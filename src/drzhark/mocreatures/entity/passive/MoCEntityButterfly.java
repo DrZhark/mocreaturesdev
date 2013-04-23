@@ -1,19 +1,22 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-// TODO make them smaller
-
-public class MoCEntityButterfly extends MoCEntityInsect {
+public class MoCEntityButterfly extends MoCEntityInsect 
+{
     public MoCEntityButterfly(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "butterflyb.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "butterflyb.png";
     }
 
     private int fCounter;
@@ -30,16 +33,17 @@ public class MoCEntityButterfly extends MoCEntityInsect {
             if (getIsFlying() && rand.nextInt(200) == 0)
             {
                 setIsFlying(false);
-            }
+            }       
         }
     }
-
+ 
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-            int k = rand.nextInt(100);
+        	setType(rand.nextInt(10)+1);
+            /*int k = rand.nextInt(100);
             if (k <= 12)
             {
                 setType(1);
@@ -71,10 +75,8 @@ public class MoCEntityButterfly extends MoCEntityInsect {
             else
             {
                 setType(5);
-            }
-
+            }*/
         }
-
     }
 
     @Override
@@ -97,6 +99,12 @@ public class MoCEntityButterfly extends MoCEntityInsect {
             return MoCreatures.proxy.MODEL_TEXTURE + "bfvanessaatalanta.png";
         case 7:
             return MoCreatures.proxy.MODEL_TEXTURE + "bfpierisrapae.png";
+        case 8:
+            return MoCreatures.proxy.MODEL_TEXTURE + "mothcamptogrammabilineata.png";
+        case 9:
+            return MoCreatures.proxy.MODEL_TEXTURE + "mothidiaaemula.png";
+        case 10:
+            return MoCreatures.proxy.MODEL_TEXTURE + "moththyatirabatis.png";
         default:
             return MoCreatures.proxy.MODEL_TEXTURE + "bfpierisrapae.png";
         }
@@ -132,7 +140,11 @@ public class MoCEntityButterfly extends MoCEntityInsect {
     @Override
     public float getSizeFactor()
     {
-        return 0.7F;
+    	if (getType() < 8)
+    	{
+    		return 0.7F;
+    	}
+        return 1.0F;
     }
 
     @Override
@@ -146,4 +158,10 @@ public class MoCEntityButterfly extends MoCEntityInsect {
     {
         return par1ItemStack != null && (par1ItemStack.itemID == Block.plantRed.blockID || par1ItemStack.itemID == Block.plantYellow.blockID);
     }
+    
+    @Override
+    public boolean isAttractedToLight() 
+    {
+		return getType() > 7;
+	}
 }

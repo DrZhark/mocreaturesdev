@@ -12,7 +12,7 @@ public class MoCItem extends Item// implements ITextureProvider
     public MoCItem(int i)
     {
         super(i);
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(MoCreatures.tabMoC);
     }
 
    /* @Override
