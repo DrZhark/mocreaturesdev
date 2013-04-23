@@ -813,15 +813,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     }
 
     /**
-     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
-     * is always empty and will not remove any chunks.
-     */
-    public boolean unload100OldestChunks()
-    {
-        return true;
-    }
-
-    /**
      * Returns if the IChunkProvider supports saving.
      */
     public boolean canSave()
@@ -866,10 +857,12 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     	//if (!portalDone) createPortal(this.worldObj, this.RNGa);	
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
 	@Override
 	public boolean unloadQueuedChunks() {
-		return false;
+		return true;
 	}
-	
-
 }

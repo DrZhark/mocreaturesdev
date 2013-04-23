@@ -183,6 +183,7 @@ public class MoCreatures {
      * ITEMS
      */
     static int MoCItemID;// = 8772;
+    static int MoCEntityID = 0;
     public static int WyvernLairDimensionID; //17;
     //public static int MoCBlockID;//
     //public static Block wyvernlairportal;
@@ -500,20 +501,14 @@ public class MoCreatures {
      */
     protected void registerEntity(Class<? extends Entity> entityClass, String entityName)
     {
-        int entityID = EntityRegistry.findGlobalUniqueEntityId();
         LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", entityName);
-        //private static EntityEggInfo searchEggColor(Class entityClass , int entityId)
-        //EntityEggInfo eggColors = MoCEggColour.searchEggColor(entityClass, entityID);
-        EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID);
-        EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
+        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID++, instance, 128, 1, true);
     }
 
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, String visibleName)
     {
-        int entityID = EntityRegistry.findGlobalUniqueEntityId();
         LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
-        EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID, eggColor, eggDotsColor);
-        EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
+        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID++, instance, 128, 1, true);
     }
 
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor)
@@ -524,10 +519,10 @@ public class MoCreatures {
     protected void InitItems()
     {
         MoCItemID = proxy.itemID;//8772;//((Integer) mocitemidA.get()).intValue();
-        
+
         WyvernLairDimensionID = proxy.WyvernDimension;//17
         //MoCBlockID = proxy.getBlockID();
-        
+
         recordshuffle = (new MoCItemRecord(MoCItemID++, "shuffling")).setUnlocalizedName("recordshuffle");//setIconIndex(89).setItemName("recordshuffle");
         //recordshuffle.ID will be: (MoCItemID + 256)
         horsesaddle = (new MoCItemHorseSaddle(MoCItemID++)).setUnlocalizedName("horsesaddle");//.setIconIndex(0).setItemName("HorseSaddle");

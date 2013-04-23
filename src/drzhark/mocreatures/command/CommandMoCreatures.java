@@ -55,7 +55,6 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc fireogrechance <int>");
         commands.add("/moc enableownership <boolean>");
         commands.add("/moc enableresetownerscroll <boolean>");
-        commands.add("/moc enableresetscroll <boolean>");
         commands.add("/moc maxtamedperop <int>");
         commands.add("/moc maxtamedperplayer <int>");
         commands.add("/moc attackdolphins <boolean>");
