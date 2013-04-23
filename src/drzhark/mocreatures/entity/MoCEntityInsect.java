@@ -2,11 +2,14 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
 
 public class MoCEntityInsect extends MoCEntityAmbient {
@@ -96,6 +99,19 @@ public class MoCEntityInsect extends MoCEntityAmbient {
                 }
             }
 
+            if (isAttractedToLight() && rand.nextInt(50) == 0)
+            {
+            	int ai[] = MoCTools.ReturnNearestBlockCoord(this, Block.torchWood.blockID, 8D);
+                if (ai[0] > -1000)
+                {
+                	PathEntity pathentity = worldObj.getEntityPathToXYZ(this,ai[0], ai[1], ai[2], 24F, true, false, false, true);
+                	if (pathentity != null)
+                	{
+                		this.setPathToEntity(pathentity);
+                	}
+                }
+            }
+ 
             //this makes the flying insect move all the time in the air
             if (getIsFlying() && !hasPath() && !isMovementCeased() && entityToAttack == null)
             {
@@ -111,7 +127,16 @@ public class MoCEntityInsect extends MoCEntityAmbient {
         }
     }
 
-    @Override
+    /**
+     * Is this insect attracted to light?
+     * @return
+     */
+    public boolean isAttractedToLight() 
+    {
+		return false;
+	}
+
+	@Override
     public void performAnimation(int animationType)
     {
         

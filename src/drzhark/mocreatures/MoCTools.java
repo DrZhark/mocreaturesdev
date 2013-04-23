@@ -81,6 +81,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityRay;
@@ -679,6 +680,75 @@ public class MoCTools {
                 {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
                     if ((j2 != 0) && (Block.blocksList[j2].blockMaterial == material))
+                    {
+
+                        distance = getSqDistanceTo(entity, k1, l1, i2);
+                        if (shortestDistance == -1D)
+                        {
+                            x = k1;
+                            y = l1;
+                            z = i2;
+                            shortestDistance = distance;
+                        }
+
+                        if (distance < shortestDistance)
+                        {
+
+                            x = k1;
+                            y = l1;
+                            z = i2;
+                            shortestDistance = distance;
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+        if (entity.posX > x)
+        {
+            x -= 2;
+        }
+        else
+        {
+            x += 2;
+        }
+        if (entity.posZ > z)
+        {
+            z -= 2;
+        }
+        else
+        {
+            z += 2;
+        }
+        return (new int[] { x, y, z });
+    }
+
+    public static int[] ReturnNearestBlockCoord(Entity entity, int blockID, Double dist)
+    {
+        double shortestDistance = -1D;
+        double distance = 0D;
+        int x = -9999;
+        int y = -1;
+        int z = -1;
+
+        AxisAlignedBB axisalignedbb = entity.boundingBox.expand(dist, dist, dist);
+        int i = MathHelper.floor_double(axisalignedbb.minX);
+        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor_double(axisalignedbb.minY);
+        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
+        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        for (int k1 = i; k1 < j; k1++)
+        {
+            for (int l1 = k; l1 < l; l1++)
+            {
+                for (int i2 = i1; i2 < j1; i2++)
+                {
+                    int j2 = entity.worldObj.getBlockId(k1, l1, i2);
+                    if ((j2 != 0) && (j2 == blockID))
                     {
 
                         distance = getSqDistanceTo(entity, k1, l1, i2);
@@ -1990,4 +2060,26 @@ public class MoCTools {
         
     	return false;
     }
+
+    
+    
+    /*
+     * Spawns maggots
+     */
+	public static void spawnMaggots(World worldObj, Entity entity)
+	{
+		 if (MoCreatures.isServer())
+	        {
+	            int var2 = 1 + worldObj.rand.nextInt(4);
+	            for (int i = 0; i < var2; ++i)
+	            {
+	                float var4 = ((float) (i % 2) - 0.5F) * (float) 1 / 4.0F;
+	                float var5 = ((float) (i / 2) - 0.5F) * (float) 1 / 4.0F;
+	                MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
+	               maggot.setLocationAndAngles(entity.posX + (double) var4, entity.posY + 0.5D, entity.posZ + (double) var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+	                worldObj.spawnEntityInWorld(maggot);
+	            }
+	        }
+		
+	}
 }

@@ -39,6 +39,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         roper = null;
         setHasBabies(false);
         //cheated = true;
+        this.stepHeight = 1.0F;
 
     }
 

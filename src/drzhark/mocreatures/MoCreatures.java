@@ -115,6 +115,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
+import drzhark.mocreatures.entity.passive.MoCEntityCrab;
 import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
@@ -131,6 +132,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -162,7 +164,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.2")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.4")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -173,6 +175,7 @@ public class MoCreatures {
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")
     public static MoCProxy proxy;
     public static CustomSpawner myCustomSpawner;
+    public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
 
     /**
      * ITEMS
@@ -444,6 +447,8 @@ public class MoCreatures {
         registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407);
         //registerEntity(MoCEntityOgre.class, "OgreNew", 16711680, 65407);
         registerEntity(MoCEntityRoach.class, "Roach", 65407, 13749760);
+        registerEntity(MoCEntityMaggot.class, "Maggot", 65407, 9141102);
+        registerEntity(MoCEntityCrab.class, "Crab", 65407, 16622);
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -725,6 +730,8 @@ public class MoCreatures {
         MinecraftForge.setBlockHarvestLevel(mocStone, 0, "pickaxe", 1); 
         
         WyvernLairBiome = (new BiomeGenWyvernLair(proxy.WyvernBiomeID)); 
+        
+        LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
         
 //        
 //        mocBlockFarm = new MoCBlockFarm(MoCBlockID++).setBlockName("MoCFarmBlock").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundWoodFootstep);

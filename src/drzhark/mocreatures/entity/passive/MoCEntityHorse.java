@@ -68,6 +68,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         setEdad(50);
         setChestedHorse(false);
         roper = null;
+        this.stepHeight = 1.0F;
         if (MoCreatures.isServer())
         {
             // setMaxHealth(20);
@@ -2139,7 +2140,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if ((rand.nextInt(10) == 0) && (this.getType() == 23) || (this.getType() == 24) || (this.getType() == 25))
             {
-                MoCTools.spawnSlimes(worldObj, this);
+                MoCTools.spawnMaggots(worldObj, this);
             }
 
             if (getIsTamed() && (isMagicHorse() || isPureBreed()) && !isGhost() && rand.nextInt(4) == 0)

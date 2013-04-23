@@ -47,6 +47,7 @@ public class MoCEntityKomodo extends MoCEntityAnimal
         texture = MoCreatures.proxy.MODEL_TEXTURE + "komododragon.png";
         setTamed(false);
         setAdult(false);
+        this.stepHeight = 1.0F;
         
         //setEdad(35);
         if(rand.nextInt(6) == 0)

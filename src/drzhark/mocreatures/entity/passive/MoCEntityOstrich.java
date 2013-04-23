@@ -64,6 +64,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
         //stay = false;
         //eggCounter = 0;
         this.eggCounter = this.rand.nextInt(1000) + 1000;
+        this.stepHeight = 1.0F;
 
     }
 

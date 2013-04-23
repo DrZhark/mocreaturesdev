@@ -75,6 +75,7 @@ import drzhark.mocreatures.client.model.MoCModelBird;
 import drzhark.mocreatures.client.model.MoCModelBoar;
 import drzhark.mocreatures.client.model.MoCModelBunny;
 import drzhark.mocreatures.client.model.MoCModelButterfly;
+import drzhark.mocreatures.client.model.MoCModelCrab;
 import drzhark.mocreatures.client.model.MoCModelCricket;
 import drzhark.mocreatures.client.model.MoCModelCrocodile;
 import drzhark.mocreatures.client.model.MoCModelDeer;
@@ -96,6 +97,7 @@ import drzhark.mocreatures.client.model.MoCModelKittyBed;
 import drzhark.mocreatures.client.model.MoCModelKittyBed2;
 import drzhark.mocreatures.client.model.MoCModelKomodo;
 import drzhark.mocreatures.client.model.MoCModelLitterBox;
+import drzhark.mocreatures.client.model.MoCModelMaggot;
 import drzhark.mocreatures.client.model.MoCModelMouse;
 import drzhark.mocreatures.client.model.MoCModelNewHorse;
 import drzhark.mocreatures.client.model.MoCModelNewHorseMob;
@@ -181,6 +183,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
+import drzhark.mocreatures.entity.passive.MoCEntityCrab;
 import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
@@ -197,6 +200,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -292,6 +296,8 @@ public class MoCClientProxy extends MoCProxy {
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityWyvern.class, new MoCRenderAnimal(new MoCModelWyvern(), 0.5F));
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityOgre.class, new MoCRenderAnimal(new MoCModelOgre(), 0.6F));
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityRoach.class, new MoCRenderInsect(new MoCModelRoach()));
+        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMaggot.class, new MoCRenderAnimal(new MoCModelMaggot(), 0F));
+        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityCrab.class, new MoCRenderAnimal(new MoCModelCrab(), 0.2F));
         
     }
 

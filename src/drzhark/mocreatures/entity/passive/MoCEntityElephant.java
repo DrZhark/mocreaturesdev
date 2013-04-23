@@ -85,7 +85,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         setEdad(50);
         setSize(1.1F, 3F);
         health = 40;
-
+        this.stepHeight = 1.0F;
         if (MoCreatures.isServer())
         {
             if (rand.nextInt(4) == 0)
