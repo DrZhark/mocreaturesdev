@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -361,49 +362,36 @@ public final class CustomSpawner {
                                                             }
 
                                                             EntityLiving entityliving;
-                                                            for (int i = 0; i < 4; ++i)
+
+                                                            try
                                                             {
+                                                                entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+                                                            }
+                                                            catch (Exception exception)
+                                                            {
+                                                                exception.printStackTrace();
+                                                                return countTotal;
+                                                            }
 
-                                                                try
+                                                            entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+
+                                                            if (entityliving.getCanSpawnHere())
+                                                            {
+                                                                ++spawnedMob;
+                                                                worldObj.spawnEntityInWorld(entityliving);
+                                                                creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
+                                                                // changed check from maxSpawnedInChunk to maxGroupCount.
+                                                                if (MoCreatures.proxy.debugLogging) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
+                                                                if (spawnedMob >= spawnlistentry.maxGroupCount)
                                                                 {
-                                                                    entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+                                                                    continue label108;
                                                                 }
-                                                                catch (Exception exception)
-                                                                {
-                                                                    exception.printStackTrace();
-                                                                    return countTotal;
-                                                                }
-
-                                                                entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-
-                                                                try
-                                                                {
-                                                                    if (entityliving.getCanSpawnHere())
-                                                                    {
-                                                                        ++spawnedMob;
-                                                                        if (MoCreatures.proxy.debugLogging) log.info("CustomSpawner Spawning " + entityliving);
-
-                                                                        worldObj.spawnEntityInWorld(entityliving);
-                                                                        creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
-
-                                                                        if (spawnedMob >= (entityliving.getMaxSpawnedInChunk()))// * 3))
-                                                                        {
-                                                                            continue label108;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
-                                                                    }
-
-                                                                    countTotal += spawnedMob;
-                                                                }
-                                                                catch (Exception exception)
-                                                                {
-                                                                    //System.out.println("spawn crash: " + exception);
-                                                                }
-
-                                                            }//end for
+                                                            }
+                                                            else
+                                                            {
+                                                                if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
+                                                            }
+                                                            countTotal += spawnedMob;
                                                         }
                                                     }
                                                 }
@@ -611,6 +599,13 @@ public final class CustomSpawner {
     {
         int x = biomeList.indexOf(biomegenbase);
         if (x >= 0) { return fulllist[x]; }
+        return null;
+    }
+
+    public List getCustomBiomeSpawnList(BiomeGenBase biome)
+    {
+        int x = biomeList.indexOf(biome);
+        if (x >= 0) { return this.customCreatureSpawnList[x]; }
         return null;
     }
 
@@ -912,8 +907,6 @@ public final class CustomSpawner {
         return false;
     }
 
-   
-    
     /**
      * determines if a skeleton spawns on a spider, and if a sheep is a different color
      */
@@ -925,5 +918,67 @@ public final class CustomSpawner {
         }
 
         par0EntityLiving.initCreature();
+    }
+
+    /**
+     * Called during chunk generation to spawn initial creatures.
+     */
+    public static void performWorldGenSpawning(World worldObj, BiomeGenBase par1BiomeGenBase, int par2, int par3, int par4, int par5, Random par6Random, List customSpawnList)
+    {
+        if (!customSpawnList.isEmpty() && MoCreatures.proxy.worldGenCreatureSpawning)
+        {
+            while (par6Random.nextFloat() < par1BiomeGenBase.getSpawningChance())
+            {
+                //this is where it has to be changed to include the custom list
+                //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
+                SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.getRandomItem(worldObj.rand, customSpawnList);
+                int i1 = spawnlistentry.minGroupCount + par6Random.nextInt(1 + spawnlistentry.maxGroupCount - spawnlistentry.minGroupCount);
+                int j1 = par2 + par6Random.nextInt(par4);
+                int k1 = par3 + par6Random.nextInt(par5);
+                int l1 = j1;
+                int i2 = k1;
+
+                for (int j2 = 0; j2 < i1; ++j2)
+                {
+                    boolean flag = false;
+
+                    for (int k2 = 0; !flag && k2 < 4; ++k2)
+                    {
+                        int l2 = worldObj.getTopSolidOrLiquidBlock(j1, k1);
+
+                        if (canCreatureTypeSpawnAtLocation(EnumCreatureType.creature, worldObj, j1, l2, k1))
+                        {
+                            float f = (float)j1 + 0.5F;
+                            float f1 = (float)l2;
+                            float f2 = (float)k1 + 0.5F;
+                            EntityLiving entityliving;
+
+                            try
+                            {
+                                entityliving = (EntityLiving)spawnlistentry.entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
+                            }
+                            catch (Exception exception)
+                            {
+                                exception.printStackTrace();
+                                continue;
+                            }
+
+                            entityliving.setLocationAndAngles((double)f, (double)f1, (double)f2, par6Random.nextFloat() * 360.0F, 0.0F);
+                            worldObj.spawnEntityInWorld(entityliving);
+                            if (MoCreatures.proxy.debugLogging) log.info("worldgen spawned " + entityliving);
+                            creatureSpecificInit(entityliving, worldObj, f, f1, f2);
+                            flag = true;
+                        }
+
+                        j1 += par6Random.nextInt(5) - par6Random.nextInt(5);
+
+                        for (k1 += par6Random.nextInt(5) - par6Random.nextInt(5); j1 < par2 || j1 >= par2 + par4 || k1 < par3 || k1 >= par3 + par4; k1 = i2 + par6Random.nextInt(5) - par6Random.nextInt(5))
+                        {
+                            j1 = l1 + par6Random.nextInt(5) - par6Random.nextInt(5);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
