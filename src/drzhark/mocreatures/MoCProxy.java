@@ -165,6 +165,7 @@ public class MoCProxy implements IGuiHandler {
     public boolean elephantBulldozer;
 
     public int itemID;
+    public int eggID;
     //new blocks IDs
     public int blockDirtID;
     public int blockGrassID;
@@ -1145,6 +1146,7 @@ public class MoCProxy implements IGuiHandler {
         animateTextures = MoCconfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "animateTextures", false, "Animate Textures").getBoolean(false);
         // general
         itemID = MoCconfig.get(CATEGORY_MOC_ID_SETTINGS, "ItemID", 8772, "The starting ID used for MoCreatures items. Each item will increment this number by 1 for its ID.").getInt();
+        eggID = MoCconfig.get(CATEGORY_MOC_ID_SETTINGS, "EggID", 7772, "The starting ID used for MoCreatures eggs. Each egg will increment this number by 1 for its ID.").getInt();
         allowInstaSpawn = MoCconfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
         debugLogging = MoCconfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", false, "Turns on verbose logging").getBoolean(false);
         worldGenCreatureSpawning = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);

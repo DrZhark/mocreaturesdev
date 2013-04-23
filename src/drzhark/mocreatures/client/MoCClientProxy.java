@@ -596,6 +596,8 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean isOldWorldW;
     public static MoCSettingInt mocitemidA;
     public static WidgetInt mocitemidW;
+    public static MoCSettingInt eggidA;
+    public static WidgetInt eggidW;
     public static WidgetInt blockDirtIdW;
     public static MoCSettingInt blockDirtIdS;
     public static WidgetInt blockGrassIdW;
@@ -939,6 +941,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(mocitemidA = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "ItemID", itemID, 4096, 1, 60000));
         mocitemidW = new WidgetInt(mocitemidA, "Item ID");
         widgetIDSettingsColumns.add(mocitemidW);
+        guiapiSettings.append(eggidA = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "EggID", eggID, 2048, 1, 60000));
+        eggidW = new WidgetInt(eggidA, "Egg ID");
+        widgetIDSettingsColumns.add(eggidW);
         guiapiSettings.append(blockDirtIdS = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", blockDirtID, 1, 1, 255));
         blockDirtIdW = new WidgetInt(blockDirtIdS, "DirtBlock ID");
         widgetIDSettingsColumns.add(blockDirtIdW);

@@ -19,6 +19,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityEggInfo;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -182,8 +184,9 @@ public class MoCreatures {
     /**
      * ITEMS
      */
+    static int MoCEggID;// = 7772;
     static int MoCItemID;// = 8772;
-    static int MoCEntityID = 0;
+    static int MoCEntityID = 1; // used internally, does not need to be configured by users
     public static int WyvernLairDimensionID; //17;
     //public static int MoCBlockID;//
     //public static Block wyvernlairportal;
@@ -505,10 +508,15 @@ public class MoCreatures {
         EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID++, instance, 128, 1, true);
     }
 
+    // handle entity/egg registrations
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, String visibleName)
     {
-        LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
-        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID++, instance, 128, 1, true);
+        LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", "en_US", visibleName);
+        EntityList.IDtoClassMapping.put(MoCEggID, entityClass);
+        EntityList.entityEggs.put(MoCEggID, new EntityEggInfo(MoCEggID, eggColor, eggDotsColor));
+        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
+        MoCEntityID++;
+        MoCEggID++;
     }
 
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor)
@@ -518,8 +526,8 @@ public class MoCreatures {
 
     protected void InitItems()
     {
-        MoCItemID = proxy.itemID;//8772;//((Integer) mocitemidA.get()).intValue();
-
+        MoCItemID = proxy.itemID;
+        MoCEggID = proxy.eggID;
         WyvernLairDimensionID = proxy.WyvernDimension;//17
         //MoCBlockID = proxy.getBlockID();
 
