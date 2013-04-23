@@ -42,6 +42,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -174,12 +175,14 @@ public class MoCProxy implements IGuiHandler {
     public int blockPlanksID;
     public int WyvernDimension;
     public int WyvernBiomeID;
-    
+
+    public boolean worldGenCreatureSpawning;
     public int maxMobs;
     public int maxAnimals;
     public int maxAmbient;
     public int maxWaterMobs;
-    public int spawnTickRate;
+    public int animalSpawnTickRate;
+    public int mobSpawnTickRate;
     public int despawnTickRate;
     public int maxTamed;
     public int maxOPTamed;
@@ -1144,11 +1147,13 @@ public class MoCProxy implements IGuiHandler {
         itemID = MoCconfig.get(CATEGORY_MOC_ID_SETTINGS, "ItemID", 8772, "The starting ID used for MoCreatures items. Each item will increment this number by 1 for its ID.").getInt();
         allowInstaSpawn = MoCconfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
         debugLogging = MoCconfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", false, "Turns on verbose logging").getBoolean(false);
+        worldGenCreatureSpawning = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);
         maxMobs = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMobs", 70, "Max amount of mobs proportional to the amount of chunks seen by players. Formula is : amount * chunks / 256. For more info see http://www.minecraftwiki.net/wiki/Spawn.").getInt();
         maxAnimals = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAnimals", 90, "Max amount of animals proportional to the amount of chunks seen by players. Formula is : amount * chunks / 256. For more info see http://www.minecraftwiki.net/wiki/Spawn.").getInt();
         maxAmbient = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbient", 20, "Max amount of ambient proportional to the amount of chunks seen by players. Formula is : amount * chunks / 256. For more info see http://www.minecraftwiki.net/wiki/Spawn.").getInt();
         maxWaterMobs = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterMobs", 30, "Max amount of watermobs proportional to the amount of chunks seen by players. Formula is : amount * chunks / 256. For more info see http://www.minecraftwiki.net/wiki/Spawn.").getInt();
-        spawnTickRate = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnTickRate", 100, "The amount of ticks it takes to spawn creatures. A tick rate of 100 would cause Custom Spawner to spawn creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
+        animalSpawnTickRate = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "animalSpawnTickRate", 100, "The amount of ticks it takes to spawn animals. A tick rate of 100 would cause Custom Spawner to spawn animals every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
+        mobSpawnTickRate = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", 100, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
         useCustomSpawner = MoCconfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
         maxTamed = MoCconfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerPlayer", 10, "Max tamed creatures a player can have. Requires enableOwnership to be set to true.").getInt();

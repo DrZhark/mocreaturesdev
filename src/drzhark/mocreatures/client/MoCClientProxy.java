@@ -507,11 +507,15 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetInt maxAnimalsW;
     public static MoCSettingInt maxWaterMobsS;
     public static WidgetInt maxWaterMobsW;
-    public static MoCSettingInt spawnTickRateS;
-    public static WidgetInt spawnTickRateW;
+    public static MoCSettingInt animalSpawnTickRateS;
+    public static WidgetInt animalSpawnTickRateW;
+    public static MoCSettingInt mobSpawnTickRateS;
+    public static WidgetInt mobSpawnTickRateW;
     public static MoCSettingInt maxAmbientMobsS;
     public static WidgetInt maxAmbientMobsW;
-    
+    public static MoCSettingBoolean worldGenCreatureSpawningB;
+    public static WidgetBoolean worldGenCreatureSpawningW;
+
     public static MoCSettingInt despawnTickRateS;
     public static WidgetInt despawnTickRateW;
     
@@ -863,9 +867,12 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(useCustomSpawnerS = new MoCSettingBoolean(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", useCustomSpawner));
         useCustomSpawnerW = new WidgetBoolean(useCustomSpawnerS, "Use CustomSpawner?", "Yes", "No");
         widgetCustomSpawnerColumns.add(useCustomSpawnerW);
-        guiapiSettings.append(spawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnTickRate", spawnTickRate, 1, 1, 1000));
-        spawnTickRateW = new WidgetInt(spawnTickRateS, "Spawn Tick Rate");
-        widgetCustomSpawnerColumns.add(spawnTickRateW);
+        guiapiSettings.append(animalSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "animalSpawnTickRate", animalSpawnTickRate, 1, 1, 1000));
+        animalSpawnTickRateW = new WidgetInt(animalSpawnTickRateS, "Anml Spawn Ticks");
+        widgetCustomSpawnerColumns.add(animalSpawnTickRateW);
+        guiapiSettings.append(mobSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", mobSpawnTickRate, 1, 1, 1000));
+        mobSpawnTickRateW = new WidgetInt(mobSpawnTickRateS, "Mob Spawn Ticks");
+        widgetCustomSpawnerColumns.add(mobSpawnTickRateW);
         guiapiSettings.append(maxMobsS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMobs", maxMobs, 1, 1, 1000));
         maxMobsW = new WidgetInt(maxMobsS, "Hostiles");
         widgetCustomSpawnerColumns.add(maxMobsW);
@@ -878,7 +885,6 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(maxAmbientMobsS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbient", maxAmbient, 1, 1, 1000));
         maxWaterMobsW = new WidgetInt(maxAmbientMobsS, "Ambient Mobs");
         widgetCustomSpawnerColumns.add(maxWaterMobsW);
-        
         guiapiSettings.append(despawnVanillaB = new MoCSettingBoolean(CATEGORY_CUSTOMSPAWNER_SETTINGS, "DespawnVanilla", despawnVanilla));
         despawnVanillaW = new WidgetBoolean(despawnVanillaB, "Despawn vanilla mobs?", "Yes", "No");
         widgetCustomSpawnerColumns.add(despawnVanillaW);
@@ -888,6 +894,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(modifyVanillaSpawnsB = new MoCSettingBoolean(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ModifyVanillaSpawns", modifyVanillaSpawns));
         modifyVanillaSpawnsW = new WidgetBoolean(modifyVanillaSpawnsB, "Change vanilla spawns?", "Yes", "No");
         widgetCustomSpawnerColumns.add(modifyVanillaSpawnsW);
+        guiapiSettings.append(worldGenCreatureSpawningB = new MoCSettingBoolean(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", worldGenCreatureSpawning));
+        worldGenCreatureSpawningW = new WidgetBoolean(worldGenCreatureSpawningB, "Chunk Gen Spawning?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(worldGenCreatureSpawningW);
         //**********************************************************//
 
        
@@ -1293,12 +1302,12 @@ public class MoCClientProxy extends MoCProxy {
                 MoCSettingInt settingFrequency = new MoCSettingInt(category, entityName + " Frequency", entityData.frequency, 0, 1, 20);
                 guiapiSettings.append(settingFrequency);
                 widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, entityName + " Frequency"));
-                MoCSettingInt settingMinGroup = new MoCSettingInt(category, entityName + " Min Group", entityData.minGroup, 1, 1, 20);
+                MoCSettingInt settingMinGroup = new MoCSettingInt(category, entityName + " Min", entityData.minGroup, 1, 1, 20);
                 guiapiSettings.append(settingMinGroup);
-                widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, entityName + " Min Group"));
-                MoCSettingInt settingMaxGroup = new MoCSettingInt(category, entityName + " Max Group", entityData.maxGroup, 1, 1, 20);
+                widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, entityName + " Min"));
+                MoCSettingInt settingMaxGroup = new MoCSettingInt(category, entityName + " Max", entityData.maxGroup, 1, 1, 20);
                 guiapiSettings.append(settingMaxGroup);
-                widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, entityName + " Max Group"));
+                widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, entityName + " Max"));
 
                 if (entityData.getBiomeGroups() != null)
                 {

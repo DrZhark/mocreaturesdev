@@ -41,6 +41,7 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc despawnvanilla <boolean>");
         commands.add("/moc despawntickrate <int>");
         commands.add("/moc modifyvanillaspawns <boolean>");
+        commands.add("/moc worldgencreaturespawning <boolean>");
         commands.add("/moc maxambient <int>");
         commands.add("/moc maxmobs <int>");
         commands.add("/moc maxanimals <int>");
@@ -53,7 +54,7 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc caveogrechance <float>");
         commands.add("/moc fireogrechance <int>");
         commands.add("/moc enableownership <boolean>");
-        commands.add("/moc enableresetscroll <boolean>");
+        commands.add("/moc enableresetownerscroll <boolean>");
         commands.add("/moc maxtamedperop <int>");
         commands.add("/moc maxtamedperplayer <int>");
         commands.add("/moc attackdolphins <boolean>");

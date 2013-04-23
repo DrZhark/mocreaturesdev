@@ -24,25 +24,36 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
             {
                 WorldServer worldObj = DimensionManager.getWorld(dimension);
 
-                if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.spawnTickRate == 0L)) 
+                if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.animalSpawnTickRate == 0L)) 
                 {
 
-                int numSpawns = 0;
+                    int animalSpawns = 0;
+    
+                    boolean spawnPassive = true;
+                    if (dimension == 0)
+                    {
+                    	spawnPassive = worldObj.isDaytime();
+                    }
+                    
+                    if (worldObj.playerEntities.size() > 0) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    {
+                        animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, false, spawnPassive);
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + animalSpawns + " Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+                    }
+                }
 
-                boolean spawnPassive = true;
-                if (dimension == 0)
+                if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.mobSpawnTickRate == 0L)) 
                 {
-                	spawnPassive = worldObj.isDaytime();
-                }
-                
-                if (worldObj.playerEntities.size() > 0) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
-                {
-                    numSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, worldObj.difficultySetting > 0, spawnPassive);
-                    if (MoCreatures.proxy.debugLogging) System.out.println("Mo'Creatures Spawned " + numSpawns + " Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+
+                    int mobSpawns = 0;
+
+                    if (worldObj.playerEntities.size() > 0) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    {
+                        mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, worldObj.difficultySetting > 0, false);
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+                    }
                 }
 
-                }
-                
                 if (MoCreatures.proxy.despawnVanilla && worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.despawnTickRate == 0L))
                 {
                 	 

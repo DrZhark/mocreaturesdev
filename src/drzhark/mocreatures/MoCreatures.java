@@ -60,12 +60,14 @@ import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerAboutToStart;
 import cpw.mods.fml.common.Mod.ServerStarted;
 import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -162,7 +164,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.2")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.4")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -343,6 +345,7 @@ public class MoCreatures {
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
+        MinecraftForge.TERRAIN_GEN_BUS.register(new MoCEventHooks()); // register our event subscriptions
         log = event.getModLog();
         // check if config exists, if not then copy default
         File mocConfigFile = new File(event.getSuggestedConfigurationFile().getParent() + File.separator + "MoCProperties.cfg");
@@ -463,11 +466,10 @@ public class MoCreatures {
         proxy.ConfigPostInit(event);
     }
 
-    @ServerStarting
-    public void serverStarting(FMLServerStartingEvent event)
+    // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
+    @ServerAboutToStart
+    public void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
-        // register server commands
-        event.registerServerCommand(new CommandMoCreatures());
         // initialized here to support all custom biomes
         if (proxy.useCustomSpawner)
         {
@@ -478,6 +480,13 @@ public class MoCreatures {
         proxy.initializeEntities();
         updateSettings(); // refresh settings
     }
+
+    @ServerStarting
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandMoCreatures());
+    }
+
     /**
      * For Litterbox and kittybeds
      * 
