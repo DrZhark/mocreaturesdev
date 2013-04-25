@@ -4,6 +4,7 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -68,9 +69,12 @@ public class MoCEntityCrab extends MoCEntityAmbient
     {
         super.onLivingUpdate();
 
-        if (!worldObj.isRemote)
+        if (MoCreatures.isServer())
         {
-            
+            if (fleeingTick == 3)
+            {
+            	MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+            }
         }
     }
 
@@ -81,7 +85,14 @@ public class MoCEntityCrab extends MoCEntityAmbient
 
    
 
-    
+    @Override
+    public void performAnimation(int animationType)
+    {
+        if (animationType == 1) //fleeing animation finishes
+        {
+            this.fleeingTick = 0;
+        }
+    }
 
     @Override
     public boolean getCanSpawnHere()
@@ -94,7 +105,7 @@ public class MoCEntityCrab extends MoCEntityAmbient
     @Override
     protected int getDropItemId()
     {
-        return 0;//Item.slimeBall.itemID;
+        return MoCreatures.crabmeat.itemID;
     }
 
     @Override
@@ -118,5 +129,16 @@ public class MoCEntityCrab extends MoCEntityAmbient
     public float getSizeFactor() 
     {   
 		return 0.7F * (float)getEdad() * 0.01F;
+    }
+    
+    @Override
+    public boolean canBreatheUnderwater()
+    {
+        return true;
+    }
+    
+    public boolean isFleeing()
+    {
+    	return this.fleeingTick != 0;
     }
 }

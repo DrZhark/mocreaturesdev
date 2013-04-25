@@ -5,6 +5,7 @@ import java.util.List;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCIMoCreature;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
@@ -564,7 +565,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
                     ||(!getIsAdult() && ((entity1.width > 0.5D) || (entity1.height > 0.5D))) 
                     || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) 
                     || ((entity1 instanceof EntityMob) && (!getIsTamed() || !getIsAdult())) 
-                    || (getIsTamed() && (entity1 instanceof MoCEntityKitty)) 
+                    || (getIsTamed() && (entity1 instanceof MoCIMoCreature) && ((MoCIMoCreature)entity1).getIsTamed() ) 
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
                     )

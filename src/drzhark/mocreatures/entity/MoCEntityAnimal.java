@@ -250,7 +250,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 		        || (entity instanceof EntityPlayer && this.getIsTamed()) 
 		        || (entity instanceof MoCEntityKittyBed) 
 		        || (entity instanceof MoCEntityLitterBox) 
-		        || (this.getIsTamed() && (entity instanceof MoCEntityAnimal && ((MoCEntityAnimal) entity).getIsTamed())) 
+		        || (this.getIsTamed() && (entity instanceof MoCIMoCreature && ((MoCIMoCreature) entity).getIsTamed())) 
 		        || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
 		        || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
 		        || (entity.width >= this.width || entity.height >= this.height)

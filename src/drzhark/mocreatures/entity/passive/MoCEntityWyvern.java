@@ -686,7 +686,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	public void updateRiderPosition()
 	{
 		
-		double dist = (0.1D);
+		double dist = getSizeFactor() * (0.3D);
 		double newPosX = posX - (dist * Math.cos((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
 		double newPosZ = posZ - (dist * Math.sin((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
 		riddenByEntity.setPosition(newPosX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), newPosZ);
@@ -913,9 +913,13 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 		 	int i = MathHelper.floor_double(posX);
 			int j = MathHelper.floor_double(boundingBox.minY);
 			int k = MathHelper.floor_double(posZ);
-
+			int l = 10;
+			if (getType() == 5) //mother wyverns drop eggs more frequently
+			{
+				l = 3;
+			}
 			String s = MoCTools.BiomeName(worldObj, i, j, k);
-			if (s.equals("WyvernBiome") && rand.nextInt(10) == 0) 
+			if (s.equals("WyvernBiome") && rand.nextInt(l) == 0) 
 			{
 				//int m = rand.nextInt(2)+1;
                 //for (int l = 0; l < m; l++)
