@@ -399,8 +399,7 @@ public class MoCreatures {
         proxy.registerRenderInformation();
         TickRegistry.registerTickHandler(new MoCServerTickHandler(), Side.SERVER);
         
-        DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, true);
-        DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
+        DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
     }
 
     private void AddEntities()
@@ -475,13 +474,13 @@ public class MoCreatures {
     public void postInit(FMLPostInitializationEvent event)
     {
         proxy.ConfigPostInit(event);
+        DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
     }
 
-    @ServerStarting
-    public void serverStarting(FMLServerStartingEvent event)
+    // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
+    @ServerAboutToStart
+    public void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
-        // register server commands
-        event.registerServerCommand(new CommandMoCreatures());
         // initialized here to support all custom biomes
         if (proxy.useCustomSpawner)
         {
@@ -493,6 +492,11 @@ public class MoCreatures {
         updateSettings(); // refresh settings
     }
 
+    @ServerStarting
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandMoCreatures());
+    }
 
     /**
      * For Litterbox and kittybeds
@@ -501,6 +505,20 @@ public class MoCreatures {
      * @param entityName
      */
     protected void registerEntity(Class<? extends Entity> entityClass, String entityName)
+    {
+        int entityID = EntityRegistry.findGlobalUniqueEntityId();
+        LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", entityName);
+        EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID);
+    }
+
+    private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, String visibleName)
+    {
+        int entityID = EntityRegistry.findGlobalUniqueEntityId();
+        LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
+        EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID, eggColor, eggDotsColor);
+    }
+    // disable new method until I can verify server updates will be smooth
+   /* protected void registerEntity(Class<? extends Entity> entityClass, String entityName)
     {
         LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", entityName);
         EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID++, instance, 128, 1, true);
@@ -515,7 +533,7 @@ public class MoCreatures {
         EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
         MoCEntityID++;
         MoCEggID++;
-    }
+    }*/
 
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor)
     {
