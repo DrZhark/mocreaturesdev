@@ -341,7 +341,7 @@ public class MoCClientPacketHandler implements IPacketHandler {
         EntityClientPlayerMP player = MoCClientProxy.mc.thePlayer;
         player.sendQueue.addToSendQueue(packet);
     }
-
+    
     public static void sendEntityDivePacket()
     {
         // client sending entity dive command. 
@@ -388,4 +388,40 @@ public class MoCClientPacketHandler implements IPacketHandler {
         player.sendQueue.addToSendQueue(packet);
 		
 	}
+	
+	/**
+	 * New instaSpawn method with (key) name of entity and number to spawn
+	 * @param name
+	 * @param number
+	 */
+	public static void sendInstaSpawnPacket(String name, int number)
+    {
+        // client sending insta spawn command. int ID, int number
+
+		if (name.isEmpty() || number < 1)
+		{
+			return;
+		}
+		
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try
+        {
+            data.writeInt(Integer.valueOf(26));
+            data.writeUTF(name);
+            data.writeInt(Integer.valueOf(number));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = "MoCreatures";
+        packet.data = bytes.toByteArray();
+        packet.length = packet.data.length;
+
+        EntityClientPlayerMP player = MoCClientProxy.mc.thePlayer;
+        player.sendQueue.addToSendQueue(packet);
+    }
 }

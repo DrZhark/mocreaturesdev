@@ -23,45 +23,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
-// TODO
-// tail animation (done)
-// ear animation (done)
-// mouth adjustment (done)
-// sit stance animation (done)
-// different trusks animation - limit angles of what I have now (done)
-// taming of calfs (done)
-
-//sounds putting pieces, tusk harness, howdah , etc (done)
-//sounds putting on platform / harness, etc(done)
-// breeding (do it on MoCEntityAnimal) pending!
-// animate chests (done), rolls (done), platforms (done), howdah with movement
-// double passenger? (done)
-// fix howdah mount (done)
-// name position (done)
-// move legs in so shirt can be seen (done) - didn't work well, had to set back to original (done)
-// adjust mountYoffset in a differrnt way (done)
-
-// choose which ones to stomp, which ones to carry other people (done)
-// adjust mounting (done)/ second mounting (*) and sitting animation plus YMountOff (done)
-//adjust platform based on mountedYoffset() (done)
-// whip effect - charging (done)
-// select which one carries the most (done), carries a second player, and which one(s) destroy blocks (done = all)
-// or make mammoths destroy up to 3-4 blocks, the other one 3, 2 and 1 blocks tall (yep)
-// limit or activate/deactivate tusk block destroying - or add a limit for tusks (done they break)
-//add strenght multiplier for tusks? or increase in block recovery? (done)
-//tusks harness to keep damage counter (done)
-
-// make a sit platform for ? mammoth (done)
-// avoid bear / big cat attacking mammoths / elephants (done)
-//create only one platform, is making 5+ now (done)
-//make sure platforms are destroyed properly (done)
-//change recipe for chest set (done)
-//avoid griefing (done)
-//improve block breaking (less cpu intensive) (done)
-//adjust roper and name (done)
-//sounds
-//stomp sounds
 
 public class MoCEntityElephant extends MoCEntityAnimal {
 
@@ -86,6 +49,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         setSize(1.1F, 3F);
         health = 40;
         this.stepHeight = 1.0F;
+
         if (MoCreatures.isServer())
         {
             if (rand.nextInt(4) == 0)
@@ -102,6 +66,8 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
+    	
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
@@ -785,8 +751,12 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
 
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        
         String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        //if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        
+        if (currentbiome.temperature <= 0.05F)
         {
             setType(3 + rand.nextInt(2));
             health = getMaxHealth();
@@ -1179,7 +1149,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         if (MoCTools.isNearTorch(this)) { return false; }
-        return (checkSpawningBiome() && (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving());
+        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
     
     @Override

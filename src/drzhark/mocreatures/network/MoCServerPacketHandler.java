@@ -123,6 +123,23 @@ public class MoCServerPacketHandler implements IPacketHandler {
 
                     }
                 }
+                
+                
+                if (packetID == 26) // server receives spawn packet with entity name
+                {
+                	EntityPlayer player = (EntityPlayer) playerEntity;
+                    String entityName = dataStream.readUTF();
+                    int number = dataStream.readInt();
+                    if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) // make sure the client has admin rights on server!
+                    {
+                        MoCTools.spawnNearPlayerbyName(player, entityName, number);
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
+                    }
+                    else
+                    {
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
+                    }
+                }
             }
             catch (IOException e)
             {

@@ -39,7 +39,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 		super(world);
 		setTamed(false);
 		setAdult(true);
-		selectType();
+		//selectType();
 	}
 
 	/**
@@ -52,6 +52,13 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 		setType(1);
 	}
 
+	@Override
+    public void initCreature()
+    {
+    	selectType();
+    	super.initCreature();
+    }
+	
 	@Override
 	public EntityAgeable createChild(EntityAgeable var1)
 	{

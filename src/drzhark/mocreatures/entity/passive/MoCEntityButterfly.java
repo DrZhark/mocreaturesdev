@@ -34,13 +34,9 @@ public class MoCEntityButterfly extends MoCEntityInsect
             {
                 setIsFlying(false);
             }
-            
-            
         }
     }
 
-    
-    
     @Override
     public void selectType()
     {
@@ -80,9 +76,7 @@ public class MoCEntityButterfly extends MoCEntityInsect
             {
                 setType(5);
             }*/
-
         }
-
     }
 
     @Override

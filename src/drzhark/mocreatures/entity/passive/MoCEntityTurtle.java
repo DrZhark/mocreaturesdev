@@ -234,7 +234,7 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
         {
             if (!getIsUpsideDown() && !getIsTamed())
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 4D);
+                EntityLiving entityliving = getBoogey(4D);
                 if ((entityliving != null) && canEntityBeSeen(entityliving))
                 {
 

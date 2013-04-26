@@ -38,7 +38,7 @@ public class MoCEntityFXStar extends EntityFX {
     @Override
     public int getFXLayer()
     {
-        return 0;
+        return 1;
     }
 
 

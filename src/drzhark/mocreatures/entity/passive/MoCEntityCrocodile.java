@@ -445,7 +445,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         }
     }
 
-    // @Override
+
     @Override
     protected Entity findPlayerToAttack()
     {
@@ -453,23 +453,21 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
 
         if (worldObj.difficultySetting > 0)// && getIsAdult())
         {
-            /*
-             * EntityPlayer entityplayer =
-             * worldObj.getClosestPlayerToEntity(this, 12D); if((entityplayer !=
-             * null) && getIsAdult()) { return entityplayer; }
-             */
+            double attackD = 12D;
+             
             if (getIsResting())
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 6D);
-                return entityliving;
-
+            	attackD = 6D;
             }
-            else if (MoCreatures.isServer() && (rand.nextInt(80) == 0)) // && getIsHungry())
-            {
-                EntityLiving entityliving = getClosestEntityLiving(this, 12D);
-                // setHungry(false);
-                return entityliving;
+            
+            EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, attackD); 
+            if((entityplayer != null) && getIsAdult()) 
+            { 
+            	 return entityplayer; 
             }
+            
+            EntityLiving entityliving = getClosestEntityLiving(this, attackD);
+            return entityliving;
         }
         return null;
     }

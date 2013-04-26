@@ -65,6 +65,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
+import drzhark.mocreatures.entity.passive.MoCEntityCrab;
 import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
@@ -258,6 +259,31 @@ public class MoCTools {
             }
         }
     }
+    
+    public static void spawnNearPlayerbyName(EntityPlayer player, String eName, int numberToSpawn) 
+    {
+    	WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
+    	System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
+    	for (int i = 0; i < numberToSpawn; i++)
+        {
+    		EntityLiving entityToSpawn = null;
+            
+    		try
+            {
+    			Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+    			entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+            }catch (Exception e) 
+            { System.out.println(e);}
+            
+            if (entityToSpawn != null)
+            {
+            	entityToSpawn.initCreature();
+            	entityToSpawn.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
+                worldObj.spawnEntityInWorld(entityToSpawn);
+            }
+        }
+	}
+    
 
     public static void playCustomSound(Entity entity, String customSound, World worldObj)
     {
@@ -292,7 +318,6 @@ public class MoCTools {
         }
     }*/
 
-    //TODO 4FIX
     /**
      * Returns a new instance of MoCIMoCreature based on the creatureType 
      * @param creatureType
@@ -301,7 +326,6 @@ public class MoCTools {
      */
     public static EntityLiving spawnList(int creatureType, World worldObj)
     {
-        //TODO change this to a list
         /**
          * Spawn list
          * 
@@ -314,38 +338,39 @@ public class MoCTools {
          * Butterfly6 
          * Cat 7 
          * Cricket 8 
-         * Croc 9 
-         * Deer 10 
-         * Dolphin 11 
-         * Dragonfly12 
-         * Duck 13 
-         * Elephant 14
-         * Firefly 15 
-         * Fish 16
-         * Fly 17 
-         * Fox 18 
-         * Goat 19 
-         * Golem 20
-         * Horse 21 
-         * HorseMob 22 
-         * JellyFish23 
-         * Komodo24
-         * Mice 25 
-         * Ogre 26 
-         * Ostrich 27 
-         * Rat 28 
-         * Ray 29 
-         * Shark 30
-         * Scorpions31 
-         * Snail 32 
-         * Snake 33 
-         * Turkey 34 
-         * Turtle 35 
-         * Werewolf 36 
-         * Wraith 37 
-         * Wraith F 38 
-         * WWolf 39
-         * Wyvern 40
+         * Crab 9
+         * Croc 10 
+         * Deer 11 
+         * Dolphin 12 
+         * Dragonfly13 
+         * Duck 14 
+         * Elephant 15
+         * Firefly 16 
+         * Fish 17
+         * Fly 18 
+         * Fox 19 
+         * Goat 20 
+         * Golem 21
+         * Horse 22 
+         * HorseMob 23 
+         * JellyFish24 
+         * Komodo25
+         * Mice 26 
+         * Ogre 27 
+         * Ostrich 28 
+         * Rat 29 
+         * Ray 30 
+         * Shark 31
+         * Scorpions32 
+         * Snail 33 
+         * Snake 34 
+         * Turkey 35 
+         * Turtle 36 
+         * Werewolf 37 
+         * Wraith 38 
+         * Wraith F 39 
+         * WWolf 40
+         * Wyvern 41
          */
 
         switch (creatureType)
@@ -379,98 +404,101 @@ public class MoCTools {
             return new MoCEntityCricket(worldObj);
 
         case 9:
+            return new MoCEntityCrab(worldObj);
+            
+        case 10:
             return new MoCEntityCrocodile(worldObj);
 
-        case 10:
+        case 11:
             return new MoCEntityDeer(worldObj);
 
-        case 11:
+        case 12:
             return new MoCEntityDolphin(worldObj);
 
-        case 12:
+        case 13:
             return new MoCEntityDragonfly(worldObj);
 
-        case 13:
+        case 14:
             return new MoCEntityDuck(worldObj);
 
-        case 14:
+        case 15:
             return new MoCEntityElephant(worldObj);
             
-        case 15:
+        case 16:
             return new MoCEntityFirefly(worldObj);
 
-        case 16:
+        case 17:
             return new MoCEntityFishy(worldObj);
 
-        case 17:
+        case 18:
             return new MoCEntityFly(worldObj);
 
-        case 18:
+        case 19:
             return new MoCEntityFox(worldObj);
 
-        case 19:
+        case 20:
             return new MoCEntityGoat(worldObj);
 
-        case 20:
+        case 21:
             return new MoCEntityGolem(worldObj);
 
-        case 21:
+        case 22:
             return new MoCEntityHorse(worldObj);
 
-        case 22:
+        case 23:
             return new MoCEntityHorseMob(worldObj);
 
-        case 23:
+        case 24:
             return new MoCEntityJellyFish(worldObj);
         
-        case 24:
+        case 25:
             return new MoCEntityKomodo(worldObj);
         
-        case 25:
+        case 26:
             return new MoCEntityMouse(worldObj);
 
-        case 26:
+        case 27:
             return new MoCEntityOgre(worldObj);
 
-        case 27:
+        case 28:
             return new MoCEntityOstrich(worldObj);
 
-        case 28:
+        case 29:
             return new MoCEntityRat(worldObj);
 
-        case 29:
+        case 30:
             return new MoCEntityRay(worldObj);
 
-        case 30:
+        case 31:
             return new MoCEntityShark(worldObj);
 
-        case 31:
+        case 32:
             return new MoCEntityScorpion(worldObj);
 
-        case 32:
+        case 33:
             return new MoCEntitySnail(worldObj);
 
-        case 33:
+        case 34:
             return new MoCEntitySnake(worldObj);
 
-        case 34:
+        case 35:
             return new MoCEntityTurkey(worldObj);
 
-        case 35:
+        case 36:
             return new MoCEntityTurtle(worldObj);
 
-        case 36:
+        case 37:
             return new MoCEntityWerewolf(worldObj);
 
-        case 37:
+        case 38:
             return new MoCEntityWraith(worldObj);
 
-        case 38:
+        case 39:
             return new MoCEntityFlameWraith(worldObj);
 
-        case 39:
-            return new MoCEntityWWolf(worldObj);
         case 40:
+            return new MoCEntityWWolf(worldObj);
+        case 41:
             return new MoCEntityWyvern(worldObj);
 
         default:
@@ -725,7 +753,7 @@ public class MoCTools {
         }
         return (new int[] { x, y, z });
     }
-
+    
     public static int[] ReturnNearestBlockCoord(Entity entity, int blockID, Double dist)
     {
         double shortestDistance = -1D;
@@ -1040,6 +1068,21 @@ public class MoCTools {
         }
     }
 
+    public static BiomeGenBase Biomekind(World world, int i, int j, int k)
+    {
+        WorldChunkManager worldchunkmanager = world.getWorldChunkManager();
+        if (worldchunkmanager == null) { return null; }
+        BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i, k);
+        if (biomegenbase == null)
+        {
+            return null;
+        }
+        else
+        {
+            return biomegenbase;
+        }
+    }
+    
     public static void destroyDrops(Entity entity, double d)
     {
 
@@ -1695,7 +1738,7 @@ public class MoCTools {
      */
     public static boolean tameWithName(EntityPlayer ep, MoCIMoCreature entity) {
         //System.out.println("number of pets for " + ep + " = " + count + "limit = " + MoCreatures.proxy.getMaxTamed());
-        int max = 0;
+    	int max = 0;
         if (MoCreatures.proxy.enableOwnership) 
         {
             
@@ -2061,7 +2104,6 @@ public class MoCTools {
     	return false;
     }
 
-    
     
     /*
      * Spawns maggots

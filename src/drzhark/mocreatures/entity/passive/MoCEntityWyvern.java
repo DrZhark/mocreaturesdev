@@ -686,7 +686,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	public void updateRiderPosition()
 	{
 		
-		double dist = (0.1D);
+		double dist = getSizeFactor() * (0.3D);
 		double newPosX = posX - (dist * Math.cos((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
 		double newPosZ = posZ - (dist * Math.sin((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
 		riddenByEntity.setPosition(newPosX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), newPosZ);
@@ -836,7 +836,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	    public int nameYOffset()
 	    {
 		 int yOff = getEdad() * -1;
-		 if (yOff < -90) yOff = -90;
+		 if (yOff < -120) yOff = -120;
 		 return yOff;
 
 	    }
@@ -850,22 +850,10 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	 @Override
 	    public boolean getCanSpawnHere()
 	    {
-		 	//System.out.println("frequency = " + MoCreatures.proxy.getFrequency(this.getEntityName()));
-	        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
+		 	return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
 	    }
 	 
-	 //removed as it causes lag!
-	 /*@Override
-	    public void setDead()
-	    {
-	        if (MoCreatures.isServer() && this.health > 0 && ( (this.dimension == MoCreatures.WyvernLairDimensionID && this.posY > 0) || getIsTamed()))
-	        {
-	        	
-	            return;
-	        }
-	        super.setDead();
-	    }*/
-	 
+	
 	 private void openMouth()
 	    {
 		 	if (MoCreatures.isServer())
@@ -913,9 +901,13 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 		 	int i = MathHelper.floor_double(posX);
 			int j = MathHelper.floor_double(boundingBox.minY);
 			int k = MathHelper.floor_double(posZ);
-
+			int l = 10;
+			if (getType() == 5) //mother wyverns drop eggs more frequently
+			{
+				l = 3;
+			}
 			String s = MoCTools.BiomeName(worldObj, i, j, k);
-			if (s.equals("WyvernBiome") && rand.nextInt(10) == 0) 
+			if (s.equals("WyvernBiome") && rand.nextInt(l) == 0) 
 			{
 				//int m = rand.nextInt(2)+1;
                 //for (int l = 0; l < m; l++)

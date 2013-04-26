@@ -50,7 +50,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 		super(world);
 		setTamed(false);
 		setAdult(true);
-		selectType();
+		//selectType();
 
 	}
 
@@ -63,6 +63,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	{
 		setType(1);
 	}
+	
+	@Override
+    public void initCreature()
+    {
+    	selectType();
+    	super.initCreature();
+    }
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable var1)
@@ -250,7 +257,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 		        || (entity instanceof EntityPlayer && this.getIsTamed()) 
 		        || (entity instanceof MoCEntityKittyBed) 
 		        || (entity instanceof MoCEntityLitterBox) 
-		        || (this.getIsTamed() && (entity instanceof MoCEntityAnimal && ((MoCEntityAnimal) entity).getIsTamed())) 
+		        || (this.getIsTamed() && (entity instanceof MoCIMoCreature && ((MoCIMoCreature) entity).getIsTamed())) 
 		        || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
 		        || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
 		        || (entity.width >= this.width || entity.height >= this.height)
@@ -320,7 +327,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	 */
 	public boolean entitiesToInclude(Entity entity)
 	{
-		return ((entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
+		return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
 
 		);
 	}

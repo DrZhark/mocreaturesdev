@@ -39,7 +39,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     {
         super(world);
         setTamed(false);
-        selectType();
+        
     }
 
     /**
@@ -69,6 +69,13 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         selectType();
     }*/
 
+    @Override
+    public void initCreature()
+    {
+    	selectType();
+    	super.initCreature();
+    }
+    
     @Override
     protected void entityInit()
     {

@@ -69,6 +69,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         setChestedHorse(false);
         roper = null;
         this.stepHeight = 1.0F;
+
         if (MoCreatures.isServer())
         {
             // setMaxHealth(20);

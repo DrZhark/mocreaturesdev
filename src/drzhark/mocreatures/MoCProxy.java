@@ -42,6 +42,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -174,7 +175,7 @@ public class MoCProxy implements IGuiHandler {
     public int blockPlanksID;
     public int WyvernDimension;
     public int WyvernBiomeID;
-
+    
     public boolean worldGenCreatureSpawning;
     public int maxMobs;
     public int maxAnimals;

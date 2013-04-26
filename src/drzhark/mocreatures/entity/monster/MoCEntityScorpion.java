@@ -17,6 +17,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityScorpion extends MoCEntityMob {
     private boolean isPoisoning;
@@ -51,6 +52,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
+    	
         if (getType() == 0)
         {
             setType(1);
@@ -528,7 +531,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
 
         if (MoCTools.isNearTorch(this)) { return false; }
-        checkSpawningBiome();
+        
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
     }
 
@@ -550,26 +553,28 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean checkSpawningBiome()
     {
-
-        int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(boundingBox.minY);
-        int k = MathHelper.floor_double(posZ);
-
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
-        {
-            setType(4);
-        }
-        else if (worldObj.provider.isHellWorld)
+    	if (worldObj.provider.isHellWorld)
         {
             setType(3);
             isImmuneToFire = true;
             return true;
         }
+    	
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(boundingBox.minY);
+        int k = MathHelper.floor_double(posZ);
 
-        if (!worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && (posY < 50D))
+        String s = MoCTools.BiomeName(worldObj, i, j, k);
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        
+        //if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        if (currentbiome.temperature <= 0.05F)
         {
-            setType(2);
+            setType(4);
+        }
+        else if (!worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && (posY < 50D))
+        {
+        	setType(2);
             return true;
         }
 
@@ -577,6 +582,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
     }
 
+    
+    
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {

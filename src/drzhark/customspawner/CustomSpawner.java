@@ -46,7 +46,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import drzhark.mocreatures.MoCreatures;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "1.12.3")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "1.12.5")
 public final class CustomSpawner {
     private int maxAnimals = 40;
     private int maxMobs = 60;
@@ -363,36 +363,36 @@ public final class CustomSpawner {
 
                                                             EntityLiving entityliving;
 
-                                                            try
-                                                            {
-                                                                entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
-                                                            }
-                                                            catch (Exception exception)
-                                                            {
-                                                                exception.printStackTrace();
-                                                                return countTotal;
-                                                            }
+                                                                try
+                                                                {
+                                                                    entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+                                                                }
+                                                                catch (Exception exception)
+                                                                {
+                                                                    exception.printStackTrace();
+                                                                    return countTotal;
+                                                                }
 
-                                                            entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+                                                                entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
 
-                                                            if (entityliving.getCanSpawnHere())
-                                                            {
-                                                                ++spawnedMob;
-                                                                worldObj.spawnEntityInWorld(entityliving);
-                                                                creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
+                                                                    if (entityliving.getCanSpawnHere())
+                                                                    {
+                                                                        ++spawnedMob;
+                                                                        worldObj.spawnEntityInWorld(entityliving);
+                                                                        creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
                                                                 // changed check from maxSpawnedInChunk to maxGroupCount.
                                                                 if (MoCreatures.proxy.debugLogging) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
                                                                 if (spawnedMob >= spawnlistentry.maxGroupCount)
-                                                                {
-                                                                    continue label108;
+                                                                        {
+                                                                            continue label108;
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
+                                                                    }
+                                                                    countTotal += spawnedMob;
                                                                 }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
-                                                            }
-                                                            countTotal += spawnedMob;
-                                                        }
                                                     }
                                                 }
 
@@ -907,6 +907,7 @@ public final class CustomSpawner {
         return false;
     }
 
+   
     /**
      * determines if a skeleton spawns on a spider, and if a sheep is a different color
      */

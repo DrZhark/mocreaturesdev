@@ -5,6 +5,7 @@ import java.util.List;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCIMoCreature;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
@@ -25,6 +26,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityBigCat extends MoCEntityAnimal {
     //protected int force;
@@ -65,6 +67,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
         if (getType() == 0)
         {
             /*if (rand.nextInt(4) == 0)
@@ -453,22 +456,32 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public boolean checkSpawningBiome()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-
-        //int l = rand.nextInt(10);
-
-        if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        //String s = MoCTools.BiomeName(worldObj, i, j, k);
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        
+        if (currentbiome.temperature <= 0.05F)
+        {
+            setType(6); //snow leopard
+            return true;
+        }
+        
+        int l = 0;
+        {
+            l = checkNearBigKitties(12D);
+            if (l == 7)
+            {
+                l = 5;
+            }
+        }
+        setType(l);
+       /* if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
         {
             setType(6);// = 6;//snow leopard
             //return true;
-        }
-        //selectType();
+        }*/
         return true;
     }
 
@@ -476,18 +489,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         if (MoCTools.isNearTorch(this)) { return false; }
-
-        int i = 0;
-        {
-            i = checkNearBigKitties(12D);
-            if (i == 7)
-            {
-                i = 5;
-            }
-        }
-        setType(i);
-        checkSpawningBiome();
-
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
@@ -564,7 +565,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
                     ||(!getIsAdult() && ((entity1.width > 0.5D) || (entity1.height > 0.5D))) 
                     || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) 
                     || ((entity1 instanceof EntityMob) && (!getIsTamed() || !getIsAdult())) 
-                    || (getIsTamed() && (entity1 instanceof MoCEntityKitty)) 
+                    || (getIsTamed() && (entity1 instanceof MoCIMoCreature) && ((MoCIMoCreature)entity1).getIsTamed() ) 
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
                     )

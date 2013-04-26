@@ -166,7 +166,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.4")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.5")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -178,7 +178,7 @@ public class MoCreatures {
     public static MoCProxy proxy;
     public static CustomSpawner myCustomSpawner;
     public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
-
+    
     /**
      * ITEMS
      */
@@ -342,6 +342,8 @@ public class MoCreatures {
     public static Item scrollFreedom;
     public static Item scrollOfSale;
     public static Item scrollOfOwner;
+    public static Item crabmeat;
+    public static Item crabmeatcooked;
 
     public static Logger log;
 
@@ -393,8 +395,7 @@ public class MoCreatures {
         proxy.registerRenderInformation();
         TickRegistry.registerTickHandler(new MoCServerTickHandler(), Side.SERVER);
         
-        DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, true);
-        DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
+        DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
     }
 
     private void AddEntities()
@@ -451,7 +452,7 @@ public class MoCreatures {
         //registerEntity(MoCEntityOgre.class, "OgreNew", 16711680, 65407);
         registerEntity(MoCEntityRoach.class, "Roach", 65407, 13749760);
         registerEntity(MoCEntityMaggot.class, "Maggot", 65407, 9141102);
-        registerEntity(MoCEntityCrab.class, "Crab", 65407, 16622);
+        registerEntity(MoCEntityCrab.class, "Crab", 65407, 13749760);
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -469,9 +470,10 @@ public class MoCreatures {
     public void postInit(FMLPostInitializationEvent event)
     {
         proxy.ConfigPostInit(event);
+        DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
     }
 
-    // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
+ // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
     @ServerAboutToStart
     public void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
@@ -491,7 +493,7 @@ public class MoCreatures {
     {
         event.registerServerCommand(new CommandMoCreatures());
     }
-
+    
     /**
      * For Litterbox and kittybeds
      * 
@@ -524,7 +526,7 @@ public class MoCreatures {
     protected void InitItems()
     {
         MoCItemID = proxy.itemID;//8772;//((Integer) mocitemidA.get()).intValue();
-        
+
         WyvernLairDimensionID = proxy.WyvernDimension;//17
         //MoCBlockID = proxy.getBlockID();
         
@@ -606,13 +608,11 @@ public class MoCreatures {
         heartdarkness = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartdarkness");//.setIconIndex(80).setItemName("heartdarkness");
         heartfire = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartfire");//.setIconIndex(82).setItemName("heartfire");
         heartundead = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartundead");//.setIconIndex(81).setItemName("heartundead");
-        ostrichmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setUnlocalizedName("ostrichraw");//.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setIconIndex(83).setItemName("ostrichmeat");
+        ostrichmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ostrichraw");//.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setIconIndex(83).setItemName("ostrichmeat");
         ostrichcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");//.setIconIndex(84).setItemName("ostrichcooked");
         unicorn = (new MoCItem(MoCItemID++)).setUnlocalizedName("unicorn");//.setIconIndex(47).setItemName("unicorn");
         MoCItemID++;
-        //staff            = (new MoCItem(MoCItemID++)).setIconIndex(69).setItemName("staff");
         MoCItemID++;
-        //staffender        = (new MoCItem(MoCItemID++)).setIconIndex(70).setItemName("staffender");
         horsearmorcrystal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorcrystal");//.setIconIndex(76).setItemName("horsearmorcrystal");
 
         MoCItemID++;
@@ -675,6 +675,9 @@ public class MoCreatures {
         garment = (new MoCItem(MoCItemID++)).setUnlocalizedName("garment");//.setIconIndex(133).setItemName("garment");
         howdah = (new MoCItem(MoCItemID++)).setUnlocalizedName("howdah");//.setIconIndex(134).setItemName("howdah");
         platform = (new MoCItem(MoCItemID++)).setUnlocalizedName("platform");//.setIconIndex(135).setItemName("platform");
+        
+        crabmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("crabmeat");//.setIconIndex(77).setItemName("ratRaw");
+        crabmeatcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("crabmeatcooked");//.setIconIndex(78).setItemName("ratCooked");
         
         multiBlockNames.add ("WyvernLair");
         multiBlockNames.add("OgreLair");
@@ -817,6 +820,8 @@ public class MoCreatures {
         LanguageRegistry.addName(heartundead, "Heart of Undead");
         LanguageRegistry.addName(ostrichmeat, "Ostrich meat");
         LanguageRegistry.addName(ostrichcooked, "Ostrich cooked");
+        LanguageRegistry.addName(crabmeat, "Crab meat");
+        LanguageRegistry.addName(crabmeatcooked, "Crab cooked");
         LanguageRegistry.addName(unicorn, "Unicorn Horn");
         //LanguageRegistry.addName(staff, "Empty Staff");
         //LanguageRegistry.addName(staffender, "Ender Staff");
@@ -932,6 +937,8 @@ public class MoCreatures {
 
     private void AddRecipes()
     {
+    	GameRegistry.addSmelting(MoCreatures.crabmeat.itemID, new ItemStack(MoCreatures.crabmeatcooked, 1), 0F);
+    	
         GameRegistry.addSmelting(MoCreatures.ratRaw.itemID, new ItemStack(MoCreatures.ratCooked, 1), 0F);
 
         GameRegistry.addSmelting(MoCreatures.ostrichmeat.itemID, new ItemStack(MoCreatures.ostrichcooked, 1), 0F);
