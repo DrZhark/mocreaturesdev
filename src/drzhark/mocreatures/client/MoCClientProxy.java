@@ -31,6 +31,7 @@ import sharose.mods.guiapi.GuiModScreen;
 import sharose.mods.guiapi.ModAction;
 import sharose.mods.guiapi.ModSettingScreen;
 import sharose.mods.guiapi.SettingList;
+import sharose.mods.guiapi.SettingMulti;
 import sharose.mods.guiapi.WidgetBoolean;
 import sharose.mods.guiapi.WidgetClassicTwocolumn;
 import sharose.mods.guiapi.WidgetFloat;
@@ -524,10 +525,10 @@ public class MoCClientProxy extends MoCProxy {
     public static MoCSettingInt despawnTickRateS;
     public static WidgetInt despawnTickRateW;
     
-    public static MoCSettingInt instaSpawnS;
-    public static WidgetInt instaSpawnW;
-    public static MoCSettingInt instaSpawnN;
-    public static WidgetInt instaSpawnNW;
+    //public static MoCSettingInt instaSpawnS;
+   // public static WidgetInt instaSpawnW;
+    //public static MoCSettingInt instaSpawnN;
+    //public static WidgetInt instaSpawnNW;
 
     public static MoCSettingBoolean spawnPiranhaS;
     public static MoCSettingInt particleFXS;
@@ -581,6 +582,7 @@ public class MoCClientProxy extends MoCProxy {
     public MoCSettingList settingBiomeGroups;
     public MoCSettingList entityBiomeList;
     public MoCSettingList biomesList;
+    public MoCSettingList entityList;
 
     public static MoCSettingBoolean despawnVanillaB;
     public static WidgetBoolean despawnVanillaW;
@@ -637,6 +639,7 @@ public class MoCClientProxy extends MoCProxy {
     public WidgetSimplewindow IDSettingsWindow;
     public WidgetSimplewindow vanillamobwindow;
     public WidgetSimplewindow defaultsWindow;
+    public WidgetSimplewindow instaSpaqwnerWindow;
     private WidgetClassicTwocolumn widgetCreatureSettingsColumns;
     private WidgetClassicTwocolumn widgetCreatureSpawnSettingsColumns;
     private WidgetClassicTwocolumn widgetMobSettingsColumns;
@@ -716,15 +719,15 @@ public class MoCClientProxy extends MoCProxy {
         ModAction initWaterMobWindow = new ModAction(this, "showWaterMobOptions", new Class[0]);
         ModAction initAmbientWindow = new ModAction(this, "showAmbientOptions", new Class[0]);
         ModAction initCustomSpawnerWindow = new ModAction(this, "showCustomSpawnerOptions", new Class[0]);
-        ModAction initInstaSpawnerWindow = new ModAction(this, "showInstaSpawnerOptions", new Class[0]);
         ModAction initGeneralSettingsWindow = new ModAction(this, "showGeneralSettings", new Class[0]);
         ModAction initIDSettingsWindow = new ModAction(this, "showIDSettings", new Class[0]);
         ModAction initBiomeGroupsWindow = new ModAction(this, "showBiomeGroups", new Class[0]);
         ModAction initDefaultsWindow = new ModAction(this, "showDefaults", new Class[0]);
+        ModAction showInstaSpawner = new ModAction(this, "showInstaSpawner", new Class[0]);
         MoCScreen.append(GuiApiHelper.makeButton("General Settings", initGeneralSettingsWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("ID Settings", initIDSettingsWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("CustomSpawner", initCustomSpawnerWindow, true));
-        MoCScreen.append(GuiApiHelper.makeButton("Insta-Spawner", initInstaSpawnerWindow, true));
+        MoCScreen.append(GuiApiHelper.makeButton("Insta-Spawner", showInstaSpawner, true));
         MoCScreen.append(GuiApiHelper.makeButton("Creatures", initCreatureWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Mobs", initMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Water Mobs", initWaterMobWindow, true));
@@ -967,16 +970,6 @@ public class MoCClientProxy extends MoCProxy {
         widgetIDSettingsColumns.add(wyvernDimensionIdW);
         //**********************************************************//
         
-        /*
-        blockDirtID = MoCconfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "DirtBlock", 200, "Basic block for terrain generation").getInt();
-        blockGrassID = MoCconfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "GrassBlock", 201, "Basic block for terrain generation").getInt();
-        blockStoneID = MoCconfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "StoneBlock", 202, "Basic block for terrain generation").getInt();
-        blockLeafID = MoCconfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LeafBlock", 700, "").getInt();
-        blockLogID = MoCconfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LogBlock", 701, "").getInt();
-        blockTallGrassID = MoCconfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "TallGrassBlock", 702, "").getInt();
-        blockPlanksID = MoCconfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "PlanksBlock", 703, "").getInt();
-        WyvernDimension = MoCconfig.get(CATEGORY_MOC_ID_SETTINGS, "WvernLairDimensionID", 17, "").getInt();
-        WyvernBiomeID = MoCconfig.get(CATEGORY_MOC_ID_SETTINGS, "WvernLairBiomeID", 37, "").getInt();*/
         
         //******************** Reset Default Settings ********************//
         defaultChoices = new WidgetClassicTwocolumn(new Widget[0]);
@@ -992,66 +985,12 @@ public class MoCClientProxy extends MoCProxy {
         defaultChoices.add(defaultChoiceButton2);
         //**********************************************************//
 
-        //******************** Insta-Spawner ********************//
-        widgetInstaSpawnerColumn = new WidgetSinglecolumn();
-        settingNumberToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Number to spawn", "spawnN", 3, 1, 10);
-        /**
-         * Spawn list
-         * 
-         * Bee 0 
-         * Bear 1 
-         * BigCat 2 
-         * Bird 3 
-         * Boar 4 
-         * Bunny 5 
-         * Butterfly6 
-         * Cat 7 
-         * Cricket 8 
-         * Croc 9 
-         * Deer 10 
-         * Dolphin 11 
-         * Dragonfly12 
-         * Duck 13 
-         * Elephant 14
-         * Firefly 15 
-         * Fish 16
-         * Fly 17 
-         * Fox 18 
-         * Goat 19 
-         * Golem 20
-         * Horse 21 
-         * HorseMob 22 
-         * JellyFish23 
-         * Komodo24
-         * Mice 25 
-         * Ogre 26 
-         * Ostrich 27 
-         * Rat 28
-         * Ray 29 
-         * Shark 30
-         * Scorpions31 
-         * Snail 32 
-         * Snake 33 
-         * Turkey 34 
-         * Turtle 35 
-         * Werewolf 36 
-         * Wraith 37 
-         * Wraith F 38 
-         * WWolf 39
-         * Wyvern 40
-         */
-
-        settingClassToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature type", "classToSpawn", 0, //moCreatures[]
-                        "Bee", "Bear", "BigCat", "Bird", "Boar", "Bunny", "Butterfly", "Cat", "Cricket", "Crocodile", "Deer", "Dolphin", "Dragonfly", "Duck", "Elephant", 
-                        "Firefly", "Fish", "Fly", "Fox", "Goat", "Golem", "Horse", "HorseMob", "JellyFish", "Komodo Dragon", "Mice", "Ogre", "Ostrich", "Rat", "Ray", 
-                        "Shark", "Scorpion", "Snail", "Snake", "Turkey", "Turtle", "Werewolf", "Wraith", "Flame Wraith", "Wild Wolf", "Wyvern");
-
-        widgetInstaSpawnerColumn.add(GuiApiHelper.makeButton("Spawn!", "instaSpawn", this, true));
-
+        //******************** Reset All ********************//
         SimpleButtonModel simplebuttonmodel8 = new SimpleButtonModel();
         simplebuttonmodel8.addActionCallback(new ModAction(guiapiSettings, "resetAll", new Class[0]));
         Button button8 = new Button(simplebuttonmodel8);
         button8.setText("Reset to defaults");
+        
         //**********************************************************//
 
         guiapiSettings.load();
@@ -1220,31 +1159,9 @@ public class MoCClientProxy extends MoCProxy {
         GuiModScreen.show(defaultsWindow);
     }
 
-    public void showInstaSpawnerOptions()
-    {
-        if (instaSpawnerWindow == null)
-        {
-            instaSpawnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the number and creature to spawn");
-        }
-        GuiModScreen.show(instaSpawnerWindow);
-    }
 
-    public void instaSpawn()
-    {
-        //TODO
-        //only to be used by the client owner of the server or SP
-        int classID = guiapiSettings.getMultiSettingValue("classToSpawn");
-        int number = guiapiSettings.getIntSettingValue("spawnN");
-        try {
-            //MoCTools.spawnNearPlayer(mc.thePlayer, classID, number);//, mc.theWorld);
-            MoCClientPacketHandler.sendInstaSpawnPacket(classID, number);
-            //System.out.println("Mo'Creatures insta-spawned " + number + " creatures");
-        }
-        catch (Exception ex)
-        {
-            //System.out.println("host clients can not insta-spawn creatures");
-        }
-    }
+
+    
 
     public void showBiomeGroups()
     {
@@ -1337,6 +1254,48 @@ public class MoCClientProxy extends MoCProxy {
         }
     }
 
+    public void showInstaSpawner()
+    {
+    	widgetInstaSpawnerColumn = new WidgetSinglecolumn(new Widget[0]);
+    	
+        ArrayList<String> moCreaturesList = new ArrayList<String>();
+        for (Map.Entry<String, MoCEntityData> entityEntry : entityMap.entrySet())
+        {
+        	moCreaturesList.add(entityEntry.getKey()); 
+        }
+        entityList = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature Type:", "SpawnEntityList", moCreaturesList, "");
+        ((WidgetList) entityList.displayWidget).listBox.setTheme("/listbox");
+    	widgetInstaSpawnerColumn.heightOverrideExceptions.put(entityList.displayWidget, 130);
+    	settingNumberToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Number to Spawn", "spawnN", 3, 1, 10);
+        widgetInstaSpawnerColumn.add(GuiApiHelper.makeButton("Perform Spawn", new ModAction(this, "instaSpawn", MoCSettingList.class, ArrayList.class).setDefaultArguments(entityList, moCreaturesList), true));
+    	instaSpaqwnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the Creature to Spawn");
+        GuiModScreen.show(instaSpaqwnerWindow);
+    }
+    
+    
+    @SuppressWarnings("unused")
+    public void instaSpawn(MoCSettingList setting, ArrayList aList)
+    {
+    	ListBox<String> listbox = ((WidgetList) setting.displayWidget).listBox;
+        int classID = listbox.getSelected();
+        int numberToSpawn = settingNumberToSpawn.get();//guiapiSettings.getIntSettingValue("spawnN");
+        String nameOfEntity = (String) aList.get(classID);
+        System.out.println("Sendind command spawn " + numberToSpawn + " entities of type "  + nameOfEntity);
+        try {
+            MoCClientPacketHandler.sendInstaSpawnPacket(nameOfEntity, numberToSpawn);
+            
+        }
+        catch (Exception ex)
+        {
+            
+        }
+    }
+    
+    public void getClassFromEntityMap(int index)
+    {
+    	
+    }
+    
     @SuppressWarnings("unused")
     private static void addGroupListboxOption(MoCSettingList setting, MoCSettingText text) {
         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("addGroupListboxOption setting backendName = " + setting.backendName + ", category = " + setting.category);

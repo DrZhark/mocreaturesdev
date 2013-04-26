@@ -30,7 +30,7 @@ public class MoCEntityOgre extends MoCEntityMob{
         frequencyA = 30;
     }
 
-    /*@Override
+    @Override
     public void selectType()
     {
     	if (worldObj.provider.isHellWorld)
@@ -43,16 +43,15 @@ public class MoCEntityOgre extends MoCEntityMob{
         {
         	if (getType() == 0)
         	{
-        		setType(rand.nextInt(2)+1);
-        		health = getMaxHealth();
+        		//setType(rand.nextInt(2)+1);
+        		//health = getMaxHealth();
         		
-        		int fOgreChance = 50;//MoCreatures.proxy.fireOgreChance;
-                int cOgreChance = 50;//MoCreatures.proxy.caveOgreChance;
+        		int fOgreChance = MoCreatures.proxy.fireOgreChance;
+                int cOgreChance = MoCreatures.proxy.caveOgreChance;
                 int j = rand.nextInt(100);
                 
-                
                 if (canCaveOgreSpawn() && (j >= (100 - cOgreChance)))
-                {	System.out.println("can spawn cave o");
+                {	//System.out.println("can spawn cave o");
                 	setType(rand.nextInt(2)+5);
                 }
                 else if (j >= (100 - fOgreChance))
@@ -68,14 +67,10 @@ public class MoCEntityOgre extends MoCEntityMob{
         		health = getMaxHealth();
         	}
         }
-    }*/
     
-    @Override
-    public void selectType()
-    {
-    	//using initCreature instead
     }
 
+   
     @Override
     public String getTexture()
     {
@@ -100,12 +95,6 @@ public class MoCEntityOgre extends MoCEntityMob{
 
     }
     
-    @Override
-    protected void entityInit()
-    {
-        super.entityInit();
-        //dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // ogreAttack
-    }
 
     @Override
     public int getMaxHealth()
@@ -419,45 +408,5 @@ public class MoCEntityOgre extends MoCEntityMob{
         //setType(rand.nextInt(6)+1);
 		health = getMaxHealth();
         return true;
-    }
-    
-    @Override
-    public void initCreature()
-    {
-    	if (worldObj.provider.isHellWorld)
-        {
-            setType(rand.nextInt(2)+3);
-            health = getMaxHealth();
-            this.isImmuneToFire = true;
-
-        }else
-        {
-        	if (getType() == 0)
-        	{
-        		//setType(rand.nextInt(2)+1);
-        		//health = getMaxHealth();
-        		
-        		int fOgreChance = MoCreatures.proxy.fireOgreChance;
-                int cOgreChance = MoCreatures.proxy.caveOgreChance;
-                int j = rand.nextInt(100);
-                
-                if (canCaveOgreSpawn() && (j >= (100 - cOgreChance)))
-                {	//System.out.println("can spawn cave o");
-                	setType(rand.nextInt(2)+5);
-                }
-                else if (j >= (100 - fOgreChance))
-                {
-                	setType(rand.nextInt(2)+3);
-                    this.isImmuneToFire = true;
-                }
-                else
-                {
-                	setType(rand.nextInt(2)+1);
-                }
-	            //setType(rand.nextInt(6)+1);
-        		health = getMaxHealth();
-        	}
-        }
-    	//System.out.println("init creature, posX = " + posX  + ", pos Y = " + posY);
     }
 }

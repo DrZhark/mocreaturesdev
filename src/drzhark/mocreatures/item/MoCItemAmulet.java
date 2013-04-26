@@ -63,10 +63,11 @@ public class MoCItemAmulet extends MoCItem {
         if (spawnClass == 21 || spawnClass == 0) // horses or old amulets
         {
         	//dirty fix for old amulets
+        	spawnClass = 22;
         	if (spawnClass == 0 || creatureType == 0)
         	{
         		creatureType = i;
-        		spawnClass = 21;
+        		spawnClass = 22;
         		edad = 100;
         		health = 20;
         		armor = 0;

@@ -26,6 +26,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityBigCat extends MoCEntityAnimal {
     //protected int force;
@@ -66,6 +67,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
         if (getType() == 0)
         {
             /*if (rand.nextInt(4) == 0)
@@ -454,22 +456,32 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public boolean checkSpawningBiome()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
+        //String s = MoCTools.BiomeName(worldObj, i, j, k);
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
+        if (currentbiome.temperature <= 0.05F)
+        {
+            setType(6); //snow leopard
+            return true;
+        }
 
-        //int l = rand.nextInt(10);
-
-        if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        int l = 0;
+        {
+            l = checkNearBigKitties(12D);
+            if (l == 7)
+            {
+                l = 5;
+            }
+        }
+        setType(l);
+       /* if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
         {
             setType(6);// = 6;//snow leopard
             //return true;
-        }
-        //selectType();
+        }*/
         return true;
     }
 
@@ -477,18 +489,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         if (MoCTools.isNearTorch(this)) { return false; }
-
-        int i = 0;
-        {
-            i = checkNearBigKitties(12D);
-            if (i == 7)
-            {
-                i = 5;
-            }
-        }
-        setType(i);
-        checkSpawningBiome();
-
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 

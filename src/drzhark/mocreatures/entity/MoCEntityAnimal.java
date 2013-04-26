@@ -50,7 +50,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 		super(world);
 		setTamed(false);
 		setAdult(true);
-		selectType();
+		//selectType();
 
 	}
 
@@ -63,6 +63,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	{
 		setType(1);
 	}
+
+	@Override
+    public void initCreature()
+    {
+    	selectType();
+    	super.initCreature();
+    }
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable var1)

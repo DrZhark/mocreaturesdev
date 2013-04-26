@@ -41,7 +41,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         outOfWater = 0;
         setTamed(false);
         setTemper(50);
-        selectType();
+        //selectType();
     }
 
     /**
@@ -54,6 +54,12 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         setType(1);
     }
 
+    @Override
+    public void initCreature()
+    {
+    	selectType();
+    	super.initCreature();
+    }
     /**
      * Forge methods to send the type int to client from server
      */

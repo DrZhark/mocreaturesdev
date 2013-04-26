@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityFox extends MoCEntityAnimal {
     protected double attackRange;
@@ -45,6 +46,17 @@ public class MoCEntityFox extends MoCEntityAnimal {
         }
     }
 
+    @Override
+    public void selectType()
+    {
+    	checkSpawningBiome();
+    	
+        if (getType() == 0)
+        {
+        	setType(1);
+        }
+    }   
+    
     @Override
     public String getTexture()
     {
@@ -138,7 +150,7 @@ public class MoCEntityFox extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         if (MoCTools.isNearTorch(this)) { return false; }
-        checkSpawningBiome();
+        
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
@@ -148,14 +160,14 @@ public class MoCEntityFox extends MoCEntityAnimal {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
         String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        if (currentbiome.temperature <= 0.05F)
         {
             setType(2);
         }
         return true;
-
     }
 
     public EntityLiving getClosestTarget(Entity entity, double d)
