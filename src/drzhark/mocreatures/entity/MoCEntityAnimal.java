@@ -327,7 +327,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	 */
 	public boolean entitiesToInclude(Entity entity)
 	{
-		return ((entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
+		return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
 
 		);
 	}

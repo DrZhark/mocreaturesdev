@@ -77,26 +77,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
                 setType(2);
             }
         }
-
-        /*if (getType() == 1)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdwhite.png";
-        } else if (getType() == 2)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdblack.png";
-        } else if (getType() == 3)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdgreen.png";
-        } else if (getType() == 4)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdblue.png";
-        } else if (getType() == 5)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdyellow.png";
-        } else if (getType() == 6)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "birdred.png";
-        }*/
     }
 
     @Override
@@ -127,11 +107,21 @@ public class MoCEntityBird extends MoCEntityAnimal {
     protected void entityInit()
     {
         super.entityInit();
-        // dataWatcher.addObject(16, Byte.valueOf((byte) 0));
-        // dataWatcher.addObject(17, Integer.valueOf(0));
-        // dataWatcher.addObject(18, String.valueOf(""));
+        dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // preTamed - 0 false 1 true
     }
 
+    public boolean getPreTamed()
+    {
+    	return (dataWatcher.getWatchableObjectByte(22) == 1);
+    }
+    
+    public void setPreTamed(boolean flag)
+    {
+    	byte input = (byte) (flag ? 1 : 0);
+        dataWatcher.updateObject(22, Byte.valueOf(input));
+    }
+    
+    
     @Override
     protected void fall(float f)
     {
@@ -291,11 +281,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
     protected int getDropItemId()
     {
         return Item.feather.itemID;
-
-        /*
-         * if(rand.nextInt(2) == 0) { return Item.feather.itemID; } else {
-         * return Item.seeds.itemID; }
-         */
     }
 
     @Override
@@ -330,7 +315,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
     public boolean getPicked()
     {
         return isPicked;
-        // return (dataWatcher.getWatchableObjectByte(16) & (1 << 2)) != 0;
     }
 
     @Override
@@ -351,10 +335,25 @@ public class MoCEntityBird extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        if (!getIsTamed()) { return false; }
+        
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
+        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.itemID == Item.seeds.itemID)
+        {
+        	if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+            if (MoCreatures.isServer())
+            {
+                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+            }
+            return true;
+        }
+        
+        if (!getIsTamed()) { return false; }
+        
         rotationYaw = entityplayer.rotationYaw;
         if (this.ridingEntity == null)
         {
@@ -422,12 +421,12 @@ public class MoCEntityBird extends MoCEntityAnimal {
         //check added to avoid duplicating behavior on client / server
         if (MoCreatures.isServer())
         {
-            EntityLiving entityliving = getClosestEntityLiving(this, 5D);
-            if ((entityliving != null) && !getIsTamed() && canEntityBeSeen(entityliving))
+            EntityLiving entityliving = getBoogey(5D);
+            if ((entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
             {
                 fleeing = true;
             }
-            if (rand.nextInt(300) == 0)
+            if (rand.nextInt(200) == 0)
             {
                 fleeing = true;
             }
@@ -462,15 +461,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
                     if ((rand.nextInt(50) == 0) && (entityitem1 != null))
                     {
                         entityitem1.setDead();
-                        if (!getIsTamed())
-                        {
-                            EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
-                            if (entityplayer != null && MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-                            }
-                        }
-                        
+                        setPreTamed(true);                        
                     }
                 }
             }
