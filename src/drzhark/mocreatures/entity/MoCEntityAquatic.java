@@ -1140,7 +1140,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && mountCount == 0)//&& (this.riddenByEntity == null))
+        if (this.riddenByEntity != null)
+            this.riddenByEntity.mountEntity(null);
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
         {
         		return;
         }

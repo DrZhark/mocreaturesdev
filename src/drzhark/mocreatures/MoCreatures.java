@@ -166,7 +166,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.4")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.5")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -1210,11 +1210,8 @@ public class MoCreatures {
         if (proxy.debugLogging) log.info("Populating spawns...");
 
         MoCConfigCategory entities = proxy.MoCconfig.getCategory(proxy.CATEGORY_ENTITY_BIOME_SETTINGS);
-        Map<String, MoCEntityData> entityList = proxy.mocEntityMap; // add mocreatures only
-        if (proxy.modifyVanillaSpawns) // if we are modifying the vanilla spawns then use the complete entity list containing all entities
-        {
-            entityList = proxy.entityMap;
-        }
+        Map<String, MoCEntityData> entityList = proxy.entityMap;
+
         if (proxy.debugLogging) log.info("Scanning MoCProperties.cfg for entities...");
         for (Entry<String, MoCProperty> entityEntry : entities.entrySet())
         {
@@ -1281,6 +1278,28 @@ public class MoCreatures {
                             }
                         }
                         
+                    }
+                }
+                // handle entities with no biome groups
+                MoCEntityData entityData = entityList.get(entityEntry.getKey());
+                if (entityData != null && entityData.frequency == 0)
+                {
+                    // remove from all biomes
+                    BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
+                    List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+                    for (Map.Entry<String, MoCBiomeData> biomeEntry : proxy.biomeMap.entrySet())
+                    {
+                        MoCBiomeData biomeData = biomeEntry.getValue();
+                        if (biomeData != null)
+                        {
+                            biomeList.add(biomeData.getBiome());
+                        }
+                    }
+                    if (biomeList.size() > 0)
+                    {
+                        allBiomes = biomeList.toArray(allBiomes);
+                        myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
+                        EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
                     }
                 }
             }

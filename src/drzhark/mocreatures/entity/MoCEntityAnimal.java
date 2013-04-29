@@ -163,7 +163,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	@Override
 	public void setName(String name)
 	{
-		//if (!MoCreatures.isServer()) return;
 		dataWatcher.updateObject(17, String.valueOf(name));
 	}
 
@@ -1895,7 +1894,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && mountCount == 0)//&& (this.riddenByEntity == null))
+        if (this.riddenByEntity != null)
+            this.riddenByEntity.mountEntity(null);
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
         {
         		return;
         }

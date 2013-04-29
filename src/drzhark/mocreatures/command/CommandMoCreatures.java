@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+
+import drzhark.mocreatures.MoCBiomeData;
 import drzhark.mocreatures.MoCBiomeGroupData;
 import drzhark.mocreatures.MoCConfigCategory;
 import drzhark.mocreatures.MoCConfiguration;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.MoCEntityData;
 import drzhark.mocreatures.MoCProperty;
 import drzhark.mocreatures.MoCProperty.Type;
@@ -19,10 +23,18 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraftforge.common.DimensionManager;
 
 public class CommandMoCreatures extends CommandBase {
 
@@ -68,10 +80,10 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc debuglogging <boolean>");
         commands.add("/moc list biomegroups");
         commands.add("/moc list <entity> biomegroups");
+        commands.add("/moc list tamed <playername>");
+        commands.add("/moc tamedcount <playername>");
+        commands.add("/moc tp <entityid> <playername>");
         aliases.add("moc");
-       // commandsCustomSpawner.add("spawntickrate");
-      //  commandsCustomSpawner.add("despawnvanilla");
-       // commandsCustomSpawner.add(")
     }
 
     public String getCommandName()
@@ -109,6 +121,7 @@ public class CommandMoCreatures extends CommandBase {
         MoCConfiguration config = MoCreatures.proxy.MoCconfig;
 
         boolean saved = false;
+        boolean doNotShowHelp = false;
         if (par2ArrayOfStr.length >= 2)
         {
 
@@ -169,10 +182,187 @@ public class CommandMoCreatures extends CommandBase {
                             {
                                 par1ICommandSender.sendChatToPlayer(biomeGroupEntry.getKey());
                             }
+                            doNotShowHelp = true;
+                            break OUTER;
+                        }
+                        else if (par2.equalsIgnoreCase("tamed") || par2.equalsIgnoreCase("tame"))
+                        {
+                            if (par2ArrayOfStr[2] != null)
+                            {
+                                int entityCount = 0;
+                                String playername = par2ArrayOfStr[2];
+                                List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+                                for (int i = 0; i < players.size(); i++)
+                                {
+                                    EntityPlayerMP player = (EntityPlayerMP) players.get(i);
+                                    if (player.username.equalsIgnoreCase(playername))
+                                    {
+                                        // search for tamed entity
+                                        for (int dimension : DimensionManager.getIDs())
+                                        {
+                                            WorldServer world = DimensionManager.getWorld(dimension);
+                                            for (int j = 0; j < world.loadedEntityList.size(); j++)
+                                            {
+                                                Entity entity = (Entity) world.loadedEntityList.get(j);
+                                                // search for entities that are MoCEntityAnimal's
+                                                if (MoCEntityAnimal.class.isAssignableFrom(entity.getClass()))
+                                                {
+                                                    // grab the entity data
+                                                    NBTTagCompound compound = new NBTTagCompound();
+                                                    entity.writeToNBT(compound);
+                                                    if (compound != null && compound.getString("Owner") != null)
+                                                    {
+                                                        String owner = compound.getString("Owner");
+                                                        String name = compound.getString("Name");
+                                                        if (owner != null && owner.equalsIgnoreCase(playername))
+                                                        {
+                                                            entityCount++;
+                                                            par1ICommandSender.sendChatToPlayer("Found " + entity.getEntityName() + " with name " + name + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        par1ICommandSender.sendChatToPlayer("Listed count : " + entityCount + ", Recorded count : " + player.getEntityData().getInteger("NumberTamed"));
+                                        doNotShowHelp = true;
+                                        break OUTER;
+                                    }
+                                }
+                                par1ICommandSender.sendChatToPlayer("Player " + playername + " does not have any tamed animals.");
+                                doNotShowHelp = true;
+                                break OUTER;
+                            }
+                        }
+                        else
+                        {
+                            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
+                            {
+                                if (entityEntry.getKey().equalsIgnoreCase(par2))
+                                {
+                                    MoCEntityData entityData = entityEntry.getValue();
+                                    for (int i = 0; i < entityData.getBiomeGroups().size(); i++)
+                                    {
+                                        par1ICommandSender.sendChatToPlayer(entityData.getBiomeGroups().get(i));
+                                    }
+                                    doNotShowHelp = true;
+                                    break OUTER;
+                                }
+                            }
+                            par1ICommandSender.sendChatToPlayer("Entity " + par2 + " is invalid. Please enter a valid entity.");
+                            doNotShowHelp = true;
+                            break OUTER;
                         }
                     }
+                    break OUTER;
                 }
                 // END LIST COMMAND
+                else if (par1.equalsIgnoreCase("tp") && par2ArrayOfStr.length == 3)
+                {
+                    if (par2 != null)
+                    {
+                        int entityId = 0;
+                        try 
+                        {
+                            entityId = Integer.parseInt(par2);
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            par1ICommandSender.sendChatToPlayer("INVALID ENTITY ID");
+                            doNotShowHelp = true;
+                            break OUTER;
+                        }
+                        String playername = par2ArrayOfStr[2];
+                        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+                        for (int i = 0; i < players.size(); i++)
+                        {
+                            EntityPlayerMP player = (EntityPlayerMP) players.get(i);
+                            if (player.username.equalsIgnoreCase(playername))
+                            {
+                                // search for tamed entity
+                                for (int dimension : DimensionManager.getIDs())
+                                {
+                                    WorldServer world = DimensionManager.getWorld(dimension);
+                                    for (int j = 0; j < world.loadedEntityList.size(); j++)
+                                    {
+                                        Entity entity = (Entity) world.loadedEntityList.get(j);
+                                        // search for entities that are MoCEntityAnimal's
+                                        if (MoCEntityAnimal.class.isAssignableFrom(entity.getClass()) && entity.entityId == entityId)
+                                        {
+                                            // grab the entity data
+                                            NBTTagCompound compound = new NBTTagCompound();
+                                            entity.writeToNBT(compound);
+                                            if (compound != null && compound.getString("Owner") != null)
+                                            {
+                                                String owner = compound.getString("Owner");
+                                                String name = compound.getString("Name");
+                                                if (owner != null && owner.equalsIgnoreCase(playername))
+                                                {
+                                                    // check if in same dimension
+                                                    if (entity.dimension == player.dimension)
+                                                        entity.setPosition(player.posX, player.posY, player.posZ);
+                                                    else if (!player.worldObj.isRemote)// transfer entity to player dimension
+                                                    {
+                                                        Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
+                                                        if (newEntity != null)
+                                                        {
+                                                            newEntity.copyDataFrom(entity, true); // transfer all existing data to our new entity
+                                                            newEntity.setPosition(player.posX, player.posY, player.posZ);
+                                                            DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
+                                                        }
+                                                        if (entity.riddenByEntity == null)
+                                                        {
+                                                            entity.isDead = true;
+                                                        }
+                                                        else // dismount players
+                                                        {
+                                                            entity.riddenByEntity.mountEntity(null);
+                                                            entity.isDead = true;
+                                                        }
+                                                        world.resetUpdateEntityTick();
+                                                        DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
+                                                    }
+                                                    par1ICommandSender.sendChatToPlayer(name + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension);
+                                                    doNotShowHelp = true;
+                                                    break OUTER;
+                                                }
+                                                par1ICommandSender.sendChatToPlayer("Unable to transfer entity ID " + entityId + ". It may only be transferred to " + owner);
+                                                doNotShowHelp = true;
+                                                break OUTER;
+                                            }
+                                        }
+                                    } // end for
+                                } // end for
+                                doNotShowHelp = true;
+                                par1ICommandSender.sendChatToPlayer("Tamed entity could not be located.");
+                                break OUTER;
+                            } // end if
+                    } // end for
+                    }
+                    break OUTER;
+                }
+                else if (par1.equalsIgnoreCase("tamedcount"))
+                {
+                    String playername = par2;
+                    List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+                    for (int i = 0; i < players.size(); i++)
+                    {
+                        EntityPlayerMP player = (EntityPlayerMP) players.get(i);
+                        if (player.username.equalsIgnoreCase(playername))
+                        {
+                            NBTTagCompound compound = player.getEntityData();
+                            if (compound != null && compound.hasKey("NumberTamed"))
+                            {
+                                int tamedCount = compound.getInteger("NumberTamed");
+                                par1ICommandSender.sendChatToPlayer(playername + "'s recorded tamed count is " + tamedCount);
+                                doNotShowHelp = true;
+                                break OUTER;
+                            }
+                        }
+                    }
+                    par1ICommandSender.sendChatToPlayer("Could not find player " + playername + ". Please verify the player is online and/or name was entered correctly.");
+                    doNotShowHelp = true;
+                    break OUTER;
+                }
                 // START ENTITY FREQUENCY/BIOME SECTION
                 else if (par2.equalsIgnoreCase("frequency") || par2.equalsIgnoreCase("min") || par2.equalsIgnoreCase("max") || par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
                 {
@@ -204,7 +394,6 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                       // System.out.println("Saving frequency " + par3 + " to entity " + entityEntry.getKey());
                                         entityEntry.getValue().frequency = Integer.parseInt(par3);
                                         MoCProperty prop = config.get(category, entityEntry.getKey());
                                         prop.valueList.set(0, par3);
@@ -220,7 +409,6 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                       // System.out.println("Saving min " + par3 + " to entity " + entityEntry.getKey());
                                         entityEntry.getValue().minGroup = Integer.parseInt(par3);
                                         MoCProperty prop = config.get(category, entityEntry.getKey());
                                         prop.valueList.set(1, par3);
@@ -236,7 +424,6 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                       // System.out.println("Saving max " + par3 + " to entity " + entityEntry.getKey());
                                         entityEntry.getValue().maxGroup = Integer.parseInt(par3);
                                         MoCProperty prop = config.get(category, entityEntry.getKey());
                                         prop.valueList.set(2, par3);
@@ -253,7 +440,6 @@ public class CommandMoCreatures extends CommandBase {
                             // handle biome groups
                             else if (par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
                             {
-                                //System.out.println("biomegroup test");
                                 if (par2ArrayOfStr.length != 4)
                                     break OUTER;
                                 String value = par2ArrayOfStr[3].toUpperCase();
@@ -275,9 +461,10 @@ public class CommandMoCreatures extends CommandBase {
                                                 break OUTER;
                                             }
                                             biomeGroups.add(value);
-                                            MoCProperty prop = config.get(category, entityEntry.getKey());
-                                            prop.valueList.add(value);
-                                            Collections.sort(prop.valueList);
+                                            //MoCProperty prop = config.get(category, entityEntry.getKey());
+                                            //prop.valueList.add(value);
+                                            //Collections.sort(prop.valueList);
+                                            Collections.sort(biomeGroups);
                                             saved = true;
                                             par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityEntry.getKey() + ".");
                                             break OUTER;
@@ -298,8 +485,6 @@ public class CommandMoCreatures extends CommandBase {
                                             if (value.equals(biomeGroups.get(i)))
                                             {
                                                 biomeGroups.remove(i);
-                                                MoCProperty prop = config.get(category, entityEntry.getKey());
-                                                prop.valueList.remove(i);
                                                 saved = true;
                                                 par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityEntry.getKey() + ".");
                                                 break OUTER;
@@ -358,9 +543,7 @@ public class CommandMoCreatures extends CommandBase {
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    //System.out.println("Saving int list in category " + catName);
-                                    //property.set(valueList);
-                                    //saved = true;
+                                    par1ICommandSender.sendChatToPlayer("Invalid value entered. Please enter a valid number.");
                                 }
                                 
                             }
@@ -368,16 +551,13 @@ public class CommandMoCreatures extends CommandBase {
                             {
                                 try {
                                     Double.parseDouble(par2);
-                                    //System.out.println("Saving double " + par2 + " in category " + catName);
                                     property.set(par2);
                                     saved = true;
                                     par1ICommandSender.sendChatToPlayer("Set " + propEntry.getKey() + " to " + par2 + ".");
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    //System.out.println("Saving int list in category " + catName);
-                                    //property.set(valueList);
-                                    //saved = true;
+                                    par1ICommandSender.sendChatToPlayer("Invalid value entered. Please enter a valid number.");
                                 }
                             }
                             break OUTER; // exit since we found the property we need to save
@@ -391,11 +571,10 @@ public class CommandMoCreatures extends CommandBase {
         {
             config.save();
             MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
-            //MoCreatures.updateSettings();
             MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);
             MoCreatures.updateSettings();
         }
-        else
+        else if (!doNotShowHelp)
         {
             this.sendCommandHelp(par1ICommandSender);
         }

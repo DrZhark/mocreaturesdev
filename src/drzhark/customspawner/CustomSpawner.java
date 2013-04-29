@@ -532,18 +532,20 @@ public final class CustomSpawner {
             if (fulllist != null)
             {
                 int x = biomeList.indexOf(element.biomeName);
-                for (Iterator iterator = fulllist[x].iterator(); iterator.hasNext();)
+                if (x >= 0) // don't iterate through list if biome wasn't found
                 {
-                    if (iterator != null)
+                    for (Iterator iterator = fulllist[x].iterator(); iterator.hasNext();)
                     {
-                        SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
-                        if (spawnlistentry.entityClass == class1)
+                        if (iterator != null)
                         {
-                            iterator.remove();
+                            SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
+                            if (spawnlistentry.entityClass == class1)
+                            {
+                                iterator.remove();
+                            }
                         }
                     }
                 }
-
             }
 
         }

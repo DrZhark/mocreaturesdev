@@ -263,7 +263,7 @@ public class MoCTools {
     public static void spawnNearPlayerbyName(EntityPlayer player, String eName, int numberToSpawn) 
     {
     	WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
-    	System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
+    	//System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
     	for (int i = 0; i < numberToSpawn; i++)
         {
     		EntityLiving entityToSpawn = null;
@@ -1746,24 +1746,22 @@ public class MoCTools {
                 int count = MoCTools.numberTamedByPlayer(ep);
                 if (isThisPlayerAnOP(ep)) 
                 {
-                	max = MoCreatures.proxy.maxOPTamed;
+                    max = MoCreatures.proxy.maxOPTamed;
                 }
                 if (count >= max) 
                 {
-                	String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
-                	MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
-                	return false;
-                } else 
-                {
-                    if (!entity.getOwnerName().equals(ep.username)) 
-                    {
-                    	NBTTagCompound nbtt = ep.getEntityData();
-                    	nbtt.setInteger("NumberTamed", count + 1);
-                    }
+                    String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
+                    MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
+                    return false;
                 }
-            
-            entity.setOwner(ep.username);
+                if (entity.getOwnerName().equals(ep.username) || entity.getOwnerName().equals("")) 
+                {
+                    entity.setOwner(ep.username);
+                    NBTTagCompound nbtt = ep.getEntityData();
+                    nbtt.setInteger("NumberTamed", count + 1);
+                }
         }
+
         if (MoCreatures.isServer()) 
         {
             MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) entity).entityId);
