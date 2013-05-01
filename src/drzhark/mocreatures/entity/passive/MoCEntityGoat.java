@@ -30,7 +30,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     private int tailcount; // 90 to -45
     private int earcount; // 20 to 40 default = 30
     private int eatcount;
-    public EntityLiving roper;
+    //public EntityLiving roper;
 
     // TODO
     /*
@@ -638,15 +638,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
         if (getIsTamed())
         {
 
-            /*if ((itemstack != null) //&& MoCreatures.isServer()
-                    && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-            {
-                if (!MoCreatures.isServer())
-                {
-                    MoCreatures.proxy.setName(entityplayer, this);
-                }
-                return true;
-            }*/
             if ((itemstack != null) && (isItemEdible(itemstack.getItem())))
             {
                 if (--itemstack.stackSize == 0)
@@ -657,32 +648,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
                 worldObj.playSoundAtEntity(this, "goateating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
 
             }
-
-            /*if (itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.itemID == Item.pickaxeWood.itemID || itemstack.itemID == Item.pickaxeStone.itemID || itemstack.itemID == Item.pickaxeIron.itemID || itemstack.itemID == Item.pickaxeGold.itemID))
-            {
-                //setDisplayName(!getDisplayName());
-                return true;
-            }*/
-
-            /*if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && (itemstack.itemID == MoCreatures.rope.itemID))
-            {
-                if (--itemstack.stackSize == 0)
-                {
-                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-                }
-                worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-                roper = entityplayer;
-                return true;
-            }
-            if ((roper != null))
-            {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.rope));
-                worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-                roper = null;
-                return true;
-            }*/
-
-            // return true;
         }
 
         if (!getIsTamed() && (itemstack != null) && isItemEdible(itemstack.getItem()))
@@ -690,12 +655,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
             if (MoCreatures.isServer())
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-                //TODO NAMER
-                //setTamed(true);
-                //if (!MoCreatures.isServer())
-                //{
-                //    MoCreatures.proxy.setName(entityplayer, this);
-                //}
             }
         }
 

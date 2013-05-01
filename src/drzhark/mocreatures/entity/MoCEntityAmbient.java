@@ -1324,4 +1324,15 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 			l++;
 		} while (true);
 	}
+	
+	@Override
+	public int tiltFrontOffset() {
+		return 0;
+	}
+	
+	@Override
+	public int tiltOffset() 
+	{
+		return 0;
+	}
 }

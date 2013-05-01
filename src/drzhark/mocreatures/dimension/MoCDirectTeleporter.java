@@ -46,7 +46,7 @@ public class MoCDirectTeleporter extends Teleporter
 	//private final Random random;
 	//private final LongHashMap longhashmap = new LongHashMap();
 	//private final List locallist = new ArrayList();
-	
+	private boolean portalDone;
 	
 	public MoCDirectTeleporter(WorldServer par1WorldServer) 
 	{
@@ -64,12 +64,27 @@ public class MoCDirectTeleporter extends Teleporter
 		int var11 = MathHelper.floor_double(par1Entity.posZ);
 		par1Entity.setLocationAndAngles((double) var9, (double) var10, (double) var11, par1Entity.rotationYaw, 0.0F);
 		par1Entity.motionX = par1Entity.motionY = par1Entity.motionZ = 0.0D;
+		//createPortal(par1Entity.worldObj, par1Entity.worldObj.rand);
+		
 	}
 	
+	public void createPortal(World par1World, Random par2Random)//, int par3, int par4)
+    {
+    	MoCWorldGenPortal myPortal = new MoCWorldGenPortal(Block.blockNetherQuartz.blockID, 2, Block.stairsNetherQuartz.blockID, 0, Block.blockNetherQuartz.blockID, 1, Block.blockNetherQuartz.blockID, 0);
+        for (int i = 0; i< 14; i++)
+        {
+        	if (!portalDone)
+        	{
+    		//System.out.println("attemp to create portal " + MoCreatures.isServer());
+    		int randPosY = 58 + i;//par2Random.nextInt(8);
+        	portalDone = myPortal.generate(par1World, par2Random, 0, randPosY, 0);
+    		}
+        }
+    }
 	/**
      * Place an entity in a nearby portal, creating one if necessary.
-     */
-/*    public void placeInPortal2(Entity par1Entity, double par2, double par4, double par6, float par8)
+     *//*
+    public void placeInPortal2(Entity par1Entity, double par2, double par4, double par6, float par8)
     {
         if (this.worldServerInstance.provider.dimensionId != 1)
         {

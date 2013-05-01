@@ -6,24 +6,20 @@ package drzhark.mocreatures.block;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import drzhark.mocreatures.MoCreatures;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 
 
 public class MoCBlockLeaf extends BlockLeavesBase
@@ -32,25 +28,17 @@ public class MoCBlockLeaf extends BlockLeavesBase
 
     @SideOnly(Side.CLIENT)
     private Icon[] icons;
+    //private int graphicSetting;
     
     public MoCBlockLeaf(int i)
     {
         super(i, Material.leaves, true);
+        //super(i);
         setTickRandomly(true);
-        
-        //TODO remove before release
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
     
-    public int getBlockColor()
-    {
-        double d = 0.5D;
-        double d1 = 1.0D;
-        return 0;            
-    }
-
-       
-    public void onBlockRemoval(World world, int i, int j, int k)
+      public void onBlockRemoval(World world, int i, int j, int k)
     {
         int l = 1;
         int i1 = l + 1;
@@ -196,13 +184,41 @@ public class MoCBlockLeaf extends BlockLeavesBase
         }
     }
 
-    
-    private void removeLeaves(World world, int i, int j, int k)
+    /**
+     * ejects contained items into the world, and notifies neighbours of an update, as appropriate
+     */
+    public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
     {
-        dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-        //world.setBlockWithNotify(i, j, k, 0);
-        world.setBlockMetadataWithNotify(i, j, k, 0, 3);
+        byte b0 = 1;
+        int j1 = b0 + 1;
+
+        if (par1World.checkChunksExist(par2 - j1, par3 - j1, par4 - j1, par2 + j1, par3 + j1, par4 + j1))
+        {
+            for (int k1 = -b0; k1 <= b0; ++k1)
+            {
+                for (int l1 = -b0; l1 <= b0; ++l1)
+                {
+                    for (int i2 = -b0; i2 <= b0; ++i2)
+                    {
+                        int j2 = par1World.getBlockId(par2 + k1, par3 + l1, par4 + i2);
+
+                        if (Block.blocksList[j2] != null)
+                        {
+                            Block.blocksList[j2].beginLeavesDecay(par1World, par2 + k1, par3 + l1, par4 + i2);
+                        }
+                    }
+                }
+            }
+        }
     }
+    
+   
+    private void removeLeaves(World par1World, int par2, int par3, int par4)
+    {
+        this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+        par1World.setBlockToAir(par2, par3, par4);
+    }
+    
     
     @Override
     public int quantityDropped(Random random)
@@ -210,13 +226,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
         return random.nextInt(20) != 0 ? 0 : 1;
     }
 
-    @Override
-    public int idDropped(int i, Random random, int j)
-    {
-        return Block.sapling.blockID;
-    }
-
-   
+       
     @Override
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
@@ -238,38 +248,37 @@ public class MoCBlockLeaf extends BlockLeavesBase
     }
 
     
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
 
-    /**
+    *//**
      * Pass true to draw this block using fancy graphics, or false for fast graphics.
-     */
+     *//*
     public void setGraphicsLevel(boolean par1)
     {
+    	System.out.println("setting fancy graphics = " + par1);
         this.graphicsLevel = par1;
-        //this.field_94394_cP = par1 ? 0 : 1;
-    }
+        this.graphicSetting = par1 ? 0 : 1;
+    }*/
 
-    @Override
+    /*@Override
     public void onEntityWalking(World world, int i, int j, int k, Entity entity)
     {
         super.onEntityWalking(world, i, j, k, entity);
     }
+*/
 
-
- 
-  
-  
-    //func_94332_a = registerIcons(IconRegister)
-  //func_94245_a = registerIcon(String)
     @SideOnly(Side.CLIENT)
     @Override
   public void registerIcons(IconRegister par1IconRegister)
   {
+        //icons = new Icon[2][MoCreatures.multiBlockNames.size()];
         icons = new Icon[MoCreatures.multiBlockNames.size()];
       
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
-            icons[x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x));
+            //icons[0][x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x));
+            //icons[1][x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
+            icons[x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
         }
   }
  
@@ -281,6 +290,8 @@ public class MoCBlockLeaf extends BlockLeavesBase
   @Override
   public Icon getIcon(int par1, int par2)
   {
+      if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
+      //return icons[graphicSetting][par2];
       return icons[par2];
   }
   
@@ -293,13 +304,25 @@ public class MoCBlockLeaf extends BlockLeavesBase
             subItems.add(new ItemStack(this, 1, ix));
         }
     }
-
   
-  @SideOnly(Side.CLIENT)
-  public Icon getIconFromDamage(int i)
+  
+  @Override
+  public int idDropped(int par1, Random par2Random, int par3)
   {
-  return icons[i]; 
+	  return 0;
+      //return Block.sapling.blockID;
   }
   
+  @SideOnly(Side.CLIENT)
   
+  public Icon getIconFromDamage(int i)
+  {
+	  //return icons[graphicSetting][i]; 
+	  return icons[i];
+  }
+  
+
+  
+  
+
 }

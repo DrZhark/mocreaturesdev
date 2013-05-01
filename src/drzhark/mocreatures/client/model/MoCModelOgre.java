@@ -691,8 +691,6 @@ public class MoCModelOgre extends ModelBase
         
         float RLegXRotB = RLegXRot;
         float LLegXRotB = LLegXRot;
-        float RLegXRotC = RLegXRot;
-        float LLegXRotC = LLegXRot;
         
         RgtThigh.rotateAngleX =  RLegXRot;
         LftThigh.rotateAngleX =  LLegXRot;

@@ -1158,4 +1158,15 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 			this.riddenByEntity = null;
 		}
 	}
+    
+    @Override
+	public int tiltFrontOffset() {
+		return 0;
+	}
+    
+    @Override
+	public int tiltOffset() 
+	{
+		return 0;
+	}
 }

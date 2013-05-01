@@ -46,7 +46,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import drzhark.mocreatures.MoCreatures;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "1.12.3")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "1.12.5")
 public final class CustomSpawner {
     private int maxAnimals = 40;
     private int maxMobs = 60;
@@ -532,8 +532,6 @@ public final class CustomSpawner {
             if (fulllist != null)
             {
                 int x = biomeList.indexOf(element.biomeName);
-                if (x >= 0) // don't iterate through list if biome wasn't found
-                {
                     for (Iterator iterator = fulllist[x].iterator(); iterator.hasNext();)
                     {
                         if (iterator != null)
@@ -545,7 +543,7 @@ public final class CustomSpawner {
                             }
                         }
                     }
-                }
+
             }
 
         }

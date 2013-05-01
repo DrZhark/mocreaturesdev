@@ -19,6 +19,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityEggInfo;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -103,13 +105,16 @@ import drzhark.mocreatures.entity.monster.MoCEntityFlameWraith;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityHellRat;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
+import drzhark.mocreatures.entity.monster.MoCEntityMiniGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityRat;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
+import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
+import drzhark.mocreatures.entity.passive.MoCEntityAnt;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBee;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
@@ -138,6 +143,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
 import drzhark.mocreatures.entity.passive.MoCEntityRay;
 import drzhark.mocreatures.entity.passive.MoCEntityRoach;
 import drzhark.mocreatures.entity.passive.MoCEntityShark;
@@ -166,7 +172,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.1.5")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -182,7 +188,9 @@ public class MoCreatures {
     /**
      * ITEMS
      */
+    static int MoCEggID;// = 7772;
     static int MoCItemID;// = 8772;
+    static int MoCEntityID = 1; // used internally, does not need to be configured by users
     public static int WyvernLairDimensionID; //17;
     //public static int MoCBlockID;//
     //public static Block wyvernlairportal;
@@ -207,6 +215,8 @@ public class MoCreatures {
     static EnumArmorMaterial scorpfARMOR = EnumHelper.addArmorMaterial("scorpfARMOR", 18, new int[] { 2, 7, 6, 2 }, 12);
     static EnumArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", 20, new int[] { 3, 7, 6, 3 }, 15);
     static EnumArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static EnumArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", 15, new int[] { 2, 6, 5, 2 }, 15);
+    static EnumToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 2, 15);
 
     public static Item horsesaddle;
     public static Item horsearmormetal;
@@ -254,6 +264,7 @@ public class MoCreatures {
     public static Item bo;
     public static Item katana;
     public static Item sharksword;
+    public static Item swordsilver;
 
     public static Item key;
     public static Item vialdarkness;
@@ -400,59 +411,62 @@ public class MoCreatures {
 
     private void AddEntities()
     {
-        registerEntity(MoCEntityBunny.class, "Bunny", 12623485, 9141102);//, 0x05600, 0x006500);
-        registerEntity(MoCEntitySnake.class, "Snake", 14020607, 13749760);//, 0x05800, 0x006800);
-        registerEntity(MoCEntityTurtle.class, "Turtle", 14772545, 9320590);//, 0x04800, 0x004500);
-        registerEntity(MoCEntityBird.class, "Bird", 14020607, 14020607);// 0x03600, 0x003500);
-        registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0);//, 0x02600, 0x002500);
-        registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBear.class, "Bear", 14772545, 1);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBigCat.class, "BigCat", 12623485, 16622);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWWolf.class, "WWolf", 16711680, 13749760);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWraith.class, "Wraith", 16711680, 0);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFlameWraith.class, "FlameWraith", 16711680, 12623485);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFox.class, "Fox", 14772545, 5253242);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWerewolf.class, "Werewolf", 16711680, 7434694);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityShark.class, "Shark", 33023, 9013643);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDolphin.class, "Dolphin", 33023, 15631086);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFishy.class, "Fishy", 33023, 65407);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityKitty.class, "Kitty", 12623485, 5253242);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityKittyBed.class, "KittyBed");
-        registerEntity(MoCEntityLitterBox.class, "LitterBox");
-        registerEntity(MoCEntityRat.class, "Rat", 12623485, 9141102);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102);//14772545, 9141102);
-        registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityEgg.class, "Egg");//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFishBowl.class, "FishBowl");//, 0x2600, 0x052500);
-        registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFly.class, "Fly", 65407, 1);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDragonfly.class, "DragonFly", 65407, 14020607);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFirefly.class, "Firefly", 65407, 9320590);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityCricket.class, "Cricket", 65407, 16622);//, 0x2600, 0x052500);
-        registerEntity(MoCEntitySnail.class, "Snail", 65407, 14772545);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityButterfly.class, "ButterFly", 65407, 7434694);//, 0x22600, 0x012500);
-        registerEntity(MoCEntityThrowableRock.class, "TRock");
-        registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622);
-        registerEntity(MoCEntityPetScorpion.class, "PetScorpion");
-        registerEntity(MoCEntityPlatform.class, "MoCPlatform");
-        registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423);
-        registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423);
-        registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407);
-        //registerEntity(MoCEntityOgre.class, "OgreNew", 16711680, 65407);
-        registerEntity(MoCEntityRoach.class, "Roach", 65407, 13749760);
-        registerEntity(MoCEntityMaggot.class, "Maggot", 65407, 9141102);
-        registerEntity(MoCEntityCrab.class, "Crab", 65407, 13749760);
+        registerEntity(MoCEntityBunny.class, "Bunny", 12623485, 9141102, true);//, 0x05600, 0x006500);
+        registerEntity(MoCEntitySnake.class, "Snake", 14020607, 13749760, true);//, 0x05800, 0x006800);
+        registerEntity(MoCEntityTurtle.class, "Turtle", 14772545, 9320590, true);//, 0x04800, 0x004500);
+        registerEntity(MoCEntityBird.class, "Bird", 14020607, 14020607, true);// 0x03600, 0x003500);
+        registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0, true);//, 0x02600, 0x002500);
+        registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBear.class, "Bear", 14772545, 1, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBigCat.class, "BigCat", 12623485, 16622, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWWolf.class, "WWolf", 16711680, 13749760, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWraith.class, "Wraith", 16711680, 0, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFlameWraith.class, "FlameWraith", 16711680, 12623485, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFox.class, "Fox", 14772545, 5253242, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWerewolf.class, "Werewolf", 16711680, 7434694, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityShark.class, "Shark", 33023, 9013643, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDolphin.class, "Dolphin", 33023, 15631086, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFishy.class, "Fishy", 33023, 65407, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityKitty.class, "Kitty", 12623485, 5253242, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityKittyBed.class, "KittyBed", true);
+        registerEntity(MoCEntityLitterBox.class, "LitterBox", true);
+        registerEntity(MoCEntityRat.class, "Rat", 12623485, 9141102, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102, true);//14772545, 9141102);
+        registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityEgg.class, "Egg", true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFishBowl.class, "FishBowl", true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFly.class, "Fly", 65407, 1, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDragonfly.class, "DragonFly", 65407, 14020607, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFirefly.class, "Firefly", 65407, 9320590, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityCricket.class, "Cricket", 65407, 16622, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntitySnail.class, "Snail", 65407, 14772545, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityButterfly.class, "ButterFly", 65407, 7434694, true);//, 0x22600, 0x012500);
+        registerEntity(MoCEntityThrowableRock.class, "TRock", true);
+        registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622, true);
+        registerEntity(MoCEntityPetScorpion.class, "PetScorpion", true);
+        registerEntity(MoCEntityPlatform.class, "MoCPlatform", true);
+        registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423, true);
+        registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423, true);
+        registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407, true);
+        registerEntity(MoCEntityRoach.class, "Roach", 65407, 13749760, false);
+        registerEntity(MoCEntityMaggot.class, "Maggot", 65407, 9141102, false);
+        registerEntity(MoCEntityCrab.class, "Crab", 65407, 13749760, false);
+        registerEntity(MoCEntityRaccoon.class, "Raccoon", 14772545, 13749760, false);
+        registerEntity(MoCEntityMiniGolem.class, "MiniGolem", 16711680, 13749760, false);
+        registerEntity(MoCEntitySilverSkeleton.class, "SilverSkeleton", 16711680, 33023, false);
+        registerEntity(MoCEntityAnt.class, "Ant", 65407, 12623485, false);
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -500,33 +514,55 @@ public class MoCreatures {
      * @param entityClass
      * @param entityName
      */
-    protected void registerEntity(Class<? extends Entity> entityClass, String entityName)
+    protected void registerEntity(Class<? extends Entity> entityClass, String entityName, boolean useGlobalID)
     {
-        int entityID = EntityRegistry.findGlobalUniqueEntityId();
+    	if (useGlobalID)
+    {
         LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", entityName);
-        //private static EntityEggInfo searchEggColor(Class entityClass , int entityId)
-        //EntityEggInfo eggColors = MoCEggColour.searchEggColor(entityClass, entityID);
+    		int entityID = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID);
         EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
+            
+    	}
+    	else
+    	{
+    		
+    		
+    		LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", "en_US", entityName);
+    		EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
+    		MoCEntityID++;
+    	}        
     }
 
-    private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, String visibleName)
+    private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, String visibleName, boolean useGlobalID)
+    {
+    	if (useGlobalID)
     {
         int entityID = EntityRegistry.findGlobalUniqueEntityId();
-        LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
         EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID, eggColor, eggDotsColor);
+    		LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
         EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
+    	}else
+    	{
+    		LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", "en_US", visibleName);
+    		EntityList.IDtoClassMapping.put(MoCEggID, entityClass);
+    		EntityList.entityEggs.put(MoCEggID, new EntityEggInfo(MoCEggID, eggColor, eggDotsColor));
+    		EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
+    		MoCEntityID++;
+    		MoCEggID++;
     }
 
-    private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor)
+    }
+
+    private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor, boolean useGlobalID)
     {
-        registerEntity(entityClass, entityName, eggColor, eggDotsColor, entityName);
+        registerEntity(entityClass, entityName, eggColor, eggDotsColor, entityName, useGlobalID);
     }
 
     protected void InitItems()
     {
         MoCItemID = proxy.itemID;//8772;//((Integer) mocitemidA.get()).intValue();
-
+        MoCEggID = proxy.eggID;
         WyvernLairDimensionID = proxy.WyvernDimension;//17
         //MoCBlockID = proxy.getBlockID();
 
@@ -678,6 +714,7 @@ public class MoCreatures {
         
         crabmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("crabmeat");//.setIconIndex(77).setItemName("ratRaw");
         crabmeatcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("crabmeatcooked");//.setIconIndex(78).setItemName("ratCooked");
+        swordsilver = (new MoCItemWeapon(MoCItemID++, this.SILVER)).setUnlocalizedName("swordsilver");//.setIconIndex(68).setItemName("sharksword");
         
         multiBlockNames.add ("WyvernLair");
         multiBlockNames.add("OgreLair");
@@ -854,6 +891,7 @@ public class MoCreatures {
         LanguageRegistry.addName(swordFrost, "Frost Scorpion Sword");
         LanguageRegistry.addName(swordCave, "Cave Scorpion Sword");
         LanguageRegistry.addName(swordNether, "Nether Scorpion Sword");
+        LanguageRegistry.addName(swordsilver, "Silver Skeleton Sword");
 
         LanguageRegistry.addName(plateScorpDirt, "Scorpion Plate");
         LanguageRegistry.addName(helmetScorpDirt, "Scorpion Helmet");

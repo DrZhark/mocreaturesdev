@@ -1926,5 +1926,16 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	 */
 	public void dropArmor() {}
 	
+	@Override
+	public int tiltFrontOffset() 
+	{
+		return 0;
+	}
+	
+	@Override
+	public int tiltOffset() 
+	{
+		return 0;
+	}
 }
 

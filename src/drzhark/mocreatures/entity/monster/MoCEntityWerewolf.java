@@ -209,6 +209,10 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 {
                     i = 10;
                 }
+                if (itemstack.itemID == MoCreatures.swordsilver.itemID)
+                {
+                	i = 10;
+                }
             }
         }
         return super.attackEntityFrom(damagesource, i);

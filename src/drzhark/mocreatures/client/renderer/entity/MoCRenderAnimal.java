@@ -171,6 +171,8 @@ public class MoCRenderAnimal extends RenderLiving {
         }*/
         stretch(mocreature);
         adjustYOffset(mocreature);
+        adjustTiltFront(mocreature);
+        adjustTilt(mocreature);
         super.preRenderCallback(entityliving, f);
 
     }
@@ -187,5 +189,36 @@ public class MoCRenderAnimal extends RenderLiving {
             GL11.glTranslatef(0.0F, f, 0.0F);
         }
     }
+
+   
+    /**
+     * Tilts the creature to the front / back
+     * @param mocreature
+     */
+    protected void adjustTiltFront(MoCIMoCreature mocreature)
+    {
+        int i = mocreature.tiltFrontOffset();
+
+        if (i != 0)
+        {
+            GL11.glRotatef((float) (i * 70D), -1F, 0.0F, 0.0F);
+        }
+    }
+    
+    /**
+     * Tilts the creature to left /right
+     * @param mocreature
+     */
+    protected void adjustTilt(MoCIMoCreature mocreature)
+    {
+        int i = mocreature.tiltOffset();
+
+        if (i != 0)
+        {
+            GL11.glRotatef((float) i * 10F, 0F, 0F, -1F);
+        }
+    }
+    
+    
 
 }

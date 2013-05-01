@@ -223,10 +223,12 @@ public class MoCBlockLog extends MoCBlock
 	@Override
     public Icon getIcon(int par1Side, int Metadata)
     {
+		if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;
 		if (par1Side < 2)
 		{
 			return icons[Metadata][0];
 		}
+		
 		return icons[Metadata][1];
 		
     }

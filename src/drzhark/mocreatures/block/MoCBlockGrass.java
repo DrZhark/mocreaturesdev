@@ -94,7 +94,7 @@ public class MoCBlockGrass extends MoCBlock
     
     
    
-    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    /*public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         super.randomDisplayTick(par1World, par2, par3, par4, par5Random);
 
@@ -102,7 +102,7 @@ public class MoCBlockGrass extends MoCBlock
         {
             par1World.spawnParticle("depthsuspend", (float)par2 + par5Random.nextFloat(), (float)par3 + 1.1F, (float)par4 + par5Random.nextFloat(), 20.0D, 20.0D, 20.0D);
         }
-    }
+    }*/
 
 
     
@@ -146,7 +146,8 @@ public class MoCBlockGrass extends MoCBlock
 	@Override
     public Icon getIcon(int par1Side, int Metadata)
     {
-		if (par1Side > 2) par1Side = 2;
+		if (par1Side < 0 || par1Side > 2) par1Side = 2;
+		if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;
         return icons[Metadata][par1Side];
     }
     

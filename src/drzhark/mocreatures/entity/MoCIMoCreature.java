@@ -76,4 +76,8 @@ public interface MoCIMoCreature {
     public int getType();
 
 	public void dismountEntity();
+
+	public int tiltOffset();
+
+	public int tiltFrontOffset();
 }

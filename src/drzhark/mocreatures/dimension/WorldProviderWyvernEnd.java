@@ -24,11 +24,6 @@ public class WorldProviderWyvernEnd extends WorldProvider
     {
         this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
         this.dimensionId = MoCreatures.WyvernLairDimensionID;
-        //MoCSkyRenderer mySkyRenderer = new MoCSkyRenderer();
-        //setSkyRenderer(mySkyRenderer);
-        //@SideOnly(Side.CLIENT)
-        //setSkyRenderer(new MoCSkyRenderer());
-        //this.hasNoSky = true;
         setCustomSky();
     }
 
@@ -107,13 +102,13 @@ public class WorldProviderWyvernEnd extends WorldProvider
 //        float var6 = (float)(var3 >> 8 & 255) / 255.0F;
 //        float var7 = (float)(var3 & 255) / 255.0F;
         
-        float var5 = (float)(var3 >> 174 & 255) / 255.0F;
-        float var6 = (float)(var3 >> 117 & 255) / 255.0F;
-        float var7 = (float)(var3 >> 255 & 255) / 255.0F;
+        //float var5 = (float)(var3 >> 174 & 255) / 255.0F;
+        //float var6 = (float)(var3 >> 117 & 255) / 255.0F;
+        //float var7 = (float)(var3 >> 255 & 255) / 255.0F;
         
-        var5 = 0/255.0F;
-        var6 = 98/255.0F;
-        var7 = 73/255.0F;
+        float var5 = 0/255.0F;
+        float var6 = 98/255.0F;
+        float var7 = 73/255.0F;
         
         var5 *= var4 * 0.0F + 0.15F;
         var6 *= var4 * 0.0F + 0.15F;

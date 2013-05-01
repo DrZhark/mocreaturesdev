@@ -23,24 +23,6 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-// TODO
-// trail fx on moving blocks (no!)
-// portal like particle on chest (done)
-// power texture mask(s) (done) pending to select them / healing? /acquiring? /
-// angry? (done)
-// yOffset changes depending on leg length (done)
-// arms extending when attacking entity from away, it will shoot rocks (done)
-// shooting arm cubes (done)
-// sound acquiring rocks (done)
-// crumbling sound when losing rocks (done)
-// drop all stones when dying (including valuable #4) (done)
-// sync isAngry server- client (Done)
-// cube exploding death (done)
-// cubes damaging entities in path (done)
-// cubes life shortened, switch to entity block on dead (done)
-// avoid moving water, chests, ? blocks (done)
-// entityTrock life shortened (done)
-// homing Trocks (no!)
 
 public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpawnData {
 

@@ -81,16 +81,16 @@ public class MoCRenderGolem extends MoCRenderAnimal {
         return this.renderGPassModel((MoCEntityGolem) par1EntityLiving, par2, par3);
     }
 
-    @Override
+   /* @Override
     protected void preRenderCallback(EntityLiving entityliving, float f)
     {
         MoCEntityGolem mocreature = (MoCEntityGolem) entityliving;
-        adjustTilt(mocreature);
+        //adjustTilt(mocreature);
         super.preRenderCallback(entityliving, f);
 
-    }
+    }*/
 
-    protected void adjustTilt(MoCEntityGolem mocreature)
+    /*protected void adjustTilt(MoCEntityGolem mocreature)
     {
         int i = mocreature.tiltOffset();
 
@@ -98,6 +98,6 @@ public class MoCRenderGolem extends MoCRenderAnimal {
         {
             GL11.glRotatef((float) i * 10F, 0F, 0F, -1F);
         }
-    }
+    }*/
 
 }

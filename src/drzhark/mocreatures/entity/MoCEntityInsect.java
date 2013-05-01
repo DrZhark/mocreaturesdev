@@ -155,15 +155,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     @Override
     public boolean getCanSpawnHere()
     {
-        checkSpawningBiome();
-        return true;
-    }
-
-    @Override
-    public boolean checkSpawningBiome()
-    {
-        selectType();
-        return true;
+        return super.getCanSpawnHereAnimal()  && super.getCanSpawnHereCreature();
     }
 
     @Override
@@ -230,4 +222,12 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     {
     	return 20;
     }
+
+	@Override
+	public int tiltOffset() 
+	{
+		return 0;
+	}
+
+	
 }

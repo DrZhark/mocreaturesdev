@@ -60,6 +60,7 @@ public class MoCBlockPlanks extends MoCBlock
     @Override
     public Icon getIcon(int par1, int par2)
     {
+		if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
     }
     

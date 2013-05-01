@@ -1172,8 +1172,8 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         // unicorn plus white pegasus (they will both vanish!)
         if (typeA == 36 && typeB == 39 || typeB == 36 && typeA == 39)
         {
-            entityhorse.vanishHorse();
-            entityhorse1.vanishHorse();
+            //entityhorse.vanishHorse();
+            //entityhorse1.vanishHorse();
             return 50; // white fairy
         }
 
@@ -2397,7 +2397,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 entityhorse.gestationtime = 0;
                 int l = HorseGenetics(this, entityhorse);
 
-                if (l == 51) // fairy horse!
+                if (l == 50) // fairy horse!
                 {
                     // TODO TEST IF THIS SOUNDS IN CLIENT!
                     MoCTools.playCustomSound(this, "appearmagic", worldObj);

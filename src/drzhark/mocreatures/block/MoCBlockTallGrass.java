@@ -129,11 +129,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     @Override
     public Icon getIcon(int par1, int par2)
     {
-    	//fixes? game crashing bug
-    	if (par2 > icons.length)
-    	{
-    		par2 = icons.length;
-    	}
+    	if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
     }
     

@@ -1654,6 +1654,35 @@ public class MoCTools {
         return 0;
     }
 
+    public static int[] destroyRandomBlockWithMetadata(Entity entity, double distance)
+    {
+    	//int d = (int)distance;
+        int l = (int) (distance * distance * distance);
+        int metaD = 0;
+        for (int i = 0; i < l; i++)
+        {
+            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int k = entity.worldObj.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(y + 1.1D), MathHelper.floor_double(z));
+            int j = entity.worldObj.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
+
+            if (j != 0 && k == 0)
+            {
+            	metaD = entity.worldObj.getBlockMetadata(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
+            	if (mobGriefing(entity.worldObj))
+            	{
+            		entity.worldObj.setBlock(x, y, z, 0, 0, 3);
+            	}
+                return (new int[] { j, metaD });
+
+            }
+
+        }
+
+        return (new int[] { -1, metaD });
+    }
+
     /**
      * Finds a random block around the entity and returns the coordinates the
      * block will be the top one of that layer, without any other block around
@@ -1753,15 +1782,17 @@ public class MoCTools {
                     String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
                     MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
                     return false;
-                }
-                if (entity.getOwnerName().equals(ep.username) || entity.getOwnerName().equals("")) 
+                } else 
                 {
-                    entity.setOwner(ep.username);
+                    if (!entity.getOwnerName().equals(ep.username)) 
+                {
                     NBTTagCompound nbtt = ep.getEntityData();
                     nbtt.setInteger("NumberTamed", count + 1);
                 }
         }
 
+            entity.setOwner(ep.username);
+        }
         if (MoCreatures.isServer()) 
         {
             MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) entity).entityId);

@@ -169,9 +169,8 @@ public class MoCEntityOgre extends MoCEntityMob{
     @Override
     public boolean getCanSpawnHere()
     {
-    	checkSpawningBiome();
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0)
-        && super.getCanSpawnHere();
+    	//checkSpawningBiome();
+        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
     @Override
@@ -305,11 +304,6 @@ public class MoCEntityOgre extends MoCEntityMob{
         	attackCounterRight = 0;
         }
         
-        /*if (attackCounterRight > 0 && ++attackCounterRight > 30)
-        {
-        	//System.out.println("attack right = " + attackCounterRight);
-        	if (++attackCounterRight > 30) attackCounterRight = 0;
-        }*/
         super.onLivingUpdate();
     }
 
@@ -381,32 +375,8 @@ public class MoCEntityOgre extends MoCEntityMob{
     
     private boolean canCaveOgreSpawn()
     {
-    	//System.out.println("posY = " + posY);
     	return (!worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) && (posY < 50D);
     }
     
-    @Override
-    public boolean checkSpawningBiome()
-    {
 
-    	int fOgreChance = 50;//MoCreatures.proxy.fireOgreChance;
-        int cOgreChance = 50;//MoCreatures.proxy.caveOgreChance;
-        int j = rand.nextInt(100);
-        if (canCaveOgreSpawn() && (j >= (100 - cOgreChance)))
-        {
-            setType(rand.nextInt(2)+5);
-        }
-        else if (j >= (100 - fOgreChance))
-        {
-        	setType(rand.nextInt(2)+3);
-            this.isImmuneToFire = true;
-        }
-        else
-        {
-        	setType(rand.nextInt(2)+1);
-        }
-        //setType(rand.nextInt(6)+1);
-		health = getMaxHealth();
-        return true;
-    }
 }
