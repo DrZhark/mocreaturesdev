@@ -190,7 +190,7 @@ public class MoCreatures {
      */
     static int MoCEggID;// = 7772;
     static int MoCItemID;// = 8772;
-    static int MoCEntityID = 1; // used internally, does not need to be configured by users
+    static int MoCEntityID = 7256; // used internally, does not need to be configured by users
     public static int WyvernLairDimensionID; //17;
     //public static int MoCBlockID;//
     //public static Block wyvernlairportal;
@@ -418,45 +418,45 @@ public class MoCreatures {
         registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0, true);//, 0x02600, 0x002500);
         registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680, true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBear.class, "Bear", 14772545, 1, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBigCat.class, "BigCat", 12623485, 16622, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWWolf.class, "WWolf", 16711680, 13749760, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWraith.class, "Wraith", 16711680, 0, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFlameWraith.class, "FlameWraith", 16711680, 12623485, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWWolf.class, "WWolf", 16711680, 13749760, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWraith.class, "Wraith", 16711680, 0, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFlameWraith.class, "FlameWraith", 16711680, 12623485, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFox.class, "Fox", 14772545, 5253242, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityWerewolf.class, "Werewolf", 16711680, 7434694, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityWerewolf.class, "Werewolf", 16711680, 7434694, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityShark.class, "Shark", 33023, 9013643, true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityDolphin.class, "Dolphin", 33023, 15631086, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFishy.class, "Fishy", 33023, 65407, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFishy.class, "Fishy", 33023, 65407, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityKitty.class, "Kitty", 12623485, 5253242, true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityKittyBed.class, "KittyBed", true);
         registerEntity(MoCEntityLitterBox.class, "LitterBox", true);
-        registerEntity(MoCEntityRat.class, "Rat", 12623485, 9141102, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102, true);//14772545, 9141102);
-        registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityRat.class, "Rat", 12623485, 9141102, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102, false);//14772545, 9141102);
+        registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069, true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityEgg.class, "Egg", true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFishBowl.class, "FishBowl", true);//, 0x2600, 0x052500);
         registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFly.class, "Fly", 65407, 1, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDragonfly.class, "DragonFly", 65407, 14020607, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFirefly.class, "Firefly", 65407, 9320590, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityCricket.class, "Cricket", 65407, 16622, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntitySnail.class, "Snail", 65407, 14772545, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityButterfly.class, "ButterFly", 65407, 7434694, true);//, 0x22600, 0x012500);
-        registerEntity(MoCEntityThrowableRock.class, "TRock", true);
-        registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622, true);
+        registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFly.class, "Fly", 65407, 1, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDragonfly.class, "DragonFly", 65407, 14020607, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFirefly.class, "Firefly", 65407, 9320590, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityCricket.class, "Cricket", 65407, 16622, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntitySnail.class, "Snail", 65407, 14772545, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityButterfly.class, "ButterFly", 65407, 7434694, false);//, 0x22600, 0x012500);
+        registerEntity(MoCEntityThrowableRock.class, "TRock", false);
+        registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622, false);
         registerEntity(MoCEntityPetScorpion.class, "PetScorpion", true);
-        registerEntity(MoCEntityPlatform.class, "MoCPlatform", true);
+        registerEntity(MoCEntityPlatform.class, "MoCPlatform", false);
         registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423, true);
         registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423, true);
         registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407, true);
@@ -545,11 +545,11 @@ public class MoCreatures {
     	}else
     	{
     		LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", "en_US", visibleName);
-    		EntityList.IDtoClassMapping.put(MoCEggID, entityClass);
-    		EntityList.entityEggs.put(MoCEggID, new EntityEggInfo(MoCEggID, eggColor, eggDotsColor));
     		EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
+    		EntityList.IDtoClassMapping.put(MoCEntityID, entityClass);
+    		EntityList.entityEggs.put(Integer.valueOf(MoCEntityID), new EntityEggInfo(MoCEntityID, eggColor, eggDotsColor));
     		MoCEntityID++;
-    		MoCEggID++;
+    		//MoCEggID++;
     }
 
     }
@@ -562,7 +562,7 @@ public class MoCreatures {
     protected void InitItems()
     {
         MoCItemID = proxy.itemID;//8772;//((Integer) mocitemidA.get()).intValue();
-        MoCEggID = proxy.eggID;
+        //MoCEggID = proxy.eggID;
         WyvernLairDimensionID = proxy.WyvernDimension;//17
         //MoCBlockID = proxy.getBlockID();
 

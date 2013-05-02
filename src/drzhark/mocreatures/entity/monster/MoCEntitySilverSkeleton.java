@@ -65,7 +65,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
 	@Override
 	protected int getDropItemId()
 	{
-		if (rand.nextInt(5) == 0)
+		if (rand.nextInt(10) == 0)
 		{
 			return MoCreatures.swordsilver.itemID;
 		}
