@@ -140,6 +140,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
 import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
+import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -467,6 +468,7 @@ public class MoCreatures {
         registerEntity(MoCEntityMiniGolem.class, "MiniGolem", 16711680, 13749760, false);
         registerEntity(MoCEntitySilverSkeleton.class, "SilverSkeleton", 16711680, 33023, false);
         registerEntity(MoCEntityAnt.class, "Ant", 65407, 12623485, false);
+        registerEntity(MoCEntityMediumFish.class, "MediumFish", 33023, 9320590, false);
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -778,7 +780,7 @@ public class MoCreatures {
         MinecraftForge.setBlockHarvestLevel(mocGrass, 0, "shovel", 0); 
         MinecraftForge.setBlockHarvestLevel(mocStone, 0, "pickaxe", 1); 
         
-        WyvernLairBiome = (new BiomeGenWyvernLair(proxy.WyvernBiomeID)); 
+        //WyvernLairBiome = (new BiomeGenWyvernLair(proxy.WyvernBiomeID)); 
         
         LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
         

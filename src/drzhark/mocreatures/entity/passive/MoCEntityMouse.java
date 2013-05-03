@@ -1,6 +1,7 @@
 
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.Block;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 
 public class MoCEntityMouse extends MoCEntityAnimal
@@ -27,6 +29,8 @@ public class MoCEntityMouse extends MoCEntityAnimal
     
     public void selectType()
     {
+    	checkSpawningBiome();
+    	
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
@@ -62,6 +66,22 @@ public class MoCEntityMouse extends MoCEntityAnimal
             default:
                 return MoCreatures.proxy.MODEL_TEXTURE + "miceg.png";
         }
+    }
+    
+    @Override
+    public boolean checkSpawningBiome()
+    {
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(boundingBox.minY);
+        int k = MathHelper.floor_double(posZ);
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        
+        String s = MoCTools.BiomeName(worldObj, i, j, k);
+        if (currentbiome.temperature <= 0.05F)
+        {
+            setType(3); //white mice!
+        }
+        return true;
     }
     
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityBear extends MoCEntityAnimal {
 
@@ -71,6 +72,8 @@ public class MoCEntityBear extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
+    	
         if (getType() == 0)
         {
 
@@ -365,7 +368,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         if (MoCTools.isNearTorch(this)) { return false; }
-        checkSpawningBiome();
+        //checkSpawningBiome();
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
@@ -444,16 +447,19 @@ public class MoCEntityBear extends MoCEntityAnimal {
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
 
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-        //System.out.println("biome = " + s);
-        int l = rand.nextInt(10);
-
-        if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        String biomename = MoCTools.BiomeName(worldObj, i, j, k);
+        if (currentbiome.temperature <= 0.05F)
         {
-            setType(4);//polar bear
-            //System.out.println("Setting type 4");
+            setType(4);
+            return true;
         }
-        //selectType();
+        //original.toLowerCase().contains(tobeChecked.toLowerCase()) 
+        if (biomename.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
+        {
+        	setType(3);//panda
+        	return true;
+        }
         return true;
     }
 

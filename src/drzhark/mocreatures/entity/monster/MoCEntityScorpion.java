@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -651,5 +652,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
     public int getTalkInterval()
     {
         return 300;
+    }
+    
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
     }
 }

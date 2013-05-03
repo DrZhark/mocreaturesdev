@@ -410,12 +410,17 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
             Entity entity = (Entity) list.get(j);
             if ((entity != this) && (entity instanceof MoCEntityBigCat))
             {
-                MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
-                if (getType() == 2)
+               /* 
+                if (entitybigcat.getType() == 2)
                 {
-                    setType(1);// = 1;
+                    return 1;
                 }
-                return getType();
+                if (entitybigcat.getType() == 1 && rand.nextInt(3) == 0)
+                {
+                	return 2;
+                }*/
+            	MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
+                return entitybigcat.getType();
             }
         }
 
@@ -471,17 +476,22 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         int l = 0;
         {
             l = checkNearBigKitties(12D);
-            if (l == 7)
+
+           
+            if (l == 2)
+            {
+            	l = 1;
+            }
+            else if (l == 1 && rand.nextInt(3) == 0)
+            {
+            	l = 2;
+            }
+            else if (l == 7)
             {
                 l = 5;
             }
         }
         setType(l);
-       /* if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
-        {
-            setType(6);// = 6;//snow leopard
-            //return true;
-        }*/
         return true;
     }
 

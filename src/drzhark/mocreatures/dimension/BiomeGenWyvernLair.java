@@ -16,7 +16,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 
 public class BiomeGenWyvernLair extends BiomeGenBase
 {
-	//protected WorldGenDelphiTree Delphi;
 
 	public BiomeGenWyvernLair(int par1)
 	{

@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -663,5 +664,13 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     public void dropMyStuff() 
     {
         MoCTools.dropSaddle(this, worldObj);
+    }
+    
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
     }
 }

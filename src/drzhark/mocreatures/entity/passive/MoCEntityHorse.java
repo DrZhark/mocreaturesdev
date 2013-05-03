@@ -8,6 +8,7 @@ import net.minecraft.block.BlockJukeBox;
 import net.minecraft.block.StepSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -3012,5 +3013,15 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             transformCounter = 1;
         }
         
+    }
+    
+    @Override
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        if (isUndead()) 
+        {
+        	return EnumCreatureAttribute.UNDEAD;
+        }
+        return super.getCreatureAttribute();
     }
 }

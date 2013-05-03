@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.monster;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -159,4 +160,12 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
 	{
 		return "silverskeleton";
 	}
+	
+	/**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.UNDEAD;
+    }
 }

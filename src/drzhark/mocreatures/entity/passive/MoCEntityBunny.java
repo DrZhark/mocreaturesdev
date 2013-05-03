@@ -13,7 +13,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityBunny extends MoCEntityAnimal {
     public boolean pickedUp;
@@ -57,6 +59,8 @@ public class MoCEntityBunny extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+    	checkSpawningBiome();
+    	
         if (getType() == 0)
         {
             int k = rand.nextInt(100);
@@ -82,6 +86,24 @@ public class MoCEntityBunny extends MoCEntityAnimal {
             }
         }
 
+    }
+
+    
+    @Override
+    public boolean checkSpawningBiome()
+    {
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(boundingBox.minY);
+        int k = MathHelper.floor_double(posZ);
+
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
+        if (currentbiome.temperature <= 0.05F)
+        {
+            setType(3); //snow white bunnies!
+            return true;
+        }
+       
+        return true;
     }
 
     @Override

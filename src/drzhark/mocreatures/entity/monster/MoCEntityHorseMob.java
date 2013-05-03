@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
@@ -495,6 +496,19 @@ public class MoCEntityHorseMob extends MoCEntityMob
     public void LavaFX()
     {
         MoCreatures.proxy.LavaFX(this);
+    }
+    
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    @Override
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        if (getType() == 23) 
+        {
+        	return EnumCreatureAttribute.UNDEAD;
+        }
+        return super.getCreatureAttribute();
     }
 //    && !worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) 
  //   && (posY < 50D)

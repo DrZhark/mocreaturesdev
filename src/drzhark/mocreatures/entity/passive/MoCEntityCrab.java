@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
@@ -140,5 +141,13 @@ public class MoCEntityCrab extends MoCEntityAmbient
     public boolean isFleeing()
     {
     	return this.fleeingTick != 0;
+    }
+    
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,8 +23,10 @@ public class WorldProviderWyvernEnd extends WorldProvider
      */
     public void registerWorldChunkManager()
     {
-        this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
-        this.dimensionId = MoCreatures.WyvernLairDimensionID;
+        //this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
+        this.worldChunkMgr = new WorldChunkManagerWyvernLair(new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID), 0.5F, 0.0F);
+        setDimension(MoCreatures.WyvernLairDimensionID);
+        //this.dimensionId = MoCreatures.WyvernLairDimensionID;
         setCustomSky();
     }
 

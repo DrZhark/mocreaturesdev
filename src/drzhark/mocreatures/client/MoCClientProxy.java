@@ -100,6 +100,7 @@ import drzhark.mocreatures.client.model.MoCModelKittyBed2;
 import drzhark.mocreatures.client.model.MoCModelKomodo;
 import drzhark.mocreatures.client.model.MoCModelLitterBox;
 import drzhark.mocreatures.client.model.MoCModelMaggot;
+import drzhark.mocreatures.client.model.MoCModelMediumFish;
 import drzhark.mocreatures.client.model.MoCModelMiniGolem;
 import drzhark.mocreatures.client.model.MoCModelMouse;
 import drzhark.mocreatures.client.model.MoCModelNewHorse;
@@ -137,6 +138,7 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderDeer;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderDolphin;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderEgg;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderFirefly;
+import drzhark.mocreatures.client.renderer.entity.MoCRenderFish;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderFishBowl;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderFishy;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderGoat;
@@ -209,6 +211,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
 import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
+import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -311,6 +314,7 @@ public class MoCClientProxy extends MoCProxy {
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMiniGolem.class, new MoCRenderAnimal(new MoCModelMiniGolem(), 0.5F));
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntitySilverSkeleton.class, new MoCRenderAnimal(new MoCModelSilverSkeleton(), 0.6F));
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityAnt.class, new MoCRenderInsect(new MoCModelAnt()));
+        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMediumFish.class, new MoCRenderFish(new MoCModelMediumFish(), 0.2F));
         
     }
 

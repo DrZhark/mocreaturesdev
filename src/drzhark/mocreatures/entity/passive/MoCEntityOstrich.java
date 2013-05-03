@@ -37,6 +37,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCloth;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -1245,5 +1246,13 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     }
     
     
-    
+    @Override
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        if (getType() == 7) 
+        {
+        	return EnumCreatureAttribute.UNDEAD;
+        }
+        return super.getCreatureAttribute();
+    }
 }

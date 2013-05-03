@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -146,7 +147,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 			{
 				setType(3);
 			}
-			else if (i <= 98)
+			else if (i <= 95)
 			{
 				setType(4);
 			}
@@ -907,13 +908,9 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 				l = 3;
 			}
 			String s = MoCTools.BiomeName(worldObj, i, j, k);
-			if (s.equals("WyvernBiome") && rand.nextInt(l) == 0) 
+			if (rand.nextInt(l) == 0) //s.equals("WyvernBiome") && 
 			{
-				//int m = rand.nextInt(2)+1;
-                //for (int l = 0; l < m; l++)
-                //{
                     entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, getType() + 49), 0.0F);
-                //}
 			}
 			
 	       
@@ -978,4 +975,15 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	 		}
 	 		return 100;
 	 	}
+	 	
+	 	
+	 	@Override
+	    public EnumCreatureAttribute getCreatureAttribute()
+	    {
+	        if (getType() == 6) 
+	        {
+	        	return EnumCreatureAttribute.UNDEAD;
+	        }
+	        return super.getCreatureAttribute();
+	    }
 }

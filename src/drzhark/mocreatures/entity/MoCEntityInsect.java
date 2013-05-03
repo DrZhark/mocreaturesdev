@@ -9,6 +9,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
 
@@ -229,5 +230,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 		return 0;
 	}
 
-	
+	/**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
+    }
 }
