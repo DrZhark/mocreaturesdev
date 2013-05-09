@@ -52,6 +52,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleButtonModel;
+import drzhark.mocreatures.MoCBiomeData;
 import drzhark.mocreatures.MoCBiomeGroupData;
 import drzhark.mocreatures.MoCConfigCategory;
 import drzhark.mocreatures.MoCEntityData;
@@ -519,7 +520,6 @@ public class MoCClientProxy extends MoCProxy {
         return 2;
     }
 
-    //-----------------GUI API STUFF
     /**
      * GUI API options
      */
@@ -530,10 +530,14 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetInt maxAnimalsW;
     public static MoCSettingInt maxWaterMobsS;
     public static WidgetInt maxWaterMobsW;
-    public static MoCSettingInt animalSpawnTickRateS;
-    public static WidgetInt animalSpawnTickRateW;
+    public static MoCSettingInt creatureSpawnTickRateS;
+    public static WidgetInt creatureSpawnTickRateW;
     public static MoCSettingInt mobSpawnTickRateS;
     public static WidgetInt mobSpawnTickRateW;
+    public static MoCSettingInt ambientSpawnTickRateS;
+    public static WidgetInt ambientSpawnTickRateW;
+    public static MoCSettingInt waterSpawnTickRateS;
+    public static WidgetInt waterSpawnTickRateW;
     public static MoCSettingInt maxAmbientMobsS;
     public static WidgetInt maxAmbientMobsW;
     public static MoCSettingBoolean worldGenCreatureSpawningB;
@@ -541,11 +545,6 @@ public class MoCClientProxy extends MoCProxy {
 
     public static MoCSettingInt despawnTickRateS;
     public static WidgetInt despawnTickRateW;
-    
-    //public static MoCSettingInt instaSpawnS;
-   // public static WidgetInt instaSpawnW;
-    //public static MoCSettingInt instaSpawnN;
-    //public static WidgetInt instaSpawnNW;
 
     public static MoCSettingBoolean spawnPiranhaS;
     public static MoCSettingInt particleFXS;
@@ -635,8 +634,6 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetInt wyvernBiomeIdW;
     public static MoCSettingInt wyvernBiomeIdS;
 
-    public MoCSettingList listBoxSettingTest;
-
     private WidgetSimplewindow instaSpawnerWindow;
     private MoCSettingInt settingNumberToSpawn;
     private MoCSettingMulti settingClassToSpawn;
@@ -654,11 +651,14 @@ public class MoCClientProxy extends MoCProxy {
     public WidgetSimplewindow mobSpawnSettingsWindow;
     public WidgetSimplewindow ambientOptionsWindow;
     public WidgetSimplewindow ambientSpawnSettingsWindow;
+    public WidgetSimplewindow undefinedOptionsWindow;
+    public WidgetSimplewindow undefinedSpawnSettingsWindow;
     public WidgetSimplewindow generalSettingsWindow;
     public WidgetSimplewindow IDSettingsWindow;
     public WidgetSimplewindow vanillamobwindow;
     public WidgetSimplewindow defaultsWindow;
     public WidgetSimplewindow instaSpaqwnerWindow;
+
     private WidgetClassicTwocolumn widgetCreatureSettingsColumns;
     private WidgetClassicTwocolumn widgetCreatureSpawnSettingsColumns;
     private WidgetClassicTwocolumn widgetMobSettingsColumns;
@@ -667,6 +667,8 @@ public class MoCClientProxy extends MoCProxy {
     private WidgetClassicTwocolumn widgetWaterMobSpawnSettingsColumns;
     private WidgetClassicTwocolumn widgetAmbientSettingsColumns;
     private WidgetClassicTwocolumn widgetAmbientSpawnSettingsColumns;
+    private WidgetClassicTwocolumn widgetUndefinedSettingsColumns;
+    private WidgetClassicTwocolumn widgetUndefinedSpawnSettingsColumns;
     private WidgetClassicTwocolumn widgetCustomSpawnerColumns;
     private WidgetClassicTwocolumn widgetGeneralSettingsColumns;
     private WidgetClassicTwocolumn widgetIDSettingsColumns;
@@ -684,37 +686,34 @@ public class MoCClientProxy extends MoCProxy {
     private WidgetClassicTwocolumn mobOptions;
     private WidgetClassicTwocolumn waterMobOptions;
     private WidgetClassicTwocolumn ambientOptions;
+    private WidgetClassicTwocolumn undefinedOptions;
     private WidgetClassicTwocolumn biomeGroupOptions;
     private WidgetClassicTwocolumn biomeButtons;
 
-    public boolean needsBiomeGroupUpdate = false;
+    private static final String BUTTON_GENERAL_SETTINGS = "General Settings";
+    private static final String BUTTON_ID_SETTINGS = "ID Settings";
+    private static final String BUTTON_FREQUENCIES = "Frequencies";
+    private static final String BUTTON_MINGROUP = "Min Group Spawn";
+    private static final String BUTTON_MAXGROUP = "Max Group Spawn";
+    private static final String BUTTON_VANILLA_CREATURE_FREQUENCIES = "Vanilla Creature Frequencies";
+    private static final String BUTTON_VANILLA_MONSTER_FREQUENCIES = "Vanilla Monster Frequencies";
+    private static final String BUTTON_VANILLA_WATER_CREATURE_FREQUENCIES = "Vanilla Watercreature Frequencies";
+    private static final String BUTTON_CREATURES = "Creatures";
+    private static final String BUTTON_CREATURE_GENERAL_SETTINGS = "Creature General Settings";
+    private static final String BUTTON_CREATURE_SPAWN_SETTINGS = "Creature Spawn Settings";
+    private static final String BUTTON_MONSTER_GENERAL_SETTINGS = "Monster General Settings";
+    private static final String BUTTON_MONSTER_SPAWN_SETTINGS = "Monster Spawn Settings";
+    private static final String BUTTON_WATERMOB_GENERAL_SETTINGS = "Water Mob General Settings";
+    private static final String BUTTON_WATERMOB_SPAWN_SETTINGS = "Water Mob Spawn Settings";
+    private static final String BUTTON_AMBIENT_SPAWN_SETTINGS = "Ambient Spawn Settings";
+    private static final String BUTTON_UNDEFINED_SPAWN_SETTINGS = "Undefined Spawn Settings";
+    private static final String BUTTON_CUSTOMSPAWNER_SETTINGS = "Customspawner Settings";
+    private static final String BUTTON_OWNERSHIP_SETTINGS = "Ownership Settings";
+    private static final String BUTTON_ENTITY_SPAWN_SETTINGS = "Entity Biome Settings";
+    private static final String BUTTON_DEFAULTS = "Reset to Defaults";
+    private static final String MOC_SCREEN_TITLE = "DrZhark's Mo'Creatures" ;
 
-    public static final String BUTTON_GENERAL_SETTINGS = "General Settings";
-    public static final String BUTTON_ID_SETTINGS = "ID Settings";
-    public static final String BUTTON_FREQUENCIES = "Frequencies";
-    public static final String BUTTON_MINGROUP = "Min Group Spawn";
-    public static final String BUTTON_MAXGROUP = "Max Group Spawn";
-    public static final String BUTTON_VANILLA_CREATURE_FREQUENCIES = "Vanilla Creature Frequencies";
-    public static final String BUTTON_VANILLA_MONSTER_FREQUENCIES = "Vanilla Monster Frequencies";
-    public static final String BUTTON_VANILLA_WATER_CREATURE_FREQUENCIES = "Vanilla Watercreature Frequencies";
-    public static final String BUTTON_CREATURES = "Creatures";
-    public static final String BUTTON_CREATURE_GENERAL_SETTINGS = "Creature General Settings";
-    public static final String BUTTON_CREATURE_SPAWN_SETTINGS = "Creature Spawn Settings";
-    public static final String BUTTON_CREATURE_CHUNK_SETTINGS = "Creature Chunk Settings";
-    public static final String BUTTON_MONSTER_GENERAL_SETTINGS = "Monster General Settings";
-    public static final String BUTTON_MONSTER_SPAWN_SETTINGS = "Monster Spawn Settings";
-    public static final String BUTTON_MONSTER_CHUNK_SETTINGS = "Monster Chunk Settings";
-    public static final String BUTTON_WATERMOB_GENERAL_SETTINGS = "Water Mob General Settings";
-    public static final String BUTTON_WATERMOB_SPAWN_SETTINGS = "Water Mob Spawn Settings";
-    public static final String BUTTON_WATERMOB_CHUNK_SETTINGS = "Water Mob Chunk Settings";
-    public static final String BUTTON_AMBIENT_GENERAL_SETTINGS = "Ambient General Settings";
-    public static final String BUTTON_AMBIENT_SPAWN_SETTINGS = "Ambient Spawn Settings";
-    public static final String BUTTON_AMBIENT_CHUNK_SETTINGS = "Ambient Chunk Settings";
-    public static final String BUTTON_CUSTOMSPAWNER_SETTINGS = "Customspawner Settings";
-    public static final String BUTTON_OWNERSHIP_SETTINGS = "Ownership Settings";
-    public static final String BUTTON_ENTITY_SPAWN_SETTINGS = "Entity Biome Settings";
-    public static final String BUTTON_DEFAULTS = "Reset to Defaults";
-
+    public static final List<String> entityTypes = Arrays.asList("UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
     private Map<String, WidgetClassicTwocolumn> widgetBiomeGroupMap = new HashMap<String, WidgetClassicTwocolumn>();
 
     public MoCEntityData currentSelectedEntity;
@@ -737,6 +736,7 @@ public class MoCClientProxy extends MoCProxy {
         ModAction initMobWindow = new ModAction(this, "showMobOptions", new Class[0]);
         ModAction initWaterMobWindow = new ModAction(this, "showWaterMobOptions", new Class[0]);
         ModAction initAmbientWindow = new ModAction(this, "showAmbientOptions", new Class[0]);
+        ModAction initUndefinedWindow = new ModAction(this, "showUndefinedOptions", new Class[0]);
         ModAction initCustomSpawnerWindow = new ModAction(this, "showCustomSpawnerOptions", new Class[0]);
         ModAction initGeneralSettingsWindow = new ModAction(this, "showGeneralSettings", new Class[0]);
         ModAction initIDSettingsWindow = new ModAction(this, "showIDSettings", new Class[0]);
@@ -751,6 +751,7 @@ public class MoCClientProxy extends MoCProxy {
         MoCScreen.append(GuiApiHelper.makeButton("Mobs", initMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Water Mobs", initWaterMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Ambient", initAmbientWindow, true));
+        MoCScreen.append(GuiApiHelper.makeButton("Undefined", initUndefinedWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Biome Groups", initBiomeGroupsWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Reset to Defaults", initDefaultsWindow, true));
         //**********************************************************//
@@ -764,11 +765,11 @@ public class MoCClientProxy extends MoCProxy {
         creatureSpawnButton.setText(BUTTON_CREATURE_SPAWN_SETTINGS);
         creatureOptions.add(creatureSpawnButton);
         widgetCreatureSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<String, MoCEntityData> entry : entityMap.entrySet())
+        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
         {
            if (entry.getValue().getType() == EnumCreatureType.creature)
            {
-               widgetCreatureSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
+               //widgetCreatureSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
            }
         }
 
@@ -805,11 +806,11 @@ public class MoCClientProxy extends MoCProxy {
         mobSpawnButton.setText(BUTTON_MONSTER_SPAWN_SETTINGS);
         mobOptions.add(mobSpawnButton);
         widgetMobSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<String, MoCEntityData> entry : entityMap.entrySet())
+        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
         {
            if (entry.getValue().getType() == EnumCreatureType.monster)
            {
-               widgetMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
+              // widgetMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
            }
         }
 
@@ -849,11 +850,11 @@ public class MoCClientProxy extends MoCProxy {
         waterMobSpawnButton.setText(BUTTON_WATERMOB_SPAWN_SETTINGS);
         waterMobOptions.add(waterMobSpawnButton);
         widgetWaterMobSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<String, MoCEntityData> entry : entityMap.entrySet())
+        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
         {
            if (entry.getValue().getType() == EnumCreatureType.waterCreature)
            {
-               widgetWaterMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
+            //   widgetWaterMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
            }
         }
 
@@ -881,11 +882,28 @@ public class MoCClientProxy extends MoCProxy {
         ambientSpawnButton.setText(BUTTON_AMBIENT_SPAWN_SETTINGS);
         ambientOptions.add(ambientSpawnButton);
         widgetAmbientSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<String, MoCEntityData> entry : entityMap.entrySet())
+        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
         {
            if (entry.getValue().getType() == EnumCreatureType.ambient)
            {
-               widgetAmbientSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
+            //   widgetAmbientSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
+           }
+        }
+
+        //******************** Undefined ********************//
+        undefinedOptions = new WidgetSinglecolumn(new Widget[0]);
+
+        SimpleButtonModel undefinedSpawnButtonModel = new SimpleButtonModel();
+        undefinedSpawnButtonModel.addActionCallback(new ModAction(this, "showUndefinedSpawnSettings", new Class[0]));
+        Button undefinedSpawnButton = new Button(undefinedSpawnButtonModel);
+        undefinedSpawnButton.setText(BUTTON_UNDEFINED_SPAWN_SETTINGS);
+        undefinedOptions.add(undefinedSpawnButton);
+        widgetUndefinedSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
+        {
+           if (entry.getValue().getType() == null)
+           {
+             //  widgetUndefinedSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
            }
         }
 
@@ -894,12 +912,18 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(useCustomSpawnerS = new MoCSettingBoolean(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", useCustomSpawner));
         useCustomSpawnerW = new WidgetBoolean(useCustomSpawnerS, "Use CustomSpawner?", "Yes", "No");
         widgetCustomSpawnerColumns.add(useCustomSpawnerW);
-        guiapiSettings.append(animalSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "animalSpawnTickRate", animalSpawnTickRate, 1, 1, 1000));
-        animalSpawnTickRateW = new WidgetInt(animalSpawnTickRateS, "Anml Spawn Ticks");
-        widgetCustomSpawnerColumns.add(animalSpawnTickRateW);
+        guiapiSettings.append(creatureSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", creatureSpawnTickRate, 1, 1, 1000));
+        creatureSpawnTickRateW = new WidgetInt(creatureSpawnTickRateS, "Anml Spawn Ticks");
+        widgetCustomSpawnerColumns.add(creatureSpawnTickRateW);
         guiapiSettings.append(mobSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", mobSpawnTickRate, 1, 1, 1000));
         mobSpawnTickRateW = new WidgetInt(mobSpawnTickRateS, "Mob Spawn Ticks");
         widgetCustomSpawnerColumns.add(mobSpawnTickRateW);
+        guiapiSettings.append(waterSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", waterSpawnTickRate, 1, 1, 1000));
+        waterSpawnTickRateW = new WidgetInt(waterSpawnTickRateS, "Wtr Spawn Ticks");
+        widgetCustomSpawnerColumns.add(waterSpawnTickRateW);
+        guiapiSettings.append(ambientSpawnTickRateS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", ambientSpawnTickRate, 1, 1, 1000));
+        ambientSpawnTickRateW = new WidgetInt(ambientSpawnTickRateS, "Ambt Spawn Ticks");
+        widgetCustomSpawnerColumns.add(ambientSpawnTickRateW);
         guiapiSettings.append(maxMobsS = new MoCSettingInt(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMobs", maxMobs, 1, 1, 1000));
         maxMobsW = new WidgetInt(maxMobsS, "Hostiles");
         widgetCustomSpawnerColumns.add(maxMobsW);
@@ -960,9 +984,6 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(mocitemidA = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "ItemID", itemID, 4096, 1, 60000));
         mocitemidW = new WidgetInt(mocitemidA, "Item ID");
         widgetIDSettingsColumns.add(mocitemidW);
-        //guiapiSettings.append(eggidA = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "EggID", eggID, 2048, 1, 60000));
-        //eggidW = new WidgetInt(eggidA, "Egg ID");
-        //widgetIDSettingsColumns.add(eggidW);
         guiapiSettings.append(blockDirtIdS = new MoCSettingInt(CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", blockDirtID, 1, 1, 255));
         blockDirtIdW = new WidgetInt(blockDirtIdS, "DirtBlock ID");
         widgetIDSettingsColumns.add(blockDirtIdW);
@@ -1133,6 +1154,26 @@ public class MoCClientProxy extends MoCProxy {
         GuiModScreen.show(ambientSpawnSettingsWindow);
     }
 
+    // Undefined
+    public void showUndefinedOptions()
+    {
+        if (undefinedOptionsWindow == null)
+        {
+            undefinedOptionsWindow = new WidgetSimplewindow(undefinedOptions, "Undefined Options");
+        }
+
+        GuiModScreen.show(undefinedOptionsWindow);
+    }
+
+    public void showUndefinedSpawnSettings()
+    {
+        if (undefinedSpawnSettingsWindow == null)
+        {
+            undefinedSpawnSettingsWindow = new WidgetSimplewindow(widgetUndefinedSpawnSettingsColumns, BUTTON_UNDEFINED_SPAWN_SETTINGS);
+        }
+        GuiModScreen.show(undefinedSpawnSettingsWindow);
+    }
+
     public void showCustomSpawnerOptions()
     {
         if (customSpawnerWindow == null)
@@ -1180,10 +1221,6 @@ public class MoCClientProxy extends MoCProxy {
         }
         GuiModScreen.show(defaultsWindow);
     }
-
-
-
-    
 
     public void showBiomeGroups()
     {
@@ -1234,41 +1271,44 @@ public class MoCClientProxy extends MoCProxy {
             if (entityData.getEntityWindow() == null)
             {
                 WidgetSinglecolumn widgetEntitySettingColumn = new WidgetSinglecolumn(new Widget[0]);
-                String category = "";
-                if (entityData.getType() == EnumCreatureType.creature)
-                    category = CATEGORY_MOC_CREATURE_FREQUENCIES;
-                else if (entityData.getType() == EnumCreatureType.monster)
-                    category = CATEGORY_MOC_MONSTER_FREQUENCIES;
-                else if (entityData.getType() == EnumCreatureType.waterCreature)
-                    category = CATEGORY_MOC_WATER_CREATURE_FREQUENCIES;
-                else if (entityData.getType() == EnumCreatureType.ambient)
-                    category = CATEGORY_MOC_AMBIENT_FREQUENCIES;
-                MoCSettingInt settingFrequency = new MoCSettingInt(category, entityName + " Frequency", entityData.frequency, 0, 1, 20);
+                MoCSettingMulti settingType = new MoCSettingMulti(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName + " Type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().toString().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
+                guiapiSettings.append(settingType);
+                widgetEntitySettingColumn.add(new WidgetMulti(settingType, "Type"));
+                MoCSettingInt settingFrequency = new MoCSettingInt(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName + " Frequency", entityData.getFrequency(), 0, 1, 20);
                 guiapiSettings.append(settingFrequency);
-                widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, entityName + " Frequency"));
-                MoCSettingInt settingMinGroup = new MoCSettingInt(category, entityName + " Min", entityData.minGroup, 1, 1, 20);
+                widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, "Frequency"));
+                MoCSettingInt settingMinGroup = new MoCSettingInt(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName + " Min", entityData.getMinSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMinGroup);
-                widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, entityName + " Min"));
-                MoCSettingInt settingMaxGroup = new MoCSettingInt(category, entityName + " Max", entityData.maxGroup, 1, 1, 20);
+                widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, "Min"));
+                MoCSettingInt settingMaxGroup = new MoCSettingInt(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName + " Max", entityData.getMaxSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMaxGroup);
-                widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, entityName + " Max"));
+                widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, "Max"));
+                MoCSettingInt settingChunkGroup = new MoCSettingInt(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName + " Chunk", entityData.getMaxInChunk(), 1, 1, 20);
+                guiapiSettings.append(settingChunkGroup);
+                widgetEntitySettingColumn.add(new WidgetInt(settingChunkGroup, "Chunk"));
+                MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(CATEGORY_ENTITY_CANSPAWN_SETTINGS, entityName + " CanSpawn", entityData.getCanSpawn());
+                guiapiSettings.append(settingCanSpawn);
+                widgetEntitySettingColumn.add(new WidgetBoolean(settingCanSpawn, "CanSpawn"));
+                MoCSettingBoolean settingVanillaControl = new MoCSettingBoolean("", entityName + " Vanilla Has Control", entityData.getVanillaControl());
+                guiapiSettings.append(settingVanillaControl);
+                widgetEntitySettingColumn.add(new WidgetBoolean(settingVanillaControl, "Vanilla Has Control"));
 
                 if (entityData.getBiomeGroups() != null)
                 {
-                    entityBiomeList = guiapiSettings.addSetting(widgetEntitySettingColumn, entityName + " Biome Groups", entityName + " Biome Groups", entityData.getBiomeGroups(), CATEGORY_ENTITY_BIOME_SETTINGS);
-                }
+                    entityBiomeList = guiapiSettings.addSetting(widgetEntitySettingColumn, "Biome Groups", entityName + " Biome Groups", (ArrayList)entityData.getBiomeGroups(), CATEGORY_ENTITY_BIOME_SETTINGS);
 
-                ((WidgetList) entityBiomeList.displayWidget).listBox.setTheme("/listbox");
-                widgetEntitySettingColumn.heightOverrideExceptions.put(entityBiomeList.displayWidget, 140);
-                WidgetSingleRow listBoxRow = new WidgetSingleRow(110, 20);
-                MoCSettingText textSetting = new MoCSettingText("", "enter biome");
-                listBoxRow.add(GuiApiHelper.makeButton("Add Group", new ModAction(this,"addGroupListboxOption", MoCSettingList.class, MoCSettingText.class).setDefaultArguments(entityBiomeList, textSetting), true));
-                guiapiSettings.append(textSetting);
-                listBoxRow.add(new WidgetText(textSetting, ""));
-                //listBoxRow.add(GuiApiHelper.makeButton("Display Selected", new ModAction(this, "showSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
-                listBoxRow.add(GuiApiHelper.makeButton("Remove Selected", new ModAction(this, "removeSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
-                widgetEntitySettingColumn.add(listBoxRow);
-                widgetEntitySettingColumn.widthOverrideExceptions.put(listBoxRow, 0);
+                    ((WidgetList) entityBiomeList.displayWidget).listBox.setTheme("/listbox");
+                    widgetEntitySettingColumn.heightOverrideExceptions.put(entityBiomeList.displayWidget, 140);
+                    WidgetSingleRow listBoxRow = new WidgetSingleRow(110, 20);
+                    MoCSettingText textSetting = new MoCSettingText("", "enter biome");
+                    listBoxRow.add(GuiApiHelper.makeButton("Add Group", new ModAction(this,"addGroupListboxOption", MoCSettingList.class, MoCSettingText.class).setDefaultArguments(entityBiomeList, textSetting), true));
+                    guiapiSettings.append(textSetting);
+                    listBoxRow.add(new WidgetText(textSetting, ""));
+                    //listBoxRow.add(GuiApiHelper.makeButton("Display Selected", new ModAction(this, "showSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
+                    listBoxRow.add(GuiApiHelper.makeButton("Remove Selected", new ModAction(this, "removeSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
+                    widgetEntitySettingColumn.add(listBoxRow);
+                    widgetEntitySettingColumn.widthOverrideExceptions.put(listBoxRow, 0);
+                }
                 entityData.setEntityWindow(new WidgetSimplewindow(widgetEntitySettingColumn, entityName));
             }
             this.currentSelectedEntity = entityData;
@@ -1281,9 +1321,9 @@ public class MoCClientProxy extends MoCProxy {
     	widgetInstaSpawnerColumn = new WidgetSinglecolumn(new Widget[0]);
     	
         ArrayList<String> moCreaturesList = new ArrayList<String>();
-        for (Map.Entry<String, MoCEntityData> entityEntry : entityMap.entrySet())
+        for (Map.Entry<Integer, MoCEntityData> entityEntry : entityMap.entrySet())
         {
-        	moCreaturesList.add(entityEntry.getKey()); 
+        	//moCreaturesList.add(entityEntry.getKey()); 
         }
         entityList = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature Type:", "SpawnEntityList", moCreaturesList, "");
         ((WidgetList) entityList.displayWidget).listBox.setTheme("/listbox");
@@ -1328,18 +1368,40 @@ public class MoCClientProxy extends MoCProxy {
             String[] tokens = setting.backendName.split(" ");
             MoCProperty prop = null;
             if (setting.backendName.contains("Biome Groups"))
-                prop = MoCreatures.proxy.MoCconfig.get(setting.category, tokens[0]);
-            else if (setting.backendName.contains("Biomes"))
-                prop = MoCreatures.proxy.MoCBiomeConfig.get(setting.category, tokens[0]);
-            if (prop != null)
             {
-                setting.get().add(text.get());
-                prop.valueList = setting.get();
-                Collections.sort(setting.get()); // sort list before displaying
-                setting.displayWidget.update();
-                MoCreatures.proxy.MoCBiomeConfig.save();
-                MoCreatures.proxy.MoCconfig.save();
+                //prop = MoCreatures.proxy.MoCconfig.get(setting.category, tokens[0]);
+                MoCEntityData entityData = entityMap.get(tokens[0]);
+                if (entityData!= null)
+                {
+                    System.out.println("ADDED BIOME GROUP " + text.get() + " to entity " + tokens[0]);
+                    entityData.addBiomeGroup(text.get());
+                    Collections.sort(setting.get()); // sort list before displaying
+                    setting.displayWidget.update();
+                }
             }
+            else if (setting.backendName.contains("Biomes"))
+            {
+                //prop = MoCreatures.proxy.MoCBiomeConfig.get(setting.category, tokens[0]);
+                MoCBiomeGroupData biomeGroupData = biomeGroupMap.get(tokens[0]);
+                if (biomeGroupData != null)
+                {
+                    biomeGroupData.addBiome(tokens[0]);
+                    Collections.sort(setting.get()); // sort list before displaying
+                    setting.displayWidget.update();
+                }
+            }
+           // if (prop != null)
+          //  {
+               // System.out.println("setting = " + setting.get() + ", text = " + text.get());
+                //System.out.println("prop list before = " + prop.valueList);
+                //setting.get().add(text.get());
+                //prop.valueList = setting.get();
+               // System.out.println("prop list after = " + prop.valueList);
+             //   Collections.sort(setting.get()); // sort list before displaying
+             //   setting.displayWidget.update();
+                MoCreatures.proxy.mocBiomeConfig.save();
+                MoCreatures.proxy.mocGlobalConfig.save();
+            //}
         }
     }
 
@@ -1355,16 +1417,16 @@ public class MoCClientProxy extends MoCProxy {
             String[] tokens = setting.backendName.split(" ");
             MoCProperty prop = null;
             if (setting.backendName.contains("Biome Groups"))
-                prop = MoCreatures.proxy.MoCconfig.get(setting.category, tokens[0]);
+                prop = MoCreatures.proxy.mocGlobalConfig.get(setting.category, tokens[0]);
             else if (setting.backendName.contains("Biomes"))
-                prop = MoCreatures.proxy.MoCBiomeConfig.get(setting.category, tokens[0]);
+                prop = MoCreatures.proxy.mocBiomeConfig.get(setting.category, tokens[0]);
             if (prop != null)
             {
                 setting.get().remove(selected);
-                prop.valueList = setting.get();
+                //prop.valueList = setting.get();
                 setting.displayWidget.update();
-                MoCreatures.proxy.MoCBiomeConfig.save();
-                MoCreatures.proxy.MoCconfig.save(); // save config
+                MoCreatures.proxy.mocBiomeConfig.save();
+                MoCreatures.proxy.mocGlobalConfig.save(); // save config
 
                 if (selected == listbox.getNumEntries()) // I'm only removing one at a
                                                             // time, so this is OK.
@@ -1462,7 +1524,13 @@ public class MoCClientProxy extends MoCProxy {
         IDSettingsWindow = null;
         vanillamobwindow = null;
         defaultsWindow = null;
-        MoCScreen.modScreens.clear(); // clear any existing screens
+        for (int i = 0; i < MoCScreen.modScreens.size(); i++)
+        {
+            if (MoCScreen.modScreens.get(i).niceName.equalsIgnoreCase(MOC_SCREEN_TITLE))
+            {
+                MoCScreen.modScreens.remove(i);
+            }
+        }
         MoCScreen = null;
         guiapiSettings = null;
     }

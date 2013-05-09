@@ -491,7 +491,6 @@ public class MoCConfiguration
                 {
                     lineNum++;
                     line = buffer.readLine();
-                    //System.out.println("line = " + line);
                     if (line == null)
                     {
                         break;
@@ -499,18 +498,17 @@ public class MoCConfiguration
 
                     Matcher start = CONFIG_START.matcher(line);
                     Matcher end = CONFIG_END.matcher(line);
-                   // System.out.println("start = " + start + ", end = " + end);
+
                     if (start.matches())
                     {
                         fileName = start.group(1);
-                        //System.out.println("start fileName = " + fileName);
+
                         categories = new TreeMap<String, MoCConfigCategory>();
                         continue;
                     }
                     else if (end.matches())
                     {
                         fileName = end.group(1);
-                        //System.out.println("end fileName = " + fileName);
                         MoCConfiguration child = new MoCConfiguration();
                         child.categories = categories;
                         this.children.put(fileName, child);
@@ -532,7 +530,6 @@ public class MoCConfiguration
                             }
 
                             nameEnd = i;
-                            //System.out.println("nameStart = " + nameStart + ", nameEnd = " + nameEnd);
                         }
                         else if (Character.isWhitespace(line.charAt(i)))
                         {
@@ -540,7 +537,6 @@ public class MoCConfiguration
                         }
                         else
                         {
-                            //System.out.println("checking character " + line.charAt(i));
                             switch (line.charAt(i))
                             {
                                 case '#':
@@ -561,7 +557,7 @@ public class MoCConfiguration
                                 case '{':
                                     name = line.substring(nameStart, nameEnd + 1);
                                     String qualifiedName = MoCConfigCategory.getQualifiedName(name, currentCat);
-                                    //System.out.println("case { , name = " + name + ", qualifiedName = " + qualifiedName);
+
                                     MoCConfigCategory cat = categories.get(qualifiedName);
                                     if (cat == null)
                                     {
@@ -582,12 +578,12 @@ public class MoCConfiguration
                                         throw new RuntimeException(String.format("Config file corrupt, attepted to close to many categories '%s:%d'", fileName, lineNum));
                                     }
                                     currentCat = currentCat.parent;
-                                    //System.out.println("case } , currentCat = " + currentCat);
+
                                     break;
 
                                 case '=':
                                     name = line.substring(nameStart, nameEnd + 1);
-                                    //System.out.println("case = , name = " + name);
+
                                     if (currentCat == null)
                                     {
                                         throw new RuntimeException(String.format("'%s' has no scope in '%s:%d'", name, fileName, lineNum));
@@ -603,69 +599,56 @@ public class MoCConfiguration
                                 case ':':
                                     type = MoCProperty.Type.tryParse(line.substring(nameStart, nameEnd + 1).charAt(0));
                                     nameStart = nameEnd = -1;
-                                   // System.out.println("case : , name = " + name);
                                     break;
 
                                 case '<':
-                                    //System.out.println("case < , i = " + i);
+
                                     if (tmpList != null)
                                     {
                                         throw new RuntimeException(String.format("Malformed list MoCProperty \"%s:%d\"", fileName, lineNum));
                                     }
 
                                     name = line.substring(nameStart, nameEnd + 1);
-                                    //System.out.println("case < , name = " + name);
-                                    //System.out.println("name length = " + name.length());
-                                    //System.out.println("line length = " + line.length());
 
                                     if (currentCat == null)
                                     {
                                         throw new RuntimeException(String.format("'%s' has no scope in '%s:%d'", name, fileName, lineNum));
                                     }
-                                    //System.out.println("Created NEW tmpList");
+
                                     tmpList = new ArrayList<String>();
-                                    //System.out.println("line.length() = " + line.length() + ", i = " + i);
+
                                     if ((line.length() > i+1))
                                     {
                                         if (line.charAt(i+1) == '>')
                                         {
-                                            //System.out.println("last char of line = " + line.charAt(i+1));
                                             i++;
                                         }
                                         else 
                                         {
                                             line = line.substring(i+1, line.length());
                                             String[] values = line.split(":|\\>");
-                                            //System.out.println("values length = " + values.length);
                                             for (int j = 0; j < values.length; j++)
                                             {
-                                                //System.out.println("adding value " + values[j]);
                                                 tmpList.add(values[j]);
                                             }
                                             i = line.length() - 1;
-                                            //System.out.println("last char = " + line.charAt(i));
                                         }
                                     }
                                     else
                                     {
-                                        //System.out.println("SKIPPING LINE");
                                         skip = true;
                                         break;
                                     }
 
                                 case '>':
-                                    //System.out.println("case >");
                                     if (tmpList == null)
                                     {
                                         throw new RuntimeException(String.format("Malformed list MoCProperty \"%s:%d\"", fileName, lineNum));
                                     }
-                                    //System.out.println("Setting category " + name + " with value size " + tmpList.size());
                                     currentCat.set(name, new MoCProperty(name, tmpList, type));
                                     name = null;
-                                    //System.out.println("Setting tmpList to NULL!!!");
                                     tmpList = null;
                                     type = null;
-                                    //System.out.println("case >");
                                     break;
 
                                 default:
@@ -680,7 +663,6 @@ public class MoCConfiguration
                     }
                     else if (tmpList != null && !skip)
                     {
-                        //System.out.println("Adding value " + line.trim() + " to array");
                         tmpList.add(line.trim());
                     }
                 }
@@ -730,7 +712,6 @@ public class MoCConfiguration
             {
                 return;
             }
-
             if (file.canWrite())
             {
                 FileOutputStream fos = new FileOutputStream(file);
@@ -766,7 +747,7 @@ public class MoCConfiguration
     {
         for (MoCConfigCategory cat : categories.values())
         {
-            if (!cat.isChild())
+            if (!cat.isChild()) // if category has no parent categories
             {
                 cat.write(out, 0);
                 out.newLine();
@@ -777,7 +758,6 @@ public class MoCConfiguration
     public MoCConfigCategory getCategory(String category)
     {
         MoCConfigCategory ret = categories.get(category.toLowerCase());
-
         if (ret == null)
         {
             if (category.contains(CATEGORY_SPLITTER))
@@ -812,6 +792,7 @@ public class MoCConfiguration
             {
                 ret = new MoCConfigCategory(category);
                 categories.put(category, ret);
+                this.save();
                 changed = true;
             }
         }

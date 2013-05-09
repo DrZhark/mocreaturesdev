@@ -118,7 +118,7 @@ public class CommandMoCreatures extends CommandBase {
         String par2 = "";
         if (par2ArrayOfStr.length > 1)
             par2 = par2ArrayOfStr[1];
-        MoCConfiguration config = MoCreatures.proxy.MoCconfig;
+        MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
 
         boolean saved = false;
         boolean doNotShowHelp = false;
@@ -235,7 +235,7 @@ public class CommandMoCreatures extends CommandBase {
                         }
                         else
                         {
-                            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
+                            /*for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
                             {
                                 if (entityEntry.getKey().equalsIgnoreCase(par2))
                                 {
@@ -250,7 +250,7 @@ public class CommandMoCreatures extends CommandBase {
                             }
                             par1ICommandSender.sendChatToPlayer("Entity " + par2 + " is invalid. Please enter a valid entity.");
                             doNotShowHelp = true;
-                            break OUTER;
+                            break OUTER;*/
                         }
                     }
                     break OUTER;
@@ -366,36 +366,20 @@ public class CommandMoCreatures extends CommandBase {
                 // START ENTITY FREQUENCY/BIOME SECTION
                 else if (par2.equalsIgnoreCase("frequency") || par2.equalsIgnoreCase("min") || par2.equalsIgnoreCase("max") || par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
                 {
-                    for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
+                    // DISABLED UNTIL I REDO IT WITH NEW SETUP
+                    /*for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
                     {
                         if (entityEntry.getKey().equalsIgnoreCase(par1))
                         {
                             // handle frequencies
                             if (par2.equalsIgnoreCase("frequency") || par2.equalsIgnoreCase("min") || par2.equalsIgnoreCase("max"))
                             {
-                                String category = "";
-                                if (entityEntry.getValue().getType() == EnumCreatureType.ambient)
-                                {
-                                    category = MoCreatures.proxy.CATEGORY_MOC_AMBIENT_FREQUENCIES;
-                                }
-                                else if (entityEntry.getValue().getType() == EnumCreatureType.creature)
-                                {
-                                    category = MoCreatures.proxy.CATEGORY_MOC_CREATURE_FREQUENCIES;
-                                }
-                                else if (entityEntry.getValue().getType() == EnumCreatureType.waterCreature)
-                                {
-                                    category = MoCreatures.proxy.CATEGORY_MOC_WATER_CREATURE_FREQUENCIES;
-                                }
-                                else if (entityEntry.getValue().getType() == EnumCreatureType.monster)
-                                {
-                                    category = MoCreatures.proxy.CATEGORY_MOC_MONSTER_FREQUENCIES;
-                                }
                                 if (par2.equalsIgnoreCase("frequency"))
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().frequency = Integer.parseInt(par3);
-                                        MoCProperty prop = config.get(category, entityEntry.getKey());
+                                        entityEntry.getValue().setFrequency(Integer.parseInt(par3));
+                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
                                         prop.valueList.set(0, par3);
                                         saved = true;
                                         par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " frequency to " + par3 + ".");
@@ -409,8 +393,8 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().minGroup = Integer.parseInt(par3);
-                                        MoCProperty prop = config.get(category, entityEntry.getKey());
+                                        entityEntry.getValue().setMinSpawn(Integer.parseInt(par3));
+                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
                                         prop.valueList.set(1, par3);
                                         saved = true;
                                         par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " minGroupSpawn to " + par3 + ".");
@@ -424,8 +408,8 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().maxGroup = Integer.parseInt(par3);
-                                        MoCProperty prop = config.get(category, entityEntry.getKey());
+                                        entityEntry.getValue().setMaxSpawn(Integer.parseInt(par3));
+                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
                                         prop.valueList.set(2, par3);
                                         saved = true;
                                         par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " maxGroupSpawn to " + par3 + ".");
@@ -446,7 +430,7 @@ public class CommandMoCreatures extends CommandBase {
                                 String category = MoCreatures.proxy.CATEGORY_ENTITY_BIOME_SETTINGS;
                                 try 
                                 {
-                                    ArrayList<String> biomeGroups = entityEntry.getValue().getBiomeGroups();
+                                    List<String> biomeGroups = entityEntry.getValue().getBiomeGroups();
                                     if (par3.equalsIgnoreCase("add"))
                                     {
                                         if (!biomeGroups.contains(value))
@@ -504,7 +488,7 @@ public class CommandMoCreatures extends CommandBase {
                                 break OUTER;
                             }
                         }
-                    }
+                    }*/
                 }
                 // END ENTITY FREQUENCY/BIOME SECTION
                 // START OTHER SECTIONS

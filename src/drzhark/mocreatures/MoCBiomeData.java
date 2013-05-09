@@ -7,17 +7,26 @@ public class MoCBiomeData {
     private Class<? extends BiomeGenBase> clazz;
     private boolean defined;
     private BiomeGenBase biome;
+    private String tag;
 
-    public MoCBiomeData(Class<? extends BiomeGenBase> biomeClass, BiomeGenBase biome)
+    public MoCBiomeData(BiomeGenBase biome)
     {
-        this.clazz = biomeClass;
+        this.clazz = biome.getClass();
         this.biome = biome;
         this.defined = false;
     }
 
-    public MoCBiomeData(Class<? extends BiomeGenBase> biomeClass, BiomeGenBase biome, boolean flag)
+    public MoCBiomeData(BiomeGenBase biome, String tag)
     {
-        this.clazz = biomeClass;
+        this.clazz = biome.getClass();
+        this.biome = biome;
+        this.defined = false;
+        this.tag = tag;
+    }
+
+    public MoCBiomeData(BiomeGenBase biome, boolean flag)
+    {
+        this.clazz = biome.getClass();
         this.biome = biome;
         this.defined = flag;
     }
@@ -35,6 +44,21 @@ public class MoCBiomeData {
     public BiomeGenBase getBiome()
     {
         return biome;
+    }
+
+    public int getBiomeID()
+    {
+        return this.biome.biomeID;
+    }
+
+    public String getTag()
+    {
+        return tag;
+    }
+
+    public void setTag(String tag)
+    {
+        this.tag = tag;
     }
 
     public void setDefined(boolean flag)

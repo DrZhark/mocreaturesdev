@@ -112,7 +112,8 @@ private boolean changed = false;
     {
         for (int x = 0; x < data.length; x++)
         {
-            out.write(data[x]);
+            if (data[x] != null)
+                out.write(data[x]);
         }
         if (new_line) out.write(NEW_LINE);
     }

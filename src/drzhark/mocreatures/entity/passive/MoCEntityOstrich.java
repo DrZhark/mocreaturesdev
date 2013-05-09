@@ -1059,7 +1059,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     public boolean getCanSpawnHere()
     {
         //spawns in deserts and plains
-        return (MoCreatures.proxy.entityMap.get(this.getEntityName()).frequency > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving() && (!MoCTools.isNearTorch(this));
+        return (MoCreatures.proxy.entityModMap.get("drzhark").getCreatureMap().get(this.getEntityName()).getFrequency() > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving() && (!MoCTools.isNearTorch(this));
     }
 
     @Override

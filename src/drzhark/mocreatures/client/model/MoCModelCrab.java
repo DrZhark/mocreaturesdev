@@ -402,4 +402,3 @@ ShellRight = new ModelRenderer(this, 0, 23);
 
 }
 
-

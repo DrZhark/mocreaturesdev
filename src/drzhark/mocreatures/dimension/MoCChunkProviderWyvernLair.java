@@ -776,16 +776,20 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     @Override
     public void recreateStructures(int par1, int par2) 
     {
-    	//System.out.println("recreate structures called");
-    	//if (!portalDone) createPortal(this.worldObj, this.RNGa);	
+    //System.out.println("recreate structures called");
+    //if (!portalDone) createPortal(this.worldObj, this.RNGa);	
     }
 
     /**
      * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
      * is always empty and will not remove any chunks.
      */
-	@Override
-	public boolean unloadQueuedChunks() {
-		return true;
-	}
+    @Override
+    public boolean unloadQueuedChunks() {
+        return true;
+    }
+
+    @Override
+    public void func_104112_b() {
+    }
 }

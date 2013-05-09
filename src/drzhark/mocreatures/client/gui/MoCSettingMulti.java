@@ -24,6 +24,11 @@ public class MoCSettingMulti extends SettingMulti {
         super(title, defValue, labelValues);
     }
 
+    public MoCSettingMulti(String cat, String title, int defValue, String... labelValues) {
+        super(title, defValue, labelValues);
+        this.category = cat;
+    }
+
     /**
      * A constructor for SettingMulti. Default value is 0, or the first label to
      * be defined.

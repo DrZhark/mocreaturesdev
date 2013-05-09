@@ -30,6 +30,11 @@ public class MoCBiomeGroupData {
         return biomes;
     }
 
+    public void addBiome(String biome)
+    {
+        this.biomes.add(biome);
+    }
+
     @SideOnly(Side.CLIENT)
     public void setBiomeGroupWindow(WidgetSimplewindow biomeWindow)
     {

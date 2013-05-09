@@ -31,6 +31,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -38,20 +39,24 @@ import net.minecraft.world.biome.BiomeGenEnd;
 import net.minecraft.world.biome.BiomeGenHell;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.Event.Result;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 //import net.minecraftforge.event.entity.living.LivingSpecialSpawnEvent;
 import cpw.mods.fml.common.Mod;
+import drzhark.mocreatures.MoCEntityData;
 import drzhark.mocreatures.MoCreatures;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "1.12.5")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.0.0")
 public final class CustomSpawner {
-    private int maxAnimals = 40;
-    private int maxMobs = 60;
-    private int maxAquatic = 10;
-    private int maxAmbient = 10;
+    private int maxCreatures;
+    private int maxMonsters;
+    private int maxWaterCreatures;
+    private int maxAmbients;
+    private static byte spawnRadius = 0;
 
     public List<BiomeGenBase> biomeList;
     public List[] entityClasses;
@@ -239,180 +244,214 @@ public final class CustomSpawner {
      * 
      * 
      */
-    public final int doCustomSpawning(WorldServer worldObj, boolean spawnMobs, boolean spawnAnmls)
+    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype)
     {
-        if (!spawnMobs && !spawnAnmls)
-        {
-            return 0;
-        }
-        else
-        {
-            eligibleChunksForSpawning.clear();
-            int countTotal;
-            int var6;
+        eligibleChunksForSpawning.clear();
+        int countTotal;
+        int var6;
 
-            for (countTotal = 0; countTotal < worldObj.playerEntities.size(); ++countTotal)
+        if (spawnRadius == 0)
+        {
+            spawnRadius = (byte) MoCreatures.proxy.mobSpawnRange;
+
+            if (spawnRadius > (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
             {
-                EntityPlayer entityplayer = (EntityPlayer) worldObj.playerEntities.get(countTotal);
-                int var5 = MathHelper.floor_double(entityplayer.posX / 16.0D);
-                var6 = MathHelper.floor_double(entityplayer.posZ / 16.0D);
-                byte var7 = 8;
+                spawnRadius = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance();
+            }
 
-                for (int var8 = -var7; var8 <= var7; ++var8)
+            if (spawnRadius > 8)
+            {
+                spawnRadius = 8;
+            }
+        }
+ 
+        for (countTotal = 0; countTotal < worldObj.playerEntities.size(); ++countTotal)
+        {
+            EntityPlayer entityplayer = (EntityPlayer) worldObj.playerEntities.get(countTotal);
+            int var5 = MathHelper.floor_double(entityplayer.posX / 16.0D);
+            var6 = MathHelper.floor_double(entityplayer.posZ / 16.0D);
+            byte var7 = spawnRadius;
+
+            for (int var8 = -var7; var8 <= var7; ++var8)
+            {
+                for (int var9 = -var7; var9 <= var7; ++var9)
                 {
-                    for (int var9 = -var7; var9 <= var7; ++var9)
-                    {
-                        boolean var10 = var8 == -var7 || var8 == var7 || var9 == -var7 || var9 == var7;
-                        ChunkCoordIntPair var11 = new ChunkCoordIntPair(var8 + var5, var9 + var6);
+                    boolean var10 = var8 == -var7 || var8 == var7 || var9 == -var7 || var9 == var7;
+                    ChunkCoordIntPair var11 = new ChunkCoordIntPair(var8 + var5, var9 + var6);
 
-                        if (!var10)
-                        {
-                            eligibleChunksForSpawning.put(var11, Boolean.valueOf(false));
-                        }
-                        else if (!eligibleChunksForSpawning.containsKey(var11))
-                        {
-                            eligibleChunksForSpawning.put(var11, Boolean.valueOf(true));
-                        }
+                    if (!var10)
+                    {
+                        eligibleChunksForSpawning.put(var11, Boolean.valueOf(false));
+                    }
+                    else if (!eligibleChunksForSpawning.containsKey(var11))
+                    {
+                        eligibleChunksForSpawning.put(var11, Boolean.valueOf(true));
                     }
                 }
             }
+        }
 
-            countTotal = 0;
-            ChunkCoordinates chunkcoordspawn = worldObj.getSpawnPoint();
-            EnumCreatureType[] enumcreaturevalues = EnumCreatureType.values();
-            var6 = enumcreaturevalues.length;
-            //0 = monster, 1 = creature, 2 = ambient, 3 = watercreature
+        countTotal = 0;
+        ChunkCoordinates chunkcoordspawn = worldObj.getSpawnPoint();
+        EnumCreatureType[] enumcreaturevalues = EnumCreatureType.values();
+        var6 = enumcreaturevalues.length;
+        int limit = 0;
+        //0 = monster, 1 = creature, 2 = ambient, 3 = watercreature
+        switch (enumcreaturetype)
+        {
+            case monster:
+                limit = maxMonsters;
+                break;
+            case creature:
+                limit = maxCreatures;
+                break;
+            case waterCreature:
+                limit = maxWaterCreatures;
+                break;
+            case ambient:
+                limit = maxAmbients;
+                break;
+        }
 
-            for (int enumType = 0; enumType < var6; ++enumType)
+        if (limit == 0)
+        {
+            return 0;
+        }
+        //System.out.println("CustomMobSpawner limit = " + limit);
+        int mobcnt = 0;
+        int enumC = countSpawnedEntities(worldObj, enumcreaturetype);
+
+        //modified to allow custom creature counts instead of vanillas
+        if (enumC <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256)
+        {
+            Iterator iterator = eligibleChunksForSpawning.keySet().iterator();
+            ArrayList<ChunkCoordIntPair> tmp = new ArrayList(eligibleChunksForSpawning.keySet());
+            Collections.shuffle(tmp);
+            iterator = tmp.iterator();
+            int moblimit = (limit * eligibleChunksForSpawning.size() / 256) - mobcnt + 1; // CraftBukkit - up to 1 more than limit
+            //System.out.println("moblimit = " + limit);
+            label108: while (iterator.hasNext() && (moblimit > 0))
             {
-                EnumCreatureType enumcreaturetype = enumcreaturevalues[enumType];
+                ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator.next();
 
-                int enumC = countSpawnedEntities(worldObj, enumcreaturetype);
-
-                //modified to allow custom creature counts instead of vanillas
-                if ((!enumcreaturetype.getPeacefulCreature() || spawnAnmls) && (enumcreaturetype.getPeacefulCreature() || spawnMobs) && (enumC <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256))
+                if (eligibleChunksForSpawning.get(chunkcoordintpair) != null && !((Boolean) eligibleChunksForSpawning.get(chunkcoordintpair)).booleanValue()) // blood - added null check to avoid crashing during SSP spawning
                 {
-                    Iterator iterator = eligibleChunksForSpawning.keySet().iterator();
-                    ArrayList<ChunkCoordIntPair> tmp = new ArrayList(eligibleChunksForSpawning.keySet());
-                    Collections.shuffle(tmp);
-                    iterator = tmp.iterator();
+                    ChunkPosition chunkpos = getRandomSpawningPointInChunk(worldObj, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+                    int posX = chunkpos.x;
+                    int posY = chunkpos.y;
+                    int posZ = chunkpos.z;
 
-                    label108: while (iterator.hasNext())
+                    if (!worldObj.isBlockNormalCube(posX, posY, posZ) && worldObj.getBlockMaterial(posX, posY, posZ) == enumcreaturetype.getCreatureMaterial())
                     {
-                        ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator.next();
+                        int spawnedMob = 0;
+                        int spawnCount = 0;
 
-                        if (eligibleChunksForSpawning.get(chunkcoordintpair) != null && !((Boolean) eligibleChunksForSpawning.get(chunkcoordintpair)).booleanValue()) // blood - added null check to avoid crashing during SSP spawning
+                        while (spawnCount < 3)
                         {
-                            ChunkPosition chunkpos = getRandomSpawningPointInChunk(worldObj, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
-                            int posX = chunkpos.x;
-                            int posY = chunkpos.y;
-                            int posZ = chunkpos.z;
+                            int tempX = posX;
+                            int tempY = posY;
+                            int tempZ = posZ;
+                            byte var20 = 6;
+                            SpawnListEntry spawnlistentry = null;
+                            int spawnAttempt = 0;
 
-                            if (!worldObj.isBlockNormalCube(posX, posY, posZ) && worldObj.getBlockMaterial(posX, posY, posZ) == enumcreaturetype.getCreatureMaterial())
+                            while (true)
                             {
-                                int spawnedMob = 0;
-                                int spawnCount = 0;
+                                if (spawnAttempt < 4)
 
-                                while (spawnCount < 3)
                                 {
-                                    int tempX = posX;
-                                    int tempY = posY;
-                                    int tempZ = posZ;
-                                    byte var20 = 6;
-                                    SpawnListEntry spawnlistentry = null;
-                                    int spawnAttempt = 0;
-
-                                    while (true)
+                                    label101:
                                     {
-                                        if (spawnAttempt < 4)
+                                        tempX += worldObj.rand.nextInt(var20) - worldObj.rand.nextInt(var20);
+                                        tempY += worldObj.rand.nextInt(1) - worldObj.rand.nextInt(1);
+                                        tempZ += worldObj.rand.nextInt(var20) - worldObj.rand.nextInt(var20);
 
+                                        //if(canCreatureTypeSpawnAtLocation(enumcreaturetype, worldObj, tempPosX, tempPosY, tempPosZ))
+                                        if (canCreatureTypeSpawnAtLocation(enumcreaturetype, worldObj, tempX, tempY, tempZ))
                                         {
-                                            label101:
+                                            float spawnX = (float) tempX + 0.5F;
+                                            float spawnY = (float) tempY;
+                                            float spawnZ = (float) tempZ + 0.5F;
+                                            //changed so creatures spawn closer
+                                            if (worldObj.getClosestPlayer((double) spawnX, (double) spawnY, (double) spawnZ, 24.0D) == null)
                                             {
-                                                tempX += worldObj.rand.nextInt(var20) - worldObj.rand.nextInt(var20);
-                                                tempY += worldObj.rand.nextInt(1) - worldObj.rand.nextInt(1);
-                                                tempZ += worldObj.rand.nextInt(var20) - worldObj.rand.nextInt(var20);
-
-                                                //if(canCreatureTypeSpawnAtLocation(enumcreaturetype, worldObj, tempPosX, tempPosY, tempPosZ))
-                                                if (canCreatureTypeSpawnAtLocation(enumcreaturetype, worldObj, tempX, tempY, tempZ))
+                                                float var26 = spawnX - (float) chunkcoordspawn.posX;
+                                                float var27 = spawnY - (float) chunkcoordspawn.posY;
+                                                float var28 = spawnZ - (float) chunkcoordspawn.posZ;
+                                                float spawnDist = var26 * var26 + var27 * var27 + var28 * var28;
+                                                //changed as well to make creatures spawn closer
+                                                if (spawnDist >= 576.0F)
                                                 {
-                                                    float spawnX = (float) tempX + 0.5F;
-                                                    float spawnY = (float) tempY;
-                                                    float spawnZ = (float) tempZ + 0.5F;
-                                                    //changed so creatures spawn closer
-                                                    if (worldObj.getClosestPlayer((double) spawnX, (double) spawnY, (double) spawnZ, 24.0D) == null)
+                                                    if (spawnlistentry == null)
                                                     {
-                                                        float var26 = spawnX - (float) chunkcoordspawn.posX;
-                                                        float var27 = spawnY - (float) chunkcoordspawn.posY;
-                                                        float var28 = spawnZ - (float) chunkcoordspawn.posZ;
-                                                        float spawnDist = var26 * var26 + var27 * var27 + var28 * var28;
-                                                        //changed as well to make creatures spawn closer
-                                                        if (spawnDist >= 256.0F)
+                                                        //this is where it has to be changed to include the custom list
+                                                        //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
+                                                        spawnlistentry = getRandomCustomMob(worldObj, enumcreaturetype, tempX, tempY, tempZ);
+
+                                                        if (spawnlistentry == null)
                                                         {
-                                                            if (spawnlistentry == null)
-                                                            {
-                                                                //this is where it has to be changed to include the custom list
-                                                                //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
-                                                                spawnlistentry = getRandomCustomMob(worldObj, enumcreaturetype, tempX, tempY, tempZ);
-
-                                                                if (spawnlistentry == null)
-                                                                {
-                                                                    break label101;
-                                                                }
-                                                            }
-
-                                                            EntityLiving entityliving;
-
-                                                            try
-                                                            {
-                                                                entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
-                                                            }
-                                                            catch (Exception exception)
-                                                            {
-                                                                exception.printStackTrace();
-                                                                return countTotal;
-                                                            }
-
-                                                            entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-
-                                                            if (entityliving.getCanSpawnHere())
-                                                            {
-                                                                ++spawnedMob;
-                                                                worldObj.spawnEntityInWorld(entityliving);
-                                                                creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
-                                                                // changed check from maxSpawnedInChunk to maxGroupCount.
-                                                                if (MoCreatures.proxy.debugLogging) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
-                                                                if (spawnedMob >= spawnlistentry.maxGroupCount)
-                                                                {
-                                                                    continue label108;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
-                                                            }
-                                                            countTotal += spawnedMob;
+                                                            break label101;
                                                         }
                                                     }
-                                                }
 
-                                                ++spawnAttempt;
-                                                continue;
+                                                    EntityLiving entityliving;
+
+                                                    try
+                                                    {
+                                                        entityliving = (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+                                                    }
+                                                    catch (Exception exception)
+                                                    {
+                                                        exception.printStackTrace();
+                                                        return countTotal;
+                                                    }
+
+                                                    entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+
+                                                    Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, worldObj, spawnX, spawnY, spawnZ);
+                                                    if (isValidLightLevel(entityliving, worldObj) && (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())))
+                                                    {
+                                                        ++spawnedMob;
+                                                        worldObj.spawnEntityInWorld(entityliving);
+                                                        creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
+                                                        // changed check from maxSpawnedInChunk to maxGroupCount.
+                                                       // System.out.println("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
+                                                        if (MoCreatures.proxy.debugLogging) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
+                                                        if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving))
+                                                        {
+                                                            continue label108;
+                                                        }
+                                                        moblimit--;
+                                                       // System.out.println("moblimit now = " + moblimit);
+                                                        if (moblimit <= 0)   // If we're past limit, stop spawn
+                                                        {
+                                                            continue label108;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
+                                                    }
+                                                    countTotal += spawnedMob;
+                                                }
                                             }
                                         }
 
-                                        ++spawnCount;
-                                        break;
+                                        ++spawnAttempt;
+                                        continue;
                                     }
                                 }
+
+                                ++spawnCount;
+                                break;
                             }
                         }
                     }
                 }
             }
-
-            return countTotal;
         }
+
+        return countTotal;
     }
 
     public void AddCustomSpawn(Class class1, int i, int max, EnumCreatureType enumcreaturetype)
@@ -518,7 +557,7 @@ public final class CustomSpawner {
     public void RemoveCustomSpawn(Class class1, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
         if (class1 == null) { throw new IllegalArgumentException("entityClass cannot be null"); }
-        if (enumcreaturetype == null) { throw new IllegalArgumentException("spawnList cannot be null"); }
+        //if (enumcreaturetype == null) { throw new IllegalArgumentException("spawnList cannot be null"); }
         if (abiomegenbase == null)
         {
             abiomegenbase = new BiomeGenBase[biomeList.size()];
@@ -532,6 +571,8 @@ public final class CustomSpawner {
             if (fulllist != null)
             {
                 int x = biomeList.indexOf(element.biomeName);
+                if (x >= 0) // don't iterate through list if biome wasn't found
+                {
                     for (Iterator iterator = fulllist[x].iterator(); iterator.hasNext();)
                     {
                         if (iterator != null)
@@ -543,7 +584,7 @@ public final class CustomSpawner {
                             }
                         }
                     }
-
+                }
             }
 
         }
@@ -611,51 +652,51 @@ public final class CustomSpawner {
 
     private int getMax(EnumCreatureType enumcreaturetype)
     {
-        if (enumcreaturetype == EnumCreatureType.monster) { return getMaxMobs(); }
-        if (enumcreaturetype == EnumCreatureType.creature) { return getMaxAnimals(); }
-        if (enumcreaturetype == EnumCreatureType.waterCreature) { return getMaxAquatic(); }
-        if (enumcreaturetype == EnumCreatureType.ambient) { return getMaxAmbient(); }
+        if (enumcreaturetype == EnumCreatureType.monster) { return getMaxMonsters(); }
+        if (enumcreaturetype == EnumCreatureType.creature) { return getMaxCreatures(); }
+        if (enumcreaturetype == EnumCreatureType.waterCreature) { return getMaxWaterCreatures(); }
+        if (enumcreaturetype == EnumCreatureType.ambient) { return getMaxAmbients(); }
         return 30;
     }
 
-    public int getMaxAnimals()
+    public int getMaxCreatures()
     {
-        return maxAnimals;
+        return maxCreatures;
     }
 
-    public void setMaxAnimals(int max)
+    public void setMaxCreatures(int max)
     {
-        maxAnimals = max;
+        maxCreatures = max;
     }
 
-    public int getMaxMobs()
+    public int getMaxMonsters()
     {
-        return maxMobs;
+        return maxMonsters;
     }
 
-    public void setMaxMobs(int max)
+    public void setMaxMonsters(int max)
     {
-        maxMobs = max;
+        maxMonsters = max;
     }
 
-    public int getMaxAquatic()
+    public int getMaxWaterCreatures()
     {
-        return maxAquatic;
+        return maxWaterCreatures;
     }
 
-    public void setMaxAquatic(int max)
+    public void setMaxWaterCreatures(int max)
     {
-        maxAquatic = max;
+        maxWaterCreatures = max;
     }
 
-    public int getMaxAmbient()
+    public int getMaxAmbients()
     {
-        return maxAmbient;
+        return maxAmbients;
     }
 
-    public void setMaxAmbient(int max)
+    public void setMaxAmbients(int max)
     {
-        maxAmbient = max;
+        maxAmbients = max;
     }
 
     /*public int getMaxSpawnsPerChunk()
@@ -668,15 +709,24 @@ public final class CustomSpawner {
         maxSpawnsPerChunk = max;
     }*/
 
-    private static boolean canCreatureTypeSpawnAtLocation(EnumCreatureType enumcreaturetype, World world, int i, int j, int k)
+    /**
+     * Returns whether or not the specified creature type can spawn at the specified location.
+     */
+    public static boolean canCreatureTypeSpawnAtLocation(EnumCreatureType par0EnumCreatureType, World par1World, int par2, int par3, int par4)
     {
-        if (enumcreaturetype.getCreatureMaterial() == Material.water)
+        if (par0EnumCreatureType.getCreatureMaterial() == Material.water)
         {
-            return world.getBlockMaterial(i, j, k).isLiquid() && !world.isBlockNormalCube(i, j + 1, k);
+            return par1World.getBlockMaterial(par2, par3, par4).isLiquid() && par1World.getBlockMaterial(par2, par3 - 1, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
+        }
+        else if (!par1World.doesBlockHaveSolidTopSurface(par2, par3 - 1, par4))
+        {
+            return false;
         }
         else
         {
-            return world.isBlockNormalCube(i, j - 1, k) && !world.isBlockNormalCube(i, j, k) && !world.getBlockMaterial(i, j, k).isLiquid() && !world.isBlockNormalCube(i, j + 1, k);
+            int l = par1World.getBlockId(par2, par3 - 1, par4);
+            boolean spawnBlock = (Block.blocksList[l] != null && Block.blocksList[l].canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4));
+            return spawnBlock && l != Block.bedrock.blockID && !par1World.isBlockNormalCube(par2, par3, par4) && !par1World.getBlockMaterial(par2, par3, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
         }
     }
 
@@ -868,6 +918,39 @@ public final class CustomSpawner {
         }
     }
 
+    protected boolean isValidLightLevel(Entity entity, WorldServer worldObj)
+    {
+        if (!entity.isCreatureType(EnumCreatureType.creature, true))
+        {
+            return true;
+        }
+        int x = MathHelper.floor_double(entity.posX);
+        int y = MathHelper.floor_double(entity.boundingBox.minY);
+        int z = MathHelper.floor_double(entity.posZ);
+
+        int i = this.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+        if (i >= MoCreatures.proxy.lightLevel)
+            if (MoCreatures.proxy.debugLogging) log.info("Could not spawn entity " + entity + ". LightLevel over threshold of " + i + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+        return i <= MoCreatures.proxy.lightLevel;
+    }
+
+    /**
+     * Gets the amount of light on a block without taking into account sunlight
+     */
+    public int getBlockLightValue(Chunk chunk, int x, int y, int z)
+    {
+        ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
+
+        if (extendedblockstorage == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return extendedblockstorage.getExtBlocklightValue(x, y & 15, z);
+        }
+    }
+
     public static boolean isNearTorch(Entity entity, Double dist, World worldObj)
     {
         AxisAlignedBB axisalignedbb = entity.boundingBox.expand(dist, 2D, dist);
@@ -906,7 +989,6 @@ public final class CustomSpawner {
 
         return false;
     }
-   
 
     /**
      * determines if a skeleton spawns on a spider, and if a sheep is a different color
@@ -966,6 +1048,7 @@ public final class CustomSpawner {
 
                             entityliving.setLocationAndAngles((double)f, (double)f1, (double)f2, par6Random.nextFloat() * 360.0F, 0.0F);
                             worldObj.spawnEntityInWorld(entityliving);
+                            //System.out.println("worldgen spawned " + entityliving);
                             if (MoCreatures.proxy.debugLogging) log.info("worldgen spawned " + entityliving);
                             creatureSpecificInit(entityliving, worldObj, f, f1, f2);
                             flag = true;
