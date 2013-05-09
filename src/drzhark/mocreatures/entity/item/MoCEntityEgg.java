@@ -4,9 +4,12 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityFishy;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityPiranha;
 import drzhark.mocreatures.entity.passive.MoCEntityShark;
+import drzhark.mocreatures.entity.passive.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.block.material.Material;
@@ -146,7 +149,7 @@ public class MoCEntityEgg extends EntityLiving {
                 }
             }
 
-            if (isInWater() && getEggType() < 21 && (rand.nextInt(20) == 0))
+            if (isInWater() && (getEggType() < 21 || getEggType() > 69)&& (rand.nextInt(20) == 0))
             {
                 tCounter++;
                 if (tCounter % 5 == 0)
@@ -162,13 +165,12 @@ public class MoCEntityEgg extends EntityLiving {
 
                     // if (entityliving != null)
 
-                    if (getEggType() < 11) // fishy
+                    if (getEggType() < 10) // fishy
                     {
                         MoCEntityFishy entityspawn = new MoCEntityFishy(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(getEggType());
-                        entityspawn.selectType();
                         entityspawn.setEdad(30);
                         worldObj.spawnEntityInWorld(entityspawn);
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
@@ -177,8 +179,6 @@ public class MoCEntityEgg extends EntityLiving {
                             if (MoCreatures.isServer())
                             {
                                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                                //TODO NAMER
-                                //entityspawn.setTamed(true);
                             }
                         }
                     }
@@ -188,7 +188,6 @@ public class MoCEntityEgg extends EntityLiving {
                         MoCEntityShark entityspawn = new MoCEntityShark(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
-                        // entityspawn.type = getEggType());
                         entityspawn.setEdad(30);
                         worldObj.spawnEntityInWorld(entityspawn);
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
@@ -203,6 +202,59 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                     }
 
+                    else if (getEggType()  == 90) // piranha
+                    {
+                    	MoCEntityPiranha entityspawn = new MoCEntityPiranha(worldObj);
+
+                        entityspawn.setPosition(posX, posY, posZ);
+                        worldObj.spawnEntityInWorld(entityspawn);
+                        entityspawn.setEdad(30);
+                        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
+                        if (entityplayer != null)
+                        {
+                            if (MoCreatures.isServer())
+                            {
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                            }
+                        }
+                    }
+                    
+                    else if (getEggType() > 79 && getEggType() < (80 + MoCEntitySmallFish.fishNames.length)) // smallfish
+                    {
+                    	MoCEntitySmallFish entityspawn = new MoCEntitySmallFish(worldObj);
+
+                        entityspawn.setPosition(posX, posY, posZ);
+                        entityspawn.setType(getEggType() - 79);
+                        worldObj.spawnEntityInWorld(entityspawn);
+                        entityspawn.setEdad(30);
+                        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
+                        if (entityplayer != null)
+                        {
+                            if (MoCreatures.isServer())
+                            {
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                            }
+                        }
+                    }
+                    
+                    else if (getEggType() > 69 && getEggType() < (80 + MoCEntityMediumFish.fishNames.length)) // mediumfish
+                    {
+                    	MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(worldObj);
+
+                        entityspawn.setPosition(posX, posY, posZ);
+                        entityspawn.setType(getEggType() - 69);
+                        worldObj.spawnEntityInWorld(entityspawn);
+                        entityspawn.setEdad(30);
+                        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
+                        if (entityplayer != null)
+                        {
+                            if (MoCreatures.isServer())
+                            {
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                            }
+                        }
+                    }
+                    //else if (i > 69 && i < (70 + MoCEntityMediumFish.fishNames.length))
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
 
                     setDead();

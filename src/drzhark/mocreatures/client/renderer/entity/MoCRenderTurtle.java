@@ -11,7 +11,7 @@ import drzhark.mocreatures.client.model.MoCModelTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderTurtle extends MoCRenderAnimal {
+public class MoCRenderTurtle extends MoCRenderMoC {
     public MoCRenderTurtle(MoCModelTurtle modelbase, float f)
     {
         super(modelbase, f);

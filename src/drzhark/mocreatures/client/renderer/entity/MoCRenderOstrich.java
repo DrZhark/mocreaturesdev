@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderOstrich extends MoCRenderAnimal {
+public class MoCRenderOstrich extends MoCRenderMoC {
 
     public MoCRenderOstrich(ModelBase modelbase, float f)
     {

@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderInsect extends MoCRenderAnimal {
+public class MoCRenderInsect extends MoCRenderMoC {
     public MoCRenderInsect(ModelBase modelbase)
     {
         super(modelbase, 0.0F);

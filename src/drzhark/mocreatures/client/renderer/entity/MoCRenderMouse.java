@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderMouse extends MoCRenderAnimal {
+public class MoCRenderMouse extends MoCRenderMoC {
 
     public MoCRenderMouse(ModelBase modelbase, float f)
     {

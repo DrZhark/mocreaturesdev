@@ -225,7 +225,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     }
 
 	@Override
-	public int tiltOffset() 
+	public int rollRotationOffset() 
 	{
 		return 0;
 	}

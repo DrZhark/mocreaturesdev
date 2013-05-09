@@ -296,17 +296,15 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (worldObj.difficultySetting > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
         {
-            /*if (!getIsTamed())
-            {
+           
                 EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 12D);
-                if ((entityplayer != null) && getIsAdult()) { return entityplayer; }
-            }
-            else*/
+                if ((entityplayer != null)) { return entityplayer; }
+            
             {
                 if ((rand.nextInt(80) == 0))
                 {
                     EntityLiving entityliving = getClosestEntityLiving(this, 10D);
-                if (entityliving != null && this.canEntityBeSeen(entityliving)) // blood - add LoS requirement
+                if (entityliving != null && !(entityliving instanceof EntityPlayer) && this.canEntityBeSeen(entityliving)) // blood - add LoS requirement
                     return entityliving;
                 }
 

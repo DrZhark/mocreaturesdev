@@ -22,12 +22,12 @@ public class MoCModelFishy extends ModelBase {
     public MoCModelFishy()
     {
         Body = new ModelRenderer(this, 0, 0);
-        Body.addBox(0.0F, 0.0F, 0.0F, 1, 5, 5, 0.0F);
-        Body.setRotationPoint(0.0F, 19F, 0.0F);
+        Body.addBox(0.0F, 0.0F, -3.5F, 1, 5, 5, 0.0F);
+        Body.setRotationPoint(0.0F, 18F, -1F);
         Body.rotateAngleX = 0.7853981F;
         Tail = new ModelRenderer(this, 12, 0);
         Tail.addBox(0.0F, 0.0F, 0.0F, 1, 3, 3, 0.0F);
-        Tail.setRotationPoint(0.0F, 18.7F, 6F);
+        Tail.setRotationPoint(0.0F, 20.5F, 3F);
         Tail.rotateAngleX = 0.7853981F;
     }
 

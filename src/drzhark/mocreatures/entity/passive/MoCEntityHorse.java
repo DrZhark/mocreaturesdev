@@ -2048,7 +2048,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         }
         if (flag)
         {
-            runLikeHell(ep1);
+            MoCTools.runLikeHell(this, ep1);
         }
         return flag;
     }

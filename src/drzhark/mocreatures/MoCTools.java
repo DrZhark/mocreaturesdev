@@ -278,7 +278,7 @@ public class MoCTools {
             if (entityToSpawn != null)
             {
             	entityToSpawn.initCreature();
-            	entityToSpawn.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
+            	entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
         }
@@ -318,6 +318,24 @@ public class MoCTools {
         }
     }*/
 
+    /**
+     * Returns a new instance of EntityLiving based on the name of the class
+     * @param eName
+     * @param worldObj
+     * @return
+     */
+    public static EntityLiving spawnListByNameClass(String eName, World worldObj) 
+    {
+    	EntityLiving entityToSpawn = null;
+    	try
+    	{
+    		Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+    		entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+    	}catch (Exception e) 
+    	{ System.out.println(e);}
+    	return entityToSpawn;        
+    }
+    
     /**
      * Returns a new instance of MoCIMoCreature based on the creatureType 
      * @param creatureType
@@ -2024,6 +2042,40 @@ public class MoCTools {
     }
 
     /**
+     * Drops a new EntityItem fishnet with the stored information of the entity
+     */
+    public static void dropFishnet(MoCIMoCreature entity)
+    {
+        if (MoCreatures.isServer())
+        {
+               ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
+               
+               if( stack.stackTagCompound == null )
+        		{
+                	stack.setTagCompound(new NBTTagCompound());
+        		}
+        		NBTTagCompound nbtt = stack.stackTagCompound;
+        		
+                try
+                {
+                	nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+                	nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
+                	nbtt.setInteger("Edad", entity.getEdad());
+            		nbtt.setString("Name", entity.getName());
+            		nbtt.setInteger("CreatureType", entity.getType());
+            		nbtt.setString("OwnerName", entity.getOwnerName());
+                }
+                catch (Exception e)
+                {
+                }
+                EntityItem entityitem = new EntityItem(((EntityLiving)entity).worldObj, ((EntityLiving)entity).posX, ((EntityLiving)entity).posY, ((EntityLiving)entity).posZ, stack);
+                entityitem.delayBeforeCanPickup = 20;
+                ((EntityLiving)entity).worldObj.spawnEntityInWorld(entityitem);
+                //entity.setDead();
+        }
+    }
+    
+    /**
      * Returns the right full amulet based on the MoCEntityAnimal passed
      * @param entity
      * @return
@@ -2152,5 +2204,45 @@ public class MoCTools {
 	            }
 	        }
 		
+	}
+	
+	public static void getPathToEntity(EntityCreature creatureToMove, Entity entityTarget, float f)
+	{
+		PathEntity pathentity = creatureToMove.worldObj.getPathEntityToEntity(creatureToMove, entityTarget, 16F, true, false, false, true);
+		if (pathentity != null && f < 12F)
+		{
+			creatureToMove.setPathToEntity(pathentity);
+		}
+	}
+	
+	public static void runLikeHell(EntityCreature runningEntity, Entity boogey)
+	{
+		double d = runningEntity.posX - boogey.posX;
+		double d1 = runningEntity.posZ - boogey.posZ;
+		double d2 = Math.atan2(d, d1);
+		d2 += (runningEntity.worldObj.rand.nextFloat() - runningEntity.worldObj.rand.nextFloat()) * 0.75D;
+		double d3 = runningEntity.posX + (Math.sin(d2) * 8D);
+		double d4 = runningEntity.posZ + (Math.cos(d2) * 8D);
+		int i = MathHelper.floor_double(d3);
+		int j = MathHelper.floor_double(runningEntity.boundingBox.minY);
+		int k = MathHelper.floor_double(d4);
+		int l = 0;
+		do
+		{
+			if (l >= 16)
+			{
+				break;
+			}
+			int i1 = (i + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
+			int j1 = (j + runningEntity.worldObj.rand.nextInt(3)) - runningEntity.worldObj.rand.nextInt(3);
+			int k1 = (k + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
+			if ((j1 > 4) && ((runningEntity.worldObj.getBlockId(i1, j1, k1) == 0) || (runningEntity.worldObj.getBlockId(i1, j1, k1) == Block.snow.blockID)) && (runningEntity.worldObj.getBlockId(i1, j1 - 1, k1) != 0))
+			{
+				PathEntity pathentity = runningEntity.worldObj.getEntityPathToXYZ(runningEntity, i1, j1, k1, 16F, true, false, false, true);
+				runningEntity.setPathToEntity(pathentity);
+				break;
+			}
+			l++;
+		} while (true);
 	}
 }

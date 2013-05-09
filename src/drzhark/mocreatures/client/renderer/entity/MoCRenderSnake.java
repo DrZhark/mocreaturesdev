@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderSnake extends MoCRenderAnimal {
+public class MoCRenderSnake extends MoCRenderMoC {
 
     public MoCRenderSnake(ModelBase modelbase, float f)
     {

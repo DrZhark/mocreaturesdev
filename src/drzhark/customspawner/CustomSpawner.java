@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -26,29 +25,22 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenEnd;
-import net.minecraft.world.biome.BiomeGenHell;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.Event.Result;
+import net.minecraftforge.event.ForgeEventFactory;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
-//import net.minecraftforge.event.entity.living.LivingSpecialSpawnEvent;
 import cpw.mods.fml.common.Mod;
-import drzhark.mocreatures.MoCEntityData;
-import drzhark.mocreatures.MoCreatures;
+
 
 @Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.0.0")
 public final class CustomSpawner {
@@ -56,6 +48,7 @@ public final class CustomSpawner {
     private int maxMonsters;
     private int maxWaterCreatures;
     private int maxAmbients;
+    private boolean verboseConsole;
     private static byte spawnRadius = 0;
 
     public List<BiomeGenBase> biomeList;
@@ -244,7 +237,7 @@ public final class CustomSpawner {
      * 
      * 
      */
-    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype)
+    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype, int mobSpawnRange, int lightLevel)
     {
         eligibleChunksForSpawning.clear();
         int countTotal;
@@ -252,7 +245,7 @@ public final class CustomSpawner {
 
         if (spawnRadius == 0)
         {
-            spawnRadius = (byte) MoCreatures.proxy.mobSpawnRange;
+            spawnRadius = (byte) mobSpawnRange;
 
             if (spawnRadius > (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
             {
@@ -409,14 +402,14 @@ public final class CustomSpawner {
                                                     entityliving.setLocationAndAngles((double) spawnX, (double) spawnY, (double) spawnZ, worldObj.rand.nextFloat() * 360.0F, 0.0F);
 
                                                     Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, worldObj, spawnX, spawnY, spawnZ);
-                                                    if (isValidLightLevel(entityliving, worldObj) && (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())))
+                                                    if (isValidLightLevel(entityliving, worldObj, lightLevel) && (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())))
                                                     {
                                                         ++spawnedMob;
                                                         worldObj.spawnEntityInWorld(entityliving);
                                                         creatureSpecificInit(entityliving, worldObj, spawnX, spawnY, spawnZ);
                                                         // changed check from maxSpawnedInChunk to maxGroupCount.
                                                        // System.out.println("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
-                                                        if (MoCreatures.proxy.debugLogging) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
+                                                        if (verboseConsole) log.info("spawned " + entityliving + ", spawnedMob = " + spawnedMob + ", maxGroupCount = " + spawnlistentry.maxGroupCount);
                                                         if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving))
                                                         {
                                                             continue label108;
@@ -430,7 +423,7 @@ public final class CustomSpawner {
                                                     }
                                                     else
                                                     {
-                                                        if (MoCreatures.proxy.debugLogging) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
+                                                        if (verboseConsole) log.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
                                                     }
                                                     countTotal += spawnedMob;
                                                 }
@@ -482,7 +475,7 @@ public final class CustomSpawner {
 
     public void AddCustomSpawn(Class class1, int i, int j, int k, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
-        if (MoCreatures.proxy.debugLogging) log.info("AddCustomSpawn class " + class1 + ", at coords " + i + ", " + j + ", " + k + "  type = " + enumcreaturetype);
+        if (verboseConsole) log.info("AddCustomSpawn class " + class1 + ", at coords " + i + ", " + j + ", " + k + "  type = " + enumcreaturetype);
         if (class1 == null) { throw new IllegalArgumentException("entityClass cannot be null"); }
         if (enumcreaturetype == null) { throw new IllegalArgumentException("spawnList cannot be null"); }
         if (abiomegenbase == null)
@@ -699,6 +692,16 @@ public final class CustomSpawner {
         maxAmbients = max;
     }
 
+    public boolean isVerboseConsole() 
+    {
+		return verboseConsole;
+	}
+
+	public void setVerboseConsole(boolean flag) 
+	{
+		this.verboseConsole = flag;
+	}
+	
     /*public int getMaxSpawnsPerChunk()
     {
         return maxSpawnsPerChunk;
@@ -730,24 +733,19 @@ public final class CustomSpawner {
         }
     }
 
-    //New DesPawner stuff
     protected final int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving)
+    {
+    	return entityDespawnCheck(worldObj, entityliving, 7);
+    }
+    
+    //New DesPawner stuff
+    protected final int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int lightLevel)
     {
         
         if (entityliving instanceof EntityWolf && ((EntityWolf) entityliving).isTamed()) { return 0; }
-        if (isNearTorch(entityliving, 8D, worldObj)) { return 0; }
-
-        /*if (!(entityliving instanceof EntityCow 
-        		|| entityliving instanceof EntitySheep 
-        		|| entityliving instanceof EntityChicken 
-        		|| entityliving instanceof EntityPig
-        		|| entityliving instanceof EntityOcelot
-        		|| entityliving instanceof EntitySquid
-        		))
-        {
-        	return 0;
-        }*/
-        
+        //if (isNearTorch(entityliving, 8D, worldObj)) { return 0; }
+        if (!isValidDespawnLightLevel(entityliving, worldObj, lightLevel)) { return 0; }
+                
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(entityliving, -1D);
         if (entityplayer != null) //entityliving.canDespawn() && 
         {
@@ -791,7 +789,7 @@ public final class CustomSpawner {
         return i;
     }
 
-    public final int despawnVanillaAnimals(WorldServer worldObj)
+    public final int despawnVanillaAnimals(WorldServer worldObj, int lightLevel)
     {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
@@ -803,7 +801,7 @@ public final class CustomSpawner {
             }
             if ((entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
             {
-                count += entityDespawnCheck(worldObj, (EntityLiving) entity);
+                count += entityDespawnCheck(worldObj, (EntityLiving) entity, lightLevel);
 
             }
         }
@@ -918,7 +916,7 @@ public final class CustomSpawner {
         }
     }
 
-    protected boolean isValidLightLevel(Entity entity, WorldServer worldObj)
+    protected boolean isValidLightLevel(Entity entity, WorldServer worldObj, int lightLevel)
     {
         if (!entity.isCreatureType(EnumCreatureType.creature, true))
         {
@@ -929,9 +927,18 @@ public final class CustomSpawner {
         int z = MathHelper.floor_double(entity.posZ);
 
         int i = this.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
-        if (i >= MoCreatures.proxy.lightLevel)
-            if (MoCreatures.proxy.debugLogging) log.info("Could not spawn entity " + entity + ". LightLevel over threshold of " + i + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
-        return i <= MoCreatures.proxy.lightLevel;
+        if (i >= lightLevel)
+            if (verboseConsole) log.info("Could not spawn entity " + entity + ". LightLevel over threshold of " + i + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+        return i <= lightLevel;
+    }
+    
+    protected boolean isValidDespawnLightLevel(Entity entity, WorldServer worldObj, int lightLevel)
+    {
+        int x = MathHelper.floor_double(entity.posX);
+        int y = MathHelper.floor_double(entity.boundingBox.minY);
+        int z = MathHelper.floor_double(entity.posZ);
+        int i = this.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+        return i <= lightLevel;
     }
 
     /**
@@ -1006,9 +1013,9 @@ public final class CustomSpawner {
     /**
      * Called during chunk generation to spawn initial creatures.
      */
-    public static void performWorldGenSpawning(World worldObj, BiomeGenBase par1BiomeGenBase, int par2, int par3, int par4, int par5, Random par6Random, List customSpawnList)
+    public static void performWorldGenSpawning(World worldObj, BiomeGenBase par1BiomeGenBase, int par2, int par3, int par4, int par5, Random par6Random, List customSpawnList, boolean worldGenCreatureSpawning)
     {
-        if (!customSpawnList.isEmpty() && MoCreatures.proxy.worldGenCreatureSpawning)
+        if (!customSpawnList.isEmpty() && worldGenCreatureSpawning)
         {
             while (par6Random.nextFloat() < par1BiomeGenBase.getSpawningChance())
             {
@@ -1049,7 +1056,7 @@ public final class CustomSpawner {
                             entityliving.setLocationAndAngles((double)f, (double)f1, (double)f2, par6Random.nextFloat() * 360.0F, 0.0F);
                             worldObj.spawnEntityInWorld(entityliving);
                             //System.out.println("worldgen spawned " + entityliving);
-                            if (MoCreatures.proxy.debugLogging) log.info("worldgen spawned " + entityliving);
+                            //if (verboseConsole) log.info("worldgen spawned " + entityliving);
                             creatureSpecificInit(entityliving, worldObj, f, f1, f2);
                             flag = true;
                         }

@@ -828,14 +828,32 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     }*/
 
 	@Override
-	public int tiltFrontOffset() 
+	public int pitchRotationOffset() 
 	{
 		return 0;
 	}
 
 	@Override
-	public int tiltOffset() 
+	public int rollRotationOffset() 
 	{
 		return 0;
+	}
+	
+	@Override
+	public int yawRotationOffset()
+	{
+		return 0;
+	}
+	
+	@Override
+	public float getAdjustedZOffset()
+	{
+		return 0F;
+	}
+	
+	@Override
+	public float getAdjustedXOffset()
+	{
+		return 0F;
 	}
 }

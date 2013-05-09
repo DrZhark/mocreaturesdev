@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderBird extends MoCRenderAnimal {
+public class MoCRenderBird extends MoCRenderMoC {
 
     public MoCRenderBird(ModelBase modelbase, float f)
     {

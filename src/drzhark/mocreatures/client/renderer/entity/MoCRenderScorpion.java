@@ -11,7 +11,7 @@ import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderScorpion extends MoCRenderAnimal {
+public class MoCRenderScorpion extends MoCRenderMoC {
     public MoCRenderScorpion(MoCModelScorpion modelbase, float f)
     {
         super(modelbase, f);

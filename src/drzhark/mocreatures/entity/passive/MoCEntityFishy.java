@@ -7,6 +7,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityWolf;
@@ -22,14 +23,14 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     public int gestationtime;
     private boolean hasEaten;
 
-    public static final String fishNames[] = { "Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy", "Piranha" };
+    public static final String fishNames[] = { "Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy" };
 
     public MoCEntityFishy(World world)
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = 6;
-        setEdad(100);
+        health = getMaxHealth();
+        setEdad(50 + rand.nextInt(50));
         // unused_flag = true;
     }
 
@@ -38,7 +39,9 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     {
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
+        	setType(rand.nextInt(fishNames.length) + 1);
+        	
+            /*int i = rand.nextInt(100);
             if (i <= 9)
             {
                 setType(1);
@@ -82,7 +85,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
             if (!MoCreatures.proxy.spawnPiranhas && (getType() == 10))
             {
                 setType(1);
-            }
+            }*/
         }
 
     }
@@ -143,7 +146,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
-    @Override
+    /*@Override
     protected void attackEntity(Entity entity, float f)
     {
         if (attackTime <= 0 && (f < 2D) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY))
@@ -155,9 +158,9 @@ public class MoCEntityFishy extends MoCEntityAquatic {
         	} 
             
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
         if (super.attackEntityFrom(damagesource, i))
@@ -174,7 +177,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
         {
             return false;
         }
-    }
+    }*/
 
     @Override
     protected void dropFewItems(boolean flag, int x)
@@ -198,7 +201,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
         }
     }
 
-    @Override
+    /*@Override
     protected Entity findPlayerToAttack()
     {
         if ((worldObj.difficultySetting > 0) && (getEdad() >= 100) && (getType() == 10))
@@ -212,7 +215,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
             }
         }
         return null;
-    }
+    }*/
 
     // TODO move this
     public EntityLiving FindTarget(Entity entity, double d)
@@ -248,6 +251,15 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
+        
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+        	prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
+        	rotationPitch = prevRotationPitch;
+        }
+        
+        
+        
         if (MoCreatures.isServer())
         {
             if (!getIsAdult() && (rand.nextInt(100) == 0))
@@ -258,6 +270,22 @@ public class MoCEntityFishy extends MoCEntityAquatic {
                     setAdult(true);
                 }
             }
+            
+            if (rand.nextInt(5) == 0 && !getIsTamed())
+            {
+                EntityLiving entityliving = getBoogey(8D);
+                if (entityliving != null && entityliving.isInsideOfMaterial(Material.water))
+                {
+                   MoCTools.runLikeHell(this, entityliving);
+
+                }
+            }
+            
+            if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
+            {
+            	this.health = getMaxHealth();
+            }
+           
             if (!ReadyforParenting(this)) { return; }
             int i = 0;
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(4D, 3D, 4D));
@@ -324,6 +352,62 @@ public class MoCEntityFishy extends MoCEntityAquatic {
 
     public boolean ReadyforParenting(MoCEntityFishy entityfishy)
     {
-        return entityfishy.getIsTamed() && entityfishy.getHasEaten() && entityfishy.getIsAdult();
+    	return false; //TOOD pending overhaul of breeding
+        //return entityfishy.getIsTamed() && entityfishy.getHasEaten() && entityfishy.getIsAdult();
+    }
+    
+    @Override
+    protected boolean canBeTrappedInNet() 
+    {
+		return true;
+	}
+    
+    @Override
+    public boolean renderName()
+    {
+        return getDisplayName() && (riddenByEntity == null);
+    }
+    
+    @Override
+    public int nameYOffset()
+    {
+        return -25;
+    }
+    
+    @Override
+	public int rollRotationOffset()
+	{
+    	if (!this.isInsideOfMaterial(Material.water))
+    	{
+    		return -90;
+    	}
+		return 0;
+	}
+    
+    @Override
+    public float getAdjustedYOffset()
+    {
+    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
+    	{
+    		return -0.1F;
+    	}
+    	return 0.0F;
+    }
+    
+        
+    @Override
+	public float getAdjustedXOffset()
+	{
+    	if (!this.isInsideOfMaterial(Material.water))
+    	{
+    		return -0.2F;
+    	}
+		return 0F;
+	}
+    
+    @Override
+    protected boolean isFisheable()
+    {
+    	return !getIsTamed();
     }
 }

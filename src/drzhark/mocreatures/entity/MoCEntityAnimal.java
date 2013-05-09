@@ -253,7 +253,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
 		return ((!(entity instanceof EntityLiving)) 
 		        || (entity instanceof EntityMob) 
-		        || (entity instanceof EntityPlayer && this.getIsTamed()) 
+		        || (entity instanceof EntityPlayer )// && this.getIsTamed()) 
 		        || (entity instanceof MoCEntityKittyBed) 
 		        || (entity instanceof MoCEntityLitterBox) 
 		        || (this.getIsTamed() && (entity instanceof MoCIMoCreature && ((MoCIMoCreature) entity).getIsTamed())) 
@@ -265,7 +265,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 		);
 	}
 
-	public void runLikeHell(Entity entity)
+	//Moved to MoCTools
+	/*public void runLikeHell(Entity entity)
 	{
 		double d = posX - entity.posX;
 		double d1 = posZ - entity.posZ;
@@ -294,7 +295,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 			}
 			l++;
 		} while (true);
-	}
+	}*/
 
 	/**
 	 * Finds and entity described in entitiesToInclude at d distance
@@ -1927,15 +1928,33 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	public void dropArmor() {}
 	
 	@Override
-	public int tiltFrontOffset() 
+	public int pitchRotationOffset() 
 	{
 		return 0;
 	}
 	
 	@Override
-	public int tiltOffset() 
+	public int rollRotationOffset() 
 	{
 		return 0;
+	}
+	
+	@Override
+	public int yawRotationOffset()
+	{
+		return 0;
+	}
+	
+	@Override
+	public float getAdjustedZOffset()
+	{
+		return 0F;
+	}
+	
+	@Override
+	public float getAdjustedXOffset()
+	{
+		return 0F;
 	}
 }
 

@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class MoCEntityWerewolf extends MoCEntityMob {
     private boolean transforming;
@@ -209,7 +210,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 {
                     i = 10;
                 }
-                if (itemstack.itemID == MoCreatures.swordsilver.itemID)
+                if (itemstack.itemID == MoCreatures.swordsilver.itemID)// || itemstack.getItem() instanceof ItemWeapon)
                 {
                 	i = 10;
                 }

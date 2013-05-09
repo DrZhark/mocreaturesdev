@@ -75,9 +75,23 @@ public interface MoCIMoCreature {
     
     public int getType();
 
+    public void setType(int i);
+
 	public void dismountEntity();
 
-	public int tiltOffset();
+	public int rollRotationOffset();
 
-	public int tiltFrontOffset();
+	public int pitchRotationOffset();
+
+	public void setEdad(int i);
+
+	public int getEdad();
+
+	public int yawRotationOffset();
+
+	public float getAdjustedZOffset();
+
+	public float getAdjustedXOffset();
+
+
 }

@@ -144,10 +144,12 @@ import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityPiranha;
 import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
 import drzhark.mocreatures.entity.passive.MoCEntityRay;
 import drzhark.mocreatures.entity.passive.MoCEntityRoach;
 import drzhark.mocreatures.entity.passive.MoCEntityShark;
+import drzhark.mocreatures.entity.passive.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.passive.MoCEntitySnail;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
@@ -161,6 +163,7 @@ import drzhark.mocreatures.item.MoCItemAmulet;
 import drzhark.mocreatures.item.MoCItemArmor;
 import drzhark.mocreatures.item.MoCItemEgg;
 import drzhark.mocreatures.item.MoCItemFishBowl;
+import drzhark.mocreatures.item.MoCItemFishnet;
 import drzhark.mocreatures.item.MoCItemFood;
 import drzhark.mocreatures.item.MoCItemHayStack;
 import drzhark.mocreatures.item.MoCItemHorseSaddle;
@@ -357,6 +360,8 @@ public class MoCreatures {
     public static Item crabmeat;
     public static Item crabmeatcooked;
 
+    public static Item fishnet;
+
     public static Logger log;
 
     @PreInit
@@ -443,7 +448,9 @@ public class MoCreatures {
         registerEntity(MoCEntityMiniGolem.class, "MiniGolem", 16711680, 13749760, false);
         registerEntity(MoCEntitySilverSkeleton.class, "SilverSkeleton", 16711680, 33023, false);
         registerEntity(MoCEntityAnt.class, "Ant", 65407, 12623485, false);
-        registerEntity(MoCEntityMediumFish.class, "MediumFish", 33023, 9320590, false);
+        registerEntity(MoCEntityMediumFish.class, "MediumFish", 33023, 16622, false);
+        registerEntity(MoCEntitySmallFish.class, "SmallFish", 33023, 65407, false);
+        registerEntity(MoCEntityPiranha.class, "Piranha", 33023, 16711680, false);
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -637,7 +644,8 @@ public class MoCreatures {
         ostrichmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ostrichraw");//.setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setIconIndex(83).setItemName("ostrichmeat");
         ostrichcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");//.setIconIndex(84).setItemName("ostrichcooked");
         unicorn = (new MoCItem(MoCItemID++)).setUnlocalizedName("unicorn");//.setIconIndex(47).setItemName("unicorn");
-        MoCItemID++;
+        //MoCItemID++;
+        fishnet = (new MoCItemFishnet(MoCItemID++)).setUnlocalizedName("fishnet");
         MoCItemID++;
         horsearmorcrystal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorcrystal");//.setIconIndex(76).setItemName("horsearmorcrystal");
 
@@ -919,11 +927,12 @@ public class MoCreatures {
         LanguageRegistry.addName(howdah, "Elephant Howdah");
         LanguageRegistry.addName(garment, "Elephant Garment");
         LanguageRegistry.addName(platform, "Mammoth Platform");
+        LanguageRegistry.addName(fishnet, "Fish Net");
 
-        for (int i = 0; i < 55; i++)
+        for (int i = 0; i < 91; i++)
         {
             String s;
-            if (i > 0 && i < 11)
+            if (i > 0 && i < 10)
             {
                 s = MoCEntityFishy.fishNames[i - 1];
                 LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Fish Egg"));
@@ -956,6 +965,23 @@ public class MoCreatures {
             {
                 s = MoCEntityWyvern.wyvernNames[i - 50];
                 LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Wyvern Egg"));
+            }
+            
+            else if (i > 69 && i < (70 + MoCEntityMediumFish.fishNames.length))
+            {
+                s = MoCEntityMediumFish.fishNames[i - 70];
+                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Egg"));
+            }
+            
+            else if (i > 79 && i < (80 + MoCEntitySmallFish.fishNames.length))
+            {
+                s = MoCEntitySmallFish.fishNames[i - 80];
+                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Egg"));
+            }
+            
+            else if (i == 90)
+            {
+                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), ("Piranha Egg"));
             }
             
         }
@@ -1008,6 +1034,7 @@ public class MoCreatures {
 
         GameRegistry.addShapelessRecipe(new ItemStack(viallight, 1), new Object[] { vialundead, vialnightmare, vialdarkness });
 
+        GameRegistry.addRecipe(new ItemStack(fishnet, 1), new Object[] { " # ", "S#S", "#S#", Character.valueOf('#'), Item.silk, Character.valueOf('S'), sharkteeth });
         
         GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.itemsList[Block.planks.blockID], Character.valueOf('R'), rope });
         

@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderCricket extends MoCRenderAnimal {
+public class MoCRenderCricket extends MoCRenderMoC {
     public MoCRenderCricket(ModelBase modelbase)
     {
         super(modelbase, 0.0F);

@@ -8,12 +8,15 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWaterMob;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +37,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     private int divingCount;
     private int mountCount;
     public EntityLiving roper;
+    public boolean fishHooked;
 
     public MoCEntityAquatic(World world)
     {
@@ -85,7 +89,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         super.entityInit();
         dataWatcher.addObject(15, Integer.valueOf(50)); // int temper
         dataWatcher.addObject(16, Byte.valueOf((byte) 0)); // byte IsTamed, 0 = false 1 = true
-        dataWatcher.addObject(17, String.valueOf("")); // displayName empty string by default
+        dataWatcher.addObject(17, String.valueOf("")); // Name empty string by default
         dataWatcher.addObject(18, Byte.valueOf((byte) 0)); // byte IsAdult, 0 = false 1 = true
         dataWatcher.addObject(19, Integer.valueOf(0)); // int ageTicks / "edad"
         dataWatcher.addObject(20, Integer.valueOf(0)); // integer type - will be automatically checked and networked in onUpdate-EntityLiving
@@ -719,9 +723,38 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             {
                 MoCTools.forceDataSync(this);
             }
+            
+            if (isFisheable() && !fishHooked && rand.nextInt(30) == 0)
+            {
+            	getFished();
     	}
     	
+            if (fishHooked && rand.nextInt(200) == 0)
+            {
+            	fishHooked = false;
+            	
+                List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(2, 2, 2));
+        		for (int i = 0; i < list.size(); i++)
+        		{
+        			Entity entity1 = (Entity) list.get(i);
 		
+        			if (entity1 instanceof EntityFishHook)
+        			{
+        				if (((EntityFishHook)entity1).bobber == this)
+        				{
+        					((EntityFishHook)entity1).bobber = null;
+        				}
+        			}
+        			
+        		}
+            	
+            }
+    	}
+    	
+    	if (isNotScared() && fleeingTick > 0)
+		{
+			fleeingTick = 0;
+		}
         
 
         moveSpeed = getMoveSpeed();
@@ -734,6 +767,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         }
         else
         {
+        	//prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
+        	//rotationPitch = prevRotationPitch;
             //    System.out.println("out of water");
             // since Riding() is not being called, we must watch for player dismounts
             if (this.riddenByEntity != null)
@@ -749,7 +784,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             {
                 setPathToEntity(null);
             }
-            if (outOfWater > 200 && (outOfWater % 30) == 0)
+            if (outOfWater > 100 && (outOfWater % 20) == 0)
 
             // if((rand.nextInt(20) == 0) && (riddenByEntity == null) &&
             // !worldObj.multiplayerWorld)
@@ -894,21 +929,18 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public int nameYOffset()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public double roperYOffset()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public boolean renderName()
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -1001,6 +1033,11 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName())) { return false; }
 
+        //to prevent tamed aquatics from getting block damage
+        if (getIsTamed() && damagesource.getDamageType().equalsIgnoreCase("inWall"))
+        {
+        	return false;
+        }
         if (MoCreatures.isServer() && getIsTamed())
         {
             MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
@@ -1114,6 +1151,23 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             return true;
         }
 
+        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
+        {
+        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        	if (MoCreatures.isServer())
+        	{
+        		MoCTools.dropFishnet(this);
+        		this.isDead = true;
+        	}
+        	
+        	return true;
+        }
+
+        return false;
+    }
+
+    protected boolean canBeTrappedInNet() 
+    {
         return false;
     }
 
@@ -1160,13 +1214,109 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 	}
     
     @Override
-	public int tiltFrontOffset() {
+	public int pitchRotationOffset() {
 		return 0;
 	}
     
     @Override
-	public int tiltOffset() 
+	public int rollRotationOffset() 
 	{
 		return 0;
 	}
+    
+    /**
+     * The act of getting Hooked into a fish Hook.
+     */
+    private void getFished()
+    {
+    	EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 18D);
+        if (entityplayer1 != null)
+        {
+        	EntityFishHook fishHook = entityplayer1.fishEntity;
+        	if (fishHook != null  && fishHook.bobber == null)
+        	{
+        		float f = fishHook.getDistanceToEntity(this);
+				if (f > 1)
+				{
+					MoCTools.getPathToEntity(this, fishHook, f);
+				}
+				else
+				{
+					fishHook.bobber = this;
+					fishHooked = true;
+				}
+        	}    
+        }
+    }
+    
+    /**
+     * Is this aquatic entity prone to be fished with a fish Hook?
+     * @return
+     */
+    protected boolean isFisheable()
+    {
+    	return false;
+    }
+    
+    @Override
+	public int yawRotationOffset()
+	{
+		return 0;
+	}
+    
+    @Override
+	public float getAdjustedZOffset()
+	{
+		return 0F;
+	}
+    
+    @Override
+	public float getAdjustedXOffset()
+	{
+		return 0F;
+	}
+    
+    /**
+	 * Finds and entity described in entitiesToInclude at d distance
+	 * 
+	 * @param d
+	 * @return
+	 */
+	protected EntityLiving getBoogey(double d)
+	{
+		double d1 = -1D;
+		EntityLiving entityliving = null;
+		List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
+		for (int i = 0; i < list.size(); i++)
+		{
+			Entity entity = (Entity) list.get(i);
+			if (entitiesToInclude(entity))
+			{
+				entityliving = (EntityLiving) entity;
+			}
+		}
+		return entityliving;
+	}
+
+	/**
+	 * Used in getBoogey to specify what kind of entity to look for
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public boolean entitiesToInclude(Entity entity)
+	{
+		return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
+
+		);
+	}
+	
+	public boolean isNotScared()
+	{
+		return false;
+	}
+	
+	
+	
+
 }

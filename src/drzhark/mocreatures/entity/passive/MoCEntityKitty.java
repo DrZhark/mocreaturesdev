@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 public class MoCEntityKitty extends MoCEntityAnimal {
     //public float    edad;
     //public int      maxhealth;
-    private final boolean textureSet;
+    //private final boolean textureSet;
     private int kittytimer;
     private int madtimer;
     private boolean foundTree;
@@ -42,7 +42,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     {
         super(world);
         setSize(0.7F, 0.5F);
-        textureSet = false;
+        //textureSet = false;
         setAdult(true);
         setEdad(40);
         setKittyState(1);
@@ -125,7 +125,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             return MoCreatures.proxy.MODEL_TEXTURE + "pussycath.png";
 
         default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostricha.png";
+            return MoCreatures.proxy.MODEL_TEXTURE + "pussycata.png";
         }
     }
 
@@ -792,7 +792,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                     EntityLiving entityliving = getBoogey(6D, true);
                     if (entityliving != null)
                     {
-                        runLikeHell(entityliving);
+                        MoCTools.runLikeHell(this, entityliving);
                     }
                     break;
                 }
@@ -823,7 +823,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 EntityLiving entityliving1 = getBoogey(6D, false);
                 if (entityliving1 != null)
                 {
-                    runLikeHell(entityliving1);
+                    MoCTools.runLikeHell(this, entityliving1);
                 }
                 break;
 

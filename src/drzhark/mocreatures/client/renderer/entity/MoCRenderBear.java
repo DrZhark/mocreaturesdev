@@ -10,7 +10,7 @@ import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderBear extends MoCRenderAnimal {
+public class MoCRenderBear extends MoCRenderMoC {
 
     public MoCRenderBear(MoCModelBear modelbase, float f)
     {

@@ -460,7 +460,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
             	attackD = 6D;
             }
             
-            EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, attackD); 
+            EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, attackD); 
             if((entityplayer != null) && getIsAdult()) 
             {
             	 return entityplayer; 

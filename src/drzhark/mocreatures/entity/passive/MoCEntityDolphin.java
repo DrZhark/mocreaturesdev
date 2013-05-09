@@ -332,8 +332,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     {
         if (super.interact(entityplayer)) { return false; }
         
-        //TODO remove before rlease
-        //setTamed(true);
         
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null) && (itemstack.itemID == Item.fishRaw.itemID))

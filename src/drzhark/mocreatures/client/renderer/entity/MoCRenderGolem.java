@@ -11,7 +11,7 @@ import drzhark.mocreatures.client.model.MoCModelGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderGolem extends MoCRenderAnimal {
+public class MoCRenderGolem extends MoCRenderMoC {
 
     private final ModelBase MoCModelG = new MoCModelGolem();
 

@@ -261,7 +261,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
                 EntityLiving entityliving = getBoogey(6D);
                 if(entityliving != null)
                 {
-                    runLikeHell(entityliving);
+                    MoCTools.runLikeHell(this, entityliving);
 
                 }
             }

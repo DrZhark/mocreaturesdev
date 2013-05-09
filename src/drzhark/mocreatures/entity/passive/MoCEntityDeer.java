@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.Entity;
@@ -147,7 +148,7 @@ public class MoCEntityDeer extends MoCEntityAnimal {
                 {
                     setMySpeed(true);
 
-                    runLikeHell(entityliving);
+                    MoCTools.runLikeHell(this, entityliving);
 
                 }
                 else

@@ -170,16 +170,9 @@ public class MoCEntitySnail extends MoCEntityAmbient
     @Override
     public boolean getCanSpawnHere()
     {
-        checkSpawningBiome();
         return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
-    @Override
-    public boolean checkSpawningBiome()
-    {
-        selectType();
-        return true;
-    }
 
     @Override
     protected int getDropItemId()

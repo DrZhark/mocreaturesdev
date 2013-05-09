@@ -10,7 +10,7 @@ import drzhark.mocreatures.client.model.MoCModelNewHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderNewHorse extends MoCRenderAnimal {
+public class MoCRenderNewHorse extends MoCRenderMoC {
 
     public MoCRenderNewHorse(MoCModelNewHorse modelbase)
     {

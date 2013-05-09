@@ -877,7 +877,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         return i;
     }
 
-    public int tiltOffset()
+    public int rollRotationOffset()
     {
         int leftLeg = 0;
         int rightLeg = 0;
@@ -905,7 +905,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         {
             rightLeg++;
         }
-        return leftLeg - rightLeg;
+        return (leftLeg - rightLeg) * 10;
     }
 
     /**

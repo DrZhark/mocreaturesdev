@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderBunny extends MoCRenderAnimal {
+public class MoCRenderBunny extends MoCRenderMoC {
 
     //private boolean textureset = false;
 
