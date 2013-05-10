@@ -793,20 +793,11 @@ public class MoCClientProxy extends MoCProxy {
 
 
         //******************** Mobs ********************//
-        mobOptions = new WidgetSinglecolumn(new Widget[0]);
+        mobOptions = new WidgetClassicTwocolumn(new Widget[0]);
 
-        SimpleButtonModel mobSpawnButtonModel = new SimpleButtonModel();
-        mobSpawnButtonModel.addActionCallback(new ModAction(this, "showMobSpawnSettings", new Class[0]));
-        Button mobSpawnButton = new Button(mobSpawnButtonModel);
-        mobSpawnButton.setText(BUTTON_MONSTER_SPAWN_SETTINGS);
-        mobOptions.add(mobSpawnButton);
-        widgetMobSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
-        {
-           if (entry.getValue().getType() == EnumCreatureType.monster)
+        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
            {
-              // widgetMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
-           }
+            mobOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.monster), true));
         }
 
         SimpleButtonModel simplebuttonmodel4 = new SimpleButtonModel();
@@ -837,20 +828,11 @@ public class MoCClientProxy extends MoCProxy {
 
 
         //******************** Water Mobs ********************//
-        waterMobOptions = new WidgetSinglecolumn(new Widget[0]);
+        waterMobOptions = new WidgetClassicTwocolumn(new Widget[0]);
 
-        SimpleButtonModel waterMobSpawnButtonModel = new SimpleButtonModel();
-        waterMobSpawnButtonModel.addActionCallback(new ModAction(this, "showWaterMobSpawnSettings", new Class[0]));
-        Button waterMobSpawnButton = new Button(waterMobSpawnButtonModel);
-        waterMobSpawnButton.setText(BUTTON_WATERMOB_SPAWN_SETTINGS);
-        waterMobOptions.add(waterMobSpawnButton);
-        widgetWaterMobSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
-        {
-           if (entry.getValue().getType() == EnumCreatureType.waterCreature)
+        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
            {
-            //   widgetWaterMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
-           }
+            waterMobOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.waterCreature), true));
         }
 
         SimpleButtonModel simplebuttonmodel5 = new SimpleButtonModel();
@@ -869,37 +851,19 @@ public class MoCClientProxy extends MoCProxy {
         //**********************************************************//
 
         //******************** Ambient ********************//
-        ambientOptions = new WidgetSinglecolumn(new Widget[0]);
+        ambientOptions = new WidgetClassicTwocolumn(new Widget[0]);
 
-        SimpleButtonModel ambientSpawnButtonModel = new SimpleButtonModel();
-        ambientSpawnButtonModel.addActionCallback(new ModAction(this, "showAmbientSpawnSettings", new Class[0]));
-        Button ambientSpawnButton = new Button(ambientSpawnButtonModel);
-        ambientSpawnButton.setText(BUTTON_AMBIENT_SPAWN_SETTINGS);
-        ambientOptions.add(ambientSpawnButton);
-        widgetAmbientSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
-        {
-           if (entry.getValue().getType() == EnumCreatureType.ambient)
+        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
            {
-            //   widgetAmbientSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
-           }
+            ambientOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.ambient), true));
         }
 
         //******************** Undefined ********************//
-        undefinedOptions = new WidgetSinglecolumn(new Widget[0]);
+        undefinedOptions = new WidgetClassicTwocolumn(new Widget[0]);
 
-        SimpleButtonModel undefinedSpawnButtonModel = new SimpleButtonModel();
-        undefinedSpawnButtonModel.addActionCallback(new ModAction(this, "showUndefinedSpawnSettings", new Class[0]));
-        Button undefinedSpawnButton = new Button(undefinedSpawnButtonModel);
-        undefinedSpawnButton.setText(BUTTON_UNDEFINED_SPAWN_SETTINGS);
-        undefinedOptions.add(undefinedSpawnButton);
-        widgetUndefinedSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<Integer, MoCEntityData> entry : entityMap.entrySet())
-        {
-           if (entry.getValue().getType() == null)
+        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
            {
-             //  widgetUndefinedSpawnSettingsColumns.add(GuiApiHelper.makeButton(entry.getKey(), new ModAction(this, "showEntitySettings", String.class).setDefaultArguments(entry.getKey()), true));
-           }
+            undefinedOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), null), true));
         }
 
         //******************** CustomSpawner ********************//
@@ -1241,7 +1205,7 @@ public class MoCClientProxy extends MoCProxy {
             WidgetSinglecolumn widgetBiomesColumn = new WidgetSinglecolumn(new Widget[0]);
             if (biomeGroupData.getBiomeList() != null)
             {
-                //biomesList = guiapiSettings.addSetting(widgetBiomesColumn, biomeGroupData.getBiomeGroupName() + " Biomes", biomeGroupData.getBiomeGroupName() + " Biomes", (ArrayList)biomeGroupData.getBiomeList(), biomeGroupData.getBiomeGroupName().toLowerCase());
+                biomesList = guiapiSettings.addSetting(widgetBiomesColumn, biomeGroupData.getBiomeGroupName() + " Biomes", biomeGroupData.getBiomeGroupName() + " Biomes", (ArrayList)biomeGroupData.getBiomeList(), mocBiomeConfig, biomeGroupData.getBiomeGroupName().toLowerCase());
             }
             ((WidgetList) biomesList.displayWidget).listBox.setTheme("/listbox");
             widgetBiomesColumn.heightOverrideExceptions.put(biomesList.displayWidget, 140);

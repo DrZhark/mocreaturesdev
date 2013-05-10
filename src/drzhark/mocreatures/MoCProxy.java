@@ -595,24 +595,24 @@ public class MoCProxy implements IGuiHandler {
 
         for (Map.Entry<String, MoCEntityData> mocEntry : mocEntityMap.entrySet())
         {
-            mocEntityConfig.get(CATEGORY_ENTITY_BIOME_SETTINGS, mocEntry.getKey(), mocEntry.getValue().getBiomeGroups(), false);
+            mocEntityConfig.get(CATEGORY_ENTITY_BIOME_SETTINGS, mocEntry.getKey(), mocEntry.getValue().getBiomeGroups());
         }
 
         for (Map.Entry<String, MoCEntityData> vanillaEntry : vanillaEntityMap.entrySet())
         {
-            vanillaEntityConfig.get(CATEGORY_ENTITY_BIOME_SETTINGS, vanillaEntry.getKey(), vanillaEntry.getValue().getBiomeGroups(), false);
+            vanillaEntityConfig.get(CATEGORY_ENTITY_BIOME_SETTINGS, vanillaEntry.getKey(), vanillaEntry.getValue().getBiomeGroups());
         }
         // gen mocreatures entity defautls
 
         for (Map.Entry<String, MoCEntityData> mocEntry : mocEntityMap.entrySet())
         {
-            mocEntityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, mocEntry.getKey(), new ArrayList(Arrays.asList(mocEntry.getValue().getType().toString().toUpperCase(), Integer.toString(mocEntry.getValue().getFrequency()), Integer.toString(mocEntry.getValue().getMinSpawn()), Integer.toString(mocEntry.getValue().getMaxSpawn()), Integer.toString(mocEntry.getValue().getMaxInChunk()))), false);
+            mocEntityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, mocEntry.getKey(), new ArrayList(Arrays.asList(mocEntry.getValue().getType().toString().toUpperCase(), Integer.toString(mocEntry.getValue().getFrequency()), Integer.toString(mocEntry.getValue().getMinSpawn()), Integer.toString(mocEntry.getValue().getMaxSpawn()), Integer.toString(mocEntry.getValue().getMaxInChunk()))));
             mocEntry.getValue().setEntityConfig(mocEntityConfig);
         }
 
         for (Map.Entry<String, MoCEntityData> vanillaEntry : vanillaEntityMap.entrySet())
         {
-            vanillaEntityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, vanillaEntry.getKey(), new ArrayList(Arrays.asList(vanillaEntry.getValue().getType().toString().toUpperCase(), Integer.toString(vanillaEntry.getValue().getFrequency()), Integer.toString(vanillaEntry.getValue().getMinSpawn()), Integer.toString(vanillaEntry.getValue().getMaxSpawn()), Integer.toString(vanillaEntry.getValue().getMaxInChunk()))), false);
+            vanillaEntityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, vanillaEntry.getKey(), new ArrayList(Arrays.asList(vanillaEntry.getValue().getType().toString().toUpperCase(), Integer.toString(vanillaEntry.getValue().getFrequency()), Integer.toString(vanillaEntry.getValue().getMinSpawn()), Integer.toString(vanillaEntry.getValue().getMaxSpawn()), Integer.toString(vanillaEntry.getValue().getMaxInChunk()))));
             vanillaEntry.getValue().setEntityConfig(vanillaEntityConfig);
         }
         mocEntityConfig.save();
@@ -744,7 +744,7 @@ public class MoCProxy implements IGuiHandler {
                 }
                 if (!entityConfig.getCategory(CATEGORY_ENTITY_SPAWN_SETTINGS).containsKey(entityName))
                 {
-                    entityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName, new ArrayList(Arrays.asList( ((creatureType == null) ? "UNDEFINED" : creatureType.toString().toUpperCase()), new Integer(frequency).toString(), new Integer(minGroup).toString(), new Integer(maxGroup).toString(), new Integer(maxSpawnInChunk).toString())), false);
+                    entityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName, new ArrayList(Arrays.asList( ((creatureType == null) ? "UNDEFINED" : creatureType.toString().toUpperCase()), new Integer(frequency).toString(), new Integer(minGroup).toString(), new Integer(maxGroup).toString(), new Integer(maxSpawnInChunk).toString())));
                 }
                 else 
                 {
@@ -794,7 +794,6 @@ public class MoCProxy implements IGuiHandler {
                         if (mocBiomeConfig.hasCategory(biomeGroupName.toLowerCase()))
                         {
                             MoCProperty biomeProps = mocBiomeConfig.getCategory(biomeGroupName).get(biomeGroupName);
-                            biomeProps.newline = true; // place biome groups on seperate lines
                             for (int j = 0; j < biomeProps.valueList.size(); j++)
                             {
                                 List<String> biomeParts = parseBiome(biomeProps.valueList.get(j));
@@ -901,7 +900,7 @@ public class MoCProxy implements IGuiHandler {
                 prop.valueList = modData.getBiomes();
             }
             else {
-                modData.getModConfig().get("biomes", "biomes", modData.getBiomes(), true);
+                modData.getModConfig().get("biomes", "biomes", modData.getBiomes());
             }
             modData.getModConfig().save();
             //mocGlobalConfig.save();
@@ -1147,7 +1146,7 @@ public class MoCProxy implements IGuiHandler {
         {
             if (!mocBiomeConfig.hasCategory(biomeGroupEntry.getKey()))
             {
-                mocBiomeConfig.get(biomeGroupEntry.getKey(), biomeGroupEntry.getKey(), biomeGroupEntry.getValue().getBiomeList(), true);
+                mocBiomeConfig.get(biomeGroupEntry.getKey(), biomeGroupEntry.getKey(), biomeGroupEntry.getValue().getBiomeList());
             }
         }
         mocBiomeConfig.save();
