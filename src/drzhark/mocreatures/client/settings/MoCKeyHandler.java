@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 import sharose.mods.guiapi.GuiModScreen;
 import sharose.mods.guiapi.ModSettingScreen;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 import drzhark.mocreatures.MoCreatures;
@@ -47,6 +48,7 @@ public class MoCKeyHandler extends KeyHandler {
         boolean kbDive = kb.keyDescription.equals("MoCreatures Dive");
         boolean kbGui = kb.keyDescription.equals("MoCreatures GUI");
         boolean kbDismount = kb.keyDescription.equals("MoCreatures Dismount");
+        boolean chatting = FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().getChatOpen();
 
         if (MoCClientProxy.mc.inGameHasFocus && kbJump)
         {
@@ -69,7 +71,7 @@ public class MoCKeyHandler extends KeyHandler {
         /**
          * this avoids double jumping
          */
-        if (keyCount < 4) { return; }
+        if (keyCount < 4 || chatting) { return; }
 
         EntityPlayer ep = MoCClientProxy.mc.thePlayer;
 
