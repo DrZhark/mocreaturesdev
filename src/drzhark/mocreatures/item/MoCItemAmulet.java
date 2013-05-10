@@ -107,7 +107,8 @@ public class MoCItemAmulet extends MoCItem {
             {
         		try
         		{
-        			MoCEntityAnimal storedCreature = MoCTools.spawnMoCAnimalList(spawnClass, worldObj);
+        			//MoCEntityAnimal storedCreature = MoCTools.spawnMoCAnimalList(spawnClass, worldObj);
+        			MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); //quick fix before migrating
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
             		storedCreature.setType(creatureType);
             		storedCreature.setTamed(true);

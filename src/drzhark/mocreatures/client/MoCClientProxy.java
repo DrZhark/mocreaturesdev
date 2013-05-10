@@ -845,9 +845,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(attackdolphinsB = new MoCSettingBoolean(entityModMap.get("drzhark").getModConfig(), CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", attackDolphins));
         attackdolphinsW = new WidgetBoolean(attackdolphinsB, "Aggresive Dolphins?", "Yes", "No");
         widgetWaterMobSettingsColumns.add(attackdolphinsW);
-        guiapiSettings.append(spawnPiranhaS = new MoCSettingBoolean(entityModMap.get("drzhark").getModConfig(), CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "SpawnPiranhas", spawnPiranhas));
-        spawnpiranhaW = new WidgetBoolean(spawnPiranhaS, "Spawn Piranhas?", "Yes", "No");
-        widgetWaterMobSettingsColumns.add(spawnpiranhaW);
+        //guiapiSettings.append(spawnPiranhaS = new MoCSettingBoolean(entityModMap.get("drzhark").getModConfig(), CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "SpawnPiranhas", spawnPiranhas));
+        //spawnpiranhaW = new WidgetBoolean(spawnPiranhaS, "Spawn Piranhas?", "Yes", "No");
+        //widgetWaterMobSettingsColumns.add(spawnpiranhaW);
         //**********************************************************//
 
         //******************** Ambient ********************//

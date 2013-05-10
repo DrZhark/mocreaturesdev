@@ -38,7 +38,7 @@ public class MoCEventHooks {
         }
     }
 
-    @ForgeSubscribe // handle world gen spawns
+    /*@ForgeSubscribe // handle world gen spawns
     public void onLivingWorldGenSpawn(EntityJoinWorldEvent event)
     {
         if (EntityLiving.class.isAssignableFrom(event.entity.getClass()) && MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.modifyVanillaSpawns)
@@ -49,7 +49,7 @@ public class MoCEventHooks {
                 event.entity.setDead();
             }
         }
-    }
+    }*/
 
     @ForgeSubscribe // override maxSpawnInChunk values
     public void onLivingPackSize(LivingPackSizeEvent event)

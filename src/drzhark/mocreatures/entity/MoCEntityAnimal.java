@@ -594,6 +594,19 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 			
 			return true;
 		}
+		
+		if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
+        {
+        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        	if (MoCreatures.isServer())
+        	{
+        		MoCTools.dropFishnet(this);
+        		this.isDead = true;
+        	}
+        	
+        	return true;
+        }
+		
 		return false;
 	}
 
@@ -1957,6 +1970,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	public float getAdjustedXOffset()
 	{
 		return 0F;
+	}
+	
+	protected boolean canBeTrappedInNet() 
+    {
+		return false;
 	}
 }
 

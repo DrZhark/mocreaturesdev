@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.EntityAmbientCreature;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -1354,5 +1355,167 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 	public float getAdjustedXOffset()
 	{
 		return 0F;
+	}
+	
+	protected boolean canBeTrappedInNet() 
+    {
+		return false;
+	}
+	
+	
+	
+	@Override
+	public boolean interact(EntityPlayer entityplayer)
+	{
+		ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
+		//before ownership check 
+		if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) 
+				&& MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
+		{
+			if (--itemstack.stackSize == 0)
+			{
+				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			}
+			if (MoCreatures.isServer())
+			{
+				if (MoCreatures.proxy.enableOwnership) 
+				{
+					EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
+					if (epOwner != null)
+					{
+						MoCTools.reduceTamedByPlayer(epOwner);
+					}
+					else
+					{
+						MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
+					}
+				}
+				this.setOwner("");
+				
+			}
+			return true;
+		}
+		//if the player interacting is not the owner, do nothing!
+		if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) 
+		{
+			//System.out.println("Player " + entityplayer + " attempted interaction. Denies as " + getOwnerName() + " is the owner");
+			return true; 
+		}
+
+		//changes name
+		if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
+				&& ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
+		{
+			if (MoCreatures.isServer())
+			{
+				MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+			}
+			//TODO NAMER
+			/*if (!MoCreatures.isServer())
+			{
+				MoCreatures.proxy.setName(entityplayer, this);
+			}*/
+			return true;
+		}
+		
+		//sets it free, untamed
+		if ((itemstack != null) && getIsTamed() 
+				&& ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
+		{
+			if (--itemstack.stackSize == 0)
+			{
+				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			}
+			if (MoCreatures.isServer())
+			{
+				
+				if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
+				this.setOwner("");
+				this.setName("");
+				this.dropMyStuff();
+				this.setTamed(false);
+			}
+			
+			return true;
+		}
+
+		//removes owner, any other player can claim it by renaming it
+		if ((itemstack != null) && getIsTamed() 
+					&& ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
+		{
+			if (--itemstack.stackSize == 0)
+			{
+				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			}
+			if (MoCreatures.isServer())
+			{
+				
+				if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
+				this.setOwner("");
+			}
+				
+			return true;
+		}
+		//heals
+		if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
+		{
+			if (--itemstack.stackSize == 0)
+			{
+				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			}
+			worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+			if (MoCreatures.isServer())
+			{
+				health = getMaxHealth();
+			}
+			return true;
+		}
+
+		/*//attaches rope
+		if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && getIsTamed() && (itemstack.itemID == MoCreatures.rope.itemID))
+		{
+			if (--itemstack.stackSize == 0)
+			{
+				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+			}
+			worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+			roper = entityplayer;
+			setEating(false);
+			return true;
+		}
+
+		//removes rope
+		if ((roper != null) && getIsTamed())
+		{
+			entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.rope));
+			worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+			roper = null;
+			return true;
+		}*/
+
+		if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.shears.itemID))
+		{
+			if (MoCreatures.isServer())
+			{
+				dropMyStuff();
+			}
+			
+			return true;
+		}
+		
+		if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
+        {
+        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        	if (MoCreatures.isServer())
+        	{
+        		MoCTools.dropFishnet(this);
+        		this.isDead = true;
+        	}
+        	
+        	return true;
+        }
+		
+		return false;
 	}
 }

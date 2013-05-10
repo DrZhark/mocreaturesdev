@@ -142,4 +142,21 @@ public class MoCEntityCrab extends MoCEntityAmbient
     {
         return EnumCreatureAttribute.ARTHROPOD;
     }
+    
+    protected boolean canBeTrappedInNet() 
+    {
+		return true;
+	}
+    
+    @Override
+    public boolean renderName()
+    {
+        return getDisplayName() && (riddenByEntity == null);
+    }
+    
+    @Override
+    public int nameYOffset()
+    {
+        return -20;
+    }
 }
