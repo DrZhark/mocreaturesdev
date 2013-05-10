@@ -47,9 +47,9 @@ public class MoCModelMaggot extends ModelBase
 		
 		GL11.glPushMatrix();
         GL11.glEnable(3042 /*GL_BLEND*/);
-        float transparency = 0.9F;
+        //float transparency = 0.9F;
         GL11.glBlendFunc(770, 771);
-        GL11.glColor4f(1.2F, 1.2F, 1.2F, transparency);
+        //GL11.glColor4f(1.2F, 1.2F, 1.2F, transparency);
         GL11.glScalef(1.0F, 1.0F, 1.0F + (f1*3F));
         Head.render(f5);
 		Body.render(f5);

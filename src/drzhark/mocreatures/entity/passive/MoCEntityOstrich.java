@@ -576,7 +576,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             }
 
             //egg laying
-            if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0) //!getIsTamed() &&
+            if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0 && !getIsTamed())// &&
             {
 
                 //so it doesn't cause a ostrich overpopulation
@@ -585,7 +585,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
                 
                     int OstrichEggType = 30;
                     MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
-                    if (this.getIsTamed() && entityOstrich != null)
+                    /*if (this.getIsTamed() && entityOstrich != null)
                     {
                         //OstrichEggType = 31; 
                         MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
@@ -594,7 +594,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
                         entityOstrich.setEggWatching(true);
                         setEggWatching(true);
                         openMouth();
-                    }
+                    }*/
 
                     if (!this.getIsTamed())
                     {

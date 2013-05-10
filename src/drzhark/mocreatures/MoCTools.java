@@ -270,7 +270,9 @@ public class MoCTools {
             
     		try
             {
-    			Class myClass = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName).getEntityClass();
+    			MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+        		Class myClass = entityData.getEntityClass();
+    			//Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
     			entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
             }catch (Exception e) 
             { System.out.println(e);}
@@ -278,7 +280,7 @@ public class MoCTools {
             if (entityToSpawn != null)
             {
             	entityToSpawn.initCreature();
-            	entityToSpawn.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
+            	entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
         }
@@ -329,10 +331,13 @@ public class MoCTools {
     	EntityLiving entityToSpawn = null;
     	try
     	{
-    		Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+    		MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+    		Class myClass = entityData.getEntityClass();
+    		//Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
     		entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
     	}catch (Exception e) 
-    	{ System.out.println(e);}
+    	{ 
+    		System.out.println("Unable to find class for entity " + eName + ", " + e);}
     	return entityToSpawn;        
     }
     
@@ -1840,15 +1845,15 @@ public class MoCTools {
     public static void reduceTamedByPlayer(EntityPlayer ep)
     {
         int count = MoCTools.numberTamedByPlayer(ep);
-        System.out.println("tamed entities for online player " + ep.username + " =" + count);
+        //System.out.println("tamed entities for online player " + ep.username + " =" + count);
         NBTTagCompound nbtt = ep.getEntityData();
         count--;
         if (count < 0)
         {
             count = 0;
         }
+        //System.out.println("reducing tamed count for player " + ep.username + " the count now is " + count);
         nbtt.setInteger("NumberTamed", count);
-        System.out.println("reducing tamed count for player " + ep.username + " the count now is " + nbtt.getInteger("NumberTamed"));
     }
 
     /**

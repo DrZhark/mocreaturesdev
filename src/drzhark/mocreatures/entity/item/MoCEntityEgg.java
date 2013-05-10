@@ -155,9 +155,14 @@ public class MoCEntityEgg extends EntityLiving {
                 if (tCounter % 5 == 0)
                 {
                     motionY += 0.2D;
-
                 }
-                if (tCounter >= 50)
+
+                if (tCounter == 5)
+                {
+                	NotifyEggHatching();                    
+                }
+                
+                if (tCounter >= 30)
                 {
 
                     // EntityLiving entityspawn = spawnLiving(creatureName,
@@ -271,8 +276,15 @@ public class MoCEntityEgg extends EntityLiving {
                 {
                     motionY += 0.2D;
 
+
                 }
-                if (tCounter >= 50)
+                
+                if (tCounter == 5)
+                {
+                	NotifyEggHatching();                    
+                }
+
+                if (tCounter >= 30)
                 {
 
                     if (getEggType() > 20 && getEggType() < 29) // snakes
@@ -405,6 +417,14 @@ public class MoCEntityEgg extends EntityLiving {
         }
     }
 
+    private void NotifyEggHatching()
+    {
+    	EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
+        if (entityplayer != null)
+        {
+        	entityplayer.sendChatToPlayer("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area");
+        }
+    }
     public int getSize()
     {
         if (getEggType() == 30 || getEggType() == 31) { return 170; }

@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityRay extends MoCEntityAquatic {
     public boolean attacking;
@@ -24,8 +26,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
     {
         super(world);
         setSize(1.8F, 0.5F);
-        health = 20;
-        //setMaxHealth(10);
+		health = 10;
         setEdad(50 + (rand.nextInt(50)));
 
         moveSpeed = 0.3F;
@@ -36,6 +37,8 @@ public class MoCEntityRay extends MoCEntityAquatic {
     @Override
     public void selectType()
     {
+		checkSpawningBiome();
+
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
@@ -49,6 +52,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
                 setType(1);
                 setEdad(70);
             }
+			getMaxHealth();
         }
 
         /*if (type == 1)
@@ -83,6 +87,10 @@ public class MoCEntityRay extends MoCEntityAquatic {
     @Override
     public int getMaxHealth()
     {
+		if (getType() == 2)
+		{
+			return 10;
+		}
         return 20;
     }
 
@@ -95,7 +103,8 @@ public class MoCEntityRay extends MoCEntityAquatic {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        //EntityPlayer ep = (EntityPlayer)riddenByEntity;
+		if (super.interact(entityplayer)) { return false; }
+		
         if (riddenByEntity == null && getType() == 1)
         {
             entityplayer.rotationYaw = rotationYaw;
@@ -105,13 +114,11 @@ public class MoCEntityRay extends MoCEntityAquatic {
             {
                 entityplayer.mountEntity(this);
             }
-        }
-        else
-        {
-            entityplayer.mountEntity(null);
+			return true;
         }
 
-        return true;
+
+		return false;
     }
 
     @Override
@@ -189,20 +196,16 @@ public class MoCEntityRay extends MoCEntityAquatic {
         }
     }
 
+	
+
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+	public boolean getCanSpawnHere()
     {
-        super.readEntityFromNBT(nbttagcompound);
+		return (MoCreatures.proxy.getFrequency(this.getEntityName())  > 0) && super.getCanSpawnHere();
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
-    {
-        super.writeEntityToNBT(nbttagcompound);
-    }
-
-    @Override
-    public boolean getCanSpawnHere()
+	public boolean checkSpawningBiome()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -212,6 +215,52 @@ public class MoCEntityRay extends MoCEntityAquatic {
         {
             setType(2);
         }
-        return super.getCanSpawnHere();
+		return true;
+	}
+
+
+	@Override
+	public float getAdjustedYOffset()
+	{
+		if (!isSwimming())
+		{
+			return 0.09F;
+		}
+		else if (getType() == 1)
+		{
+			return 0.15F;
+		}
+
+		return 0.25F;
+	}
+	
+	@Override
+    public boolean renderName()
+    {
+        return getDisplayName() && (riddenByEntity == null);
+    }
+    
+    @Override
+    public int nameYOffset()
+    {
+        return -25;
+    }
+    
+    @Override
+    public boolean canBeTrappedInNet()
+    {
+    	return ( getType() == 2 || (getType()== 1 && getIsTamed()) );
+    }
+    
+    @Override
+	public double getMountedYOffset()
+	{
+    	return (double)this.height * 0.15D * getSizeFactor();
+	}
+    
+    @Override
+    public float getSizeFactor() 
+    {   
+		return (float)getEdad() * 0.01F;
     }
 }

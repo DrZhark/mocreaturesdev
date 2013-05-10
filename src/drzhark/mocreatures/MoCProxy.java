@@ -215,10 +215,10 @@ public class MoCProxy implements IGuiHandler {
     public int zebraChance;
     public int particleFX;
     // defaults
-    public int frequency = 8;
+    public int frequency = 6;
     public int minGroup = 1;
-    public int maxGroup = 1;
-    public int maxSpawnInChunk = 1;
+    public int maxGroup = 2;
+    public int maxSpawnInChunk = 3;
     public float strength = 1;
     public int sharkSpawnDif = 0;
 
