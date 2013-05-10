@@ -312,10 +312,9 @@ public final class CustomSpawner {
         }
         //System.out.println("CustomMobSpawner limit = " + limit);
         int mobcnt = 0;
-        int enumC = countSpawnedEntities(worldObj, enumcreaturetype);
 
         //modified to allow custom creature counts instead of vanillas
-        if (enumC <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256)
+        if (worldObj.countEntities(enumcreaturetype, true) <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256)
         {
             Iterator iterator = eligibleChunksForSpawning.keySet().iterator();
             ArrayList<ChunkCoordIntPair> tmp = new ArrayList(eligibleChunksForSpawning.keySet());
@@ -593,33 +592,6 @@ public final class CustomSpawner {
         return 0;
     }
 
-    public int countSpawnedEntities(World world, EnumCreatureType enumcreaturetype)
-    {
-        int i = getEnumIndex(enumcreaturetype);
-        int finalcount = 0;
-        {
-            boolean flag = false;
-            for (Iterator iterator = entityClasses[i].iterator(); iterator.hasNext();)
-            {
-                try
-                {
-                    if (iterator != null)
-                    {
-                        Class class1 = (Class) iterator.next();
-                        if (class1 != null)
-                        {
-                            finalcount += world.countEntities(class1);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        }
-        return finalcount;
-    }
-
     private List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
     {
         if (enumcreaturetype == EnumCreatureType.monster) { return customMobSpawnList; }
@@ -743,7 +715,6 @@ public final class CustomSpawner {
     {
         
         if (entityliving instanceof EntityWolf && ((EntityWolf) entityliving).isTamed()) { return 0; }
-        //if (isNearTorch(entityliving, 8D, worldObj)) { return 0; }
         if (!isValidDespawnLightLevel(entityliving, worldObj, lightLevel)) { return 0; }
                 
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(entityliving, -1D);

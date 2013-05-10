@@ -114,10 +114,4 @@ public class MoCEntityDragonfly extends MoCEntityInsect
     {
         return 0.2F;
     }
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
 }

@@ -848,13 +848,6 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	        return par1ItemStack != null && (par1ItemStack.itemID == MoCreatures.ratRaw.itemID || par1ItemStack.itemID == MoCreatures.rawTurkey.itemID);
 	    }
 	 
-	 @Override
-	    public boolean getCanSpawnHere()
-	    {
-	        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-	    }
-	 
-	 
 	 private void openMouth()
 	    {
 		 	if (MoCreatures.isServer())

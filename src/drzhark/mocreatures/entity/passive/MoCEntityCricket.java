@@ -141,11 +141,4 @@ public class MoCEntityCricket extends MoCEntityInsect
     {
         return 0.5F;
     }
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
 }

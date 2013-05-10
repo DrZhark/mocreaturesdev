@@ -270,7 +270,7 @@ public class MoCTools {
             
     		try
             {
-    			Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+    			Class myClass = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName).getEntityClass();
     			entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
             }catch (Exception e) 
             { System.out.println(e);}
@@ -278,7 +278,7 @@ public class MoCTools {
             if (entityToSpawn != null)
             {
             	entityToSpawn.initCreature();
-            	entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+            	entityToSpawn.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
         }
@@ -1786,7 +1786,7 @@ public class MoCTools {
     public static boolean tameWithName(EntityPlayer ep, MoCIMoCreature entity) {
         //System.out.println("number of pets for " + ep + " = " + count + "limit = " + MoCreatures.proxy.getMaxTamed());
         int max = 0;
-        if (MoCreatures.proxy.enableOwnership) 
+        if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
         {
             
                 max = MoCreatures.proxy.maxTamed;
@@ -1840,15 +1840,15 @@ public class MoCTools {
     public static void reduceTamedByPlayer(EntityPlayer ep)
     {
         int count = MoCTools.numberTamedByPlayer(ep);
-        //System.out.println("tamed entities for online player " + ep.username + " =" + count);
+        System.out.println("tamed entities for online player " + ep.username + " =" + count);
         NBTTagCompound nbtt = ep.getEntityData();
         count--;
         if (count < 0)
         {
             count = 0;
         }
-        //System.out.println("reducing tamed count for player " + ep.username + " the count now is " + count);
         nbtt.setInteger("NumberTamed", count);
+        System.out.println("reducing tamed count for player " + ep.username + " the count now is " + nbtt.getInteger("NumberTamed"));
     }
 
     /**

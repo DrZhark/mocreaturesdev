@@ -57,12 +57,6 @@ public class MoCEntityHellRat extends MoCEntityRat {
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     protected int getDropItemId()
     {
         boolean flag = (rand.nextInt(3) == 0);

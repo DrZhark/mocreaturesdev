@@ -108,12 +108,6 @@ public class MoCEntityBee extends MoCEntityInsect
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     public int getTalkInterval()
     {
         return 2000;

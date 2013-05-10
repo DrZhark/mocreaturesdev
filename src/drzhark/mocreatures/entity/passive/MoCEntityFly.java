@@ -140,12 +140,6 @@ public class MoCEntityFly extends MoCEntityInsect
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack)
     {
         return par1ItemStack != null && par1ItemStack.itemID == Item.rottenFlesh.itemID;

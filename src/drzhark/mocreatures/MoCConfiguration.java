@@ -292,22 +292,22 @@ public class MoCConfiguration
         return get(category, key, defaultValue, comment, STRING);
     }
 
-    public MoCProperty get(String category, String key, List<String> defaultValue)
+    public MoCProperty get(String category, String key, List<String> defaultValue, boolean newline)
     {
-        return get(category, key, defaultValue, null);
+        return get(category, key, defaultValue, null, newline);
     }
 
-    public MoCProperty get(String category, String key, List<String> defaultValue, String comment)
+    public MoCProperty get(String category, String key, List<String> defaultValue, String comment, boolean newline)
     {
-        return get(category, key, defaultValue, comment, STRING);
+        return get(category, key, defaultValue, comment, STRING, newline);
     }
 
-    public MoCProperty get(String category, String key, int[] defaultValue)
+    public MoCProperty get(String category, String key, int[] defaultValue, boolean newline)
     {
-        return get(category, key, defaultValue, null);
+        return get(category, key, defaultValue, null, newline);
     }
 
-    public MoCProperty get(String category, String key, int[] defaultValue, String comment)
+    public MoCProperty get(String category, String key, int[] defaultValue, String comment, boolean newline)
     {
         List<String> values = new ArrayList();
         for (int i = 0; i < defaultValue.length; i++)
@@ -315,7 +315,7 @@ public class MoCConfiguration
             values.add(Integer.toString(defaultValue[i]));
         }
 
-        MoCProperty prop =  get(category, key, values, comment, INTEGER);
+        MoCProperty prop =  get(category, key, values, comment, INTEGER, newline);
         if (!prop.isIntList())
         {
             prop.valueList = values;
@@ -324,12 +324,12 @@ public class MoCConfiguration
         return prop;
     }
 
-    public MoCProperty get(String category, String key, double[] defaultValue)
+    public MoCProperty get(String category, String key, double[] defaultValue, boolean newline)
     {
-        return get(category, key, defaultValue, null);
+        return get(category, key, defaultValue, null, newline);
     }
 
-    public MoCProperty get(String category, String key, double[] defaultValue, String comment)
+    public MoCProperty get(String category, String key, double[] defaultValue, String comment, boolean newline)
     {
         List<String> values = new ArrayList();
         for (int i = 0; i < defaultValue.length; i++)
@@ -337,7 +337,7 @@ public class MoCConfiguration
             values.add(Double.toString(defaultValue[i]));
         }
 
-        MoCProperty prop =  get(category, key, values, comment, DOUBLE);
+        MoCProperty prop =  get(category, key, values, comment, DOUBLE, newline);
         
         if (!prop.isDoubleList())
         {
@@ -347,12 +347,12 @@ public class MoCConfiguration
         return prop;
     }
 
-    public MoCProperty get(String category, String key, boolean[] defaultValue)
+    public MoCProperty get(String category, String key, boolean[] defaultValue, boolean newline)
     {
-        return get(category, key, defaultValue, null);
+        return get(category, key, defaultValue, null, newline);
     }
 
-    public MoCProperty get(String category, String key, boolean[] defaultValue, String comment)
+    public MoCProperty get(String category, String key, boolean[] defaultValue, String comment, boolean newline)
     {
         List<String> values = new ArrayList();
         for (int i = 0; i < defaultValue.length; i++)
@@ -360,7 +360,7 @@ public class MoCConfiguration
             values.add(Boolean.toString(defaultValue[i]));
         }
 
-        MoCProperty prop =  get(category, key, values, comment, BOOLEAN);
+        MoCProperty prop =  get(category, key, values, comment, BOOLEAN, newline);
         
         if (!prop.isBooleanList())
         {
@@ -406,7 +406,7 @@ public class MoCConfiguration
         }
     }
 
-    public MoCProperty get(String category, String key, List<String> defaultValue, String comment, MoCProperty.Type type)
+    public MoCProperty get(String category, String key, List<String> defaultValue, String comment, MoCProperty.Type type, boolean newline)
     {
         if (!caseSensitiveCustomCategories)
         {
@@ -418,6 +418,7 @@ public class MoCConfiguration
         if (cat.containsKey(key))
         {
             MoCProperty prop = cat.get(key);
+            prop.newline = newline;
 
             if (prop.getType() == null)
             {
@@ -432,6 +433,7 @@ public class MoCConfiguration
         else if (defaultValue != null)
         {
             MoCProperty prop = new MoCProperty(key, defaultValue, type);
+            prop.newline = newline;
             prop.comment = comment;
             cat.put(key, prop);
             return prop;
@@ -792,7 +794,7 @@ public class MoCConfiguration
             {
                 ret = new MoCConfigCategory(category);
                 categories.put(category, ret);
-                this.save();
+                //this.save();
                 changed = true;
             }
         }
@@ -952,5 +954,15 @@ public class MoCConfiguration
     public Set<String> getCategoryNames()
     {
         return ImmutableSet.copyOf(categories.keySet());
+    }
+
+    public String getFileName()
+    {
+        if (this.file != null)
+        {
+            String fullName = this.file.getName();
+            return fullName.substring(0, fullName.indexOf('.'));
+        }
+        return "undefined";
     }
 }

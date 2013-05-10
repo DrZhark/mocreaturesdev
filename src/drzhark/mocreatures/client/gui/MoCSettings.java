@@ -109,9 +109,9 @@ public class MoCSettings extends ModSettings {
      * convenience list setting adder
      */
     public MoCSettingList addSetting(Widget w2, String nicename,
-            String backendname, ArrayList options, String category) {
+            String backendname, ArrayList options, MoCConfiguration config, String category) {
 
-        MoCSettingList s = new MoCSettingList(category, backendname, options);
+        MoCSettingList s = new MoCSettingList(config, category, backendname, options);
         WidgetList w = new WidgetList(s, nicename);
         w2.add(w);
         append(s);
@@ -140,13 +140,14 @@ public class MoCSettings extends ModSettings {
      *            The context to save.
      */
     @SuppressWarnings("rawtypes")
-    public void save(String context, String backendName, String category) {
+    public void save(String context, String backendName, String category, MoCConfiguration config) {
         if (!settingsLoaded) {
             return;
         }
         try {
-            MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
-            MoCConfiguration biomeConfig = MoCreatures.proxy.mocBiomeConfig;
+            //MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
+            //MoCConfiguration biomeConfig = MoCreatures.proxy.mocBiomeConfig;
+            MoCConfiguration entityConfig = config;
             File path = ModSettings.getAppDir("/" + ModSettings.contextDatadirs.get(context) + "/" + backendname + "/");
             ModSettings.dbgout("saving context " + context + " (" + path.getAbsolutePath() + " [" + ModSettings.contextDatadirs.get(context) + "])");
             if (!path.exists()) {
@@ -159,7 +160,8 @@ public class MoCSettings extends ModSettings {
                 if (z.backendName.equals(backendName)) break;
             }
 
-            if (category == MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS)
+            //if (category == MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS)
+            /*if (entityConfig != config)
             {
                 int catType = -1;
                 System.out.println("backendname = " + z.backendName + ", context = " + z.toString(context));
@@ -253,10 +255,10 @@ public class MoCSettings extends ModSettings {
                         }
                     }
                 }
-            }
+            }*/
 
             config.save(); // save config
-            biomeConfig.save();
+            //biomeConfig.save();
             MoCreatures.proxy.needsUpdate = true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -23,7 +23,7 @@ public class MoCKeyHandler extends KeyHandler {
     //static KeyBinding jumpBinding = new KeyBinding("jumpBind", Keyboard.KEY_F);
     static KeyBinding jumpBinding = new KeyBinding("MoCreatures Jump", MoCClientProxy.mc.gameSettings.keyBindJump.keyCode);
     //static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_F);
-    static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F9);
+    static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F6);
     static KeyBinding dismountBinding = new KeyBinding("MoCreatures Dismount", Keyboard.KEY_F);
 
     public MoCKeyHandler()

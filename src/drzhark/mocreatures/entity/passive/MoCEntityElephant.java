@@ -1143,13 +1143,10 @@ public class MoCEntityElephant extends MoCEntityAnimal {
       return MoCreatures.animalHide.itemID;
     }
     
-    
-    
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
+        return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
     
     @Override

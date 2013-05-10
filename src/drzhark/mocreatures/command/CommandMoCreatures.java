@@ -12,6 +12,7 @@ import drzhark.mocreatures.MoCBiomeData;
 import drzhark.mocreatures.MoCBiomeGroupData;
 import drzhark.mocreatures.MoCConfigCategory;
 import drzhark.mocreatures.MoCConfiguration;
+import drzhark.mocreatures.MoCEntityModData;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.MoCEntityData;
 import drzhark.mocreatures.MoCProperty;
@@ -25,6 +26,7 @@ import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,24 +46,27 @@ public class CommandMoCreatures extends CommandBase {
     private static Map<String, String> commmentMap = new TreeMap<String, String>();
 
     static {
-        commands.add("/moc <entity> biomegroup add <group>");
-        commands.add("/moc <entity> biomegroup remove <group>");
-        commands.add("/moc <entity> frequency <int>");
-        commands.add("/moc <entity> min <int>");
-        commands.add("/moc <entity> max <int>");
-        commands.add("/moc spawntickrate <int>");
+        commands.add("/moc <tag> <entity> biomegroup add <group>");
+        commands.add("/moc <tag> <entity> biomegroup remove <group>");
+        commands.add("/moc <tag> <entity> frequency <int>");
+        commands.add("/moc <tag> <entity> min <int>");
+        commands.add("/moc <tag> <entity> max <int>");
+        commands.add("/moc spawncreaturetickrate <int>");
+        commands.add("/moc spawnwatertickrate <int>");
+        commands.add("/moc spawnambienttickrate <int>");
+        commands.add("/moc spawnmonstertickrate <int>");
         commands.add("/moc despawnvanilla <boolean>");
         commands.add("/moc despawntickrate <int>");
         commands.add("/moc modifyvanillaspawns <boolean>");
         commands.add("/moc worldgencreaturespawning <boolean>");
-        commands.add("/moc maxambient <int>");
-        commands.add("/moc maxmobs <int>");
-        commands.add("/moc maxanimals <int>");
-        commands.add("/moc maxwatermobs <int>");
+        commands.add("/moc maxambients <int>");
+        commands.add("/moc maxmonsters <int>");
+        commands.add("/moc maxcreatures <int>");
+        commands.add("/moc maxwatercreatures <int>");
         commands.add("/moc usecustomspawner <boolean>");
         commands.add("/moc caveogrestrength <float>");
         commands.add("/moc fireogrestrength <float>");
-        commands.add("/moc ogreattackrage <int>");
+        commands.add("/moc ogreattackrange <int>");
         commands.add("/moc ogrestrength <float>");
         commands.add("/moc caveogrechance <float>");
         commands.add("/moc fireogrechance <int>");
@@ -78,9 +83,11 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc zebrachance <int>");
         commands.add("/moc spawnpiranhas <boolean>");
         commands.add("/moc debuglogging <boolean>");
+        commands.add("/moc lightlevel <int>");
         commands.add("/moc list biomegroups");
-        commands.add("/moc list <entity> biomegroups");
+        commands.add("/moc list <tag> <entity> biomegroups");
         commands.add("/moc list tamed <playername>");
+        commands.add("/moc list tags");
         commands.add("/moc tamedcount <playername>");
         commands.add("/moc tp <entityid> <playername>");
         aliases.add("moc");
@@ -118,69 +125,41 @@ public class CommandMoCreatures extends CommandBase {
         String par2 = "";
         if (par2ArrayOfStr.length > 1)
             par2 = par2ArrayOfStr[1];
-        MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
 
+        MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
         boolean saved = false;
         boolean doNotShowHelp = false;
         if (par2ArrayOfStr.length >= 2)
         {
 
-            OUTER: if (par2ArrayOfStr.length <= 4)
+            OUTER: if (par2ArrayOfStr.length <= 5)
             {
                 String par3 = "";
                 if (par2ArrayOfStr.length >= 3)
                 {
                     par3 = par2ArrayOfStr[2];
                 }
-                // START HELP COMMAND
-                if (par1.equalsIgnoreCase("help"))
-                {
-                    List<String> list = this.getSortedPossibleCommands(par1ICommandSender);
-                    byte b0 = 7;
-                    int i = (list.size() - 1) / b0;
-                    boolean flag = false;
-                    ICommand icommand;
-                    int j;
 
-                    try
-                    {
-                        j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(par1ICommandSender, par2ArrayOfStr[0], 1, i + 1) - 1;
-                    }
-                    catch (NumberInvalidException numberinvalidexception)
-                    {
-                        if (par2 != null)
-                        {
-                            throw new WrongUsageException(par2, new Object[0]);
-                        }
-
-                        throw new CommandNotFoundException();
-                    }
-
-                    int k = Math.min((j + 1) * b0, list.size());
-                    par1ICommandSender.sendChatToPlayer(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---");
-
-                    for (int l = j * b0; l < k; ++l)
-                    {
-                        String command = list.get(l);
-                        par1ICommandSender.sendChatToPlayer(command);
-                    }
-
-                    /*if (j == 0 && par1ICommandSender instanceof EntityPlayer)
-                    {
-                        par1ICommandSender.sendChatToPlayer(EnumChatFormatting.GREEN + par1ICommandSender.translateString("commands.help.footer", new Object[0]));
-                    }*/
-                }
-                // END HELP COMMAND
                 // START LIST COMMAND
-                else if (par1.equalsIgnoreCase("list"))
+                if (par1.equalsIgnoreCase("list"))
                 {
                     if (par2 != null)
                     {
+                        if (par2.equalsIgnoreCase("tags"))
+                        {
+                            for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
+                            {
+                                par1ICommandSender.sendChatToPlayer(modEntry.getKey() + " uses tag " + EnumChatFormatting.AQUA + modEntry.getValue().getModTag());
+                            }
+
+                            doNotShowHelp = true;
+                            break OUTER;
+                        }
                         if (par2.equalsIgnoreCase("biomegroups") || par2.equalsIgnoreCase("bg"))
                         {
                             for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry: MoCreatures.proxy.biomeGroupMap.entrySet())
                             {
-                                par1ICommandSender.sendChatToPlayer(biomeGroupEntry.getKey());
+                                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.AQUA + biomeGroupEntry.getKey());
                             }
                             doNotShowHelp = true;
                             break OUTER;
@@ -233,24 +212,29 @@ public class CommandMoCreatures extends CommandBase {
                                 break OUTER;
                             }
                         }
-                        else
+                        else if (par2ArrayOfStr.length == 4)// handle entity biomegroup listings
                         {
-                            /*for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
+                            String tag = par2ArrayOfStr[1];
+                            String name = par2ArrayOfStr[2];
+                            for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
                             {
-                                if (entityEntry.getKey().equalsIgnoreCase(par2))
+                                if (modEntry.getValue().getModTag().equalsIgnoreCase(tag))
                                 {
-                                    MoCEntityData entityData = entityEntry.getValue();
-                                    for (int i = 0; i < entityData.getBiomeGroups().size(); i++)
+                                    MoCEntityData entityData = modEntry.getValue().getCreature(name);
+                                    if (entityData != null)
                                     {
-                                        par1ICommandSender.sendChatToPlayer(entityData.getBiomeGroups().get(i));
+                                        for (int i = 0; i < entityData.getBiomeGroups().size(); i++)
+                                        {
+                                            par1ICommandSender.sendChatToPlayer(entityData.getBiomeGroups().get(i));
+                                        }
+                                        doNotShowHelp = true;
+                                        break OUTER;
                                     }
-                                    doNotShowHelp = true;
-                                    break OUTER;
                                 }
                             }
                             par1ICommandSender.sendChatToPlayer("Entity " + par2 + " is invalid. Please enter a valid entity.");
                             doNotShowHelp = true;
-                            break OUTER;*/
+                            break OUTER;
                         }
                     }
                     break OUTER;
@@ -364,25 +348,27 @@ public class CommandMoCreatures extends CommandBase {
                     break OUTER;
                 }
                 // START ENTITY FREQUENCY/BIOME SECTION
-                else if (par2.equalsIgnoreCase("frequency") || par2.equalsIgnoreCase("min") || par2.equalsIgnoreCase("max") || par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
+                else if (par2ArrayOfStr.length >=4 && (par3.equalsIgnoreCase("frequency") || par3.equalsIgnoreCase("min") || par3.equalsIgnoreCase("max") || par3.equalsIgnoreCase("chunk") || par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg")))
                 {
-                    // DISABLED UNTIL I REDO IT WITH NEW SETUP
-                    /*for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.proxy.entityMap.entrySet())
+                    String tag = par2ArrayOfStr[0];
+                    String name = par2ArrayOfStr[1];
+                    String par4 = par2ArrayOfStr[3];
+                    for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
                     {
-                        if (entityEntry.getKey().equalsIgnoreCase(par1))
+                        if (modEntry.getValue().getModTag().equalsIgnoreCase(tag))
                         {
-                            // handle frequencies
-                            if (par2.equalsIgnoreCase("frequency") || par2.equalsIgnoreCase("min") || par2.equalsIgnoreCase("max"))
+                            MoCEntityData entityData = modEntry.getValue().getCreature(name);
+                            if (entityData != null)
                             {
-                                if (par2.equalsIgnoreCase("frequency"))
+                                if (par3.equalsIgnoreCase("frequency"))
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().setFrequency(Integer.parseInt(par3));
-                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
-                                        prop.valueList.set(0, par3);
+                                        entityData.setFrequency(Integer.parseInt(par4));
+                                        MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                        prop.valueList.set(0, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " frequency to " + par3 + ".");
+                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " frequency to " + par4 + ".");
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -393,11 +379,11 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().setMinSpawn(Integer.parseInt(par3));
-                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
-                                        prop.valueList.set(1, par3);
+                                        entityData.setMinSpawn(Integer.parseInt(par4));
+                                        MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                        prop.valueList.set(1, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " minGroupSpawn to " + par3 + ".");
+                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " minGroupSpawn to " + par4 + ".");
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -408,11 +394,11 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     try 
                                     {
-                                        entityEntry.getValue().setMaxSpawn(Integer.parseInt(par3));
-                                        MoCProperty prop = config.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityEntry.getKey());
-                                        prop.valueList.set(2, par3);
+                                        entityData.setMaxSpawn(Integer.parseInt(par4));
+                                        MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                        prop.valueList.set(2, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityEntry.getKey() + " maxGroupSpawn to " + par3 + ".");
+                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " maxGroupSpawn to " + par4 + ".");
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -424,14 +410,13 @@ public class CommandMoCreatures extends CommandBase {
                             // handle biome groups
                             else if (par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
                             {
-                                if (par2ArrayOfStr.length != 4)
+                                if (par2ArrayOfStr.length != 5)
                                     break OUTER;
-                                String value = par2ArrayOfStr[3].toUpperCase();
-                                String category = MoCreatures.proxy.CATEGORY_ENTITY_BIOME_SETTINGS;
+                                String value = par2ArrayOfStr[4].toUpperCase();
                                 try 
                                 {
-                                    List<String> biomeGroups = entityEntry.getValue().getBiomeGroups();
-                                    if (par3.equalsIgnoreCase("add"))
+                                    List<String> biomeGroups = entityData.getBiomeGroups();
+                                    if (par2ArrayOfStr[3].equalsIgnoreCase("add"))
                                     {
                                         if (!biomeGroups.contains(value))
                                         {
@@ -450,7 +435,7 @@ public class CommandMoCreatures extends CommandBase {
                                             //Collections.sort(prop.valueList);
                                             Collections.sort(biomeGroups);
                                             saved = true;
-                                            par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityEntry.getKey() + ".");
+                                            par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityData.getEntityName() + ".");
                                             break OUTER;
                                         }
                                         else 
@@ -470,7 +455,7 @@ public class CommandMoCreatures extends CommandBase {
                                             {
                                                 biomeGroups.remove(i);
                                                 saved = true;
-                                                par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityEntry.getKey() + ".");
+                                                par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + ".");
                                                 break OUTER;
                                             }
                                         }
@@ -488,7 +473,7 @@ public class CommandMoCreatures extends CommandBase {
                                 break OUTER;
                             }
                         }
-                    }*/
+                    }
                 }
                 // END ENTITY FREQUENCY/BIOME SECTION
                 // START OTHER SECTIONS
@@ -551,8 +536,52 @@ public class CommandMoCreatures extends CommandBase {
                 // END OTHER SECTIONS
             }
         }
+        // START HELP COMMAND
+        if (par1.equalsIgnoreCase("help"))
+        {
+            doNotShowHelp = true;
+            List<String> list = this.getSortedPossibleCommands(par1ICommandSender);
+            byte b0 = 7;
+            int i = (list.size() - 1) / b0;
+            boolean flag = false;
+            ICommand icommand;
+            int j = 0;
+
+            if (par2ArrayOfStr.length > 1)
+            {
+                try
+                {
+                    j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(par1ICommandSender, par2ArrayOfStr[1], 1, i + 1) - 1;
+                }
+                catch (NumberInvalidException numberinvalidexception)
+                {
+                    if (par2 != null)
+                    {
+                        throw new WrongUsageException(par2, new Object[0]);
+                    }
+    
+                    throw new CommandNotFoundException();
+                }
+            }
+
+            int k = Math.min((j + 1) * b0, list.size());
+            par1ICommandSender.sendChatToPlayer(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---");
+
+            for (int l = j * b0; l < k; ++l)
+            {
+                String command = list.get(l);
+                par1ICommandSender.sendChatToPlayer(command);
+            }
+
+            /*if (j == 0 && par1ICommandSender instanceof EntityPlayer)
+            {
+                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.GREEN + par1ICommandSender.translateString("commands.help.footer", new Object[0]));
+            }*/
+        }
+        // END HELP COMMAND
         if (saved)
         {
+            // TODO: update only what is needed instead of everything
             config.save();
             MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
             MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);

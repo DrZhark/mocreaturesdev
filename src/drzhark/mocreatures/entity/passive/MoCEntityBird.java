@@ -255,16 +255,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
         return false;
     }
 
-    /*
-     * public int type { return(dataWatcher.getWatchableObjectInt(17)); }
-     */
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     @Override
     public boolean entitiesToIgnore(Entity entity)
     {

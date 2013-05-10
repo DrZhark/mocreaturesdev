@@ -260,7 +260,7 @@ public class MoCEntityData {
 
     public MoCEntityModData getEntityMod()
     {
-    	return this.modData;
+        return this.modData;
     }
 
     public void setEntityMod(MoCEntityModData mod)
@@ -275,12 +275,13 @@ public class MoCEntityData {
 
     public boolean getCanSpawn()
     {
-    	if (this.frequency > 0 
-    	 && ((this.getType() == EnumCreatureType.creature && !MoCreatures.proxy.spawnCreatures && !(MoCreatures.proxy.maxAnimals <= 0))
-    	 || (this.getType() == EnumCreatureType.ambient && !MoCreatures.proxy.spawnAmbients && !(MoCreatures.proxy.maxAmbient <= 0))
-    	 || (this.getType() == EnumCreatureType.waterCreature && !MoCreatures.proxy.spawnWaterCreatures && !(MoCreatures.proxy.maxWaterMobs <= 0))
-    	 || (this.getType() == EnumCreatureType.monster && !MoCreatures.proxy.spawnMonsters && !(MoCreatures.proxy.maxMobs <= 0))))
-    		this.canSpawn = false;
+        if (this.frequency > 0 
+         && ((this.getType() == EnumCreatureType.creature && MoCreatures.proxy.spawnCreatures && !(MoCreatures.proxy.maxCreatures <= 0))
+         || (this.getType() == EnumCreatureType.ambient && MoCreatures.proxy.spawnAmbients && !(MoCreatures.proxy.maxAmbients <= 0))
+         || (this.getType() == EnumCreatureType.waterCreature && MoCreatures.proxy.spawnWaterCreatures && !(MoCreatures.proxy.maxWaterCreatures <= 0))
+         || (this.getType() == EnumCreatureType.monster && MoCreatures.proxy.spawnMonsters && !(MoCreatures.proxy.maxMonsters <= 0))))
+            this.canSpawn = true;
+        else this.canSpawn = false;
         return this.canSpawn;
     }
 

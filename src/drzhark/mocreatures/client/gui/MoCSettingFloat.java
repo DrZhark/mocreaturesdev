@@ -1,10 +1,12 @@
 package drzhark.mocreatures.client.gui;
 
+import drzhark.mocreatures.MoCConfiguration;
 import sharose.mods.guiapi.SettingFloat;
 
 public class MoCSettingFloat extends SettingFloat {
 
     public String category; // reference to category this setting is linked to
+    private MoCConfiguration config;
     /**
      * A constructor for SettingFloat. Defaults settings to default value of 0,
      * range of 0.0-1.0, and a step of 0.1.
@@ -65,10 +67,11 @@ public class MoCSettingFloat extends SettingFloat {
         super(title, defValue, minValue, stepValue, maxValue);
     }
 
-    public MoCSettingFloat(String cat, String title, float defValue, float minValue,
+    public MoCSettingFloat(MoCConfiguration config, String cat, String title, float defValue, float minValue,
             float stepValue, float maxValue) {
         super(title, defValue, minValue, stepValue, maxValue);
         this.category = cat;
+        this.config = config;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class MoCSettingFloat extends SettingFloat {
             values.put(context, v);
         }
         if (parent != null) {
-            ((MoCSettings)parent).save(context, this.backendName, this.category);
+            ((MoCSettings)parent).save(context, this.backendName, this.category, this.config);
         }
         if (displayWidget != null) {
             displayWidget.update();

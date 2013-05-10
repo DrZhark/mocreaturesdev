@@ -167,13 +167,6 @@ public class MoCEntityOgre extends MoCEntityMob{
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-    	//checkSpawningBiome();
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     protected String getDeathSound()
     {
         return "ogredying";

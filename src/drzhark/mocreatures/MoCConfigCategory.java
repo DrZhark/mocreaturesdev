@@ -177,17 +177,17 @@ private boolean changed = false;
             if (prop.isList())
             {
                 char type = prop.getType().getID();
-                write(out, false, pad1 + String.valueOf(type), ":", propName, " <");
+                write(out, prop.newline, pad1 + String.valueOf(type), ":", propName, " <");
                 for (int i = 0; i < prop.valueList.size(); i++)
                 {
                     String line = prop.valueList.get(i);
                     if (prop.valueList.size() == i+1) // if last line, don't write delimiter
                     {
-                        write(out, false, line);
+                        write(out, prop.newline, line);
                     }
                     else 
                     {
-                        write(out, false, line + ":");
+                        write(out, prop.newline, line + (prop.newline ? "" : ":"));
                     }
                 }
                 write(out, false, ">", NEW_LINE);

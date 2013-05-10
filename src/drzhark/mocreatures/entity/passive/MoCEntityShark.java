@@ -149,12 +149,6 @@ public class MoCEntityShark extends MoCEntityAquatic {
         return entityliving;
     }
 
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && (worldObj.difficultySetting >= (MoCreatures.proxy.sharkSpawnDif + 1)) && super.getCanSpawnHere();
-    }
-
     /*@Override
     public boolean interact(EntityPlayer entityplayer)
     {

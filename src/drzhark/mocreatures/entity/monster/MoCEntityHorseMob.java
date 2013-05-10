@@ -485,7 +485,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
             setType(32);
             //selectType();
         }
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
+        return super.getCanSpawnHere();
     }
     
     public void UndeadFX()

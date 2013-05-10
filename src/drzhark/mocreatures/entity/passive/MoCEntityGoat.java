@@ -729,10 +729,4 @@ public class MoCEntityGoat extends MoCEntityAnimal {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("DisplayName", getDisplayName());
     }
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
 }

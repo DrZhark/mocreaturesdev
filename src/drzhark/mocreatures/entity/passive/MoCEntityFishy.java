@@ -242,12 +242,6 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();

@@ -170,6 +170,12 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         return getBlockPathWeight(i, j, k) >= 0.0F;
     }
 
+    @Override
+    public boolean getCanSpawnHere()
+    {
+        return (MoCreatures.proxy.getFrequency(this.entityId) > 0 && super.getCanSpawnHere());
+    }
+
     public boolean getCanSpawnHereMob()
     {
         int i = MathHelper.floor_double(posX);
@@ -838,7 +844,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public int yawRotationOffset()
 	{

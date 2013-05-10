@@ -818,9 +818,7 @@ public class MoCEntitySnake extends MoCEntityAnimal {
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
-        return (checkSpawningBiome() && (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving());
+        return (checkSpawningBiome() && getCanSpawnHereCreature() && getCanSpawnHereLiving());
     }
 
     @Override

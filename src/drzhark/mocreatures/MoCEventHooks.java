@@ -36,13 +36,6 @@ public class MoCEventHooks {
         }
     }
 
-    @ForgeSubscribe
-    public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
-    {
-        System.out.println("event = " + event.getResult());
-        
-    }
-
     @ForgeSubscribe // handle world gen spawns
     public void onLivingWorldGenSpawn(EntityJoinWorldEvent event)
     {
@@ -55,17 +48,20 @@ public class MoCEventHooks {
             }
         }
     }
-    /*@ForgeSubscribe
-    public void onWorldLoading(WorldEvent.Load event)
+
+    @ForgeSubscribe // override maxSpawnInChunk values
+    public void onLivingPackSize(LivingPackSizeEvent event)
     {
-        //String dimensionName = event.world.provider.getDimensionName();
-        event.world.getSaveHandler().getWorldDirectoryName()
-        if (dimensionName != null)
+        if (MoCreatures.proxy.useCustomSpawner)
         {
-            MoCConfiguration config = MoCreatures.proxy.MoCconfig;
-            System.out.println("Dimension " + dimensionName + " is loading.");
+            MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
+            if (entityData != null)
+            {
+                event.maxPackSize = entityData.getMaxInChunk();
+                event.setResult(Result.ALLOW); // needed for changes to take effect
+            }
         }
-    }*/
+    }
 
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)

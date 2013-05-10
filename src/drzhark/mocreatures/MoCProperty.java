@@ -41,6 +41,7 @@ public class MoCProperty
     private String name;
     public String value;
     public String comment;
+    public boolean newline = false;
     public List<String> valueList;
 
     private final boolean wasRead;

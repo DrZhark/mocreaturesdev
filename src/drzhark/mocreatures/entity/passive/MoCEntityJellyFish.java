@@ -249,10 +249,4 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     {
         super.writeEntityToNBT(nbttagcompound);
     }*/
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
 }

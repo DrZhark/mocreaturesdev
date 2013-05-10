@@ -83,8 +83,7 @@ public class MoCEntityKomodo extends MoCEntityAnimal
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
+        return getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
 
     @Override

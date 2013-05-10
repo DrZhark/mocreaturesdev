@@ -872,6 +872,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 	@Override
 	public boolean getCanSpawnHere()
 	{
+	    if (MoCreatures.proxy.getFrequency(this.entityId) <= 0)
+	        return false;
 		if (worldObj.provider.dimensionId != 0)
 		{
 			return getCanSpawnHereCreature() && getCanSpawnHereLiving();

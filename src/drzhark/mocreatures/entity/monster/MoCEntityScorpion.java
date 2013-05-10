@@ -528,10 +528,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean getCanSpawnHere()
     {
-
-        if (MoCTools.isNearTorch(this)) { return false; }
-        
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
+        return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
     }
 
     /*@Override

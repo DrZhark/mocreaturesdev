@@ -546,6 +546,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 	@Override
 	public boolean getCanSpawnHere()
 	{
+	    if (MoCreatures.proxy.getFrequency(this.entityId) <= 0)
+	        return false;
 		int i = MathHelper.floor_double(posX);
 		int j = MathHelper.floor_double(boundingBox.minY);
 		int k = MathHelper.floor_double(posZ);

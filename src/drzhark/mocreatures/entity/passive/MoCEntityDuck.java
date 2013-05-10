@@ -25,12 +25,6 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     public int getMaxHealth()
     {
         return 4;

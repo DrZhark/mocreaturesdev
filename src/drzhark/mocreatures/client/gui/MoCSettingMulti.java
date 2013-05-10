@@ -2,6 +2,8 @@ package drzhark.mocreatures.client.gui;
 
 import java.util.List;
 
+import drzhark.mocreatures.MoCConfiguration;
+
 import sharose.mods.guiapi.ModSettings;
 import sharose.mods.guiapi.SettingMulti;
 
@@ -9,6 +11,7 @@ public class MoCSettingMulti extends SettingMulti {
 
     public String category; // reference to category this setting is linked to
     public String previousValue;
+    public MoCConfiguration config;
     /**
      * A constructor for SettingMulti.
      * 
@@ -24,9 +27,10 @@ public class MoCSettingMulti extends SettingMulti {
         super(title, defValue, labelValues);
     }
 
-    public MoCSettingMulti(String cat, String title, int defValue, String... labelValues) {
+    public MoCSettingMulti(MoCConfiguration config, String cat, String title, int defValue, String... labelValues) {
         super(title, defValue, labelValues);
         this.category = cat;
+        this.config = config;
     }
 
     /**
@@ -43,9 +47,10 @@ public class MoCSettingMulti extends SettingMulti {
         super(title, 0, labelValues);
     }
 
-    public MoCSettingMulti(String cat, String title, String... labelValues) {
+    public MoCSettingMulti(MoCConfiguration config, String cat, String title, String... labelValues) {
         super(title, 0, labelValues);
         this.category = cat;
+        this.config = config;
     }
 
     /**
@@ -67,7 +72,7 @@ public class MoCSettingMulti extends SettingMulti {
     public void set(Integer v, String context) {
         values.put(context, v);
         if (parent != null) {
-            ((MoCSettings)parent).save(context, this.backendName, this.category);
+            ((MoCSettings)parent).save(context, this.backendName, this.category, this.config);
         }
         if (displayWidget != null) {
             displayWidget.update();

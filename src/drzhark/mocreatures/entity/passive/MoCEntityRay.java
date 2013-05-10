@@ -212,6 +212,6 @@ public class MoCEntityRay extends MoCEntityAquatic {
         {
             setType(2);
         }
-        return (MoCreatures.proxy.getFrequency(this.getEntityName())  > 0) && super.getCanSpawnHere();
+        return super.getCanSpawnHere();
     }
 }

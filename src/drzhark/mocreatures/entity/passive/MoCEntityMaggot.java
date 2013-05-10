@@ -47,16 +47,6 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     protected void fall(float f)
     {
     }
-
-   
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        checkSpawningBiome();
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     
     @Override
     protected int getDropItemId()

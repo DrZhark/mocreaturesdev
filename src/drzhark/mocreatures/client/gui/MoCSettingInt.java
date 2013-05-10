@@ -1,10 +1,12 @@
 package drzhark.mocreatures.client.gui;
 
+import drzhark.mocreatures.MoCConfiguration;
 import sharose.mods.guiapi.SettingInt;
 
 public class MoCSettingInt extends SettingInt {
 
     public String category;
+    private MoCConfiguration config;
     /**
      * A constructor for SettingInt. Defaults settings to default value of 0,
      * range of 1-100, and a step of 1.
@@ -63,11 +65,11 @@ public class MoCSettingInt extends SettingInt {
         super(title, defValue, minValue, stepValue, maxValue);
     }
 
-    public MoCSettingInt(String cat, String title, int defValue, int minValue, int stepValue, int maxValue) {
+    public MoCSettingInt(MoCConfiguration config, String cat, String title, int defValue, int minValue, int stepValue, int maxValue) {
         super(title, defValue, minValue, stepValue, maxValue);
         this.category = cat;
+        this.config = config;
     }
-
 
     @Override
     public void set(Integer v, String context) {
@@ -80,7 +82,7 @@ public class MoCSettingInt extends SettingInt {
         }
 
         if (parent != null) {
-            ((MoCSettings)parent).save(context, this.backendName, this.category);
+            ((MoCSettings)parent).save(context, this.backendName, this.category, this.config);
         }
 
         if (displayWidget != null) {

@@ -424,13 +424,6 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         return 9;
     }
 
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        checkSpawningBiome();
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     public boolean getChestedHorse()
     {
         return (dataWatcher.getWatchableObjectByte(23) == 1);

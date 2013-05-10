@@ -90,14 +90,6 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
         return false;
     }*/
     
-    
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-    
-    
     @Override
     protected void dropFewItems(boolean flag, int x)
     {

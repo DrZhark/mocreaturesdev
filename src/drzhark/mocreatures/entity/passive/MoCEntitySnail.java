@@ -168,13 +168,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
     }*/
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-
-    @Override
     protected int getDropItemId()
     {
         return Item.slimeBall.itemID;

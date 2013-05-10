@@ -108,14 +108,6 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         return null;
     }
 
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     // TODO find a way to move this
     public EntityLiving getClosestTarget(Entity entity, double d)
     {

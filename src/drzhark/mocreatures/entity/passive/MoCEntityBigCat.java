@@ -495,13 +495,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         return true;
     }
 
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        if (MoCTools.isNearTorch(this)) { return false; }
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     // TODO move somewhere else
     public boolean NearSnowWithDistance(Entity entity, Double double1)
     {

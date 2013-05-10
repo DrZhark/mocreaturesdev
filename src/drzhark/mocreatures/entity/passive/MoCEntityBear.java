@@ -365,14 +365,6 @@ public class MoCEntityBear extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        if (MoCTools.isNearTorch(this)) { return false; }
-        //checkSpawningBiome();
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    @Override
     public boolean interact(EntityPlayer entityplayer)
     {
         if (super.interact(entityplayer)) { return false; }

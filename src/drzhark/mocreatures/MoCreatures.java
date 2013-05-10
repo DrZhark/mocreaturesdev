@@ -368,7 +368,7 @@ public class MoCreatures {
     public void preInit(FMLPreInitializationEvent event)
     {
         MinecraftForge.TERRAIN_GEN_BUS.register(new MoCEventHooks()); // register our event subscriptions
-        //MinecraftForge.EVENT_BUS.register(new MoCEventHooks());
+        MinecraftForge.EVENT_BUS.register(new MoCEventHooks());
         log = event.getModLog();
         proxy.ConfigInit(event);
         proxy.initSounds();
@@ -1284,14 +1284,15 @@ public class MoCreatures {
                         biomesToSpawn = entityData.getSpawnBiomes().toArray(biomesToSpawn);
                         if (proxy.useCustomSpawner)
                         {
+                            System.out.println(entityData.getEntityName()  +" canSpawn = " + entityData.getCanSpawn());
                             if (entityData.getCanSpawn())
                             {
                                 myCustomSpawner.AddCustomSpawn(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getType(), biomesToSpawn);
-                                if (proxy.debugLogging) log.info("Added " + entityData.getEntityClass() + " to CustomSpawner spawn lists");
+                                System.out.println("Added " + entityData.getEntityClass() + " to CustomSpawner spawn lists");
                             }
-                            //otherwise the Forge spawnlist remains pouplated with duplicated entries on CMS
-                            EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), biomesToSpawn); 
-                            if (proxy.debugLogging) log.info("Removed " + entityData.getEntityClass() + " from Vanilla spawn lists");
+                            //otherwise the Forge spawnlist remains populated with duplicated entries on CMS
+                            removeAllBiomeSpawns(entityData, true); // If we add a entity to CMS, we MUST remove it from ALL biomes on vanilla to avoid massive spawning in missing biomes
+                            System.out.println("Removed " + entityData.getEntityClass() + " from Vanilla spawn lists");
                         }
                         else //use Forge Spawn method instead
                         {
@@ -1310,43 +1311,49 @@ public class MoCreatures {
                     // handle entity removals
                     if (proxy.useCustomSpawner)
                     {
-                        if (entityData != null && (entityData.getFrequency() == 0
-                        || entityData.getType() == null // undefined
-                        || ((MoCreatures.proxy.maxAmbient == 0 || !MoCreatures.proxy.spawnAmbients) && entityData.getType() == EnumCreatureType.ambient) 
-                        || ((MoCreatures.proxy.maxAnimals == 0 || !MoCreatures.proxy.spawnCreatures) && entityData.getType() == EnumCreatureType.creature)
-                        || ((MoCreatures.proxy.maxMobs == 0 || !MoCreatures.proxy.spawnMonsters) && entityData.getType() == EnumCreatureType.monster)
-                        || ((MoCreatures.proxy.maxWaterMobs == 0 || !MoCreatures.proxy.spawnWaterCreatures) && entityData.getType() == EnumCreatureType.waterCreature)))
+                        if (entityData != null && entityData.getFrequency() <= 0 &&
+                           (entityData.getType() == null // undefined
+                        || ((MoCreatures.proxy.maxAmbients == 0 || !MoCreatures.proxy.spawnAmbients) && entityData.getType() == EnumCreatureType.ambient) 
+                        || ((MoCreatures.proxy.maxCreatures == 0 || !MoCreatures.proxy.spawnCreatures) && entityData.getType() == EnumCreatureType.creature)
+                        || ((MoCreatures.proxy.maxMonsters == 0 || !MoCreatures.proxy.spawnMonsters) && entityData.getType() == EnumCreatureType.monster)
+                        || ((MoCreatures.proxy.maxWaterCreatures == 0 || !MoCreatures.proxy.spawnWaterCreatures) && entityData.getType() == EnumCreatureType.waterCreature)))
                         {
                             // remove from all biomes
-                            if (proxy.debugLogging) MoCreatures.log.info("Entity " + entityData.getEntityClass() + " is not allowed to spawn due to configuration settings. Please check your confirm your settings if this is a mistake.");
-                            BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
-                            List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-                            for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
-                            {
-                                if (BiomeGenBase.biomeList[j] != null)
-                                {
-                                    biomeList.add(BiomeGenBase.biomeList[j]);
-                                }
-                            }
-                            if (biomeList.size() > 0)
-                            {
-                                if (proxy.debugLogging) MoCreatures.log.info("Removing entity " + entityData.getEntityClass() + " with type " + entityData.getType() + " from all biome spawnlists.");
-                                allBiomes = biomeList.toArray(allBiomes);
-                                myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-                                if (entityData.getType() != null)
-                                    EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-                                else
-                                {
-                                    // handle undefined types
-                                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
-                                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
-                                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
-                                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
-                                }
-                            }
+                            System.out.println("Entity " + entityData.getEntityClass() + " is not allowed to spawn due to configuration settings. Please check your confirm your settings if this is a mistake.");
+                            removeAllBiomeSpawns(entityData, false);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public static void removeAllBiomeSpawns(MoCEntityData entityData, boolean vanillaOnly)
+    {
+        BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
+        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+        {
+            if (BiomeGenBase.biomeList[j] != null)
+            {
+                biomeList.add(BiomeGenBase.biomeList[j]);
+            }
+        }
+        if (biomeList.size() > 0)
+        {
+            System.out.println("Removing entity " + entityData.getEntityClass() + " with type " + entityData.getType() + " from all biome spawnlists.");
+            allBiomes = biomeList.toArray(allBiomes);
+            if (!vanillaOnly)
+                myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
+            if (entityData.getType() != null)
+                EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
+            else
+            {
+                // handle undefined types
+                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
+                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
+                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
+                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
             }
         }
     }
@@ -1363,10 +1370,10 @@ public class MoCreatures {
         {
             if (myCustomSpawner != null) // if server has not started, don't reset custom spawner settings
             {
-                myCustomSpawner.setMaxMonsters(proxy.maxMobs);
-                myCustomSpawner.setMaxCreatures(proxy.maxAnimals);
-                myCustomSpawner.setMaxWaterCreatures(proxy.maxWaterMobs);
-                myCustomSpawner.setMaxAmbients(proxy.maxAmbient);
+                myCustomSpawner.setMaxMonsters(proxy.maxMonsters);
+                myCustomSpawner.setMaxCreatures(proxy.maxCreatures);
+                myCustomSpawner.setMaxWaterCreatures(proxy.maxWaterCreatures);
+                myCustomSpawner.setMaxAmbients(proxy.maxAmbients);
                 myCustomSpawner.clearLists();
                 populateSpawns();
             }

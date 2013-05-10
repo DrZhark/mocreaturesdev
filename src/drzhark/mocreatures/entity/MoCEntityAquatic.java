@@ -744,13 +744,13 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         				{
         					((EntityFishHook)entity1).bobber = null;
         				}
-        			}
-        			
+    	}
+    	
         		}
             	
             }
     	}
-    	
+		
     	if (isNotScared() && fleeingTick > 0)
 		{
 			fleeingTick = 0;
@@ -987,7 +987,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public boolean getCanSpawnHere()
     {
-        return this.worldObj.checkNoEntityCollision(this.boundingBox);
+        return MoCreatures.proxy.getFrequency(this.entityId) > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
     }
 
     @Override

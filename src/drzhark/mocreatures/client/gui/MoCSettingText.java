@@ -1,10 +1,12 @@
 package drzhark.mocreatures.client.gui;
 
+import drzhark.mocreatures.MoCConfiguration;
 import sharose.mods.guiapi.SettingText;
 
 public class MoCSettingText extends SettingText {
 
     public String category; // reference to category this setting is linked to
+    private MoCConfiguration config;
     /**
      * A constructor for SettingText.
      * 
@@ -17,9 +19,10 @@ public class MoCSettingText extends SettingText {
         super(title, defaulttext);
     }
 
-    public MoCSettingText(String cat, String title, String defaulttext) {
+    public MoCSettingText(MoCConfiguration config, String cat, String title, String defaulttext) {
         super(title, defaulttext);
         this.category = cat;
+        this.config = config;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class MoCSettingText extends SettingText {
     public void set(String v, String context) {
         values.put(context, v);
         if (parent != null) {
-            ((MoCSettings)parent).save(context, this.backendName, this.category); // MoC - include setting name so we can avoid saving all settings
+            ((MoCSettings)parent).save(context, this.backendName, this.category, this.config); // MoC - include setting name so we can avoid saving all settings
         }
         if (displayWidget != null) {
             displayWidget.update();

@@ -44,7 +44,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0)
+        return (MoCreatures.proxy.getFrequency(this.entityId) > 0)
         //&& (worldObj.difficultySetting >= (((Integer) MoCreatures.fwraithSpawnDifficulty.get()).intValue() + 1)) 
         && super.d2();
     }

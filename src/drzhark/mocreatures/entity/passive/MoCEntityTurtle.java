@@ -518,14 +518,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0)
-        //&& getCanSpawnHereAquatic();
-        && super.getCanSpawnHere();
-    }
-
-    @Override
     public int getMaxSpawnedInChunk()
     {
         return 6;

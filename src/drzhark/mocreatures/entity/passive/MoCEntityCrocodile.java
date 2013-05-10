@@ -190,7 +190,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
                 setIsResting(false);
                 biteProgress = 0;
                 hunting = 1;
-
             }
 
         }
@@ -382,6 +381,12 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     @Override
     protected void attackEntity(Entity entity, float f)
     {
+        if (entity instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer)entity;
+            if (player.capabilities.isCreativeMode)
+                return;
+        }
         if (getHasCaughtPrey()) { return; }
 
         if (attackTime <= 0 && (f < 3F) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY))
@@ -604,14 +609,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     public int getTalkInterval()
     {
         return 120;
-    }
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
     }
 
     @Override

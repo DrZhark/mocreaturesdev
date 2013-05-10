@@ -1,10 +1,12 @@
 package drzhark.mocreatures.client.gui;
 
+import drzhark.mocreatures.MoCConfiguration;
 import sharose.mods.guiapi.SettingBoolean;
 
 public class MoCSettingBoolean extends SettingBoolean {
 
     public String category; // reference to category this setting is linked to
+    private MoCConfiguration config;
     /**
      * This is the constructor for SettingBoolean. It sets the default value as
      * false.
@@ -28,16 +30,17 @@ public class MoCSettingBoolean extends SettingBoolean {
         super(name, defValue);
     }
 
-    public MoCSettingBoolean(String cat, String name, Boolean defValue) {
+    public MoCSettingBoolean(MoCConfiguration config, String cat, String name, Boolean defValue) {
         super(name, defValue);
         this.category = cat;
+        this.config = config;
     }
 
     @Override
     public void set(Boolean v, String context) {
         values.put(context, v);
         if (parent != null) {
-            ((MoCSettings)parent).save(context, this.backendName, this.category);
+            ((MoCSettings)parent).save(context, this.backendName, this.category, this.config);
         }
         if (displayWidget != null) {
             displayWidget.update();

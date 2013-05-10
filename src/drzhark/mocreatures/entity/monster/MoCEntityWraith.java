@@ -29,14 +29,6 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0)
-        //&& (worldObj.difficultySetting >= (((Integer) MoCreatures.wraithSpawnDifficulty.get()).intValue() + 1)) 
-        && super.getCanSpawnHere();
-    }
-
-    @Override
     protected String getDeathSound()
     {
         return "wraithdying";

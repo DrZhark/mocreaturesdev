@@ -276,13 +276,4 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     {
         return 15;
     }
-
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
-    
-
 }

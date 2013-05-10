@@ -380,12 +380,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
         return entityliving;
     }
 
-    @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-    }
-
     //TODO use MoCAnimal instead
     public EntityLiving getClosestTarget(Entity entity, double d)
     {

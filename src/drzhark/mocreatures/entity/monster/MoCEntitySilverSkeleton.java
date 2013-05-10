@@ -137,13 +137,6 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
 	}
 
 	@Override
-	public boolean getCanSpawnHere()
-	{
-		return (MoCreatures.proxy.getFrequency(this.getEntityName()) > 0) && super.getCanSpawnHere();
-	}
-
-	
-	@Override
 	protected String getDeathSound()
 	{
 		return "silverskeletondying";
