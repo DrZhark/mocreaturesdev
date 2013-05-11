@@ -405,6 +405,10 @@ public class CommandMoCreatures extends CommandBase {
                                         this.sendCommandHelp(par1ICommandSender);
                                     }
                                 }
+                                if (MoCreatures.myCustomSpawner != null)
+                                {
+                                   MoCreatures.myCustomSpawner.updateSpawnListEntry(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
+                                }
                                 break OUTER;
                             }
                             // handle biome groups
@@ -435,6 +439,11 @@ public class CommandMoCreatures extends CommandBase {
                                             //Collections.sort(prop.valueList);
                                             Collections.sort(biomeGroups);
                                             saved = true;
+                                            if (MoCreatures.myCustomSpawner != null)
+                                            {
+                                                // update lists
+                                                MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
+                                            }
                                             par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityData.getEntityName() + ".");
                                             break OUTER;
                                         }
@@ -455,6 +464,11 @@ public class CommandMoCreatures extends CommandBase {
                                             {
                                                 biomeGroups.remove(i);
                                                 saved = true;
+                                                if (MoCreatures.myCustomSpawner != null)
+                                                {
+                                                    // update lists
+                                                    MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
+                                                }
                                                 par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + ".");
                                                 break OUTER;
                                             }
@@ -583,9 +597,7 @@ public class CommandMoCreatures extends CommandBase {
         {
             // TODO: update only what is needed instead of everything
             config.save();
-            MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
-            MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);
-            MoCreatures.updateSettings();
+            MoCreatures.proxy.readConfigValues();
         }
         else if (!doNotShowHelp)
         {

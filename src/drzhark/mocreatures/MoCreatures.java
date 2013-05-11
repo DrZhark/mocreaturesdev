@@ -1266,6 +1266,13 @@ public class MoCreatures {
     {
         if (proxy.debugLogging) log.info("Populating spawns...");
 
+        if (proxy.useCustomSpawner)
+        {
+            myCustomSpawner.setMaxAmbients(proxy.maxAmbients);
+            myCustomSpawner.setMaxCreatures(proxy.maxCreatures);
+            myCustomSpawner.setMaxWaterCreatures(proxy.maxWaterCreatures);
+            myCustomSpawner.setMaxMonsters(proxy.maxMonsters);
+        }
         if (proxy.debugLogging) log.info("Scanning mod configs for entities...");
         for (Map.Entry<String, MoCEntityModData> modEntry : proxy.entityModMap.entrySet())
         {
