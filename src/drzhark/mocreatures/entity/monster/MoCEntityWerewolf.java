@@ -123,7 +123,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     public void setHumanForm(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }

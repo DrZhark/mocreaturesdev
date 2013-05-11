@@ -15,7 +15,7 @@ public class MoCEntityData {
 
     private Class<? extends EntityLiving> clazz;
     private EnumCreatureType typeOfCreature;
-    private String entityName = "";
+    private String entityName;
     private boolean canSpawn = true;
     private boolean vanillaControl = false;
     private int entityId;
@@ -24,24 +24,18 @@ public class MoCEntityData {
     private WidgetSimplewindow entityWindow;
 
     private List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
-    private List<String> biomeGroups;
+    private List<String> biomeGroups = new ArrayList<String>();
     private int frequency = 8;
     private int minGroup = 1;
     private int maxGroup = 1;
     private int maxSpawnInChunk = 1;
     private MoCEntityModData modData;
 
-    public MoCEntityData(Class<? extends EntityLiving> entityClass)
+    public MoCEntityData(Class<? extends EntityLiving> entityClass, String name)
     {
         this.clazz = entityClass;
         this.typeOfCreature = null;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type)
-    {
-        this.clazz = entityClass;
-        this.entityId = id;
-        this.typeOfCreature = type;
+        this.entityName = name;
     }
 
     public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, String name)
@@ -94,7 +88,7 @@ public class MoCEntityData {
         else this.canSpawn = true;
     }
 
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, EnumCreatureType type, int freq, int min, int max, int maxchunk, List<String> biomeGroups)
+    public MoCEntityData(Class<? extends EntityLiving> entityClass, String name, EnumCreatureType type, int freq, int min, int max, int maxchunk, List<String> biomeGroups)
     {
         this.clazz = entityClass;
       //  this.entityId = -1;
@@ -104,6 +98,7 @@ public class MoCEntityData {
         this.maxGroup = max;
         this.biomeGroups = biomeGroups;
         this.maxSpawnInChunk = maxchunk;
+        this.entityName = name;
         if (frequency <= 0 || min == 0 || max == 0 || biomeGroups.size() == 0)
             this.canSpawn = false;
         else this.canSpawn = true;
@@ -260,7 +255,7 @@ public class MoCEntityData {
 
     public MoCEntityModData getEntityMod()
     {
-        return this.modData;
+    	return this.modData;
     }
 
     public void setEntityMod(MoCEntityModData mod)
