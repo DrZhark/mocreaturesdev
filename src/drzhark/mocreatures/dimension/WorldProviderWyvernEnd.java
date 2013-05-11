@@ -31,13 +31,9 @@ public class WorldProviderWyvernEnd extends WorldProvider
         setCustomSky();
         if (MoCreatures.proxy.useCustomSpawner)
         {
-            MoCreatures.myCustomSpawner = new CustomSpawner();
-            if (MoCreatures.proxy.debugCMS)
-            {
-                MoCreatures.myCustomSpawner.setVerboseConsole(true);
-            }
-            MoCreatures.proxy.initializeBiomes();
-            MoCreatures.proxy.initializeEntities();
+            MoCreatures.myCustomSpawner.resetCMS();
+            MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
+            MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);
             MoCreatures.updateSettings(); // refresh settings
         }
     }

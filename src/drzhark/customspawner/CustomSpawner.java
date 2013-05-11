@@ -99,6 +99,43 @@ public final class CustomSpawner {
         }
     }
 
+    public void resetCMS()
+    {
+        this.biomeList = new ArrayList<BiomeGenBase>();
+        try
+        {
+            for (BiomeGenBase biomegenbase : BiomeGenBase.biomeList)
+            {
+                if (biomegenbase == null)
+                {
+                    continue;
+                }
+
+                biomeList.add(biomegenbase);
+            }
+
+            customCreatureSpawnList = new List[biomeList.size()];
+            customMonsterSpawnList = new List[biomeList.size()];
+            customAmbientSpawnList = new List[biomeList.size()];
+            customWaterCreatureSpawnList = new List[biomeList.size()];
+            entityClasses = new List[4];
+            vanillaClassList = new ArrayList<Class>();
+            vanillaClassList.add(EntityChicken.class);
+            vanillaClassList.add(EntityCow.class);
+            vanillaClassList.add(EntityPig.class);
+            vanillaClassList.add(EntitySheep.class);
+            vanillaClassList.add(EntityWolf.class);
+            vanillaClassList.add(EntitySquid.class);
+            vanillaClassList.add(EntityOcelot.class);
+            vanillaClassList.add(EntityBat.class);
+            clearLists();
+        }
+        catch (Exception ex)
+        {
+            throw new RuntimeException(ex);
+        }
+    }
+
     protected static ChunkPosition getRandomSpawningPointInChunk(World worldObj, int par1, int par2)
     {
         Chunk chunk = worldObj.getChunkFromChunkCoords(par1, par2);
@@ -474,7 +511,7 @@ public final class CustomSpawner {
 
     public void AddCustomSpawn(Class class1, int i, int j, int k, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
-        if (verboseConsole) log.info("AddCustomSpawn class " + class1 + ", at coords " + i + ", " + j + ", " + k + "  type = " + enumcreaturetype);
+        if (verboseConsole) log.info("AddCustomSpawn class " + class1 + ", with " + i + ":" + j + ":" + k + "  type = " + enumcreaturetype);
         if (class1 == null) { throw new IllegalArgumentException("entityClass cannot be null"); }
         if (enumcreaturetype == null) { throw new IllegalArgumentException("spawnList cannot be null"); }
         if (abiomegenbase == null)
