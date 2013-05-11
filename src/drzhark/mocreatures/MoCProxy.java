@@ -204,6 +204,10 @@ public class MoCProxy implements IGuiHandler {
     public boolean spawnMonsters;
     public boolean spawnAmbients;
     public boolean spawnWaterCreatures;
+    public boolean debugCMS;
+    public boolean checkAmbientLightLevel;
+    public boolean disallowMonsterSpawningDuringDay;
+    public int despawnLightLevel = 7;
     public int lightLevel = 7;
     public int maxMonsters;
     public int maxCreatures;
@@ -225,7 +229,6 @@ public class MoCProxy implements IGuiHandler {
     public int maxGroup = 2;
     public int maxSpawnInChunk = 3;
     public float strength = 1;
-    //public int sharkSpawnDif = 0;
 
     // ogre settings
     public float ogreStrength;
@@ -351,7 +354,7 @@ public class MoCProxy implements IGuiHandler {
     private static final String MOD_KEY_TWILIGHT = "twilightforest";
     public static MoCStructureData structureData = new MoCStructureData();
     public static Map<String, MoCBiomeData> biomeMap = new TreeMap<String, MoCBiomeData>();
-    protected static Map<Integer, MoCEntityData> entityMap = new HashMap<Integer, MoCEntityData>();
+    protected static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
 
  // biome groups
     //public static List defaultBiomeGroupUndefined = new ArrayList();
@@ -376,96 +379,129 @@ public class MoCProxy implements IGuiHandler {
     public static Map<String, MoCBiomeGroupData> biomeGroupMap = new TreeMap<String, MoCBiomeGroupData>();
     public static Map<String, MoCBiomeGroupData> defaultBiomeGroupMap = new TreeMap<String, MoCBiomeGroupData>(); // used only for default biome groups
    // public static Map<Integer, MoCEntityData> entityMap = new TreeMap<Integer, MoCEntityData>();
-    public static List<String> entityConflict = new ArrayList<String>();
-    public static List<String> biomeConflict = new ArrayList<String>();
-    public static Map<String, MoCProperty> propertyMap = new TreeMap<String, MoCProperty>();
     public static final Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>();
     public static final Map<String, MoCEntityData> vanillaEntityMap = new TreeMap<String, MoCEntityData>();
-    public static final Map<String, MoCEntityModData> entityModMap = new TreeMap<String, MoCEntityModData>();
-    public static final Map<String, MoCBiomeModData> biomeModMap = new TreeMap<String, MoCBiomeModData>();
-    public static final Map<String, MoCBiomeModData> tagConfigMap = new HashMap<String, MoCBiomeModData>();
-    private static Map<String, MoCProperty> propsToSave = new HashMap<String, MoCProperty>();
+    public static Map<String, MoCEntityModData> entityModMap = new TreeMap<String, MoCEntityModData>();
+    public static Map<String, MoCBiomeModData> biomeModMap = new TreeMap<String, MoCBiomeModData>();
+    public static Map<String, MoCBiomeModData> tagConfigMap = new HashMap<String, MoCBiomeModData>();
     private static Map<String, EnumCreatureType> entityTypes = new HashMap<String, EnumCreatureType>();
     public static Map<String, String> entityModKeyMap = new HashMap<String, String>();
     public static Map<String, List<String>> modKeyMap = new HashMap<String, List<String>>();
+    public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
     public static Map<Class<? extends EntityLiving>, MoCEntityData> classToEntityMapping = new HashMap<Class<? extends EntityLiving>, MoCEntityData>();
-    static {
-        // mocreatures
-        mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Bear", new MoCEntityData(MoCEntityBear.class, EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Bee", new MoCEntityData(MoCEntityBee.class, EnumCreatureType.ambient, 7, 1, 4, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("BigCat", new MoCEntityData(MoCEntityBigCat.class, EnumCreatureType.creature,  6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("BigGolem", new MoCEntityData(MoCEntityGolem.class, EnumCreatureType.monster, 3, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Bird", new MoCEntityData(MoCEntityBird.class, EnumCreatureType.creature, 15, 2, 3, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Boar", new MoCEntityData(MoCEntityBoar.class, EnumCreatureType.creature, 8, 2, 2, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Bunny", new MoCEntityData(MoCEntityBunny.class, EnumCreatureType.creature, 10, 2, 3, 4, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "NORMAL", "WYVERNLAIR"))));
-        mocEntityMap.put("ButterFly", new MoCEntityData(MoCEntityButterfly.class, EnumCreatureType.ambient, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Crab", new MoCEntityData(MoCEntityCrab.class, EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("BEACHES", "RIVER"))));
-        mocEntityMap.put("Cricket", new MoCEntityData(MoCEntityCricket.class, EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Crocodile", new MoCEntityData(MoCEntityCrocodile.class, EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
-        mocEntityMap.put("Deer", new MoCEntityData(MoCEntityDeer.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
-        mocEntityMap.put("Dolphin", new MoCEntityData(MoCEntityDolphin.class, EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER"))));
-        mocEntityMap.put("DragonFly", new MoCEntityData(MoCEntityDragonfly.class, EnumCreatureType.ambient, 6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
-        mocEntityMap.put("Duck", new MoCEntityData(MoCEntityDuck.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, EnumCreatureType.creature, 4, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
-        mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN"))));
-        mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
-        mocEntityMap.put("FlameWraith", new MoCEntityData(MoCEntityFlameWraith.class, EnumCreatureType.monster, 5, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("Fly", new MoCEntityData(MoCEntityFly.class, EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
-        mocEntityMap.put("Goat", new MoCEntityData(MoCEntityGoat.class, EnumCreatureType.creature, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
-        mocEntityMap.put("HellRat", new MoCEntityData(MoCEntityHellRat.class, EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        mocEntityMap.put("Horse", new MoCEntityData(MoCEntityHorse.class, EnumCreatureType.creature, 10, 1, 3, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
-        mocEntityMap.put("HorseMob", new MoCEntityData(MoCEntityHorseMob.class, EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("JellyFish", new MoCEntityData(MoCEntityJellyFish.class, EnumCreatureType.waterCreature, 8, 1, 4, 4, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
-        mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
-        mocEntityMap.put("KomodoDragon", new MoCEntityData(MoCEntityKomodo.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
-        mocEntityMap.put("Maggot", new MoCEntityData(MoCEntityMaggot.class, EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("MediumFish", new MoCEntityData(MoCEntityMediumFish.class, EnumCreatureType.waterCreature, 10, 1, 4, 4, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
-        mocEntityMap.put("MiniGolem", new MoCEntityData(MoCEntityMiniGolem.class, EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Mouse", new MoCEntityData(MoCEntityMouse.class, EnumCreatureType.creature, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("Ogre", new MoCEntityData(MoCEntityOgre.class, EnumCreatureType.monster, 8, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("Ostrich", new MoCEntityData(MoCEntityOstrich.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "NORMAL"))));
-        mocEntityMap.put("Raccoon", new MoCEntityData(MoCEntityRaccoon.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
-        mocEntityMap.put("Rat", new MoCEntityData(MoCEntityRat.class, EnumCreatureType.monster, 7, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Ray", new MoCEntityData(MoCEntityRay.class, EnumCreatureType.waterCreature, 10, 1, 2, 3, new ArrayList(Arrays.asList("OCEAN", "RIVER", "SWAMP"))));
-        mocEntityMap.put("Scorpion", new MoCEntityData(MoCEntityScorpion.class, EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("Shark", new MoCEntityData(MoCEntityShark.class, EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("OCEAN"))));
-        mocEntityMap.put("SilverSkeleton", new MoCEntityData(MoCEntitySilverSkeleton.class, EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
-        mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
-        mocEntityMap.put("Turkey", new MoCEntityData(MoCEntityTurkey.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
-        mocEntityMap.put("Turtle", new MoCEntityData(MoCEntityTurtle.class, EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP", "JUNGLE"))));
-        mocEntityMap.put("Werewolf", new MoCEntityData(MoCEntityWerewolf.class, EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Wraith", new MoCEntityData(MoCEntityWraith.class, EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("WWolf", new MoCEntityData(MoCEntityWWolf.class, EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Wyvern", new MoCEntityData(MoCEntityWyvern.class, EnumCreatureType.creature, 6, 1, 3, 3, new ArrayList(Arrays.asList("WYVERNLAIR"))));
+
+    public void resetAllData()
+    {
+        entityModMap.clear();
+        tagConfigMap.clear();
+        biomeModMap.clear();
+        mocEntityMap.clear();
+        entityModKeyMap.clear();
+        biomeGroupMap.clear();
+        biomeModMap.clear();
+        modKeyMap.clear();
+        instaSpawnerMap.clear();
+        classToEntityMapping.clear();
+    }
+
+    //----------------CONFIG INITIALIZATION
+    public void ConfigInit(FMLPreInitializationEvent event) 
+    {
+        configPreEvent = event;
+        mocGlobalConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCGlobal.cfg"));
+        mocBiomeConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCBiomeGroups.cfg"));
+        mocStructureConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCStructures.cfg"));
+        /* mocBiomeConfig.addCustomCategoryComment("Biome Keys", "Mod Biome List.\n" +
+                "This list contains all mod detected biomes in the form ID-BiomeName.\n" +
+                "This list is informational only and is used for the purpose of making biome groups.\n" +
+                "You may NOT change the ID!! It will be generated automatically based on your mod configs.\n" +
+                "If you do need to change a biome ID, find your mod's config and change it there instead then this list should update.");*/
+        configFile = event.getSuggestedConfigurationFile();
+        mocGlobalConfig.load();
+        mocBiomeConfig.load();
+        mocStructureConfig.load();
+        genModConfiguration(event);
+        this.readConfigValues();
+        if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCProperties.cfg");
+    }
+
+    public void genModConfiguration(FMLPreInitializationEvent event)
+    {
+        mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, "Ant", EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("Bear", new MoCEntityData(MoCEntityBear.class, "Bear", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Bee", new MoCEntityData(MoCEntityBee.class, "Bee", EnumCreatureType.ambient, 7, 1, 4, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("BigCat", new MoCEntityData(MoCEntityBigCat.class, "BigCat", EnumCreatureType.creature,  6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("BigGolem", new MoCEntityData(MoCEntityGolem.class, "BigGolem", EnumCreatureType.monster, 3, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Bird", new MoCEntityData(MoCEntityBird.class, "Bird", EnumCreatureType.creature, 15, 2, 3, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Boar", new MoCEntityData(MoCEntityBoar.class, "Boar", EnumCreatureType.creature, 8, 2, 2, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("Bunny", new MoCEntityData(MoCEntityBunny.class, "Bunny", EnumCreatureType.creature, 10, 2, 3, 4, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("ButterFly", new MoCEntityData(MoCEntityButterfly.class, "Butterfly", EnumCreatureType.ambient, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Crab", new MoCEntityData(MoCEntityCrab.class, "Crab", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("BEACHES", "RIVER"))));
+        mocEntityMap.put("Cricket", new MoCEntityData(MoCEntityCricket.class, "Cricket", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Crocodile", new MoCEntityData(MoCEntityCrocodile.class, "Crocodile", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
+        mocEntityMap.put("Deer", new MoCEntityData(MoCEntityDeer.class, "Deer", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
+        mocEntityMap.put("Dolphin", new MoCEntityData(MoCEntityDolphin.class, "Dolphin", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER"))));
+        mocEntityMap.put("DragonFly", new MoCEntityData(MoCEntityDragonfly.class, "DragonFly", EnumCreatureType.ambient, 6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("Duck", new MoCEntityData(MoCEntityDuck.class, "Duck", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, "Elephant", EnumCreatureType.creature, 4, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
+        mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, "Firefly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN"))));
+        mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, "Fishy", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("FlameWraith", new MoCEntityData(MoCEntityFlameWraith.class, "FlameWraith", EnumCreatureType.monster, 5, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
+        mocEntityMap.put("Fly", new MoCEntityData(MoCEntityFly.class, "Fly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, "Fox", EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
+        mocEntityMap.put("Goat", new MoCEntityData(MoCEntityGoat.class, "Goat", EnumCreatureType.creature, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("HellRat", new MoCEntityData(MoCEntityHellRat.class, "HellRat", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
+        mocEntityMap.put("Horse", new MoCEntityData(MoCEntityHorse.class, "Horse", EnumCreatureType.creature, 10, 1, 3, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("HorseMob", new MoCEntityData(MoCEntityHorseMob.class, "HorseMob", EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
+        mocEntityMap.put("JellyFish", new MoCEntityData(MoCEntityJellyFish.class, "JellyFish", EnumCreatureType.waterCreature, 8, 1, 4, 4, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
+        mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, "Kitty", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
+        mocEntityMap.put("KomodoDragon", new MoCEntityData(MoCEntityKomodo.class, "KomodoDragon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
+        mocEntityMap.put("Maggot", new MoCEntityData(MoCEntityMaggot.class, "Maggot", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("MediumFish", new MoCEntityData(MoCEntityMediumFish.class, "MediumFish", EnumCreatureType.waterCreature, 10, 1, 4, 4, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("MiniGolem", new MoCEntityData(MoCEntityMiniGolem.class, "MiniGolem", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Mouse", new MoCEntityData(MoCEntityMouse.class, "Mouse", EnumCreatureType.creature, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Ogre", new MoCEntityData(MoCEntityOgre.class, "Ogre", EnumCreatureType.monster, 8, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
+        mocEntityMap.put("Ostrich", new MoCEntityData(MoCEntityOstrich.class, "Ostrich", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "NORMAL"))));
+        mocEntityMap.put("Raccoon", new MoCEntityData(MoCEntityRaccoon.class, "Racoon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("Rat", new MoCEntityData(MoCEntityRat.class, "Rat", EnumCreatureType.monster, 7, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Ray", new MoCEntityData(MoCEntityRay.class, "Ray", EnumCreatureType.waterCreature, 10, 1, 2, 3, new ArrayList(Arrays.asList("OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("Scorpion", new MoCEntityData(MoCEntityScorpion.class, "Scorpion", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
+        mocEntityMap.put("Shark", new MoCEntityData(MoCEntityShark.class, "Shark", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("OCEAN"))));
+        mocEntityMap.put("SilverSkeleton", new MoCEntityData(MoCEntitySilverSkeleton.class, "SilverSkeleton", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, "Snail", EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, "SmallFish", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("Turkey", new MoCEntityData(MoCEntityTurkey.class, "Turkey", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
+        mocEntityMap.put("Turtle", new MoCEntityData(MoCEntityTurtle.class, "Turtle", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP", "JUNGLE"))));
+        mocEntityMap.put("Werewolf", new MoCEntityData(MoCEntityWerewolf.class, "Werewolf", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Wraith", new MoCEntityData(MoCEntityWraith.class, "Wraith", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("WWolf", new MoCEntityData(MoCEntityWWolf.class, "WWolf", EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS"))));
+        mocEntityMap.put("Wyvern", new MoCEntityData(MoCEntityWyvern.class, "Wyvern", EnumCreatureType.creature, 6, 1, 3, 3, new ArrayList(Arrays.asList("WYVERNLAIR"))));
 
         // vanilla
-        vanillaEntityMap.put("Bat", new MoCEntityData(EntityBat.class, EnumCreatureType.ambient, 10, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        vanillaEntityMap.put("Blaze", new MoCEntityData(EntityBlaze.class, EnumCreatureType.monster, 8, 1, 2, 4, new ArrayList(Arrays.asList(""))));
-        vanillaEntityMap.put("CaveSpider", new MoCEntityData(EntityCaveSpider.class, EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
-        vanillaEntityMap.put("Chicken", new MoCEntityData(EntityChicken.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
-        vanillaEntityMap.put("Cow", new MoCEntityData(EntityCow.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
-        vanillaEntityMap.put("Creeper", new MoCEntityData(EntityCreeper.class, EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
-        vanillaEntityMap.put("Enderman", new MoCEntityData(EntityEnderman.class, EnumCreatureType.monster, 1, 1, 4, 4, new ArrayList(Arrays.asList("MOBS", "THEEND"))));
-        vanillaEntityMap.put("Ghast", new MoCEntityData(EntityGhast.class, EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        vanillaEntityMap.put("LavaSlime", new MoCEntityData(EntityMagmaCube.class, EnumCreatureType.monster, 1, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        vanillaEntityMap.put("MushroomCow", new MoCEntityData(EntityMooshroom.class, EnumCreatureType.creature, 8, 1, 4, 4, new ArrayList(Arrays.asList("MUSHROOM"))));
-        vanillaEntityMap.put("Ozelot", new MoCEntityData(EntityOcelot.class, EnumCreatureType.monster, 6, 1, 3, 3, new ArrayList(Arrays.asList("JUNGLE"))));
-        vanillaEntityMap.put("Pig", new MoCEntityData(EntityPig.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        vanillaEntityMap.put("PigZombie", new MoCEntityData(EntityPigZombie.class, EnumCreatureType.monster, 15, 4, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        vanillaEntityMap.put("Sheep", new MoCEntityData(EntitySheep.class, EnumCreatureType.creature, 12, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
-        vanillaEntityMap.put("Silverfish", new MoCEntityData(EntitySilverfish.class, EnumCreatureType.monster, 0, 1, 4, 4, new ArrayList(Arrays.asList(""))));
-        vanillaEntityMap.put("Skeleton", new MoCEntityData(EntitySkeleton.class, EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
-        vanillaEntityMap.put("Slime", new MoCEntityData(EntitySlime.class, EnumCreatureType.monster, 6, 1, 1, 4, new ArrayList(Arrays.asList("MOBS"))));
-        vanillaEntityMap.put("SnowMan", new MoCEntityData(EntitySnowman.class, EnumCreatureType.monster, 0, 1, 1, 1, new ArrayList(Arrays.asList(""))));
-        vanillaEntityMap.put("Spider", new MoCEntityData(EntitySpider.class, EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
-        vanillaEntityMap.put("Squid", new MoCEntityData(EntitySquid.class, EnumCreatureType.waterCreature, 8, 1, 2, 2, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
-        vanillaEntityMap.put("Witch", new MoCEntityData(EntityWitch.class, EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList(""))));
-        vanillaEntityMap.put("Wolf", new MoCEntityData(EntityWolf.class, EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST"))));
-        vanillaEntityMap.put("Zombie", new MoCEntityData(EntityZombie.class, EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("Bat", new MoCEntityData(EntityBat.class, "Bat", EnumCreatureType.ambient, 10, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        vanillaEntityMap.put("Blaze", new MoCEntityData(EntityBlaze.class, "Blaze", EnumCreatureType.monster, 8, 1, 2, 4, new ArrayList(Arrays.asList(""))));
+        vanillaEntityMap.put("CaveSpider", new MoCEntityData(EntityCaveSpider.class, "CaveSpider", EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("Chicken", new MoCEntityData(EntityChicken.class, "Chicken", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
+        vanillaEntityMap.put("Cow", new MoCEntityData(EntityCow.class, "Cow", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
+        vanillaEntityMap.put("Creeper", new MoCEntityData(EntityCreeper.class, "Creeper", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("Enderman", new MoCEntityData(EntityEnderman.class, "Enderman", EnumCreatureType.monster, 1, 1, 4, 4, new ArrayList(Arrays.asList("MOBS", "THEEND"))));
+        vanillaEntityMap.put("Ghast", new MoCEntityData(EntityGhast.class, "Ghast", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
+        vanillaEntityMap.put("LavaSlime", new MoCEntityData(EntityMagmaCube.class, "LavaSlime", EnumCreatureType.monster, 1, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
+        vanillaEntityMap.put("MushroomCow", new MoCEntityData(EntityMooshroom.class, "MushroomCow", EnumCreatureType.creature, 8, 1, 4, 4, new ArrayList(Arrays.asList("MUSHROOM"))));
+        vanillaEntityMap.put("Ozelot", new MoCEntityData(EntityOcelot.class, "Ozelot", EnumCreatureType.monster, 6, 1, 3, 3, new ArrayList(Arrays.asList("JUNGLE"))));
+        vanillaEntityMap.put("Pig", new MoCEntityData(EntityPig.class, "Pig", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        vanillaEntityMap.put("PigZombie", new MoCEntityData(EntityPigZombie.class, "PigZombie", EnumCreatureType.monster, 15, 4, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
+        vanillaEntityMap.put("Sheep", new MoCEntityData(EntitySheep.class, "Sheep", EnumCreatureType.creature, 12, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
+        vanillaEntityMap.put("Silverfish", new MoCEntityData(EntitySilverfish.class, "Silverfish", EnumCreatureType.monster, 0, 1, 4, 4, new ArrayList(Arrays.asList(""))));
+        vanillaEntityMap.put("Skeleton", new MoCEntityData(EntitySkeleton.class, "Skeleton", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("Slime", new MoCEntityData(EntitySlime.class, "Slime", EnumCreatureType.monster, 6, 1, 1, 4, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("SnowMan", new MoCEntityData(EntitySnowman.class, "SnowMan", EnumCreatureType.monster, 0, 1, 1, 1, new ArrayList(Arrays.asList(""))));
+        vanillaEntityMap.put("Spider", new MoCEntityData(EntitySpider.class, "Spider", EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("Squid", new MoCEntityData(EntitySquid.class, "Squid", EnumCreatureType.waterCreature, 8, 1, 2, 2, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
+        vanillaEntityMap.put("Witch", new MoCEntityData(EntityWitch.class, "Witch", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList(""))));
+        vanillaEntityMap.put("Wolf", new MoCEntityData(EntityWolf.class, "Wolf", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST"))));
+        vanillaEntityMap.put("Zombie", new MoCEntityData(EntityZombie.class, "Zombie", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
 
         //defaultBiomeGroupMap.put(BIOME_UNDEFINED_GROUP, new MoCBiomeGroupData(BIOME_UNDEFINED_GROUP, defaultBiomeGroupUndefined));
         defaultBiomeGroupMap.put(BIOME_FOREST_GROUP, new MoCBiomeGroupData(BIOME_FOREST_GROUP, defaultBiomeGroupForest));
@@ -531,33 +567,15 @@ public class MoCProxy implements IGuiHandler {
         entityModKeyMap.put("arsmagica", "ArsMagica.cfg");
         entityModKeyMap.put("projectzulu", "ProjectZulu.cfg");
         entityModKeyMap.put("thaumcraft", "Thaumcraft.cfg");
+        entityModKeyMap.put("tinker", "TinkerConstruct.cfg");
+        entityModKeyMap.put("atum", "Atum.cfg");
+        entityModKeyMap.put("advancedglowstone", "AngryCreatures.cfg");
+        entityModKeyMap.put("minefantasy", "MineFantasy.cfg");
+        entityModKeyMap.put("primitivemobs", "PrimitiveMobs.cfg");
+        entityModKeyMap.put("atmosmobs", "AtmosMobs.cfg");
         entityModKeyMap.put("vanilla", "Vanilla.cfg");
         entityModKeyMap.put("undefined", "Undefined.cfg");
-    }
 
-    //----------------CONFIG INITIALIZATION
-    public void ConfigInit(FMLPreInitializationEvent event) 
-    {
-        configPreEvent = event;
-        mocGlobalConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCGlobal.cfg"));
-        mocBiomeConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCBiomeGroups.cfg"));
-        mocStructureConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCStructures.cfg"));
-        /* mocBiomeConfig.addCustomCategoryComment("Biome Keys", "Mod Biome List.\n" +
-                "This list contains all mod detected biomes in the form ID-BiomeName.\n" +
-                "This list is informational only and is used for the purpose of making biome groups.\n" +
-                "You may NOT change the ID!! It will be generated automatically based on your mod configs.\n" +
-                "If you do need to change a biome ID, find your mod's config and change it there instead then this list should update.");*/
-        configFile = event.getSuggestedConfigurationFile();
-        mocGlobalConfig.load();
-        mocBiomeConfig.load();
-        mocStructureConfig.load();
-        genModConfiguration(event);
-        this.readConfigValues();
-        if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCProperties.cfg");
-    }
-
-    public void genModConfiguration(FMLPreInitializationEvent event)
-    {
         MoCConfigCategory modMapCat = mocGlobalConfig.getCategory(CATEGORY_MOD_MAPPINGS);
         //useDefaultModBiomeMappings = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useDefaultModBiomeMappings", true, "Use Default Mod Biome Mappings").getBoolean(true);
         for (Map.Entry<String, List<String>> keyEntry : modKeyMap.entrySet())
@@ -586,6 +604,7 @@ public class MoCProxy implements IGuiHandler {
                 if (debugLogging) MoCreatures.log.info("Added Mod Biome Mapping " + keyEntry.getKey() + " with tag " + tag + " to file " + configName);
             }
         }
+
         // handle custom tag to config mappings
         for (Map.Entry<String, MoCProperty> propEntry : modMapCat.entrySet())
         {
@@ -625,6 +644,15 @@ public class MoCProxy implements IGuiHandler {
             vanillaEntityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, vanillaEntry.getKey(), new ArrayList(Arrays.asList(vanillaEntry.getValue().getType().toString().toUpperCase(), Integer.toString(vanillaEntry.getValue().getFrequency()), Integer.toString(vanillaEntry.getValue().getMinSpawn()), Integer.toString(vanillaEntry.getValue().getMaxSpawn()), Integer.toString(vanillaEntry.getValue().getMaxInChunk()))));
             vanillaEntry.getValue().setEntityConfig(vanillaEntityConfig);
         }
+        // populate default vanilla/mocreature mod data
+        for (Map.Entry<String, MoCEntityData> entityEntry : mocEntityMap.entrySet())
+        {
+            entityModMap.get("drzhark").addCreature(entityEntry.getValue());
+        }
+        for (Map.Entry<String, MoCEntityData> entityEntry : vanillaEntityMap.entrySet())
+        {
+            entityModMap.get("vanilla").addCreature(entityEntry.getValue());
+        }
         mocEntityConfig.save();
         vanillaEntityConfig.save();
         mocGlobalConfig.save();
@@ -639,6 +667,8 @@ public class MoCProxy implements IGuiHandler {
     public void initializeEntities()
     {
         entityMap.clear();
+        classToEntityMapping.clear();
+        instaSpawnerMap.clear();
         for (Object obj : EntityList.classToStringMapping.entrySet())
         {
             Map.Entry entry = (Map.Entry)obj;
@@ -669,6 +699,7 @@ public class MoCProxy implements IGuiHandler {
                 if (debugLogging) MoCreatures.log.info("Detected " + clazz + " in EntityList, checking if valid...");
                 EnumCreatureType creatureType = null;
                 MoCEntityData entityData = null;
+
                 if ((EntityAnimal.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.creature, true)) && !(MoCEntityAmbient.class.isAssignableFrom(clazz)))
                 {
                     creatureType = EnumCreatureType.creature;
@@ -707,7 +738,6 @@ public class MoCProxy implements IGuiHandler {
                 }
                 else if (clazz != EntityLiving.class && clazz != EntityMob.class && clazz != MoCEntityFishBowl.class && clazz != MoCEntityLitterBox.class && clazz != MoCEntityEgg.class && clazz != MoCEntityKittyBed.class)
                 {
-                    // undefined
                     entityData = new MoCEntityData(clazz, entityliving.entityId, creatureType, entityName);
                     entityData.setCanSpawn(false); // dont allow undefined types to spawn
                 }
@@ -716,25 +746,31 @@ public class MoCProxy implements IGuiHandler {
                     if (debugLogging) MoCreatures.log.info("Entity " + clazz + " is not valid, skipping...");
                     continue;
                 }
-                classToEntityMapping.put(clazz, entityData); // store for structure use
-                entityMap.put(entityliving.entityId, entityData); // used for fast lookups
                 entityData.setEntityName(entityName);
                 entityData.setEntityID(entityliving.entityId);
                 if (debugLogging) MoCreatures.log.info("Added " + ((creatureType == null) ? "UNDEFINED" : creatureType.toString().toUpperCase()) + " " + entry.getKey() + " with name " + entityName);
                 // handle frequencies
                 // assign config for type of mod
-                String entityClass = clazz.toString().toLowerCase();
+                String entityClass = clazz.getName().toLowerCase();
                 MoCConfiguration entityConfig = entityModMap.get("undefined").getModConfig();
 
+                boolean undefined = true;
                 if (debugLogging) MoCreatures.log.info("Searching for mod " + entityClass + " belongs to...");
+
                 if (entityClass.contains("net.minecraft") || entityClass.toString().length() <= 3) // vanilla
                 {
                     MoCEntityModData modData = entityModMap.get("vanilla");
                     if (debugLogging) MoCreatures.log.info("Matched mod " + "Vanilla to " + entityClass);
-                    modData.addCreature(entityData);
+                    if (!modData.addCreature(entityData))
+                    {
+                        entityData = modData.getCreature(entityName);
+                        entityData.setEntityID(entityliving.entityId);
+                        entityData.setEntityMod(modData);
+                    }
                     entityData.setEntityMod(modData);
                     entityConfig = modData.getModConfig();
                     entityData.setEntityConfig(entityConfig);
+                    undefined = false;
                 }
                 else { // custom
                     for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
@@ -744,14 +780,65 @@ public class MoCProxy implements IGuiHandler {
                             // Found match, use config
                             MoCEntityModData modData = modEntry.getValue();
                             if (debugLogging) MoCreatures.log.info("Matched mod " + modEntry.getKey() + " to " + entityClass);
-                            modData.addCreature(entityData);
+                            if (!modData.addCreature(entityData))
+                            {
+                                entityData = modData.getCreature(entityName);
+                                entityData.setEntityID(entityliving.entityId);
+                                entityData.setEntityMod(modData);
+                            };
                             entityData.setEntityMod(modData);
                             entityConfig = modData.getModConfig();
                             entityData.setEntityConfig(entityConfig);
+                            undefined = false;
                             break;
                         }
                     }
                 }
+                if (undefined)
+                {
+                    if (debugLogging) MoCreatures.log.info("Detected Undefined Entity Class " + entityClass + ". You must add a mapping for this class in MoCGlobal.cfg.");
+                    String tokens[] = entityClass.split("\\.");
+
+                    // no mapping for class in config so lets generate one
+                    if (tokens.length > 2)
+                    {
+                        String modKey = tokens[0];
+                        if (modKey.equalsIgnoreCase("mod") || modKey.equalsIgnoreCase("mods") || modKey.equalsIgnoreCase("mob") || modKey.equalsIgnoreCase("mobs"))
+                            modKey = tokens[1];
+                        String configName = modKey + ".cfg";
+
+                        biomeModMap.put(modKey, new MoCBiomeModData(modKey, modKey, new MoCConfiguration(new File(configPreEvent.getSuggestedConfigurationFile().getParent(), MOD_BIOME_FILE_ROOT + configName))));
+                        if (debugLogging) MoCreatures.log.info("AddedAutomatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
+                        entityModMap.put(modKey, new MoCEntityModData(modKey, modKey, new MoCConfiguration(new File(configPreEvent.getSuggestedConfigurationFile().getParent(), MOD_CREATURES_FILE_ROOT + configName))));
+                        if (debugLogging) MoCreatures.log.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
+                        tagConfigMap.put(modKey, biomeModMap.get(modKey));
+                        MoCConfigCategory modMapCat = mocGlobalConfig.getCategory(CATEGORY_MOD_MAPPINGS);
+                        modMapCat.put(modKey, new MoCProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)), Type.STRING, "automatically generated"));
+
+                        MoCEntityModData modData = entityModMap.get(modKey);
+                        if (debugLogging) MoCreatures.log.info("Matched mod " + modKey + " to " + entityClass);
+                        if (!modData.addCreature(entityData))
+                        {
+                            entityData = modData.getCreature(entityName);
+                            entityData.setEntityID(entityliving.entityId);
+                            entityData.setEntityMod(modData);
+                        }
+                        entityData.setEntityMod(modData);
+                        entityConfig = modData.getModConfig();
+                        entityData.setEntityConfig(entityConfig);
+                    }
+                    else 
+                    {
+                        if (debugLogging) MoCreatures.log.info("Could not generate an automatic mod mapping for entity " + entityClass);
+                        continue;
+                    }
+                }
+            //    if (found)
+            //    {
+                    classToEntityMapping.put(clazz, entityData); // store for structure use
+                    entityMap.put(entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName(), entityData); // used for fast lookups
+                    instaSpawnerMap.put(entityliving.entityId, entityliving.getClass()); // used for instaspawner
+              //  }
                 if (!entityConfig.getCategory(CATEGORY_ENTITY_SPAWN_SETTINGS).containsKey(entityName))
                 {
                     entityConfig.get(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName, new ArrayList(Arrays.asList( ((creatureType == null) ? "UNDEFINED" : creatureType.toString().toUpperCase()), new Integer(frequency).toString(), new Integer(minGroup).toString(), new Integer(maxGroup).toString(), new Integer(maxSpawnInChunk).toString())));
@@ -793,7 +880,6 @@ public class MoCProxy implements IGuiHandler {
                 }
                 mocGlobalConfig.save();
                 MoCConfigCategory entityBiomeCategory = entityConfig.getCategory(CATEGORY_ENTITY_BIOME_SETTINGS);
-
                 // Add spawnable biomes for each entity
                 if (entityBiomeCategory.get(entityName) != null && entityBiomeCategory.get(entityName).valueList != null)
                 {
@@ -806,7 +892,7 @@ public class MoCProxy implements IGuiHandler {
                             MoCProperty biomeProps = mocBiomeConfig.getCategory(biomeGroupName).get(biomeGroupName);
                             for (int j = 0; j < biomeProps.valueList.size(); j++)
                             {
-                                List<String> biomeParts = parseBiome(biomeProps.valueList.get(j));
+                                List<String> biomeParts = parseName(biomeProps.valueList.get(j));
                                 if (biomeParts.size() == 2) // valid
                                 {
                                     String tag = biomeParts.get(0);
@@ -821,6 +907,13 @@ public class MoCProxy implements IGuiHandler {
                             }
                         }
                     }
+                    entityData.setBiomeGroups(biomeList);
+                }
+                else // populate empty list so GUI can add to it
+                {
+                    MoCProperty prop = new MoCProperty(entityName, new ArrayList(Arrays.asList()), Type.STRING);
+                    entityBiomeCategory.put(entityName, prop);
+                    entityData.setBiomeGroups(prop.valueList);
                 }
                 entityConfig.save();
             }
@@ -1177,7 +1270,7 @@ public class MoCProxy implements IGuiHandler {
                     for (int i = 0; i < category.getValue().valueList.size(); i++)
                     {
                         //if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Found biome " + category.getValue().valueList.get(i) + " in biome group " + biomeGroupName);
-                        List<String> biomeParts = parseBiome(category.getValue().valueList.get(i));
+                        List<String> biomeParts = parseName(category.getValue().valueList.get(i));
 
                         //System.out.println("prop = " + category.getValue().valueList.get(i) + ", tag = " + biomeParts.get(0)+ ", biomename = " + biomeParts.get(1));
                         // TODO verify biome read is valid
@@ -1225,7 +1318,7 @@ public class MoCProxy implements IGuiHandler {
         mocBiomeConfig.save();
     }
 
-    public List<String> parseBiome(String biomeConfigEntry)
+    public List<String> parseName(String biomeConfigEntry)
     {
         String tag = biomeConfigEntry.substring(0, biomeConfigEntry.indexOf('|'));
         String biomeName = biomeConfigEntry.substring(biomeConfigEntry.indexOf('|') + 1, biomeConfigEntry.length());
@@ -1313,21 +1406,25 @@ public class MoCProxy implements IGuiHandler {
         allowInstaSpawn = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
         debugLogging = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", false, "Turns on verbose logging").getBoolean(false);
         worldGenCreatureSpawning = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);
-        maxMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMonsters", 200, "Max amount of monster.").getInt();
+        maxMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMonsters", 250, "Max amount of monster.").getInt();
         maxCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxCreatures", 250, "Max amount of animals.").getInt();
         maxAmbients = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbients", 100, "Max amount of ambients.").getInt();
-        maxWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterCreatures", 75, "Max amount of watercreatures.").getInt();
+        maxWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterCreatures", 60, "Max amount of watercreatures.").getInt();
         creatureSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", 50, "The amount of ticks it takes to spawn animals. A tick rate of 100 would cause Custom Spawner to spawn animals every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         monsterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", 30, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         ambientSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", 60, "The amount of ticks it takes to spawn ambients. A tick rate of 100 would cause Custom Spawner to spawn ambients every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
-        waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 50, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
+        waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 60, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
         monsterSpawnRange = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnRange", 8, "Mob limit radius to spawn distance (chunks aren't loaded)").getInt();
         spawnCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnCreatures", true, "Allow creatures to spawn. Turn off to disable all creature entity types.").getBoolean(true);
         spawnMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnMonsters", true, "Allow monsters to spawn. Turn off to disable all monster entity types.").getBoolean(true);
         spawnWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnWaterCreatures", true, "Allow watercreatures to spawn. Turn off to disable all watercreature entity types.").getBoolean(true);
         spawnAmbients = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnAmbients", true, "Allow ambients to spawn. Turn off to disable all ambient entity types.").getBoolean(true);
-        lightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "lightLevel", 7, "The light level threshold used to determine whether or not to spawn or despawn a creature.").getInt();
+        lightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "lightLevel", 7, "The light level threshold used to determine whether or not to spawn a creature.").getInt();
+        despawnLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", 7, "The light level threshold used to determine whether or not to despawn a creature.").getInt();
+        checkAmbientLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", false, "Turns on check for lightLevel for Ambient creature spawns.").getBoolean(false);
+        disallowMonsterSpawningDuringDay = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", false, "Prevents monsters from spawning anywhere during the day. Note: this will affect underground spawns as well.").getBoolean(false);
+        debugCMS = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);
         useCustomSpawner = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
 
         maxTamed = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerPlayer", 10, "Max tamed creatures a player can have. Requires enableOwnership to be set to true.").getInt();

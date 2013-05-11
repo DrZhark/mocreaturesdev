@@ -20,7 +20,6 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
     {
         if (MoCreatures.proxy.useCustomSpawner)
         {
-        	
             for (int dimension : DimensionManager.getIDs())
             {
                 WorldServer worldObj = DimensionManager.getWorld(dimension);
@@ -39,7 +38,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
                     {
-                        ambientSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.ambient, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel);
+                        ambientSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.ambient, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + ambientSpawns + " Ambients");
                     }
                 }
@@ -58,7 +57,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
                     {
-                        waterSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.waterCreature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel);
+                        waterSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.waterCreature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + waterSpawns + " Water Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
                     }
                 }
@@ -72,12 +71,12 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                     boolean spawnPassive = true;
                     if (dimension == 0)
                     {
-                    	spawnPassive = worldObj.isDaytime();
+                        spawnPassive = worldObj.isDaytime();
                     }
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
                     {
-                        animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.creature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel);
+                        animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.creature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + animalSpawns + " Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
                     }
                 }
@@ -87,9 +86,9 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
 
                     int mobSpawns = 0;
 
-                    if (worldObj.playerEntities.size() > 0) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    if (worldObj.playerEntities.size() > 0 && !MoCreatures.proxy.disallowMonsterSpawningDuringDay) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
                     {
-                        mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel);
+                        mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");// + ",  players on dimension " + dimension + " = " + playersInDimension );
                     }
                 }
@@ -97,15 +96,14 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                 // despawn tick
                 if (MoCreatures.proxy.despawnVanilla && worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.despawnTickRate == 0L))
                 {
-                	 
-                	if (worldObj.playerEntities.size() > 0)
-                	{
-                		int numDespawns = MoCreatures.myCustomSpawner.despawnVanillaAnimals(worldObj, MoCreatures.proxy.lightLevel);
+                    if (worldObj.playerEntities.size() > 0)
+                    {
+                        int numDespawns = MoCreatures.myCustomSpawner.despawnVanillaAnimals(worldObj, MoCreatures.proxy.despawnLightLevel);
                         if (MoCreatures.proxy.debugLogging)
                         {
                             MoCreatures.log.info("Mo'Creatures DeSpawned " + numDespawns + " Vanilla Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension);
                         }
-                	}
+                    }
                     
                 }
 
@@ -131,60 +129,19 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
     }
     
     @Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) 
-	{
-	}
-
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
-	{
-		onTickInGame();
-	}
-
-	@Override
-	public EnumSet<TickType> ticks() 
-	{
-		return EnumSet.of(TickType.SERVER);
-	}
-	
-	
-	/*@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData)
-	{
-		if(type.equals(EnumSet.of(TickType.PLAYER)))
-		{
-			onPlayerTick((EntityPlayer) tickData[0]);
-		}
-	}*/
-    
-    /*@Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData)
+    public void tickStart(EnumSet<TickType> type, Object... tickData) 
     {
-    	if(type.equals(EnumSet.of(TickType.PLAYER)))
-		{
+    }
+
+    @Override
+    public void tickEnd(EnumSet<TickType> type, Object... tickData) 
+    {
         onTickInGame();
-		}
-    }*/
+    }
 
-   
-    /*@Override
-	public EnumSet<TickType> ticks()
-	{
-		return EnumSet.of(TickType.SERVER, TickType.PLAYER);
-	}*/
-
-    private void onPlayerTick(EntityPlayer player)
-	{
-    	
-		/*if(player.getCurrentArmor(3) != null && player.worldObj.rand.nextInt(50)==0)
-			{
-			//System.out.println("player has a helmet");
-			ItemStack myStack = player.getCurrentArmor(3);
-			if (myStack != null && myStack.getItem() instanceof MoCItemArmor)
-			{
-				MoCTools.updatePlayerArmorEffects(player);
-				//System.out.println("player has equipped a MoC helmet");
-			}
-			}*/
-	}
+    @Override
+    public EnumSet<TickType> ticks() 
+    {
+        return EnumSet.of(TickType.SERVER);
+    }
 }

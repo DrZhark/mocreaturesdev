@@ -19,6 +19,11 @@ public class MoCSettingText extends SettingText {
         super(title, defaulttext);
     }
 
+    public MoCSettingText(MoCConfiguration config, String title, String defaulttext) {
+        super(title, defaulttext);
+        this.config = config;
+    }
+
     public MoCSettingText(MoCConfiguration config, String cat, String title, String defaulttext) {
         super(title, defaulttext);
         this.category = cat;

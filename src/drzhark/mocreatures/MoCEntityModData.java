@@ -1,5 +1,6 @@
 package drzhark.mocreatures;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,9 +21,7 @@ public class MoCEntityModData {
     private Map<String, MoCEntityData> ambientMap = new TreeMap<String, MoCEntityData>();
     private Map<String, MoCEntityData> undefinedMap = new TreeMap<String, MoCEntityData>();
     private Map<String, MapGenBase> structureMap = new TreeMap<String, MapGenBase>();
-    @SideOnly(Side.CLIENT)
-    private WidgetSimplewindow entityModWindow;
-    public static enum StructureType { CAVE, MINESHAFT, NETHER_BRIDGE, NETHER_CAVE, RAVINE, SCATTERED_FEATURE, STRONGHOLD, VILLAGE, CUSTOM }
+    private Map<EnumCreatureType, WidgetSimplewindow> widgetMap = new HashMap<EnumCreatureType, WidgetSimplewindow>();
     private String tag;
     private String modClassID;
 
@@ -43,22 +42,25 @@ public class MoCEntityModData {
         return this.creatureMap;
     }
 
-    public void addCreature(MoCEntityData entityData)
+    public boolean addCreature(MoCEntityData entityData)
     {
+        boolean result = true;
         if (entityData != null)
         {
-        	if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Adding " + entityData.getEntityClass() + " to " + entityData.getType() + " spawnList for mod " + this.modClassID);
-            if (entityData.getType() == null)
+            if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Adding " + entityData.getEntityClass() + " to " + entityData.getType() + " spawnList for mod " + this.modClassID);
+            if (entityData.getType() == null && !this.undefinedMap.containsKey(entityData.getEntityName()))
                 this.undefinedMap.put(entityData.getEntityName(), entityData);
-            else if (entityData.getType() == EnumCreatureType.creature)
+            else if (entityData.getType() == EnumCreatureType.creature && !this.creatureMap.containsKey(entityData.getEntityName()))
                 this.creatureMap.put(entityData.getEntityName(), entityData);
-            else if (entityData.getType() == EnumCreatureType.waterCreature)
+            else if (entityData.getType() == EnumCreatureType.waterCreature && !this.waterCreatureMap.containsKey(entityData.getEntityName()))
                 this.waterCreatureMap.put(entityData.getEntityName(), entityData);
-            else if (entityData.getType() == EnumCreatureType.monster)
+            else if (entityData.getType() == EnumCreatureType.monster && !this.monsterMap.containsKey(entityData.getEntityName()))
                 this.monsterMap.put(entityData.getEntityName(), entityData);
-            else if (entityData.getType() == EnumCreatureType.ambient)
+            else if (entityData.getType() == EnumCreatureType.ambient && !this.ambientMap.containsKey(entityData.getEntityName()))
                 this.ambientMap.put(entityData.getEntityName(), entityData);
+            else result = false;
         }
+        return result;
     }
 
     public Map<String, MoCEntityData> getSpawnListFromType(EnumCreatureType type)
@@ -78,7 +80,6 @@ public class MoCEntityModData {
 
     public MoCEntityData getCreature(String entityName)
     {
-        System.out.println("entityName = " + entityName);
         // check case-insensitive names to support commands
         for (Map.Entry<String, MoCEntityData> entityEntry : this.undefinedMap.entrySet())
         {
@@ -88,7 +89,6 @@ public class MoCEntityModData {
         }
         for (Map.Entry<String, MoCEntityData> entityEntry : this.creatureMap.entrySet())
         {
-            System.out.println("Found entityEntry " + entityEntry.getKey());
             if (entityEntry.getKey().equalsIgnoreCase(entityName))
                 if (this.creatureMap.get(entityEntry.getKey()) != null)
                     return this.creatureMap.get(entityEntry.getKey());
@@ -191,15 +191,21 @@ public class MoCEntityModData {
     }
 
     @SideOnly(Side.CLIENT)
-    public void setEntityWindow(WidgetSimplewindow window)
+    public void setEntityWindow(EnumCreatureType type, WidgetSimplewindow window)
     {
-        this.entityModWindow = window;
+        this.widgetMap.put(type, window);
     }
 
     @SideOnly(Side.CLIENT)
-    public WidgetSimplewindow getEntityWindow()
+    public WidgetSimplewindow getEntityWindow(EnumCreatureType type)
     {
-        return this.entityModWindow;
+        return this.widgetMap.get(type);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public Map<EnumCreatureType, WidgetSimplewindow> getWidgetWindows()
+    {
+        return this.widgetMap;
     }
 
     public String getModKey()

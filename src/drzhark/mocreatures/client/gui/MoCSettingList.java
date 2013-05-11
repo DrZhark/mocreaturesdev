@@ -9,7 +9,7 @@ import sharose.mods.guiapi.SettingList;
 public class MoCSettingList extends SettingList {
 
     public String category; // reference to category this setting is linked to
-    private MoCConfiguration config;
+    public MoCConfiguration config;
 
     public MoCSettingList(String title) {
         super(title, new ArrayList<String>());

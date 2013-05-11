@@ -38,19 +38,6 @@ public class MoCEventHooks {
         }
     }
 
-    /*@ForgeSubscribe // handle world gen spawns
-    public void onLivingWorldGenSpawn(EntityJoinWorldEvent event)
-    {
-        if (EntityLiving.class.isAssignableFrom(event.entity.getClass()) && MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.modifyVanillaSpawns)
-        {
-            if (MoCreatures.proxy.vanillaEntityMap.containsKey(event.entity.getEntityName()) || MoCreatures.proxy.vanillaEntityMap.containsKey(event.entity.getEntityName() + ".Vanilla"))
-            {
-                System.out.println("Killed vanilla world gen entity " + event.entity);
-                event.entity.setDead();
-            }
-        }
-    }*/
-
     @ForgeSubscribe // override maxSpawnInChunk values
     public void onLivingPackSize(LivingPackSizeEvent event)
     {

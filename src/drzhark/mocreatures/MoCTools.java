@@ -234,57 +234,54 @@ public class MoCTools {
         }
     }
 
-    public static void spawnNearPlayer(EntityPlayer player, int creatureName, int numberToSpawn)//, World worldObj)
+    public static void spawnNearPlayer(EntityPlayer player, int entityId, int numberToSpawn)//, World worldObj)
     {
-        //WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.worldType);
         WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
-
-        //WorldServer worldServer = player.getServerForPlayer(); 
         for (int i = 0; i < numberToSpawn; i++)
         {
-            EntityLiving entityliving = spawnList(creatureName, worldObj);
+            EntityLiving entityliving = null;
+            try
+            {
+                Class entityClass = MoCreatures.proxy.instaSpawnerMap.get(entityId);
+                entityliving = (EntityLiving) entityClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+            }catch (Exception e) 
+            { 
+                System.out.println(e);
+            }
 
-            if (entityliving != null)// && entityliving.getCanSpawnHere())
+            if (entityliving != null)
             {
                 entityliving.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
-                if (entityliving instanceof MoCIMoCreature && ((MoCIMoCreature) entityliving).checkSpawningBiome())// && ((MoCIMoCreature)entityliving).getCanSpawnHere())
-                {
-                    //player.worldObj.spawnEntityInWorld(entityliving);
-                    //worldObj.spawnEntityInWorld(entityliving);
-
-                    worldObj.spawnEntityInWorld(entityliving);
-                    //FMLCommonHandler.instance().getMinecraftServerInstance()
-                    //Minecraft.getMinecraft().theWorld.spawnEntityInWorld(entityliving);
-                }
+                worldObj.spawnEntityInWorld(entityliving);
             }
         }
     }
 
     public static void spawnNearPlayerbyName(EntityPlayer player, String eName, int numberToSpawn) 
     {
-    	WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
-    	//System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
-    	for (int i = 0; i < numberToSpawn; i++)
+        WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
+        //System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
+        for (int i = 0; i < numberToSpawn; i++)
         {
-    		EntityLiving entityToSpawn = null;
+            EntityLiving entityToSpawn = null;
             
-    		try
+            try
             {
-    			MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
-        		Class myClass = entityData.getEntityClass();
-    			//Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
-    			entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+                MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+                Class myClass = entityData.getEntityClass();
+                //Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+                entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
             }catch (Exception e) 
             { System.out.println(e);}
             
             if (entityToSpawn != null)
             {
-            	entityToSpawn.initCreature();
-            	entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+                entityToSpawn.initCreature();
+                entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
         }
-	}
+    }
     
 
     public static void playCustomSound(Entity entity, String customSound, World worldObj)
@@ -328,17 +325,17 @@ public class MoCTools {
      */
     public static EntityLiving spawnListByNameClass(String eName, World worldObj) 
     {
-    	EntityLiving entityToSpawn = null;
-    	try
-    	{
-    		MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
-    		Class myClass = entityData.getEntityClass();
-    		//Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
-    		entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
-    	}catch (Exception e) 
-    	{ 
-    		System.out.println("Unable to find class for entity " + eName + ", " + e);}
-    	return entityToSpawn;        
+        EntityLiving entityToSpawn = null;
+        try
+        {
+            MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+            Class myClass = entityData.getEntityClass();
+            //Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
+            entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
+        }catch (Exception e) 
+        { 
+            if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Unable to find class for entity " + eName + ", " + e);}
+        return entityToSpawn;        
     }
     
     /**
@@ -532,12 +529,12 @@ public class MoCTools {
     
     public static MoCIMoCreature spawnIMoCreatureList(int creatureType, World worldObj)
     {
-    	return (MoCIMoCreature) spawnList(creatureType, worldObj);
+        return (MoCIMoCreature) spawnList(creatureType, worldObj);
     }
 
     public static MoCEntityAnimal spawnMoCAnimalList(int creatureType, World worldObj)
     {
-    	return (MoCEntityAnimal) spawnList(creatureType, worldObj);
+        return (MoCEntityAnimal) spawnList(creatureType, worldObj);
     }
     
     public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat)
@@ -1253,15 +1250,15 @@ public class MoCTools {
 
     public static boolean mobGriefing(World world)
     {
-    	return world.getGameRules().getGameRuleBooleanValue("mobGriefing");
+        return world.getGameRules().getGameRuleBooleanValue("mobGriefing");
     }
     
     public static void DestroyBlast(Entity entity, double d, double d1, double d2, float f, boolean flag)
     {
-    	entity.worldObj.playSoundEffect(d, d1, d2, "destroy", 4F, (1.0F + ((entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat()) * 0.2F)) * 0.7F);
-            	
-    	boolean mobGriefing = mobGriefing(entity.worldObj);
-    	
+        entity.worldObj.playSoundEffect(d, d1, d2, "destroy", 4F, (1.0F + ((entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat()) * 0.2F)) * 0.7F);
+
+        boolean mobGriefing = mobGriefing(entity.worldObj);
+        
         HashSet hashset = new HashSet();
         float f1 = f;
         int i = 16;
@@ -1652,7 +1649,7 @@ public class MoCTools {
      */
     public static int destroyRandomBlock(Entity entity, double distance)
     {
-    	//int d = (int)distance;
+        //int d = (int)distance;
         int l = (int) (distance * distance * distance);
         for (int i = 0; i < l; i++)
         {
@@ -1664,10 +1661,10 @@ public class MoCTools {
 
             if (j != 0 && k == 0)
             {
-            	if (mobGriefing(entity.worldObj))
-            	{
-            		entity.worldObj.setBlock(x, y, z, 0, 0, 3);
-            	}
+                if (mobGriefing(entity.worldObj))
+                {
+                    entity.worldObj.setBlock(x, y, z, 0, 0, 3);
+                }
                 return j;
 
             }
@@ -1679,7 +1676,7 @@ public class MoCTools {
 
     public static int[] destroyRandomBlockWithMetadata(Entity entity, double distance)
     {
-    	//int d = (int)distance;
+        //int d = (int)distance;
         int l = (int) (distance * distance * distance);
         int metaD = 0;
         for (int i = 0; i < l; i++)
@@ -1692,11 +1689,11 @@ public class MoCTools {
 
             if (j != 0 && k == 0)
             {
-            	metaD = entity.worldObj.getBlockMetadata(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            	if (mobGriefing(entity.worldObj))
-            	{
-            		entity.worldObj.setBlock(x, y, z, 0, 0, 3);
-            	}
+                metaD = entity.worldObj.getBlockMetadata(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
+                if (mobGriefing(entity.worldObj))
+                {
+                    entity.worldObj.setBlock(x, y, z, 0, 0, 3);
+                }
                 return (new int[] { j, metaD });
 
             }
@@ -1845,15 +1842,15 @@ public class MoCTools {
     public static void reduceTamedByPlayer(EntityPlayer ep)
     {
         int count = MoCTools.numberTamedByPlayer(ep);
-        //System.out.println("tamed entities for online player " + ep.username + " =" + count);
+        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("tamed entities for online player " + ep.username + " =" + count);
         NBTTagCompound nbtt = ep.getEntityData();
         count--;
         if (count < 0)
         {
             count = 0;
         }
-        //System.out.println("reducing tamed count for player " + ep.username + " the count now is " + count);
         nbtt.setInteger("NumberTamed", count);
+        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("reducing tamed count for player " + ep.username + " the count now is " + nbtt.getInteger("NumberTamed"));
     }
 
     /**
@@ -2011,26 +2008,26 @@ public class MoCTools {
                ItemStack stack = getProperAmulet(entity);
                 if (stack == null) 
                 {
-                	return;
+                    return;
                 }
-            	if( stack.stackTagCompound == null )
-        		{
-                	stack.setTagCompound(new NBTTagCompound());
-        		}
-        		NBTTagCompound nbtt = stack.stackTagCompound;
-        		
+                if( stack.stackTagCompound == null )
+                {
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+                NBTTagCompound nbtt = stack.stackTagCompound;
+                
                 try
                 {
-                	//TODO change the 21 to the list given based on the class of the creature
-                	nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
-                	nbtt.setInteger("Health", entity.getHealth());
-            		nbtt.setInteger("Edad", entity.getEdad());
-            		nbtt.setString("Name", entity.getName());
-            		nbtt.setBoolean("Rideable", entity.getIsRideable());
-            		nbtt.setByte("Armor", entity.getArmorType());
-            		nbtt.setInteger("CreatureType", entity.getType());
-            		nbtt.setBoolean("Adult", entity.getIsAdult());          
-            		nbtt.setString("OwnerName", entity.getOwnerName());
+                    //TODO change the 21 to the list given based on the class of the creature
+                    nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
+                    nbtt.setInteger("Health", entity.getHealth());
+                    nbtt.setInteger("Edad", entity.getEdad());
+                    nbtt.setString("Name", entity.getName());
+                    nbtt.setBoolean("Rideable", entity.getIsRideable());
+                    nbtt.setByte("Armor", entity.getArmorType());
+                    nbtt.setInteger("CreatureType", entity.getType());
+                    nbtt.setBoolean("Adult", entity.getIsAdult());          
+                    nbtt.setString("OwnerName", entity.getOwnerName());
                 }
                 catch (Exception e)
                 {
@@ -2056,19 +2053,19 @@ public class MoCTools {
                ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
                
                if( stack.stackTagCompound == null )
-        		{
-                	stack.setTagCompound(new NBTTagCompound());
-        		}
-        		NBTTagCompound nbtt = stack.stackTagCompound;
-        		
+                {
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+                NBTTagCompound nbtt = stack.stackTagCompound;
+                
                 try
                 {
-                	nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
-                	nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
-                	nbtt.setInteger("Edad", entity.getEdad());
-            		nbtt.setString("Name", entity.getName());
-            		nbtt.setInteger("CreatureType", entity.getType());
-            		nbtt.setString("OwnerName", entity.getOwnerName());
+                    nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+                    nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
+                    nbtt.setInteger("Edad", entity.getEdad());
+                    nbtt.setString("Name", entity.getName());
+                    nbtt.setInteger("CreatureType", entity.getType());
+                    nbtt.setString("OwnerName", entity.getOwnerName());
                 }
                 catch (Exception e)
                 {
@@ -2087,31 +2084,28 @@ public class MoCTools {
      */
     public static ItemStack getProperAmulet(MoCEntityAnimal entity)
     {
-    	if (entity instanceof MoCEntityHorse)
-    	{
-    		//int i = ((MoCEntityHorse)entity).getType();
+        if (entity instanceof MoCEntityHorse)
+        {
+            //int i = ((MoCEntityHorse)entity).getType();
 
-    		if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
-    		{
-    			return new ItemStack(MoCreatures.amuletbonefull, 1, entity.getType());
-    		}
-    		
-    		if (entity.getType() > 47 && entity.getType() < 60)
+            if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
+            {
+                return new ItemStack(MoCreatures.amuletbonefull, 1, entity.getType());
+            }
+            if (entity.getType() > 47 && entity.getType() < 60)
             {
                 return new ItemStack(MoCreatures.amuletfairyfull, 1, entity.getType());
             }
-    		
-    		if (entity.getType() == 39 || entity.getType() == 40)
+            if (entity.getType() == 39 || entity.getType() == 40)
             {
                 return new ItemStack(MoCreatures.amuletpegasusfull, 1, entity.getType());
             }
-    		
-    		if (entity.getType() == 21 || entity.getType() == 22)
+            if (entity.getType() == 21 || entity.getType() == 22)
             {
                return new ItemStack(MoCreatures.amuletghostfull, 1, entity.getType());
             }
-    	}
-		return null;
+        }
+        return null;
     }
     
     /**
@@ -2121,133 +2115,127 @@ public class MoCTools {
      */
     public static ItemStack getProperEmptyAmulet(MoCEntityAnimal entity)
     {
-    	if (entity instanceof MoCEntityHorse)
-    	{
-    		//int i = ((MoCEntityHorse)entity).getType();
+        if (entity instanceof MoCEntityHorse)
+        {
+            //int i = ((MoCEntityHorse)entity).getType();
 
-    		if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
-    		{
-    			return new ItemStack(MoCreatures.amuletbone, 1, entity.getType());
-    		}
-    		
-    		if (entity.getType() > 49 && entity.getType() < 60)
+            if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
+            {
+                return new ItemStack(MoCreatures.amuletbone, 1, entity.getType());
+            }
+            if (entity.getType() > 49 && entity.getType() < 60)
             {
                 return new ItemStack(MoCreatures.amuletfairy, 1, entity.getType());
             }
-    		
-    		if (entity.getType() == 39 || entity.getType() == 40)
+            if (entity.getType() == 39 || entity.getType() == 40)
             {
                 return new ItemStack(MoCreatures.amuletpegasus, 1, entity.getType());
             }
-    		
-    		if (entity.getType() == 21 || entity.getType() == 22)
+            if (entity.getType() == 21 || entity.getType() == 22)
             {
                return new ItemStack(MoCreatures.amuletghost, 1, entity.getType());
             }
-    	}
-		return null;
+        }
+        return null;
     }
     
     public static int countPlayersInDimension(WorldServer worldObj, int dimension)
     {
-    	int playersInDimension = 0;
-    	for (int j = 0; j < worldObj.playerEntities.size(); ++j)
+        int playersInDimension = 0;
+        for (int j = 0; j < worldObj.playerEntities.size(); ++j)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)worldObj.playerEntities.get(j);
 
             if (entityplayermp.dimension == dimension)
             {
-            	playersInDimension++;
+                playersInDimension++;
             }
         }
-    	return playersInDimension;
+        return playersInDimension;
     }
     
     public static boolean isThisPlayerAnOP(EntityPlayer player)
     {
-    	if (!MoCreatures.isServer()) 
-    	{	
-    		return false;
-    	}
-    	//Set playerListSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getWhiteListedPlayers();
-    	//Set opSet = MinecraftServer.getServer().getConfigurationManager().getOps();
-    	Set opSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getOps();
-    	//fSystem.out.println("opsets = " + opSet);
-    	if (opSet != null)// && opSet.contains(player.username))
-    	{
-        	for(Iterator i = opSet.iterator(); i.hasNext();)
+        if (!MoCreatures.isServer()) 
+        {    
+            return false;
+        }
+        //Set playerListSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getWhiteListedPlayers();
+        //Set opSet = MinecraftServer.getServer().getConfigurationManager().getOps();
+        Set opSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getOps();
+        //fSystem.out.println("opsets = " + opSet);
+        if (opSet != null)// && opSet.contains(player.username))
+        {
+            for(Iterator i = opSet.iterator(); i.hasNext();)
             {  
                 String opnames = (String)i.next();  
                 if (opnames.equalsIgnoreCase(player.username))
                 {  
-                	return true;
+                    return true;
                 }  
             }  
-    	}
-    	
-    	
-        
-    	return false;
+        }
+        return false;
     }
     
     
     /*
      * Spawns maggots
      */
-	public static void spawnMaggots(World worldObj, Entity entity)
-	{
-		 if (MoCreatures.isServer())
-	        {
-	            int var2 = 1 + worldObj.rand.nextInt(4);
-	            for (int i = 0; i < var2; ++i)
-	            {
-	                float var4 = ((float) (i % 2) - 0.5F) * (float) 1 / 4.0F;
-	                float var5 = ((float) (i / 2) - 0.5F) * (float) 1 / 4.0F;
-	                MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
-	               maggot.setLocationAndAngles(entity.posX + (double) var4, entity.posY + 0.5D, entity.posZ + (double) var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-	                worldObj.spawnEntityInWorld(maggot);
-	            }
-	        }
-		
-	}
-	
-	public static void getPathToEntity(EntityCreature creatureToMove, Entity entityTarget, float f)
-	{
-		PathEntity pathentity = creatureToMove.worldObj.getPathEntityToEntity(creatureToMove, entityTarget, 16F, true, false, false, true);
-		if (pathentity != null && f < 12F)
-		{
-			creatureToMove.setPathToEntity(pathentity);
-		}
-	}
-	
-	public static void runLikeHell(EntityCreature runningEntity, Entity boogey)
-	{
-		double d = runningEntity.posX - boogey.posX;
-		double d1 = runningEntity.posZ - boogey.posZ;
-		double d2 = Math.atan2(d, d1);
-		d2 += (runningEntity.worldObj.rand.nextFloat() - runningEntity.worldObj.rand.nextFloat()) * 0.75D;
-		double d3 = runningEntity.posX + (Math.sin(d2) * 8D);
-		double d4 = runningEntity.posZ + (Math.cos(d2) * 8D);
-		int i = MathHelper.floor_double(d3);
-		int j = MathHelper.floor_double(runningEntity.boundingBox.minY);
-		int k = MathHelper.floor_double(d4);
-		int l = 0;
-		do
-		{
-			if (l >= 16)
-			{
-				break;
-			}
-			int i1 = (i + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
-			int j1 = (j + runningEntity.worldObj.rand.nextInt(3)) - runningEntity.worldObj.rand.nextInt(3);
-			int k1 = (k + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
-			if ((j1 > 4) && ((runningEntity.worldObj.getBlockId(i1, j1, k1) == 0) || (runningEntity.worldObj.getBlockId(i1, j1, k1) == Block.snow.blockID)) && (runningEntity.worldObj.getBlockId(i1, j1 - 1, k1) != 0))
-			{
-				PathEntity pathentity = runningEntity.worldObj.getEntityPathToXYZ(runningEntity, i1, j1, k1, 16F, true, false, false, true);
-				runningEntity.setPathToEntity(pathentity);
-				break;
-			}
-			l++;
-		} while (true);
-	}
+    public static void spawnMaggots(World worldObj, Entity entity)
+    {
+         if (MoCreatures.isServer())
+            {
+                int var2 = 1 + worldObj.rand.nextInt(4);
+                for (int i = 0; i < var2; ++i)
+                {
+                    float var4 = ((float) (i % 2) - 0.5F) * (float) 1 / 4.0F;
+                    float var5 = ((float) (i / 2) - 0.5F) * (float) 1 / 4.0F;
+                    MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
+                   maggot.setLocationAndAngles(entity.posX + (double) var4, entity.posY + 0.5D, entity.posZ + (double) var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+                    worldObj.spawnEntityInWorld(maggot);
+                }
+            }
+        
+    }
+    
+    public static void getPathToEntity(EntityCreature creatureToMove, Entity entityTarget, float f)
+    {
+        PathEntity pathentity = creatureToMove.worldObj.getPathEntityToEntity(creatureToMove, entityTarget, 16F, true, false, false, true);
+        if (pathentity != null && f < 12F)
+        {
+            creatureToMove.setPathToEntity(pathentity);
+        }
+    }
+    
+    public static void runLikeHell(EntityCreature runningEntity, Entity boogey)
+    {
+        double d = runningEntity.posX - boogey.posX;
+        double d1 = runningEntity.posZ - boogey.posZ;
+        double d2 = Math.atan2(d, d1);
+        d2 += (runningEntity.worldObj.rand.nextFloat() - runningEntity.worldObj.rand.nextFloat()) * 0.75D;
+        double d3 = runningEntity.posX + (Math.sin(d2) * 8D);
+        double d4 = runningEntity.posZ + (Math.cos(d2) * 8D);
+        int i = MathHelper.floor_double(d3);
+        int j = MathHelper.floor_double(runningEntity.boundingBox.minY);
+        int k = MathHelper.floor_double(d4);
+        int l = 0;
+        do
+        {
+            if (l >= 16)
+            {
+                break;
+            }
+            int i1 = (i + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
+            int j1 = (j + runningEntity.worldObj.rand.nextInt(3)) - runningEntity.worldObj.rand.nextInt(3);
+            int k1 = (k + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
+            if ((j1 > 4) && ((runningEntity.worldObj.getBlockId(i1, j1, k1) == 0) || (runningEntity.worldObj.getBlockId(i1, j1, k1) == Block.snow.blockID)) && (runningEntity.worldObj.getBlockId(i1, j1 - 1, k1) != 0))
+            {
+                PathEntity pathentity = runningEntity.worldObj.getEntityPathToXYZ(runningEntity, i1, j1, k1, 16F, true, false, false, true);
+                runningEntity.setPathToEntity(pathentity);
+                break;
+            }
+            l++;
+        } while (true);
+    }
 }

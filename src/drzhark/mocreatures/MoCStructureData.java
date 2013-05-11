@@ -126,7 +126,7 @@ public class MoCStructureData {
             {
                 for (int i = 0; i < prop.valueList.size(); i++)
                 {
-                    List<String> nameParts = MoCreatures.proxy.parseBiome(prop.valueList.get(i));
+                    List<String> nameParts = MoCreatures.proxy.parseName(prop.valueList.get(i));
                     if (nameParts != null && nameParts.size() == 2)
                     {
                         String tag = nameParts.get(0);

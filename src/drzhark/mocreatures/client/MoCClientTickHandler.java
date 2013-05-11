@@ -19,32 +19,12 @@ public class MoCClientTickHandler implements ITickHandler {
 
     private void onTickInGame()
     {
-       /* if (inMenu)
+        if (MoCreatures.proxy.needsUpdate && !inMenu)
         {
-            if (lastTickRun > 10)
-            {
-                //System.out.println("MoCreatures.proxy.needsUpdate = " + MoCreatures.proxy.needsUpdate);
-                if (MoCreatures.proxy.needsUpdate)
-                {
-                    //System.out.println("need update, updating settings...");
-                    MoCreatures.updateSettings();
-                    inMenu = false;
-                }
-            }
-        }*/
-        
-        if (inMenu)
-        {
-            //if (lastTickRun > 10)
-            //{
-            if (MoCreatures.proxy.needsUpdate)
-            {
-                MoCreatures.updateSettings();
-                inMenu = false;
-                MoCreatures.proxy.needsUpdate = false;
-            }
-            //}
-            //lastTickRun++;
+            MoCreatures.proxy.needsUpdate = false;
+            MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
+            MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);
+            MoCreatures.updateSettings();
         }
     }
 
@@ -53,7 +33,9 @@ public class MoCClientTickHandler implements ITickHandler {
 
     private void onTickInGui(GuiScreen curScreen)
     {
+        // handle GUI tick stuff here
         inMenu = true;
+        MoCreatures.proxy.needsUpdate = true;
         lastTickRun = 0;
     }
 
@@ -74,6 +56,7 @@ public class MoCClientTickHandler implements ITickHandler {
             }
             else
             {
+                inMenu = false;
                 onTickInGame();
             }
         }
@@ -91,16 +74,4 @@ public class MoCClientTickHandler implements ITickHandler {
     {
         return null;
     }
-    
-    
-    
-    
-    
-    
-   
-
-
-
-
-
 }

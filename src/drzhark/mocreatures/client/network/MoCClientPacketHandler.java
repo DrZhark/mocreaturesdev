@@ -15,6 +15,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.gui.MoCGUIEntityNamer;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -390,25 +391,25 @@ public class MoCClientPacketHandler implements IPacketHandler {
 	}
 	
 	/**
-	 * New instaSpawn method with (key) name of entity and number to spawn
-	 * @param name
+	 * New instaSpawn method with (key) entity ID and number to spawn
+	 * @param entityId
 	 * @param number
 	 */
-	public static void sendInstaSpawnPacket(String name, int number)
+	public static void sendInstaSpawnPacket(String entityId, int number)
     {
         // client sending insta spawn command. int ID, int number
 
-		if (name.isEmpty() || number < 1)
-		{
-			return;
-		}
-		
+        if (!MoCreatures.proxy.instaSpawnerMap.containsKey(entityId) || number < 1)
+        {
+            return;
+        }
+
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
         {
             data.writeInt(Integer.valueOf(26));
-            data.writeUTF(name);
+            data.writeInt(Integer.valueOf(entityId));
             data.writeInt(Integer.valueOf(number));
         }
         catch (IOException e)

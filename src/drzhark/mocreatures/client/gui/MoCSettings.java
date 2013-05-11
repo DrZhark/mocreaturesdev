@@ -37,6 +37,7 @@ import de.matthiasmann.twl.Widget;
 import drzhark.mocreatures.MoCConfigCategory;
 import drzhark.mocreatures.MoCConfiguration;
 import drzhark.mocreatures.MoCEntityData;
+import drzhark.mocreatures.MoCEntityModData;
 import drzhark.mocreatures.MoCProperty;
 import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.MoCreatures;
@@ -145,8 +146,6 @@ public class MoCSettings extends ModSettings {
             return;
         }
         try {
-            //MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
-            //MoCConfiguration biomeConfig = MoCreatures.proxy.mocBiomeConfig;
             MoCConfiguration entityConfig = config;
             File path = ModSettings.getAppDir("/" + ModSettings.contextDatadirs.get(context) + "/" + backendname + "/");
             ModSettings.dbgout("saving context " + context + " (" + path.getAbsolutePath() + " [" + ModSettings.contextDatadirs.get(context) + "])");
@@ -160,29 +159,36 @@ public class MoCSettings extends ModSettings {
                 if (z.backendName.equals(backendName)) break;
             }
 
-            //if (category == MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS)
-            /*if (entityConfig != config)
+            if (config != null && config != MoCreatures.proxy.mocBiomeConfig && config != MoCreatures.proxy.mocGlobalConfig)
             {
-                int catType = -1;
-                System.out.println("backendname = " + z.backendName + ", context = " + z.toString(context));
-                if (z.backendName.contains("Type"))
-                    catType = 0;
-                else if (z.backendName.contains("Frequency"))
-                    catType = 1;
-                else if (z.backendName.contains("Min"))
-                    catType = 2;
-                else if (z.backendName.contains("Max"))
-                    catType = 3;
-                else if (z.backendName.contains("Chunk"))
-                    catType = 4;
-                for (Map.Entry<String, MoCProperty> propEntry : config.getCategory(category).getValues().entrySet())
+                MoCEntityModData modData = null;
+                for (Map.Entry<String, String> modEntry : MoCreatures.proxy.entityModKeyMap.entrySet())
                 {
-                    if (propEntry.getKey().equalsIgnoreCase(z.backendName.substring(0, z.backendName.indexOf(" "))))
+                    if (modEntry.getValue().contains(config.getFileName()))
                     {
-                        // handle entity config
-                        if (MoCreatures.proxy.entityMap.containsKey(propEntry.getKey()))
+                        modData = MoCreatures.proxy.entityModMap.get(modEntry.getKey());
+                    }
+                }
+                if (modData != null)
+                {
+                    int catType = -1;
+                    //System.out.println("backendname = " + z.backendName + ", context = " + z.toString(context));
+                    if (z.backendName.contains("Type"))
+                        catType = 0;
+                    else if (z.backendName.contains("Frequency"))
+                        catType = 1;
+                    else if (z.backendName.contains("Min"))
+                        catType = 2;
+                    else if (z.backendName.contains("Max"))
+                        catType = 3;
+                    else if (z.backendName.contains("Chunk"))
+                        catType = 4;
+                    for (Map.Entry<String, MoCProperty> propEntry : config.getCategory(category).getValues().entrySet())
+                    {
+                        if (propEntry.getKey().equalsIgnoreCase(z.backendName.substring(0, z.backendName.indexOf(" "))))
                         {
-                            MoCEntityData entityData = MoCreatures.proxy.entityMap.get(propEntry.getKey());
+                            // handle entity config
+                            MoCEntityData entityData = modData.getCreature(propEntry.getKey());
                             if (entityData != null)
                             {
                                 MoCProperty property = propEntry.getValue();
@@ -238,28 +244,25 @@ public class MoCSettings extends ModSettings {
                                 }
                             }
                         }
-                    }
-                 }
+                     }
+                }
             }
-            else { // handle rest of our categories the same
-                if (category != null && category != "")
+            else if (config != null){ // handle rest of our categories the same
+                for (Map.Entry<String, MoCProperty> propEntry : config.getCategory(category).getValues().entrySet())
                 {
-                    for (Map.Entry<String, MoCProperty> propEntry : config.getCategory(category).getValues().entrySet())
+                    if (propEntry.getKey().equalsIgnoreCase(z.backendName))
                     {
-                        if (propEntry.getKey().equalsIgnoreCase(z.backendName))
-                        {
-                            MoCProperty property = propEntry.getValue();
-                            property.value = z.toString(context);
-                            if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("set config value to " + property.value);
-                            break;
-                        }
+                        MoCProperty property = propEntry.getValue();
+                        property.value = z.toString(context);
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("set config value to " + property.value);
+                        break;
                     }
                 }
-            }*/
-
-            config.save(); // save config
+            }
+            if (config != null)
+                config.save(); // save config
             //biomeConfig.save();
-            MoCreatures.proxy.needsUpdate = true;
+            // we handle syncing changes in MoCClientTickHandler
         } catch (Exception e) {
             e.printStackTrace();
         }

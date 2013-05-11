@@ -55,7 +55,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 //this is the critical one!
                 if (packetID == 21) // server receives horse jump command packet. make the horse under this player jump
                 {
-                    //EntityPlayer player = ((NetServerHandler)network.getNetHandler()).getPlayerEntity();
                     EntityPlayer player = (EntityPlayer) playerEntity;
 
                     if (player.ridingEntity != null && player.ridingEntity instanceof MoCIMoCreature)
@@ -68,14 +67,13 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 //already working with workaround
                 if (packetID == 22) // server receives insta spawn command packet. int classID, int number
                 {
-                    //EntityPlayer player = ((NetServerHandler)network.getNetHandler()).getPlayerEntity();
                     EntityPlayer player = (EntityPlayer) playerEntity;
-                    int classID = dataStream.readInt();
+                    int entityId = dataStream.readInt();
                     int number = dataStream.readInt();
-                    //FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getOps();
+
                     if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) // make sure the client has admin rights on server!
                     {
-                        MoCTools.spawnNearPlayer(player, classID, number);
+                        MoCTools.spawnNearPlayer(player, entityId, number);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
                     }
                     else

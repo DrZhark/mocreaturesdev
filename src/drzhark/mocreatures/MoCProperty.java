@@ -60,6 +60,12 @@ public class MoCProperty
         this(name, value, type, false);
     }
 
+    public MoCProperty(String name, String value, Type type, String comment)
+    {
+        this(name, value, type, false);
+        this.comment = comment;
+    }
+
     MoCProperty(String name, String value, Type type, boolean read)
     {
         setName(name);
@@ -72,6 +78,12 @@ public class MoCProperty
     public MoCProperty(String name, List<String> values, Type type)
     {
         this(name, values, type, false);
+    }
+
+    public MoCProperty(String name, List<String> values, Type type, String comment)
+    {
+        this(name, values, type, false);
+        this.comment = comment;
     }
 
     MoCProperty(String name, List<String> values, Type type, boolean read)
