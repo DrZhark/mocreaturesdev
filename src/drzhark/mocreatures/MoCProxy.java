@@ -103,6 +103,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPiranha;
 import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
 import drzhark.mocreatures.entity.passive.MoCEntityRay;
 import drzhark.mocreatures.entity.passive.MoCEntityShark;
@@ -430,7 +431,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, "Ant", EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Bear", new MoCEntityData(MoCEntityBear.class, "Bear", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Bee", new MoCEntityData(MoCEntityBee.class, "Bee", EnumCreatureType.ambient, 7, 1, 4, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("BigCat", new MoCEntityData(MoCEntityBigCat.class, "BigCat", EnumCreatureType.creature,  6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("BigCat", new MoCEntityData(MoCEntityBigCat.class, "BigCat", EnumCreatureType.creature,  6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("BigGolem", new MoCEntityData(MoCEntityGolem.class, "BigGolem", EnumCreatureType.monster, 3, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Bird", new MoCEntityData(MoCEntityBird.class, "Bird", EnumCreatureType.creature, 15, 2, 3, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Boar", new MoCEntityData(MoCEntityBoar.class, "Boar", EnumCreatureType.creature, 8, 2, 2, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
@@ -443,7 +444,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Dolphin", new MoCEntityData(MoCEntityDolphin.class, "Dolphin", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER"))));
         mocEntityMap.put("DragonFly", new MoCEntityData(MoCEntityDragonfly.class, "DragonFly", EnumCreatureType.ambient, 6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
         mocEntityMap.put("Duck", new MoCEntityData(MoCEntityDuck.class, "Duck", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, "Elephant", EnumCreatureType.creature, 4, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
+        mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, "Elephant", EnumCreatureType.creature, 4, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
         mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, "Firefly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN"))));
         mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, "Fishy", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
         mocEntityMap.put("FlameWraith", new MoCEntityData(MoCEntityFlameWraith.class, "FlameWraith", EnumCreatureType.monster, 5, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
@@ -461,7 +462,8 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("MiniGolem", new MoCEntityData(MoCEntityMiniGolem.class, "MiniGolem", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Mouse", new MoCEntityData(MoCEntityMouse.class, "Mouse", EnumCreatureType.creature, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Ogre", new MoCEntityData(MoCEntityOgre.class, "Ogre", EnumCreatureType.monster, 8, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("Ostrich", new MoCEntityData(MoCEntityOstrich.class, "Ostrich", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "NORMAL"))));
+        mocEntityMap.put("Ostrich", new MoCEntityData(MoCEntityOstrich.class, "Ostrich", EnumCreatureType.creature, 4, 1, 1, 1, new ArrayList(Arrays.asList("DESERT", "NORMAL"))));
+        mocEntityMap.put("Piranha", new MoCEntityData(MoCEntityPiranha.class, "Piranha", EnumCreatureType.waterCreature, 4, 1, 3, 3, new ArrayList(Arrays.asList("BEACHES", "RIVER", "SWAMP"))));
         mocEntityMap.put("Raccoon", new MoCEntityData(MoCEntityRaccoon.class, "Racoon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("Rat", new MoCEntityData(MoCEntityRat.class, "Rat", EnumCreatureType.monster, 7, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Ray", new MoCEntityData(MoCEntityRay.class, "Ray", EnumCreatureType.waterCreature, 10, 1, 2, 3, new ArrayList(Arrays.asList("OCEAN", "RIVER", "SWAMP"))));
@@ -469,7 +471,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Shark", new MoCEntityData(MoCEntityShark.class, "Shark", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("OCEAN"))));
         mocEntityMap.put("SilverSkeleton", new MoCEntityData(MoCEntitySilverSkeleton.class, "SilverSkeleton", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, "Snail", EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
         mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, "SmallFish", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
         mocEntityMap.put("Turkey", new MoCEntityData(MoCEntityTurkey.class, "Turkey", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
         mocEntityMap.put("Turtle", new MoCEntityData(MoCEntityTurtle.class, "Turtle", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP", "JUNGLE"))));
@@ -1414,7 +1416,7 @@ public class MoCProxy implements IGuiHandler {
         maxAmbients = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbients", 100, "Max amount of ambients.").getInt();
         maxWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterCreatures", 60, "Max amount of watercreatures.").getInt();
         creatureSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", 50, "The amount of ticks it takes to spawn animals. A tick rate of 100 would cause Custom Spawner to spawn animals every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
-        monsterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", 30, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
+        monsterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnTickRate", 30, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         ambientSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", 60, "The amount of ticks it takes to spawn ambients. A tick rate of 100 would cause Custom Spawner to spawn ambients every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 60, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
