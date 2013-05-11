@@ -135,7 +135,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     public void setHunched(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
         //hunched = var1;

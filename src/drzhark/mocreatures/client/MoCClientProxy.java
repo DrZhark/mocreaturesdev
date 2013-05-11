@@ -623,6 +623,8 @@ public class MoCClientProxy extends MoCProxy {
     
     public static MoCSettingBoolean debugLoggingB;
     public static WidgetBoolean debugLoggingW;
+    public static MoCSettingBoolean CMSLoggingB;
+    public static WidgetBoolean CMSLoggingW;
 
     public static MoCSettingBoolean isOldWorld;
     public static WidgetBoolean isOldWorldW;
@@ -881,10 +883,13 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(useCustomSpawnerS = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", useCustomSpawner));
         useCustomSpawnerW = new WidgetBoolean(useCustomSpawnerS, "Use CustomSpawner?", "Yes", "No");
         widgetCustomSpawnerColumns.add(useCustomSpawnerW);
+        guiapiSettings.append(CMSLoggingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", debugCMS));
+        CMSLoggingW = new WidgetBoolean(CMSLoggingB, "Show CMS Logging?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(CMSLoggingW);
         guiapiSettings.append(creatureSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", creatureSpawnTickRate, 1, 1, 1000));
         creatureSpawnTickRateW = new WidgetInt(creatureSpawnTickRateS, "Anml Spawn Ticks");
         widgetCustomSpawnerColumns.add(creatureSpawnTickRateW);
-        guiapiSettings.append(monsterSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "mobSpawnTickRate", monsterSpawnTickRate, 1, 1, 1000));
+        guiapiSettings.append(monsterSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnTickRate", monsterSpawnTickRate, 1, 1, 1000));
         monsterSpawnTickRateW = new WidgetInt(monsterSpawnTickRateS, "Mob Spawn Ticks");
         widgetCustomSpawnerColumns.add(monsterSpawnTickRateW);
         guiapiSettings.append(waterSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", waterSpawnTickRate, 1, 1, 1000));
@@ -924,10 +929,10 @@ public class MoCClientProxy extends MoCProxy {
         despawnLightLevelW = new WidgetInt(despawnLightLevelS, "DespawnLightLevel");
         widgetCustomSpawnerColumns.add(despawnLightLevelW);
         guiapiSettings.append(checkAmbientLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", checkAmbientLightLevel));
-        checkAmbientLightLevelW = new WidgetBoolean(checkAmbientLightLevelB, "CheckAmbientLightLevel?", "Yes", "No");
+        checkAmbientLightLevelW = new WidgetBoolean(checkAmbientLightLevelB, "Ambients use Lightlvl?", "Yes", "No");
         widgetCustomSpawnerColumns.add(checkAmbientLightLevelW);
         guiapiSettings.append(disallowMonsterSpawningDuringDayB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", disallowMonsterSpawningDuringDay));
-        disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "DisallowMonsterSpawningDuringDay?", "Yes", "No");
+        disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "Stop Mob Spawn at Day?", "Yes", "No");
         widgetCustomSpawnerColumns.add(disallowMonsterSpawningDuringDayW);
         //**********************************************************//
 
@@ -1294,9 +1299,9 @@ public class MoCClientProxy extends MoCProxy {
                 MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " CanSpawn", entityData.getCanSpawn());
                 guiapiSettings.append(settingCanSpawn);
                 widgetEntitySettingColumn.add(new WidgetBoolean(settingCanSpawn, "CanSpawn"));
-                MoCSettingBoolean settingVanillaControl = new MoCSettingBoolean(null, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Vanilla Has Control", entityData.getVanillaControl());
-                guiapiSettings.append(settingVanillaControl);
-                widgetEntitySettingColumn.add(new WidgetBoolean(settingVanillaControl, "Vanilla Has Control"));
+                //MoCSettingBoolean settingVanillaControl = new MoCSettingBoolean(null, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Vanilla Has Control", entityData.getVanillaControl());
+                //guiapiSettings.append(settingVanillaControl);
+                //widgetEntitySettingColumn.add(new WidgetBoolean(settingVanillaControl, "Vanilla Has Control"));
                 if (entityData.getBiomeGroups() != null)
                 {
                     MoCSettingList entityBiomeList = guiapiSettings.addSetting(widgetEntitySettingColumn, "Biome Groups", entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName() + " Biome Groups", (ArrayList)entityData.getBiomeGroups(), entityData.getEntityConfig(), CATEGORY_ENTITY_BIOME_SETTINGS);
