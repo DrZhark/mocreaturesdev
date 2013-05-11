@@ -10,6 +10,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.customspawner.CustomSpawner;
 import drzhark.mocreatures.MoCreatures;
 
 //this one is a copy of the end world provider
@@ -28,6 +29,17 @@ public class WorldProviderWyvernEnd extends WorldProvider
         setDimension(MoCreatures.WyvernLairDimensionID);
         //this.dimensionId = MoCreatures.WyvernLairDimensionID;
         setCustomSky();
+        if (MoCreatures.proxy.useCustomSpawner)
+        {
+            MoCreatures.myCustomSpawner = new CustomSpawner();
+            if (MoCreatures.proxy.debugCMS)
+            {
+                MoCreatures.myCustomSpawner.setVerboseConsole(true);
+            }
+            MoCreatures.proxy.initializeBiomes();
+            MoCreatures.proxy.initializeEntities();
+            MoCreatures.updateSettings(); // refresh settings
+        }
     }
 
     /**
