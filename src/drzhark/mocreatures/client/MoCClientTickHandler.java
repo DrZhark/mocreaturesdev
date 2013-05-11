@@ -19,13 +19,7 @@ public class MoCClientTickHandler implements ITickHandler {
 
     private void onTickInGame()
     {
-        if (MoCreatures.proxy.needsUpdate && !inMenu)
-        {
-            MoCreatures.proxy.needsUpdate = false;
-            MoCreatures.proxy.ConfigInit(MoCreatures.proxy.configPreEvent);
-            MoCreatures.proxy.ConfigPostInit(MoCreatures.proxy.configPostEvent);
-            MoCreatures.updateSettings();
-        }
+
     }
 
     boolean inMenu;

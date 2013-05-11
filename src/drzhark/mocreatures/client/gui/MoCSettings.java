@@ -242,6 +242,10 @@ public class MoCSettings extends ModSettings {
                                         break;
                                     default :
                                 }
+                                if (MoCreatures.myCustomSpawner != null)
+                                {
+                                   MoCreatures.myCustomSpawner.updateSpawnListEntry(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
+                                }
                             }
                         }
                      }
@@ -262,7 +266,10 @@ public class MoCSettings extends ModSettings {
             if (config != null)
                 config.save(); // save config
             //biomeConfig.save();
-            // we handle syncing changes in MoCClientTickHandler
+            MoCreatures.proxy.mocGlobalConfig.save();
+            MoCreatures.proxy.mocBiomeConfig.save();
+            MoCreatures.proxy.readConfigValues();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

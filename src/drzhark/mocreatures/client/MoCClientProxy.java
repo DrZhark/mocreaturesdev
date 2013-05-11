@@ -1393,6 +1393,11 @@ public class MoCClientProxy extends MoCProxy {
                 MoCEntityData entityData = entityMap.get(tokens[0]);
                 if (entityData!= null)
                 {
+                    if (MoCreatures.myCustomSpawner != null && setting.category.equals(CATEGORY_ENTITY_BIOME_SETTINGS))
+                    {
+                        // update lists
+                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(text.get()));
+                    }
                     entityData.addBiomeGroup(text.get());
                     Collections.sort(setting.get()); // sort list before displaying
                     setting.displayWidget.update();
@@ -1400,7 +1405,6 @@ public class MoCClientProxy extends MoCProxy {
             }
             else if (setting.backendName.contains("Biomes"))
             {
-                //prop = MoCreatures.proxy.MoCBiomeConfig.get(setting.category, tokens[0]);
                 MoCBiomeGroupData biomeGroupData = biomeGroupMap.get(tokens[0]);
                 if (biomeGroupData != null)
                 {
@@ -1411,9 +1415,7 @@ public class MoCClientProxy extends MoCProxy {
             }
 
                 MoCreatures.proxy.mocBiomeConfig.save();
-                //MoCreatures.proxy.mocGlobalConfig.save();
                 setting.config.save();
-            //}
         }
     }
 
@@ -1439,13 +1441,18 @@ public class MoCClientProxy extends MoCProxy {
     
                 if (prop != null)
                 {
+                    if (MoCreatures.myCustomSpawner != null && setting.category.equals(CATEGORY_ENTITY_BIOME_SETTINGS))
+                    {
+                        // update lists
+                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(setting.get().get(selected)));
+                    }
                     setting.get().remove(selected);
                     //prop.valueList = setting.get();
                     setting.displayWidget.update();
                     MoCreatures.proxy.mocBiomeConfig.save();
                     //MoCreatures.proxy.mocGlobalConfig.save(); // save config
                     setting.config.save();
-    
+
                     if (selected == listbox.getNumEntries()) // I'm only removing one at a
                                                                 // time, so this is OK.
                     {

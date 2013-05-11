@@ -887,6 +887,7 @@ public class MoCProxy implements IGuiHandler {
                     for (int i = 0; i < biomeList.size(); i++)
                     {
                         String biomeGroupName = biomeList.get(i);
+                        List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
                         if (mocBiomeConfig.hasCategory(biomeGroupName.toLowerCase()))
                         {
                             MoCProperty biomeProps = mocBiomeConfig.getCategory(biomeGroupName).get(biomeGroupName);
@@ -899,12 +900,14 @@ public class MoCProxy implements IGuiHandler {
                                     String biomeName = biomeParts.get(1);
                                     if (tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)) != null)
                                     {
+                                        spawnBiomes.add(tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)));
                                         entityData.addSpawnBiome(tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)));
                                         if (debugLogging) MoCreatures.log.info("Added " + tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)) + " to entity " + entityName + " spawnBiomes");
                                     }
                                     else if (debugLogging) MoCreatures.log.info("Invalid Biome " + biomeProps.valueList.get(j) + " was found in config category " + biomeGroupName + " in MoCBiomeGroups.cfg");
                                 }
                             }
+                            entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
                         }
                     }
                     entityData.setBiomeGroups(biomeList);

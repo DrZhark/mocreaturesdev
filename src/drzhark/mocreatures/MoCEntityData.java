@@ -1,7 +1,9 @@
 package drzhark.mocreatures;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,6 +27,7 @@ public class MoCEntityData {
 
     private List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
     private List<String> biomeGroups = new ArrayList<String>();
+    private Map<String, List<BiomeGenBase>> biomeGroupSpawnMap = new HashMap<String, List<BiomeGenBase>>();
     private int frequency = 8;
     private int minGroup = 1;
     private int maxGroup = 1;
@@ -292,9 +295,24 @@ public class MoCEntityData {
         this.entityWindow = window;
     }
 
+    public void addBiomeGroupSpawnMap(String biomeGroupName, List<BiomeGenBase> biomes)
+    {
+        this.biomeGroupSpawnMap.put(biomeGroupName, biomes);
+    }
+
+    public List<BiomeGenBase> getBiomeGroupSpawnMap(String biomeGroupName)
+    {
+        return this.biomeGroupSpawnMap.get(biomeGroupName);
+    }
+
     public void addSpawnBiome(BiomeGenBase biome)
     {
         this.spawnBiomes.add(biome);
+    }
+
+    public void removeSpawnBiome(BiomeGenBase biome)
+    {
+        this.spawnBiomes.remove(biome);
     }
 
     public List<BiomeGenBase> getSpawnBiomes()

@@ -53,10 +53,10 @@ public final class CustomSpawner {
 
     public List<BiomeGenBase> biomeList;
     public List[] entityClasses;
-    protected List[] customMobSpawnList;
+    protected List[] customMonsterSpawnList;
     protected List[] customAmbientSpawnList;
     protected List[] customCreatureSpawnList;
-    protected List[] customAquaticSpawnList;
+    protected List[] customWaterCreatureSpawnList;
     private List<Class> vanillaClassList;
     private static Logger log = Logger.getLogger("CustomSpawner");
 
@@ -78,9 +78,9 @@ public final class CustomSpawner {
             }
 
             customCreatureSpawnList = new List[biomeList.size()];
-            customMobSpawnList = new List[biomeList.size()];
+            customMonsterSpawnList = new List[biomeList.size()];
             customAmbientSpawnList = new List[biomeList.size()];
-            customAquaticSpawnList = new List[biomeList.size()];
+            customWaterCreatureSpawnList = new List[biomeList.size()];
             entityClasses = new List[4];
             vanillaClassList = new ArrayList<Class>();
             vanillaClassList.add(EntityChicken.class);
@@ -113,9 +113,9 @@ public final class CustomSpawner {
         for (int x = 0; x < biomeList.size(); x++)
         {
             customCreatureSpawnList[x] = new ArrayList();
-            customMobSpawnList[x] = new ArrayList();
+            customMonsterSpawnList[x] = new ArrayList();
             customAmbientSpawnList[x] = new ArrayList();
-            customAquaticSpawnList[x] = new ArrayList();
+            customWaterCreatureSpawnList[x] = new ArrayList();
         }
         for (int x = 0; x < 4; x++)
         {
@@ -594,9 +594,9 @@ public final class CustomSpawner {
 
     private List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
     {
-        if (enumcreaturetype == EnumCreatureType.monster) { return customMobSpawnList; }
+        if (enumcreaturetype == EnumCreatureType.monster) { return customMonsterSpawnList; }
         if (enumcreaturetype == EnumCreatureType.creature) { return customCreatureSpawnList; }
-        if (enumcreaturetype == EnumCreatureType.waterCreature) { return customAquaticSpawnList; }
+        if (enumcreaturetype == EnumCreatureType.waterCreature) { return customWaterCreatureSpawnList; }
         if (enumcreaturetype == EnumCreatureType.ambient) { return customAmbientSpawnList; }
         return null;
     }
@@ -606,6 +606,38 @@ public final class CustomSpawner {
         int x = biomeList.indexOf(biomegenbase);
         if (x >= 0) { return fulllist[x]; }
         return null;
+    }
+
+    public void updateSpawnListEntry(Class<? extends EntityLiving> clazz, EnumCreatureType type, int freq, int min, int max)
+    {
+        List[] customList = getCustomSpawnableList(type);
+        for (int i = 0; i < customList.length; i++)
+        {
+            List spawnList = customList[i];
+            BiomeGenBase biome = biomeList.get(i);
+            for (int j = 0; j < spawnList.size(); j++)
+            {
+                SpawnListEntry spawnlistentry = (SpawnListEntry)spawnList.get(j);
+                if (spawnlistentry.entityClass == clazz)
+                {
+                    if (verboseConsole) log.info("updateSpawnListEntry " + clazz + " to " + freq + ":" + min + ":" + max + " in biome " + biome.biomeName);
+                    spawnlistentry.itemWeight = freq;
+                    spawnlistentry.minGroupCount = min;
+                    spawnlistentry.maxGroupCount = max;
+                }
+            }
+        }
+    }
+
+    public void updateSpawnListBiomes(Class<? extends EntityLiving> clazz, EnumCreatureType type, int freq, int min, int max, List<BiomeGenBase> biomes)
+    {
+        if (biomes != null)
+        {
+            if (verboseConsole) log.info("updateSpawnListBiomes for clazz " + clazz + " with " + freq + ":" + min + ":" + max + " in " + biomes);
+            RemoveCustomSpawn(clazz, type, null);
+            BiomeGenBase[] allBiomes = new BiomeGenBase[biomes.size()];
+            AddCustomSpawn(clazz, freq, min, max, type, biomes.toArray(allBiomes));
+        }
     }
 
     public List getCustomBiomeSpawnList(BiomeGenBase biome)
@@ -673,16 +705,6 @@ public final class CustomSpawner {
 	{
 		this.verboseConsole = flag;
 	}
-	
-    /*public int getMaxSpawnsPerChunk()
-    {
-        return maxSpawnsPerChunk;
-    }
-
-    public void setMaxSpawnsPerChunk(int max)
-    {
-        maxSpawnsPerChunk = max;
-    }*/
 
     /**
      * Returns whether or not the specified creature type can spawn at the specified location.
