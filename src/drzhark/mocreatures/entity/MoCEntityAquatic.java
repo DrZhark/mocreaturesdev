@@ -1196,7 +1196,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         if (this.riddenByEntity != null)
             this.riddenByEntity.mountEntity(null);
-        if (getIsTamed() && this.health > 0)
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)//removing server check causes dupes in client
         {
         		return;
         }

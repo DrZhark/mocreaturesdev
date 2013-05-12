@@ -685,7 +685,8 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     @Override
     public void setDead()
     {
-        if ((getIsTamed()) && (health > 0)) { return; }
+    	if (MoCreatures.isServer() && getIsTamed() && this.health > 0)//removing server check causes dupes in client
+        { return; }
         super.setDead();
     }
 
