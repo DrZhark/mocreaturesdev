@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.passive.MoCEntityShark;
+import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderShark extends RenderLiving {

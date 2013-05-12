@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.ambient;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;

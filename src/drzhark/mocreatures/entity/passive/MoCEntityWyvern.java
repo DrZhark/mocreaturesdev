@@ -31,7 +31,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 	public int mouthCounter;
 	public int wingFlapCounter;
 	public int diveCounter;
-	public static final String wyvernNames[] = { "Jungle", "Swamp", "Sand", "Savanna", "Mother", "Undead", "Light", "Dark" };
+	public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark" };
 	
 	public MoCEntityWyvern(World world)
 	{

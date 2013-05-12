@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityFishy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderFishy extends RenderLiving {

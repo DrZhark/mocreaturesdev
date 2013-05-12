@@ -4,8 +4,8 @@ import java.util.List;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
-import drzhark.mocreatures.entity.passive.MoCEntityDolphin;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 

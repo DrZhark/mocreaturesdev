@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityFirefly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelFirefly extends ModelBase {

@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderButterfly extends MoCRenderInsect {

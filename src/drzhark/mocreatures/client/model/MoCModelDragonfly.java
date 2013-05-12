@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityDragonfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelDragonfly extends ModelBase {

@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelFirefly;
-import drzhark.mocreatures.entity.passive.MoCEntityFirefly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderFirefly extends MoCRenderInsect {

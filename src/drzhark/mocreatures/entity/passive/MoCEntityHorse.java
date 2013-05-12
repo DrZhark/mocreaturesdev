@@ -1321,7 +1321,10 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         
         if ((itemstack != null) && !getIsRideable() && itemstack.itemID == Item.saddle.itemID)
         {
+        	if (--itemstack.stackSize == 0)
+            {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
             setRideable(true);
             return true;
         }

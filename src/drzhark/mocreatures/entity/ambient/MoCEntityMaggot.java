@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
@@ -47,7 +47,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     protected void fall(float f)
     {
     }
-    
+
     @Override
     protected int getDropItemId()
     {

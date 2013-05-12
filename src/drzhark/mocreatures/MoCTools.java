@@ -14,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
@@ -49,6 +50,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.ambient.MoCEntityBee;
+import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityCrab;
+import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
+import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFly;
+import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
+import drzhark.mocreatures.entity.ambient.MoCEntitySnail;
+import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityRay;
+import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 import drzhark.mocreatures.entity.monster.MoCEntityFlameWraith;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
@@ -59,35 +74,21 @@ import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBee;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
-import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
-import drzhark.mocreatures.entity.passive.MoCEntityCrab;
-import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
-import drzhark.mocreatures.entity.passive.MoCEntityDolphin;
-import drzhark.mocreatures.entity.passive.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.passive.MoCEntityDuck;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
-import drzhark.mocreatures.entity.passive.MoCEntityFirefly;
-import drzhark.mocreatures.entity.passive.MoCEntityFishy;
-import drzhark.mocreatures.entity.passive.MoCEntityFly;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
-import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
-import drzhark.mocreatures.entity.passive.MoCEntityRay;
-import drzhark.mocreatures.entity.passive.MoCEntityShark;
-import drzhark.mocreatures.entity.passive.MoCEntitySnail;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
@@ -2238,4 +2239,30 @@ public class MoCTools {
             l++;
         } while (true);
     }
+	
+	/**
+	 * Finds a near vulnerable player and poisons it if the player is in the water and not riding anything
+	 * @param poisoner
+	 * @param needsToBeInWater: the target needs to be in water for poison to be successful?
+	 * @return true if was able to poison the player
+	 */
+	public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater)
+	{
+		EntityPlayer entityplayertarget = poisoner.worldObj.getClosestVulnerablePlayerToEntity(poisoner, 2D);
+		{
+			if (entityplayertarget != null && ( (needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater) && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F)
+			{
+				if (entityplayertarget.ridingEntity != null && entityplayertarget.ridingEntity instanceof EntityBoat)
+				{
+					//don't poison players on boats
+				}else
+				{
+					MoCreatures.poisonPlayer(entityplayertarget);
+					entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

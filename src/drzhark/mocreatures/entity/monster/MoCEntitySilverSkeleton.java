@@ -139,19 +139,19 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
 	@Override
 	protected String getDeathSound()
 	{
-		return "silverskeletondying";
+		return "mob.skeleton.death";
 	}
 
 	@Override
 	protected String getHurtSound()
 	{
-		return "silverskeletonhurt";
+		return "mob.skeleton.hurt";
 	}
 
 	@Override
 	protected String getLivingSound()
 	{
-		return "silverskeleton";
+		return "mob.skeleton.say";
 	}
 	
 	/**
@@ -160,5 +160,11 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEAD;
+    }
+   
+    @Override
+    protected void playStepSound(int par1, int par2, int par3, int par4)
+    {
+        this.playSound("mob.skeleton.step", 0.15F, 1.0F);
     }
 }

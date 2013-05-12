@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntitySnail;
+import drzhark.mocreatures.entity.ambient.MoCEntitySnail;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelSnail extends ModelBase {

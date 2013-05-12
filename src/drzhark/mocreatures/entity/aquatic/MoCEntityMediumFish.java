@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
@@ -129,9 +129,9 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
                 {
                    MoCTools.runLikeHell(this, entityliving);
 
-        }
-    }
-    
+                }
+            }
+            
             if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
             {
             	this.health = getMaxHealth();

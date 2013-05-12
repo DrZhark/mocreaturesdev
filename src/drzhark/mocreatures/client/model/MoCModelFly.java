@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityFly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFly;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelFly extends ModelBase {

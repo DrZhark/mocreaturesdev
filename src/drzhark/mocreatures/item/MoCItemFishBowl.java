@@ -4,8 +4,8 @@ import java.util.List;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
 import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
-import drzhark.mocreatures.entity.passive.MoCEntityFishy;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;

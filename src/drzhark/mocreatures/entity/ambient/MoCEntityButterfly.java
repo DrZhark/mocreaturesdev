@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.ambient;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -33,10 +33,10 @@ public class MoCEntityButterfly extends MoCEntityInsect
             if (getIsFlying() && rand.nextInt(200) == 0)
             {
                 setIsFlying(false);
-            }       
+            }
         }
     }
- 
+
     @Override
     public void selectType()
     {

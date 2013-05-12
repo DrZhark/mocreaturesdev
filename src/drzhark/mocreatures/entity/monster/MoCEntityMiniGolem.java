@@ -250,7 +250,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     @Override
     protected String getDeathSound()
     {
-        return "minigolemdying";
+        return "golemgrunt";
     }
 
     /*@Override
@@ -262,7 +262,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     @Override
     protected String getHurtSound()
     {
-        return "minigolemgrunt";
+        return "golemgrunt";
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.client.model.MoCModelJellyFish;
-import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderJellyFish extends RenderLiving {
@@ -52,8 +52,6 @@ public class MoCRenderJellyFish extends RenderLiving {
     {
         MoCEntityJellyFish entityjellyfish = (MoCEntityJellyFish) entityliving;
         boolean flag = entityjellyfish.isGlowing();
-        //flag = true;
-        //tempJellyFish.typeInt = entityray.type;
 
         if (!entityjellyfish.isSwimming())
         {
@@ -83,16 +81,6 @@ public class MoCRenderJellyFish extends RenderLiving {
 
     }
 
-    /*@Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
-    {
-        MoCEntityJellyFish entityjellyfish = (MoCEntityJellyFish) entityliving;
-        //if(!entityjellyfish.getIsAdult())
-        //{
-            stretch(entityjellyfish);
-        //}
-        return entityliving.ticksExisted + f;
-    }*/
 
     protected void stretch(MoCEntityJellyFish entityjellyfish)
     {

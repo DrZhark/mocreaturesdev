@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 

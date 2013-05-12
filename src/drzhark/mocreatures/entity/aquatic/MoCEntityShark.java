@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 public class MoCEntityShark extends MoCEntityAquatic {
     public MoCEntityShark(World world)

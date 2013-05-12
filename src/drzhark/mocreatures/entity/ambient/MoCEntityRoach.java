@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;

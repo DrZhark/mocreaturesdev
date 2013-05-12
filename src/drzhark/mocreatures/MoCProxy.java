@@ -59,6 +59,24 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import drzhark.mocreatures.MoCProperty.Type;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
+import drzhark.mocreatures.entity.ambient.MoCEntityBee;
+import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityCrab;
+import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
+import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
+import drzhark.mocreatures.entity.ambient.MoCEntityFly;
+import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
+import drzhark.mocreatures.entity.ambient.MoCEntitySnail;
+import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityMediumFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityPiranha;
+import drzhark.mocreatures.entity.aquatic.MoCEntityRay;
+import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
+import drzhark.mocreatures.entity.aquatic.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
@@ -75,41 +93,23 @@ import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
-import drzhark.mocreatures.entity.passive.MoCEntityAnt;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBee;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
-import drzhark.mocreatures.entity.passive.MoCEntityButterfly;
-import drzhark.mocreatures.entity.passive.MoCEntityCrab;
-import drzhark.mocreatures.entity.passive.MoCEntityCricket;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
-import drzhark.mocreatures.entity.passive.MoCEntityDolphin;
-import drzhark.mocreatures.entity.passive.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.passive.MoCEntityDuck;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
-import drzhark.mocreatures.entity.passive.MoCEntityFirefly;
-import drzhark.mocreatures.entity.passive.MoCEntityFishy;
-import drzhark.mocreatures.entity.passive.MoCEntityFly;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityJellyFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
-import drzhark.mocreatures.entity.passive.MoCEntityMaggot;
-import drzhark.mocreatures.entity.passive.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
-import drzhark.mocreatures.entity.passive.MoCEntityPiranha;
 import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
-import drzhark.mocreatures.entity.passive.MoCEntityRay;
-import drzhark.mocreatures.entity.passive.MoCEntityShark;
-import drzhark.mocreatures.entity.passive.MoCEntitySmallFish;
-import drzhark.mocreatures.entity.passive.MoCEntitySnail;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
@@ -351,6 +351,7 @@ public class MoCProxy implements IGuiHandler {
     public static final String BIOME_MOBS_GROUP = "MOBS";
     public static final String BIOME_TWILIGHT_GROUP = "TWILIGHTFOREST";
     public static final String BIOME_VOLCANO_GROUP = "VOLCANO";
+    public static final String BIOME_LAKE_GROUP = "LAKE";
     public static final String BIOME_GROUP_SETTINGS = "biome-group-settings";
 
     private static final String MOD_KEY_BIOMESOPLENTY = "biomesop";
@@ -380,6 +381,7 @@ public class MoCProxy implements IGuiHandler {
     private static List defaultBiomeGroupMushroom = new ArrayList();
     private static List defaultBiomeGroupTwilight = new ArrayList();
     private static List defaultBiomeGroupVolcano = new ArrayList();
+    private static List defaultBiomeGroupLake = new ArrayList();
 
     public static Map<String, MoCBiomeGroupData> biomeGroupMap = new TreeMap<String, MoCBiomeGroupData>();
     public static Map<String, MoCBiomeGroupData> defaultBiomeGroupMap = new TreeMap<String, MoCBiomeGroupData>(); // used only for default biome groups
@@ -450,7 +452,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Duck", new MoCEntityData(MoCEntityDuck.class, "Duck", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, "Elephant", EnumCreatureType.creature, 4, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
         mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, "Firefly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN"))));
-        mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, "Fishy", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, "Fishy", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("FlameWraith", new MoCEntityData(MoCEntityFlameWraith.class, "FlameWraith", EnumCreatureType.monster, 5, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
         mocEntityMap.put("Fly", new MoCEntityData(MoCEntityFly.class, "Fly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, "Fox", EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
@@ -462,13 +464,13 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, "Kitty", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
         mocEntityMap.put("KomodoDragon", new MoCEntityData(MoCEntityKomodo.class, "KomodoDragon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
         mocEntityMap.put("Maggot", new MoCEntityData(MoCEntityMaggot.class, "Maggot", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
-        mocEntityMap.put("MediumFish", new MoCEntityData(MoCEntityMediumFish.class, "MediumFish", EnumCreatureType.waterCreature, 10, 1, 4, 4, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("MediumFish", new MoCEntityData(MoCEntityMediumFish.class, "MediumFish", EnumCreatureType.waterCreature, 10, 1, 4, 4, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("MiniGolem", new MoCEntityData(MoCEntityMiniGolem.class, "MiniGolem", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Mouse", new MoCEntityData(MoCEntityMouse.class, "Mouse", EnumCreatureType.creature, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Ogre", new MoCEntityData(MoCEntityOgre.class, "Ogre", EnumCreatureType.monster, 8, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
         mocEntityMap.put("Ostrich", new MoCEntityData(MoCEntityOstrich.class, "Ostrich", EnumCreatureType.creature, 4, 1, 1, 1, new ArrayList(Arrays.asList("DESERT", "NORMAL"))));
         mocEntityMap.put("Piranha", new MoCEntityData(MoCEntityPiranha.class, "Piranha", EnumCreatureType.waterCreature, 4, 1, 3, 3, new ArrayList(Arrays.asList("BEACHES", "RIVER", "SWAMP"))));
-        mocEntityMap.put("Raccoon", new MoCEntityData(MoCEntityRaccoon.class, "Racoon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("Raccoon", new MoCEntityData(MoCEntityRaccoon.class, "Raccoon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("Rat", new MoCEntityData(MoCEntityRat.class, "Rat", EnumCreatureType.monster, 7, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Ray", new MoCEntityData(MoCEntityRay.class, "Ray", EnumCreatureType.waterCreature, 10, 1, 2, 3, new ArrayList(Arrays.asList("OCEAN", "RIVER", "SWAMP"))));
         mocEntityMap.put("Scorpion", new MoCEntityData(MoCEntityScorpion.class, "Scorpion", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
@@ -476,7 +478,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("SilverSkeleton", new MoCEntityData(MoCEntitySilverSkeleton.class, "SilverSkeleton", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, "Snail", EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
-        mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, "SmallFish", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP"))));
+        mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, "SmallFish", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("Turkey", new MoCEntityData(MoCEntityTurkey.class, "Turkey", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
         mocEntityMap.put("Turtle", new MoCEntityData(MoCEntityTurtle.class, "Turtle", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP", "JUNGLE"))));
         mocEntityMap.put("Werewolf", new MoCEntityData(MoCEntityWerewolf.class, "Werewolf", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
@@ -527,6 +529,7 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupMap.put(BIOME_WYVERN_GROUP, new MoCBiomeGroupData(BIOME_WYVERN_GROUP, defaultBiomeGroupWyvern));
         defaultBiomeGroupMap.put(BIOME_TWILIGHT_GROUP,  new MoCBiomeGroupData(BIOME_TWILIGHT_GROUP, defaultBiomeGroupTwilight));
         defaultBiomeGroupMap.put(BIOME_VOLCANO_GROUP, new MoCBiomeGroupData(BIOME_VOLCANO_GROUP, defaultBiomeGroupVolcano));
+        defaultBiomeGroupMap.put(BIOME_LAKE_GROUP, new MoCBiomeGroupData(BIOME_LAKE_GROUP, defaultBiomeGroupLake));
 
         // sort default lists
        // Collections.sort(defaultBiomeGroupUndefined);
@@ -545,6 +548,7 @@ public class MoCProxy implements IGuiHandler {
         Collections.sort(defaultBiomeGroupTheEnd);
         Collections.sort(defaultBiomeGroupWyvern);
         Collections.sort(defaultBiomeGroupTwilight);
+        Collections.sort(defaultBiomeGroupLake);
 
         entityTypes.put("UNDEFINED", null);
         entityTypes.put("CREATURE", EnumCreatureType.creature);
@@ -1210,6 +1214,10 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Beach");
         defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Shore");
         
+        /********** LAKE ***********/ //Biomes that create lake like structures to spawn aquatics
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Plains"); 
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Extreme Hills");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert"); 
         
         /********** MUSHROOM **********/
         defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIsland");

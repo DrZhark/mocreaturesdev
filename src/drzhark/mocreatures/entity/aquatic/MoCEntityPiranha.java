@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -83,7 +83,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     @Override
     protected void attackEntity(Entity entity, float f)
     {
-        if (entity.isInsideOfMaterial(Material.water) && (f < 2.5D) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY) && (getEdad() >= 100))
+        if (entity.isInWater() && (f < 0.8D)) //entity.isInsideOfMaterial(Material.water)
         {
         	if (entity instanceof EntityPlayer && ((EntityPlayer)entity).ridingEntity != null)
         	{
@@ -122,4 +122,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
 
         }
     }
+    
+    
 }

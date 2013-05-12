@@ -40,7 +40,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         roper = null;
         setHasBabies(false);
         //cheated = true;
-        this.stepHeight = 1.0F;
+        this.stepHeight = 20.0F;
 
     }
 
@@ -459,7 +459,10 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null) && getIsAdult() && !getIsRideable() && (itemstack.itemID == Item.saddle.itemID || itemstack.itemID == MoCreatures.horsesaddle.itemID))
         {
+        	if (--itemstack.stackSize == 0)
+            {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
             setRideable(true);
             return true;
         }
@@ -501,7 +504,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
             }
             return true;
         }
-        if (this.ridingEntity == null && !getIsAdult())
+        if (this.ridingEntity == null && getEdad() < 60)
         {
             rotationYaw = entityplayer.rotationYaw;
             if (MoCreatures.isServer())
@@ -515,7 +518,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
         }
-        else if (this.ridingEntity != null && !getIsAdult())
+        else if (this.ridingEntity != null && getIsPicked())
         {
             worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
             setPicked(false);
@@ -673,4 +676,10 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     {
         return EnumCreatureAttribute.ARTHROPOD;
     }
+    
+    @Override
+	public float getAdjustedYOffset()
+	{
+		return 0.2F;
+	}
 }

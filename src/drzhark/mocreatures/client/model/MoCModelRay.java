@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.passive.MoCEntityRay;
+import drzhark.mocreatures.entity.aquatic.MoCEntityRay;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelRay extends ModelBase {
@@ -164,7 +164,7 @@ public class MoCModelRay extends ModelBase {
     {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityRay ray = (MoCEntityRay)entity;
-        this.attacking = ray.attacking;
+        this.attacking = ray.isPoisoning();
         this.typeInt = ray.getType();
         
         setRotationAngles(f, f1, f2, f3, f4, f5);

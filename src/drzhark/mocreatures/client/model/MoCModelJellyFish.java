@@ -1,10 +1,13 @@
 package drzhark.mocreatures.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelJellyFish extends ModelBase {
@@ -118,69 +121,41 @@ public class MoCModelJellyFish extends ModelBase {
           setRotation(Leg9, 0F, 0.7853982F, 0F);
           
           
-        /*textureWidth = 64;
-        textureHeight = 32;
 
-        Body = new ModelRenderer(this, 36, 0);
-        Body.addBox(-3F, 0F, -3F, 6, 2, 6);
-        Body.setRotationPoint(0F, 9F, 0F);
-
-        BodyUp = new ModelRenderer(this, 36, 8);
-        BodyUp.addBox(-2F, -1F, -2F, 4, 1, 4);
-        BodyUp.setRotationPoint(0F, 9F, 0F);
-
-        BodyD = new ModelRenderer(this, 4, 0);
-        BodyD.addBox(-4F, 2F, -4F, 8, 3, 8);
-        BodyD.setRotationPoint(0F, 9F, 0F);
-
-        FootA = new ModelRenderer(this, 0, 0);
-        FootA.addBox(-0.5F, 0F, -0.5F, 1, 10, 1);
-        FootA.setRotationPoint(-2F, 14F, -2F);
-
-        FootB = new ModelRenderer(this, 0, 0);
-        FootB.addBox(-0.5F, 0F, -0.5F, 1, 10, 1);
-        FootB.setRotationPoint(0F, 14F, 0F);
-
-        FootC = new ModelRenderer(this, 0, 0);
-        FootC.addBox(-0.5F, 0F, -0.5F, 1, 10, 1);
-        FootC.setRotationPoint(2F, 14F, 2F);
-
-        FootD = new ModelRenderer(this, 0, 0);
-        FootD.addBox(-0.5F, 0F, -0.5F, 1, 10, 1);
-        FootD.setRotationPoint(2F, 14F, -2F);
-
-        FootE = new ModelRenderer(this, 0, 0);
-        FootE.addBox(-0.5F, 0F, -0.5F, 1, 10, 1);
-        FootE.setRotationPoint(-2F, 14F, 2F);
-
-        SpotA = new ModelRenderer(this, 4, 0);
-        SpotA.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1);
-        SpotA.setRotationPoint(0F, 9F, 0F);
-
-        Core = new ModelRenderer(this, 0, 12);
-        Core.addBox(-2F, -2F, -2F, 4, 4, 4);
-        Core.setRotationPoint(0F, 12F, 0F);*/
 
     }
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
     {
-        /*super.render(entity, f, f1, f2, f3, f4, f5);
         setRotationAngles(f, f1, f2, f3, f4, f5);
-        Body.render(f5);
-        BodyUp.render(f5);
-        BodyD.render(f5);
-        FootA.render(f5);
-        FootB.render(f5);
-        FootC.render(f5);
-        FootD.render(f5);
-        FootE.render(f5);
-        SpotA.render(f5);
-        Core.render(f5);*/
+        MoCEntityJellyFish entityjellyfish = (MoCEntityJellyFish) entity;
+        boolean flag = entityjellyfish.isGlowing();
         
-        //super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5);
+        GL11.glPushMatrix();
+        GL11.glEnable(3042 /*GL_BLEND*/);
+        if (!flag)
+        {
+            float transparency = 0.7F;
+            GL11.glBlendFunc(770, 7711);
+            GL11.glColor4f(0.8F, 0.8F, 0.8F, transparency);
+        }
+        else
+        {
+            GL11.glBlendFunc(770, 1);
+            //GL11.glBlendFunc(770, GL11.GL_ONE);
+        }
+        //super.doRenderLiving(entityliving, d, d1, d2, f, f1);
+        super.render(entity, f, f1, f2, f3, f4, f5);
+        renderParts(f5);
+        GL11.glDisable(3042/*GL_BLEND*/);
+        GL11.glPopMatrix();
+        
+        
+    }
+
+    private void renderParts(float f5)
+    {
         Top.render(f5);
         Head.render(f5);
         HeadSmall.render(f5);

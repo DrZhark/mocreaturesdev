@@ -1,6 +1,10 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,8 +26,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     {
         super(world);
         setSize(0.3F, 0.5F);
-        health = 6;
-        setMaxHealth(6);
+        health = getMaxHealth();
         setEdad(50 + (rand.nextInt(50)));
 
         
@@ -166,38 +169,22 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
                 }
             }
 
-            poisoncounter++;
-            
-
-            if (poisoncounter > 250 && (worldObj.difficultySetting > 0))
+            if (!getIsTamed() && ++poisoncounter > 250 && (worldObj.difficultySetting > 0)  && rand.nextInt(30) == 0)
             {
-
-                EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 2D);
-                {
-                    if (entityplayertarget != null && entityplayertarget.isInWater())
-                    {
-                    	if (entityplayertarget.ridingEntity != null && entityplayertarget.ridingEntity instanceof EntityBoat)
-                    	{
-                    		//don't poison players on boats
-                    	}else
-                    	{
-                        MoCreatures.poisonPlayer(entityplayertarget);
-                        entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
-                        poisoncounter = 0;
-                    	}
-                        //attacking = true;
-                    }
-
-                }
+            	EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
+            	if (entityplayertarget != null)
+            	{
+            		System.out.println("attempting poisioning" + this);
+            	}
+            	
+            	if (MoCTools.findNearPlayerAndPoison(this, true))
+            	{
+            		poisoncounter = 0;
+            	}
             }
-
-            
-            
         }
     }
-
     
-
     @Override
     public void floating()
     {
@@ -222,6 +209,73 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         return 0;
     }
     
+    
+  
+    
+    @Override
+	public int pitchRotationOffset()
+	{
+    	if (!this.isInsideOfMaterial(Material.water))
+    	{
+    		return 90;
+    	}
+		return 0;
+	}
+    
+    @Override
+    public boolean renderName()
+    {
+        return getDisplayName() && (riddenByEntity == null);
+    }
+    
+    @Override
+    public int nameYOffset()
+    { 	int yOff = (int) (getEdad() * -1 /2.3);
+	 	return yOff;
+    }
+      
+    @Override
+	public float getAdjustedZOffset()
+	{
+    	if (!this.isInsideOfMaterial(Material.water))
+    	{
+    		return -0.6F;
+    	}
+		return 0F;
+	}
+    
+    @Override
+    public float getAdjustedYOffset()
+    {
+    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
+    	{
+    		return -0.3F;
+    	}
+    	return 0.4F;
+    }
+    
+    @Override
+    public float getSizeFactor() 
+    {  
+    	float pulseSize = 0F;
+    	if (this.isInsideOfMaterial(Material.water))
+    	{
+    		pulseSize = this.pulsingSize;
+            if (pulseSize > 0.2F)
+            {
+                pulseSize = 0.2F - (pulseSize - 0.2F);
+            }
+    	}
+    	
+    	return (float)getEdad() * 0.01F + (pulseSize/4);
+    }
+    
+    @Override
+    protected boolean canBeTrappedInNet() 
+    {
+		return true;
+	}
+
     //only for debugging
     /*@Override
     public boolean interact(EntityPlayer entityplayer)

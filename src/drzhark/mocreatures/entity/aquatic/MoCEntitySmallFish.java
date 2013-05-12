@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.aquatic;
 
 
 import java.util.List;
@@ -233,13 +233,7 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
     {
         return -25;
     }
-    
-    @Override
-	public float getAdjustedZOffset()
-	{
-		return 0F;
-	}
-    
+      
     @Override
 	public float getAdjustedXOffset()
 	{

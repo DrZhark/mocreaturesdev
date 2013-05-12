@@ -2,8 +2,8 @@ package drzhark.mocreatures.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import drzhark.mocreatures.entity.passive.MoCEntityCricket;
-import drzhark.mocreatures.entity.passive.MoCEntityRoach;
+import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
+import drzhark.mocreatures.entity.ambient.MoCEntityRoach;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;

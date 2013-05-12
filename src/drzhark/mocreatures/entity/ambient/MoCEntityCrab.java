@@ -1,4 +1,4 @@
-package drzhark.mocreatures.entity.passive;
+package drzhark.mocreatures.entity.ambient;
 
 
 import drzhark.mocreatures.MoCreatures;
@@ -22,7 +22,7 @@ public class MoCEntityCrab extends MoCEntityAmbient
         
     }
 
-   
+    
 
 
     @Override
@@ -69,7 +69,7 @@ public class MoCEntityCrab extends MoCEntityAmbient
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-
+        
         if (MoCreatures.isServer())
         {
             if (fleeingTick == 3)
