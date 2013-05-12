@@ -1357,7 +1357,14 @@ public class MoCreatures {
             if (!vanillaOnly)
                 myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
             if (entityData.getType() != null)
+            {
+                // special case for ocelots since they are added to monster spawnlists as creature
+                if (entityData.getEntityName().equals("Ozelot"))
+                {
+                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
+                }
                 EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
+            }
             else
             {
                 // handle undefined types
