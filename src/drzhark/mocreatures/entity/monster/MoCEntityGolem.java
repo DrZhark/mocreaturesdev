@@ -255,7 +255,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         trock.setBehavior(type);//so the rock: 2 follows the EntityGolem  or 3 - gets around the golem
         
         //destroys the block that was already there
-        if (MoCTools.mobGriefing(worldObj)) worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], 0, 0, 3);
+        if (MoCTools.mobGriefing(worldObj) && MoCreatures.proxy.golemDestroyBlocks) worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], 0, 0, 3);
 
         //spawns the new TRock
         this.worldObj.spawnEntityInWorld(trock);

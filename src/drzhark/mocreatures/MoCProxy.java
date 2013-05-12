@@ -17,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -188,6 +189,9 @@ public class MoCProxy implements IGuiHandler {
     public boolean enableResetOwnership;
     public boolean elephantBulldozer;
 
+    // griefing options
+    public boolean golemDestroyBlocks;
+
     public int itemID;
     //new blocks IDs
     public int blockDirtID;
@@ -298,8 +302,8 @@ public class MoCProxy implements IGuiHandler {
     public static final String MOC_WRAITH_NAME = "Wraith";
     public static final String MOC_WWOLF_NAME = "WWolf";
 
-    private static final String MOD_CREATURES_FILE_ROOT = "MoCreatures" + File.separator + "Creatures" + File.separator;
-    private static final String MOD_BIOME_FILE_ROOT = "MoCreatures" + File.separator + "Biomes" + File.separator;
+    private static final String MOD_CREATURES_FILE_ROOT = File.separator + "Creatures" + File.separator;
+    private static final String MOD_BIOME_FILE_ROOT = File.separator + "Biomes" + File.separator;
 
     public static final String CATEGORY_MOC_GENERAL_SETTINGS = "global-settings";
     //public static final String CATEGORY_MOD_ENTITY_MAPPINGS = "mod-entity-mappings";
@@ -421,12 +425,12 @@ public class MoCProxy implements IGuiHandler {
         mocGlobalConfig.load();
         mocBiomeConfig.load();
         mocStructureConfig.load();
-        genModConfiguration(event);
+        genModConfiguration();
         this.readConfigValues();
         if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCProperties.cfg");
     }
 
-    public void genModConfiguration(FMLPreInitializationEvent event)
+    public void genModConfiguration()
     {
         mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, "Ant", EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Bear", new MoCEntityData(MoCEntityBear.class, "Bear", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "MOUNTAIN", "NORMAL"))));
@@ -436,7 +440,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Bird", new MoCEntityData(MoCEntityBird.class, "Bird", EnumCreatureType.creature, 15, 2, 3, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Boar", new MoCEntityData(MoCEntityBoar.class, "Boar", EnumCreatureType.creature, 8, 2, 2, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Bunny", new MoCEntityData(MoCEntityBunny.class, "Bunny", EnumCreatureType.creature, 10, 2, 3, 4, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "NORMAL", "WYVERNLAIR"))));
-        mocEntityMap.put("ButterFly", new MoCEntityData(MoCEntityButterfly.class, "Butterfly", EnumCreatureType.ambient, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("ButterFly", new MoCEntityData(MoCEntityButterfly.class, "ButterFly", EnumCreatureType.ambient, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Crab", new MoCEntityData(MoCEntityCrab.class, "Crab", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("BEACHES", "RIVER"))));
         mocEntityMap.put("Cricket", new MoCEntityData(MoCEntityCricket.class, "Cricket", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Crocodile", new MoCEntityData(MoCEntityCrocodile.class, "Crocodile", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
@@ -491,7 +495,7 @@ public class MoCProxy implements IGuiHandler {
         vanillaEntityMap.put("Ghast", new MoCEntityData(EntityGhast.class, "Ghast", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
         vanillaEntityMap.put("LavaSlime", new MoCEntityData(EntityMagmaCube.class, "LavaSlime", EnumCreatureType.monster, 1, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
         vanillaEntityMap.put("MushroomCow", new MoCEntityData(EntityMooshroom.class, "MushroomCow", EnumCreatureType.creature, 8, 1, 4, 4, new ArrayList(Arrays.asList("MUSHROOM"))));
-        vanillaEntityMap.put("Ozelot", new MoCEntityData(EntityOcelot.class, "Ozelot", EnumCreatureType.monster, 6, 1, 3, 3, new ArrayList(Arrays.asList("JUNGLE"))));
+        vanillaEntityMap.put("Ozelot", new MoCEntityData(EntityOcelot.class, "Ozelot", EnumCreatureType.creature, 2, 1, 1, 3, new ArrayList(Arrays.asList("JUNGLE"))));
         vanillaEntityMap.put("Pig", new MoCEntityData(EntityPig.class, "Pig", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         vanillaEntityMap.put("PigZombie", new MoCEntityData(EntityPigZombie.class, "PigZombie", EnumCreatureType.monster, 15, 4, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
         vanillaEntityMap.put("Sheep", new MoCEntityData(EntitySheep.class, "Sheep", EnumCreatureType.creature, 12, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
@@ -575,6 +579,7 @@ public class MoCProxy implements IGuiHandler {
         entityModKeyMap.put("minefantasy", "MineFantasy.cfg");
         entityModKeyMap.put("primitivemobs", "PrimitiveMobs.cfg");
         entityModKeyMap.put("atmosmobs", "AtmosMobs.cfg");
+        entityModKeyMap.put("farlanders", "Farlanders.cfg");
         entityModKeyMap.put("vanilla", "Vanilla.cfg");
         entityModKeyMap.put("undefined", "Undefined.cfg");
 
@@ -599,8 +604,8 @@ public class MoCProxy implements IGuiHandler {
                 }
                 List<String> values = new ArrayList(Arrays.asList(tag, configName));
                 modMapCat.put(keyEntry.getKey(), new MoCProperty(keyEntry.getKey(), values, Type.STRING));
-                biomeModMap.put(keyEntry.getKey(), new MoCBiomeModData(keyEntry.getKey(), tag, new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), MOD_BIOME_FILE_ROOT + configName))));
-                entityModMap.put(keyEntry.getKey(), new MoCEntityModData(keyEntry.getKey(), tag, new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), MOD_CREATURES_FILE_ROOT + configName))));
+                biomeModMap.put(keyEntry.getKey(), new MoCBiomeModData(keyEntry.getKey(), tag, new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_BIOME_FILE_ROOT + configName))));
+                entityModMap.put(keyEntry.getKey(), new MoCEntityModData(keyEntry.getKey(), tag, new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_CREATURES_FILE_ROOT + configName))));
                 if (debugLogging) MoCreatures.log.info("Added Mod Entity Mapping " + keyEntry.getKey() + " to file " + configName);
                 tagConfigMap.put(tag, biomeModMap.get(keyEntry.getKey()));
                 if (debugLogging) MoCreatures.log.info("Added Mod Biome Mapping " + keyEntry.getKey() + " with tag " + tag + " to file " + configName);
@@ -615,8 +620,10 @@ public class MoCProxy implements IGuiHandler {
             {
                 if (prop.valueList.size() == 2)
                 {
-                    biomeModMap.put(propEntry.getKey(), new MoCBiomeModData(propEntry.getKey(), prop.valueList.get(0), new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), MOD_BIOME_FILE_ROOT + prop.valueList.get(1)))));
+                    biomeModMap.put(propEntry.getKey(), new MoCBiomeModData(propEntry.getKey(), prop.valueList.get(0), new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_BIOME_FILE_ROOT + prop.valueList.get(1)))));
                     if (debugLogging) MoCreatures.log.info("Added Custom Mod Biome Mapping " + propEntry.getKey() + " with tag " + prop.valueList.get(0) + " to file " + prop.valueList.get(1));
+                    entityModMap.put(propEntry.getKey(), new MoCEntityModData(propEntry.getKey(), prop.valueList.get(0), new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_CREATURES_FILE_ROOT + prop.valueList.get(1)))));
+                    if (debugLogging) MoCreatures.log.info("Added Custom Mod Entity Mapping " + propEntry.getKey() + " with tag " + prop.valueList.get(0) + " to file " + prop.valueList.get(1));
                 }
             }
         }
@@ -688,7 +695,7 @@ public class MoCProxy implements IGuiHandler {
             } 
 
             entityName = (String)entry.getValue();
-            //if (debugLogging) MoCreatures.log.info("Found entityName "  + entityName);
+            if (debugLogging) MoCreatures.log.info("Found entityName "  + entityName + " with class " + clazz);
             if (entityName.contains("."))
             {
                 if ((entityName.indexOf(".") + 1) < entityName.length())
@@ -711,7 +718,7 @@ public class MoCProxy implements IGuiHandler {
                         entityData.setCanSpawn(false);
                     }
                 }
-                else if (IMob.class.isAssignableFrom(clazz) && (clazz != EntityMob.class) || entityliving.isCreatureType(EnumCreatureType.monster, true))
+                else if (((IMob.class.isAssignableFrom(clazz) || IRangedAttackMob.class.isAssignableFrom(clazz)) && (clazz != EntityMob.class)) || entityliving.isCreatureType(EnumCreatureType.monster, true))
                 {
                     creatureType = EnumCreatureType.monster;
                     entityData = new MoCEntityData(clazz, entityliving.entityId, creatureType, entityName);
@@ -720,7 +727,7 @@ public class MoCProxy implements IGuiHandler {
                         entityData.setCanSpawn(false);
                     }
                 }
-                else if (EntityAmbientCreature.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.ambient, true) || MoCEntityAmbient.class.isAssignableFrom(clazz))
+                else if (EntityAmbientCreature.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.ambient, true)) //|| MoCEntityAmbient.class.isAssignableFrom(clazz))
                 {
                     creatureType = EnumCreatureType.ambient;
                     entityData = new MoCEntityData(clazz, entityliving.entityId, creatureType, entityName);
@@ -759,7 +766,7 @@ public class MoCProxy implements IGuiHandler {
                 boolean undefined = true;
                 if (debugLogging) MoCreatures.log.info("Searching for mod " + entityClass + " belongs to...");
 
-                if (entityClass.contains("net.minecraft") || entityClass.toString().length() <= 3) // vanilla
+                if (entityClass.contains("net.minecraft.entity")|| entityClass.toString().length() <= 3) // vanilla
                 {
                     MoCEntityModData modData = entityModMap.get("vanilla");
                     if (debugLogging) MoCreatures.log.info("Matched mod " + "Vanilla to " + entityClass);
@@ -802,16 +809,18 @@ public class MoCProxy implements IGuiHandler {
                     String tokens[] = entityClass.split("\\.");
 
                     // no mapping for class in config so lets generate one
-                    if (tokens.length > 2)
+                    if (tokens.length >= 2)
                     {
                         String modKey = tokens[0];
-                        if (modKey.equalsIgnoreCase("mod") || modKey.equalsIgnoreCase("mods") || modKey.equalsIgnoreCase("mob") || modKey.equalsIgnoreCase("mobs"))
+                        if (modKey.equalsIgnoreCase("mod") || modKey.equalsIgnoreCase("mods") || modKey.equalsIgnoreCase("mob") || modKey.equalsIgnoreCase("mobs") || modKey.equalsIgnoreCase("com") || modKey.equalsIgnoreCase("coms"))
                             modKey = tokens[1];
+                        else if (entityClass.contains("net.minecraft") && tokens.length > 2)
+                            modKey = tokens[2];
                         String configName = modKey + ".cfg";
 
-                        biomeModMap.put(modKey, new MoCBiomeModData(modKey, modKey, new MoCConfiguration(new File(configPreEvent.getSuggestedConfigurationFile().getParent(), MOD_BIOME_FILE_ROOT + configName))));
+                        biomeModMap.put(modKey, new MoCBiomeModData(modKey, modKey, new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_BIOME_FILE_ROOT + configName))));
                         if (debugLogging) MoCreatures.log.info("AddedAutomatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
-                        entityModMap.put(modKey, new MoCEntityModData(modKey, modKey, new MoCConfiguration(new File(configPreEvent.getSuggestedConfigurationFile().getParent(), MOD_CREATURES_FILE_ROOT + configName))));
+                        entityModMap.put(modKey, new MoCEntityModData(modKey, modKey, new MoCConfiguration(new File(mocGlobalConfig.file.getParent(), MOD_CREATURES_FILE_ROOT + configName))));
                         if (debugLogging) MoCreatures.log.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
                         tagConfigMap.put(modKey, biomeModMap.get(modKey));
                         MoCConfigCategory modMapCat = mocGlobalConfig.getCategory(CATEGORY_MOD_MAPPINGS);
@@ -1014,7 +1023,7 @@ public class MoCProxy implements IGuiHandler {
             //mocGlobalConfig.save();
         }
         
-        mocGlobalConfig.addCustomCategoryComment("mod-biome-mappings", "Mod Biome Mappings\n" + 
+        mocGlobalConfig.addCustomCategoryComment("mod-mappings", "Mod Biome Mappings\n" + 
                 "You may change tag values but do NOT change the default keys since they are used to generate our defaults.\n" +
                 "For example, 'twilightforest=TL:TwilightForest.cfg' may be changed to 'twilightforest=TWL:TWL.cfg' but may NOT be changed to 'twilight=TWL:TWL.cfg'");
         // update tags in our defaults if necessary
@@ -1411,12 +1420,12 @@ public class MoCProxy implements IGuiHandler {
         allowInstaSpawn = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
         debugLogging = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", false, "Turns on verbose logging").getBoolean(false);
         worldGenCreatureSpawning = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);
-        maxMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMonsters", 250, "Max amount of monster.").getInt();
+        maxMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMonsters", 215, "Max amount of monster.").getInt();
         maxCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxCreatures", 250, "Max amount of animals.").getInt();
         maxAmbients = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbients", 100, "Max amount of ambients.").getInt();
         maxWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterCreatures", 60, "Max amount of watercreatures.").getInt();
         creatureSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", 50, "The amount of ticks it takes to spawn animals. A tick rate of 100 would cause Custom Spawner to spawn animals every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
-        monsterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnTickRate", 30, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
+        monsterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnTickRate", 50, "The amount of ticks it takes to spawn mobs. A tick rate of 100 would cause Custom Spawner to spawn mobs every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         ambientSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", 60, "The amount of ticks it takes to spawn ambients. A tick rate of 100 would cause Custom Spawner to spawn ambients every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 60, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
@@ -1456,7 +1465,7 @@ public class MoCProxy implements IGuiHandler {
         ogreAttackRange = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreAttackRange", 12, "The block radius where ogres 'smell' players").getInt();
         fireOgreChance = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreChance", 25, "The chance percentage of spawning Fire ogres in the Overworld").getInt();
         caveOgreChance = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreChance", 75, "The chance percentage of spawning Cave ogres at depth of 50 in the Overworld").getInt();
-
+        golemDestroyBlocks = mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", true, "Allows Big Golems to break blocks.").getBoolean(true);
         //blocks
         blockDirtID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", 200, "Basic block for terrain generation, needs to be less than 256").getInt();
         blockGrassID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "GrassBlockID", 201, "Basic block for terrain generation, needs to be less than 256").getInt();

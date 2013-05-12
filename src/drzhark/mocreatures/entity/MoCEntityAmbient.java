@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
@@ -1518,4 +1519,18 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 		
 		return false;
 	}
+
+    /**
+     * Returns true if the entity is of the @link{EnumCreatureType} provided
+     * @param type The EnumCreatureType type this entity is evaluating
+     * @param forSpawnCount If this is being invoked to check spawn count caps.
+     * @return If the creature is of the type provided
+     */
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount)
+    {
+        if (type == EnumCreatureType.ambient)
+            return true;
+        else return false;
+    }
 }

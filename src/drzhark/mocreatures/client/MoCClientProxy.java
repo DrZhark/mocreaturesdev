@@ -606,6 +606,8 @@ public class MoCClientProxy extends MoCProxy {
     public static MoCSettingInt fireOgreChanceS;
     public static WidgetInt caveOgreChanceW;
     public static WidgetInt fireOgreChanceW;
+    public static MoCSettingBoolean golemDestroyBlocksB;
+    public static WidgetBoolean golemDestroyBlocksW;
     
     public MoCSettings guiapiSettings;
     public ModSettingScreen MoCScreen;
@@ -737,6 +739,11 @@ public class MoCClientProxy extends MoCProxy {
 
     public void ConfigPostInit(FMLPostInitializationEvent event) {
         super.ConfigPostInit(event);
+        initGUI();
+    }
+
+    public void initGUI()
+    {
         MoCreatures.log.info("Initializing MoCreatures GUI API");
         // GUI API settings
         guiapiSettings = new MoCSettings("MoCreatures");
@@ -833,6 +840,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(fireOgreChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "fireOgreChance", fireOgreChance, 0, 1, 100));
         fireOgreChanceW = new WidgetInt(fireOgreChanceS, "Fire Ogre Chance");
         widgetMobSettingsColumns.add(fireOgreChanceW);
+        guiapiSettings.append(golemDestroyBlocksB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", golemDestroyBlocks));
+        golemDestroyBlocksW = new WidgetBoolean(golemDestroyBlocksB, "Golem Destroy Blocks?");
+        widgetMobSettingsColumns.add(golemDestroyBlocksW);
         //**********************************************************//
 
 
@@ -1518,10 +1528,15 @@ public class MoCClientProxy extends MoCProxy {
 
         MoCScreen = null;
         guiapiSettings = null;
-        super.resetAllData();
-        ConfigInit(configPreEvent);
-        ConfigPostInit(configPostEvent);
-        GuiModScreen.show(MoCClientProxy.instance.MoCScreen.theWidget);
+       // ConfigInit(configPreEvent);
+        //ConfigPostInit(configPostEvent);
+        genModConfiguration();
+        readConfigValues();
+        initGUI();
+        initializeBiomes();
+        initializeEntities();
+        MoCreatures.updateSettings();
+        GuiModScreen.show(MoCScreen.theWidget);
     }
 
     public void cancelReset()

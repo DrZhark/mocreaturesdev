@@ -1912,9 +1912,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         if (this.riddenByEntity != null)
             this.riddenByEntity.mountEntity(null);
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
+        if (getIsTamed() && this.health > 0)
         {
-        		return;
+            return;
         }
         super.setDead();
     }
