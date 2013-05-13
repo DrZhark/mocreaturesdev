@@ -11,7 +11,6 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 
-
 public class MoCEntityRoach extends MoCEntityInsect
 
 {
@@ -21,13 +20,11 @@ public class MoCEntityRoach extends MoCEntityInsect
         texture = MoCreatures.proxy.MODEL_TEXTURE + "roach.png";
     }
 
-    
     @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
 
-        //System.out.println("onLadder = " + isOnLadder() + " , server = "  + MoCreatures.isServer());
         if (MoCreatures.isServer())
         {
 
@@ -44,12 +41,9 @@ public class MoCEntityRoach extends MoCEntityInsect
                     runLikeHell(entityliving);
                 }
             }
-
-            
-
         }
     }
-    
+
     @Override
     public boolean entitiesToInclude(Entity entity)
     {
@@ -73,33 +67,16 @@ public class MoCEntityRoach extends MoCEntityInsect
     {
         return par1ItemStack != null && par1ItemStack.itemID == Item.rottenFlesh.itemID;
     }
-    
+
     @Override
     public boolean getIsFlying()
-    {	
-    	//return false;
+    {    
         return (dataWatcher.getWatchableObjectByte(22) == 1);
     }
-    
+
     @Override
     protected int getFlyingFreq()
     {
-    	return 300;
+        return 300;
     }
-    
-    /*public boolean climbing()
-    {
-    	if (isOnLadder())
-    	{
-    		System.out.println("roach on ladder , server = " + MoCreatures.isServer());
-    		return true;
-    	}
-        return false;
-    }*/
-
-    /*@Override
-    public boolean isMovementCeased()
-    {
-    	return true;
-    }*/
 }

@@ -32,36 +32,19 @@ public class MoCStructureData {
         {
             String structKey = "";
             switch (type) {
-                
-                case NETHER_BRIDGE :
-                {
-                    structKey = type.name();
-                    addStructToConfig(base, structKey);
-                    //}
-                    this.structures.put(type.name(), base);
-                    //}
-                    break;
-                }
-                case STRONGHOLD :
-                {
-                    break;
-                }
-                case SCATTERED_FEATURE : // handle witchhut
-                {
-                    structKey = type.name();
-                    addStructToConfig(base, structKey);
-                    break;
-                }
-                case MINESHAFT :
-                {
-                    MapGenMineshaft mineshaft = (MapGenMineshaft)base;
-                    break;
-                }
-                case VILLAGE :
-                {
-                    MapGenVillage village = (MapGenVillage)base;
-                    break;
-                }
+            case NETHER_BRIDGE :
+            {
+                structKey = type.name();
+                addStructToConfig(base, structKey);
+                this.structures.put(type.name(), base);
+                break;
+            }
+            case SCATTERED_FEATURE : // handle witchhut
+            {
+                structKey = type.name();
+                addStructToConfig(base, structKey);
+                break;
+            }
             default:
                 break;
             }
@@ -71,10 +54,11 @@ public class MoCStructureData {
     public void addStructToConfig(MapGenBase base, String structKey)
     {
         List spawnList = null;
-        if (structKey.equalsIgnoreCase("NETHER_BRIDGE"))
+        if (structKey.equalsIgnoreCase("NETHER_BRIDGE") && base instanceof MapGenNetherBridge)
             spawnList = ((MapGenNetherBridge)base).getSpawnList();
-        else if (structKey.equalsIgnoreCase("SCATTERED_FEATURE"))
+        else if (structKey.equalsIgnoreCase("SCATTERED_FEATURE") && base instanceof MapGenScatteredFeature)
             spawnList = ((MapGenScatteredFeature)base).getScatteredFeatureSpawnList();
+
         if (!MoCreatures.proxy.mocStructureConfig.hasCategory(structKey)) // populate default list
         {
             for (int i = 0; i < spawnList.size(); i++)
@@ -102,7 +86,8 @@ public class MoCStructureData {
                     {
                         prop.valueList.add(tag + "|" + entityData.getEntityName());
                     }
-                    else {
+                    else 
+                    {
                         cat.put(structKey, new MoCProperty(structKey, new ArrayList(Arrays.asList(tag + "|" + entityData.getEntityName())), Type.STRING));
                     }
                 }

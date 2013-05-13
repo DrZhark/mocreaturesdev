@@ -16,7 +16,6 @@ public class MoCEntityFXVanish extends EntityFX {
     private final double portalPosX;
     private final double portalPosY;
     private final double portalPosZ;
-    //private int textureChanger;
     private final boolean implode;
     private final float textureBrightness = 1.0F;
 
@@ -27,7 +26,6 @@ public class MoCEntityFXVanish extends EntityFX {
         this.particleRed = red;
         this.particleGreen = green;
         this.particleBlue = blue;
-
         this.motionX = par8;
         this.motionY = par10 * 5D;
         this.motionZ = par12;
@@ -36,34 +34,9 @@ public class MoCEntityFXVanish extends EntityFX {
         this.portalPosZ = this.posZ = par6;
         this.noClip = true;
         this.portalParticleScale = this.particleScale = this.rand.nextFloat() * 0.3F + 0.5F;
-
-        //this.setParticleTextureIndex(65);
-        //this.setParticleTextureIndex(partTexture);
-
-        //this.setSize(0.01F, 0.01F);
         this.implode = flag;
-
         this.particleMaxAge = (int) (Math.random() * 10.0D) + 70;
-
     }
-
- 
- 
-
-/*    @Override
-    public int getBrightnessForRender(float par1)
-    {
-        return 257;
-    }
-*/
-    
-  /*  @Override
-    public float getBrightness(float par1)
-    {
-        return 1.0F;
-    }
-*/
-   
 
     /**
      * sets which texture to use (2 = items.png)
@@ -83,7 +56,7 @@ public class MoCEntityFXVanish extends EntityFX {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        //textureChanger++;
+
         int speeder = 0;
         float sizeExp = 2.0F;
         if (implode)
@@ -104,31 +77,21 @@ public class MoCEntityFXVanish extends EntityFX {
         {
             this.setDead();
         }
-
     }
 
-    
-    
     @Override
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        //func_98187_b() = bindTexture();
-    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + "fxvanish.png");
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + "fxvanish.png");
         float scale = 0.1F * this.particleScale;
         float xPos = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) par2 - interpPosX);
         float yPos = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) par2 - interpPosY);
         float zPos = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) par2 - interpPosZ);
         float colorIntensity = 1.0F;
         par1Tessellator.setColorOpaque_F(this.particleRed * colorIntensity, this.particleGreen * colorIntensity, this.particleBlue * colorIntensity);//, 1.0F);
-
         par1Tessellator.addVertexWithUV((double) (xPos - par3 * scale - par6 * scale), (double) (yPos - par4 * scale), (double) (zPos - par5 * scale - par7 * scale), 0D, 1D);
         par1Tessellator.addVertexWithUV((double) (xPos - par3 * scale + par6 * scale), (double) (yPos + par4 * scale), (double) (zPos - par5 * scale + par7 * scale), 1D, 1D);
         par1Tessellator.addVertexWithUV((double) (xPos + par3 * scale + par6 * scale), (double) (yPos + par4 * scale), (double) (zPos + par5 * scale + par7 * scale), 1D, 0D);
         par1Tessellator.addVertexWithUV((double) (xPos + par3 * scale - par6 * scale), (double) (yPos - par4 * scale), (double) (zPos + par5 * scale - par7 * scale), 0D, 0D);
-
-        
     }
-    
-   
-
 }

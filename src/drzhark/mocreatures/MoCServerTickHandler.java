@@ -13,9 +13,8 @@ import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 import drzhark.mocreatures.item.MoCItemArmor;
 
-public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
+public class MoCServerTickHandler implements IScheduledTickHandler
 {
-
     private void onTickInGame()
     {
         if (MoCreatures.proxy.useCustomSpawner)
@@ -27,7 +26,6 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                 // ambient spawn tick
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.ambientSpawnTickRate == 0L) && MoCreatures.proxy.spawnAmbients && MoCreatures.proxy.maxAmbients > 0) 
                 {
-
                     int ambientSpawns = 0;
 
                     boolean spawnPassive = true;
@@ -36,7 +34,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                         spawnPassive = worldObj.isDaytime();
                     }
                     
-                    if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
                         ambientSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.ambient, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + ambientSpawns + " Ambients");
@@ -46,7 +44,6 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                 // water creature spawn tick
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.waterSpawnTickRate == 0L) && MoCreatures.proxy.spawnWaterCreatures && MoCreatures.proxy.maxWaterCreatures > 0) 
                 {
-
                     int waterSpawns = 0;
     
                     boolean spawnPassive = true;
@@ -55,41 +52,38 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                         spawnPassive = worldObj.isDaytime();
                     }
                     
-                    if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
                         waterSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.waterCreature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + waterSpawns + " Water Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + waterSpawns + " Water Creatures");
                     }
                 }
 
                 // creature spawn tick
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.creatureSpawnTickRate == 0L) && MoCreatures.proxy.spawnCreatures && MoCreatures.proxy.maxCreatures > 0) 
                 {
-
                     int animalSpawns = 0;
-    
                     boolean spawnPassive = true;
                     if (dimension == 0)
                     {
                         spawnPassive = worldObj.isDaytime();
                     }
                     
-                    if (worldObj.playerEntities.size() > 0 && spawnPassive) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
                         animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.creature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + animalSpawns + " Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + animalSpawns + " Creatures");
                     }
                 }
                 // monster spawn tick
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.monsterSpawnTickRate == 0L) && MoCreatures.proxy.spawnMonsters && worldObj.difficultySetting > 0 && MoCreatures.proxy.maxMonsters > 0) 
                 {
-
                     int mobSpawns = 0;
 
-                    if (worldObj.playerEntities.size() > 0 && !MoCreatures.proxy.disallowMonsterSpawningDuringDay) //&& worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")
+                    if (worldObj.playerEntities.size() > 0 && !MoCreatures.proxy.disallowMonsterSpawningDuringDay)
                     {
                         mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel);
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");// + ",  players on dimension " + dimension + " = " + playersInDimension );
+                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");
                     }
                 }
 
@@ -98,22 +92,16 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
                 {
                     if (worldObj.playerEntities.size() > 0)
                     {
-                        int numDespawns = MoCreatures.myCustomSpawner.despawnVanillaAnimals(worldObj, MoCreatures.proxy.despawnLightLevel);
+                        int numDespawns = MoCreatures.myCustomSpawner.despawnCreatures(worldObj, MoCreatures.proxy.despawnLightLevel, MoCreatures.proxy.keepVanillaOnlyWithLight);
                         if (MoCreatures.proxy.debugLogging)
                         {
-                            MoCreatures.log.info("Mo'Creatures DeSpawned " + numDespawns + " Vanilla Creatures");// + ",  players on dimension " + dimension + " = " + playersInDimension);
+                            MoCreatures.log.info("Mo'Creatures DeSpawned " + numDespawns + " Vanilla Creatures");
                         }
                     }
-                    
                 }
-
-                worldObj = null;
             }
         }
     }
-
-   
-    
 
     @Override
     public String getLabel()
@@ -124,7 +112,6 @@ public class MoCServerTickHandler implements IScheduledTickHandler//ITickHandler
     @Override
     public int nextTickSpacing()
     {
-
         return 20000;
     }
     

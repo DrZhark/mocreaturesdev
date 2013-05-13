@@ -109,7 +109,6 @@ public class MoCSounds {
     {
         if (MoCClientProxy.mc.sndManager == null)
         {
-            //System.out.println("No sound manager?");
             return;
         }
         //soundsLoaded = true;
@@ -126,10 +125,8 @@ public class MoCSounds {
 
     }
 
-    //private void installSound(String filename) 
     private void installSound(String filename, String filepath)
     {
-        //String filepath = "newsound/";
         File soundFile = new File(MoCClientProxy.mc.mcDataDir, "resources/" + filepath + filename);
 
         if (!soundFile.exists())

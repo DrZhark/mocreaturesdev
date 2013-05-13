@@ -23,51 +23,15 @@ public class MoCEntityBee extends MoCEntityInsect
     public MoCEntityBee(World world)
     {
         super(world);
-        //setSize(0.2F, 0.2F);
         health = 4;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "bee.png";
     }
-
-    /*@Override
-    public boolean isFlyer()
-    {
-        return true;
-    }
-    
-    @Override
-    public boolean isFlyerInsect()
-    {
-        return true;
-    }*/
-
-    //private int textCounter;
-
-    /**
-     * Overridden for the dynamic nightmare texture.
-     */
-    /*
-    public String getTexture()
-    {
-            //if (rand.nextInt(2)== 0) textCounter++;
-            textCounter++;
-            if (textCounter < 10) textCounter = 10;
-            if (textCounter > 29) textCounter = 10;
-            String textNumber = "" + textCounter;
-            textNumber = textNumber.substring(0,1);
-            return MoCreatures.proxy.MODEL_TEXTURE + "bee" + textNumber + ".png";
-
-    }*/
 
     @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
 
-        /*EntityPlayer ep2 = worldObj.getClosestPlayerToEntity(this, 3D);
-        if (ep2 != null)
-        {
-            //System.out.println("Am I mounting player? = " + this.ridingEntity != null + " is this server? = " + MoCreatures.isServer());
-        }*/
         if (MoCreatures.isServer())
         {
             EntityPlayer ep = worldObj.getClosestPlayerToEntity(this, 5D);
@@ -82,11 +46,6 @@ public class MoCEntityBee extends MoCEntityInsect
                 setIsFlying(false);
             }
         }
-
-        /*if (!hasPath() && !isMovementCeased() && entityToAttack == null)
-        {
-            updateWanderPath();
-        }*/
     }
 
     private String getMySound()
@@ -134,7 +93,6 @@ public class MoCEntityBee extends MoCEntityInsect
     @Override
     protected String getLivingSound()
     {
-        //System.out.println("sound playing");
         return null;
     }
 

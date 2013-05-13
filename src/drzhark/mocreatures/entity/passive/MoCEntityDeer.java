@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.World;
 
 public class MoCEntityDeer extends MoCEntityAnimal {
-    //public boolean textureSet;
+
     private float myMoveSpeed;
 
     public MoCEntityDeer(World world)
@@ -17,7 +17,6 @@ public class MoCEntityDeer extends MoCEntityAnimal {
         setEdad(75);
         setSize(0.9F, 1.3F);
         health = 10;
-        //textureSet = false;
         setAdult(true);
         myMoveSpeed = 1.7F;
         setTamed(false);
@@ -42,22 +41,6 @@ public class MoCEntityDeer extends MoCEntityAnimal {
                 setType(3);
             }
         }
-        /*if (getType() == 1)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "deer.png";
-            //health = 15;
-        } else if (getType() == 2)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "deerf.png";
-            //health = 15;
-        } else
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "deerb.png";
-            //health = 5;
-            setAdult(false);
-        }
-        
-        setMySpeed(false);*/
     }
 
     @Override
@@ -95,10 +78,6 @@ public class MoCEntityDeer extends MoCEntityAnimal {
     {
         return "deerdying";
     }
-
-    /*
-     * public int type { return(dataWatcher.getWatchableObjectInt(17)); }
-     */
 
     @Override
     protected int getDropItemId()
@@ -181,12 +160,6 @@ public class MoCEntityDeer extends MoCEntityAnimal {
         myMoveSpeed = f;
     }
 
-    /*public void setTypeInt(int i)
-    {
-        type = i;
-        selectType();
-    }
-    */
     @Override
     public float getMoveSpeed()
     {

@@ -265,7 +265,7 @@ public class MoCSettings extends ModSettings {
             }
             if (config != null)
                 config.save(); // save config
-            //biomeConfig.save();
+
             MoCreatures.proxy.mocGlobalConfig.save();
             MoCreatures.proxy.mocBiomeConfig.save();
             MoCreatures.proxy.readConfigValues();

@@ -24,8 +24,6 @@ public class MoCEntityFox extends MoCEntityAnimal {
     public MoCEntityFox(World world)
     {
         super(world);
-        //foxboolean = false;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fox.png";
         setSize(0.9F, 1.3F);
         health = 15;
         force = 2;
@@ -49,11 +47,11 @@ public class MoCEntityFox extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
-    	
+        checkSpawningBiome();
+        
         if (getType() == 0)
         {
-        	setType(1);
+            setType(1);
         }
     }   
     
@@ -231,7 +229,6 @@ public class MoCEntityFox extends MoCEntityAnimal {
     public int nameYOffset()
     {
         return -50;
-
     }
 
     @Override

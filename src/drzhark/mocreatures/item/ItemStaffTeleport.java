@@ -18,108 +18,80 @@ import drzhark.mocreatures.dimension.MoCDirectTeleporter;
 
 public class ItemStaffTeleport extends MoCItem
 {
+    public ItemStaffTeleport(int i)
+    {
+        super(i);
+        maxStackSize = 1;
+        setMaxDamage(128);
+        this.setCreativeTab(CreativeTabs.tabTools);
+    }
 
-	public ItemStaffTeleport(int i)
-	{
-		super(i);
-		maxStackSize = 1;
-		setMaxDamage(128);
-		this.setCreativeTab(CreativeTabs.tabTools);
+    private int portalPosX;
+    private int portalPosY;
+    private int portalPosZ;
+    private int portalDimension;
 
-	}
+    /**
+     * Returns True is the item is renderer in full 3D when hold.
+     */
+    @Override
+    public boolean isFull3D()
+    {
+        return true;
+    }
 
-	private int portalPosX;
-	private int portalPosY;
-	private int portalPosZ;
-	private int portalDimension;
+    /**
+     * returns the action that specifies what animation to play when the items
+     * is being used
+     */
+    @Override
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.block;
+    }
 
+    /**
+     * Called whenever this item is equipped and the right mouse button is
+     * pressed. Args: itemStack, world, entityPlayer
+     */
+    @Override
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer)
+    {
+        if (entityplayer.ridingEntity != null || entityplayer.riddenByEntity != null)
+        {
+            return par1ItemStack;
+        }
 
-	
-	/**
-	 * Returns True is the item is renderer in full 3D when hold.
-	 */
-	@Override
-	public boolean isFull3D()
-	{
-		return true;
-	}
+        double coordY = entityplayer.posY + (double)entityplayer.getEyeHeight();
+        double coordZ = entityplayer.posZ;
+        double coordX = entityplayer.posX;
+        for (int x = 4; x < 128; x++)
+        {
+            double newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * x;
+            double newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
+            double newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
+            int iTarget = entityplayer.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
+            if (iTarget != 0)
+            {
+                newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1);
+                newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
+                newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
 
-	/**
-	 * returns the action that specifies what animation to play when the items
-	 * is being used
-	 */
-	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack)
-	{
-		return EnumAction.block;
-	}
+                if (MoCreatures.isServer())
+                {
+                    EntityPlayerMP thePlayer = (EntityPlayerMP) entityplayer;
+                    thePlayer.playerNetServerHandler.setPlayerLocation((double)newPosX, (double)newPosY, (double)newPosZ, entityplayer.rotationYaw, entityplayer.rotationPitch);
+                    MoCTools.playCustomSound(entityplayer, "appearmagic", entityplayer.worldObj);
+                }
+                MoCreatures.proxy.teleportFX(entityplayer);
+                entityplayer.setItemInUse(par1ItemStack, 200);
+                par1ItemStack.damageItem(1, entityplayer);
 
-	/**
-	 * Called whenever this item is equipped and the right mouse button is
-	 * pressed. Args: itemStack, world, entityPlayer
-	 */
-	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer)
-	{
-		/*if(!MoCreatures.isServer())
-		{
-			return par1ItemStack;
-		}*/
+                return par1ItemStack;
+            }
+        }
 
-		if (entityplayer.ridingEntity != null || entityplayer.riddenByEntity != null)
-		{
-
-			return par1ItemStack;
-		}
-		
-		
-			
-		
-    	double coordY = entityplayer.posY + (double)entityplayer.getEyeHeight();
-    	double coordZ = entityplayer.posZ;
-    	double coordX = entityplayer.posX;
-		for (int x = 4; x < 128; x++)
-		{
-			
-			
-			double newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * x;
-    		double newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
-    		double newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
-    		int iTarget = entityplayer.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
-		        if (iTarget != 0)
-		        {
-		        	newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1);
-	    			newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
-	    			newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
-	    			
-	    			if (MoCreatures.isServer())
-	    			{
-	    				EntityPlayerMP thePlayer = (EntityPlayerMP) entityplayer;
-				        thePlayer.playerNetServerHandler.setPlayerLocation((double)newPosX, (double)newPosY, (double)newPosZ, entityplayer.rotationYaw, entityplayer.rotationPitch);
-				        MoCTools.playCustomSound(entityplayer, "appearmagic", entityplayer.worldObj);
-	    			}
-	    			MoCreatures.proxy.teleportFX(entityplayer);
-			        entityplayer.setItemInUse(par1ItemStack, 200);
-			        par1ItemStack.damageItem(1, entityplayer);
-				     
-			        return par1ItemStack;
-		        }
-		}
-		
-		entityplayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
-		
-		return par1ItemStack;
-	}
-
-	
-
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		
-	}
-
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		
-	}
+        entityplayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+        return par1ItemStack;
+    }
 }

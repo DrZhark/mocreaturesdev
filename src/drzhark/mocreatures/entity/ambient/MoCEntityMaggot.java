@@ -7,7 +7,6 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 
 public class MoCEntityMaggot extends MoCEntityAmbient
-
 {
     public MoCEntityMaggot(World world)
     {
@@ -17,7 +16,6 @@ public class MoCEntityMaggot extends MoCEntityAmbient
         texture = MoCreatures.proxy.MODEL_TEXTURE + "maggot.png";
     }
 
-   
     @Override
     public int getMaxHealth()
     {
@@ -28,19 +26,6 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     public float getMoveSpeed()
     {
         return 0.15F;
-    }
-
-     
-
-    @Override
-    public void onLivingUpdate()
-    {
-        super.onLivingUpdate();
-
-        if (!worldObj.isRemote)
-        {
-
-        }
     }
 
     @Override
@@ -69,5 +54,5 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     protected void jump()
     {
     }
-    
+
 }

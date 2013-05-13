@@ -26,11 +26,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
         super(world);
         setSize(1.5F, 0.8F);
         setEdad(80 + rand.nextInt(100));
-        //setMaxHealth(30);
         health = 30;
-        // unused_flag = true;
-        // moveSpeed = 0.9F;
-
     }
 
     @Override
@@ -64,8 +60,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
                 setType(6);
             }
         }
-
-
     }
 
     @Override
@@ -183,14 +177,12 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
 
     public void setIsHungry(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setHasEaten(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
@@ -229,10 +221,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     {
         return riddenByEntity == null;
     }
-
-    /*
-     * @Override protected boolean canDespawn() { return !getIsTamed(); }
-     */
 
     @Override
     protected Entity findPlayerToAttack()
@@ -384,16 +372,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             return true;
         }
-        /*if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-        {
-            if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }
-            return true;
-        }*/
-        //if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == Item.pickaxeDiamond.itemID) || (itemstack.itemID == Item.pickaxeWood.itemID) || (itemstack.itemID == Item.pickaxeStone.itemID) || (itemstack.itemID == Item.pickaxeIron.itemID) || (itemstack.itemID == Item.pickaxeGold.itemID))) { return true; }
         if (riddenByEntity == null)
         {
             entityplayer.rotationYaw = rotationYaw;
@@ -416,19 +394,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     {
         super.onLivingUpdate();
 
-        //debugging purposes
-        /*EntityPlayer ep = worldObj.getClosestPlayerToEntity(this, 6D);
-        if (ep != null)
-        {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-            {
-                //System.out.println("Server mounting entity = " + this.riddenByEntity);
-            }else
-            {
-                //System.out.println("Client mounting entity = " + this.riddenByEntity);
-            }
-        }*/
-
         if (MoCreatures.isServer())
         {
             if (!getIsAdult() && (rand.nextInt(50) == 0))
@@ -443,7 +408,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
             {
                 setIsHungry(true);
             }
-            // Riding();
+
             if ((riddenByEntity == null) && (deathTime == 0) && (!getIsTamed() || getIsHungry()))
             {
                 EntityItem entityitem = getClosestFish(this, 12D);
@@ -513,7 +478,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
                 break;
             }
         }
-
     }
 
     public boolean ReadyforParenting(MoCEntityDolphin entitydolphin)
@@ -554,5 +518,4 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("DisplayName", getDisplayName());
     }
-
 }

@@ -22,9 +22,6 @@ public class MoCEntityCrab extends MoCEntityAmbient
         
     }
 
-    
-
-
     @Override
     public int getMaxHealth()
     {
@@ -69,12 +66,12 @@ public class MoCEntityCrab extends MoCEntityAmbient
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        
+
         if (MoCreatures.isServer())
         {
             if (fleeingTick == 3)
             {
-            	MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
             }
         }
     }
@@ -83,8 +80,6 @@ public class MoCEntityCrab extends MoCEntityAmbient
     protected void fall(float f)
     {
     }
-
-   
 
     @Override
     public void performAnimation(int animationType)
@@ -121,7 +116,7 @@ public class MoCEntityCrab extends MoCEntityAmbient
     @Override
     public float getSizeFactor() 
     {   
-		return 0.7F * (float)getEdad() * 0.01F;
+        return 0.7F * (float)getEdad() * 0.01F;
     }
     
     @Override
@@ -132,7 +127,7 @@ public class MoCEntityCrab extends MoCEntityAmbient
     
     public boolean isFleeing()
     {
-    	return this.fleeingTick != 0;
+        return this.fleeingTick != 0;
     }
     
     /**
@@ -145,8 +140,8 @@ public class MoCEntityCrab extends MoCEntityAmbient
     
     protected boolean canBeTrappedInNet() 
     {
-		return true;
-	}
+        return true;
+    }
     
     @Override
     public boolean renderName()

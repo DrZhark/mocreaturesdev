@@ -45,7 +45,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         outOfWater = 0;
         setTamed(false);
         setTemper(50);
-        //selectType();
     }
 
     /**
@@ -61,27 +60,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void initCreature()
     {
-    	selectType();
-    	super.initCreature();
-    }
-    /**
-     * Forge methods to send the type int to client from server
-     */
-    /*
-    @Override
-    public void writeSpawnData(ByteArrayDataOutput data)
-    {
-        data.writeInt(type);
-        
-    }
-
-    @Override
-    public void readSpawnData(ByteArrayDataInput data)
-    {
-        type = data.readInt();
         selectType();
+        super.initCreature();
     }
-     */
 
     @Override
     protected void entityInit()
@@ -141,14 +122,12 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     public void setTemper(int i)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(15, Integer.valueOf(i));
     }
 
     @Override
     public void setTamed(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(16, Byte.valueOf(input));
     }
@@ -156,27 +135,23 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void setName(String name)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(17, String.valueOf(name));
     }
 
     @Override
     public void setAdult(boolean flag)
     {
-        //if (!MoCreatures.isServer()) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(18, Byte.valueOf(input));
     }
 
     public void setEdad(int i)
     {
-        //if (!MoCreatures.isServer()) return;
         dataWatcher.updateObject(19, Integer.valueOf(i));
     }
 
     public void setType(int i)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(20, Integer.valueOf(i));
     }
 
@@ -211,7 +186,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     public void faceItem(int i, int j, int k, float f)
     {
-        //System.out.println("faceItem " + this.getName());
         double d = i - posX;
         double d1 = k - posZ;
         double d2 = j - posY;
@@ -238,17 +212,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     protected void playStepSound(int par1, int par2, int par3, int par4)
     {
         // TODO make the sounds
-
     }
-
-    /*@Override
-    protected void fall(float f)
-    {
-        if (!isInWater())
-        {
-            super.fall(f);
-        }
-    }*/
 
     @Override
     protected void fall(float f)
@@ -320,7 +284,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     public boolean gettingOutOfWater()
     {
-        //System.out.println("gettingOutOfWater() " + this.getName());
         int i = (int) posX;
         int j = (int) posY;
         int k = (int) posZ;
@@ -359,14 +322,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void makeEntityJump()
     {
-        /*if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-        {
-            //System.out.println("Server jumping entity = " + this.entityId);
-        }else
-        {
-            //System.out.println("Client jumping entity = " + this.entityId);
-        }*/
-        //System.out.println("makeEntityJump() " + this.toString() + " getIsJumping() = " + getIsJumping());
         this.jumpPending = true;
     }
 
@@ -381,26 +336,19 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         if (riddenByEntity == null)
         {
-            //System.out.println(this.getName() + " riddenByEntity is NULL");
             super.moveEntityWithHeading(f, f1);
         }
         if ((riddenByEntity != null) && !getIsTamed() && !isSwimming())
         {
-            //System.out.println(this.getName() + " SETTING MOUNT TO NULL!!");
             riddenByEntity.mountEntity(null);
             return;
         }
 
         if ((riddenByEntity != null) && !getIsTamed())
         {
-            //if ((rand.nextInt(5) == 0) && !maJump)
             if ((rand.nextInt(5) == 0) && !getIsJumping() && jumpPending)
             {
-                //motionY += 0.4D;
-                //maJump = true;
-                //System.out.println("moveEntitywithHeading " + this.getName() + " is jumping!!");
                 motionY += getCustomJump();
-                //System.out.println(this.toString() + " setIsJumping = true");
                 setIsJumping(true);
                 jumpPending = false;
             }
@@ -411,7 +359,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             }
             if (MoCreatures.isServer())
             {
-                //System.out.println("moveEntitywithHeading " + this.getName() + " moveEntity, IS NOT TAMED!");
                 moveEntity(motionX, motionY, motionZ);
             }
             if (MoCreatures.isServer() && rand.nextInt(50) == 0)
@@ -424,7 +371,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             }
             if (onGround)
             {
-                //maJump = false;
                 setIsJumping(false);
             }
             if (MoCreatures.isServer())
@@ -436,21 +382,13 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                 }
                 if (rand.nextInt(chance * 8) == 0)
                 {
-                    //System.out.println("moveEntitywithHeading SETTING TAMED TO TRUE!!");
-                    //MoCreatures.proxy.setName((EntityPlayer)riddenByEntity, this);
-                    //TODO NAMER
-                    //setTamed(true);
-                    //MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) riddenByEntity, this.entityId);
                     MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, this);
                 }
 
             }
-
         }
         else if ((riddenByEntity != null) && getIsTamed())// && isSwimming())
         {
-            //System.out.println("motx = " + motionX + ", motY = " + motionY + ", motZ = " + motionZ);
-            //boundingBox.maxY = riddenByEntity.boundingBox.maxY;
             motionX += riddenByEntity.motionX * (getCustomSpeed() / 5D);
             motionZ += riddenByEntity.motionZ * (getCustomSpeed() / 5D);
 
@@ -465,11 +403,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                 divePending = false;
                 motionY -= 0.3D;
             }
-            // not needed ?
-            if (onGround)
-            {
-                //System.out.println(this.getName() + " is on Ground");
-            }
+
             if (motionY > 0.01D && !isSwimming())
             {
                 motionY = -0.01D;
@@ -477,10 +411,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             rotationPitch = riddenByEntity.rotationPitch * 0.5F;
             prevRotationYaw = rotationYaw = riddenByEntity.rotationYaw;
             setRotation(rotationYaw, rotationPitch);
-            //moveEntity(motionX, motionY, motionZ);
+
             if (MoCreatures.isServer())
             {
-                //    System.out.println(this.getName() + " SERVER moveEntity, IS TAMED!");
                 moveEntity(motionX, motionY, motionZ);
             }
 
@@ -499,8 +432,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
         this.limbYaw += (f4 - this.limbYaw) * 0.4F;
         this.limbSwing += this.limbYaw;
-        
-
     }
 
     protected boolean MoveToNextEntity(Entity entity)
@@ -584,16 +515,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     }
 
-    /*
-     * public boolean stuckInWater() { float distY =
-     * MoCTools.distanceToSurface(this); //System.out.println("DistY = " + distY);
-     * return ((isInsideOfMaterial(Material.water)) && onGround && (distY >2));
-     * }
-     */
-
     public void floating()
     {
-
         float distY = MoCTools.distanceToSurface(this);
 
         if (riddenByEntity != null)
@@ -606,13 +529,11 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             else
             {
                 motionY = -0.008D;
-                // motionY *= 0.6D;
             }
             return;
         }
 
-        if ((entityToAttack != null && ((entityToAttack.posY < (posY - 0.5D)) && getDistanceToEntity(entityToAttack) < 10F))) // ||
-                                                                                                                                // caughtPrey)
+        if ((entityToAttack != null && ((entityToAttack.posY < (posY - 0.5D)) && getDistanceToEntity(entityToAttack) < 10F)))
         {
             if (motionY < -0.1)
             {
@@ -627,7 +548,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             {
                 motionY = -0.05;
             }
-
         }
         else
         {
@@ -672,19 +592,13 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && (rand.nextInt(10) == 0))
                     {
-                        //attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity),((EntityMob) entity).attackStrength);
-                    	attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), ((EntityMob)entity).getAttackStrength(this));
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), ((EntityMob)entity).getAttackStrength(this));
                     }
                 }
-
             }
             if (entityplayer.isSneaking())
             {
-                //if (!worldObj.isRemote)
-                //{
-            	this.makeEntityDive();
-                //entityplayer.mountEntity(null);
-                //}
+                this.makeEntityDive();
             }
         }
     }
@@ -698,23 +612,23 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void onLivingUpdate()
     {
-    	if (MoCreatures.isServer())
-    	{
-    		if (this.riddenByEntity != null)
-    		{
-    			Riding();
-    			mountCount = 1;
-    		}
-    		
-    		if (mountCount > 0)
-    		{
-    			if (++mountCount > 50)
-    			{
-    				mountCount = 0;
-    			}
-    		}
-    		
-    		if (getIsTamed() && rand.nextInt(100) == 0)
+        if (MoCreatures.isServer())
+        {
+            if (this.riddenByEntity != null)
+            {
+                Riding();
+                mountCount = 1;
+            }
+
+            if (mountCount > 0)
+            {
+                if (++mountCount > 50)
+                {
+                    mountCount = 0;
+                }
+            }
+            
+            if (getIsTamed() && rand.nextInt(100) == 0)
             {
                 MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
             }
@@ -726,51 +640,43 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             
             if (isFisheable() && !fishHooked && rand.nextInt(30) == 0)
             {
-            	getFished();
-    	}
-    	
+                getFished();
+            }
+
             if (fishHooked && rand.nextInt(200) == 0)
             {
-            	fishHooked = false;
-            	
+                fishHooked = false;
+                
                 List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(2, 2, 2));
-        		for (int i = 0; i < list.size(); i++)
-        		{
-        			Entity entity1 = (Entity) list.get(i);
-		
-        			if (entity1 instanceof EntityFishHook)
-        			{
-        				if (((EntityFishHook)entity1).bobber == this)
-        				{
-        					((EntityFishHook)entity1).bobber = null;
-        				}
-    	}
-    	
-        		}
-            	
-            }
-    	}
-		
-    	if (isNotScared() && fleeingTick > 0)
-		{
-			fleeingTick = 0;
-		}
+                for (int i = 0; i < list.size(); i++)
+                {
+                    Entity entity1 = (Entity) list.get(i);
         
+                    if (entity1 instanceof EntityFishHook)
+                    {
+                        if (((EntityFishHook)entity1).bobber == this)
+                        {
+                            ((EntityFishHook)entity1).bobber = null;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isNotScared() && fleeingTick > 0)
+        {
+            fleeingTick = 0;
+        }
 
         moveSpeed = getMoveSpeed();
 
         if (isSwimming())
         {
             floating();
-            //Riding();
             outOfWater = 0;
         }
         else
         {
-        	//prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
-        	//rotationPitch = prevRotationPitch;
-            //    System.out.println("out of water");
-            // since Riding() is not being called, we must watch for player dismounts
             if (this.riddenByEntity != null)
             {
                 if (this.riddenByEntity.isSneaking())
@@ -785,21 +691,12 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                 setPathToEntity(null);
             }
             if (outOfWater > 100 && (outOfWater % 20) == 0)
-
-            // if((rand.nextInt(20) == 0) && (riddenByEntity == null) &&
-            // !worldObj.multiplayerWorld)
             {
-                // outOfWater++;
-                motionY += 0.3D;// + (outOfWater / 30);
+                motionY += 0.3D;
                 motionX = (float) (Math.random() * 0.2D - 0.1D);
                 motionZ = (float) (Math.random() * 0.2D - 0.1D);
                 attackEntityFrom(DamageSource.drown, 1);
             }
-            /*
-             * if((health <= 0) || (!isInWater() && (riddenByEntity == null))) {
-             * isJumping = false; moveStrafing = 0.0F; moveForward = 0.0F;
-             * randomYawVelocity = 0.0F; }
-             */
         }
 
         if (!hasPath() && riddenByEntity == null && !isMovementCeased() && entityToAttack == null)
@@ -816,9 +713,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         }
         else
         {
-
             divingCount++;
-            if (divingCount > 100 || riddenByEntity != null)// || !hasPath())
+            if (divingCount > 100 || riddenByEntity != null)
             {
                 diving = false;
                 divingCount = 0;
@@ -854,7 +750,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         setName(nbttagcompound.getString("Name"));
         setType(nbttagcompound.getInteger("TypeInt"));
         setOwner(nbttagcompound.getString("Owner"));
-        //selectType();
     }
 
     /**
@@ -870,7 +765,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     public void setDisplayName(boolean flag)
     {
-
     }
 
     public void setTypeInt(int i)
@@ -918,7 +812,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                 this.entityAge = 0;
             }
         }
-
     }
 
     public float getMoveSpeed()
@@ -1002,11 +895,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         this.dataWatcher.updateObject(21, par1Str);
     }
 
-    /*public EntityLiving getOwner()
-    {
-        return this.worldObj.getPlayerEntityByName(this.getOwnerName());
-    }*/
-
     @Override
     public void onDeath(DamageSource damagesource)
     {
@@ -1036,7 +924,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         //to prevent tamed aquatics from getting block damage
         if (getIsTamed() && damagesource.getDamageType().equalsIgnoreCase("inWall"))
         {
-        	return false;
+            return false;
         }
         if (MoCreatures.isServer() && getIsTamed())
         {
@@ -1052,55 +940,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-      //before ownership check 
-      		if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) 
-      				&& MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
-      		{
-      			if (--itemstack.stackSize == 0)
-      			{
-      				entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-      			}
-      			if (MoCreatures.isServer())
-      			{
-      				if (MoCreatures.proxy.enableOwnership) 
-      				{
-      					EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
-      					if (epOwner != null)
-      					{
-      						MoCTools.reduceTamedByPlayer(epOwner);
-      					}
-      					else
-      					{
-      						MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
-      					}
-      				}
-      				this.setOwner("");
-      			}
-      			return true;
-      		}
-      		
-        //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
-
-        //changes name
-        if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-        {
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-            //TODO NAMER
-            /*if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }*/
-            return true;
-        }
-
-        //sets it free, untamed
-        if ((itemstack != null) && getIsTamed() 
-                && ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
+        //before ownership check 
+        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) && MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1108,20 +949,55 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             }
             if (MoCreatures.isServer())
             {
-                        
+                if (MoCreatures.proxy.enableOwnership) 
+                {
+                    EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
+                    if (epOwner != null)
+                    {
+                        MoCTools.reduceTamedByPlayer(epOwner);
+                    }
+                    else
+                    {
+                        MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
+                    }
+                }
+                this.setOwner("");
+            }
+            return true;
+        }
+        //if the player interacting is not the owner, do nothing!
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
+    
+        //changes name
+        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
+        {
+            if (MoCreatures.isServer())
+            {
+                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+            }
+            return true;
+        }
+
+        //sets it free, untamed
+        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
+        {
+            if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+            if (MoCreatures.isServer())
+            {
                 if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 this.setOwner("");
                 this.setName("");
                 this.dropMyStuff();
                 this.setTamed(false);
             }
-                    
             return true;
         }
 
         //removes owner, any other player can claim it by renaming it
-        if ((itemstack != null) && getIsTamed() 
-                        && ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
+        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1129,14 +1005,12 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             }
             if (MoCreatures.isServer())
             {
-                        
                 if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 this.setOwner("");
             }
-                        
             return true;
         }
-                
+
         if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
         {
             if (--itemstack.stackSize == 0)
@@ -1153,14 +1027,14 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
         if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
         {
-        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-        	if (MoCreatures.isServer())
-        	{
-        		MoCTools.dropFishnet(this);
-        		this.isDead = true;
-        	}
-        	
-        	return true;
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if (MoCreatures.isServer())
+            {
+                MoCTools.dropFishnet(this);
+                this.isDead = true;
+            }
+
+            return true;
         }
 
         return false;
@@ -1173,7 +1047,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
     private void dropMyStuff() {
         // TODO Auto-generated method stub
-        
     }
 
     /**
@@ -1186,137 +1059,131 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         return false;
     }
-    
+
     @Override
     public void setArmorType(byte i) {}
-    
+
  // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
     public void setDead()
     {
         if (this.riddenByEntity != null)
             this.riddenByEntity.mountEntity(null);
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)//removing server check causes dupes in client
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
         {
-        		return;
+            return;
         }
         super.setDead();
     }
-    
+
     @Override
     public void dismountEntity() 
-	{
-		if (MoCreatures.isServer() && this.riddenByEntity != null)
-		{
-			this.riddenByEntity.mountEntity(null);
-			this.riddenByEntity = null;
-		}
-	}
+    {
+        if (MoCreatures.isServer() && this.riddenByEntity != null)
+        {
+            this.riddenByEntity.mountEntity(null);
+            this.riddenByEntity = null;
+        }
+    }
+
+    @Override
+    public int pitchRotationOffset() {
+        return 0;
+    }
     
     @Override
-	public int pitchRotationOffset() {
-		return 0;
-	}
-    
-    @Override
-	public int rollRotationOffset() 
-	{
-		return 0;
-	}
-    
+    public int rollRotationOffset() 
+    {
+        return 0;
+    }
+
     /**
      * The act of getting Hooked into a fish Hook.
      */
     private void getFished()
     {
-    	EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 18D);
+        EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 18D);
         if (entityplayer1 != null)
         {
-        	EntityFishHook fishHook = entityplayer1.fishEntity;
-        	if (fishHook != null  && fishHook.bobber == null)
-        	{
-        		float f = fishHook.getDistanceToEntity(this);
-				if (f > 1)
-				{
-					MoCTools.getPathToEntity(this, fishHook, f);
-				}
-				else
-				{
-					fishHook.bobber = this;
-					fishHooked = true;
-				}
-        	}    
+            EntityFishHook fishHook = entityplayer1.fishEntity;
+            if (fishHook != null  && fishHook.bobber == null)
+            {
+                float f = fishHook.getDistanceToEntity(this);
+                if (f > 1)
+                {
+                    MoCTools.getPathToEntity(this, fishHook, f);
+                }
+                else
+                {
+                    fishHook.bobber = this;
+                    fishHooked = true;
+                }
+            }    
         }
     }
-    
+
     /**
      * Is this aquatic entity prone to be fished with a fish Hook?
      * @return
      */
     protected boolean isFisheable()
     {
-    	return false;
+        return false;
     }
-    
+
     @Override
-	public int yawRotationOffset()
-	{
-		return 0;
-	}
-    
+    public int yawRotationOffset()
+    {
+        return 0;
+    }
+
     @Override
-	public float getAdjustedZOffset()
-	{
-		return 0F;
-	}
-    
+    public float getAdjustedZOffset()
+    {
+        return 0F;
+    }
+
     @Override
-	public float getAdjustedXOffset()
-	{
-		return 0F;
-	}
-    
+    public float getAdjustedXOffset()
+    {
+        return 0F;
+    }
+
     /**
-	 * Finds and entity described in entitiesToInclude at d distance
-	 * 
-	 * @param d
-	 * @return
-	 */
-	protected EntityLiving getBoogey(double d)
-	{
-		double d1 = -1D;
-		EntityLiving entityliving = null;
-		List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
-		for (int i = 0; i < list.size(); i++)
-		{
-			Entity entity = (Entity) list.get(i);
-			if (entitiesToInclude(entity))
-			{
-				entityliving = (EntityLiving) entity;
-			}
-		}
-		return entityliving;
-	}
+     * Finds and entity described in entitiesToInclude at d distance
+     * 
+     * @param d
+     * @return
+     */
+    protected EntityLiving getBoogey(double d)
+    {
+        double d1 = -1D;
+        EntityLiving entityliving = null;
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
+        for (int i = 0; i < list.size(); i++)
+        {
+            Entity entity = (Entity) list.get(i);
+            if (entitiesToInclude(entity))
+            {
+                entityliving = (EntityLiving) entity;
+            }
+        }
+        return entityliving;
+    }
 
-	/**
-	 * Used in getBoogey to specify what kind of entity to look for
-	 * 
-	 * @param entity
-	 * @return
-	 */
-	public boolean entitiesToInclude(Entity entity)
-	{
-		return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D))
+    /**
+     * Used in getBoogey to specify what kind of entity to look for
+     * 
+     * @param entity
+     * @return
+     */
+    public boolean entitiesToInclude(Entity entity)
+    {
+        return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
+    }
 
-		);
-	}
-	
-	public boolean isNotScared()
-	{
-		return false;
-	}
-	
-	
-	
-
+    public boolean isNotScared()
+    {
+        return false;
+    }
 }

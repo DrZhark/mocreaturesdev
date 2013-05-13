@@ -7,15 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class MoCEntityDragonfly extends MoCEntityInsect
-
 {
     private int soundCount;
 
     public MoCEntityDragonfly(World world)
     {
         super(world);
-        //setSize(0.2F, 0.2F);
-        //health = 2;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "dragonflya.png";
     }
 
@@ -64,27 +61,10 @@ public class MoCEntityDragonfly extends MoCEntityInsect
         }
     }
 
-    /*@Override
-    public boolean isFlyer()
-    {
-        return true;
-    }
-    
-    @Override
-    public boolean isFlyerInsect()
-    {
-        return true;
-    }*/
-
     @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-
-        /*if (!hasPath() && !isMovementCeased() && entityToAttack == null)
-        {
-            updateWanderPath();
-        }*/
 
         if (MoCreatures.isServer())
         {
@@ -100,7 +80,6 @@ public class MoCEntityDragonfly extends MoCEntityInsect
                 setIsFlying(false);
             }
         }
-
     }
 
     @Override

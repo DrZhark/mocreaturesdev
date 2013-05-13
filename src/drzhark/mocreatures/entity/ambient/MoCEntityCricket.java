@@ -30,7 +30,6 @@ public class MoCEntityCricket extends MoCEntityInsect
             motionX *= 5D;
             motionZ *= 5D;
             jumpCounter = 1;
-            //setPathToEntity(null);
         }
         super.updateEntityActionState();
     }
@@ -50,7 +49,6 @@ public class MoCEntityCricket extends MoCEntityInsect
                 setType(2);
             }
         }
-
     }
 
     @Override
@@ -71,10 +69,6 @@ public class MoCEntityCricket extends MoCEntityInsect
     {
         super.onLivingUpdate();
 
-        /*if (getIsFlying() && !hasPath() && !isMovementCeased() && entityToAttack == null)
-        {
-            updateWanderPath();
-        }*/
         if (MoCreatures.isServer())
         {
             if (getIsFlying() && rand.nextInt(50) == 0)
@@ -87,7 +81,6 @@ public class MoCEntityCricket extends MoCEntityInsect
                 EntityPlayer ep = worldObj.getClosestPlayerToEntity(this, 5D);
                 if (ep != null && --soundCounter == -1)
                 {
-                    //System.out.println("sound playing cricket flying");
                     MoCTools.playCustomSound(this, "cricketfly", this.worldObj);
                     soundCounter = 10;
                 }
@@ -106,28 +99,7 @@ public class MoCEntityCricket extends MoCEntityInsect
             {
                 jumpCounter = 0;
             }
-
         }
-
-        /*if (!worldObj.isRemote)
-        {
-            if (jumpCounter > 0 && ++jumpCounter > 30)
-            {
-                jumpCounter = 0;
-            }
-                
-            if (getIsFlying() && rand.nextInt(50) == 0 )
-            {
-                setIsFlying(false);
-            }
-            
-            EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 3D);
-            if (entityplayer1 != null && !getIsFlying())
-            {
-                this.motionY += 0.3D;
-                setIsFlying(true);
-            }
-        }*/
     }
 
     @Override

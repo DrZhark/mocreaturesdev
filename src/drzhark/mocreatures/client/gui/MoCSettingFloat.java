@@ -77,7 +77,6 @@ public class MoCSettingFloat extends SettingFloat {
     @Override
     public void set(Float v, String context) {
         if (stepValue > 0) {
-            //values.put(context, Math.round(v / stepValue) * stepValue);
             values.put(context, (float)(Math.round(v * 100.0) / 100.0)); // blood - force result to be 2 decimals
         } else {
             values.put(context, v);

@@ -210,15 +210,12 @@ public class MoCEntityFishBowl extends EntityLiving {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             ItemStack mystack = toItemStack(getType());
-            //if (!worldObj.isRemote)
-            {
-                entityplayer.inventory.addItemStackToInventory(mystack);
-            }
+            entityplayer.inventory.addItemStackToInventory(mystack);
             setType(0);
             return true;
         }
 
-        if (ridingEntity == null && MoCreatures.isServer())// && !worldObj.isRemote)
+        if (ridingEntity == null && MoCreatures.isServer())
         {
             rotationYaw = entityplayer.rotationYaw;
             // TODO change sound
@@ -241,7 +238,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     @Override
     public void moveEntity(double d, double d1, double d2)
     {
-        if ((ridingEntity != null) || !onGround)//|| !((Boolean) MoCreatures.staticbed.get()).booleanValue())
+        if ((ridingEntity != null) || !onGround)
         {
             if (!worldObj.isRemote)
             {
@@ -269,18 +266,11 @@ public class MoCEntityFishBowl extends EntityLiving {
         prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
     }
 
-    /*@Override
-    protected void updateEntityActionState()
-    {
-        prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
-    }*/
-
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readEntityFromNBT(nbttagcompound);
         setType(nbttagcompound.getInteger("SheetColour"));
-
     }
 
     @Override
@@ -288,7 +278,6 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setInteger("SheetColour", getType());
-
     }
 
     @Override

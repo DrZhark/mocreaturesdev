@@ -247,10 +247,6 @@ public class MoCClientProxy extends MoCProxy {
     @Override
     public void registerRenderers()
     {
-        //no longer needed on 1.5
-        //MinecraftForgeClient.preloadTexture(ITEMS_PNG);
-        //MinecraftForgeClient.preloadTexture(BLOCK_PNG);
-        //MoCTexturePreload.preLoadTextures(); 
     }
 
     @Override
@@ -262,8 +258,6 @@ public class MoCClientProxy extends MoCProxy {
     @Override
     public void registerRenderInformation()
     {
-        //RenderingRegistry.addNewArmourRendererPrefix(BLOCK_PNG);
-
         // Register your custom renderers
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBunny.class, new MoCRenderBunny(new MoCModelBunny(), 0.3F));
         RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBird.class, new MoCRenderBird(new MoCModelBird(), 0.3F));
@@ -865,9 +859,6 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(attackdolphinsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", attackDolphins));
         attackdolphinsW = new WidgetBoolean(attackdolphinsB, "Aggresive Dolphins?", "Yes", "No");
         widgetWaterMobSettingsColumns.add(attackdolphinsW);
-        //guiapiSettings.append(spawnPiranhaS = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "SpawnPiranhas", spawnPiranhas));
-        //spawnpiranhaW = new WidgetBoolean(spawnPiranhaS, "Spawn Piranhas?", "Yes", "No");
-        //widgetWaterMobSettingsColumns.add(spawnpiranhaW);
         //**********************************************************//
 
         //******************** Ambient ********************//
@@ -1034,7 +1025,6 @@ public class MoCClientProxy extends MoCProxy {
 
         guiapiSettings.load();
     }
-
     //*********************** GUI API MENU CALLS ************************//
 
     // Creatures
@@ -1285,7 +1275,6 @@ public class MoCClientProxy extends MoCProxy {
 
     public void showEntitySettings(MoCEntityData entityData)
     {
-        //MoCEntityData entityData = entityMap.get(entityName);
         if (entityData != null)
         {
             if (entityData.getEntityWindow() == null)
@@ -1309,9 +1298,6 @@ public class MoCClientProxy extends MoCProxy {
                 MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " CanSpawn", entityData.getCanSpawn());
                 guiapiSettings.append(settingCanSpawn);
                 widgetEntitySettingColumn.add(new WidgetBoolean(settingCanSpawn, "CanSpawn"));
-                //MoCSettingBoolean settingVanillaControl = new MoCSettingBoolean(null, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Vanilla Has Control", entityData.getVanillaControl());
-                //guiapiSettings.append(settingVanillaControl);
-                //widgetEntitySettingColumn.add(new WidgetBoolean(settingVanillaControl, "Vanilla Has Control"));
                 if (entityData.getBiomeGroups() != null)
                 {
                     MoCSettingList entityBiomeList = guiapiSettings.addSetting(widgetEntitySettingColumn, "Biome Groups", entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName() + " Biome Groups", (ArrayList)entityData.getBiomeGroups(), entityData.getEntityConfig(), CATEGORY_ENTITY_BIOME_SETTINGS);
@@ -1323,7 +1309,6 @@ public class MoCClientProxy extends MoCProxy {
                     listBoxRow.add(GuiApiHelper.makeButton("Add Group", new ModAction(this,"addGroupListboxOption", MoCSettingList.class, MoCSettingText.class).setDefaultArguments(entityBiomeList, textSetting), true));
                     guiapiSettings.append(textSetting);
                     listBoxRow.add(new WidgetText(textSetting, ""));
-                    //listBoxRow.add(GuiApiHelper.makeButton("Display Selected", new ModAction(this, "showSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
                     listBoxRow.add(GuiApiHelper.makeButton("Remove Selected", new ModAction(this, "removeSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
                     widgetEntitySettingColumn.add(listBoxRow);
                     widgetEntitySettingColumn.widthOverrideExceptions.put(listBoxRow, 0);
@@ -1337,20 +1322,20 @@ public class MoCClientProxy extends MoCProxy {
 
     public void showInstaSpawner()
     {
-    	widgetInstaSpawnerColumn = new WidgetSinglecolumn(new Widget[0]);
-    	
+        widgetInstaSpawnerColumn = new WidgetSinglecolumn(new Widget[0]);
+        
         ArrayList<String> moCreaturesList = new ArrayList<String>();
         for (Map.Entry<Class<? extends EntityLiving>, MoCEntityData> entityEntry : classToEntityMapping.entrySet())
         {
-        	moCreaturesList.add(entityEntry.getValue().getEntityMod().getModTag() + "|" + entityEntry.getValue().getEntityName());
+            moCreaturesList.add(entityEntry.getValue().getEntityMod().getModTag() + "|" + entityEntry.getValue().getEntityName());
         }
         Collections.sort(moCreaturesList);
         entityList = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature Type:", "SpawnEntityList", moCreaturesList, mocGlobalConfig, "");
         ((WidgetList) entityList.displayWidget).listBox.setTheme("/listbox");
-    	widgetInstaSpawnerColumn.heightOverrideExceptions.put(entityList.displayWidget, 130);
-    	settingNumberToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Number to Spawn", "spawnN", 3, 1, 10);
+        widgetInstaSpawnerColumn.heightOverrideExceptions.put(entityList.displayWidget, 130);
+        settingNumberToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Number to Spawn", "spawnN", 3, 1, 10);
         widgetInstaSpawnerColumn.add(GuiApiHelper.makeButton("Perform Spawn", new ModAction(this, "instaSpawn", MoCSettingList.class, ArrayList.class).setDefaultArguments(entityList, moCreaturesList), true));
-    	instaSpaqwnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the Creature to Spawn");
+        instaSpaqwnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the Creature to Spawn");
         GuiModScreen.show(instaSpaqwnerWindow);
     }
     
@@ -1358,7 +1343,7 @@ public class MoCClientProxy extends MoCProxy {
     @SuppressWarnings("unused")
     public void instaSpawn(MoCSettingList setting, ArrayList<String> aList)
     {
-    	ListBox<String> listbox = ((WidgetList) setting.displayWidget).listBox;
+        ListBox<String> listbox = ((WidgetList) setting.displayWidget).listBox;
         int selected = listbox.getSelected();
         int numberToSpawn = settingNumberToSpawn.get();//guiapiSettings.getIntSettingValue("spawnN");
         String entityName = aList.get(selected);
@@ -1389,7 +1374,7 @@ public class MoCClientProxy extends MoCProxy {
     
     public void getClassFromEntityMap(int index)
     {
-    	
+        
     }
     
     @SuppressWarnings("unused")
@@ -1404,7 +1389,6 @@ public class MoCClientProxy extends MoCProxy {
 
             if (setting.backendName.contains("Biome Groups"))
             {
-                //prop = MoCreatures.proxy.MoCconfig.get(setting.category, tokens[0]);
                 MoCEntityData entityData = entityMap.get(tokens[0]);
                 if (entityData!= null)
                 {
@@ -1446,7 +1430,6 @@ public class MoCClientProxy extends MoCProxy {
 
             String[] tokens = setting.backendName.split(" ");
             MoCProperty prop = null;
-           // if (setting.backendName.contains("Biome Groups"))
             if (tokens != null)
             {
 
@@ -1462,10 +1445,8 @@ public class MoCClientProxy extends MoCProxy {
                         MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(setting.get().get(selected)));
                     }
                     setting.get().remove(selected);
-                    //prop.valueList = setting.get();
                     setting.displayWidget.update();
                     MoCreatures.proxy.mocBiomeConfig.save();
-                    //MoCreatures.proxy.mocGlobalConfig.save(); // save config
                     setting.config.save();
 
                     if (selected == listbox.getNumEntries()) // I'm only removing one at a
@@ -1528,8 +1509,6 @@ public class MoCClientProxy extends MoCProxy {
 
         MoCScreen = null;
         guiapiSettings = null;
-       // ConfigInit(configPreEvent);
-        //ConfigPostInit(configPostEvent);
         genModConfiguration();
         readConfigValues();
         initGUI();

@@ -20,10 +20,8 @@ public class MoCBlock extends Block
     public MoCBlock(int par1, Material material)
     {
         super(par1, material);
-        
     }
-    
-        
+
     @Override
     public boolean canSustainPlant(World world, int x, int y, int z, ForgeDirection direction, IPlantable plant)
     {
@@ -39,8 +37,7 @@ public class MoCBlock extends Block
         {
             return true;
         }
-        
-        
+
         if (plant instanceof BlockFlower)
         {
             return true;

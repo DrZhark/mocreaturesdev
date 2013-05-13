@@ -36,7 +36,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     @Override
     public void initGui()
     {
-        buttonList.clear(); //1.5
+        buttonList.clear();
         Keyboard.enableRepeatEvents(true);
         buttonList.add(new GuiButton(0, (width / 2) - 100, (height / 4) + 120, "Done")); //1.5
     }
@@ -48,20 +48,9 @@ public class MoCGUIEntityNamer extends GuiScreen {
 
     public void updateName()
     {
-        //System.out.println("updating name of entity " + NamedEntity + "with " + NameToSet);
         NamedEntity.setName(NameToSet);
         MoCClientPacketHandler.sendNameInfo(((EntityLiving) NamedEntity).entityId, NameToSet);
-        //MoCServerPacketHandler.sendNameInfo(((EntityLiving)NamedEntity).entityId, NameToSet, ((EntityLiving)NamedEntity).worldObj.provider.dimensionId);
-
-        /*        if(!mc.theWorld.isRemote)
-        {
-            
-        }
-        else
-        {
-            //MoCServerPacketHandler.sendNameInfo(((EntityLiving)NamedEntity).entityId, NameToSet);
-        }
-        */mc.displayGuiScreen(null);
+        mc.displayGuiScreen(null);
     }
 
     @Override
@@ -78,9 +67,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     public void drawScreen(int i, int j, float f)
     {
         drawDefaultBackground();
-        //int k = mc.renderEngine.getTexture("/mocreatures/mocname.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        //mc.renderEngine.bindTexture(k);
         this.mc.renderEngine.bindTexture(MoCreatures.proxy.GUI_TEXTURE + "mocname.png");
         int l = (width - xSize) / 2;
         int i1 = (height - (ySize + 16)) / 2;

@@ -25,30 +25,17 @@ public class MoCEntityBunny extends MoCEntityAnimal {
 
     // TODO check that bunnyLimit??
 
-    // public float edad;
-
     public MoCEntityBunny(World world)
     {
         super(world);
-        // a = false;
         setAdult(true);
         setTamed(false);
         setEdad(50);
-        //moveSpeed = 1.5F;
-        //yOffset = -0.16F;
         setSize(0.4F, 0.4F);
         health = 4;
         bunnyReproduceTickerA = rand.nextInt(64);
         bunnyReproduceTickerB = 0;
-        //forceUpdates = true;
-        // unused_flag = true;
     }
-
-    /*@Override
-    protected boolean canDespawn()
-    {
-        return !getIsTamed();
-    }*/
 
     @Override
     public float getMoveSpeed()
@@ -59,8 +46,8 @@ public class MoCEntityBunny extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
-    	
+        checkSpawningBiome();
+        
         if (getType() == 0)
         {
             int k = rand.nextInt(100);
@@ -88,7 +75,6 @@ public class MoCEntityBunny extends MoCEntityAnimal {
 
     }
 
-    
     @Override
     public boolean checkSpawningBiome()
     {
@@ -102,14 +88,12 @@ public class MoCEntityBunny extends MoCEntityAnimal {
             setType(3); //snow white bunnies!
             return true;
         }
-       
         return true;
     }
 
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -182,7 +166,7 @@ public class MoCEntityBunny extends MoCEntityAnimal {
                 mountEntity(entityplayer);
             }
             pickedUp = true;
-            //System.out.println("My entity ID = " + this.entityId + "My name = " + this.getName() + " my owner = " + getOwnerName());
+
             if (!getIsTamed() && MoCreatures.isServer())
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
@@ -245,13 +229,6 @@ public class MoCEntityBunny extends MoCEntityAnimal {
                     proceed();
                     return;
                 }
-                /*
-                 * List list =
-                 * worldObj.getEntitiesWithinAABBExcludingEntity(this,
-                 * boundingBox.expand(16D, 16D, 16D)); for(int l = 0; l <
-                 * list.size(); l++) { Entity entity = (Entity) list.get(l);
-                 * if(entity instanceof MoCEntityBunny) { k++; } }
-                 */
 
                 List list1 = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(4.0D, 4.0D, 4.0D));
                 boolean flag = false;
@@ -277,10 +254,6 @@ public class MoCEntityBunny extends MoCEntityAnimal {
                     flag = true;
                     break;
                 }
-                /*
-                 * if(!flag) { k = rand.nextInt(16); }
-                 */
-
             }
         }
     }
@@ -325,7 +298,7 @@ public class MoCEntityBunny extends MoCEntityAnimal {
     @Override
     public boolean isBreedingItem(ItemStack par1ItemStack)
     {
-        return false;//par1ItemStack != null && par1ItemStack.itemID == Item.wheat.itemID;
+        return false;
     }
 
     @Override

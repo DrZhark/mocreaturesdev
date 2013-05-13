@@ -5,15 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-/*
- * public class MoCAnimalChest extends InventoryLargeChest// Container {
- * 
- * public MoCAnimalChest(String par2str, IInventory par1IInventory, IInventory
- * par2IInventory) { super(par2str, par1IInventory, par2IInventory); }
- * 
- * }
- */
-
 public class MoCAnimalChest extends InventoryBasic {
 
     public MoCAnimalChest(String name, int size)

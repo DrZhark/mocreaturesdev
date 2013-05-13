@@ -5,7 +5,6 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-
 public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
 {
     public boolean field_70885_d = false;
@@ -21,7 +20,6 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
         texture = MoCreatures.proxy.MODEL_TEXTURE + "duck.png";
         setSize(0.3F, 0.4F);
         health = 4;
-        //timeUntilNextEgg = rand.nextInt(6000) + 6000;
     }
 
     @Override
@@ -85,26 +83,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
         }
 
         this.field_70886_e += this.field_70889_i * 2.0F;
-
     }
-
-    /*@Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
-    {
-        super.readEntityFromNBT(nbttagcompound);
-    }
-
-    @Override
-    public void setEntityDead()
-    {
-        super.setEntityDead();
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
-    {
-        super.writeEntityToNBT(nbttagcompound);
-    }*/
 
     @Override
     protected int getDropItemId()

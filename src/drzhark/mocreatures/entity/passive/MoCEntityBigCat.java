@@ -29,24 +29,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityBigCat extends MoCEntityAnimal {
-    //protected int force;
-    //protected double attackRange;
-    //public float heightF;
-    //public float widthF;
-    //public float lengthF;
-    //public EntityLiving roper;
-    //private boolean hasSMPInit;
 
     public MoCEntityBigCat(World world)
     {
         super(world);
         setEdad(35);
-        // edad = 0.35F;
         setSize(0.9F, 1.3F);
         health = 25;
-        //force = 1;
-        //attackRange = 1.0D;
-        //moveSpeed = 2F;
         if (rand.nextInt(4) == 0)
         {
             setAdult(false);
@@ -57,7 +46,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
             setAdult(true);
         }
         setHungry(true);
-        //setMaxHealth(25);
         setTamed(false);
     }
 
@@ -67,14 +55,9 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
+        checkSpawningBiome();
         if (getType() == 0)
         {
-            /*if (rand.nextInt(4) == 0)
-            {
-                setAdult(false);
-                // unused_flag = true;
-            }*/
             int i = rand.nextInt(100);
             if (i <= 5)
             {
@@ -333,21 +316,18 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
 
     public void setHungry(boolean flag)
     {
-        //if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setEaten(boolean flag)
     {
-        //if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setSitting(boolean flag)
     {
-        //if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
@@ -410,16 +390,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
             Entity entity = (Entity) list.get(j);
             if ((entity != this) && (entity instanceof MoCEntityBigCat))
             {
-               /* 
-                if (entitybigcat.getType() == 2)
-                {
-                    return 1;
-                }
-                if (entitybigcat.getType() == 1 && rand.nextInt(3) == 0)
-                {
-                	return 2;
-                }*/
-            	MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
+                MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
                 return entitybigcat.getType();
             }
         }
@@ -464,7 +435,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        //String s = MoCTools.BiomeName(worldObj, i, j, k);
+
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
         if (currentbiome.temperature <= 0.05F)
@@ -480,11 +451,11 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
            
             if (l == 2)
             {
-            	l = 1;
+                l = 1;
             }
             else if (l == 1 && rand.nextInt(3) == 0)
             {
-            	l = 2;
+                l = 2;
             }
             else if (l == 7)
             {
@@ -521,35 +492,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
 
         return false;
     }
-
-
-    /*public EntityItem getClosestItem(Entity entity, double d, int i, int j)
-    {
-        double d1 = -1D;
-        EntityItem entityitem = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
-        for (int k = 0; k < list.size(); k++)
-        {
-            Entity entity1 = (Entity) list.get(k);
-            if (!(entity1 instanceof EntityItem))
-            {
-                continue;
-            }
-            EntityItem entityitem1 = (EntityItem) entity1;
-            if ((entityitem1.item.itemID != i) && (j != 0) && (entityitem1.item.itemID != j))
-            {
-                continue;
-            }
-            double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)))
-            {
-                d1 = d2;
-                entityitem = entityitem1;
-            }
-        }
-
-        return entityitem;
-    }*/
 
     public EntityLiving getClosestTarget(Entity entity, double d)
     {
@@ -701,7 +643,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
             health = getMaxHealth();
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHungry(false);
-            //setEaten(true);
         }
         return false;
 
@@ -716,31 +657,18 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         return getIsSitting();
     }
 
-    /*@Override
-    public void setDead()
-    {
-        if (MoCreatures.isServer() && getIsTamed() && (health > 0))
-        {
-            return;
-        }
-        else
-        {
-            super.setDead();
-        }
-    }*/
-
     //drops medallion on death
     @Override
     public void onDeath(DamageSource damagesource)
     {
-    	if (MoCreatures.isServer())
+        if (MoCreatures.isServer())
         {
-        	if (getIsTamed())
-        	{
-        		MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.medallion, 1));
-        	}
+            if (getIsTamed())
+            {
+                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.medallion, 1));
+            }
         }
-    	super.onDeath(damagesource);
+        super.onDeath(damagesource);
     }
     
     @Override
@@ -834,7 +762,5 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     @Override
     public void dropMyStuff() 
     {
-        
-        
     }
 }

@@ -25,7 +25,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-
 public class MoCEntityElephant extends MoCEntityAnimal {
 
     public int sprintCounter;
@@ -66,8 +65,8 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
-    	
+        checkSpawningBiome();
+        
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
@@ -127,7 +126,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -164,16 +162,13 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         default:
             return 30;
         }
-
     }
-
-    
 
     @Override
     public double getCustomSpeed()
     {
         if (sitCounter != 0) return 0D;
-        
+
         double tSpeed = 0.5D;
         if (getType() == 1)
         {
@@ -223,8 +218,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         super.onLivingUpdate();
         if (MoCreatures.isServer())
         {
-            //Riding();
-
             if (!getIsAdult() && (rand.nextInt(1000) == 0))
             {
                 setEdad(getEdad() + 1);
@@ -248,7 +241,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 }
             }
 
-            if (MoCreatures.proxy.elephantBulldozer && getIsTamed() && (riddenByEntity != null) && (getTusks() > 0) )//&& ++tuskCount > 3)
+            if (MoCreatures.proxy.elephantBulldozer && getIsTamed() && (riddenByEntity != null) && (getTusks() > 0) )
             {
                    int height = 2;
                     if (getType() == 3)
@@ -264,7 +257,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 
             }
 
-            if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer)// && riddenByEntity != entityplayer) //&& (sitCounter != 0) so owner controls it!
+            if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
             {
                 if (sitCounter != 0 && getArmorType() >= 3 && !secondRider())
                 {
@@ -303,8 +296,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 sitCounter = 0;
             }
         }
-
-        
     }
 
     private boolean secondRider() 
@@ -334,7 +325,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             MoCTools.playCustomSound(this, "turtlehurt", worldObj);
             setTusks((byte) 0);
         }
-        
     }
 
     private void destroyPlatforms()
@@ -350,11 +340,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 j++;
             }
         }
-        if (j != 0)
-        {
-            //System.out.println("destroyed " + j + " platforms");
-        }
-
     }
 
     private void sit()
@@ -365,7 +350,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             MoCServerPacketHandler.sendAnimationPacket(this.entityId, worldObj.provider.dimensionId, 0);
         }
         setPathToEntity(null);
-
     }
 
     @Override
@@ -381,25 +365,9 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        //setAdult(false);
-        /*if (!getIsAdult())
-        {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100)
-            {
-                setAdult(true);
-            }
-        }*/
-        //setType(3);
-        //setTamed(true);
-        //System.out.println("mySize: H = " + this.height + ", W = " + this.width);
-        //setHarness((byte) 0);
-        //setStorage((byte) 0);
-        //System.out.println("type = " + getType() + " tamed = " + getIsTamed() + " harness = " + getHarness() + " chests = " + getStorage() + " tusks = " + getTusks() + " sitting? " + (sitCounter != 0));
-        
+
         if ((itemstack != null) && !getIsTamed() && !getIsAdult() && itemstack.itemID == Item.cake.itemID)
         {
             if (--itemstack.stackSize == 0)
@@ -414,7 +382,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 setTamed(true);
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            
             return true;
         }
         
@@ -432,7 +399,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 setTamed(true);
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            
             return true;
         }
         
@@ -574,11 +540,9 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             {
                 localelephantchest = new MoCAnimalChest("ElephantChest", 18);
             }
-            //System.out.println("Storage size = " + StorageSize());
+
             if (getStorage() == 1)
             {
-                
-                
                 // only open this chest on server side
                 if (MoCreatures.isServer())
                 {
@@ -697,10 +661,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     {
         if (!MoCreatures.isServer()) { return; }
         int i = getTusks();
-        if (i != 0)
-        {
-            //MoCTools.playCustomSound(this, "armoroff", worldObj);
-        }
 
         if (i == 1)
         {
@@ -730,8 +690,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         return true;
     }
 
-    
-
     @Override
     public boolean updateMount()
     {
@@ -754,8 +712,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
         
         String s = MoCTools.BiomeName(worldObj, i, j, k);
-        //if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
-        
+
         if (currentbiome.temperature <= 0.05F)
         {
             setType(3 + rand.nextInt(2));
@@ -921,7 +878,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             }
             nbttagcompound.setTag("Items2", nbttaglist);
         }
-        
+
         if (getStorage() >= 3 && localelephantchest3 != null)
         {
             NBTTagList nbttaglist = new NBTTagList();
@@ -938,7 +895,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             }
             nbttagcompound.setTag("Items3", nbttaglist);
         }
-        
+
         if (getStorage() >= 4 && localelephantchest4 != null)
         {
             NBTTagList nbttaglist = new NBTTagList();
@@ -1002,7 +959,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                         continue;
                     }
                     entity.onCollideWithPlayer(entityplayer);
-
                 }
 
             }
@@ -1021,7 +977,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
 
                 }
             }
-
         }
     }
 
@@ -1070,8 +1025,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     {
         double yOff = 0F;
         boolean sit = (sitCounter != 0);
-        
-        
+
         switch (getType())
         {
         case 1:
@@ -1092,7 +1046,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             if (sit) yOff = 0.45D;
             break;
         }
-      
         return (double) (yOff + (this.height * 0.75D));
     }
 
@@ -1105,7 +1058,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     public boolean isEntityInsideOpaqueBlock()
     {
         return false;
-
     }
     
     @Override
@@ -1161,59 +1113,55 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             {
                 if (getStorage() > 0)
                 {
-                	MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.chestSet, 1));
+                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.chestSet, 1));
                     if (localelephantchest != null) MoCTools.dropInventory(this, localelephantchest);
                     
                 }
                 if (getStorage() >=2)
                 {
-                	if (localelephantchest2 != null) MoCTools.dropInventory(this, localelephantchest2);
+                    if (localelephantchest2 != null) MoCTools.dropInventory(this, localelephantchest2);
                     MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.chestSet, 1));
                 }
                 if (getStorage() >=3)
                 {
-                	if (localelephantchest3 != null) MoCTools.dropInventory(this, localelephantchest3);
+                    if (localelephantchest3 != null) MoCTools.dropInventory(this, localelephantchest3);
                     MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Block.chest, 1));
                 }
                 if (getStorage() >=4)
                 {
-                	if (localelephantchest4 != null) MoCTools.dropInventory(this, localelephantchest4);
+                    if (localelephantchest4 != null) MoCTools.dropInventory(this, localelephantchest4);
                     MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Block.chest, 1));
                 }
-                
                 setStorage((byte) 0);
             }
             dropArmor();
-            
-            
         }
-        
     }
     
     @Override
     public void dropArmor()
     {
-    	if (!MoCreatures.isServer()) {return;}
-    	if (getArmorType() >= 1)
-    	{
-    		MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.harness, 1));
-    	}
-    	if (getType() == 5 && getArmorType() >= 2)
-    	{
-    		
-    		MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.garment, 1));
-    		if (getArmorType() == 3)
-    		{
-    			MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.howdah, 1));
-    		}
-    		setType(2);
-    	}
-    	if (getType() == 4 && getArmorType() == 3)
-    	{
-    		MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.platform, 1));
-    	}
-    	setArmorType((byte) 0);
-    	
+        if (!MoCreatures.isServer()) {return;}
+        if (getArmorType() >= 1)
+        {
+            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.harness, 1));
+        }
+        if (getType() == 5 && getArmorType() >= 2)
+        {
+            
+            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.garment, 1));
+            if (getArmorType() == 3)
+            {
+                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.howdah, 1));
+            }
+            setType(2);
+        }
+        if (getType() == 4 && getArmorType() == 3)
+        {
+            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.platform, 1));
+        }
+        setArmorType((byte) 0);
+        
     }
     
     @Override
@@ -1221,10 +1169,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     {
         return 1;
     }
-    
-    
-   
-    
+
     @Override
     public int nameYOffset()
     {
@@ -1233,7 +1178,6 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             return (int) (getSizeFactor() * -110);
         }
         return (int) ((100/getEdad()) * (getSizeFactor() * -110));
-
     }
 
     @Override
@@ -1245,7 +1189,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         }
         return (double) ((100/getEdad()) * (getSizeFactor() * -0.5D));
     }
-    
+
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
@@ -1262,7 +1206,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         }
         return false;
     }
-    
+
     @Override
     protected void attackEntity(Entity entity, float f)
     {
@@ -1274,7 +1218,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             
         }
     }
-    
+
     @Override
     protected void fall(float f)
     {
@@ -1299,7 +1243,4 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             }
         }
     }
-    
-    
-
 }

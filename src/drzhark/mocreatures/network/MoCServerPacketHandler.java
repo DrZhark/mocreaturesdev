@@ -27,7 +27,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
     {
         if (packet.channel.equals("MoCreatures"))
         {
-
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 
             try
@@ -38,15 +37,13 @@ public class MoCServerPacketHandler implements IPacketHandler {
                     int entID = dataStream.readInt();
                     String name = dataStream.readUTF();
 
-                    //List<Entity> entList = ((NetServerHandler)network.getNetHandler()).getPlayerEntity().worldObj.loadedEntityList;
                     EntityPlayer player = (EntityPlayer) playerEntity;
                     List<Entity> entList = player.worldObj.loadedEntityList;
-                    //List<EntityPlayer> playerList = player.worldObj.playerEntities;
+
                     for (Entity ent : entList)
                     {
                         if (ent.entityId == entID && ent instanceof MoCIMoCreature)
                         {
-                        	//System.out.println("Setting name of " + ent + " with " + name);
                             ((MoCIMoCreature) ent).setName(name);
                             break;
                         }
@@ -89,13 +86,11 @@ public class MoCServerPacketHandler implements IPacketHandler {
                     int entID = dataStream.readInt();
                     int tType = dataStream.readInt();
                     EntityPlayer player = (EntityPlayer) playerEntity;
-                    //List<Entity> entList = ((NetServerHandler)network.getNetHandler()).getPlayerEntity().worldObj.loadedEntityList;
                     List<Entity> entList = player.worldObj.loadedEntityList;
                     for (Entity ent : entList)
                     {
                         if (ent.entityId == entID && ent instanceof MoCEntityHorse)
                         {
-                            //((MoCEntityHorse)ent).transformType = tType;
                             ((MoCEntityHorse) ent).transform(tType);
                             break;
                         }
@@ -125,7 +120,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 
                 if (packetID == 26) // server receives spawn packet with entity name
                 {
-                	EntityPlayer player = (EntityPlayer) playerEntity;
+                    EntityPlayer player = (EntityPlayer) playerEntity;
                     String entityName = dataStream.readUTF();
                     int number = dataStream.readInt();
                     if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) // make sure the client has admin rights on server!
@@ -143,16 +138,13 @@ public class MoCServerPacketHandler implements IPacketHandler {
             {
                 e.printStackTrace();
             }
-
         }
-
     }
 
     //----------------server side
     public static void sendStateInfo(EntityPlayer player, int state)
     {
         // server sending state info. first packet int: 1 then int state
-
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -170,7 +162,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
         PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
-
     }
 
     /**
@@ -199,9 +190,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.channel = "MoCreatures";
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
-
-        //TODO 4FIX
-
     }
 
     /**
@@ -260,7 +248,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-
     }
 
     /**
@@ -290,41 +277,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-
     }
-
-    /**
-     * server sends the creature Name to each client
-     * 
-     * @param ID
-     *            : Creature entity ID
-     * @param nameToSet
-     *            : name to be given
-     * @param dimension
-     *            : world dimension (this.worldObj.provider.dimensionId);)
-     */
-    //not needed as the server uses the datawatcher to synchronize this information
-    /*public static void sendNameInfo(int entityId, String nameToSet, int dimension) 
-    {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        DataOutputStream data = new DataOutputStream(bytes);
-        try
-        {
-            data.writeInt(Integer.valueOf(6));
-            data.writeInt(Integer.valueOf(entityId));
-            data.writeUTF(nameToSet);
-        }
-        catch(IOException e)
-        {
-                e.printStackTrace();
-        }
-        Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = "MoCreatures";
-        packet.data = bytes.toByteArray();
-        packet.length = packet.data.length;
-        
-        PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-    }*/
 
     /**
      * 
@@ -379,7 +332,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-
     }
 
     /**
@@ -407,7 +359,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-
     }
 
     /**
@@ -519,7 +470,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.channel = "MoCreatures";
         packet.data = bytes.toByteArray();
         packet.length = packet.data.length;
-        //System.out.println("MOCServerHandler sending packet with sourceId " + source.entityId + ", entityId " + target.entityId);
+
         PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
     }
 
@@ -584,13 +535,5 @@ public class MoCServerPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
-    }
-
-    /* NOT USED
-     * This is the packet responsible for notifying clients about other players in world. 
-     */
-    public static void sendNamedEntitySpawn(Entity source, int dimension)
-    {
-        PacketDispatcher.sendPacketToAllInDimension(new Packet20NamedEntitySpawn((EntityPlayer) source), dimension);
     }
 }

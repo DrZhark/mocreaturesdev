@@ -14,8 +14,8 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
-import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -44,18 +44,32 @@ public class MoCEventHooks {
         if (MoCreatures.proxy.useCustomSpawner)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
+           //System.out.println("entityData = " + entityData);
             if (entityData != null)
             {
+                //System.out.println("LIVINGPACKSIZE " + event.entityLiving + " setting to " + entityData.getMaxInChunk());
                 event.maxPackSize = entityData.getMaxInChunk();
+               // System.out.println("new size = " + event.maxPackSize);
                 event.setResult(Result.ALLOW); // needed for changes to take effect
             }
         }
     }
+   /* @ForgeSubscribe
+    public void onWorldLoading(WorldEvent.Load event)
+    {
+        //String dimensionName = event.world.provider.getDimensionName();
+       // event.world.getSaveHandler().getWorldDirectoryName();
+        if (event.world.provider.dimensionId == MoCreatures.proxy.WyvernDimension)
+        {
+            //MoCConfiguration config = MoCreatures.proxy.MoCconfig;
+            System.out.println("Dimension " + event.world.provider.dimensionId + " is loading.");
+        }
+    }*/
 
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)
     {
-        System.out.println("INITMAPGENEVENT " + event.newGen + " , type = " + event.type);
+      //  System.out.println("INITMAPGENEVENT " + event.newGen + " , type = " + event.type);
         if (MoCreatures.proxy.useCustomSpawner)
         {
             String structureClass = event.originalGen.getClass().toString();

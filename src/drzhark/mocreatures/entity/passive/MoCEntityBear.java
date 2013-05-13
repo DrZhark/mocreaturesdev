@@ -65,15 +65,14 @@ public class MoCEntityBear extends MoCEntityAnimal {
 
     public void setBearState(int i)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(22, Integer.valueOf(i));
     }
 
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
-    	
+        checkSpawningBiome();
+        
         if (getType() == 0)
         {
 
@@ -270,7 +269,6 @@ public class MoCEntityBear extends MoCEntityAnimal {
             if (f < 0.0F && this.getType() == 1 || this.getType() == 4)
             {
                 EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, getAttackRange());
-                //worldObj.getClosestPlayerToEntity(this, getAttackRange());
                 if (entityplayer != null) { return entityplayer; }
             }
             if (rand.nextInt(80) == 0 && this.getType() != 3)
@@ -356,7 +354,6 @@ public class MoCEntityBear extends MoCEntityAnimal {
                 {
                     entityitem.setDead();
                     worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-                    //setTamed(true);
                     health = getMaxHealth();
                 }
 
@@ -449,8 +446,8 @@ public class MoCEntityBear extends MoCEntityAnimal {
         //original.toLowerCase().contains(tobeChecked.toLowerCase()) 
         if (biomename.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
         {
-        	setType(3);//panda
-        	return true;
+            setType(3);//panda
+            return true;
         }
         return true;
     }

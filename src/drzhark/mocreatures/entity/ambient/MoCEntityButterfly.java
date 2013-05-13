@@ -16,12 +16,9 @@ public class MoCEntityButterfly extends MoCEntityInsect
     public MoCEntityButterfly(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "butterflyb.png";
     }
 
     private int fCounter;
-
-    //private float transFloat;
 
     @Override
     public void onLivingUpdate()
@@ -33,49 +30,16 @@ public class MoCEntityButterfly extends MoCEntityInsect
             if (getIsFlying() && rand.nextInt(200) == 0)
             {
                 setIsFlying(false);
-            }
+            }       
         }
     }
-
+ 
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(10)+1);
-            /*int k = rand.nextInt(100);
-            if (k <= 12)
-            {
-                setType(1);
-            }
-            else if (k <= 25)
-            {
-                setType(2);
-            }
-            else if (k <= 37)
-            {
-                setType(3);
-            }
-            else if (k <= 50)
-            {
-                setType(4);
-            }
-            else if (k <= 62)
-            {
-                setType(5);
-            }
-            else if (k <= 75)
-            {
-                setType(6);
-            }
-            else if (k <= 87)
-            {
-                setType(7);
-            }
-            else
-            {
-                setType(5);
-            }*/
+            setType(rand.nextInt(10)+1);
         }
     }
 
@@ -140,10 +104,10 @@ public class MoCEntityButterfly extends MoCEntityInsect
     @Override
     public float getSizeFactor()
     {
-    	if (getType() < 8)
-    	{
-    		return 0.7F;
-    	}
+        if (getType() < 8)
+        {
+            return 0.7F;
+        }
         return 1.0F;
     }
 
@@ -156,6 +120,6 @@ public class MoCEntityButterfly extends MoCEntityInsect
     @Override
     public boolean isAttractedToLight() 
     {
-		return getType() > 7;
-	}
+        return getType() > 7;
+    }
 }

@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 
 public interface MoCIMoCreature {
 
-    public boolean forceUpdates();// = false;
+    public boolean forceUpdates();
 
     public void selectType();
 
@@ -32,13 +32,9 @@ public interface MoCIMoCreature {
      */
     public void performAnimation(int i);
 
-    //public int getHealth();
-
     public boolean renderName();
 
     public int nameYOffset();
-
-    //public int getMaxHealth();
 
     /**
      * Used to ajust the Yoffset when using ropes
@@ -77,21 +73,19 @@ public interface MoCIMoCreature {
 
     public void setType(int i);
 
-	public void dismountEntity();
+    public void dismountEntity();
 
-	public int rollRotationOffset();
+    public int rollRotationOffset();
 
-	public int pitchRotationOffset();
+    public int pitchRotationOffset();
 
-	public void setEdad(int i);
+    public void setEdad(int i);
 
-	public int getEdad();
+    public int getEdad();
 
-	public int yawRotationOffset();
+    public int yawRotationOffset();
 
-	public float getAdjustedZOffset();
+    public float getAdjustedZOffset();
 
-	public float getAdjustedXOffset();
-
-
+    public float getAdjustedXOffset();
 }

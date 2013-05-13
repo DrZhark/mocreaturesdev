@@ -21,7 +21,6 @@ public class MoCEntityRat extends MoCEntityMob {
         super(world);
         setSize(0.5F, 0.5F);
         health = 10;
-        //attackStrength = 1;
     }
 
     @Override
@@ -43,23 +42,11 @@ public class MoCEntityRat extends MoCEntityMob {
                 setType(3);
             }
         }
-
-        /*if (type == 1)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "ratb.png";
-        } else if (type == 2)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "ratbl.png";
-        } else if (type == 3)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "ratw.png";
-        }*/
     }
 
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -144,8 +131,7 @@ public class MoCEntityRat extends MoCEntityMob {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 16D);
             return entityplayer != null && this.canEntityBeSeen(entityplayer) ? entityplayer : null;
         }
-            return null;
-        
+        return null;
     }
 
     @Override
@@ -158,7 +144,6 @@ public class MoCEntityRat extends MoCEntityMob {
     protected int getDropItemId()
     {
         return MoCreatures.ratRaw.itemID;
-        //return Item.coal.itemID;
     }
 
     @Override
@@ -185,15 +170,11 @@ public class MoCEntityRat extends MoCEntityMob {
         return 10;
     }
 
-    
-
     @Override
     public boolean isOnLadder()
     {
         return isCollidedHorizontally;
     }
-
-    
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)

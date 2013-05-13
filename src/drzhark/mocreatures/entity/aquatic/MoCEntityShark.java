@@ -27,7 +27,6 @@ public class MoCEntityShark extends MoCEntityAquatic {
         setSize(1.5F, 0.8F);
         setEdad(100 + rand.nextInt(100));
         health = 25;
-        //setMaxHealth(25);
     }
 
     @Override
@@ -41,21 +40,20 @@ public class MoCEntityShark extends MoCEntityAquatic {
     {
         if (entity.isInsideOfMaterial(Material.water) && (f < 3.5D) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY) && (getEdad() >= 100))
         {
-        	if (entity instanceof EntityPlayer && ((EntityPlayer)entity).ridingEntity != null)
-        	{
-        		Entity playerMount = ((EntityPlayer)entity).ridingEntity;
-        		if (playerMount instanceof EntityBoat) 
-        		{
-        			return;
-        		}
-        	}
-        	attackTime = 20;
+            if (entity instanceof EntityPlayer && ((EntityPlayer)entity).ridingEntity != null)
+            {
+                Entity playerMount = ((EntityPlayer)entity).ridingEntity;
+                if (playerMount instanceof EntityBoat) 
+                {
+                    return;
+                }
+            }
+            attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 5);
             if (!(entity instanceof EntityPlayer))
             {
                 MoCTools.destroyDrops(this, 3D);
             }
-            
         }
     }
 
@@ -94,9 +92,7 @@ public class MoCEntityShark extends MoCEntityAquatic {
             for (int l = 0; l < j; l++)
             {
                 entityDropItem(new ItemStack(MoCreatures.sharkteeth, 1, 0), 0.0F);
-
             }
-
         }
         else if ((worldObj.difficultySetting > 0) && (getEdad() > 150))
         {
@@ -104,8 +100,6 @@ public class MoCEntityShark extends MoCEntityAquatic {
             for (int i1 = 0; i1 < k; i1++)
             {
                 entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, 11), 0.0F);
-                // entityDropItem(new ItemStack(MoCreatures.sharkegg, 1, 0),
-                // 0.0F);
             }
         }
     }
@@ -146,27 +140,8 @@ public class MoCEntityShark extends MoCEntityAquatic {
                 entityliving = (EntityLiving) entity1;
             }
         }
-
         return entityliving;
     }
-
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.shiftedIndex) || (itemstack.itemID == Item.book.shiftedIndex)))
-        {
-            if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }
-            return true;
-        }
-        
-            return false;
-        
-    }*/
 
     @Override
     public void onLivingUpdate()
@@ -219,6 +194,6 @@ public class MoCEntityShark extends MoCEntityAquatic {
 
     public boolean isMyHealFood(Item item1)
     {
-        return false;//(item1 instanceof ItemFood);
+        return false;
     }
 }

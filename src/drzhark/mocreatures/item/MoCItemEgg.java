@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 
 public class MoCItemEgg extends MoCItem {
 
+    int eggType;
+
     public MoCItemEgg(int i)
     {
         super(i);
@@ -25,7 +27,7 @@ public class MoCItemEgg extends MoCItem {
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        if (MoCreatures.isServer())//if(!world.isRemote)
+        if (MoCreatures.isServer())
         {
             int i = itemstack.getItemDamage();
             if (i == 30)
@@ -45,9 +47,6 @@ public class MoCItemEgg extends MoCItem {
    @Override
     public String getUnlocalizedName(ItemStack itemstack)
     {
-	   //getItemDisplayName //func_77653_i
         return (new StringBuilder()).append(super.getUnlocalizedName()).append(".").append(itemstack.getItemDamage()).toString();
     }
-
-    int eggType;
 }

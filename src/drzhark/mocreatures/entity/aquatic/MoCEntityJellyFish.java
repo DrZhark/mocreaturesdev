@@ -28,8 +28,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         setSize(0.3F, 0.5F);
         health = getMaxHealth();
         setEdad(50 + (rand.nextInt(50)));
-
-        
     }
 
     @Override
@@ -59,7 +57,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
                 setType(5);
             }
         }
-
     }
     
     @Override
@@ -74,9 +71,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
-    
-        
-  //@SideOnly(Side.CLIENT)
+
       public boolean isGlowing()
       {
           if (dataWatcher.getWatchableObjectByte(22) == 1)
@@ -86,7 +81,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
           }
           return false;
       }
-      
+
     @Override
     public int getMaxHealth()
     {
@@ -132,8 +127,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         default:
             return MoCreatures.proxy.MODEL_TEXTURE + "jellyfisha.png";
         }
-
-        
     }
 
     @Override
@@ -143,7 +136,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         if (rand.nextInt(2) == 0)
         {
             pulsingSize += 0.01F;
-
         }
         
         if (pulsingSize > 0.4F)
@@ -173,18 +165,18 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
             {
             	EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
             	if (entityplayertarget != null)
-            	{
+                {
             		System.out.println("attempting poisioning" + this);
             	}
             	
             	if (MoCTools.findNearPlayerAndPoison(this, true))
-            	{
-            		poisoncounter = 0;
-            	}
+                {
+                    poisoncounter = 0;
+                }
             }
         }
     }
-    
+
     @Override
     public void floating()
     {
@@ -273,34 +265,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     @Override
     protected boolean canBeTrappedInNet() 
     {
-		return true;
-	}
-
-    //only for debugging
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        //System.out.println("Daytime = " + worldObj.isDaytime() + ", server? = " + MoCreatures.isServer());
-        if ((itemstack != null) && (itemstack.itemID == Block.sand.blockID))
-        {
-            int i = getType();
-            if (i++ > 12) i = 1;
-            setType(i);
-            return true;
-        }
-        return false;
-    }*/
-
-    /*@Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
-    {
-        super.readEntityFromNBT(nbttagcompound);
+	return true;
     }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
-    {
-        super.writeEntityToNBT(nbttagcompound);
-    }*/
 }

@@ -112,12 +112,12 @@ public class MoCEntityBird extends MoCEntityAnimal {
 
     public boolean getPreTamed()
     {
-    	return (dataWatcher.getWatchableObjectByte(22) == 1);
+        return (dataWatcher.getWatchableObjectByte(22) == 1);
     }
     
     public void setPreTamed(boolean flag)
     {
-    	byte input = (byte) (flag ? 1 : 0);
+        byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
     
@@ -331,7 +331,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
 
         if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.itemID == Item.seeds.itemID)
         {
-        	if (--itemstack.stackSize == 0)
+            if (--itemstack.stackSize == 0)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -384,7 +384,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
                 //commenting this fixes the wing movement bug
             }
         }
-        //if (!worldObj.isRemote)
 
         winge = wingb;
         wingd = wingc;
@@ -505,11 +504,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
     public void setPicked(boolean var1)
     {
         isPicked = var1;
-        // byte varT = Byte.valueOf((byte)
-        // (dataWatcher.getWatchableObjectByte(16) | (1 << 2)));
-        // byte varF = Byte.valueOf((byte)
-        // (dataWatcher.getWatchableObjectByte(16) & ~(1 << 2)));
-        // dataWatcher.updateObject(16, var1 ? varT : varF);
     }
 
     @Override
@@ -578,7 +572,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
     @Override
     public int nameYOffset()
     {
-
         return -40;
 
     }

@@ -36,17 +36,13 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
             {
                 ((EntityLiving) entity).setFire(burningTime);
             }
-
-            //entity.fire = burningTime;
         }
     }
 
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.entityId) > 0)
-        //&& (worldObj.difficultySetting >= (((Integer) MoCreatures.fwraithSpawnDifficulty.get()).intValue() + 1)) 
-        && super.d2();
+        return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && super.d2();
     }
 
     @Override
@@ -63,7 +59,6 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
             if (rand.nextInt(40) == 0)
             {
                 this.setFire(2);
-                //fire = 2;
             }
             if (worldObj.isDaytime())
             {
@@ -82,21 +77,4 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     {
         return 1.1F;
     }
-    /*@Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
-    {
-        super.readEntityFromNBT(nbttagcompound);
-    }
-
-    @Override
-    public void setEntityDead()
-    {
-        super.setEntityDead();
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
-    {
-        super.writeEntityToNBT(nbttagcompound);
-    }*/
 }

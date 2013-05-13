@@ -17,13 +17,12 @@ import net.minecraft.world.World;
 
 public class MoCBlockLog extends MoCBlock
 {
-	@SideOnly(Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     private Icon[][] icons;
-	
+
     public MoCBlockLog(int par1)
     {
         super(par1, Material.wood);
-        //textInt = par2;
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
@@ -48,7 +47,7 @@ public class MoCBlockLog extends MoCBlock
     {
         return i;
     }
-    
+
     /**
      * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
      * block and l is the block's subtype/damage.
@@ -93,7 +92,6 @@ public class MoCBlockLog extends MoCBlock
         }
     }
 
-        
     /**
      * ejects contained items into the world, and notifies neighbours of an update, as appropriate
      */
@@ -121,8 +119,7 @@ public class MoCBlockLog extends MoCBlock
             }
         }
     }
-    
-    
+
     @Override
     public boolean canSustainLeaves(World world, int x, int y, int z)
     {
@@ -134,7 +131,7 @@ public class MoCBlockLog extends MoCBlock
     {
         return true;
     }
-    
+
     /**
      * The type of render function that is called for this block
      */
@@ -143,93 +140,39 @@ public class MoCBlockLog extends MoCBlock
         return 31;
     }
 
-    
-
-
-    /**
-     * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY, hitZ, block metadata
-     */
-    /*public int onBlockPlaced(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9)
-    {
-        int var10 = par9 & 3;
-        byte var11 = 0;
-
-        switch (par5)
-        {
-            case 0:
-            case 1:
-                var11 = 0;
-                break;
-            case 2:
-            case 3:
-                var11 = 8;
-                break;
-            case 4:
-            case 5:
-                var11 = 4;
-        }
-
-        return var10 | var11;
-    }*/
-
-
-/*    *//**
-     * returns a number between 0 and 3
-     *//*
-    public static int limitToValidMetadata(int par0)
-    {
-        return par0 & 3;
-    }
-
-    
-    *//**
-     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
-     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
-     *//*
-    @Override
-    protected ItemStack createStackedBlock(int par1)
-    {
-        return new ItemStack(this.blockID, 1, limitToValidMetadata(par1));
-    }
-*/
     @SideOnly(Side.CLIENT)
-	public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
     {
-		for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
-			subItems.add(new ItemStack(this, 1, ix));
-		}
-	}
+        for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
+            subItems.add(new ItemStack(this, 1, ix));
+        }
+    }
 
-	//func_94332_a = registerIcons(IconRegister)
-    //func_94245_a = registerIcon(String)
-	@SideOnly(Side.CLIENT)
-	@Override
+    @SideOnly(Side.CLIENT)
+    @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-		icons = new Icon[MoCreatures.multiBlockNames.size()][2];
+        icons = new Icon[MoCreatures.multiBlockNames.size()][2];
         
-		for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
-		{
-			icons[x][0] = par1IconRegister.registerIcon("mocreatures:" + "logTop_" + MoCreatures.multiBlockNames.get(x));
-			icons[x][1] = par1IconRegister.registerIcon("mocreatures:" + "logSide_" + MoCreatures.multiBlockNames.get(x));
-		}
+        for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
+        {
+            icons[x][0] = par1IconRegister.registerIcon("mocreatures:" + "logTop_" + MoCreatures.multiBlockNames.get(x));
+            icons[x][1] = par1IconRegister.registerIcon("mocreatures:" + "logSide_" + MoCreatures.multiBlockNames.get(x));
+        }
     }
-   
-    
-	/**
+
+    /**
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
-	@SideOnly(Side.CLIENT)
-	@Override
+    @SideOnly(Side.CLIENT)
+    @Override
     public Icon getIcon(int par1Side, int Metadata)
     {
-		if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;
-		if (par1Side < 2)
-		{
-			return icons[Metadata][0];
-		}
-		
-		return icons[Metadata][1];
-		
+        if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;
+        if (par1Side < 2)
+        {
+            return icons[Metadata][0];
+        }
+        return icons[Metadata][1];
     }
 }

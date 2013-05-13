@@ -12,7 +12,6 @@ import drzhark.mocreatures.MoCreatures;
 @SideOnly(Side.CLIENT)
 public class MoCEntityFXUndead extends EntityFX {
 
-	
     public MoCEntityFXUndead(World par1World, double par2, double par4, double par6)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
@@ -21,31 +20,23 @@ public class MoCEntityFXUndead extends EntityFX {
         this.motionZ *= 0.8D;
         this.motionY = (double) (this.rand.nextFloat() * 0.4F + 0.05F);
 
-        //this.setParticleTextureIndex(MoCClientProxy.partchunkf);
         this.setSize(0.01F, 0.01F);
         this.particleGravity = 0.06F;
         this.particleMaxAge = (int) (32.0D / (Math.random() * 0.8D + 0.2D));
         this.particleScale *= 0.8F;
     }
 
-  /*  public int getBrightnessForRender(float par1)
-    {
-        return 257;
-    }*/
-
     /**
      * sets which texture to use (2 = items.png)
      */
     public int getFXLayer()
     {
-    	if (this.onGround)
-    	{
-    	return 1;
-    	}
+        if (this.onGround)
+        {
+        return 1;
+        }
         return 2;
     }
-
-  
 
     /**
      * Called to update the entity's position/logic.
@@ -69,29 +60,25 @@ public class MoCEntityFXUndead extends EntityFX {
             this.motionZ *= 0.7D;
         }
 
-        
         if (this.particleMaxAge-- <= 0)
         {
             this.setDead();
         }
-      
     }
 
     private String getCurrentTexture()
     {
-    	if (this.onGround)
-    	{
-    	return "fxundead1.png";
-    	}
-    	return "fxundead2.png";
+        if (this.onGround)
+        {
+        return "fxundead1.png";
+        }
+        return "fxundead2.png";
     }
-  
 
     @Override
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-    	//func_98187_b = bindTexture(String)
-    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + getCurrentTexture());
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + getCurrentTexture());
         float sizeFactor = 0.1F * this.particleScale;
         float var13 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) par2 - interpPosX);
         float var14 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) par2 - interpPosY);
@@ -102,6 +89,5 @@ public class MoCEntityFXUndead extends EntityFX {
         par1Tessellator.addVertexWithUV((double) (var13 - par3 * sizeFactor + par6 * sizeFactor), (double) (var14 + par4 * sizeFactor), (double) (var15 - par5 * sizeFactor + par7 * sizeFactor), 1D, 1D);
         par1Tessellator.addVertexWithUV((double) (var13 + par3 * sizeFactor + par6 * sizeFactor), (double) (var14 + par4 * sizeFactor), (double) (var15 + par5 * sizeFactor + par7 * sizeFactor), 1D, 0D);
         par1Tessellator.addVertexWithUV((double) (var13 + par3 * sizeFactor - par6 * sizeFactor), (double) (var14 - par4 * sizeFactor), (double) (var15 + par5 * sizeFactor - par7 * sizeFactor), 0D, 0D);
-       
     }
 }

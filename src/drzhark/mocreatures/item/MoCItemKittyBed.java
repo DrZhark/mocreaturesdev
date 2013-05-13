@@ -45,5 +45,4 @@ public class MoCItemKittyBed extends MoCItem {
         }
         return itemstack;
     }
-
 }

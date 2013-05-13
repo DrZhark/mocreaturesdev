@@ -29,17 +29,13 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
 {
     protected boolean divePending;
     protected int maxHealth;
-    //public int type;
     private PathEntity entitypath;
     public EntityLiving roper;
-
-    //public double speedModifier;
 
     public MoCEntityMob(World world)
     {
         super(world);
         setTamed(false);
-        
     }
 
     /**
@@ -52,30 +48,13 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         setType(1);
     }
 
-    /**
-     * Forge methods to send the type int to client from server
-     */
-    /*@Override
-    public void writeSpawnData(ByteArrayDataOutput data)
-    {
-        data.writeInt(type);
-        
-    }
-
-    @Override
-    public void readSpawnData(ByteArrayDataInput data)
-    {
-        type = data.readInt();
-        selectType();
-    }*/
-
     @Override
     public void initCreature()
     {
-    	selectType();
-    	super.initCreature();
+        selectType();
+        super.initCreature();
     }
-    
+
     @Override
     protected void entityInit()
     {
@@ -85,12 +64,10 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         dataWatcher.addObject(17, String.valueOf("")); // displayName empty string by default
         dataWatcher.addObject(18, Integer.valueOf(0)); // int ageTicks / "edad"
         dataWatcher.addObject(19, Integer.valueOf(0)); // int type
-        //dataWatcher.addObject(20, String.valueOf("")); //owners name
     }
 
     public void setType(int i)
     {
-        //if (!MoCreatures.isServer()) return;
         dataWatcher.updateObject(19, Integer.valueOf(i));
     }
 
@@ -130,14 +107,12 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
 
     public void setEdad(int i)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(18, Integer.valueOf(i));
     }
 
     @Override
     public void setAdult(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(15, Byte.valueOf(input));
     }
@@ -145,14 +120,12 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     @Override
     public void setName(String name)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(17, String.valueOf(name));
     }
 
     @Override
     public void setTamed(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(16, Byte.valueOf(input));
     }
@@ -228,9 +201,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
                 || (entity instanceof MoCEntityKittyBed) || (entity instanceof MoCEntityLitterBox) 
                 || (this.getIsTamed() && (entity instanceof MoCEntityAnimal && ((MoCEntityAnimal) entity).getIsTamed())) 
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
-                || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
-
-        );
+                || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)));
     }
 
     @Override
@@ -249,7 +220,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     public void onLivingUpdate()
     {
         if (MoCreatures.isServer() && forceUpdates() && rand.nextInt(1000) == 0)
-        { //send packet 
+        {
             MoCTools.forceDataSync(this);
         }
 
@@ -312,7 +283,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         {
             super.fall(f);
         }
-
     }
 
     @Override
@@ -334,7 +304,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         {
             return super.findPlayerToAttack();
         }
-
     }
 
     @Override
@@ -430,17 +399,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     @Override
     protected void updateEntityActionState()
     {
-        /*if (getIsTamed() && (riddenByEntity == null) && (roper != null))
-        {
-            float f = roper.getDistanceToEntity(this);
-            if (f > 5F)
-            {
-                getPathOrWalkableBlock(roper, f);
-            }
-        }
-
-        else */
-
         if (!isFlyer())
         {
             super.updateEntityActionState();
@@ -455,7 +413,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
             if (entityToAttack != null)
             {
                 entitypath = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
-
             }
         }
         else if (!entityToAttack.isEntityAlive())
@@ -472,7 +429,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
         }
         if (!hasAttacked && (entityToAttack != null) && ((entitypath == null) || (rand.nextInt(10) == 0)))
         {
-            // entitypath = worldObj.getPathToEntity(this, entityToAttack, f);
             entitypath = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
         }
         else if (((entitypath == null) && (rand.nextInt(80) == 0)) || (rand.nextInt(80) == 0))
@@ -685,8 +641,8 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     @Override
     public void setDead()
     {
-    	if (MoCreatures.isServer() && getIsTamed() && this.health > 0)//removing server check causes dupes in client
-        { return; }
+        // Server check required to prevent tamed entities from being duplicated on client-side
+        if (MoCreatures.isServer() && (getIsTamed()) && (health > 0)) { return; }
         super.setDead();
     }
 
@@ -722,7 +678,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
                 }
 
             }
-
         }
         else
         {
@@ -733,134 +688,52 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     @Override
     public String getOwnerName()
     {
-        return "";//this.dataWatcher.getWatchableObjectString(20);
+        return "";
     }
 
     @Override
     public void setOwner(String par1Str)
     {
-        //this.dataWatcher.updateObject(20, par1Str);
     }
-    
+
     @Override
     public void setArmorType(byte i) {}
 
-	public byte getArmorType() 
-	{		
-		return 0;
-	}
-	
-	@Override
+    public byte getArmorType() 
+    {        
+        return 0;
+    }
+    
+    @Override
     public void dismountEntity() {}
 
-    /*@Override
-    public void onDeath(DamageSource damagesource)
+    @Override
+    public int pitchRotationOffset() 
     {
-        if (this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
-        {
-            //System.out.println("owner = " + getOwnerName());
+        return 0;
+    }
 
-            EntityPlayer ep = worldObj.getPlayerEntityByName(this.getOwnerName());
-            if (ep != null)
-            {
-                MoCTools.reduceTamedByPlayer(ep);
-            }
-        }
-
-        super.onDeath(damagesource);
-    }*/
-
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
+    @Override
+    public int rollRotationOffset() 
     {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+        return 0;
+    }
 
-        //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
+    @Override
+    public int yawRotationOffset()
+    {
+        return 0;
+    }
 
-        //changes name
-        if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.shiftedIndex) || (itemstack.itemID == Item.book.shiftedIndex)))
-        {
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-            //TODO NAMER
-            if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }
-            return true;
-        }
-
-        //heals
-        if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            if (MoCreatures.isServer())
-            {
-                health = getMaxHealth();
-            }
-            return true;
-        }
-
-        //attaches rope
-        if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && getIsTamed() && (itemstack.itemID == MoCreatures.rope.shiftedIndex))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            roper = entityplayer;
-            setEating(false);
-            return true;
-        }
-
-        //removes rope
-        if ((roper != null) && getIsTamed())
-        {
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.rope));
-            worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            roper = null;
-            return true;
-        }
-
-        return false;
-    }*/
-
-	@Override
-	public int pitchRotationOffset() 
-	{
-		return 0;
-	}
-
-	@Override
-	public int rollRotationOffset() 
-	{
-		return 0;
-	}
-
-	@Override
-	public int yawRotationOffset()
-	{
-		return 0;
-	}
-	
-	@Override
-	public float getAdjustedZOffset()
-	{
-		return 0F;
-	}
-	
-	@Override
-	public float getAdjustedXOffset()
-	{
-		return 0F;
-	}
+    @Override
+    public float getAdjustedZOffset()
+    {
+        return 0F;
+    }
+    
+    @Override
+    public float getAdjustedXOffset()
+    {
+        return 0F;
+    }
 }

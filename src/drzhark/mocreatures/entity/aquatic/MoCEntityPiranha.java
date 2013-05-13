@@ -13,8 +13,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class MoCEntityPiranha extends MoCEntitySmallFish{
-	
-	public static final String fishNames[] = { "Piranha"};
+
+    public static final String fishNames[] = { "Piranha"};
 
     public MoCEntityPiranha(World world)
     {
@@ -28,7 +28,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     @Override
     public void selectType()
     {
-    	setType(1);
+        setType(1);
     }
     
     @Override
@@ -67,7 +67,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
             return false;
         }
     }
-    
+
     @Override
     public int getMaxHealth()
     {
@@ -75,35 +75,32 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     }
     
     public boolean isNotScared()
-	{
-		return true;
-	}
+    {
+        return true;
+    }
 
-    
     @Override
     protected void attackEntity(Entity entity, float f)
     {
-        if (entity.isInWater() && (f < 0.8D)) //entity.isInsideOfMaterial(Material.water)
+        if (entity.isInWater() && (f < 0.8D))
         {
-        	if (entity instanceof EntityPlayer && ((EntityPlayer)entity).ridingEntity != null)
-        	{
-        		Entity playerMount = ((EntityPlayer)entity).ridingEntity;
-        		if (playerMount instanceof EntityBoat) 
-        		{
-        			return;
-        		}
-        	}
-        	attackTime = 20;
+            if (entity instanceof EntityPlayer && ((EntityPlayer)entity).ridingEntity != null)
+            {
+                Entity playerMount = ((EntityPlayer)entity).ridingEntity;
+                if (playerMount instanceof EntityBoat) 
+                {
+                    return;
+                }
+            }
+            attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
             if (!(entity instanceof EntityPlayer))
             {
                 MoCTools.destroyDrops(this, 3D);
             }
-            
         }
     }
-    
-    
+
     @Override
     protected void dropFewItems(boolean flag, int x)
     {
@@ -119,9 +116,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
             {
                 entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, 90), 0.0F); 
             }
-
         }
     }
-    
-    
 }

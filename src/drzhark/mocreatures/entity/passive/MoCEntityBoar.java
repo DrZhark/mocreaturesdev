@@ -27,7 +27,6 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         force = 1;
         attackRange = 1.0D;
         setEdad(50);
-        // setTamed(false);
         if (rand.nextInt(4) == 0)
         {
             setAdult(false);
@@ -183,5 +182,4 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     {
         return "mob.pig.death";
     }
-
 }

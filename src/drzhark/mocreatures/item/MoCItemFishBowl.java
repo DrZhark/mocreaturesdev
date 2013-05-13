@@ -19,6 +19,9 @@ import net.minecraft.world.World;
 
 public class MoCItemFishBowl extends MoCItem {
 
+    private int fishBowlType;
+    private int ageCounter;
+
     public MoCItemFishBowl(int i)
     {
         super(i);
@@ -33,23 +36,6 @@ public class MoCItemFishBowl extends MoCItem {
         fishBowlType = j;
         ageCounter = 0;
     }
-
-    /*//@Override
-    public ItemStack onItemRightClick3(ItemStack itemstack, World world, EntityPlayer entityplayer)
-    {
-        //if (ageCounter>100)
-        {
-            itemstack.stackSize--;
-            if (MoCreatures.isServer())
-            {
-                MoCEntityFishBowl entityfishbowl = new MoCEntityFishBowl(world, itemstack.getItemDamage());
-                entityfishbowl.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
-                world.spawnEntityInWorld(entityfishbowl);
-            }
-
-        }
-        return itemstack;
-    }*/
 
     public EntityLiving getClosestFish(World worldObj, Entity entity, double d)
     {
@@ -78,22 +64,18 @@ public class MoCItemFishBowl extends MoCItem {
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
-        //if(!worldObj.isRemote)
-
         float var4 = 1.0F;
         double var5 = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double) var4;
         double var7 = entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double) var4 + 1.62D - (double) entityplayer.yOffset;
         double var9 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double) var4;
-        //boolean var11 = this.isFull == 0;
+
         MovingObjectPosition movingObjectPos = this.getMovingObjectPositionFromPlayer(worldObj, entityplayer, true);//fishBowlType == 0);
 
         if (movingObjectPos == null)
         {
-
             return itemstack;
         }
         else
-        //if(!worldObj.isRemote)
         {
             if ((!worldObj.isRemote) && (fishBowlType == 11))// && movingObjectPos.entityHit instanceof MoCEntityFishy)
             {
@@ -101,32 +83,21 @@ public class MoCItemFishBowl extends MoCItem {
                 EntityLiving target = getClosestFish(worldObj, entityplayer, 2D);
                 if (target != null)
                 {
-                    //System.out.println("got one!");
-                    //movingObjectPos.entityHit.setDead();
-                    //if (!worldObj.isRemote)
+                    target.setDead();
+                    if (--itemstack.stackSize == 0)
                     {
-                        //entityplayer.inventory.addItemStackToInventory(MoCEntityFishBowl.toItemStack(((MoCEntityFishy)target).type));
-                        target.setDead();
-                        if (--itemstack.stackSize == 0)
-                        {
-                            return ((MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType())));
-                            //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-                        }
-                        else
-                        {
-                            entityplayer.inventory.addItemStackToInventory(MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType()));
-                            return itemstack;
-                        }
-                        //itemstack.stackSize--;
+                        return ((MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType())));
                     }
-
+                    else
+                    {
+                        entityplayer.inventory.addItemStackToInventory(MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType()));
+                        return itemstack;
+                    }
                 }
-
             }
 
             if (movingObjectPos.typeOfHit == EnumMovingObjectType.TILE)
             {
-
                 int var13 = movingObjectPos.blockX;
                 int var14 = movingObjectPos.blockY;
                 int var15 = movingObjectPos.blockZ;
@@ -137,7 +108,6 @@ public class MoCItemFishBowl extends MoCItem {
                     if (--itemstack.stackSize == 0)
                     {
                         return new ItemStack(MoCreatures.fishbowl_w, 1, 11);
-                        //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                     }
                     else
                     {
@@ -145,18 +115,13 @@ public class MoCItemFishBowl extends MoCItem {
 
                         return itemstack;
                     }
-                    //itemstack.stackSize--;
-
                 }
 
                 //TODO
                 //water filling stuff
-
                 if (MoCreatures.isServer() && (fishBowlType > 0 && fishBowlType < 11) && worldObj.getBlockMaterial(var13, var14, var15) == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
                 {
-
                     MoCEntityFishy entityfish = new MoCEntityFishy(worldObj);
-                    //entityfish.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
                     entityfish.setPosition(var13, var14, var15);
                     entityfish.setTypeInt(fishBowlType);
                     entityfish.selectType();
@@ -167,28 +132,19 @@ public class MoCItemFishBowl extends MoCItem {
                         MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityfish);
                     }
 
-                    //TODO NAMER
-                    //setTamed(true);
-                    //entityfish.setTamed(true);
                     if (--itemstack.stackSize == 0)
                     {
                         return new ItemStack(MoCreatures.fishbowl_e, 1, 0);
-                        //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                     }
                     else
                     {
                         entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.fishbowl_e, 1, 0));
                         return itemstack;
                     }
-                    //itemstack.stackSize--;
-                    //entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.fishbowl_e, 1, 0));
-
-                    //return itemstack;//new ItemStack(MoCreatures.fishbowl_e, 1, 0);
                 }
 
                 if (MoCreatures.isServer() && worldObj.getBlockMaterial(var13, var14, var15).isSolid())
                 {
-
                     MoCEntityFishBowl entityfishbowl = new MoCEntityFishBowl(worldObj, itemstack.getItemDamage());
                     entityfishbowl.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
                     worldObj.spawnEntityInWorld(entityfishbowl);
@@ -196,31 +152,12 @@ public class MoCItemFishBowl extends MoCItem {
                     {
                         entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                     }
-                    //itemstack.stackSize--;
 
                     return itemstack;
                 }
-
             }
-            //else 
-
-            //return itemstack;
         }
 
         return itemstack;
     }
-
-    /* public void onUpdate(ItemStack itemstack, World worldObj, Entity par3Entity, int par4, boolean par5) 
-     {
-         //ageCounter++;
-     }*/
-
-    /*@Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
-        return (new StringBuilder()).append(super.getUnlocalizedName()).append(".").append(itemstack.getItemDamage()).toString();
-    }*/
-    
-    private int fishBowlType;
-    private int ageCounter;
 }

@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
@@ -18,9 +16,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         texture = MoCreatures.proxy.MODEL_TEXTURE + "wraith.png";
         setSize(1.5F, 1.5F);
         isImmuneToFire = false;
-        //attackStrength = 2;
         health = 10;
-        //moveSpeed = 1.3F;
     }
 
     public boolean d2()

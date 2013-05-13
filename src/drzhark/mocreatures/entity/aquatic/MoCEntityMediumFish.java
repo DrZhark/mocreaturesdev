@@ -21,10 +21,10 @@ import drzhark.mocreatures.entity.MoCEntityAquatic;
 
 public class MoCEntityMediumFish extends MoCEntityAquatic{
 
-	public static final String fishNames[] = { "Salmon", "Cod", "Bass"};
+    public static final String fishNames[] = { "Salmon", "Cod", "Bass"};
 
-	private int latMovCounter;
-	
+    private int latMovCounter;
+    
     public MoCEntityMediumFish(World world)
     {
         super(world);
@@ -33,18 +33,16 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
         setEdad(30 + rand.nextInt(70));
         
     }
-    
-    
+
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(3) + 1);
+            setType(rand.nextInt(3) + 1);
         }
-        
     }
-    
+
     @Override
     public int getMaxHealth()
     {
@@ -68,28 +66,7 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
         }
         
     }
-    
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        if (super.interact(entityplayer)) { return false; }
-        
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        
-        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID) 
-        {
-        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-        	if (MoCreatures.isServer())
-        	{
-        		MoCTools.dropFishnet(this);
-        		this.isDead = true;
-        	}
-        	
-        	return true;
-        }
-        return false;
-    }*/
-    
+
     @Override
     protected void dropFewItems(boolean flag, int x)
     {
@@ -105,10 +82,9 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
             {
                 entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, getType() + 69), 0.0F);
             }
-
         }
     }
-    
+
     @Override
     public void onLivingUpdate()
     {
@@ -128,117 +104,112 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water))
                 {
                    MoCTools.runLikeHell(this, entityliving);
-
                 }
             }
-            
+
             if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
             {
-            	this.health = getMaxHealth();
+                this.health = getMaxHealth();
             }
-            
         }
         if (!this.isInsideOfMaterial(Material.water))
         {
-        	prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
-        	rotationPitch = prevRotationPitch;
+            prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
+            rotationPitch = prevRotationPitch;
         }
-        
-       
     }
-    
-    
+
     @Override
     public float getSizeFactor() 
     {   
-    	return (float)getEdad() * 0.01F;
+        return (float)getEdad() * 0.01F;
     }
-    
+
     @Override
     public float getAdjustedYOffset()
     {
-    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
-    	{
-    		return -0.1F;
-    	}
-    	return 0.7F;
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -0.1F;
+        }
+        return 0.7F;
     }
-    
+
     @Override
     protected boolean isFisheable()
     {
-    	return !getIsTamed();
+        return !getIsTamed();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
-	public int yawRotationOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return 90;
-    	}
-    	
-    	
-    	if (rand.nextInt(3) == 0)
-    	{
-    		if (++latMovCounter > 40) latMovCounter = 0;
-    	}
-    	
-    	int latOffset = 0;
-    	if (latMovCounter < 21) 
-    	{
-    		latOffset = latMovCounter;
-    	}
-    	else
-    	{
-    		latOffset = -latMovCounter + 40;
-    	}
- 		return 80 + latOffset;
-	}
-    
-    
+    public int yawRotationOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return 90;
+        }
+        
+        
+        if (rand.nextInt(3) == 0)
+        {
+            if (++latMovCounter > 40) latMovCounter = 0;
+        }
+        
+        int latOffset = 0;
+        if (latMovCounter < 21) 
+        {
+            latOffset = latMovCounter;
+        }
+        else
+        {
+            latOffset = -latMovCounter + 40;
+        }
+         return 80 + latOffset;
+    }
+
+
     @Override
-	public int rollRotationOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
-    	{
-    		return -90;
-    	}
-		return 0;
-	}
-    
+    public int rollRotationOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -90;
+        }
+        return 0;
+    }
+
     @Override
     public boolean renderName()
     {
         return getDisplayName() && (riddenByEntity == null);
     }
-    
+
     @Override
     public int nameYOffset()
     {
         return -30;
     }
-    
+
     @Override
-	public float getAdjustedZOffset()
-	{
-		return 0F;
-	}
-    
+    public float getAdjustedZOffset()
+    {
+        return 0F;
+    }
+
     @Override
-	public float getAdjustedXOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return -0.8F;
-    	}
-		return 0F;
-	}
-    
+    public float getAdjustedXOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -0.8F;
+        }
+        return 0F;
+    }
+
     @Override
     protected boolean canBeTrappedInNet() 
     {
-		return true;
-	}
+        return true;
+    }
 }

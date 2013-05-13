@@ -30,7 +30,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     private int tailcount; // 90 to -45
     private int earcount; // 20 to 40 default = 30
     private int eatcount;
-    //public EntityLiving roper;
 
     // TODO
     /*
@@ -65,14 +64,12 @@ public class MoCEntityGoat extends MoCEntityAnimal {
 
     public void setUpset(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setCharging(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
@@ -135,7 +132,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -253,8 +249,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
             if (rand.nextInt(500) == 0 || entityToAttack == null)
             {
                 calm();
-                // setUpset(false);
-                // attacking = 0;
             }
 
             if (!getCharging() && rand.nextInt(35) == 0)
@@ -275,7 +269,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
                     setCharging(true);
                 }
             }
-
         }
 
         if (getCharging())
@@ -294,26 +287,11 @@ public class MoCEntityGoat extends MoCEntityAnimal {
             if (entityToAttack == null)
             {
                 calm();
-                // chargecount = 0;
-                // moveSpeed = 0.7F;
             }
-
         }
 
         if (!getUpset() && !getCharging())
         {
-            // roped, follow the player
-            /*if (getIsTamed() && (roper != null))
-            {
-                float f = roper.getDistanceToEntity(this);
-                if ((f > 5F))
-                {
-                    getPathOrWalkableBlock(roper, f);
-                    return;
-                }
-
-            }*/
-
             EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 24D);
             if (entityplayer1 != null)
             {// Behaviour that happens only close to player :)
@@ -342,21 +320,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
                         return;
                     }
                 }
-
-                // player nearby does it have foods in hand?
-
-                /*ItemStack itemstack1 = entityplayer1.inventory.getCurrentItem();
-                Item item1 = null;
-                if (itemstack1 != null)    item1 = itemstack1.getItem();
-                if (item1 != null && isItemEdible(item1))
-                {
-                    PathEntity pathentity = worldObj.getPathEntityToEntity(this, entityplayer1, 16F, true, false, false, true);
-                    setPathToEntity(pathentity);
-                    hungry = true;
-                    return;
-
-                }
-                */
 
                 // find other goat to play!
                 if (getType() > 4 && rand.nextInt(200) == 0)
@@ -409,7 +372,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     @Override
     protected void attackEntity(Entity entity, float f)
     {
-
         if (attackTime <= 0 && (f < 3.0D) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY) && attacking > 70)
         {
             attackTime = 30;
@@ -598,7 +560,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
         // 90 to -45
         if (!getSwingTail()) { return 90; }
 
-        // return -tailcount + 90;
         return tailcount - 45;
     }
 
@@ -618,7 +579,6 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        //System.out.println("edad = " + getEdad());
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if (itemstack != null && itemstack.itemID == Item.bucketEmpty.itemID)
@@ -664,7 +624,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
 
     public boolean getBleating()
     {
-        return bleat && (getAttacking() == 0);// && !getAttacking();
+        return bleat && (getAttacking() == 0);
     }
 
     public void setBleating(boolean flag)

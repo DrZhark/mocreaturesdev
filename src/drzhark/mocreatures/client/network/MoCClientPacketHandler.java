@@ -35,7 +35,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
     {
         if (packet.channel.equals("MoCreatures"))
         {
-
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 
             try
@@ -101,7 +100,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
                     {
                         if (ent.entityId == entID && ent instanceof MoCEntityHorse)
                         {
-                            //((MoCEntityHorse)ent).vanishHorse();
                             ((MoCEntityHorse) ent).setVanishC((byte) 1);
                             break;
                         }
@@ -116,7 +114,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
                     {
                         if (ent.entityId == entID && ent instanceof MoCEntityOgre)
                         {
-                            //((MoCEntityHorse)ent).vanishHorse();
                             ((MoCEntityOgre) ent).DestroyingOgre();
                             break;
                         }
@@ -136,8 +133,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
                         }
                     }
                     return;
-                    //MoCClientProxy.setNameID(EntityID);
-
                 }
                 if (packetID == 8) // client receives zebra shuffle command. invokes the .shuffle() method to restart animation
                 {
@@ -254,7 +249,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -266,7 +260,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
     public static void sendNameInfo(int entityId, String nameToSet)
     {
         // client sending name info. int entityID and string name
-
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -286,16 +279,11 @@ public class MoCClientPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
         EntityClientPlayerMP player = MoCClientProxy.mc.thePlayer;
         player.sendQueue.addToSendQueue(packet);
-
-        //EntityClientPlayerMP thePlayerMP = (EntityClientPlayerMP)player;
-        //thePlayerMP.sendQueue.addToSendQueue(packet);
-
     }
 
     public static void sendEntityJumpPacket()
     {
         // client sending horse jump command. 
-
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -313,14 +301,12 @@ public class MoCClientPacketHandler implements IPacketHandler {
         packet.length = packet.data.length;
 
         EntityClientPlayerMP player = MoCClientProxy.mc.thePlayer;
-        //System.out.println("MoCClientPacketHandler sending packet 21 to player " + player.toString());
         player.sendQueue.addToSendQueue(packet);
     }
 
     public static void sendInstaSpawnPacket(int ID, int number)
     {
         // client sending insta spawn command. int ID, int number
-
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -346,7 +332,6 @@ public class MoCClientPacketHandler implements IPacketHandler {
     public static void sendEntityDivePacket()
     {
         // client sending entity dive command. 
-
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
@@ -367,9 +352,9 @@ public class MoCClientPacketHandler implements IPacketHandler {
         player.sendQueue.addToSendQueue(packet);
     }
 
-	public static void sendEntityDismountPacket() 
-	{
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    public static void sendEntityDismountPacket() 
+    {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
         try
         {
@@ -387,18 +372,17 @@ public class MoCClientPacketHandler implements IPacketHandler {
 
         EntityClientPlayerMP player = MoCClientProxy.mc.thePlayer;
         player.sendQueue.addToSendQueue(packet);
-		
-	}
-	
-	/**
-	 * New instaSpawn method with (key) entity ID and number to spawn
-	 * @param entityId
-	 * @param number
-	 */
-	public static void sendInstaSpawnPacket(String entityId, int number)
+        
+    }
+    
+    /**
+     * New instaSpawn method with (key) entity ID and number to spawn
+     * @param entityId
+     * @param number
+     */
+    public static void sendInstaSpawnPacket(String entityId, int number)
     {
         // client sending insta spawn command. int ID, int number
-
         if (!MoCreatures.proxy.instaSpawnerMap.containsKey(entityId) || number < 1)
         {
             return;

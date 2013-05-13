@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 
 public class MoCEntityInsect extends MoCEntityAmbient {
 
-	private int climbCounter;
-	
+    private int climbCounter;
+
     public MoCEntityInsect(World world)
     {
         super(world);
@@ -29,7 +29,6 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     {
         super.entityInit();
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isFlying - 0 false 1 true
-        //dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // climbing - 0 false 1 true
     }
 
     @Override
@@ -51,7 +50,6 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
     public void setIsFlying(boolean flag)
     {
-        //if (!MoCreatures.isServer()) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
@@ -60,11 +58,6 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-
-        /*if (!getIsFlying() && (motionY < 0.0D))
-        {
-            motionY *= 0.6D;
-        }*/
 
         if (getIsFlying())
         {
@@ -77,11 +70,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
         if (MoCreatures.isServer())
         {
-        	if (isOnLadder() && !onGround)
-        	{
-        		MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
-        	}
-        	
+            if (isOnLadder() && !onGround)
+            {
+                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+            }
+            
             if (!getIsFlying() && rand.nextInt(getFlyingFreq()) == 0)
             {
                 List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(4D, 4D, 4D));
@@ -102,14 +95,14 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
             if (isAttractedToLight() && rand.nextInt(50) == 0)
             {
-            	int ai[] = MoCTools.ReturnNearestBlockCoord(this, Block.torchWood.blockID, 8D);
+                int ai[] = MoCTools.ReturnNearestBlockCoord(this, Block.torchWood.blockID, 8D);
                 if (ai[0] > -1000)
                 {
-                	PathEntity pathentity = worldObj.getEntityPathToXYZ(this,ai[0], ai[1], ai[2], 24F, true, false, false, true);
-                	if (pathentity != null)
-                	{
-                		this.setPathToEntity(pathentity);
-                	}
+                    PathEntity pathentity = worldObj.getEntityPathToXYZ(this,ai[0], ai[1], ai[2], 24F, true, false, false, true);
+                    if (pathentity != null)
+                    {
+                        this.setPathToEntity(pathentity);
+                    }
                 }
             }
  
@@ -119,9 +112,10 @@ public class MoCEntityInsect extends MoCEntityAmbient {
                 updateWanderPath();
             }
 
-        }else // client stuff
+        }
+        else // client stuff
         {
-        	if (climbCounter > 0 && ++climbCounter > 8)
+            if (climbCounter > 0 && ++climbCounter > 8)
             {
                 climbCounter = 0;
             }
@@ -134,20 +128,19 @@ public class MoCEntityInsect extends MoCEntityAmbient {
      */
     public boolean isAttractedToLight() 
     {
-		return false;
-	}
+        return false;
+    }
 
-	@Override
+    @Override
     public void performAnimation(int animationType)
     {
-        
         if (animationType == 1) //climbing animation
         {
             climbCounter = 1;
         }
         
     }
-    
+
     @Override
     protected void fall(float f)
     {
@@ -202,9 +195,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
     public boolean climbing()
     {
-    	return (climbCounter != 0);
-    	//return (dataWatcher.getWatchableObjectByte(23) == 1);
-        //return isOnLadder(); //&& !onGround && 
+        return (climbCounter != 0);
     }
 
     @Override
@@ -217,20 +208,19 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     {
         return false;
     }
-    
 
     protected int getFlyingFreq()
     {
-    	return 20;
+        return 20;
     }
 
-	@Override
-	public int rollRotationOffset() 
-	{
-		return 0;
-	}
+    @Override
+    public int rollRotationOffset() 
+    {
+        return 0;
+    }
 
-	/**
+    /**
      * Get this Entity's EnumCreatureAttribute
      */
     public EnumCreatureAttribute getCreatureAttribute()

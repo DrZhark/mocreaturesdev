@@ -21,8 +21,6 @@ public class MoCItemCreaturePedia extends MoCItem {
     {
         super(i);
         maxStackSize = 1;
-        //setHasSubtypes(true);
-        //ageCounter = 0;
     }
 
     /**
@@ -34,48 +32,34 @@ public class MoCItemCreaturePedia extends MoCItem {
 
         if (entityliving instanceof MoCEntityHorse)
         {
-            //System.out.println("showing horse");
             MoCreatures.showCreaturePedia("/mocreatures/pedia/horse.png");
             return;
         }
 
         if (entityliving instanceof MoCEntityTurtle)
         {
-            //System.out.println("showing turtle");
             MoCreatures.showCreaturePedia("/mocreatures/pedia/turtle.png");
             return;
         }
 
         if (entityliving instanceof MoCEntityBunny)
         {
-            //System.out.println("showing bunny");
             MoCreatures.showCreaturePedia("/mocreatures/pedia/bunny.png");
             return;
         }
 
         if (entityliving instanceof MoCEntityDolphin)
         {
-            //System.out.println("showing dolphin");
             MoCreatures.showCreaturePedia("/mocreatures/pedia/dolphin.png");
             return;
         }
-
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
-        /*if (++ageCounter < 2) 
-            {
-            System.out.println("counter < 2");
-            return itemstack;
-            }*/
-
-        //int i = itemstack.getItemDamage();
-
-        if (!worldObj.isRemote)// && i != 0)
+        if (!worldObj.isRemote)
         {
-            //System.out.println("code went through");
             double dist = 5D;
             double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
             double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
@@ -109,21 +93,18 @@ public class MoCItemCreaturePedia extends MoCItem {
 
             if (entityliving instanceof MoCEntityHorse)
             {
-                //System.out.println("showing horse");
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/horse.png");
                 return itemstack;
             }
 
             if (entityliving instanceof MoCEntityTurtle)
             {
-                //System.out.println("showing turtle");
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/turtle.png");
                 return itemstack;
             }
 
             if (entityliving instanceof MoCEntityBunny)
             {
-                //System.out.println("showing bunny");
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/bunny.png");
                 return itemstack;
             }
@@ -135,9 +116,6 @@ public class MoCItemCreaturePedia extends MoCItem {
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/dolphin.png");
                 return itemstack;
             }*/
-
-            //ageCounter = 0;
-
         }
 
         return itemstack;

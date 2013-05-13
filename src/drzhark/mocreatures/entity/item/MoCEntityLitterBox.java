@@ -26,13 +26,6 @@ public class MoCEntityLitterBox extends EntityLiving {
         texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
     }
 
-    /*public MoCEntityLitterBox(World world, double d, double d1, double d2)
-    {
-        super(world);
-        setSize(1.0F, 0.3F);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
-    }*/
-
     @Override
     protected void entityInit()
     {
@@ -228,7 +221,6 @@ public class MoCEntityLitterBox extends EntityLiving {
                 if (entitymob instanceof MoCEntityOgre)
                 {
                     ((MoCEntityOgre) entitymob).pendingSmashAttack = false;
-                    //((MoCEntityOgre) entitymob).attackTime = 20;
                 }
             }
 

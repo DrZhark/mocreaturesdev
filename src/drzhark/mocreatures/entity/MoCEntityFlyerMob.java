@@ -13,13 +13,10 @@ public abstract class MoCEntityFlyerMob extends MoCEntityMob {
     protected int attackStrength;
     private PathEntity entitypath;
 
-    //public double speedModifier;
-
     public MoCEntityFlyerMob(World world)
     {
         super(world);
         isCollidedVertically = false;
-        //speedModifier = 0.03D;
         setSize(1.5F, 1.5F);
         attackStrength = 3;
         health = 10;
@@ -144,7 +141,6 @@ public abstract class MoCEntityFlyerMob extends MoCEntityMob {
             if (entityToAttack != null)
             {
                 entitypath = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
-
             }
         }
         else if (!entityToAttack.isEntityAlive())
@@ -161,7 +157,6 @@ public abstract class MoCEntityFlyerMob extends MoCEntityMob {
         }
         if (!hasAttacked && (entityToAttack != null) && ((entitypath == null) || (rand.nextInt(10) == 0)))
         {
-            // entitypath = worldObj.getPathToEntity(this, entityToAttack, f);
             entitypath = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
         }
         else if (((entitypath == null) && (rand.nextInt(80) == 0)) || (rand.nextInt(80) == 0))

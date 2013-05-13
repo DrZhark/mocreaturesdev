@@ -67,28 +67,24 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     public void setHasFood(boolean flag)
     {
-        //if (worldObj.isRemote)    return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(15, Byte.valueOf(input));
     }
 
     public void setHasMilk(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(16, Byte.valueOf(input));
     }
 
     public void setPickedUp(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(17, Byte.valueOf(input));
     }
 
     public void setSheetColor(int i)
     {
-        //if (worldObj.isRemote) return;
         dataWatcher.updateObject(18, Integer.valueOf(i));
     }
 
@@ -224,8 +220,6 @@ public class MoCEntityKittyBed extends EntityLiving {
             return true;
         }
     }
-    
-    
 
     @Override
     public void moveEntity(double d, double d1, double d2)

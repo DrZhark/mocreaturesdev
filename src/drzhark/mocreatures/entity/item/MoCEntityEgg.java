@@ -56,10 +56,6 @@ public class MoCEntityEgg extends EntityLiving {
         return true;
     }
 
-    /*
-     * @Override protected void entityInit() { }
-     */
-
     @Override
     protected String getDeathSound()
     {
@@ -137,7 +133,6 @@ public class MoCEntityEgg extends EntityLiving {
             if (rand.nextInt(20) == 0)
             {
                 lCounter++;
-                //System.out.println("counter = " + lCounter);
             }
 
             if (lCounter > 500)
@@ -159,17 +154,11 @@ public class MoCEntityEgg extends EntityLiving {
 
                 if (tCounter == 5)
                 {
-                	NotifyEggHatching();                    
+                    NotifyEggHatching();                    
                 }
                 
                 if (tCounter >= 30)
                 {
-
-                    // EntityLiving entityspawn = spawnLiving(creatureName,
-                    // MoCreatures.mc.theWorld);
-
-                    // if (entityliving != null)
-
                     if (getEggType() < 10) // fishy
                     {
                         MoCEntityFishy entityspawn = new MoCEntityFishy(worldObj);
@@ -201,15 +190,13 @@ public class MoCEntityEgg extends EntityLiving {
                             if (MoCreatures.isServer())
                             {
                                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                                //TODO NAMER
-                                //entityspawn.setTamed(true);
                             }
                         }
                     }
 
                     else if (getEggType()  == 90) // piranha
                     {
-                    	MoCEntityPiranha entityspawn = new MoCEntityPiranha(worldObj);
+                        MoCEntityPiranha entityspawn = new MoCEntityPiranha(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
                         worldObj.spawnEntityInWorld(entityspawn);
@@ -226,7 +213,7 @@ public class MoCEntityEgg extends EntityLiving {
                     
                     else if (getEggType() > 79 && getEggType() < (80 + MoCEntitySmallFish.fishNames.length)) // smallfish
                     {
-                    	MoCEntitySmallFish entityspawn = new MoCEntitySmallFish(worldObj);
+                        MoCEntitySmallFish entityspawn = new MoCEntitySmallFish(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(getEggType() - 79);
@@ -244,7 +231,7 @@ public class MoCEntityEgg extends EntityLiving {
                     
                     else if (getEggType() > 69 && getEggType() < (80 + MoCEntityMediumFish.fishNames.length)) // mediumfish
                     {
-                    	MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(worldObj);
+                        MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(getEggType() - 69);
@@ -259,12 +246,9 @@ public class MoCEntityEgg extends EntityLiving {
                             }
                         }
                     }
-                    //else if (i > 69 && i < (70 + MoCEntityMediumFish.fishNames.length))
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
-
                     setDead();
                 }
-
             }
 
             else if (getEggType() > 20 && MoCTools.isNearTorch(this, 4D) && (rand.nextInt(20) == 0)) // non aquatic creatures
@@ -275,25 +259,21 @@ public class MoCEntityEgg extends EntityLiving {
                 if (tCounter % 5 == 0)
                 {
                     motionY += 0.2D;
-
-
                 }
-                
+
                 if (tCounter == 5)
                 {
-                	NotifyEggHatching();                    
+                    NotifyEggHatching();                    
                 }
 
                 if (tCounter >= 30)
                 {
-
                     if (getEggType() > 20 && getEggType() < 29) // snakes
                     {
                         MoCEntitySnake entityspawn = new MoCEntitySnake(worldObj);
 
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(getEggType() - 20);
-                        //entityspawn.selectType();
                         entityspawn.setEdad(50);
                         worldObj.spawnEntityInWorld(entityspawn);
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
@@ -302,8 +282,6 @@ public class MoCEntityEgg extends EntityLiving {
                             if (MoCreatures.isServer())
                             {
                                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                                //TODO NAMER
-                                //entityspawn.setTamed(true);
                             }
                         }
                     }
@@ -325,11 +303,9 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(typeInt);
-                        //entityspawn.selectType();
                         entityspawn.setEdad(35);
                         worldObj.spawnEntityInWorld(entityspawn);
                         entityspawn.setEntityHealth(entityspawn.getMaxHealth());
-                        //System.out.println("setting health of hatch to " + entityspawn.getMaxHealth());
 
                         if (getEggType() == 31)//stolen egg that hatches a tamed ostrich
                         {
@@ -339,18 +315,8 @@ public class MoCEntityEgg extends EntityLiving {
                                 if (MoCreatures.isServer())
                                 {
                                     MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                                    //TODO NAMER
-                                    //entityspawn.setTamed(true);
                                 }
                             }
-
-                            //if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-                            //{
-                            //    EntityPlayer player = worldObj.getClosestPlayerToEntity(this, 24D);
-                            //MoCreatures.proxy.setName(player, entityspawn);
-                            //    MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) player, entityspawn.entityId);
-                            //}
-
                         }
                     }
 
@@ -375,7 +341,6 @@ public class MoCEntityEgg extends EntityLiving {
                     {
                         MoCEntityPetScorpion entityspawn = new MoCEntityPetScorpion(worldObj);
                         int typeInt = getEggType() - 40;
-                        //entityspawn.cheated = false;
                         entityspawn.setPosition(posX, posY, posZ);
                         entityspawn.setType(typeInt);
                         entityspawn.setAdult(false);
@@ -419,10 +384,10 @@ public class MoCEntityEgg extends EntityLiving {
 
     private void NotifyEggHatching()
     {
-    	EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
+        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-        	entityplayer.sendChatToPlayer("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area");
+            entityplayer.sendChatToPlayer("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area");
         }
     }
     public int getSize()

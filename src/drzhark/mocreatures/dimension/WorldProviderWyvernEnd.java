@@ -18,17 +18,13 @@ import drzhark.mocreatures.MoCreatures;
 
 public class WorldProviderWyvernEnd extends WorldProviderSurface
 {
-//    private IRenderHandler skyRenderer;
-
-	/**
+    /**
      * creates a new world chunk manager for WorldProvider
      */
     public void registerWorldChunkManager()
     {
-        //this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
         this.worldChunkMgr = new WorldChunkManagerWyvernLair(new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID), 0.5F, 0.0F);
         setDimension(MoCreatures.WyvernLairDimensionID);
-        //this.dimensionId = MoCreatures.WyvernLairDimensionID;
         setCustomSky();
         if (MoCreatures.proxy.useCustomSpawner)
         {
@@ -50,22 +46,13 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
    
     private void setCustomSky()
     {
-    	if (MoCreatures.isServer())
-    	{
-    		return;
-    	}
-    	setSkyRenderer(new MoCSkyRenderer());
+        if (MoCreatures.isServer())
+        {
+            return;
+        }
+        setSkyRenderer(new MoCSkyRenderer());
     }
-//    /**
-//     * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
-//     */
-//    @Override
-//    public float calculateCelestialAngle(long par1, float par3)
-//    {
-//        return 0.0F;
-//    }
 
-    
     @SideOnly(Side.CLIENT)
 
     /**
@@ -76,20 +63,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
     {
         return null;
     }
-    
-//    @Override
-//    protected void generateLightBrightnessTable()
-//    {
-//        float var1 = 0.1F;
-//
-//        for (int var2 = 0; var2 <= 15; ++var2)
-//        {
-//            float var3 = 1.0F - (float)var2 / 15.0F;
-//            this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
-//        }
-//    }
-    
-    
+
     @SideOnly(Side.CLIENT)
 
     /**
@@ -110,14 +84,6 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
             var4 = 1.0F;
         }
 
-//        float var5 = (float)(var3 >> 16 & 255) / 255.0F;
-//        float var6 = (float)(var3 >> 8 & 255) / 255.0F;
-//        float var7 = (float)(var3 & 255) / 255.0F;
-        
-        //float var5 = (float)(var3 >> 174 & 255) / 255.0F;
-        //float var6 = (float)(var3 >> 117 & 255) / 255.0F;
-        //float var7 = (float)(var3 >> 255 & 255) / 255.0F;
-        
         float var5 = 0/255.0F;
         float var6 = 98/255.0F;
         float var7 = 73/255.0F;
@@ -183,7 +149,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
     @Override
     public String getWelcomeMessage()
     {
-    	return "Entering the Wyvern Lair";
+        return "Entering the Wyvern Lair";
     }
     /**
      * Gets the hard-coded portal location to use when entering this dimension.
@@ -205,7 +171,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
      */
     public boolean doesXZShowFog(int par1, int par2)
     {
-        return true;//true;
+        return true;
     }
 
     /**
@@ -215,76 +181,57 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
     {
         return "Wyvern Lair";
     }
-    
-//    @SideOnly(Side.CLIENT)
-//    @Override
-//        public void setSkyRenderer(IRenderHandler skyRenderer)
-//        {
-//            this.skyRenderer = skyRenderer;
-//       }
-    
-    
-    
-	 public String getSunTexture()
-	 {
-		 return "/mocreatures.twinsuns.png";//"/sunRed.png";
-	 }
 
-	 /*public String getMoonTexture()
-	 {
-	 return "/moonGreen.png";
-	 }*/
+     public String getSunTexture()
+     {
+         return "/mocreatures.twinsuns.png";
+     }
 
-	 public boolean renderStars()
-	 {
-	 return true;
-	 }
-	 
-	 public boolean renderClouds()
-	 {
-	 return true;
-	 }
+     public boolean renderStars()
+     {
+     return true;
+     }
+     
+     public boolean renderClouds()
+     {
+     return true;
+     }
 
-	 //not active?
-	
-	 public boolean renderVoidFog()
-	 {
-		 return false;
-	 }
+     //not active?
+     public boolean renderVoidFog()
+     {
+         return false;
+     }
 
-	 public boolean renderEndSky()
-	 {
-	 return false;
-	 }
-	
-	
-	 public float setSunSize()
-	 {
-	 return 10.0F;
-	 }
+     public boolean renderEndSky()
+     {
+     return false;
+     }
 
-	 
-	 public float setMoonSize()
-	 {
-	 return 0.5F;
-	 }
-	 
-	 public float getStarBrightness(World world, float f)
-	    {
-	        return 1.0F;
-	    }
-	    
-	    
-	 
-	@Override
-		 public String getSaveFolder()
-		 {
-		        return "MoCWyvernLair";
-		 }
-		 
-		@Override
-		public double getMovementFactor()
-	    {
-			return 1.0;
-	    }
+     public float setSunSize()
+     {
+     return 10.0F;
+     }
+
+     public float setMoonSize()
+     {
+     return 0.5F;
+     }
+     
+     public float getStarBrightness(World world, float f)
+     {
+         return 1.0F;
+     }
+
+    @Override
+    public String getSaveFolder()
+    {
+        return "MoCWyvernLair";
+    }
+
+    @Override
+    public double getMovementFactor()
+    {
+        return 1.0;
+    }
 }

@@ -86,9 +86,7 @@ public class MoCSettingInt extends SettingInt {
         }
 
         if (displayWidget != null) {
-            //System.out.println("displayWidget name = " + displayWidget.niceName);
             displayWidget.update();
         }
     }
-
 }

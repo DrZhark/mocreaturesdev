@@ -13,7 +13,6 @@ public class MoCEntityHellRat extends MoCEntityRat {
         texture = MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png";
         setSize(0.7F, 0.7F);
         health = 20;
-        //attackStrength = 2;
         isImmuneToFire = true;
     }
 
@@ -23,7 +22,6 @@ public class MoCEntityHellRat extends MoCEntityRat {
     public void selectType()
     {
         setType(4);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png";
     }
 
     /**
@@ -47,7 +45,6 @@ public class MoCEntityHellRat extends MoCEntityRat {
         String textNumber = "" + textCounter;
         textNumber = textNumber.substring(0, 1);
         return MoCreatures.proxy.MODEL_TEXTURE + "hellrat" + textNumber + ".png";
-
     }
 
     @Override

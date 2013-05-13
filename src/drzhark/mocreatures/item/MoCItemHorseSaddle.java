@@ -27,5 +27,4 @@ public class MoCItemHorseSaddle extends MoCItem {
         }
         return false;
     }
-
 }

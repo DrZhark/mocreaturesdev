@@ -26,9 +26,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityKitty extends MoCEntityAnimal {
-    //public float    edad;
-    //public int      maxhealth;
-    //private final boolean textureSet;
+
     private int kittytimer;
     private int madtimer;
     private boolean foundTree;
@@ -42,7 +40,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     {
         super(world);
         setSize(0.7F, 0.5F);
-        //textureSet = false;
         setAdult(true);
         setEdad(40);
         setKittyState(1);
@@ -92,7 +89,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 setType(8);
             }
         }
-
     }
 
     @Override
@@ -159,21 +155,9 @@ public class MoCEntityKitty extends MoCEntityAnimal {
         return (dataWatcher.getWatchableObjectByte(25) == 1);
     }
 
-    /*public boolean getInBed()
-    {
-        return inBed;
-        //return (dataWatcher.getWatchableObjectByte(17) & (1 << 2)) != 0;
-    }*/
-
-    /* public boolean getIsSleepy()
-     {
-         return (dataWatcher.getWatchableObjectByte(16) & (1 << 7)) != 0;
-     }*/
-
     public boolean getIsSwinging()
     {
         return isSwinging;
-        //return (dataWatcher.getWatchableObjectByte(16) & (1 << 1)) != 0;
     }
 
     public boolean getOnTree()
@@ -183,55 +167,31 @@ public class MoCEntityKitty extends MoCEntityAnimal {
 
     public void setKittyState(int i)
     {
-        if (!MoCreatures.isServer()) { return; }
         dataWatcher.updateObject(22, Integer.valueOf(i));
     }
 
     public void setSitting(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setHungry(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
 
     public void setIsEmo(boolean flag)
     {
-        if (!MoCreatures.isServer()) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(25, Byte.valueOf(input));
     }
 
-    /*public void setInBed(boolean var1)
-    {
-        byte varT = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(17) | (1 << 2)));
-        byte varF = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(17) & ~(1 << 2)));
-        dataWatcher.updateObject(17, var1 ? varT : varF);
-    }*/
-
-    /*    public void setEmoteIcon(String texture)
-    {
-        dataWatcher.updateObject(22, String.valueOf(texture));
-    }
-    */
     public void setOnTree(boolean var1)
     {
         onTree = var1;
     }
-
-    /*public void setSleepy(boolean var1)
-    {
-        isSleeping = var1;
-        //byte varT = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(16) | (1 << 7)));
-        //byte varF = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(16) & ~(1 << 7)));
-        //dataWatcher.updateObject(16, var1 ? varT : varF);
-    }*/
 
     public void setSwinging(boolean var1)
     {
@@ -259,7 +219,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 swingArm();
             }
             if (((getKittyState() == 13) && (entity instanceof EntityPlayer)) || ((getKittyState() == 8) && (entity instanceof EntityItem)) || ((getKittyState() == 18) && (entity instanceof MoCEntityKitty)) || (getKittyState() == 10)) { return; }
-            //if(worldObj.isRemote) 
+
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 1);
         }
     }
@@ -619,11 +579,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            //TODO NAMER
-            /*if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }*/
             return true;
         }
         if ((getKittyState() == 7) && (itemstack != null) && ((itemstack.itemID == Item.cake.itemID) || (itemstack.itemID == Item.fishRaw.itemID) || (itemstack.itemID == Item.fishCooked.itemID)))
@@ -665,18 +620,13 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             changeKittyState(7);
             return true;
         }
-        //if ((itemstack != null) && (getKittyState() > 2) && ((itemstack.itemID == Item.pickaxeDiamond.itemID) || (itemstack.itemID == Item.pickaxeWood.itemID) || (itemstack.itemID == Item.pickaxeStone.itemID) || (itemstack.itemID == Item.pickaxeIron.itemID) || (itemstack.itemID == Item.pickaxeGold.itemID))) { return true; }
         if ((itemstack != null) && (getKittyState() > 2) && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
         {
             if (MoCreatures.isServer())
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            //TODO NAMER
-            /*if (!MoCreatures.isServer())
-            {
-                MoCreatures.proxy.setName(entityplayer, this);
-            }*/
+
             return true;
         }
         if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == MoCreatures.rope.itemID))
@@ -765,7 +715,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 if (getEdad() >= 100)
                 {
                     setAdult(true);
-                    //unused_flag = false;
                 }
             }
             if (!getIsHungry() && !getIsSitting() && (rand.nextInt(100) == 0))
@@ -1234,7 +1183,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                         break;
                     }
                     PathEntity pathentity = worldObj.getEntityPathToXYZ(this, treeCoord[0], treeCoord[1], treeCoord[2], 24F, true, false, false, true);
-                    //PathEntity pathentity = worldObj.getEntityPathToXYZ(this, i1, j1, k1, 16F, true, false, false, true);
+
                     if (pathentity != null)
                     {
                         setPathToEntity(pathentity);
@@ -1423,7 +1372,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             case 0:
                 changeKittyState(1);
                 break;
-            //                case 22: // '\026'
+            // case 22: // '\026'
             default:
                 changeKittyState(7);
                 break;
@@ -1479,12 +1428,6 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             return;
         }
     }
-
-    /*public void setTypeInt(int i)
-    {
-        type = i;
-        selectType();
-    }*/
 
     public void swingArm()
     {
@@ -1552,13 +1495,13 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     @Override
     public void onDeath(DamageSource damagesource)
     {
-    	if (MoCreatures.isServer())
+        if (MoCreatures.isServer())
         {
-        	if (getIsTamed())
-        	{
-        		MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.medallion, 1));
-        	}
+            if (getIsTamed())
+            {
+                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.medallion, 1));
+            }
         }
-    	super.onDeath(damagesource);
+        super.onDeath(damagesource);
     }
 }

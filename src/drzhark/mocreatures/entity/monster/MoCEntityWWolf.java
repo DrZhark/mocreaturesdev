@@ -22,14 +22,11 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public MoCEntityWWolf(World world)
     {
         super(world);
-        //wolfboolean = false;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
         setSize(0.9F, 1.3F);
-        //attackStrength = 1;
     }
 
     public int mouthCounter;
-    //public int standCounter;
     public int tailCounter;
 
     /**
@@ -58,42 +55,12 @@ public class MoCEntityWWolf extends MoCEntityMob {
             {
                 setType(4);
             }
-
-            //health = getMaxHealth();
         }
-
-        /*if (type == 1)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfblack.png";
-            
-        } 
-        if (type == 2)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
-            
-        }
-        if (type == 3)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "wolftimber.png"; //snow wolf
-            
-        } 
-        if (type == 4)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfdark.png";
-            
-        } 
-        
-        if (type == 5)
-        {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfbright.png";
-            
-        } */
     }
 
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -152,16 +119,10 @@ public class MoCEntityWWolf extends MoCEntityMob {
             mouthCounter = 0;
         }
 
-        /*if (standCounter > 0 && ++standCounter > 15)
-        {
-            standCounter = 0;
-        }*/
-
         if (tailCounter > 0 && ++tailCounter > 8)
         {
             tailCounter = 0;
         }
-
     }
 
     @Override

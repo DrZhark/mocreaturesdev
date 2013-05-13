@@ -59,7 +59,6 @@ public class MoCItemWhip extends MoCItem {
                     { 
                        continue;
                     }
-
                 }
                 
                 if (entity instanceof MoCEntityBigCat)
@@ -72,7 +71,6 @@ public class MoCItemWhip extends MoCItem {
                     }
                     else if ((world.difficultySetting > 0) && entitybigcat.getIsAdult())
                     {
-                        //entitybigcat.entityToAttack = entityplayer;
                         entitybigcat.setTarget(entityplayer);
                     }
                 }
@@ -98,7 +96,6 @@ public class MoCItemWhip extends MoCItem {
                         {
                             entityhorse.setEating(!entityhorse.getEating());
                         }
-
                     }
                 }
                 
@@ -113,14 +110,14 @@ public class MoCItemWhip extends MoCItem {
                 
                 if ((entity instanceof MoCEntityWyvern))
                 {
-                	MoCEntityWyvern entitywyvern = (MoCEntityWyvern) entity;
+                    MoCEntityWyvern entitywyvern = (MoCEntityWyvern) entity;
                     if (entitywyvern.getIsTamed() && !entitywyvern.isOnAir())
                     {
-                    	entitywyvern.setSitting(!entitywyvern.getIsSitting());
+                        entitywyvern.setSitting(!entitywyvern.getIsSitting());
                     }
                 }
                 
-                if (entity instanceof MoCEntityOstrich)// && entity.riddenByEntity != null)
+                if (entity instanceof MoCEntityOstrich)
                 {
                     MoCEntityOstrich entityostrich = (MoCEntityOstrich) entity;
 
@@ -135,10 +132,8 @@ public class MoCItemWhip extends MoCItem {
                     {
                         entityostrich.setHiding(!entityostrich.getHiding());
                     }
-
                 }
-                
-                if (entity instanceof MoCEntityElephant)// && entity.riddenByEntity != null)
+                if (entity instanceof MoCEntityElephant)
                 {
                     MoCEntityElephant entityelephant = (MoCEntityElephant) entity;
 
@@ -147,9 +142,7 @@ public class MoCItemWhip extends MoCItem {
                     {
                         entityelephant.sprintCounter = 1;
                     }
-
                 }
-
             }
 
             if (i1 > 6)
@@ -157,46 +150,6 @@ public class MoCItemWhip extends MoCItem {
                 //entityplayer.triggerAchievement(MoCreatures.Indiana);
             }
             return true;
-        }
-        if (MoCreatures.isServer() && (l != 0) && ((k1 == Block.signPost.blockID) || (j1 == Block.signPost.blockID)) && (j1 != 0))
-        {
-            //removed
-            /*TileEntitySign tileentitysign = (TileEntitySign) world.getBlockTileEntity(i, j + 1, k);
-            if (tileentitysign == null)
-            {
-                tileentitysign = (TileEntitySign) world.getBlockTileEntity(i, j, k);
-            }
-            if (tileentitysign != null)
-            {
-                int i2 = 0;
-                //List list1 = world.getLoadedEntityList(); //client
-                List list1 = world.loadedEntityList; //server
-                for (int j2 = 0; j2 < list1.size(); j2++)
-                {
-                    Entity entity1 = (Entity) list1.get(j2);
-                    if (entity1 instanceof EntityOcelot)
-                    {
-                        entity1.setDead();
-                        //MoCEntityBunny entitybunny = (MoCEntityBunny) entity1;
-                        //i2++;
-                        //entitybunny.setDead();
-                    }
-                }
-
-                String s = String.valueOf(i2);
-                tileentitysign.signText[0] = "";
-                tileentitysign.signText[1] = "R.I.P.";
-                tileentitysign.signText[2] = (new StringBuilder()).append(s).append(" Ocelots").toString();
-                tileentitysign.signText[3] = "";
-                if (i2 > 69)
-                {
-                    //entityplayer.triggerAchievement(MoCreatures.BunnyKilla);
-                }
-                whipFX(world, i, j, k);
-                world.playSoundAtEntity(entityplayer, "swhip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
-                itemstack.damageItem(1, entityplayer);
-                return true;
-            }*/
         }
         return false;
     }

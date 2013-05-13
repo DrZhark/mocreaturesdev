@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class MoCItem extends Item// implements ITextureProvider
+public class MoCItem extends Item
 {
     public MoCItem(int i)
     {
@@ -15,14 +15,6 @@ public class MoCItem extends Item// implements ITextureProvider
         this.setCreativeTab(MoCreatures.tabMoC);
     }
 
-   /* @Override
-    public String getTextureFile()
-    {
-        return "/mocreatures/items.png";
-    }*/
-
-   
-    
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister par1IconRegister)

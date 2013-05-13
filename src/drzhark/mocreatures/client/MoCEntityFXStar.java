@@ -41,7 +41,6 @@ public class MoCEntityFXStar extends EntityFX {
         return 1;
     }
 
-
     /**
      * Called to update the entity's position/logic.
      */
@@ -65,14 +64,12 @@ public class MoCEntityFXStar extends EntityFX {
             this.motionZ *= 0.7D;
         }
 
-      
         if (this.particleMaxAge-- <= 0)
         {
             this.setDead();
         }
-        
     }
-    
+
     @Override
     public void setParticleTextureIndex(int par1)
     {
@@ -83,13 +80,11 @@ public class MoCEntityFXStar extends EntityFX {
     {
     }
 
-
-
     @Override
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-    	//func_98187_b = bindTexture(String)
-    	FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + "fxstar.png");
+        //func_98187_b = bindTexture(String)
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(MoCreatures.proxy.MISC_TEXTURE + "fxstar.png");
         float sizeFactor = 0.1F * this.particleScale;
         float var13 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) par2 - interpPosX);
         float var14 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) par2 - interpPosY);
@@ -100,8 +95,5 @@ public class MoCEntityFXStar extends EntityFX {
         par1Tessellator.addVertexWithUV((double) (var13 - par3 * sizeFactor + par6 * sizeFactor), (double) (var14 + par4 * sizeFactor), (double) (var15 - par5 * sizeFactor + par7 * sizeFactor), 1D, 1D);
         par1Tessellator.addVertexWithUV((double) (var13 + par3 * sizeFactor + par6 * sizeFactor), (double) (var14 + par4 * sizeFactor), (double) (var15 + par5 * sizeFactor + par7 * sizeFactor), 1D, 0D);
         par1Tessellator.addVertexWithUV((double) (var13 + par3 * sizeFactor - par6 * sizeFactor), (double) (var14 - par4 * sizeFactor), (double) (var15 + par5 * sizeFactor - par7 * sizeFactor), 0D, 0D);
-       
     }
-    
-    
 }

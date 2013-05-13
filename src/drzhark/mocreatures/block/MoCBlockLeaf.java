@@ -1,8 +1,5 @@
 package drzhark.mocreatures.block;
 
-
-
-
 import java.util.List;
 import java.util.Random;
 
@@ -21,24 +18,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 
-
 public class MoCBlockLeaf extends BlockLeavesBase
 {
     int adjacentTreeBlocks[];
 
     @SideOnly(Side.CLIENT)
     private Icon[] icons;
-    //private int graphicSetting;
-    
+
     public MoCBlockLeaf(int i)
     {
         super(i, Material.leaves, true);
-        //super(i);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
-    
-      public void onBlockRemoval(World world, int i, int j, int k)
+    public void onBlockRemoval(World world, int i, int j, int k)
     {
         int l = 1;
         int i1 = l + 1;
@@ -57,11 +50,8 @@ public class MoCBlockLeaf extends BlockLeavesBase
                             world.setBlockMetadataWithNotify(i + j1, j + k1, k + l1, j2 | 8,3);
                         }
                     }
-
                 }
-
             }
-
         }
     }
 
@@ -80,8 +70,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     {
         return !this.graphicsLevel;
     }
-    
-       
+
     @Override
     public void updateTick(World world, int i, int j, int k, Random random)
     {
@@ -110,12 +99,12 @@ public class MoCBlockLeaf extends BlockLeavesBase
                         for(int i3 = -byte0; i3 <= byte0; i3++)
                         {
                             int k3 = world.getBlockId(i + l1, j + k2, k + i3);
-                            if(k3 == MoCreatures.mocLog.blockID)            ///////Log//////////////
+                            if(k3 == MoCreatures.mocLog.blockID) ///////Log//////////////
                             {
                                 adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = 0;
                                 continue;
                             }
-                            if(k3 == MoCreatures.mocLeaf.blockID)               ///////Leaf///////////
+                            if(k3 == MoCreatures.mocLeaf.blockID) ///////Leaf///////////
                             {
                                 adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = -2;
                             } else
@@ -123,9 +112,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
                                 adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = -1;
                             }
                         }
-
                     }
-
                 }
 
                 for(int i2 = 1; i2 <= 4; i2++)
@@ -165,13 +152,9 @@ public class MoCBlockLeaf extends BlockLeavesBase
                                     adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + (l3 + k1 + 1)] = i2;
                                 }
                             }
-
                         }
-
                     }
-
                 }
-
             }
             int j2 = adjacentTreeBlocks[k1 * j1 + k1 * byte1 + k1];
             if(j2 >= 0)
@@ -211,22 +194,19 @@ public class MoCBlockLeaf extends BlockLeavesBase
             }
         }
     }
-    
-   
+
     private void removeLeaves(World par1World, int par2, int par3, int par4)
     {
         this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
         par1World.setBlockToAir(par2, par3, par4);
     }
-    
-    
+
     @Override
     public int quantityDropped(Random random)
     {
         return random.nextInt(20) != 0 ? 0 : 1;
     }
 
-       
     @Override
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
@@ -240,89 +220,55 @@ public class MoCBlockLeaf extends BlockLeavesBase
             super.harvestBlock(world, entityplayer, i, j, k, l);
         }
     }
-    
+
     @Override
     public int damageDropped(int i)
     {
         return i;
     }
 
-    
-    /*@SideOnly(Side.CLIENT)
-
-    *//**
-     * Pass true to draw this block using fancy graphics, or false for fast graphics.
-     *//*
-    public void setGraphicsLevel(boolean par1)
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
     {
-    	System.out.println("setting fancy graphics = " + par1);
-        this.graphicsLevel = par1;
-        this.graphicSetting = par1 ? 0 : 1;
-    }*/
-
-    /*@Override
-    public void onEntityWalking(World world, int i, int j, int k, Entity entity)
-    {
-        super.onEntityWalking(world, i, j, k, entity);
+        icons = new Icon[MoCreatures.multiBlockNames.size()];
+        for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
+        {
+            icons[x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
+        }
     }
-*/
+
+    @SideOnly(Side.CLIENT)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    @Override
+    public Icon getIcon(int par1, int par2)
+    {
+        if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
+        return icons[par2];
+    }
 
     @SideOnly(Side.CLIENT)
     @Override
-  public void registerIcons(IconRegister par1IconRegister)
-  {
-        //icons = new Icon[2][MoCreatures.multiBlockNames.size()];
-        icons = new Icon[MoCreatures.multiBlockNames.size()];
-      
-        for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
-        {
-            //icons[0][x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x));
-            //icons[1][x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
-            icons[x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
-        }
-  }
- 
-  
-    @SideOnly(Side.CLIENT)
-  /**
-   * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
-   */
-  @Override
-  public Icon getIcon(int par1, int par2)
-  {
-      if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
-      //return icons[graphicSetting][par2];
-      return icons[par2];
-  }
-  
-  @SideOnly(Side.CLIENT)
-  @Override
     public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
-  {
+    {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) 
         {
             subItems.add(new ItemStack(this, 1, ix));
         }
     }
-  
-  
-  @Override
-  public int idDropped(int par1, Random par2Random, int par3)
-  {
-	  return 0;
-      //return Block.sapling.blockID;
-  }
-  
-  @SideOnly(Side.CLIENT)
-  
-  public Icon getIconFromDamage(int i)
-  {
-	  //return icons[graphicSetting][i]; 
-	  return icons[i];
-  }
-  
 
-  
-  
+    @Override
+    public int idDropped(int par1, Random par2Random, int par3)
+    {
+        return 0;
+    }
 
+    @SideOnly(Side.CLIENT)
+
+    public Icon getIconFromDamage(int i)
+    {
+        return icons[i];
+    }
 }

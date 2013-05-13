@@ -97,10 +97,6 @@ import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCTools {
-    public MoCTools()
-    {
-
-    }
 
     /**
      * spawns tiny slimes
@@ -124,8 +120,6 @@ public class MoCTools {
         }
     }
 
-    
-    
     /**
      * Drops saddle
      */
@@ -133,12 +127,6 @@ public class MoCTools {
     {
         if (!entity.getIsRideable() || !MoCreatures.isServer()) { return; }
         dropCustomItem(entity, worldObj, new ItemStack(MoCreatures.horsesaddle, 1));
-        /*EntityItem entityitem = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.horsesaddle, 1));
-        float f3 = 0.05F;
-        entityitem.motionX = (float) worldObj.rand.nextGaussian() * f3;
-        entityitem.motionY = ((float) worldObj.rand.nextGaussian() * f3) + 0.2F;
-        entityitem.motionZ = (float) worldObj.rand.nextGaussian() * f3;
-        worldObj.spawnEntityInWorld(entityitem);*/
         entity.setRideable(false);
     }
 
@@ -149,14 +137,8 @@ public class MoCTools {
     {
         if (!MoCreatures.isServer()) { return; }
         dropCustomItem(entity, worldObj, new ItemStack(Block.chest, 1));
-/*        EntityItem entityitem = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Block.chest, 1));
-        float f3 = 0.05F;
-        entityitem.motionX = (float) worldObj.rand.nextGaussian() * f3;
-        entityitem.motionY = ((float) worldObj.rand.nextGaussian() * f3) + 0.2F;
-        entityitem.motionZ = (float) worldObj.rand.nextGaussian() * f3;
-        worldObj.spawnEntityInWorld(entityitem);*/
     }
-    
+
     /**
      * Drops item
      */
@@ -171,7 +153,6 @@ public class MoCTools {
         entityitem.motionZ = (float) worldObj.rand.nextGaussian() * f3;
         worldObj.spawnEntityInWorld(entityitem);
     }
-    
 
     public static void bigsmack(Entity entity, Entity entity1, float force)
     {
@@ -183,19 +164,15 @@ public class MoCTools {
         }
 
         float f = MathHelper.sqrt_double((d * d) + (d1 * d1));
-        // float f1 = 0.25F;
-        /*
-         * if(getKittyState() == 10) { f1 = 0.1F; }
-         */
         entity1.motionX /= 2D;
         entity1.motionY /= 2D;
         entity1.motionZ /= 2D;
         entity1.motionX -= (d / f) * force;
-        entity1.motionY += force;// 0.300000005960465D;
+        entity1.motionY += force;
         entity1.motionZ -= (d1 / f) * force;
-        if (entity1.motionY > force)// 0.3D)
+        if (entity1.motionY > force)
         {
-            entity1.motionY = force;// 0.3D;
+            entity1.motionY = force;
         }
     }
 
@@ -209,14 +186,14 @@ public class MoCTools {
             {
                 continue;
             }
-            //EntityMob entitymob = (EntityMob) entity;
+
             entitytarget.attackEntityFrom(DamageSource.causeMobDamage(entityattacker), 2);
             bigsmack(entityattacker, entitytarget, 0.6F);
             playCustomSound(entityattacker, "tud", worldObj);
             //todo tuck sound!!
         }
     }
-    
+
     public static void buckleMobsNotPlayers(EntityLiving entityattacker, Double dist, World worldObj)
     {
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.boundingBox.expand(dist, 2D, dist));
@@ -227,7 +204,7 @@ public class MoCTools {
             {
                 continue;
             }
-            //EntityMob entitymob = (EntityMob) entity;
+
             entitytarget.attackEntityFrom(DamageSource.causeMobDamage(entityattacker), 2);
             bigsmack(entityattacker, entitytarget, 0.6F);
             playCustomSound(entityattacker, "tud", worldObj);
@@ -261,16 +238,14 @@ public class MoCTools {
     public static void spawnNearPlayerbyName(EntityPlayer player, String eName, int numberToSpawn) 
     {
         WorldServer worldObj = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.dimensionId);
-        //System.out.println("spawning " + numberToSpawn + " entities of type " + eName );
+
         for (int i = 0; i < numberToSpawn; i++)
         {
             EntityLiving entityToSpawn = null;
-            
             try
             {
                 MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
                 Class myClass = entityData.getEntityClass();
-                //Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
                 entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
             }catch (Exception e) 
             { System.out.println(e);}
@@ -283,7 +258,6 @@ public class MoCTools {
             }
         }
     }
-    
 
     public static void playCustomSound(Entity entity, String customSound, World worldObj)
     {
@@ -294,29 +268,6 @@ public class MoCTools {
     {
         worldObj.playSoundAtEntity(entity, customSound, volume, 1.0F + ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F));
     }
-
-    /*private void procreate(EntityAnimal par1EntityAnimal)
-    {
-        EntityLiving entityliving = spawnLiving(par1EntityAnimal);
-
-        if (entityliving != null)
-        {
-            setGrowingAge(6000);
-            par1EntityAnimal.setGrowingAge(6000);
-            inLove = 0;
-            breeding = 0;
-            entityToAttack = null;
-            par1EntityAnimal.entityToAttack = null;
-            par1EntityAnimal.breeding = 0;
-            par1EntityAnimal.inLove = 0;
-            entityanimal.setGrowingAge(-24000);
-            entityanimal.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-
-            
-
-            worldObj.spawnEntityInWorld(entityanimal);
-        }
-    }*/
 
     /**
      * Returns a new instance of EntityLiving based on the name of the class
@@ -331,213 +282,13 @@ public class MoCTools {
         {
             MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
             Class myClass = entityData.getEntityClass();
-            //Class myClass = MoCreatures.proxy.entityMap.get(eName).getEntityClass();
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
         }catch (Exception e) 
         { 
             if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Unable to find class for entity " + eName + ", " + e);}
         return entityToSpawn;        
     }
-    
-    /**
-     * Returns a new instance of MoCIMoCreature based on the creatureType 
-     * @param creatureType
-     * @param worldObj
-     * @return
-     */
-    public static EntityLiving spawnList(int creatureType, World worldObj)
-    {
-        /**
-         * Spawn list
-         * 
-         * Bee 0 
-         * Bear 1 
-         * BigCat 2 
-         * Bird 3 
-         * Boar 4 
-         * Bunny 5 
-         * Butterfly6 
-         * Cat 7 
-         * Cricket 8 
-         * Crab 9
-         * Croc 10 
-         * Deer 11 
-         * Dolphin 12 
-         * Dragonfly13 
-         * Duck 14 
-         * Elephant 15
-         * Firefly 16 
-         * Fish 17
-         * Fly 18 
-         * Fox 19 
-         * Goat 20 
-         * Golem 21
-         * Horse 22 
-         * HorseMob 23 
-         * JellyFish24 
-         * Komodo25
-         * Mice 26 
-         * Ogre 27 
-         * Ostrich 28 
-         * Rat 29 
-         * Ray 30 
-         * Shark 31
-         * Scorpions32 
-         * Snail 33 
-         * Snake 34 
-         * Turkey 35 
-         * Turtle 36 
-         * Werewolf 37 
-         * Wraith 38 
-         * Wraith F 39 
-         * WWolf 40
-         * Wyvern 41
-         */
 
-        switch (creatureType)
-        {
-
-        case 0:
-            return new MoCEntityBee(worldObj);
-
-        case 1:
-            return new MoCEntityBear(worldObj);
-
-        case 2:
-            return new MoCEntityBigCat(worldObj);
-
-        case 3:
-            return new MoCEntityBird(worldObj);
-
-        case 4:
-            return new MoCEntityBoar(worldObj);
-
-        case 5:
-            return new MoCEntityBunny(worldObj);
-
-        case 6:
-            return new MoCEntityButterfly(worldObj);
-
-        case 7:
-            return new MoCEntityKitty(worldObj);
-
-        case 8:
-            return new MoCEntityCricket(worldObj);
-
-        case 9:
-            return new MoCEntityCrab(worldObj);
-
-        case 10:
-            return new MoCEntityCrocodile(worldObj);
-
-        case 11:
-            return new MoCEntityDeer(worldObj);
-
-        case 12:
-            return new MoCEntityDolphin(worldObj);
-
-        case 13:
-            return new MoCEntityDragonfly(worldObj);
-
-        case 14:
-            return new MoCEntityDuck(worldObj);
-            
-        case 15:
-            return new MoCEntityElephant(worldObj);
-
-        case 16:
-            return new MoCEntityFirefly(worldObj);
-
-        case 17:
-            return new MoCEntityFishy(worldObj);
-
-        case 18:
-            return new MoCEntityFly(worldObj);
-
-        case 19:
-            return new MoCEntityFox(worldObj);
-
-        case 20:
-            return new MoCEntityGoat(worldObj);
-
-        case 21:
-            return new MoCEntityGolem(worldObj);
-
-        case 22:
-            return new MoCEntityHorse(worldObj);
-
-        case 23:
-            return new MoCEntityHorseMob(worldObj);
-        
-        case 24:
-            return new MoCEntityJellyFish(worldObj);
-        
-        case 25:
-            return new MoCEntityKomodo(worldObj);
-
-        case 26:
-            return new MoCEntityMouse(worldObj);
-
-        case 27:
-            return new MoCEntityOgre(worldObj);
-
-        case 28:
-            return new MoCEntityOstrich(worldObj);
-
-        case 29:
-            return new MoCEntityRat(worldObj);
-
-        case 30:
-            return new MoCEntityRay(worldObj);
-
-        case 31:
-            return new MoCEntityShark(worldObj);
-
-        case 32:
-            return new MoCEntityScorpion(worldObj);
-
-        case 33:
-            return new MoCEntitySnail(worldObj);
-
-        case 34:
-            return new MoCEntitySnake(worldObj);
-
-        case 35:
-            return new MoCEntityTurkey(worldObj);
-
-        case 36:
-            return new MoCEntityTurtle(worldObj);
-
-        case 37:
-            return new MoCEntityWerewolf(worldObj);
-
-        case 38:
-            return new MoCEntityWraith(worldObj);
-
-        case 39:
-            return new MoCEntityFlameWraith(worldObj);
-
-        case 40:
-            return new MoCEntityWWolf(worldObj);
-        case 41:
-            return new MoCEntityWyvern(worldObj);
-
-        default:
-            return new MoCEntityBunny(worldObj);
-
-        }
-    }
-    
-    public static MoCIMoCreature spawnIMoCreatureList(int creatureType, World worldObj)
-    {
-        return (MoCIMoCreature) spawnList(creatureType, worldObj);
-    }
-
-    public static MoCEntityAnimal spawnMoCAnimalList(int creatureType, World worldObj)
-    {
-        return (MoCEntityAnimal) spawnList(creatureType, worldObj);
-    }
-    
     public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat)
     {
         AxisAlignedBB axisalignedbb = entity.boundingBox.expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
@@ -556,11 +307,8 @@ public class MoCTools {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
                     if ((j2 != 0) && (Block.blocksList[j2].blockMaterial == mat)) { return true; }
                 }
-
             }
-
         }
-
         return false;
     }
 
@@ -572,7 +320,6 @@ public class MoCTools {
     public static boolean isNearTorch(Entity entity, Double dist)
     {
         return isNearBlockName(entity, dist, "tile.torch") || (isNearBlockName(entity, dist, "tile.lightgem")) || (isNearBlockName(entity, dist, "tile.redstoneLight")) || (isNearBlockName(entity, dist, "tile.litpumpkin"));
-
     }
 
     public static boolean isNearBlockName(Entity entity, Double dist, String blockName)
@@ -591,19 +338,8 @@ public class MoCTools {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
-                    //int j2 = entity.worldObj.getBlockId(k1, l1, i2);
 
-                    /*if (j2 !=0) 
-                    {
-                    String nameToCheck = Block.blocksList[j2].getBlockName();
-                    if (nameToCheck.equals(blockName))
-                    {
-                        return true;
-                    }
-                    //System.out.println(nameToCheck);
-                    }*/
-
-                    if (j2 != 0)// && (Block.blocksList[j2].getBlockName().equals(blockName)))
+                    if (j2 != 0)
                     {
                         String nameToCheck = "";
                         nameToCheck = Block.blocksList[j2].getUnlocalizedName();//.getBlockName();
@@ -611,15 +347,10 @@ public class MoCTools {
                         {
                             if (nameToCheck.equals(blockName)) { return true; }
                         }
-
                     }
-
                 }
-
             }
-
         }
-
         return false;
     }
 
@@ -638,45 +369,23 @@ public class MoCTools {
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    //int j2 = MoCreatures.mc.theWorld.getBlockId(k1, l1, i2);
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
-
-                    /*if (j2 !=0) 
-                    {
-                    String nameToCheck = Block.blocksList[j2].getBlockName();
-                    if (nameToCheck.equals(blockName))
-                    {
-                        return true;
-                    }
-                    //System.out.println(nameToCheck);
-                    }*/
-
-                    if (j2 != 0)// && (Block.blocksList[j2].getBlockName().equals(blockName)))
+                    if (j2 != 0)
                     {
                         String nameToCheck = "";
-                        nameToCheck = Block.blocksList[j2].getUnlocalizedName();//.getBlockName();
+                        nameToCheck = Block.blocksList[j2].getUnlocalizedName();
                         if (nameToCheck != null && nameToCheck != "")
                         {
                             if (nameToCheck.equals("tile.jukebox"))
                             {
                                 TileEntityRecordPlayer juky = (TileEntityRecordPlayer) entity.worldObj.getBlockTileEntity(k1, l1, i2);
                                 return juky;
-                                //BlockJukeBox jukebox = (BlockJukeBox) Block.blocksList[j2];
-                                //TileEntity recordPlaying = jukebox.getBlockEntity();
-
-                                //String songPlaying = recordPlaying.readFromNBT(par1NBTTagCompound)
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
         }
-
         return null;
     }
 
@@ -703,7 +412,6 @@ public class MoCTools {
         double i1 = entity.posY - j;
         double j1 = entity.posZ - k;
         return Math.sqrt((l * l) + (i1 * i1) + (j1 * j1));
-
     }
 
     public static int[] ReturnNearestMaterialCoord(Entity entity, Material material, Double double1, Double yOff)
@@ -730,7 +438,6 @@ public class MoCTools {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
                     if ((j2 != 0) && (Block.blocksList[j2].blockMaterial == material))
                     {
-
                         distance = getSqDistanceTo(entity, k1, l1, i2);
                         if (shortestDistance == -1D)
                         {
@@ -742,18 +449,14 @@ public class MoCTools {
 
                         if (distance < shortestDistance)
                         {
-
                             x = k1;
                             y = l1;
                             z = i2;
                             shortestDistance = distance;
                         }
-
                     }
                 }
-
             }
-
         }
 
         if (entity.posX > x)
@@ -799,7 +502,6 @@ public class MoCTools {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
                     if ((j2 != 0) && (j2 == blockID))
                     {
-
                         distance = getSqDistanceTo(entity, k1, l1, i2);
                         if (shortestDistance == -1D)
                         {
@@ -811,18 +513,14 @@ public class MoCTools {
 
                         if (distance < shortestDistance)
                         {
-
                             x = k1;
                             y = l1;
                             z = i2;
                             shortestDistance = distance;
                         }
-
                     }
                 }
-
             }
-
         }
 
         if (entity.posX > x)
@@ -846,27 +544,20 @@ public class MoCTools {
 
     public static void MoveCreatureToXYZ(EntityCreature movingEntity, int x, int y, int z, float f)
     {
-        //PathEntity pathentity = MoCreatures.mc.theWorld.getEntityPathToXYZ(movingEntity, x, y, z, f);
-        //pathToEntity = worldObj.getEntityPathToXYZ(this, i, j, k, 10F, true, false, false, true);
         //TODO works?
         PathEntity pathentity = movingEntity.worldObj.getEntityPathToXYZ(movingEntity, x, y, z, f, true, false, false, true);
-
         if (pathentity != null)
         {
             movingEntity.setPathToEntity(pathentity);
-
         }
-
     }
 
     public static void MoveToWater(EntityCreature entity)
     {
-
         int ai[] = MoCTools.ReturnNearestMaterialCoord(entity, Material.water, Double.valueOf(20D), 2D);
         if (ai[0] > -1000)
         {
             MoCTools.MoveCreatureToXYZ(entity, ai[0], ai[1], ai[2], 24F);
-
         }
     }
 
@@ -883,13 +574,8 @@ public class MoCTools {
 
     public static void SlideEntityToXYZ(Entity entity, int x, int y, int z)
     {
-
         if (entity != null)
         {
-            /*int i = MathHelper.floor_double(entity.posX);
-            int j = MathHelper.floor_double(entity.posY);
-            int k = MathHelper.floor_double(entity.posZ);*/
-
             if (entity.posY < y)
             {
                 entity.motionY += 0.14999999999999999D;
@@ -926,13 +612,11 @@ public class MoCTools {
                     entity.motionZ -= 0.050000000000000003D;
                 }
             }
-
         }
     }
 
     public static float distanceToSurface(Entity entity)
     {
-        //double d = entity.posY + (double)entity.getEyeHeight();
         int i = MathHelper.floor_double(entity.posX);
         int j = MathHelper.floor_double(entity.posY);
         int k = MathHelper.floor_double(entity.posZ);
@@ -944,10 +628,8 @@ public class MoCTools {
                 l = entity.worldObj.getBlockId(i, j + x, k);
                 if (l == 0 || Block.blocksList[l].blockMaterial != Material.water) { return (float) x; }
             }
-
         }
         return 0F;
-
     }
 
     public static int distanceToFloor(Entity entity)
@@ -986,10 +668,8 @@ public class MoCTools {
 
     public static void disorientEntity(Entity entity)
     {
-
         double rotD = 0;
         double motD = 0;
-
         double d = entity.worldObj.rand.nextGaussian();
         double d1 = 0.1D * d;
         motD = (0.2D * d1) + ((1.0D - 0.2D) * motD);
@@ -1003,7 +683,6 @@ public class MoCTools {
 
     public static void slowEntity(Entity entity)
     {
-
         entity.motionX *= 0.8D;
         entity.motionZ *= 0.8D;
     }
@@ -1028,33 +707,13 @@ public class MoCTools {
         return i;
     }
 
-    /*public static List spawnList(EnumCreatureType enumcreaturetype, int i, int j, int k)
-    {
-        WorldChunkManager worldchunkmanager = entity.worldObj.getWorldChunkManager();
-        if(worldchunkmanager == null)
-        {
-            return null;
-        }
-        //TODO works?
-        BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i >> 4, k >> 4);
-        //BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAtChunkCoord(new ChunkCoordIntPair(i >> 4, k >> 4));
-        if(biomegenbase == null)
-        {
-            return null;
-        } else
-        {
-            return biomegenbase.getSpawnableList(enumcreaturetype);
-        }
-    }*/
-
     public static BiomeGenBase whatBiome(World world, int i, int j, int k)
     {
         WorldChunkManager worldchunkmanager = world.getWorldChunkManager();
         if (worldchunkmanager == null) { return null; }
         //TODO works?
-        //BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i >> 4, k >> 4);
         BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i, k);
-        //BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAtChunkCoord(new ChunkCoordIntPair(i >> 4, k >> 4));
+
         if (biomegenbase == null)
         {
             return null;
@@ -1075,7 +734,6 @@ public class MoCTools {
     {
         WorldChunkManager worldchunkmanager = world.getWorldChunkManager();
         if (worldchunkmanager == null) { return null; }
-        //BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i >> 4, k >> 4);
         BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i, k);
         //TODO works?
 
@@ -1109,7 +767,6 @@ public class MoCTools {
 
         if (!MoCreatures.proxy.destroyDrops) { return; }
 
-        //List list = MoCreatures.mc.theWorld.getEntitiesWithinAABBExcludingEntity(entity, entity.boundingBox.expand(d, d, d));
         List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.boundingBox.expand(d, d, d));
 
         for (int i = 0; i < list.size(); i++)
@@ -1125,7 +782,6 @@ public class MoCTools {
                 entityitem.setDead();
             }
         }
-
     }
 
     public static void repelMobs(Entity entity1, Double dist, World worldObj)
@@ -1418,15 +1074,11 @@ public class MoCTools {
                 int i4 = chunkposition1.y;
                 int k4 = chunkposition1.z;
                 int i5 = entity.worldObj.getBlockId(k3, i4, k4);
-                //MoCreatures.mc.theWorld.setBlockMetadata(k3, i4, k4, Block.fire.blockID);
-                //MoCreatures.mc.theWorld.setBlockWithNotify(k3, i4, k4, Block.fire.blockID);
                 if ((i5 == 0) && (entity.worldObj.rand.nextInt(8) == 0))
                 {
-                    entity.worldObj.setBlock(k3, i4, k4, Block.fire.blockID, 0, 3);//MC 1.5
-                    //MoCreatures.mc.theWorld.setBlockMetadata(k3, i4, k4, Block.fire.blockIndexInTexture);
+                    entity.worldObj.setBlock(k3, i4, k4, Block.fire.blockID, 0, 3);
                 }
             }
-
         }
     }
 
@@ -1444,7 +1096,6 @@ public class MoCTools {
             if ((entity instanceof EntityLiving) && (entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
             {
                 count += entityDespawnCheck(worldObj, (EntityLiving) entity);
-
             }
         }
         return count;
@@ -1470,10 +1121,8 @@ public class MoCTools {
             {
                 if (d3 < 1024D)
                 {
-                    //entityliving.entityAge = 0;
                     //TODO test!
                     entityliving.attackEntityFrom(DamageSource.causeMobDamage(null), 0);
-
                 }
                 else
                 {
@@ -1485,101 +1134,6 @@ public class MoCTools {
         return count;
     }
 
-    /*public String getFXString(int i)
-    {
-        String FXString = "";
-        switch(i)
-        {
-            
-            case 1: 
-                FXString = "suspended";
-                break;
-            case 2:
-                FXString = "depthsuspend";
-                break;
-            case 3:
-                FXString = "townaura";
-                break;
-            case 4: 
-                FXString = "crit";
-                break;
-            case 5: 
-                FXString = "magicCrit";
-                break;
-            case 6: 
-                FXString = "smoke";
-                break;
-            case 7: 
-                FXString = "mobSpell";
-                break;
-            case 8: 
-                FXString = "spell";
-                break;
-                
-            case 9: 
-                FXString = "instantSpell";
-                break;
-            case 10: 
-                FXString = "note";
-                break;
-            case 11: 
-                FXString = "portal";
-                break;
-
-            case 12:
-                FXString = "enchantmenttable";
-                break;
-            case 13:
-                FXString = "explode";
-                break;
-            case 14: 
-                FXString = "flame";
-                break;
-            case 15: 
-                FXString = "lava";
-                break;
-            case 16: 
-                FXString = "footstep";
-                break;
-            case 17: 
-                FXString = "splash";
-                break;
-            case 18: 
-                FXString = "largesmoke";
-                break;
-            case 19: 
-                FXString = "cloud";
-                break;
-            case 20: 
-                FXString = "reddust";
-                break;
-            case 21: 
-                FXString = "snowballpoof";
-                break;
-
-            case 22:
-                FXString = "dripWater";
-                break;
-            case 23:
-                FXString = "dripLava";
-                break;
-            case 24: 
-                FXString = "snowshovel";
-                break;
-            case 25: 
-                FXString = "slime";
-                break;
-            case 26: 
-                FXString = "heart";
-                break;
-            case 27: 
-                FXString = "bubble";
-                break;
-        }
-        //System.out.println("String = " + FXString);
-        return FXString;
-    }*/
-
     /**
      * Forces a data sync between server/client. currently used to syncrhonize
      * mounts
@@ -1588,16 +1142,12 @@ public class MoCTools {
     {
         if (entityMoCreature.updateMount() && ((Entity) entityMoCreature).ridingEntity != null)
         {
-            //System.out.println("Sending heartbeat packets...");
             MoCServerPacketHandler.sendAttachedEntity((Entity) entityMoCreature, ((Entity) entityMoCreature).ridingEntity, ((Entity) entityMoCreature).worldObj.provider.dimensionId);
         }
-
     }
 
     public static void updatePlayerArmorEffects(EntityPlayer player)
     {
-        //List<EntityPlayer> playerList = player.worldObj.playerEntities;
-
         ItemStack mystack[] = new ItemStack[4];
         mystack[0] = player.inventory.armorItemInSlot(0); //boots
         mystack[1] = player.inventory.armorItemInSlot(1); //legs
@@ -1607,7 +1157,6 @@ public class MoCTools {
         //full scorpion cave armor set, enable night vision
         if (mystack[0] != null && mystack[0].itemID == MoCreatures.bootsScorpCave.itemID && mystack[1] != null && mystack[1].itemID == MoCreatures.legsScorpCave.itemID && mystack[2] != null && mystack[2].itemID == MoCreatures.plateScorpCave.itemID && mystack[3] != null && mystack[3].itemID == MoCreatures.helmetScorpCave.itemID)
         {
-            //System.out.println("adding effect night vision to player " + player);
             player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 300, 0));
             return;
         }
@@ -1615,7 +1164,6 @@ public class MoCTools {
         //full scorpion nether armor set, enable fire resistance
         if (mystack[0] != null && mystack[0].itemID == MoCreatures.bootsScorpNether.itemID && mystack[1] != null && mystack[1].itemID == MoCreatures.legsScorpNether.itemID && mystack[2] != null && mystack[2].itemID == MoCreatures.plateScorpNether.itemID && mystack[3] != null && mystack[3].itemID == MoCreatures.helmetScorpNether.itemID)
         {
-            //System.out.println("adding effect fire resistance to player " + player);
             player.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 300, 0));
             return;
         }
@@ -1623,7 +1171,6 @@ public class MoCTools {
         //full scorpion frost armor set, enable water breathing
         if (mystack[0] != null && mystack[0].itemID == MoCreatures.bootsScorpFrost.itemID && mystack[1] != null && mystack[1].itemID == MoCreatures.legsScorpFrost.itemID && mystack[2] != null && mystack[2].itemID == MoCreatures.plateScorpFrost.itemID && mystack[3] != null && mystack[3].itemID == MoCreatures.helmetScorpFrost.itemID)
         {
-            //System.out.println("adding effect water breathing to player " + player);
             player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 300, 0));
             return;
         }
@@ -1631,7 +1178,6 @@ public class MoCTools {
         //full scorpion armor set, regeneration effect
         if (mystack[0] != null && mystack[0].itemID == MoCreatures.bootsScorpDirt.itemID && mystack[1] != null && mystack[1].itemID == MoCreatures.legsScorpDirt.itemID && mystack[2] != null && mystack[2].itemID == MoCreatures.plateScorpDirt.itemID && mystack[3] != null && mystack[3].itemID == MoCreatures.helmetScorpDirt.itemID)
         {
-            //System.out.println("adding regeneration to player " + player);
             player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 70, 0));
             return;
         }
@@ -1650,7 +1196,6 @@ public class MoCTools {
      */
     public static int destroyRandomBlock(Entity entity, double distance)
     {
-        //int d = (int)distance;
         int l = (int) (distance * distance * distance);
         for (int i = 0; i < l; i++)
         {
@@ -1667,17 +1212,13 @@ public class MoCTools {
                     entity.worldObj.setBlock(x, y, z, 0, 0, 3);
                 }
                 return j;
-
             }
-
         }
-
         return 0;
     }
 
     public static int[] destroyRandomBlockWithMetadata(Entity entity, double distance)
     {
-        //int d = (int)distance;
         int l = (int) (distance * distance * distance);
         int metaD = 0;
         for (int i = 0; i < l; i++)
@@ -1696,11 +1237,8 @@ public class MoCTools {
                     entity.worldObj.setBlock(x, y, z, 0, 0, 3);
                 }
                 return (new int[] { j, metaD });
-
             }
-
         }
-
         return (new int[] { -1, metaD });
     }
 
@@ -1720,7 +1258,6 @@ public class MoCTools {
         int tempX = -9999;
         int tempY = -1;
         int tempZ = -1;
-        //int d = (int)distance;
         int ii = (int) (distance * distance * (distance / 2));
         for (int i = 0; i < ii; i++)
         {
@@ -1735,7 +1272,6 @@ public class MoCTools {
             int o = entity.worldObj.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z + 1.1D));
             int p = entity.worldObj.getBlockId(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z - 1.1D));
 
-            //k = 0;
             float tX = (float) x - (float) entity.posX;
             float tY = (float) y - (float) entity.posY;
             float tZ = (float) z - (float) entity.posZ;
@@ -1747,11 +1283,8 @@ public class MoCTools {
                 tempY = y;
                 tempZ = z;
                 break;
-
             }
-
         }
-
         return (new int[] { tempX, tempY, tempZ });
     }
 
@@ -1772,9 +1305,7 @@ public class MoCTools {
                 && ID != 90//portal
                 && ID != 93//redstone
                 && ID != 94//redstone
-                && ID < 134//the rest
-        ;
-
+                && ID < 134;//the rest
     }
 
     /**
@@ -1786,41 +1317,39 @@ public class MoCTools {
      * @param entity
      * @return
      */
-    public static boolean tameWithName(EntityPlayer ep, MoCIMoCreature entity) {
-        //System.out.println("number of pets for " + ep + " = " + count + "limit = " + MoCreatures.proxy.getMaxTamed());
+    public static boolean tameWithName(EntityPlayer ep, MoCIMoCreature entity) 
+    {
         int max = 0;
         if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
         {
-            
-                max = MoCreatures.proxy.maxTamed;
-                int count = MoCTools.numberTamedByPlayer(ep);
-                if (isThisPlayerAnOP(ep)) 
-                {
-                    max = MoCreatures.proxy.maxOPTamed;
-                }
-                if (count >= max) 
-                {
-                    String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
-                    MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
-                    return false;
-                } else 
-                {
-                    if (!entity.getOwnerName().equals(ep.username)) 
-                {
-                    NBTTagCompound nbtt = ep.getEntityData();
-                    nbtt.setInteger("NumberTamed", count + 1);
-                }
+            max = MoCreatures.proxy.maxTamed;
+            int count = MoCTools.numberTamedByPlayer(ep);
+            if (isThisPlayerAnOP(ep)) 
+            {
+                max = MoCreatures.proxy.maxOPTamed;
+            }
+            if (count >= max) 
+            {
+                String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
+                MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
+                return false;
+            } else 
+            {
+                if (!entity.getOwnerName().equals(ep.username)) 
+            {
+                NBTTagCompound nbtt = ep.getEntityData();
+                nbtt.setInteger("NumberTamed", count + 1);
+            }
         }
-
-            entity.setOwner(ep.username);
+        entity.setOwner(ep.username);
         }
         if (MoCreatures.isServer()) 
         {
             MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) entity).entityId);
         }
-            entity.setTamed(true);
-            return true;
-        }
+        entity.setTamed(true);
+        return true;
+    }
 
     /**
      * returns the number of entities already tamed by the player ep
@@ -1866,7 +1395,7 @@ public class MoCTools {
         {
             NBTTagCompound nbtt = compound.getCompoundTag("ForgeData");
             int count = nbtt.getInteger("NumberTamed");
-            //System.out.println("tamed entities for player " + playername + " =" + count);
+
             count--;
             if (count < 0)
             {
@@ -1883,7 +1412,6 @@ public class MoCTools {
                 String playersDirectory = ".\\" + saveHandler.getWorldDirectoryName() + "\\players\\";
                 File playerFile = new File(playersDirectory + playername + ".dat");
                 File playerFileNew = new File(playersDirectory, playername + ".tmp");
-                //System.out.println("playerFile = " + playerFile + ", playerFileNew = " + playerFileNew + ", playerFile parent = " + playerFile.getParent());
 
                 CompressedStreamTools.writeCompressed(compound, new FileOutputStream(playerFileNew));
 
@@ -1899,7 +1427,6 @@ public class MoCTools {
                 if (compound.hasKey("ForgeData"))
                 {
                     NBTTagCompound nbttest = compound.getCompoundTag("ForgeData");
-                    //System.out.println("tamed entities for player " + playername + " is now " + nbttest.getInteger("NumberTamed"));
                 }
             }
             catch (Exception e)
@@ -1944,14 +1471,12 @@ public class MoCTools {
                         MoCTools.playCustomSound(entity, "golemwalk", entity.worldObj);
                         count++; //only counts recovered blocks
                     }
-
                 }
             }
         }
         return count;
-
     }
-    
+
     public static void dropInventory(Entity entity, MoCAnimalChest animalchest)
     {
         if (animalchest == null || !(MoCreatures.isServer()) ) return;
@@ -1971,23 +1496,7 @@ public class MoCTools {
             float f1 = (entity.worldObj.rand.nextFloat() * 0.8F) + 0.1F;
             float f2 = (entity.worldObj.rand.nextFloat() * 0.8F) + 0.1F;
             float f3 = 0.05F;
-            
-            /*while (itemstack.stackSize > 0)
-            {
-                int i1 = entity.worldObj.rand.nextInt(21) + 10;
-                if (i1 > itemstack.stackSize)
-                {
-                    i1 = itemstack.stackSize;
-                }
-                itemstack.stackSize -= i1;
-                
-                EntityItem entityitem = new EntityItem(entity.worldObj, i + f, j + f1, k + f2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
-                entityitem.motionX = ((float) entity.worldObj.rand.nextGaussian() * f3);
-                entityitem.motionY = (((float) entity.worldObj.rand.nextGaussian() * f3) + 0.2F);
-                entityitem.motionZ = ((float) entity.worldObj.rand.nextGaussian() * f3);
-                entity.worldObj.spawnEntityInWorld(entityitem);
-            }*/
-            
+
             EntityItem entityitem = new EntityItem(entity.worldObj,  i + f, j + f1, k + f2, itemstack);
             entityitem.motionX = ((float) entity.worldObj.rand.nextGaussian() * f3);
             entityitem.motionY = (((float) entity.worldObj.rand.nextGaussian() * f3) + 0.2F);
@@ -1995,7 +1504,6 @@ public class MoCTools {
             entity.worldObj.spawnEntityInWorld(entityitem);
             animalchest.setInventorySlotContents(l, null);
         }
-
     }
 
     /**
@@ -2006,41 +1514,37 @@ public class MoCTools {
     {
         if (MoCreatures.isServer())
         {
-               ItemStack stack = getProperAmulet(entity);
-                if (stack == null) 
-                {
-                    return;
-                }
-                if( stack.stackTagCompound == null )
-                {
-                    stack.setTagCompound(new NBTTagCompound());
-                }
-                NBTTagCompound nbtt = stack.stackTagCompound;
-                
-                try
-                {
-                    //TODO change the 21 to the list given based on the class of the creature
-                    nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
-                    nbtt.setInteger("Health", entity.getHealth());
-                    nbtt.setInteger("Edad", entity.getEdad());
-                    nbtt.setString("Name", entity.getName());
-                    nbtt.setBoolean("Rideable", entity.getIsRideable());
-                    nbtt.setByte("Armor", entity.getArmorType());
-                    nbtt.setInteger("CreatureType", entity.getType());
-                    nbtt.setBoolean("Adult", entity.getIsAdult());          
-                    nbtt.setString("OwnerName", entity.getOwnerName());
-                }
-                catch (Exception e)
-                {
-                }
-                EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
-
-                entityitem.delayBeforeCanPickup = 20;
-                entity.worldObj.spawnEntityInWorld(entityitem);
+            ItemStack stack = getProperAmulet(entity);
+            if (stack == null) 
+            {
+                return;
+            }
+            if( stack.stackTagCompound == null )
+            {
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            NBTTagCompound nbtt = stack.stackTagCompound;
             
+            try
+            {
+                //TODO change the 21 to the list given based on the class of the creature
+                nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
+                nbtt.setInteger("Health", entity.getHealth());
+                nbtt.setInteger("Edad", entity.getEdad());
+                nbtt.setString("Name", entity.getName());
+                nbtt.setBoolean("Rideable", entity.getIsRideable());
+                nbtt.setByte("Armor", entity.getArmorType());
+                nbtt.setInteger("CreatureType", entity.getType());
+                nbtt.setBoolean("Adult", entity.getIsAdult());          
+                nbtt.setString("OwnerName", entity.getOwnerName());
+            }
+            catch (Exception e)
+            {
+            }
+            EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
 
-            
-
+            entityitem.delayBeforeCanPickup = 20;
+            entity.worldObj.spawnEntityInWorld(entityitem);
         }
     }
 
@@ -2051,33 +1555,32 @@ public class MoCTools {
     {
         if (MoCreatures.isServer())
         {
-               ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
-               
-               if( stack.stackTagCompound == null )
-                {
-                    stack.setTagCompound(new NBTTagCompound());
-                }
-                NBTTagCompound nbtt = stack.stackTagCompound;
-                
-                try
-                {
-                    nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
-                    nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
-                    nbtt.setInteger("Edad", entity.getEdad());
-                    nbtt.setString("Name", entity.getName());
-                    nbtt.setInteger("CreatureType", entity.getType());
-                    nbtt.setString("OwnerName", entity.getOwnerName());
-                }
-                catch (Exception e)
-                {
-                }
-                EntityItem entityitem = new EntityItem(((EntityLiving)entity).worldObj, ((EntityLiving)entity).posX, ((EntityLiving)entity).posY, ((EntityLiving)entity).posZ, stack);
-                entityitem.delayBeforeCanPickup = 20;
-                ((EntityLiving)entity).worldObj.spawnEntityInWorld(entityitem);
-                //entity.setDead();
+            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
+
+            if( stack.stackTagCompound == null )
+            {
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            NBTTagCompound nbtt = stack.stackTagCompound;
+            
+            try
+            {
+                nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+                nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
+                nbtt.setInteger("Edad", entity.getEdad());
+                nbtt.setString("Name", entity.getName());
+                nbtt.setInteger("CreatureType", entity.getType());
+                nbtt.setString("OwnerName", entity.getOwnerName());
+            }
+            catch (Exception e)
+            {
+            }
+            EntityItem entityitem = new EntityItem(((EntityLiving)entity).worldObj, ((EntityLiving)entity).posX, ((EntityLiving)entity).posY, ((EntityLiving)entity).posZ, stack);
+            entityitem.delayBeforeCanPickup = 20;
+            ((EntityLiving)entity).worldObj.spawnEntityInWorld(entityitem);
         }
     }
-    
+
     /**
      * Returns the right full amulet based on the MoCEntityAnimal passed
      * @param entity
@@ -2087,8 +1590,6 @@ public class MoCTools {
     {
         if (entity instanceof MoCEntityHorse)
         {
-            //int i = ((MoCEntityHorse)entity).getType();
-
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
             {
                 return new ItemStack(MoCreatures.amuletbonefull, 1, entity.getType());
@@ -2118,8 +1619,6 @@ public class MoCTools {
     {
         if (entity instanceof MoCEntityHorse)
         {
-            //int i = ((MoCEntityHorse)entity).getType();
-
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28)
             {
                 return new ItemStack(MoCreatures.amuletbone, 1, entity.getType());
@@ -2161,11 +1660,10 @@ public class MoCTools {
         {    
             return false;
         }
-        //Set playerListSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getWhiteListedPlayers();
-        //Set opSet = MinecraftServer.getServer().getConfigurationManager().getOps();
+
         Set opSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getOps();
-        //fSystem.out.println("opsets = " + opSet);
-        if (opSet != null)// && opSet.contains(player.username))
+
+        if (opSet != null)
         {
             for(Iterator i = opSet.iterator(); i.hasNext();)
             {  
@@ -2178,28 +1676,23 @@ public class MoCTools {
         }
         return false;
     }
-    
-    
-    /*
-     * Spawns maggots
-     */
+
     public static void spawnMaggots(World worldObj, Entity entity)
     {
          if (MoCreatures.isServer())
-            {
-                int var2 = 1 + worldObj.rand.nextInt(4);
-                for (int i = 0; i < var2; ++i)
-                {
-                    float var4 = ((float) (i % 2) - 0.5F) * (float) 1 / 4.0F;
-                    float var5 = ((float) (i / 2) - 0.5F) * (float) 1 / 4.0F;
-                    MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
-                   maggot.setLocationAndAngles(entity.posX + (double) var4, entity.posY + 0.5D, entity.posZ + (double) var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-                    worldObj.spawnEntityInWorld(maggot);
-                }
-            }
-        
+         {
+             int var2 = 1 + worldObj.rand.nextInt(4);
+             for (int i = 0; i < var2; ++i)
+             {
+                 float var4 = ((float) (i % 2) - 0.5F) * (float) 1 / 4.0F;
+                 float var5 = ((float) (i / 2) - 0.5F) * (float) 1 / 4.0F;
+                 MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
+                 maggot.setLocationAndAngles(entity.posX + (double) var4, entity.posY + 0.5D, entity.posZ + (double) var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
+                 worldObj.spawnEntityInWorld(maggot);
+             }
+         }
     }
-    
+
     public static void getPathToEntity(EntityCreature creatureToMove, Entity entityTarget, float f)
     {
         PathEntity pathentity = creatureToMove.worldObj.getPathEntityToEntity(creatureToMove, entityTarget, 16F, true, false, false, true);
@@ -2208,7 +1701,7 @@ public class MoCTools {
             creatureToMove.setPathToEntity(pathentity);
         }
     }
-    
+
     public static void runLikeHell(EntityCreature runningEntity, Entity boogey)
     {
         double d = runningEntity.posX - boogey.posX;
@@ -2239,30 +1732,29 @@ public class MoCTools {
             l++;
         } while (true);
     }
-	
-	/**
-	 * Finds a near vulnerable player and poisons it if the player is in the water and not riding anything
-	 * @param poisoner
-	 * @param needsToBeInWater: the target needs to be in water for poison to be successful?
-	 * @return true if was able to poison the player
-	 */
-	public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater)
-	{
-		EntityPlayer entityplayertarget = poisoner.worldObj.getClosestVulnerablePlayerToEntity(poisoner, 2D);
-		{
-			if (entityplayertarget != null && ( (needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater) && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F)
-			{
-				if (entityplayertarget.ridingEntity != null && entityplayertarget.ridingEntity instanceof EntityBoat)
-				{
-					//don't poison players on boats
-				}else
-				{
-					MoCreatures.poisonPlayer(entityplayertarget);
-					entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+
+    /**
+     * Finds a near vulnerable player and poisons it if the player is in the water and not riding anything
+     * @param poisoner
+     * @param needsToBeInWater: the target needs to be in water for poison to be successful?
+     * @return true if was able to poison the player
+     */
+    public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater)
+    {
+        EntityPlayer entityplayertarget = poisoner.worldObj.getClosestVulnerablePlayerToEntity(poisoner, 2D);
+        if (entityplayertarget != null && ( (needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater) && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F)
+        {
+            if (entityplayertarget.ridingEntity != null && entityplayertarget.ridingEntity instanceof EntityBoat)
+            {
+                //don't poison players on boats
+            }
+            else
+            {
+                MoCreatures.poisonPlayer(entityplayertarget);
+                entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
+                return true;
+            }
+        }
+        return false;
+    }
 }

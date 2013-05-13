@@ -35,7 +35,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         poisontimer = 0;
         setAdult(true);
         setEdad(20);
-        //roper = null;
 
         if (MoCreatures.isServer())
         {
@@ -53,20 +52,17 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void selectType()
     {
-    	checkSpawningBiome();
-    	
+        checkSpawningBiome();
+
         if (getType() == 0)
         {
             setType(1);
-
         }
-
     }
 
     @Override
     public String getTexture()
     {
-
         switch (getType())
         {
         case 1:
@@ -77,11 +73,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
             return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png";
         case 4:
             return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png";
-
         default:
             return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
         }
-
     }
 
     @Override
@@ -94,7 +88,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
     public boolean getHasBabies()
     {
-        //return true;
         return getIsAdult() && (dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
@@ -106,19 +99,16 @@ public class MoCEntityScorpion extends MoCEntityMob {
     public boolean getIsPoisoning()
     {
         return isPoisoning;
-        //return (dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
     public void setHasBabies(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setPicked(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
@@ -187,13 +177,11 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 hideCounter = 0;
             }
             this.updateWanderPath();
-            //System.out.println("didn't find shelter");
             return;// false;
         }
         else
         {
             this.getNavigator().tryMoveToXYZ(var1.xCoord, var1.yCoord, var1.zCoord, this.getMoveSpeed() / 2F);
-            //System.out.println("moving to shelter");
         }
     }
 
@@ -212,7 +200,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void onLivingUpdate()
     {
-
         if (MoCreatures.isServer() && wantsToHide())
         {
             findSunLightShelter();
@@ -256,8 +243,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
             }
         }
 
-        //if (rand.nextInt(50) == 0) swingArm(); //this will be done automatically on the model
-
         if (MoCreatures.isServer() && !getIsAdult() && (rand.nextInt(200) == 0))
         {
             setEdad(getEdad() + 1);
@@ -276,7 +261,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         if (super.attackEntityFrom(damagesource, i))
         {
             Entity entity = damagesource.getEntity();
-            //if ((entity != null) && (entity instanceof EntityPlayer) && getIsTamed()) { return false; }
 
             if ((entity != null) && (entity != this) && (worldObj.difficultySetting > 0) && getIsAdult())
             {
@@ -290,16 +274,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
     }
 
-    // @Override
     @Override
     protected Entity findPlayerToAttack()
     {
         if (worldObj.difficultySetting > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
         {
-           
-                EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 12D);
-                if ((entityplayer != null)) { return entityplayer; }
-            
+            EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 12D);
+            if ((entityplayer != null)) { return entityplayer; }
             {
                 if ((rand.nextInt(80) == 0))
                 {
@@ -307,7 +288,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 if (entityliving != null && !(entityliving instanceof EntityPlayer) && this.canEntityBeSeen(entityliving)) // blood - add LoS requirement
                     return entityliving;
                 }
-
             }
         }
         return null;
@@ -364,11 +344,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     {
                         MoCreatures.burnPlayer((EntityPlayer) entity);
                         ((EntityLiving) entity).setFire(15);
-
                     }
-
                 }
-
             }
             else
             {
@@ -382,7 +359,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (MoCreatures.isServer())
         {
-
             MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
         }
     }
@@ -403,17 +379,15 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         super.onDeath(damagesource);
 
-        if (MoCreatures.isServer() && getIsAdult() && getHasBabies())//rand.nextInt(5) == 0)
+        if (MoCreatures.isServer() && getIsAdult() && getHasBabies())
         {
             int k = rand.nextInt(5);
             for (int i = 0; i < k; i++)
             {
-
                 MoCEntityPetScorpion entityscorpy = new MoCEntityPetScorpion(worldObj);
                 entityscorpy.setPosition(posX, posY, posZ);
                 entityscorpy.setAdult(false);
                 entityscorpy.setType(getType());
-                //entityscorpy.cheated = false;
                 worldObj.spawnEntityInWorld(entityscorpy);
                 worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
 
@@ -440,7 +414,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         {
             MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 3);
         }
-
         return "scorpiongrunt";
     }
 
@@ -465,65 +438,26 @@ public class MoCEntityScorpion extends MoCEntityMob {
         case 4:
             if (flag) { return MoCreatures.stingFrost.itemID; }
             return MoCreatures.chitinFrost.itemID;
-
         default:
             return Item.silk.itemID;
         }
     }
-    
-    
+
     @Override
     protected void dropFewItems(boolean flag, int x)
     {
-	 	if (!flag) return;
-	 	int j = this.getDropItemId();
+        if (!flag) return;
+        int j = this.getDropItemId();
 
         if (j > 0)
         {
             if (rand.nextInt(3) == 0)
             {
-            	this.dropItem(j, 1);
+                this.dropItem(j, 1);
             }
         }
-	 	
-       
+
     }
-
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        if (super.interact(entityplayer)) { return false; }
-        
-
-        if (this.ridingEntity == null && !getIsAdult())
-        {
-            rotationYaw = entityplayer.rotationYaw;
-            if (MoCreatures.isServer())
-            {
-                mountEntity(entityplayer);
-            }
-            setPicked(true);
-
-            if (MoCreatures.isServer() && !getIsTamed())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-        }
-        else if (this.ridingEntity != null && !getIsAdult())
-        {
-            worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
-            setPicked(false);
-            if (MoCreatures.isServer())
-            {
-                this.mountEntity(null);
-            }
-            motionX = entityplayer.motionX * 5D;
-            motionY = (entityplayer.motionY / 2D) + 0.5D;
-            motionZ = entityplayer.motionZ * 5D;
-        }
-
-        return false;
-    }*/
 
     @Override
     public boolean getCanSpawnHere()
@@ -531,25 +465,10 @@ public class MoCEntityScorpion extends MoCEntityMob {
         return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
     }
 
-    /*@Override
-    public double getYOffset()
-    {
-        if (ridingEntity instanceof EntityPlayer && ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) { return (yOffset - 1.7F); }
-
-        if ((ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer())
-        {
-            return (yOffset - 0.1F);
-        }
-        else
-        {
-            return yOffset;
-        }
-    }*/
-
     @Override
     public boolean checkSpawningBiome()
     {
-    	if (worldObj.provider.isHellWorld)
+        if (worldObj.provider.isHellWorld)
         {
             setType(3);
             isImmuneToFire = true;
@@ -562,8 +481,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
         String s = MoCTools.BiomeName(worldObj, i, j, k);
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
-        
-        //if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+
         if (currentbiome.temperature <= 0.05F)
         {
             setType(4);
@@ -575,11 +493,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
 
         return true;
-
     }
 
-    
-    
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
@@ -594,61 +509,18 @@ public class MoCEntityScorpion extends MoCEntityMob {
         nbttagcompound.setBoolean("Babies", getHasBabies());
     }
 
-    /*@Override
-    public boolean updateMount()
-    {
-        return getIsTamed();
-    }*/
-
-    /*@Override
-    public boolean forceUpdates()
-    {
-        return getIsTamed();
-    }*/
-
     @Override
     public boolean isAIEnabled()
     {
         return wantsToHide() && (entityToAttack == null) && (hideCounter < 50);
     }
 
-    /*@Override
-    public byte nameYOffset()
-    {
-
-        byte n = (byte) (1 - (getEdad() * 0.8));
-        if (n < -70)
-        {
-            n = -70;
-        }
-        //System.out.println("nameY =" + n);
-        return n;//(byte) (1 - (getEdad() * 0.8));
-
-    }*/
-
-    /*@Override
-    public double roperYOffset()
-    {
-        double r = (double) ((150 - getEdad()) * 0.012D);
-        if (r < 0.55D)
-        {
-            r = 0.55D;
-        }
-        if (r > 1.2D)
-        {
-            r = 1.2D;
-        }
-        //System.out.println("r =" + r);
-        return r;//(double) ((150 - getEdad()) * 0.0075D);
-
-    }*/
-
     @Override
     public int getTalkInterval()
     {
         return 300;
     }
-    
+
     /**
      * Get this Entity's EnumCreatureAttribute
      */

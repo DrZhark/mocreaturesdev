@@ -10,14 +10,12 @@ public class MoCItemTurtleSoup extends MoCItemFood {
     {
         super(i, j);
         maxStackSize = 1;
-
     }
 
     public MoCItemTurtleSoup(int i, int j, float f, boolean flag)
     {
         super(i, j, f, flag);
         maxStackSize = 1;
-
     }
 
     @Override

@@ -7,62 +7,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class MoCEntityFirefly extends MoCEntityInsect
-
 {
     private int soundCount;
 
     public MoCEntityFirefly(World world)
     {
         super(world);
-        //setSize(0.2F, 0.2F);
-        //health = 2;
-        //moveSpeed = 0.3F;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "firefly.png";
     }
-
-    /*@Override
-    protected void entityInit()
-    {
-        super.entityInit();
-        dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isFlying - 0 false 1 true
-    }
-    
-    @Override
-    public boolean isFlyer()
-    {
-        return getIsFlying();
-    }
-    
-    @Override
-    public boolean isFlyerInsect()
-    {
-        return getIsFlying();
-    }
-    
-    //private int textCounter;
-    
-    public boolean getIsFlying()
-    {
-        return (dataWatcher.getWatchableObjectByte(22) == 1);
-    }
-    
-    public void setIsFlying(boolean flag)
-    {
-        if (worldObj.isRemote)
-            return;
-        byte input = (byte) (flag ? 1 : 0);
-        dataWatcher.updateObject(22, Byte.valueOf(input));
-    }*/
 
     @Override
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-
-        /*if (getIsFlying() && !hasPath() && !isMovementCeased() && entityToAttack == null)
-        {
-            updateWanderPath();
-        }*/
 
         if (MoCreatures.isServer())
         {
@@ -78,7 +35,6 @@ public class MoCEntityFirefly extends MoCEntityInsect
                 setIsFlying(false);
             }
         }
-
     }
 
     @Override

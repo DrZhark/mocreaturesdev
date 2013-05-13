@@ -29,8 +29,6 @@ import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
-
-
 public class MoCChunkProviderWyvernLair implements IChunkProvider
 {
     private Random RNGa;
@@ -79,17 +77,14 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
      */
     public MoCChunkProviderWyvernLair(World par1World, long par2, int metadata)
     {
-    	this(par1World, par2);
-    	//metaData = metadata;
-    	
+        this(par1World, par2);
+
         for (int i = 0; i<32768; i++)
         {
-           	metadat[i] = (byte)metadata;
+            metadat[i] = (byte)metadata;
         }
     }
-    
-    //private int metaData;
-    
+
     public void generateTerrain(int par1, int par2, byte[] par3ArrayOfByte, BiomeGenBase[] par4ArrayOfBiomeGenBase)
     {
         byte var5 = 2;
@@ -167,14 +162,12 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
         ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, par1, par2, par3ArrayOfByte, par4ArrayOfBiomeGenBase);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) 
-        	{
-        	//System.out.println("returning");
-        	return;
-        	}
+        {
+            return;
+        }
 
         byte var5 = 63;
         double var6 = 0.03125D;
-        //this.stoneNoise = this.noiseGen4.generateNoiseOctaves(this.stoneNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, var6 * 2.0D, var6 * 2.0D, var6 * 2.0D);
 
         for (int var8 = 0; var8 < 16; ++var8)
         {
@@ -182,7 +175,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
             {
                 BiomeGenBase var10 = par4ArrayOfBiomeGenBase[var9 + var8 * 16];
                 float var11 = var10.getFloatTemperature();
-                int var12 = 1;//(int)(this.stoneNoise[var8 + var9 * 16] / 3.0D + 3.0D + this.RNGa.nextDouble() * 0.25D);
+                int var12 = 1;
                 int var13 = -1;
                 byte var14 = var10.topBlock;
                 byte var15 = var10.fillerBlock;
@@ -190,63 +183,59 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
                 for (int var16 = 127; var16 >= 0; --var16)
                 {
                     int var17 = (var9 * 16 + var8) * 128 + var16;
+                    byte var18 = par3ArrayOfByte[var17];
 
-                    
+                    if (var18 == 0)
                     {
-                        byte var18 = par3ArrayOfByte[var17];
-
-                        if (var18 == 0)
+                        var13 = -1;
+                    }
+                    else if (var18 == MoCreatures.mocStone.blockID)
+                    {
+                        if (var13 == -1)
                         {
-                            var13 = -1;
-                        }
-                        else if (var18 == MoCreatures.mocStone.blockID)
-                        {
-                            if (var13 == -1)
+                            if (var12 <= 0)
                             {
-                                if (var12 <= 0)
-                                {
-                                    var14 = 0;
-                                    var15 = (byte)MoCreatures.mocStone.blockID;
-                                }
-                                else if (var16 >= var5 - 4 && var16 <= var5 + 1)
-                                {
-                                    var14 = var10.topBlock;
-                                    var15 = var10.fillerBlock;
-                                }
+                                var14 = 0;
+                                var15 = (byte)MoCreatures.mocStone.blockID;
+                            }
+                            else if (var16 >= var5 - 4 && var16 <= var5 + 1)
+                            {
+                                var14 = var10.topBlock;
+                                var15 = var10.fillerBlock;
+                            }
 
-                                if (var16 < var5 && var14 == 0)
+                            if (var16 < var5 && var14 == 0)
+                            {
+                                if (var11 < 0.15F)
                                 {
-                                    if (var11 < 0.15F)
-                                    {
-                                        var14 = (byte)Block.ice.blockID;
-                                    }
-                                    else
-                                    {
-                                        var14 = (byte)Block.waterStill.blockID;
-                                    }
-                                }
-
-                                var13 = var12;
-
-                                if (var16 >= var5 - 1)
-                                {
-                                    par3ArrayOfByte[var17] = var14;
+                                    var14 = (byte)Block.ice.blockID;
                                 }
                                 else
                                 {
-                                    par3ArrayOfByte[var17] = var15;
+                                    var14 = (byte)Block.waterStill.blockID;
                                 }
                             }
-                            else if (var13 > 0)
-                            {
-                                --var13;
-                                par3ArrayOfByte[var17] = var15;
 
-                                if (var13 == 0 && var15 == Block.sand.blockID)
-                                {
-                                    var13 = this.RNGa.nextInt(4);
-                                    var15 = (byte)Block.sandStone.blockID;
-                                }
+                            var13 = var12;
+
+                            if (var16 >= var5 - 1)
+                            {
+                                par3ArrayOfByte[var17] = var14;
+                            }
+                            else
+                            {
+                                par3ArrayOfByte[var17] = var15;
+                            }
+                        }
+                        else if (var13 > 0)
+                        {
+                            --var13;
+                            par3ArrayOfByte[var17] = var15;
+
+                            if (var13 == 0 && var15 == Block.sand.blockID)
+                            {
+                                var13 = this.RNGa.nextInt(4);
+                                var15 = (byte)Block.sandStone.blockID;
                             }
                         }
                     }
@@ -254,7 +243,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
             }
         }
     }
-    
+
     /**
      * Replaces the stone that was placed in with blocks that match the biome
      */
@@ -262,7 +251,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     {
         byte var5 = 63;
         double var6 = 0.03125D;
-        //this.stoneNoise = this.noiseGen4.generateNoiseOctaves(this.stoneNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, var6 * 2.0D, var6 * 2.0D, var6 * 2.0D);
 
         for (int var8 = 0; var8 < 16; ++var8)
         {
@@ -270,7 +258,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
             {
                 BiomeGenBase var10 = par4ArrayOfBiomeGenBase[var9 + var8 * 16];
                 float var11 = var10.getFloatTemperature();
-                int var12 = 1;//(int)(this.stoneNoise[var8 + var9 * 16] / 3.0D + 3.0D + this.RNGa.nextDouble() * 0.25D);
+                int var12 = 1;
                 int var13 = -1;
                 byte var14 = var10.topBlock;
                 byte var15 = var10.fillerBlock;
@@ -348,14 +336,12 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     }
     public void replaceBlocksForBiome(int par1, int par2, byte[] par3ArrayOfByte, BiomeGenBase[] par4ArrayOfBiomeGenBase)
     {
-    	//System.out.println("starting replacer");
         ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, par1, par2, par3ArrayOfByte, par4ArrayOfBiomeGenBase);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) 
-        	{
-        	//System.out.println("returning");
-        	return;
-        	}
+        {
+            return;
+        }
 
         for (int var5 = 0; var5 < 16; ++var5)
         {
@@ -363,12 +349,10 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
             {
                 byte var7 = 5;
                 int var8 = -1;
-                
+ 
                 BiomeGenBase biome = par4ArrayOfBiomeGenBase[var6 + var5 * 16];
                 byte var9 = biome.topBlock;
                 byte var10 = biome.fillerBlock;
-                //byte var9 = (byte)MoCreatures.mocGrass.blockID;
-                //byte var10 = (byte)MoCreatures.mocDirt.blockID;
 
                 for (int var11 = 127; var11 >= 0; --var11)
                 {
@@ -381,33 +365,23 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
                     }
                     else if (var13 == (byte)MoCreatures.mocStone.blockID)
                     {
-                    	//System.out.println("it is stone");
                         if (var8 == -1)
                         {
-                            /*if (var7 <= 0)
-                            {
-                                var9 = 0;
-                                var10 = (byte)MoCreatures.wyvernStone.blockID;
-                            }*/
-
                             var8 = var7;
 
                             if (var11 >= 0)
                             {
                                 par3ArrayOfByte[var12] = var9;
-                                //System.out.println("changing to grass");
                             }
                             else
                             {
                                 par3ArrayOfByte[var12] = var10;
-                                //System.out.println("changing to dirt");
                             }
                         }
                         else if (var8 > 0)
                         {
                             --var8;
                             par3ArrayOfByte[var12] = var10;
-                            //System.out.println("changing to dirt");
                         }
                     }
                 }
@@ -429,8 +403,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
      */
     public Chunk provideChunk(int par1, int par2)
     {
-    	//System.out.println("providing chunk " + par1 + ", " + par2);
-    	
         this.RNGa.setSeed((long)par1 * 341873128712L + (long)par2 * 132897987541L);
         byte[] var3 = new byte[32768];
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
@@ -448,15 +420,10 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
             var5[var6] = (byte)this.biomesForGeneration[var6].biomeID;
         }
 
-        
         var4.generateSkylightMap();
         return var4;
     }
 
-
-    
-    
-    
     /**
      * generates a subset of the level's terrain data. Takes 7 arguments: the [empty] noise array, the position, and the
      * size.
@@ -639,15 +606,11 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
         int var4 = par2 * 16;
         int var5 = par3 * 16;
         BiomeGenBase var6 = this.worldObj.getBiomeGenForCoords(var4 + 16, var5 + 16);
-        
-        
-        //this.RNGa.setSeed(this.worldObj.getSeed());
+
         long var7 = this.RNGa.nextLong() / 2L * 2L + 1L;
         long var9 = this.RNGa.nextLong() / 2L * 2L + 1L;
-        //this.RNGa.setSeed((long)par2 * var7 + (long)par3 * var9 ^ this.worldObj.getSeed());
         boolean var11 = false;
 
-        
         int var12;
         int var13;
         int var14;
@@ -671,61 +634,45 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
                 (new WorldGenLakes(Block.lavaStill.blockID)).generate(this.worldObj, this.RNGa, var12, var13, var14);
             }
         }
-        
-        
 
-        
         var6.decorate(this.worldObj, this.RNGa, var4, var5);
-        //SpawnerAnimals.performWorldGenSpawning(this.worldObj, var6, var4 + 8, var5 + 8, 16, 16, this.RNGa);
 
         if (par2 == 0 && par3 == 0 && !portalDone) 
         {
-        	createPortal(this.worldObj, this.RNGa);
+            createPortal(this.worldObj, this.RNGa);
         }
-        
-/*        while(!portalDone)
-        {
-        	createPortal(this.worldObj, this.RNGa);
-        }
-*/
+
         MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(par1IChunkProvider, worldObj, worldObj.rand, par2, par3, false));
-        
         BlockSand.fallInstantly = false;
     }
-    
+
     private boolean towerDone;
     private boolean portalDone;
     
     public void generateTower(World par1World, Random par2Random, int par3, int par4)
     {
-    	WorldGenTower myTower = new WorldGenTower(Block.grass.blockID, Block.stoneDoubleSlab.blockID, Block.oreLapis.blockID);
+        WorldGenTower myTower = new WorldGenTower(Block.grass.blockID, Block.stoneDoubleSlab.blockID, Block.oreLapis.blockID);
         if (!towerDone)
         {
-        	//System.out.println("attemp to create tower");
-    			int randPosX = par3 + par2Random.nextInt(16) + 8;
-    			int randPosZ = par4 + par2Random.nextInt(16) + 8;
-    			towerDone = myTower.generate(par1World, par2Random, randPosX, 61, randPosZ);
-    			//(new WorldGenAncientRuins()).generate(world, random, randPosX, 130, randPosZ);
-    		
-    	}
+            int randPosX = par3 + par2Random.nextInt(16) + 8;
+            int randPosZ = par4 + par2Random.nextInt(16) + 8;
+            towerDone = myTower.generate(par1World, par2Random, randPosX, 61, randPosZ);
+        }
     }
-    
-    public void createPortal(World par1World, Random par2Random)//, int par3, int par4)
+
+    public void createPortal(World par1World, Random par2Random)
     {
-    	MoCWorldGenPortal myPortal = new MoCWorldGenPortal(Block.blockNetherQuartz.blockID, 2, Block.stairsNetherQuartz.blockID, 0, Block.blockNetherQuartz.blockID, 1, Block.blockNetherQuartz.blockID, 0);
+        MoCWorldGenPortal myPortal = new MoCWorldGenPortal(Block.blockNetherQuartz.blockID, 2, Block.stairsNetherQuartz.blockID, 0, Block.blockNetherQuartz.blockID, 1, Block.blockNetherQuartz.blockID, 0);
         for (int i = 0; i< 16; i++)
         {
-        	if (!portalDone)
-        	{
-    		//System.out.println("attemp to create portal " + MoCreatures.isServer());
-    		int randPosY = 56 + i;//par2Random.nextInt(8);
-        	portalDone = myPortal.generate(par1World, par2Random, 0, randPosY, 0);
-                                }
-                            }
-                        }
+            if (!portalDone)
+            {
+                int randPosY = 56 + i;
+                portalDone = myPortal.generate(par1World, par2Random, 0, randPosY, 0);
+            }
+        }
+    }
 
-
-    
     /**
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
@@ -776,8 +723,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     @Override
     public void recreateStructures(int par1, int par2) 
     {
-    //System.out.println("recreate structures called");
-    //if (!portalDone) createPortal(this.worldObj, this.RNGa);	
     }
 
     /**

@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.aquatic;
 
-
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
@@ -22,10 +21,10 @@ import drzhark.mocreatures.entity.MoCEntityAquatic;
 
 public class MoCEntitySmallFish extends MoCEntityAquatic{
 
-	public static final String fishNames[] = { "Anchovy", "Angelfish", "Angler", "Clownfish", "Goldfish", "Hippotang", "Manderin"};
+    public static final String fishNames[] = { "Anchovy", "Angelfish", "Angler", "Clownfish", "Goldfish", "Hippotang", "Manderin"};
 
-	private int latMovCounter;
-	
+    private int latMovCounter;
+    
     public MoCEntitySmallFish(World world)
     {
         super(world);
@@ -34,24 +33,23 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
         setEdad(30 + rand.nextInt(70));
         
     }
-    
-    
+
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(7) + 1); 
+            setType(rand.nextInt(7) + 1); 
         }
         
     }
-    
+
     @Override
     public int getMaxHealth()
     {
         return 4;
     }
-    
+
     @Override
     public String getTexture()
     {
@@ -75,36 +73,14 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
         default:
             return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_clownfish.png";
         }
-        
     }
-    
-    /*@Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        if (super.interact(entityplayer)) { return false; }
-        
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        
-        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID) 
-        {
-        	entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-        	if (MoCreatures.isServer())
-        	{
-        		MoCTools.dropFishnet(this);
-        		this.isDead = true;
-        	}
-        	
-        	return true;
-        }
-        return false;
-    }*/
-    
+
     @Override
     protected boolean canBeTrappedInNet() 
     {
-		return true;
-	}
-    
+        return true;
+    }
+
     @Override
     protected void dropFewItems(boolean flag, int x)
     {
@@ -120,10 +96,9 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
             {
                 entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, getType() + 79), 0.0F); 
             }
-
         }
     }
-    
+
     @Override
     public void onLivingUpdate()
     {
@@ -136,114 +111,107 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
             {
                 setAdult(true);
             }
-            
+
             if (!isNotScared() && rand.nextInt(5) == 0 && !getIsTamed())
             {
                 EntityLiving entityliving = getBoogey(8D);
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water))
                 {
                    MoCTools.runLikeHell(this, entityliving);
-
                 }
             }
-            
             if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
             {
-            	this.health = getMaxHealth();
+                this.health = getMaxHealth();
             }
         }
         if (!this.isInsideOfMaterial(Material.water))
         {
-        	prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
-        	rotationPitch = prevRotationPitch;
+            prevRenderYawOffset = renderYawOffset = rotationYaw = prevRotationYaw;
+            rotationPitch = prevRotationPitch;
         }
-        
-        
     }
-    
-    
+
     @Override
     public float getSizeFactor() 
     {   
-    	return (float)getEdad() * 0.01F;
+        return (float)getEdad() * 0.01F;
     }
-    
+
     @Override
     public float getAdjustedYOffset()
     {
-    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
-    	{
-    		return -0.1F;
-    	}
-    	return 0.3F;
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -0.1F;
+        }
+        return 0.3F;
     }
-    
+
     @Override
     protected boolean isFisheable()
     {
-    	return !getIsTamed();
+        return !getIsTamed();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
-	public int yawRotationOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return 90;
-    	}
-    	
-    	
-    	if (rand.nextInt(3) == 0)
-    	{
-    		if (++latMovCounter > 40) latMovCounter = 0;
-    	}
-    	
-    	int latOffset = 0;
-    	if (latMovCounter < 21) 
-    	{
-    		latOffset = latMovCounter;
-    	}
-    	else
-    	{
-    		latOffset = -latMovCounter + 40;
-    	}
- 		return 80 + latOffset;
-	}
-    
-    
+    public int yawRotationOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return 90;
+        }
+
+        if (rand.nextInt(3) == 0)
+        {
+            if (++latMovCounter > 40) latMovCounter = 0;
+        }
+
+        int latOffset = 0;
+        if (latMovCounter < 21) 
+        {
+            latOffset = latMovCounter;
+        }
+        else
+        {
+            latOffset = -latMovCounter + 40;
+        }
+         return 80 + latOffset;
+    }
+
     @Override
-	public int rollRotationOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
-    	{
-    		return -90;
-    	}
-		return 0;
-	}
-    
+    public int rollRotationOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -90;
+        }
+        return 0;
+    }
+
     @Override
     public boolean renderName()
     {
         return getDisplayName() && (riddenByEntity == null);
     }
-    
+
     @Override
     public int nameYOffset()
     {
         return -25;
     }
-      
+
     @Override
-	public float getAdjustedXOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return -0.6F;
-    	}
-		return 0F;
-	}
-    
+    public float getAdjustedXOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -0.6F;
+        }
+        return 0F;
+    }
+
     @Override
     public float getMoveSpeed()
     {

@@ -27,7 +27,6 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     public int mouthCounter;
     public int armCounter;
     private int hideCounter;
-    //public boolean cheated;
 
     public MoCEntityPetScorpion(World world)
     {
@@ -39,9 +38,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         setEdad(20);
         roper = null;
         setHasBabies(false);
-        //cheated = true;
         this.stepHeight = 20.0F;
-
     }
 
     @Override
@@ -50,9 +47,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         if (getType() == 0)
         {
             setType(1);
-
         }
-
     }
 
     @Override
@@ -62,27 +57,24 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         boolean saddle = getIsRideable();
         switch (getType())
         {
-        case 1:
-            if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png"; }
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirtsaddle.png";
-        case 2:
-            if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncave.png"; }
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncavesaddle.png";
-        case 3:
-            if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png"; }
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnethersaddle.png";
-        case 4:
-            if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png"; }
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrostsaddle.png";
-
-        case 5:
-            if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundead.png"; }
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundeadsaddle.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
+            case 1:
+                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png"; }
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirtsaddle.png";
+            case 2:
+                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncave.png"; }
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncavesaddle.png";
+            case 3:
+                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png"; }
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnethersaddle.png";
+            case 4:
+                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png"; }
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrostsaddle.png";
+            case 5:
+                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundead.png"; }
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundeadsaddle.png";
+            default:
+                return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
         }
-
     }
 
     @Override
@@ -92,7 +84,6 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isRideable - 0 false 1 true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // has babies - 0 false 1 true
         dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isPicked - 0 false 1 true
-
     }
 
     public boolean getIsRideable()
@@ -102,7 +93,6 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
 
     public boolean getHasBabies()
     {
-        //return true;
         return getIsAdult() && (dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
@@ -114,26 +104,22 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     public boolean getIsPoisoning()
     {
         return isPoisoning;
-        //return (dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
     public void setRideable(boolean flag)
     {
-        // if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setHasBabies(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setPicked(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
@@ -191,15 +177,6 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate()
     {
-        //if (MoCreatures.isServer())
-        //{
-        	/*if (cheated)
-        	{
-        		this.setDead();
-        	}*/
-            //Riding();
-        //}
-
         if (!onGround && (ridingEntity != null))
         {
             rotationYaw = ridingEntity.rotationYaw;
@@ -459,9 +436,9 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null) && getIsAdult() && !getIsRideable() && (itemstack.itemID == Item.saddle.itemID || itemstack.itemID == MoCreatures.horsesaddle.itemID))
         {
-        	if (--itemstack.stackSize == 0)
+            if (--itemstack.stackSize == 0)
             {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             setRideable(true);
             return true;
@@ -593,15 +570,13 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     @Override
     public int nameYOffset()
     {
-
         int n = (int) (1 - (getEdad() * 0.8));
         if (n < -70)
         {
             n = -70;
         }
-        
-        return n;//(byte) (1 - (getEdad() * 0.8));
 
+        return n;
     }
 
     @Override
@@ -616,9 +591,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         {
             r = 1.2D;
         }
-        
-        return r;//(double) ((150 - getEdad()) * 0.0075D);
-
+        return r;
     }
 
     @Override
@@ -678,8 +651,8 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     }
     
     @Override
-	public float getAdjustedYOffset()
-	{
-		return 0.2F;
-	}
+    public float getAdjustedYOffset()
+    {
+        return 0.2F;
+    }
 }

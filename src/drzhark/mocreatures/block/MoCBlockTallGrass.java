@@ -1,7 +1,5 @@
 package drzhark.mocreatures.block;
 
-
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,7 +30,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
 {
     @SideOnly(Side.CLIENT)
     private Icon[] icons;
-    
+
     public MoCBlockTallGrass(int par1)
     {
         super(par1, Material.vine);
@@ -42,13 +40,13 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
 
     public MoCBlockTallGrass(int par1, boolean lighted)
     {
-    	this(par1);
-    	if (lighted)
+        this(par1);
+        if (lighted)
         {
-        	this.setLightValue(0.8F);
+            this.setLightValue(0.8F);
         }
     }
-    
+
     /**
      * Returns the ID of the items to drop on destruction.
      */
@@ -57,7 +55,6 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
         return -1;
     }
 
-    
     /**
      * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i' (inclusive).
      */
@@ -75,8 +72,6 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
         super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
     }
 
-
-
     /**
      * Get the block's damage value (for use with pick block).
      */
@@ -84,8 +79,6 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     {
         return par1World.getBlockMetadata(par2, par3, par4);
     }
-
-
 
     @Override
     public boolean isShearable(ItemStack item, World world, int x, int y, int z)
@@ -105,9 +98,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     {
         return i;
     }
-    
-    //func_94332_a = registerIcons(IconRegister)
-    //func_94245_a = registerIcon(String)
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister par1IconRegister)
@@ -119,9 +110,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
             icons[x] = par1IconRegister.registerIcon("mocreatures:" + "tallGrass_" + MoCreatures.multiBlockNames.get(x));
         }
     }
-   
-    
-    
+
     /**
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
@@ -129,10 +118,10 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     @Override
     public Icon getIcon(int par1, int par2)
     {
-    	if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
+        if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
@@ -143,11 +132,9 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
         }
     }
 
-    
     @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int i)
     {
     return icons[i]; 
     }
-
 }

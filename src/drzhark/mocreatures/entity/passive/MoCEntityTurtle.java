@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -29,11 +27,7 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
         super(world);
         texture = MoCreatures.proxy.MODEL_TEXTURE + "turtle.png";
         setSize(0.6F, 0.4F);
-        //moveSpeed = 0.3F;
         health = 15;
-        //setMaxHealth(15);
-        // textureSet = false;
-        //forceUpdates = true;
         setAdult(false);
         setEdad(110);
     }
@@ -75,7 +69,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
         }
 
         return tempText;
-
     }
 
     @Override
@@ -102,14 +95,12 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
 
     public void setIsHiding(boolean flag)
     {
-        //if (worldObj.isRemote)    return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setIsUpsideDown(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
@@ -126,8 +117,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        // MoCTools.MoveToWater(this, worldObj);
-        // return true;
         if (super.interact(entityplayer)) { return false; }
         if (getIsTamed())
         {
@@ -138,30 +127,7 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
                 return true;
             }
 
-            /*if ((itemstack != null) //&& MoCreatures.isServer()
-                    && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-            {
-
-                if (!MoCreatures.isServer())
-                {
-                    MoCreatures.proxy.setName(entityplayer, this);
-                }
-                return true;
-            }
-            */
-            /*if ((itemstack != null) && ((itemstack.itemID == Item.melon.itemID) || (itemstack.itemID == Item.reed.itemID)))
-            {
-                if (--itemstack.stackSize == 0)
-                {
-                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-                }
-                this.heal(10);
-                worldObj.playSoundAtEntity(this, "turtleeating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-
-            }*/
-
-            //if (itemstack != null && (itemstack.itemID == Item.pickaxeDiamond.itemID || itemstack.itemID == Item.pickaxeWood.itemID || itemstack.itemID == Item.pickaxeStone.itemID || itemstack.itemID == Item.pickaxeIron.itemID || itemstack.itemID == Item.pickaxeGold.itemID)) { return true; }
-            if (ridingEntity == null)//&& !worldObj.isRemote)
+            if (ridingEntity == null)
             {
                 rotationYaw = entityplayer.rotationYaw;
                 // TODO change sound
@@ -191,9 +157,8 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     @Override
     protected void jump()
     {
-        if (isInsideOfMaterial(Material.water)) // super.jump();
+        if (isInsideOfMaterial(Material.water))
         {
-
             motionY = 0.3D;
             if (isSprinting())
             {
@@ -214,7 +179,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate()
     {
-
         super.onLivingUpdate();
 
         if (worldObj.isRemote)
@@ -222,11 +186,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
             if (ridingEntity != null)
             {
                 updateEntityActionState();
-            }
-            else
-            {
-                //return;
-
             }
         }
 
@@ -270,47 +229,23 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
                                 {
                                     MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
                                 }
-
-                                //TODO NAMER
-                                //setTamed(true);
-                                //if (MoCreatures.isServer())
-                                //{
-                                //    MoCreatures.proxy.setName(attackingPlayer, this);
-                                //}
                             }
                         }
                     }
                 }
             }
 
-            // this counts the number of turtles in the world
-            // int count = worldObj.countEntities(this.getClass());
-            // int count2 = worldObj.countEntities(MoCEntityTurtle.class);
-            // System.out.println("turtles # = " + count + " = " + count2);
-
-            // this.addPotionEffect(new PotionEffect(Potion.potionSlowdown.id, 70,
-            // 0));
-
             if (!getIsUpsideDown() && getIsTamed() && rand.nextInt(20) == 0)
             {
-
                 EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 12D);
                 if (entityplayer != null)
                 {
                     PathEntity pathentity = worldObj.getPathEntityToEntity(this, entityplayer, 16F, true, false, false, true);
                     setPathToEntity(pathentity);
                 }
-
             }
         }
-
     }
-
-    /*
-     * @Override public boolean handleWaterMovement() { return false; }
-     * 
-     * @Override public boolean isInWater() { return false; }
-     */
 
     @Override
     public boolean swimmerEntity()
@@ -336,7 +271,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
             }
             return false;
         }
-
         else
         {
             boolean flag = super.attackEntityFrom(damagesource, i);
@@ -344,7 +278,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
             {
                 flipflop(true);
             }
-
             return flag;
         }
     }
@@ -366,18 +299,12 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
             if (entityplayer != null)
             {
                 rotationYaw = entityplayer.rotationYaw;
-
             }
         }
         else
         {
             super.updateEntityActionState();
         }
-
-        /*
-         * if(!pickedUp) { super.updateEntityActionState(); } else if(onGround)
-         * { pickedUp = false; }
-         */
     }
 
     @Override
@@ -427,7 +354,6 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
                 flopcounter = 0;
             }
         }
-
     }
 
     public boolean getIsSwinging()
@@ -539,6 +465,5 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
         return par1ItemStack != null && (par1ItemStack.itemID == Item.reed.itemID || par1ItemStack.itemID == Item.melon.itemID);
-
     }
 }

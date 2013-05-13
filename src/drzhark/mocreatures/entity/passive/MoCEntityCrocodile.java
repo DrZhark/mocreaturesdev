@@ -24,7 +24,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     public float spin;
     public int spinInt;
     private float myMoveSpeed;
-    // public float edad;
     private boolean waterbound;
     private int hunting;
 
@@ -35,10 +34,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         setSize(2F, 0.6F);
         myMoveSpeed = 0.5F;
         health = 25;
-        // textureSet = false;
-        // setAdult(true);
         setEdad(50 + rand.nextInt(50));
-        // setEdad(0.7F);
         setTamed(false);
     }
 
@@ -68,21 +64,18 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
 
     public void setBiting(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
     public void setIsResting(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setHasCaughtPrey(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
@@ -91,10 +84,11 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     protected void jump()
     {
 
-        if (isInsideOfMaterial(Material.water)) // super.jump();
+        if (isInsideOfMaterial(Material.water))
         {
-            if (getHasCaughtPrey() || (entityToAttack == null && rand.nextInt(20) != 0)) { return;
-            // if (entityToAttack == null)
+            if (getHasCaughtPrey() || (entityToAttack == null && rand.nextInt(20) != 0)) 
+            {
+                return;
             }
 
             motionY = 0.3D;
@@ -118,12 +112,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     {
         return getIsResting();
     }
-
-    /*
-     * @Override public void moveEntity(double d, double d1, double d2) {
-     * if(!getIsResting() || (ridingEntity != null) || !onGround) {
-     * if(!worldObj.isRemote) { super.moveEntity(d, d1, d2); } } }
-     */
 
     @Override
     protected void updateEntityActionState()
@@ -149,26 +137,8 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate()
     {
-        /*
-         * EntityPlayer nearentityplayer =
-         * worldObj.getClosestPlayerToEntity(this, 3D); if (nearentityplayer !=
-         * null)// && !hasPath()) { MoCTools.MoveToWater(this, worldObj);
-         * 
-         * }
-         */
-        /*
-         * if (rand.nextInt(500) == 0) { if (getIsResting()) {
-         * setIsResting(false); }else { boolean restingflag = (entityToAttack ==
-         * null && !caughtPrey && !isInsideOfMaterial(Material.water));
-         * setIsResting(restingflag);
-         * 
-         * }
-         * 
-         * }
-         */
         if (getIsResting())
         {
-            // biteProgress = 0.4F;
             rotationPitch = -5F;
             if (!isInsideOfMaterial(Material.water) && biteProgress < 0.3F && rand.nextInt(5) == 0)
             {
@@ -179,14 +149,9 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
             {
                 setIsResting(false);
                 getMyOwnPath(entityToAttack, 16F);
-                // pathToEntity = worldObj.getPathToEntity(this, entityToAttack,
-                // f);
             }
             if (MoCreatures.isServer() && entityToAttack != null || getHasCaughtPrey() || rand.nextInt(500) == 0)// isInsideOfMaterial(Material.water)
-            // ||
             {
-                // boolean restingflag = (entityToAttack == null && !caughtPrey
-                // && !isInsideOfMaterial(Material.water));
                 setIsResting(false);
                 biteProgress = 0;
                 hunting = 1;
@@ -206,7 +171,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         if (isInsideOfMaterial(Material.water))
         {
             myMoveSpeed = 0.8F;
-            // setIsResting(false);
         }
         else
         {
@@ -290,13 +254,6 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
                             MoCTools.destroyDrops(this, 3D);
                         }
                     }
-
-                    /*
-                     * if (rand.nextInt(50)==0) { //MoCTools.MoveToWater(this,
-                     * worldObj); 
-                     *System.out.println("moving to water");
-                     * waterbound = true; }
-                     */
                 }
             }
             else
@@ -456,19 +413,19 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     {
         if (getHasCaughtPrey()) { return null; }
 
-        if (worldObj.difficultySetting > 0)// && getIsAdult())
+        if (worldObj.difficultySetting > 0)
         {
             double attackD = 12D;
              
             if (getIsResting())
             {
-            	attackD = 6D;
+                attackD = 6D;
             }
             
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, attackD); 
             if((entityplayer != null) && getIsAdult()) 
             {
-            	 return entityplayer; 
+                 return entityplayer; 
             }
             
             EntityLiving entityliving = getClosestEntityLiving(this, attackD);
@@ -491,9 +448,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         if (riddenByEntity == null) { return; }
         int direction = 1;
 
-        // double dist = 1.7D;// * edad;
         double dist = getEdad() * 0.01F + riddenByEntity.width - 0.4D;
-        // if (riddenByEntity instanceof EntityPlayer) dist = 1.7D;// * edad;
         double newPosX = posX - (dist * Math.cos((MoCTools.realAngle(rotationYaw - 90F)) / 57.29578F));
         double newPosZ = posZ - (dist * Math.sin((MoCTools.realAngle(rotationYaw - 90F)) / 57.29578F));
         riddenByEntity.setPosition(newPosX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), newPosZ);
@@ -506,15 +461,9 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         {
             direction = 1;
         }
-        // riddenByEntity.setPositionAndRotation(newPosX, posY +
-        // getMountedYOffset() + riddenByEntity.getYOffset(), newPosZ,
-        // this.rotationYaw*direction, riddenByEntity.rotationPitch);
+
         ((EntityLiving) riddenByEntity).renderYawOffset = this.rotationYaw * direction;
         ((EntityLiving) riddenByEntity).prevRenderYawOffset = this.rotationYaw * direction;
-        // ((EntityLiving)riddenByEntity).rotationYaw =
-        // this.rotationYaw*direction;
-        // ((EntityLiving)riddenByEntity).isWet()
-
     }
 
     @Override
@@ -532,12 +481,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
             if (motionY < -0.1)
             {
                 motionY = -0.1;
-                // if (motionY > 0.1) motionY = 0.1;
             }
-
-            /*
-             * if (MoCTools.distanceToSurface(this) > 1) { motionY += 0.1D; }
-             */
         }
         else
         {

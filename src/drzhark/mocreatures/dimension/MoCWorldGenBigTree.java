@@ -15,7 +15,7 @@ public class MoCWorldGenBigTree extends WorldGenerator
     {
         super(par1);
     }
-    
+
     /**
  * Generates a Big Tree with the given log and leaf block IDs
  * @param par1
@@ -36,9 +36,8 @@ public class MoCWorldGenBigTree extends WorldGenerator
         leafDistanceLimit = leafdist;
         MetadataLog = logmetadata;
         MetadataLeaf = leafmetadata;
-        
     }
-    
+
     /**
      * Contains three sets of two values that provide complimentary indices for a given 'major' index - 1 and 2 for 0, 0
      * and 2 for 1, and 0 and 1 for 2.
@@ -60,8 +59,6 @@ public class MoCWorldGenBigTree extends WorldGenerator
     double leafDensity = 1.0D;
     private int BlockLogID;
     private int BlockLeafID;
-    //private int BlockDirtID;
-    //private int BlockGrassID;
     private int MetadataLog;
     private int MetadataLeaf;
     
@@ -478,7 +475,7 @@ public class MoCWorldGenBigTree extends WorldGenerator
 
         if (var3 != MoCreatures.mocDirt.blockID && var3 != MoCreatures.mocGrass.blockID)
         {
-        	//System.out.println("invalid tree location");
+            //System.out.println("invalid tree location");
             return false;
             
         }
@@ -520,7 +517,6 @@ public class MoCWorldGenBigTree extends WorldGenerator
 
     public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-    	//System.out.println("generating tree");
         this.worldObj = par1World;
         long var6 = par2Random.nextLong();
         this.rand.setSeed(var6);

@@ -18,16 +18,12 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 public class MoCEntityRaccoon extends MoCEntityAnimal{
 
-	
-	
-	
-	public MoCEntityRaccoon(World world)
+    public MoCEntityRaccoon(World world)
     {
         super(world);
         setSize(0.8F, 0.8F);
         health = getMaxHealth();
         texture = MoCreatures.proxy.MODEL_TEXTURE + "raccoon.png";
-        
         setEdad(70 + rand.nextInt(30));
     }
 
@@ -45,7 +41,6 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
         }
     }
 
-    
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
@@ -99,7 +94,6 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
         return false;
     }
 
-    
     @Override
     protected Entity findPlayerToAttack()
     {
@@ -113,7 +107,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
             return null;
         }
     }
-    
+
     @Override
     protected String getDeathSound()
     {
@@ -144,13 +138,10 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
         return 2;
     }
 
-   
-    
     @Override
     public int nameYOffset()
     {
         return -30;
-
     }
 
     @Override
@@ -162,11 +153,9 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     @Override
     public float getSizeFactor() 
     {   
-		return 0.8F * (float)getEdad() * 0.01F;
+        return 0.8F * (float)getEdad() * 0.01F;
     }
-    
-    
-    
+
     @Override
     public void onLivingUpdate()
     {
@@ -174,7 +163,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
 
         if (MoCreatures.isServer())
         {
-        	if (!getIsAdult() && rand.nextInt(300) == 0)
+            if (!getIsAdult() && rand.nextInt(300) == 0)
             {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= 100)
@@ -184,5 +173,4 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
             }
         }
     }
-        
 }

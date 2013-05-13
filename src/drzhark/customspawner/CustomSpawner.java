@@ -666,6 +666,27 @@ public final class CustomSpawner {
         }
     }
 
+    public void checkSpawnLists(Class<? extends EntityLiving> clazz, EnumCreatureType type)
+    {
+        List[] customList = getCustomSpawnableList(type);
+        for (int i = 0; i < customList.length; i++)
+        {
+            List spawnList = customList[i];
+            BiomeGenBase biome = biomeList.get(i);
+            for (int j = 0; j < spawnList.size(); j++)
+            {
+                SpawnListEntry spawnlistentry = (SpawnListEntry)spawnList.get(j);
+                if (spawnlistentry.entityClass == clazz)
+                {
+             /*       if (verboseConsole) log.info("updateSpawnListEntry " + clazz + " to " + freq + ":" + min + ":" + max + " in biome " + biome.biomeName);
+                    spawnlistentry.itemWeight = freq;
+                    spawnlistentry.minGroupCount = min;
+                    spawnlistentry.maxGroupCount = max;*/
+                }
+            }
+        }
+    }
+
     public void updateSpawnListBiomes(Class<? extends EntityLiving> clazz, EnumCreatureType type, int freq, int min, int max, List<BiomeGenBase> biomes)
     {
         if (biomes != null)
@@ -735,13 +756,13 @@ public final class CustomSpawner {
 
     public boolean isVerboseConsole() 
     {
-		return verboseConsole;
-	}
+        return verboseConsole;
+    }
 
-	public void setVerboseConsole(boolean flag) 
-	{
-		this.verboseConsole = flag;
-	}
+    public void setVerboseConsole(boolean flag) 
+    {
+        this.verboseConsole = flag;
+    }
 
     /**
      * Returns whether or not the specified creature type can spawn at the specified location.
@@ -766,7 +787,7 @@ public final class CustomSpawner {
 
     protected final int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving)
     {
-    	return entityDespawnCheck(worldObj, entityliving, 7);
+        return entityDespawnCheck(worldObj, entityliving, 7);
     }
 
     //New DesPawner stuff
@@ -819,20 +840,23 @@ public final class CustomSpawner {
         return i;
     }
 
-    public final int despawnVanillaAnimals(WorldServer worldObj, int despawnLightLevel)
+    public final int despawnCreatures(WorldServer worldObj, int despawnLightLevel, boolean keepVanillaOnlyWithLight)
     {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
         {
             Entity entity = (Entity) worldObj.loadedEntityList.get(j);
-            if (!(entity instanceof EntityLiving))
+            if (!(entity.isCreatureType(EnumCreatureType.creature, true) || entity.isCreatureType(EnumCreatureType.ambient, true) || entity.isCreatureType(EnumCreatureType.waterCreature, true)))
             {
                 continue;
             }
-            if ((entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
+            if (keepVanillaOnlyWithLight && (entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
             {
                 count += entityDespawnCheck(worldObj, (EntityLiving) entity, despawnLightLevel);
-
+            }
+            else
+            {
+                count += entityDespawnCheck(worldObj, (EntityLiving) entity, despawnLightLevel);
             }
         }
         return count;
@@ -1002,45 +1026,6 @@ public final class CustomSpawner {
         {
             return extendedblockstorage.getExtBlocklightValue(x, y & 15, z);
         }
-    }
-
-    public static boolean isNearTorch(Entity entity, Double dist, World worldObj)
-    {
-        AxisAlignedBB axisalignedbb = entity.boundingBox.expand(dist, 2D, dist);
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
-        for (int k1 = i; k1 < j; k1++)
-        {
-            for (int l1 = k; l1 < l; l1++)
-            {
-                for (int i2 = i1; i2 < j1; i2++)
-                {
-                    int j2 = worldObj.getBlockId(k1, l1, i2);
-
-                    if (j2 != 0)
-                    {
-                        String nameToCheck = "";
-                        nameToCheck = Block.blocksList[j2].getUnlocalizedName();//.getBlockName();
-                        if (nameToCheck != null && nameToCheck != "" && nameToCheck.equals("tile.fence"))
-                        {
-                        	//System.out.println("fence! @ " + entity);
-                        	return true;
-                            //if (nameToCheck.equals("tile.torch") || nameToCheck.equals("tile.lightgem") || nameToCheck.equals("tile.redstoneLight") || nameToCheck.equals("tile.litpumpkin")) { return true; }
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        return false;
     }
 
     /**

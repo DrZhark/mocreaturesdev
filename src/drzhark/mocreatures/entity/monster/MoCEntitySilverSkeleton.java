@@ -11,33 +11,32 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntitySilverSkeleton extends MoCEntityMob{
 
-	public MoCEntitySilverSkeleton(World world)
-	{
-		super(world);
-		texture = MoCreatures.proxy.MODEL_TEXTURE + "silverskeleton.png";
-		setSize(0.9F, 1.4F);
-		health = getMaxHealth();
-	}
-	
-	public int attackCounterLeft;
+    public MoCEntitySilverSkeleton(World world)
+    {
+        super(world);
+        texture = MoCreatures.proxy.MODEL_TEXTURE + "silverskeleton.png";
+        setSize(0.9F, 1.4F);
+        health = getMaxHealth();
+    }
+
+    public int attackCounterLeft;
     public int attackCounterRight;
-    
-    
-	@Override
-	public void onLivingUpdate()
-	{
-		if (MoCreatures.isServer())
-		{
-			if (entityToAttack == null )
-        	{
-				setSprinting(false);
-        	}
-        	else
-        	{
-        		setSprinting(true);
-        	}
-			
-			if (this.worldObj.isDaytime())
+
+    @Override
+    public void onLivingUpdate()
+    {
+        if (MoCreatures.isServer())
+        {
+            if (entityToAttack == null )
+            {
+                setSprinting(false);
+            }
+            else
+            {
+                setSprinting(true);
+            }
+
+            if (this.worldObj.isDaytime())
             {
                 float var1 = this.getBrightness(1.0F);
 
@@ -46,115 +45,107 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
                     this.setFire(8);
                 }
             }
-			
-			
-		}
-
-		if (attackCounterLeft > 0 && ++attackCounterLeft > 10)
-        {
-        	attackCounterLeft = 0;
         }
-        
+
+        if (attackCounterLeft > 0 && ++attackCounterLeft > 10)
+        {
+            attackCounterLeft = 0;
+        }
+
         if (attackCounterRight > 0 && ++attackCounterRight > 10)
         {
-        	attackCounterRight = 0;
+            attackCounterRight = 0;
         }
-		
-		super.onLivingUpdate();
-	}
 
-	@Override
-	protected int getDropItemId()
-	{
-		if (rand.nextInt(10) == 0)
-		{
-			return MoCreatures.swordsilver.itemID;
-		}
-		return Item.bone.itemID;
+        super.onLivingUpdate();
+    }
 
-	}
-	
-	
-	 @Override
-	    public void performAnimation(int animationType)
-	    {
-	        
-	        if (animationType == 1) //left arm
-	        {
-	        	attackCounterLeft = 1;
-	        }
-	        if (animationType == 2) //right arm
-	        {
-	        	attackCounterRight = 1;
-	        }
-	    }
+    @Override
+    protected int getDropItemId()
+    {
+        if (rand.nextInt(10) == 0)
+        {
+            return MoCreatures.swordsilver.itemID;
+        }
+        return Item.bone.itemID;
 
-	 
-	    /**
-	     * Starts attack counters and synchronizes animations with clients
-	     */
-	    private void startAttackAnimation() 
-	    {
-	    	if (MoCreatures.isServer())
-	    	{
-	    		boolean leftArmW = rand.nextInt(2) == 0;
-	    		
-	    		if (leftArmW)
-	    		{
-	    			//System.out.println("left arm attack");
-	    			attackCounterLeft = 1;
-	    			MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
-	    		}else
-	    		{
-	    			//System.out.println("right arm attack");
-	    			attackCounterRight = 1;
-	    			MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 2);
-	    		}
-	    	}
-		}
-	    
-	   
-	    
-	    protected void attackEntity(Entity par1Entity, float par2)
-	    {
-	        if (this.attackTime <= 0 && par2 < 2.0F && par1Entity.boundingBox.maxY > this.boundingBox.minY && par1Entity.boundingBox.minY < this.boundingBox.maxY)
-	        {
-	            this.attackTime = 20;
-	            startAttackAnimation();
-	            this.attackEntityAsMob(par1Entity);
-	        }
-	    }
-	public float getMoveSpeed()
-	{
-		if (isSprinting()) return 1.2F;
-		return 0.8F;
-	}
+    }
 
-	@Override
-	public int getMaxHealth()
-	{
-		return 25;
-	}
+     @Override
+        public void performAnimation(int animationType)
+        {
+            
+            if (animationType == 1) //left arm
+            {
+                attackCounterLeft = 1;
+            }
+            if (animationType == 2) //right arm
+            {
+                attackCounterRight = 1;
+            }
+        }
 
-	@Override
-	protected String getDeathSound()
-	{
-		return "mob.skeleton.death";
-	}
+        /**
+         * Starts attack counters and synchronizes animations with clients
+         */
+        private void startAttackAnimation() 
+        {
+            if (MoCreatures.isServer())
+            {
+                boolean leftArmW = rand.nextInt(2) == 0;
+                
+                if (leftArmW)
+                {
+                    attackCounterLeft = 1;
+                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                }else
+                {
+                    attackCounterRight = 1;
+                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 2);
+                }
+            }
+        }
 
-	@Override
-	protected String getHurtSound()
-	{
-		return "mob.skeleton.hurt";
-	}
+        protected void attackEntity(Entity par1Entity, float par2)
+        {
+            if (this.attackTime <= 0 && par2 < 2.0F && par1Entity.boundingBox.maxY > this.boundingBox.minY && par1Entity.boundingBox.minY < this.boundingBox.maxY)
+            {
+                this.attackTime = 20;
+                startAttackAnimation();
+                this.attackEntityAsMob(par1Entity);
+            }
+        }
+    public float getMoveSpeed()
+    {
+        if (isSprinting()) return 1.2F;
+        return 0.8F;
+    }
 
-	@Override
-	protected String getLivingSound()
-	{
-		return "mob.skeleton.say";
-	}
-	
-	/**
+    @Override
+    public int getMaxHealth()
+    {
+        return 25;
+    }
+
+    @Override
+    protected String getDeathSound()
+    {
+	return "mob.skeleton.death";
+    }
+
+    @Override
+    protected String getHurtSound()
+    {
+	return "mob.skeleton.hurt";
+    }
+
+    @Override
+    protected String getLivingSound()
+    {
+	return "mob.skeleton.say";
+    }
+    
+    /**
      * Get this Entity's EnumCreatureAttribute
      */
     public EnumCreatureAttribute getCreatureAttribute()

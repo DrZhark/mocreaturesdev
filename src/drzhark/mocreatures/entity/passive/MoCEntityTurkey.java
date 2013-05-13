@@ -63,7 +63,6 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
             if (MoCreatures.isServer())
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-
             }
         }
 
@@ -79,15 +78,12 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
     @Override
     public int nameYOffset()
     {
-
         return -50;
-
     }
 
     @Override
     public double roperYOffset()
     {
         return 0.8D;
-
     }
 }

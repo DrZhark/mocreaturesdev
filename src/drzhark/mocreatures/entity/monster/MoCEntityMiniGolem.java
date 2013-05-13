@@ -27,20 +27,15 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         texture = MoCreatures.proxy.MODEL_TEXTURE + "minigolem.png";
         setSize(1.0F, 1.0F);
         health = getMaxHealth();
-        
-
     }
-
-   
 
     @Override
     protected void entityInit()
     {
         super.entityInit();
-        
+
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // angry 0 = false, 1 = true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasRock 0 = false, 1 = true
-
     }
 
     public boolean getIsAngry()
@@ -61,7 +56,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
 
     public void setHasRock(boolean flag)
     {
-    	byte input = (byte) (flag ? 1 : 0);
+        byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
     }
     
@@ -73,64 +68,59 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
 
         if (MoCreatures.isServer())
         {
-        	if (entityToAttack == null )
-        	{
-        		if (getIsAngry()) setIsAngry(false);
-        	}
-        	else
-        	{
-        		if (!getIsAngry()) setIsAngry(true);
-        	}
-        	
-        	if (this.worldObj.isDaytime())
+            if (entityToAttack == null )
+            {
+                if (getIsAngry()) setIsAngry(false);
+            }
+            else
+            {
+                if (!getIsAngry()) setIsAngry(true);
+            }
+
+            if (this.worldObj.isDaytime())
             {
                 float var1 = this.getBrightness(1.0F);
-        	
                 if (var1 > 0.5F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F)
                 {
                     this.setFire(8);
                 }
             }
-        	
-        	if (getIsAngry() && entityToAttack != null)
-        	{
-        		if (!getHasRock() && rand.nextInt(30) == 0)
-        		{
-        			acquireTRock();
-        		}
-        		
-        		if (getHasRock()) 
-        		{
-        			attackWithTRock();
-        		}
-        	}
-          
+            
+            if (getIsAngry() && entityToAttack != null)
+            {
+                if (!getHasRock() && rand.nextInt(30) == 0)
+                {
+                    acquireTRock();
+                }
+                
+                if (getHasRock()) 
+                {
+                    attackWithTRock();
+                }
+            }
         }
-
-        
     }
 
-    
     protected void acquireTRock()
     {
-    	int[] tRockInfo = MoCTools.destroyRandomBlockWithMetadata(this, 3D);
+        int[] tRockInfo = MoCTools.destroyRandomBlockWithMetadata(this, 3D);
         if (tRockInfo[0] == -1)
         {
-        	tcounter = 1;
-        	setHasRock(false);
-        	return;
+            tcounter = 1;
+            setHasRock(false);
+            return;
         }
         //creates a dummy Trock on top of it
         MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 2.0D, this.posZ);//, true, false);
         this.worldObj.spawnEntityInWorld(trock);
-        
+
         trock.setType(tRockInfo[0]);
         trock.setMetadata(tRockInfo[1]);
         trock.setBehavior(1);
         this.tempRock = trock;
         setHasRock(true);
     }
-   
+
     @Override
     protected boolean isMovementCeased()
     {
@@ -157,7 +147,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
             //throws a newly spawned Trock and destroys the held Trock
             if (entityToAttack != null && this.getDistanceToEntity(entityToAttack) < 48F)
             {
-            	//System.out.println("distance = " + this.getDistanceToEntity(entityToAttack));
+                //System.out.println("distance = " + this.getDistanceToEntity(entityToAttack));
                 ThrowStone(entityToAttack, this.tempRock.getType(), this.tempRock.getMetadata());
             }
 
@@ -177,24 +167,12 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         }
     }
 
- 
-
     @Override
     protected Entity findPlayerToAttack()
     {
         EntityPlayer var1 = this.worldObj.getClosestVulnerablePlayerToEntity(this, 16.0D);
-       /* if (var1 != null && this.canEntityBeSeen(var1) )
-        {
-        	setIsAngry(true);
-        	return var1;
-        }
-
-        setIsAngry(false);
-        return null;*/
         return var1 != null && this.canEntityBeSeen(var1) ? var1 : null;
     }
-
-    
 
     /**
      * Stretches the model to that size
@@ -253,12 +231,6 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         return "golemgrunt";
     }
 
-    /*@Override
-    protected int getDropItemId()
-    {
-        return MoCreatures.fur.itemID;
-    }
-    */
     @Override
     protected String getHurtSound()
     {

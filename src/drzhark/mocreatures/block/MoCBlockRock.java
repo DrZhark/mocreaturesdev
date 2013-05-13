@@ -29,30 +29,25 @@ public class MoCBlockRock extends MoCBlock
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
-    
-    
+
     @Override
     public int damageDropped(int i)
     {
         return i;
     }
-    
-    //func_94332_a = registerIcons(IconRegister)
-    //func_94245_a = registerIcon(String)
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
         icons = new Icon[MoCreatures.multiBlockNames.size()];
-        
+
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
             icons[x] = par1IconRegister.registerIcon("mocreatures:" + "rock_" + MoCreatures.multiBlockNames.get(x));
         }
-        
     }
-   
-   
+
     @SideOnly(Side.CLIENT)
     /**
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
@@ -60,10 +55,10 @@ public class MoCBlockRock extends MoCBlock
     @Override
     public Icon getIcon(int par1, int par2)
     {
-    	if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
+        if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
@@ -74,12 +69,9 @@ public class MoCBlockRock extends MoCBlock
         }
     }
 
-    
     @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int i)
     {
-    return icons[i]; 
+        return icons[i]; 
     }
-    
-   
 }

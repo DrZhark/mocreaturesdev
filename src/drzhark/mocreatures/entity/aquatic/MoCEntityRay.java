@@ -17,150 +17,130 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class MoCEntityRay extends MoCEntityAquatic {
-	//private float tempRotation;
-	private int poisoncounter;
-	private int tailCounter;
-	
-	//public boolean switchany;
 
-	public MoCEntityRay(World world)
-	{
-		super(world);
-		setSize(1.8F, 0.5F);
-		health = 10;
-		setEdad(50 + (rand.nextInt(50)));
+    private int poisoncounter;
+    private int tailCounter;
 
-		moveSpeed = 0.3F;
-		//setEdad(1.0F);
-		//unused_flag = true;
-	}
+    public MoCEntityRay(World world)
+    {
+        super(world);
+        setSize(1.8F, 0.5F);
+        health = 10;
+        setEdad(50 + (rand.nextInt(50)));
+        moveSpeed = 0.3F;
+    }
 
-	@Override
-	public void selectType()
-	{
-		checkSpawningBiome();
+    @Override
+    public void selectType()
+    {
+        checkSpawningBiome();
 
-		if (getType() == 0)
-		{
-			int i = rand.nextInt(100);
-			if (i <= 35)
-			{
-				setType(1);
-				setEdad(80 + (rand.nextInt(100)));
-			}
-			else
-			{
-				setType(1);
-				setEdad(70);
-			}
-			getMaxHealth();
-		}
-
-		/*if (type == 1)
+        if (getType() == 0)
         {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "mantray.png";
-            setMaxHealth(20);
-            setSize(1.8F, 0.5F);
-        } else if (type == 2)
+            int i = rand.nextInt(100);
+            if (i <= 35)
+            {
+                setType(1);
+                setEdad(80 + (rand.nextInt(100)));
+            }
+            else
+            {
+                setType(1);
+                setEdad(70);
+            }
+            getMaxHealth();
+        }
+    }
+
+    @Override
+    public String getTexture()
+    {
+        switch (getType())
         {
-            texture = MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
-            setMaxHealth(10);
-            setSize(0.6F, 0.5F);
-        }*/
-	}
+        case 1:
+            return MoCreatures.proxy.MODEL_TEXTURE + "mantray.png";
+        case 2:
+            return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
 
-	@Override
-	public String getTexture()
-	{
+        default:
+            return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
+        }
+    }
 
-		switch (getType())
-		{
-		case 1:
-			return MoCreatures.proxy.MODEL_TEXTURE + "mantray.png";
-		case 2:
-			return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
+    @Override
+    public int getMaxHealth()
+    {
+        if (getType() == 2)
+        {
+            return 10;
+        }
+        return 20;
+    }
 
-		default:
-			return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
-		}
-	}
+    @Override
+    public float getMoveSpeed()
+    {
+        return 0.3F;
+    }
 
-	@Override
-	public int getMaxHealth()
-	{
-		if (getType() == 2)
-		{
-			return 10;
-		}
-		return 20;
-	}
+    public boolean isPoisoning()
+    {
+        return tailCounter != 0;
+    }
+    
+    @Override
+    public boolean interact(EntityPlayer entityplayer)
+    {
+        if (super.interact(entityplayer)) { return false; }
+        
+        if (riddenByEntity == null && getType() == 1)
+        {
+            entityplayer.rotationYaw = rotationYaw;
+            entityplayer.rotationPitch = rotationPitch;
+            entityplayer.posY = posY;
+            if (!worldObj.isRemote)
+            {
+                entityplayer.mountEntity(this);
+            }
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public float getMoveSpeed()
-	{
-		return 0.3F;
-	}
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+        if (!worldObj.isRemote)
+        {
+            if (!getIsAdult() && (rand.nextInt(50) == 0))
+            {
+                setEdad(getEdad() + 1);
+                if ((getType() == 1 && getEdad() >= 180) || (getType() > 1 && getEdad() >= 90))
+                {
+                    setAdult(true);
+                }
+            }
 
-	public boolean isPoisoning()
-	{
-		return tailCounter != 0;
-	}
-	
-	@Override
-	public boolean interact(EntityPlayer entityplayer)
-	{
-		if (super.interact(entityplayer)) { return false; }
-		
-		if (riddenByEntity == null && getType() == 1)
-		{
-			entityplayer.rotationYaw = rotationYaw;
-			entityplayer.rotationPitch = rotationPitch;
-			entityplayer.posY = posY;
-			if (!worldObj.isRemote)
-			{
-				entityplayer.mountEntity(this);
-			}
-			return true;
-		}
-		
+            if (!getIsTamed() && getType() > 1 && ++poisoncounter > 250 && (worldObj.difficultySetting > 0) && rand.nextInt(30) == 0)
+            {
+                if (MoCTools.findNearPlayerAndPoison(this, true))
+                {
+                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                    poisoncounter = 0;
+                }
+            }
+        }
+        else //client stuff
+        {
+            if (tailCounter > 0 && ++tailCounter > 50)
+            {
+                tailCounter = 0;
+            }
+        }
+    }
 
-		return false;
-	}
-
-	@Override
-	public void onLivingUpdate()
-	{
-		super.onLivingUpdate();
-		if (!worldObj.isRemote)
-		{
-			if (!getIsAdult() && (rand.nextInt(50) == 0))
-			{
-				setEdad(getEdad() + 1);
-				if ((getType() == 1 && getEdad() >= 180) || (getType() > 1 && getEdad() >= 90))
-				{
-					setAdult(true);
-				}
-			}
-
-			if (!getIsTamed() && getType() > 1 && ++poisoncounter > 250 && (worldObj.difficultySetting > 0) && rand.nextInt(30) == 0)
-			{
-				if (MoCTools.findNearPlayerAndPoison(this, true))
-            	{
-					MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
-            		poisoncounter = 0;
-            	}
-			}
-		}
-		else //client stuff
-		{
-			if (tailCounter > 0 && ++tailCounter > 50)
-			{
-				tailCounter = 0;
-			}
-		}
-	}
-	
-	@Override
+    @Override
     public void performAnimation(int animationType)
     {
         if (animationType == 1) //attacking with tail
@@ -169,84 +149,82 @@ public class MoCEntityRay extends MoCEntityAquatic {
         }
     }
 
-	@Override
-	public boolean attackEntityFrom(DamageSource damagesource, int i)
-	{
-		if (super.attackEntityFrom(damagesource, i))
-		{
-			if (getType() == 1 || (worldObj.difficultySetting == 0)) { return true; }
-			Entity entity = damagesource.getEntity();
+    @Override
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    {
+        if (super.attackEntityFrom(damagesource, i))
+        {
+            if (getType() == 1 || (worldObj.difficultySetting == 0)) { return true; }
+            Entity entity = damagesource.getEntity();
 
-			if (entity != this)
-			{
-				entityToAttack = entity;
-			}
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+            if (entity != this)
+            {
+                entityToAttack = entity;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
+    @Override
+    public boolean checkSpawningBiome()
+    {
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(boundingBox.minY);
+        int k = MathHelper.floor_double(posZ);
+        String s = MoCTools.BiomeName(worldObj, i, j, k);
+        if (s != "Ocean")
+        {
+            setType(2);
+        }
+        return true;
+    }
 
-	@Override
-	public boolean checkSpawningBiome()
-	{
-		int i = MathHelper.floor_double(posX);
-		int j = MathHelper.floor_double(boundingBox.minY);
-		int k = MathHelper.floor_double(posZ);
-		String s = MoCTools.BiomeName(worldObj, i, j, k);
-		if (s != "Ocean")
-		{
-			setType(2);
-		}
-		return true;
-	}
+    @Override
+    public float getAdjustedYOffset()
+    {
+        if (!isSwimming())
+        {
+            return 0.09F;
+        }
+        else if (getType() == 1)
+        {
+            return 0.15F;
+        }
 
+        return 0.25F;
+    }
 
-	@Override
-	public float getAdjustedYOffset()
-	{
-		if (!isSwimming())
-		{
-			return 0.09F;
-		}
-		else if (getType() == 1)
-		{
-			return 0.15F;
-		}
-
-		return 0.25F;
-	}
-	
-	@Override
+    @Override
     public boolean renderName()
     {
         return getDisplayName() && (riddenByEntity == null);
     }
-    
+
     @Override
     public int nameYOffset()
     {
         return -25;
     }
-    
+
     @Override
     public boolean canBeTrappedInNet()
     {
-    	return ( getType() == 2 || (getType()== 1 && getIsTamed()) );
+        return ( getType() == 2 || (getType()== 1 && getIsTamed()) );
     }
-    
+
     @Override
-	public double getMountedYOffset()
-	{
-    	return (double)this.height * 0.15D * getSizeFactor();
-	}
-    
+    public double getMountedYOffset()
+    {
+        return (double)this.height * 0.15D * getSizeFactor();
+    }
+
     @Override
     public float getSizeFactor() 
     {   
-		return (float)getEdad() * 0.01F;
+        return (float)getEdad() * 0.01F;
     }
 }

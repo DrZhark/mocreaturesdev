@@ -8,14 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
 public class MoCEntitySnail extends MoCEntityAmbient
-
 {
     public MoCEntitySnail(World world)
     {
         super(world);
         setSize(0.2F, 0.2F);
         health = 2;
-        //moveSpeed = 0.15F;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
     }
 
@@ -23,7 +21,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     protected void entityInit()
     {
         super.entityInit();
-        dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isHiding - 0 false 1 true
+        dataWatcher.addObject(22, Byte.valueOf((byte) 0));
     }
 
     @Override
@@ -75,7 +73,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
                 setType(6);
             }
         }
-
     }
 
     @Override
@@ -96,7 +93,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
             return MoCreatures.proxy.MODEL_TEXTURE + "snaile.png";
         case 6:
             return MoCreatures.proxy.MODEL_TEXTURE + "snailf.png";
-
         default:
             return MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
         }
@@ -109,7 +105,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
 
     public void setIsHiding(boolean flag)
     {
-        //if (worldObj.isRemote) return;
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
@@ -126,7 +121,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
             {
                 if (!getIsHiding())
                 {
-                    //worldObj.playSoundAtEntity(this,"turtlehissing",1.0F,1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     setIsHiding(true);
                 }
                 setPathToEntity(null);
@@ -161,12 +155,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
         }
     }
 
-    /*@Override
-    public boolean isNotScared()
-    {
-        return true;
-    }*/
-
     @Override
     protected int getDropItemId()
     {
@@ -188,6 +176,4 @@ public class MoCEntitySnail extends MoCEntityAmbient
     protected void jump()
     {
     }
-
-
 }

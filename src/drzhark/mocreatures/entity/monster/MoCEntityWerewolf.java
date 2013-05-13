@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
@@ -61,9 +59,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             {
                 setType(4);
             }
-
         }
-
     }
 
     @Override
@@ -101,21 +97,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         }
     }
 
-    /*@Override
-    public String getTexture()
-    {
-    if(!this.getIsHumanForm())
-    {
-        return MoCreatures.proxy.MODEL_TEXTURE + "brownwerewolf.png";
-        //loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "wereblank.png");
-    }
-    else
-    {
-        return MoCreatures.proxy.MODEL_TEXTURE + "wereblank.png";
-        //loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "werehuman.png");
-    }
-    }*/
-
     public boolean getIsHumanForm()
     {
         return (dataWatcher.getWatchableObjectByte(22) == 1);
@@ -130,14 +111,12 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     public boolean getIsHunched()
     {
         return (dataWatcher.getWatchableObjectByte(23) == 1);
-        //return hunched;
     }
 
     public void setHunched(boolean flag)
     {
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(23, Byte.valueOf(input));
-        //hunched = var1;
     }
 
     @Override
@@ -172,7 +151,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                     ((EntityLiving) entity).setFire(10);
                 }
             }
-
         }
     }
 
@@ -209,7 +187,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 }
                 if (itemstack.itemID == MoCreatures.swordsilver.itemID)
                 {
-                	i = 10;
+                    i = 10;
                 }
             }
         }
@@ -326,7 +304,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     public boolean getIsUndead()
     {
         return true;
-        //return (dataWatcher.getWatchableObjectByte(16) & (1 << 3)) != 0;
     }
 
     @Override
@@ -376,7 +353,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         {
             entity.onKillEntity(this);
         }
-        //unused_flag = true;
+
         if (!worldObj.isRemote)
         {
             for (int i = 0; i < 2; i++)
@@ -398,7 +375,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         if (!worldObj.isRemote)
         {
             if (((IsNight() && getIsHumanForm()) || (!IsNight() && !getIsHumanForm())) && (rand.nextInt(250) == 0))
-            //if(getIsHumanForm() && (rand.nextInt(250) == 0))
             {
                 transforming = true;
             }
@@ -448,21 +424,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             }
         }
     }
-
-    /*
-     * @Override
-     * public void setEntityDead()
-     * {
-     * super.setEntityDead();
-     * }
-     */
-
-    /*public void setUndead(boolean var1)
-    {
-        byte varT = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(16) | (1 << 3)));
-        byte varF = Byte.valueOf((byte) (dataWatcher.getWatchableObjectByte(16) & ~(1 << 3)));
-        dataWatcher.updateObject(16, var1 ? varT : varF);
-    }*/
 
     private void Transform()
     {

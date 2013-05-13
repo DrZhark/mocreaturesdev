@@ -31,5 +31,4 @@ public class MoCItemLitterBox extends MoCItem {
         }
         return itemstack;
     }
-
 }
