@@ -88,7 +88,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                 }
 
                 // despawn tick
-                if (MoCreatures.proxy.despawnVanilla && worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.despawnTickRate == 0L))
+                if (MoCreatures.proxy.despawnVanilla && worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.despawnTickRate == 0L) && worldObj.provider.dimensionId != MoCreatures.WyvernLairDimensionID)
                 {
                     if (worldObj.playerEntities.size() > 0)
                     {

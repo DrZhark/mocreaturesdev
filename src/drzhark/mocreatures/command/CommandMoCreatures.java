@@ -375,7 +375,7 @@ public class CommandMoCreatures extends CommandBase {
                                         this.sendCommandHelp(par1ICommandSender);
                                     }
                                 }
-                                else if (par2.equalsIgnoreCase("min"))
+                                else if (par3.equalsIgnoreCase("min"))
                                 {
                                     try 
                                     {
@@ -390,7 +390,7 @@ public class CommandMoCreatures extends CommandBase {
                                         this.sendCommandHelp(par1ICommandSender);
                                     }
                                 }
-                                else if (par2.equalsIgnoreCase("max"))
+                                else if (par3.equalsIgnoreCase("max"))
                                 {
                                     try 
                                     {
@@ -405,84 +405,83 @@ public class CommandMoCreatures extends CommandBase {
                                         this.sendCommandHelp(par1ICommandSender);
                                     }
                                 }
-                                if (MoCreatures.myCustomSpawner != null)
+                                // handle biome groups
+                                else if (par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg"))
                                 {
-                                   MoCreatures.myCustomSpawner.updateSpawnListEntry(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
-                                }
-                                break OUTER;
-                            }
-                            // handle biome groups
-                            else if (par2.equalsIgnoreCase("biomegroup") || par2.equalsIgnoreCase("bg"))
-                            {
-                                if (par2ArrayOfStr.length != 5)
-                                    break OUTER;
-                                String value = par2ArrayOfStr[4].toUpperCase();
-                                try 
-                                {
-                                    List<String> biomeGroups = entityData.getBiomeGroups();
-                                    if (par2ArrayOfStr[3].equalsIgnoreCase("add"))
+                                    if (par2ArrayOfStr.length != 5)
+                                        break OUTER;
+                                    String value = par2ArrayOfStr[4].toUpperCase();
+                                    try 
                                     {
-                                        if (!biomeGroups.contains(value))
+                                        List<String> biomeGroups = entityData.getBiomeGroups();
+                                        if (par2ArrayOfStr[3].equalsIgnoreCase("add"))
                                         {
-                                            if (!MoCreatures.proxy.biomeGroupMap.containsKey(value))
+                                            if (!biomeGroups.contains(value))
                                             {
-                                                par1ICommandSender.sendChatToPlayer("Invalid Biome Group entered. Please choose a biome group from the following list : ");
-                                                for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : MoCreatures.proxy.biomeGroupMap.entrySet())
+                                                if (!MoCreatures.proxy.biomeGroupMap.containsKey(value))
                                                 {
-                                                    par1ICommandSender.sendChatToPlayer(biomeGroupEntry.getKey());
+                                                    par1ICommandSender.sendChatToPlayer("Invalid Biome Group entered. Please choose a biome group from the following list : ");
+                                                    for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : MoCreatures.proxy.biomeGroupMap.entrySet())
+                                                    {
+                                                        par1ICommandSender.sendChatToPlayer(biomeGroupEntry.getKey());
+                                                    }
+                                                    doNotShowHelp = true;
+                                                    break OUTER;
                                                 }
-                                                break OUTER;
-                                            }
-                                            biomeGroups.add(value);
-                                            //MoCProperty prop = config.get(category, entityEntry.getKey());
-                                            //prop.valueList.add(value);
-                                            //Collections.sort(prop.valueList);
-                                            Collections.sort(biomeGroups);
-                                            saved = true;
-                                            if (MoCreatures.myCustomSpawner != null)
-                                            {
-                                                // update lists
-                                                MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
-                                            }
-                                            par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityData.getEntityName() + ".");
-                                            break OUTER;
-                                        }
-                                        else 
-                                        {
-                                            par1ICommandSender.sendChatToPlayer("Biome Group " + value + " already exists!!, please choose another from the following list :");
-                                            for (int i = 0; i < MoCreatures.proxy.biomeGroupMap.size(); i++)
-                                            {
-                                                par1ICommandSender.sendChatToPlayer(MoCreatures.proxy.biomeGroupMap.get(i).getBiomeGroupName());
-                                            }
-                                        }
-                                    }
-                                    else if (par3.equalsIgnoreCase("rem") || par3.equalsIgnoreCase("remove"))
-                                    {
-                                        for (int i = 0; i < biomeGroups.size(); i++)
-                                        {
-                                            if (value.equals(biomeGroups.get(i)))
-                                            {
-                                                biomeGroups.remove(i);
+                                                biomeGroups.add(value);
+                                                Collections.sort(biomeGroups);
                                                 saved = true;
                                                 if (MoCreatures.myCustomSpawner != null)
                                                 {
                                                     // update lists
                                                     MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
                                                 }
-                                                par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + ".");
+                                                par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityData.getEntityName() + ".");
                                                 break OUTER;
                                             }
+                                            else 
+                                            {
+                                                par1ICommandSender.sendChatToPlayer("Biome Group " + value + " already exists!!, please choose another from the following list :");
+                                                for (int i = 0; i < MoCreatures.proxy.biomeGroupMap.size(); i++)
+                                                {
+                                                    par1ICommandSender.sendChatToPlayer(MoCreatures.proxy.biomeGroupMap.get(i).getBiomeGroupName());
+                                                }
+                                            }
                                         }
-                                        par1ICommandSender.sendChatToPlayer("Invalid biomegroup entered, please choose from the following list :");
-                                        for (int i = 0; i < biomeGroups.size(); i++)
+                                        else if (par4.equalsIgnoreCase("rem") || par4.equalsIgnoreCase("remove"))
                                         {
-                                            par1ICommandSender.sendChatToPlayer(biomeGroups.get(i));
+                                            for (int i = 0; i < biomeGroups.size(); i++)
+                                            {
+                                                if (value.equals(biomeGroups.get(i)))
+                                                {
+                                                    biomeGroups.remove(i);
+                                                    saved = true;
+                                                    if (MoCreatures.myCustomSpawner != null)
+                                                    {
+                                                        // update lists
+                                                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
+                                                    }
+                                                    par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + ".");
+                                                    break OUTER;
+                                                }
+                                            }
+                                            par1ICommandSender.sendChatToPlayer("Invalid biomegroup entered, please choose from the following list :");
+                                            for (int i = 0; i < biomeGroups.size(); i++)
+                                            {
+                                                par1ICommandSender.sendChatToPlayer(biomeGroups.get(i));
+                                            }
+                                            doNotShowHelp = true;
                                         }
                                     }
+                                    catch(NumberFormatException ex)
+                                    {
+                                        this.sendCommandHelp(par1ICommandSender);
+                                    }
+                                    break OUTER;
                                 }
-                                catch(NumberFormatException ex)
+                                if (MoCreatures.myCustomSpawner != null && saved == true && (par3.equalsIgnoreCase("frequency") || par3.equalsIgnoreCase("min") || par3.equalsIgnoreCase("max")))
                                 {
-                                    this.sendCommandHelp(par1ICommandSender);
+                                   MoCreatures.myCustomSpawner.updateSpawnListEntry(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
                                 }
                                 break OUTER;
                             }
@@ -586,11 +585,6 @@ public class CommandMoCreatures extends CommandBase {
                 String command = list.get(l);
                 par1ICommandSender.sendChatToPlayer(command);
             }
-
-            /*if (j == 0 && par1ICommandSender instanceof EntityPlayer)
-            {
-                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.GREEN + par1ICommandSender.translateString("commands.help.footer", new Object[0]));
-            }*/
         }
         // END HELP COMMAND
         if (saved)
