@@ -28,6 +28,7 @@ public class MoCClientTickHandler implements ITickHandler {
     {
         // handle GUI tick stuff here
         inMenu = true;
+        //MoCreatures.proxy.needsUpdate = true;
         lastTickRun = 0;
     }
 

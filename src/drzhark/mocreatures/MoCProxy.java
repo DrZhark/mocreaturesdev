@@ -169,7 +169,6 @@ public class MoCProxy implements IGuiHandler {
     public boolean debugCMS;
     public boolean checkAmbientLightLevel;
     public boolean disallowMonsterSpawningDuringDay;
-    public boolean keepVanillaOnlyWithLight;
     public int despawnLightLevel = 7;
     public int lightLevel = 7;
     public int maxMonsters;
@@ -1372,7 +1371,6 @@ public class MoCProxy implements IGuiHandler {
         despawnLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", 7, "The light level threshold used to determine whether or not to despawn a creature.").getInt();
         checkAmbientLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", false, "Turns on check for lightLevel for Ambient creature spawns.").getBoolean(false);
         disallowMonsterSpawningDuringDay = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", false, "Prevents monsters from spawning anywhere during the day. Note: this will affect underground spawns as well.").getBoolean(false);
-        keepVanillaOnlyWithLight = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnVanillaOnly", true, "If true, prevents vanilla creatures from despawning when over the despawnLightLevel threshold. If false, prevents all creatures, ambients, and watercreatures from despawning when above despawnLightLevel threshold.").getBoolean(true);
         debugCMS = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);
         useCustomSpawner = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
 

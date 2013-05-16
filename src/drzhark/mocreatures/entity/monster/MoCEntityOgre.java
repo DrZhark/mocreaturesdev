@@ -23,7 +23,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     public MoCEntityOgre(World world)
     {
         super(world);
-        setSize(1.9F, 4F);
+        setSize(1.9F, 3F);
         health = 35;
         isImmuneToFire = false;
         frequencyA = 30;

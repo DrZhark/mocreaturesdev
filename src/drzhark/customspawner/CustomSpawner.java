@@ -840,23 +840,20 @@ public final class CustomSpawner {
         return i;
     }
 
-    public final int despawnCreatures(WorldServer worldObj, int despawnLightLevel, boolean keepVanillaOnlyWithLight)
+    public final int despawnVanillaAnimals(WorldServer worldObj, int despawnLightLevel)
     {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
         {
             Entity entity = (Entity) worldObj.loadedEntityList.get(j);
-            if (!(entity.isCreatureType(EnumCreatureType.creature, true) || entity.isCreatureType(EnumCreatureType.ambient, true) || entity.isCreatureType(EnumCreatureType.waterCreature, true)))
+            if (!(entity instanceof EntityLiving))
             {
                 continue;
             }
-            if (keepVanillaOnlyWithLight && (entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
+            if ((entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf))
             {
                 count += entityDespawnCheck(worldObj, (EntityLiving) entity, despawnLightLevel);
-            }
-            else
-            {
-                count += entityDespawnCheck(worldObj, (EntityLiving) entity, despawnLightLevel);
+
             }
         }
         return count;

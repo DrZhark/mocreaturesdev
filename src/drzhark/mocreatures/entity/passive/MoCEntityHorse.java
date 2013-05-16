@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntityRecordPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.MoCTools;
@@ -133,15 +134,17 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
         String s = MoCTools.BiomeName(worldObj, i, j, k);
 
-        if (s.equals("Plains"))
+        if (s.toLowerCase().contains("plains"))
         {
             if (rand.nextInt(3) == 0)
             {
                 setType(60);// zebra
             }
         }
-
-        selectType();
+        if (s.toLowerCase().contains("savanna"))
+        {
+                setType(60);// zebra
+        }
         return true;
     }
 
@@ -2481,6 +2484,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     @Override
     public void selectType()
     {
+        checkSpawningBiome();
         if (getType() == 0)
         {
             if (rand.nextInt(5) == 0)

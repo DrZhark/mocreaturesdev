@@ -22,7 +22,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     {
         super(world);
         texture = MoCreatures.proxy.MODEL_TEXTURE + "werehuman.png";
-        setSize(0.9F, 1.3F);
+        setSize(0.9F, 1.6F);
         health = 15;
         transforming = false;
         tcounter = 0;

@@ -92,7 +92,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                 {
                     if (worldObj.playerEntities.size() > 0)
                     {
-                        int numDespawns = MoCreatures.myCustomSpawner.despawnCreatures(worldObj, MoCreatures.proxy.despawnLightLevel, MoCreatures.proxy.keepVanillaOnlyWithLight);
+                        int numDespawns = MoCreatures.myCustomSpawner.despawnVanillaAnimals(worldObj, MoCreatures.proxy.despawnLightLevel);
                         if (MoCreatures.proxy.debugLogging)
                         {
                             MoCreatures.log.info("Mo'Creatures DeSpawned " + numDespawns + " Vanilla Creatures");
