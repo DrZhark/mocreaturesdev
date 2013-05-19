@@ -176,7 +176,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.0")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -466,6 +466,17 @@ public class MoCreatures {
     {
         proxy.ConfigPostInit(event);
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
+        if (proxy.useCustomSpawner)
+        {
+            myCustomSpawner = new CustomSpawner();
+            if (proxy.debugCMS)
+            {
+                myCustomSpawner.setVerboseConsole(true);
+            }
+            proxy.initializeBiomes();
+            proxy.initializeEntities();
+            updateSettings(); // refresh settings
+        }
     }
 
     // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
@@ -474,7 +485,9 @@ public class MoCreatures {
     {
         if (proxy.useCustomSpawner)
         {
-            myCustomSpawner = new CustomSpawner();
+            if (myCustomSpawner == null)
+                myCustomSpawner = new CustomSpawner();
+            else myCustomSpawner.resetCMS();
             if (proxy.debugCMS)
             {
                 myCustomSpawner.setVerboseConsole(true);

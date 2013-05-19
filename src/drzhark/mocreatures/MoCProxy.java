@@ -736,7 +736,7 @@ public class MoCProxy implements IGuiHandler {
                                 entityData = modData.getCreature(entityName);
                                 entityData.setEntityID(entityliving.entityId);
                                 entityData.setEntityMod(modData);
-                            };
+                            }
                             entityData.setEntityMod(modData);
                             entityConfig = modData.getModConfig();
                             entityData.setEntityConfig(entityConfig);
@@ -854,7 +854,7 @@ public class MoCProxy implements IGuiHandler {
                                         entityData.addSpawnBiome(tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)));
                                         if (debugLogging) MoCreatures.log.info("Added " + tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)) + " to entity " + entityName + " spawnBiomes");
                                     }
-                                    else if (debugLogging) MoCreatures.log.info("Invalid Biome " + biomeProps.valueList.get(j) + " was found in config category " + biomeGroupName + " in MoCBiomeGroups.cfg");
+                                    else if (debugLogging) MoCreatures.log.info("Invalid Biome " + biomeProps.valueList.get(j) + " was found in config category " + biomeGroupName + " in MoCBiomeGroups.cfg. Note: This may also mean you do not have the Biome Mod installed.");
                                 }
                             }
                             entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
