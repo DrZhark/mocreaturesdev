@@ -373,7 +373,7 @@ public class MoCProxy implements IGuiHandler {
 
     public void genModConfiguration()
     {
-        mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, "Ant", EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
+        mocEntityMap.put("Ant", new MoCEntityData(MoCEntityAnt.class, "Ant", EnumCreatureType.ambient, 7, 1, 4, 4, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL", "SWAMP"))));
         mocEntityMap.put("Bear", new MoCEntityData(MoCEntityBear.class, "Bear", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Bee", new MoCEntityData(MoCEntityBee.class, "Bee", EnumCreatureType.ambient, 7, 1, 4, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("BigCat", new MoCEntityData(MoCEntityBigCat.class, "BigCat", EnumCreatureType.creature,  6, 1, 2, 2, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
@@ -383,17 +383,17 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Bunny", new MoCEntityData(MoCEntityBunny.class, "Bunny", EnumCreatureType.creature, 10, 2, 3, 4, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "JUNGLE", "NORMAL", "WYVERNLAIR"))));
         mocEntityMap.put("ButterFly", new MoCEntityData(MoCEntityButterfly.class, "ButterFly", EnumCreatureType.ambient, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
         mocEntityMap.put("Crab", new MoCEntityData(MoCEntityCrab.class, "Crab", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("BEACHES", "RIVER"))));
-        mocEntityMap.put("Cricket", new MoCEntityData(MoCEntityCricket.class, "Cricket", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Cricket", new MoCEntityData(MoCEntityCricket.class, "Cricket", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "SWAMP"))));
         mocEntityMap.put("Crocodile", new MoCEntityData(MoCEntityCrocodile.class, "Crocodile", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
         mocEntityMap.put("Deer", new MoCEntityData(MoCEntityDeer.class, "Deer", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
         mocEntityMap.put("Dolphin", new MoCEntityData(MoCEntityDolphin.class, "Dolphin", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER"))));
-        mocEntityMap.put("DragonFly", new MoCEntityData(MoCEntityDragonfly.class, "DragonFly", EnumCreatureType.ambient, 6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("DragonFly", new MoCEntityData(MoCEntityDragonfly.class, "DragonFly", EnumCreatureType.ambient, 6, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR", "SWAMP"))));
         mocEntityMap.put("Duck", new MoCEntityData(MoCEntityDuck.class, "Duck", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         mocEntityMap.put("Elephant", new MoCEntityData(MoCEntityElephant.class, "Elephant", EnumCreatureType.creature, 4, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "DESERT", "FOREST", "NORMAL"))));
-        mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, "Firefly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN"))));
+        mocEntityMap.put("Firefly", new MoCEntityData(MoCEntityFirefly.class, "Firefly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL", "JUNGLE", "MOUNTAIN", "SWAMP"))));
         mocEntityMap.put("Fishy", new MoCEntityData(MoCEntityFishy.class, "Fishy", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("FlameWraith", new MoCEntityData(MoCEntityFlameWraith.class, "FlameWraith", EnumCreatureType.monster, 5, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
-        mocEntityMap.put("Fly", new MoCEntityData(MoCEntityFly.class, "Fly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Fly", new MoCEntityData(MoCEntityFly.class, "Fly", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "SWAMP"))));
         mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, "Fox", EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
         mocEntityMap.put("Goat", new MoCEntityData(MoCEntityGoat.class, "Goat", EnumCreatureType.creature, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("HellRat", new MoCEntityData(MoCEntityHellRat.class, "HellRat", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
@@ -402,7 +402,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("JellyFish", new MoCEntityData(MoCEntityJellyFish.class, "JellyFish", EnumCreatureType.waterCreature, 8, 1, 4, 4, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
         mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, "Kitty", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
         mocEntityMap.put("KomodoDragon", new MoCEntityData(MoCEntityKomodo.class, "KomodoDragon", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP"))));
-        mocEntityMap.put("Maggot", new MoCEntityData(MoCEntityMaggot.class, "Maggot", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
+        mocEntityMap.put("Maggot", new MoCEntityData(MoCEntityMaggot.class, "Maggot", EnumCreatureType.ambient, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "SWAMP"))));
         mocEntityMap.put("MediumFish", new MoCEntityData(MoCEntityMediumFish.class, "MediumFish", EnumCreatureType.waterCreature, 10, 1, 4, 4, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("MiniGolem", new MoCEntityData(MoCEntityMiniGolem.class, "MiniGolem", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS"))));
         mocEntityMap.put("Mouse", new MoCEntityData(MoCEntityMouse.class, "Mouse", EnumCreatureType.creature, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "MOUNTAIN", "NORMAL"))));
@@ -415,8 +415,8 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Scorpion", new MoCEntityData(MoCEntityScorpion.class, "Scorpion", EnumCreatureType.monster, 6, 1, 1, 1, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
         mocEntityMap.put("Shark", new MoCEntityData(MoCEntityShark.class, "Shark", EnumCreatureType.waterCreature, 6, 1, 1, 1, new ArrayList(Arrays.asList("OCEAN"))));
         mocEntityMap.put("SilverSkeleton", new MoCEntityData(MoCEntitySilverSkeleton.class, "SilverSkeleton", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));
-        mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, "Snail", EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
-        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR"))));
+        mocEntityMap.put("Snail", new MoCEntityData(MoCEntitySnail.class, "Snail", EnumCreatureType.ambient, 7, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL", "SWAMP"))));
+        mocEntityMap.put("Snake", new MoCEntityData(MoCEntitySnake.class, "Snake", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("DESERT", "FOREST", "JUNGLE", "MOUNTAIN", "NORMAL", "WYVERNLAIR", "SWAMP"))));
         mocEntityMap.put("SmallFish", new MoCEntityData(MoCEntitySmallFish.class, "SmallFish", EnumCreatureType.waterCreature, 12, 1, 6, 6, new ArrayList(Arrays.asList("BEACHES", "OCEAN", "RIVER", "SWAMP", "LAKE"))));
         mocEntityMap.put("Turkey", new MoCEntityData(MoCEntityTurkey.class, "Turkey", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
         mocEntityMap.put("Turtle", new MoCEntityData(MoCEntityTurtle.class, "Turtle", EnumCreatureType.creature, 6, 1, 2, 2, new ArrayList(Arrays.asList("SWAMP", "JUNGLE"))));

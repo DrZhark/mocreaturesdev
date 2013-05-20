@@ -50,7 +50,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
     protected void entityInit()
     {
         super.entityInit();
-        dataWatcher.addObject(22, Integer.valueOf(0)); // int BearState 
+        dataWatcher.addObject(23, Integer.valueOf(0)); // int BearState 
     }
 
     /**
@@ -60,12 +60,12 @@ public class MoCEntityBear extends MoCEntityAnimal {
      */
     public int getBearState()
     {
-        return dataWatcher.getWatchableObjectInt(22);
+        return dataWatcher.getWatchableObjectInt(23);
     }
 
     public void setBearState(int i)
     {
-        dataWatcher.updateObject(22, Integer.valueOf(i));
+        dataWatcher.updateObject(23, Integer.valueOf(i));
     }
 
     @Override
