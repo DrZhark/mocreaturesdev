@@ -963,4 +963,9 @@ public class MoCConfiguration
         }
         return "undefined";
     }
+
+    public File getFile()
+    {
+        return this.file;
+    }
 }

@@ -210,7 +210,7 @@ public class MoCProxy implements IGuiHandler {
     public MoCConfiguration mocGlobalConfig;
     public MoCConfiguration mocBiomeConfig;
     public MoCConfiguration mocStructureConfig;
-    private File configFile;
+    protected File configFile;
 
     private static final String MOC_BEAR_NAME = "Horse";
     private static final String MOC_BEE_NAME = "Bee";
@@ -257,7 +257,7 @@ public class MoCProxy implements IGuiHandler {
     private static final String MOC_WRAITH_NAME = "Wraith";
     private static final String MOC_WWOLF_NAME = "WWolf";
 
-    private static final String MOD_CREATURES_FILE_ROOT = File.separator + "Creatures" + File.separator;
+    protected static final String MOD_CREATURES_FILE_ROOT = File.separator + "Creatures" + File.separator;
     private static final String MOD_BIOME_FILE_ROOT = File.separator + "Biomes" + File.separator;
 
     protected static final String CATEGORY_MOC_GENERAL_SETTINGS = "global-settings";
@@ -368,7 +368,7 @@ public class MoCProxy implements IGuiHandler {
         mocStructureConfig.load();
         genModConfiguration();
         this.readConfigValues();
-        if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCProperties.cfg");
+        if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCGlobal.cfg");
     }
 
     public void genModConfiguration()

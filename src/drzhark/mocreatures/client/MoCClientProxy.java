@@ -1004,7 +1004,7 @@ public class MoCClientProxy extends MoCProxy {
         //******************** Reset Default Settings ********************//
         defaultChoices = new WidgetClassicTwocolumn(new Widget[0]);
         SimpleButtonModel defaultChoiceButtonModel = new SimpleButtonModel();
-        defaultChoiceButtonModel.addActionCallback(new ModAction(this, "resetAllData", new Class[0]));
+        defaultChoiceButtonModel.addActionCallback(new ModAction(this, "resetToDefaults", new Class[0]));
         Button defaultChoiceButton = new Button(defaultChoiceButtonModel);
         defaultChoiceButton.setText("Yes");
         defaultChoices.add(defaultChoiceButton);
@@ -1510,6 +1510,38 @@ public class MoCClientProxy extends MoCProxy {
         MoCScreen = null;
         guiapiSettings = null;
         super.resetAllData();
+    }
+
+    public void resetToDefaults()
+    {
+        if (mocGlobalConfig.getFile().exists())
+        {
+            String parentDir = configFile.getParent();
+            if (!mocGlobalConfig.getFile().renameTo(new File(parentDir, "MoCreatures" + File.separator + "MoCGlobal.cfg.bak")))
+            {
+                File oldFile = new File(parentDir, "MoCreatures" + File.separator + "MoCGlobal.cfg.bak");
+                oldFile.delete();
+                mocGlobalConfig.getFile().renameTo(new File(parentDir, "MoCreatures" + File.separator + "MoCGlobal.cfg.bak"));
+            }
+            mocGlobalConfig = new MoCConfiguration(new File(parentDir, "MoCreatures" + File.separator + "MoCGlobal.cfg"));
+            File mocreaturesFile = new File(parentDir, MOD_CREATURES_FILE_ROOT + "MoCreatures.cfg");
+            if (mocreaturesFile.exists())
+            {
+                if (!mocreaturesFile.renameTo(new File(parentDir, MOD_CREATURES_FILE_ROOT + "MoCreatures.cfg.bak")))
+                {
+                    File oldFile = new File(parentDir, MOD_CREATURES_FILE_ROOT + "MoCreatures.cfg.bak");
+                    oldFile.delete();
+                    mocreaturesFile.renameTo(new File(parentDir, MOD_CREATURES_FILE_ROOT + "MoCreatures.cfg.bak"));
+                }
+            }
+        }
+        resetAllData();
+        MoCreatures.myCustomSpawner.resetCMS();
+        MoCreatures.proxy.initializeBiomes();
+        MoCreatures.proxy.initializeEntities();
+        MoCreatures.proxy.initGUI();
+        MoCreatures.updateSettings(); // refresh settings
+        GuiModScreen.show(MoCScreen.theWidget);
     }
 
     public void cancelReset()
