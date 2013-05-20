@@ -173,4 +173,10 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
             }
         }
     }
+    
+    @Override
+    public int getTalkInterval()
+    {
+        return 400;
+    }
 }

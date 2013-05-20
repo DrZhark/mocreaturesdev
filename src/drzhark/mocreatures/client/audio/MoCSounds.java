@@ -102,7 +102,8 @@ public class MoCSounds {
         "elephantgrunt4.ogg", "elephantgrunt5.ogg", "elephantgrunt6.ogg", "elephantgrunt7.ogg", "elephantgrunt8.ogg",
         "elephanthurt1.ogg", "elephanthurt2.ogg",
         "wyverndying.ogg", "wyverngrunt1.ogg", "wyverngrunt2.ogg", "wyverngrunt3.ogg", "wyverngrunt4.ogg", "wyverngrunt5.ogg",
-        "wyvernhurt1.ogg", "wyvernhurt2.ogg", "wyvernpoisoning.ogg", "wyvernwingflap.ogg"
+        "wyvernhurt1.ogg", "wyvernhurt2.ogg", "wyvernpoisoning.ogg", "wyvernwingflap.ogg",
+        "raccoondying.ogg", "raccoongrunt1.ogg", "raccoongrunt2.ogg", "raccoongrunt3.ogg", "raccoongrunt4.ogg", "raccoonhurt1.ogg", "raccoonhurt2.ogg",
     }; 
 
     public void loadSounds()

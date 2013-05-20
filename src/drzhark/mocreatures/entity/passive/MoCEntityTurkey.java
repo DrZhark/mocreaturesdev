@@ -86,4 +86,10 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
     {
         return 0.8D;
     }
+    
+    @Override
+    public int getTalkInterval()
+    {
+        return 400;
+    }
 }
