@@ -1509,13 +1509,7 @@ public class MoCClientProxy extends MoCProxy {
 
         MoCScreen = null;
         guiapiSettings = null;
-        genModConfiguration();
-        readConfigValues();
-        initGUI();
-        initializeBiomes();
-        initializeEntities();
-        MoCreatures.updateSettings();
-        GuiModScreen.show(MoCScreen.theWidget);
+        super.resetAllData();
     }
 
     public void cancelReset()

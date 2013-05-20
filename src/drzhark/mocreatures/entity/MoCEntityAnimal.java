@@ -40,14 +40,16 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     protected int temper;
     protected boolean isEntityJumping;
     public EntityLiving roper;
-     private PathEntity entitypath;
-     private int mountCount;
+    private PathEntity entitypath;
+    // used by MoCPlayerTracker to prevent dupes when a player disconnects on animal from server
+    public boolean riderIsDisconnecting;
 
     public MoCEntityAnimal(World world)
     {
         super(world);
         setTamed(false);
         setAdult(true);
+        riderIsDisconnecting = false;
     }
 
     /**
@@ -289,16 +291,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             if (rideableEntity() && this.riddenByEntity != null)
             {
                 Riding();
-                mountCount = 1;
             }
-            
-            if (mountCount > 0)
-            {
-                if (++mountCount > 50)
-                {
-                    mountCount = 0;
-                }
-            }
+
             if (forceUpdates() && rand.nextInt(500) == 0)
             {
                 MoCTools.forceDataSync(this);
@@ -1723,10 +1717,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     @Override
     public void setDead()
     {
-        if (this.riddenByEntity != null)
-            this.riddenByEntity.mountEntity(null);
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && !this.riderIsDisconnecting)
         {
             return;
         }

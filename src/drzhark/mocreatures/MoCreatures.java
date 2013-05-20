@@ -176,7 +176,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.1")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.2")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -361,6 +361,7 @@ public class MoCreatures {
     public static Item fishnet;
 
     public static Logger log;
+    public static MoCPlayerTracker tracker;
 
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
@@ -370,6 +371,8 @@ public class MoCreatures {
         log = event.getModLog();
         proxy.ConfigInit(event);
         proxy.initSounds();
+        tracker = new MoCPlayerTracker();
+        GameRegistry.registerPlayerTracker(tracker);
     }
 
     //how to check for client: if(FMLCommonHandler.instance().getSide().isClient())
@@ -464,19 +467,19 @@ public class MoCreatures {
     @PostInit
     public void postInit(FMLPostInitializationEvent event)
     {
-        proxy.ConfigPostInit(event);
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         if (proxy.useCustomSpawner)
         {
+            proxy.resetAllData();
             myCustomSpawner = new CustomSpawner();
             if (proxy.debugCMS)
             {
                 myCustomSpawner.setVerboseConsole(true);
             }
-            proxy.initializeBiomes();
-            proxy.initializeEntities();
+            proxy.ConfigPostInit(event);
             updateSettings(); // refresh settings
         }
+        else proxy.ConfigPostInit(event);
     }
 
     // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
@@ -485,6 +488,7 @@ public class MoCreatures {
     {
         if (proxy.useCustomSpawner)
         {
+            proxy.resetAllData();
             if (myCustomSpawner == null)
                 myCustomSpawner = new CustomSpawner();
             else myCustomSpawner.resetCMS();

@@ -993,9 +993,6 @@ public final class CustomSpawner {
         {
             if (verboseConsole) log.info("Denied spawn! for " + entity.getEntityName() + ". LightLevel over threshold of " + lightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
         }
-       // else {
-        //    if (verboseConsole) log.info("Valid LightLevel " + i + " found. Proceeding to spawn entity " + entity.getEntityName() + " at " + x + ", " + y + ", " + z);
-        //}
         return i <= lightLevel;
     }
     

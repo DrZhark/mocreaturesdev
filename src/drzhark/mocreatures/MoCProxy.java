@@ -211,8 +211,6 @@ public class MoCProxy implements IGuiHandler {
     public MoCConfiguration mocBiomeConfig;
     public MoCConfiguration mocStructureConfig;
     private File configFile;
-    public FMLPreInitializationEvent configPreEvent;
-    public FMLPostInitializationEvent configPostEvent;
 
     private static final String MOC_BEAR_NAME = "Horse";
     private static final String MOC_BEE_NAME = "Bee";
@@ -354,12 +352,13 @@ public class MoCProxy implements IGuiHandler {
         modKeyMap.clear();
         instaSpawnerMap.clear();
         classToEntityMapping.clear();
+        genModConfiguration();
+        this.readConfigValues();
     }
 
     //----------------CONFIG INITIALIZATION
     public void ConfigInit(FMLPreInitializationEvent event) 
     {
-        configPreEvent = event;
         mocGlobalConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCGlobal.cfg"));
         mocBiomeConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCBiomeGroups.cfg"));
         mocStructureConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCStructures.cfg"));
@@ -610,7 +609,6 @@ public class MoCProxy implements IGuiHandler {
     }
 
     public void ConfigPostInit(FMLPostInitializationEvent event) {
-        configPostEvent = event;
         initializeBiomes();
         initializeEntities();
     }
@@ -629,15 +627,17 @@ public class MoCProxy implements IGuiHandler {
             EntityLiving entityliving = null;
             try
             {
+                if (debugLogging) MoCreatures.log.info("Attempting to construct EntityLiving instance from class " + clazz + "...");
                 entityliving = (EntityLiving) clazz.getConstructor(new Class[] { World.class }).newInstance(new Object[] { DimensionManager.getWorld(0) });
             }
             catch (Exception exception)
             {
+                if (debugLogging) MoCreatures.log.info("Failed! " + clazz + " is not a valid EntityLiving, Skipping...");
                 continue;
             } 
 
             entityName = (String)entry.getValue();
-            if (debugLogging) MoCreatures.log.info("Found entityName "  + entityName + " with class " + clazz);
+            if (debugLogging) MoCreatures.log.info("Success! Discovered entity "  + entityName + " with class " + clazz);
             if (entityName.contains("."))
             {
                 if ((entityName.indexOf(".") + 1) < entityName.length())
