@@ -59,68 +59,71 @@ public class MoCStructureData {
         else if (structKey.equalsIgnoreCase("SCATTERED_FEATURE") && base instanceof MapGenScatteredFeature)
             spawnList = ((MapGenScatteredFeature)base).getScatteredFeatureSpawnList();
 
-        if (!MoCreatures.proxy.mocStructureConfig.hasCategory(structKey)) // populate default list
+        if (spawnList != null)
         {
-            for (int i = 0; i < spawnList.size(); i++)
+            if (!MoCreatures.proxy.mocStructureConfig.hasCategory(structKey)) // populate default list
             {
-                SpawnListEntry spawnlistentry = (SpawnListEntry)spawnList.get(i);
-                // determine mod
-                MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(spawnlistentry.entityClass);
-                if (!entityData.getCanSpawn())
+                for (int i = 0; i < spawnList.size(); i++)
                 {
-                    spawnList.remove(i);
-                }
-                else
-                {
-                    MoCConfigCategory cat = MoCreatures.proxy.mocStructureConfig.getCategory(structKey.toLowerCase());
-                    MoCProperty prop = cat.get(structKey);
-                    MoCBiomeModData biomeData = MoCreatures.proxy.biomeModMap.get(entityData.getEntityMod().getModKey());
-                    String tag = entityData.getEntityMod().getModKey();
-                    if (biomeData != null)
+                    SpawnListEntry spawnlistentry = (SpawnListEntry)spawnList.get(i);
+                    // determine mod
+                    MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(spawnlistentry.entityClass);
+                    if (!entityData.getCanSpawn())
                     {
-                        tag = biomeData.getBiomeModKey();
-                        if (tag.equals("vanilla"))
-                            tag = "MC";
+                        spawnList.remove(i);
                     }
-                    if (prop != null && prop.valueList != null && !prop.valueList.contains(tag + "|" + entityData.getEntityName()))
+                    else
                     {
-                        prop.valueList.add(tag + "|" + entityData.getEntityName());
-                    }
-                    else 
-                    {
-                        cat.put(structKey, new MoCProperty(structKey, new ArrayList(Arrays.asList(tag + "|" + entityData.getEntityName())), Type.STRING));
-                    }
-                }
-            }
-          }
-        else 
-        {
-            // read config
-            MoCConfigCategory cat = MoCreatures.proxy.mocStructureConfig.getCategory(structKey.toLowerCase());
-            MoCProperty prop = cat.get(structKey);
-            spawnList.clear(); // clear to avoid duplicates
-            if (prop != null && prop.valueList != null && prop.valueList.size() > 0)
-            {
-                for (int i = 0; i < prop.valueList.size(); i++)
-                {
-                    List<String> nameParts = MoCreatures.proxy.parseName(prop.valueList.get(i));
-                    if (nameParts != null && nameParts.size() == 2)
-                    {
-                        String tag = nameParts.get(0);
-                        String name = nameParts.get(1);
-                        MoCBiomeModData biomeModData = MoCreatures.proxy.tagConfigMap.get(tag);
-                        if (biomeModData != null)
+                        MoCConfigCategory cat = MoCreatures.proxy.mocStructureConfig.getCategory(structKey.toLowerCase());
+                        MoCProperty prop = cat.get(structKey);
+                        MoCBiomeModData biomeData = MoCreatures.proxy.biomeModMap.get(entityData.getEntityMod().getModKey());
+                        String tag = entityData.getEntityMod().getModKey();
+                        if (biomeData != null)
                         {
-                            String modKey = biomeModData.getBiomeModKey();
-                            MoCEntityModData modData = MoCreatures.proxy.entityModMap.get(modKey);
-                            if (modData != null)
+                            tag = biomeData.getBiomeModKey();
+                            if (tag.equals("vanilla"))
+                                tag = "MC";
+                        }
+                        if (prop != null && prop.valueList != null && !prop.valueList.contains(tag + "|" + entityData.getEntityName()))
+                        {
+                            prop.valueList.add(tag + "|" + entityData.getEntityName());
+                        }
+                        else 
+                        {
+                            cat.put(structKey, new MoCProperty(structKey, new ArrayList(Arrays.asList(tag + "|" + entityData.getEntityName())), Type.STRING));
+                        }
+                    }
+                }
+              }
+            else
+            {
+                // read config
+                MoCConfigCategory cat = MoCreatures.proxy.mocStructureConfig.getCategory(structKey.toLowerCase());
+                MoCProperty prop = cat.get(structKey);
+                spawnList.clear(); // clear to avoid duplicates
+                if (prop != null && prop.valueList != null && prop.valueList.size() > 0)
+                {
+                    for (int i = 0; i < prop.valueList.size(); i++)
+                    {
+                        List<String> nameParts = MoCreatures.proxy.parseName(prop.valueList.get(i));
+                        if (nameParts != null && nameParts.size() == 2)
+                        {
+                            String tag = nameParts.get(0);
+                            String name = nameParts.get(1);
+                            MoCBiomeModData biomeModData = MoCreatures.proxy.tagConfigMap.get(tag);
+                            if (biomeModData != null)
                             {
-                                MoCEntityData entityData = modData.getCreature(name);
-                                if (entityData != null)
+                                String modKey = biomeModData.getBiomeModKey();
+                                MoCEntityModData modData = MoCreatures.proxy.entityModMap.get(modKey);
+                                if (modData != null)
                                 {
-                                    if (entityData.getCanSpawn())
+                                    MoCEntityData entityData = modData.getCreature(name);
+                                    if (entityData != null)
                                     {
-                                        spawnList.add(new SpawnListEntry(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn()));
+                                        if (entityData.getCanSpawn())
+                                        {
+                                            spawnList.add(new SpawnListEntry(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn()));
+                                        }
                                     }
                                 }
                             }
@@ -128,7 +131,7 @@ public class MoCStructureData {
                     }
                 }
             }
+            MoCreatures.proxy.mocStructureConfig.save();
         }
-        MoCreatures.proxy.mocStructureConfig.save();
     }
 }
