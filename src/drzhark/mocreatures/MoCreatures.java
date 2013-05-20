@@ -498,6 +498,7 @@ public class MoCreatures {
             }
             proxy.initializeBiomes();
             proxy.initializeEntities();
+            MoCreatures.proxy.initGUI();
             updateSettings(); // refresh settings
         }
     }

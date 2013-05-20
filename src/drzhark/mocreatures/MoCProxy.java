@@ -1452,4 +1452,8 @@ public class MoCProxy implements IGuiHandler {
     public void setName(EntityPlayer player, MoCIMoCreature mocanimal) {
         //client side only
     }
+
+    public void initGUI() {
+        // client side only
+    }
 }
