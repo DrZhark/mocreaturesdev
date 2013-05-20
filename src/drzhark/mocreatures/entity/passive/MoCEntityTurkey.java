@@ -14,7 +14,7 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
     public MoCEntityTurkey(World world)
     {
         super(world);
-        setSize(0.5F, 0.5F);
+        setSize(0.8F, 1.0F);
         health = 6;
         texture = MoCreatures.proxy.MODEL_TEXTURE + "turkey.png";
     }

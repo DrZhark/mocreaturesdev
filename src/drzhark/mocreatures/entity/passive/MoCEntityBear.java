@@ -25,7 +25,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
     {
         super(world);
         //texture = MoCreatures.proxy.MODEL_TEXTURE + "bearbrowm.png";
-        setSize(0.9F, 1.3F);
+        setSize(1.2F, 1.5F);
         roper = null;
         //health = 25;
         setEdad(55);
