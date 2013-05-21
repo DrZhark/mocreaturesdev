@@ -145,6 +145,10 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         {
                 setType(60);// zebra
         }
+        if (s.toLowerCase().contains("prairie"))//prairies spawn only regular horses, no zebras there
+        {
+                setType(rand.nextInt(5) + 1);
+        }
         return true;
     }
 

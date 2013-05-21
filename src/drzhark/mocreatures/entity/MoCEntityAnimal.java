@@ -802,7 +802,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
         String s = MoCTools.BiomeName(worldObj, i, j, k);
 
-        if (s.equals("Jungle") || s.equals("JungleHills")) { return getCanSpawnHereJungle(); }
+        if (s.toLowerCase().contains("jungle")) 
+        {
+            return getCanSpawnHereJungle(); 
+        }
         if (s.equals("WyvernBiome")) 
         {     
             return getCanSpawnHereMoCBiome(); 
@@ -830,18 +833,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
     public boolean getCanSpawnHereJungle()
     {
-        if (this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox))
+        if (this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty())
         {
-            int var1 = MathHelper.floor_double(this.posX);
-            int var2 = MathHelper.floor_double(this.boundingBox.minY);
-            int var3 = MathHelper.floor_double(this.posZ);
-
-            if (var2 < 63) { return false; }
-
-            int var4 = this.worldObj.getBlockId(var1, var2 - 1, var3);
-            Block block = Block.blocksList[var4];
-
-            if (var4 == Block.grass.blockID || var4 == Block.leaves.blockID || (block != null && block.isLeaves(worldObj, var1, var2 - 1, var3))) { return true; }
+            return true;
         }
         return false;
     }

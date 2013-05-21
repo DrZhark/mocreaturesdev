@@ -397,7 +397,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, "Fox", EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
         mocEntityMap.put("Goat", new MoCEntityData(MoCEntityGoat.class, "Goat", EnumCreatureType.creature, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("HellRat", new MoCEntityData(MoCEntityHellRat.class, "HellRat", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        mocEntityMap.put("Horse", new MoCEntityData(MoCEntityHorse.class, "Horse", EnumCreatureType.creature, 10, 1, 3, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("Horse", new MoCEntityData(MoCEntityHorse.class, "Horse", EnumCreatureType.creature, 10, 2, 4, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("HorseMob", new MoCEntityData(MoCEntityHorseMob.class, "HorseMob", EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
         mocEntityMap.put("JellyFish", new MoCEntityData(MoCEntityJellyFish.class, "JellyFish", EnumCreatureType.waterCreature, 8, 1, 4, 4, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
         mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, "Kitty", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
@@ -1151,6 +1151,8 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Extreme Hills");
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert"); 
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Swampland");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Jungle");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert");
 
         /********** MUSHROOM **********/
         defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIsland");
