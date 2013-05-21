@@ -42,7 +42,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.2.1")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.2.2")
 public final class CustomSpawner {
     private int maxCreatures;
     private int maxMonsters;
@@ -1001,7 +1001,15 @@ public final class CustomSpawner {
         int x = MathHelper.floor_double(entity.posX);
         int y = MathHelper.floor_double(entity.boundingBox.minY);
         int z = MathHelper.floor_double(entity.posZ);
-        int i = this.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+        int i = 0;
+        if (y >= 0)
+        {
+            if (y >= 256)
+            {
+                y = 255;
+            }
+            i = this.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+        }
         if (i > despawnLightLevel)
         {
             if (verboseConsole) log.info("Denied despawn! for vanilla " + entity.getEntityName() + ". LightLevel over threshold of " + despawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
