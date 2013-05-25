@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 
 public interface MoCIMoCreature {
 
+    public void riderIsDisconnecting(boolean flag);// = false;
+
     public boolean forceUpdates();
 
     public void selectType();

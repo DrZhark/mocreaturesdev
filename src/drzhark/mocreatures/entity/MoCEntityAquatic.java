@@ -38,6 +38,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     private int mountCount;
     public EntityLiving roper;
     public boolean fishHooked;
+    private boolean riderIsDisconnecting;
 
     public MoCEntityAquatic(World world)
     {
@@ -1067,9 +1068,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void setDead()
     {
-        if (this.riddenByEntity != null)
-            this.riddenByEntity.mountEntity(null);
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0)
+        // Server check required to prevent tamed entities from being duplicated on client-side
+        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && !this.riderIsDisconnecting)
         {
             return;
         }
@@ -1185,5 +1185,11 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     public boolean isNotScared()
     {
         return false;
+    }
+    
+    @Override
+    public void riderIsDisconnecting(boolean flag)
+    {
+    	this.riderIsDisconnecting = true;
     }
 }

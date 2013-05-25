@@ -428,7 +428,7 @@ public class MoCProxy implements IGuiHandler {
         // vanilla
         vanillaEntityMap.put("Bat", new MoCEntityData(EntityBat.class, "Bat", EnumCreatureType.ambient, 10, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "JUNGLE", "NORMAL"))));
         vanillaEntityMap.put("Blaze", new MoCEntityData(EntityBlaze.class, "Blaze", EnumCreatureType.monster, 8, 1, 2, 4, new ArrayList(Arrays.asList(""))));
-        vanillaEntityMap.put("CaveSpider", new MoCEntityData(EntityCaveSpider.class, "CaveSpider", EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList("MOBS"))));
+        vanillaEntityMap.put("CaveSpider", new MoCEntityData(EntityCaveSpider.class, "CaveSpider", EnumCreatureType.monster, 8, 1, 2, 2, new ArrayList(Arrays.asList(""))));
         vanillaEntityMap.put("Chicken", new MoCEntityData(EntityChicken.class, "Chicken", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "MOUNTAIN", "NORMAL"))));
         vanillaEntityMap.put("Cow", new MoCEntityData(EntityCow.class, "Cow", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("FOREST", "NORMAL"))));
         vanillaEntityMap.put("Creeper", new MoCEntityData(EntityCreeper.class, "Creeper", EnumCreatureType.monster, 8, 1, 4, 4, new ArrayList(Arrays.asList("MOBS"))));

@@ -166,7 +166,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
             	EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
             	if (entityplayertarget != null)
                 {
-            		System.out.println("attempting poisioning" + this);
+            		//System.out.println("attempting poisioning" + this);
             	}
             	
             	if (MoCTools.findNearPlayerAndPoison(this, true))

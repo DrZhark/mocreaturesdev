@@ -42,7 +42,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     public EntityLiving roper;
     private PathEntity entitypath;
     // used by MoCPlayerTracker to prevent dupes when a player disconnects on animal from server
-    public boolean riderIsDisconnecting;
+    private boolean riderIsDisconnecting;
 
     public MoCEntityAnimal(World world)
     {
@@ -1775,5 +1775,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     protected boolean canBeTrappedInNet() 
     {
         return false;
+    }
+    
+    @Override
+    public void riderIsDisconnecting(boolean flag)
+    {
+    	this.riderIsDisconnecting = true;
     }
 }
