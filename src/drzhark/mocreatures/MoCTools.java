@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -1409,7 +1410,7 @@ public class MoCTools {
                 SaveHandler saveHandler = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler());
                 // as long as we know the world folder name we can generate the path to players directory
                 // still need to test how other worlds will work
-                String playersDirectory = ".\\" + saveHandler.getWorldDirectoryName() + "\\players\\";
+                String playersDirectory = "." + File.separator + saveHandler.getWorldDirectoryName() + File.separator + "players" + File.separator;
                 File playerFile = new File(playersDirectory + playername + ".dat");
                 File playerFileNew = new File(playersDirectory, playername + ".tmp");
 

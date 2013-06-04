@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.item;
 
 import java.util.List;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 
@@ -276,10 +277,13 @@ public class MoCEntityThrowableRock extends Entity {
 
     private void transformToItem()
     {
-        EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(getType(), 1, getMetadata()));
-        entityitem.delayBeforeCanPickup = 10;
-        entityitem.age = 5500;
-        worldObj.spawnEntityInWorld(entityitem);
+        if (MoCTools.mobGriefing(this.worldObj)) // don't drop rocks if mobgriefing is set to false, prevents duping
+        {
+            EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(getType(), 1, getMetadata()));
+            entityitem.delayBeforeCanPickup = 10;
+            entityitem.age = 5500;
+            worldObj.spawnEntityInWorld(entityitem);
+        }
         this.setDead();
     }
 

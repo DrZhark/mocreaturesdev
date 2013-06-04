@@ -176,7 +176,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.2")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.3")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
