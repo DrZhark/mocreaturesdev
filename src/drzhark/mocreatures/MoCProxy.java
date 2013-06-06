@@ -503,6 +503,7 @@ public class MoCProxy implements IGuiHandler {
         modKeyMap.put("projectzulu", new ArrayList(Arrays.asList("ZULU", "ProjectZulu.cfg")));
         modKeyMap.put("thaumcraft", new ArrayList(Arrays.asList("TC", "Thaumcraft.cfg")));
         modKeyMap.put("vanilla", new ArrayList(Arrays.asList("MC", "Vanilla.cfg")));
+        modKeyMap.put("highlands", new ArrayList(Arrays.asList("HI", "Highlands.cfg")));
         modKeyMap.put("undefined", new ArrayList(Arrays.asList("U", "Undefined.cfg")));
 
         entityModKeyMap.put("drzhark", "MoCreatures.cfg");
@@ -874,12 +875,6 @@ public class MoCProxy implements IGuiHandler {
         mocGlobalConfig.save();
     }
 
-    public void syncConfigSettings()
-    {
-        initializeBiomes();
-        initializeEntities();
-    }
-
     public void initializeBiomes()
     {
         biomeMap.clear();
@@ -892,7 +887,7 @@ public class MoCProxy implements IGuiHandler {
                 String biomeName = BiomeGenBase.biomeList[i].biomeName;
                 String biomeClass = BiomeGenBase.biomeList[i].getClass().toString();
                 MoCBiomeData biomeData = new MoCBiomeData(biome);
-                if (debugLogging) MoCreatures.log.info("Detected Biome " + biomeName + " with class " + biomeClass);
+                if (debugLogging) MoCreatures.log.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + biome.biomeID);
                 boolean found = false;
                 MoCBiomeModData biomeModData = null;
                 for (Map.Entry<String, MoCBiomeModData> modEntry : biomeModMap.entrySet())
@@ -940,7 +935,6 @@ public class MoCProxy implements IGuiHandler {
                         modData.addBiome(biomeData);
                     }
                     biomeMap.put(modData.getModTag() + "|" + biomeName, biomeData);
-                    break;
                 }
             }
         }
