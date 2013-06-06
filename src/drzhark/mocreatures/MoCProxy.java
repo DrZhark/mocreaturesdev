@@ -849,7 +849,7 @@ public class MoCProxy implements IGuiHandler {
                                 {
                                     String tag = biomeParts.get(0);
                                     String biomeName = biomeParts.get(1);
-                                    if (tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)) != null)
+                                    if (tagConfigMap.get(tag) != null && tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)) != null)
                                     {
                                         spawnBiomes.add(tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)));
                                         entityData.addSpawnBiome(tagConfigMap.get(tag).getBiome(biomeProps.valueList.get(j)));
