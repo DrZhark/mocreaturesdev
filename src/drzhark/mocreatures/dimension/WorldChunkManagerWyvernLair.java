@@ -6,11 +6,12 @@ import java.util.Random;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
+import drzhark.mocreatures.MoCreatures;
 
 public class WorldChunkManagerWyvernLair extends WorldChunkManager
 {
     /** The biome generator object. */
-    private BiomeGenBase biomeGenerator;
+    private BiomeGenBase biomeGenerator = MoCreatures.WyvernLairBiome;;
     private float hellTemperature;
 
     /** The rainfall in the world */
@@ -18,7 +19,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
 
     public WorldChunkManagerWyvernLair(BiomeGenBase par1BiomeGenBase, float par2, float par3)
     {
-        this.biomeGenerator = par1BiomeGenBase;
+        //this.biomeGenerator = par1BiomeGenBase;
         this.hellTemperature = par2;
         this.rainfall = par3;
     }
@@ -28,7 +29,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase getBiomeGenAt(int par1, int par2)
     {
-        return this.biomeGenerator;
+        return MoCreatures.WyvernLairBiome;
     }
 
     /**
@@ -36,13 +37,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5)
     {
-        if (par1ArrayOfBiomeGenBase == null || par1ArrayOfBiomeGenBase.length < par4 * par5)
-        {
-            par1ArrayOfBiomeGenBase = new BiomeGenBase[par4 * par5];
-        }
-
-        Arrays.fill(par1ArrayOfBiomeGenBase, 0, par4 * par5, this.biomeGenerator);
-        return par1ArrayOfBiomeGenBase;
+       return new BiomeGenBase[] {MoCreatures.WyvernLairBiome};
     }
 
     /**
@@ -94,7 +89,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5, boolean par6)
     {
-        return this.loadBlockGeneratorData(par1ArrayOfBiomeGenBase, par2, par3, par4, par5);
+        return new BiomeGenBase[] {MoCreatures.WyvernLairBiome};
     }
 
     /**
@@ -103,7 +98,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public ChunkPosition findBiomePosition(int par1, int par2, int par3, List par4List, Random par5Random)
     {
-        return par4List.contains(this.biomeGenerator) ? new ChunkPosition(par1 - par3 + par5Random.nextInt(par3 * 2 + 1), 0, par2 - par3 + par5Random.nextInt(par3 * 2 + 1)) : null;
+        return par4List.contains(MoCreatures.WyvernLairBiome) ? new ChunkPosition(par1 - par3 + par5Random.nextInt(par3 * 2 + 1), 0, par2 - par3 + par5Random.nextInt(par3 * 2 + 1)) : null;
     }
 
     /**
@@ -111,6 +106,6 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public boolean areBiomesViable(int par1, int par2, int par3, List par4List)
     {
-        return par4List.contains(this.biomeGenerator);
+        return par4List.contains(MoCreatures.WyvernLairBiome);
     }
 }

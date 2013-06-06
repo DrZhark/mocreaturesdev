@@ -755,7 +755,7 @@ public class MoCProxy implements IGuiHandler {
                     if (tokens.length >= 2)
                     {
                         String modKey = tokens[0];
-                        if (modKey.equalsIgnoreCase("mod") || modKey.equalsIgnoreCase("mods") || modKey.equalsIgnoreCase("mob") || modKey.equalsIgnoreCase("mobs") || modKey.equalsIgnoreCase("com") || modKey.equalsIgnoreCase("coms"))
+                        if (modKey.equalsIgnoreCase("mod") || modKey.equalsIgnoreCase("mods") || modKey.equalsIgnoreCase("mob") || modKey.equalsIgnoreCase("mobs") || modKey.equalsIgnoreCase("com") || modKey.equalsIgnoreCase("coms") || modKey.equalsIgnoreCase("net"))
                             modKey = tokens[1];
                         else if (entityClass.contains("net.minecraft") && tokens.length > 2)
                             modKey = tokens[2];

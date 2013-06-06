@@ -23,18 +23,9 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
      */
     public void registerWorldChunkManager()
     {
-        this.worldChunkMgr = new WorldChunkManagerWyvernLair(new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID), 0.5F, 0.0F);
+        this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
         setDimension(MoCreatures.WyvernLairDimensionID);
         setCustomSky();
-        if (MoCreatures.proxy.useCustomSpawner)
-        {
-            MoCreatures.proxy.resetAllData();
-            MoCreatures.myCustomSpawner.resetCMS();
-            MoCreatures.proxy.initializeBiomes();
-            MoCreatures.proxy.initializeEntities();
-            MoCreatures.proxy.initGUI();
-            MoCreatures.updateSettings(); // refresh settings
-        }
     }
 
     /**

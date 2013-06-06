@@ -388,6 +388,7 @@ public class MoCreatures {
         proxy.registerRenderInformation();
         TickRegistry.registerTickHandler(new MoCServerTickHandler(), Side.SERVER);
         DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
+        this.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
     }
 
     private void AddEntities()
