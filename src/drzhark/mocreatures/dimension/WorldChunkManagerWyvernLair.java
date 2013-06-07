@@ -19,7 +19,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
 
     public WorldChunkManagerWyvernLair(BiomeGenBase par1BiomeGenBase, float par2, float par3)
     {
-        //this.biomeGenerator = par1BiomeGenBase;
+        this.biomeGenerator = par1BiomeGenBase;
         this.hellTemperature = par2;
         this.rainfall = par3;
     }
@@ -29,7 +29,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase getBiomeGenAt(int par1, int par2)
     {
-        return MoCreatures.WyvernLairBiome;
+        return this.biomeGenerator;
     }
 
     /**
@@ -37,7 +37,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5)
     {
-       return new BiomeGenBase[] {MoCreatures.WyvernLairBiome};
+       return new BiomeGenBase[] {this.biomeGenerator};
     }
 
     /**
@@ -89,7 +89,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5, boolean par6)
     {
-        return new BiomeGenBase[] {MoCreatures.WyvernLairBiome};
+        return new BiomeGenBase[] {this.biomeGenerator};
     }
 
     /**
@@ -98,7 +98,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public ChunkPosition findBiomePosition(int par1, int par2, int par3, List par4List, Random par5Random)
     {
-        return par4List.contains(MoCreatures.WyvernLairBiome) ? new ChunkPosition(par1 - par3 + par5Random.nextInt(par3 * 2 + 1), 0, par2 - par3 + par5Random.nextInt(par3 * 2 + 1)) : null;
+        return par4List.contains(this.biomeGenerator) ? new ChunkPosition(par1 - par3 + par5Random.nextInt(par3 * 2 + 1), 0, par2 - par3 + par5Random.nextInt(par3 * 2 + 1)) : null;
     }
 
     /**
@@ -106,6 +106,6 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager
      */
     public boolean areBiomesViable(int par1, int par2, int par3, List par4List)
     {
-        return par4List.contains(MoCreatures.WyvernLairBiome);
+        return par4List.contains(this.biomeGenerator);
     }
 }
