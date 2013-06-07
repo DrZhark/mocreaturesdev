@@ -297,10 +297,25 @@ public class MoCProxy implements IGuiHandler {
     private static final String BIOME_TWILIGHT_GROUP = "TWILIGHTFOREST";
     private static final String BIOME_VOLCANO_GROUP = "VOLCANO";
     private static final String BIOME_LAKE_GROUP = "LAKE";
+    // BWG
+    private static final String BIOME_BWG_ALPHA_ARCTIC_GROUP = "BWG_ALPHA_ARCTIC";
+    private static final String BIOME_BWG_ALPHA_DESERT_GROUP = "BWG_ALPHA_DESERT";
+    private static final String BIOME_BWG_ALPHA_FOREST_GROUP = "BWG_ALPHA_FOREST";
+    private static final String BIOME_BWG_ALPHA_NORMAL_GROUP = "BWG_ALPHA_NORMAL";
+    private static final String BIOME_BWG_ALPHA_SWAMP_GROUP = "BWG_ALPHA_SWAMP";
+    private static final String BIOME_BWG_BETA_GROUP = "BWG_BETA";
+    private static final String BIOME_BWG_INFDEV_GROUP = "BWG_INFDEV";
+    private static final String BIOME_BWG_JUNGLEISLAND_GROUP = "BWG_JUNGLE_ISLAND";
+    private static final String BIOME_BWG_SKYBLOCK_GROUP = "BWG_SKYBLOCK";
+    private static final String BIOME_BWG_SKYLAND_GROUP = "BWG_SKYLAND";
+    private static final String BIOME_BWG_SURVIVALISLAND_GROUP = "BWG_SURVIVAL_ISLAND";
+    private static final String BIOME_BWG_TROPICALISLAND_GROUP = "BWG_TROPICAL_ISLAND";
+
     private static final String BIOME_GROUP_SETTINGS = "biome-group-settings";
 
     private static final String MOD_KEY_BIOMESOPLENTY = "biomesop";
     private static final String MOD_KEY_EXTRABIOMESXL = "extrabiomes";
+    private static final String MOD_KEY_BWG = "ted80";
     private static final String MOD_KEY_VANILLA = "vanilla";
     private static final String MOD_KEY_TWILIGHT = "twilightforest";
     public static MoCStructureData structureData = new MoCStructureData();
@@ -324,6 +339,19 @@ public class MoCProxy implements IGuiHandler {
     private static List defaultBiomeGroupTwilight = new ArrayList();
     private static List defaultBiomeGroupVolcano = new ArrayList();
     private static List defaultBiomeGroupLake = new ArrayList();
+    // BWG
+    private static List defaultBiomeGroupBWGAlphaArctic = new ArrayList();
+    private static List defaultBiomeGroupBWGAlphaDesert = new ArrayList();
+    private static List defaultBiomeGroupBWGAlphaForest = new ArrayList();
+    private static List defaultBiomeGroupBWGAlphaNormal = new ArrayList();
+    private static List defaultBiomeGroupBWGAlphaSwamp = new ArrayList();
+    private static List defaultBiomeGroupBWGBeta = new ArrayList();
+    private static List defaultBiomeGroupBWGInfDev = new ArrayList();
+    private static List defaultBiomeGroupBWGJungleIsland = new ArrayList();
+    private static List defaultBiomeGroupBWGSkyblock = new ArrayList();
+    private static List defaultBiomeGroupBWGSkyland = new ArrayList();
+    private static List defaultBiomeGroupBWGSurvivalIsland = new ArrayList();
+    private static List defaultBiomeGroupBWGTropicalIsland = new ArrayList();
 
     protected static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
     private static final Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>();
@@ -468,24 +496,25 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupMap.put(BIOME_TWILIGHT_GROUP,  new MoCBiomeGroupData(BIOME_TWILIGHT_GROUP, defaultBiomeGroupTwilight));
         defaultBiomeGroupMap.put(BIOME_VOLCANO_GROUP, new MoCBiomeGroupData(BIOME_VOLCANO_GROUP, defaultBiomeGroupVolcano));
         defaultBiomeGroupMap.put(BIOME_LAKE_GROUP, new MoCBiomeGroupData(BIOME_LAKE_GROUP, defaultBiomeGroupLake));
+        // BWG
+        defaultBiomeGroupMap.put(BIOME_BWG_ALPHA_ARCTIC_GROUP, new MoCBiomeGroupData(BIOME_BWG_ALPHA_ARCTIC_GROUP, defaultBiomeGroupBWGAlphaArctic));
+        defaultBiomeGroupMap.put(BIOME_BWG_ALPHA_DESERT_GROUP, new MoCBiomeGroupData(BIOME_BWG_ALPHA_DESERT_GROUP, defaultBiomeGroupBWGAlphaDesert));
+        defaultBiomeGroupMap.put(BIOME_BWG_ALPHA_FOREST_GROUP, new MoCBiomeGroupData(BIOME_BWG_ALPHA_FOREST_GROUP, defaultBiomeGroupBWGAlphaForest));
+        defaultBiomeGroupMap.put(BIOME_BWG_ALPHA_NORMAL_GROUP, new MoCBiomeGroupData(BIOME_BWG_ALPHA_NORMAL_GROUP, defaultBiomeGroupBWGAlphaNormal));
+        defaultBiomeGroupMap.put(BIOME_BWG_ALPHA_SWAMP_GROUP, new MoCBiomeGroupData(BIOME_BWG_ALPHA_SWAMP_GROUP, defaultBiomeGroupBWGAlphaSwamp));
+        defaultBiomeGroupMap.put(BIOME_BWG_BETA_GROUP, new MoCBiomeGroupData(BIOME_BWG_BETA_GROUP, defaultBiomeGroupBWGBeta));
+        defaultBiomeGroupMap.put(BIOME_BWG_INFDEV_GROUP, new MoCBiomeGroupData(BIOME_BWG_INFDEV_GROUP, defaultBiomeGroupBWGInfDev));
+        defaultBiomeGroupMap.put(BIOME_BWG_JUNGLEISLAND_GROUP, new MoCBiomeGroupData(BIOME_BWG_JUNGLEISLAND_GROUP, defaultBiomeGroupBWGJungleIsland));
+        defaultBiomeGroupMap.put(BIOME_BWG_SKYBLOCK_GROUP, new MoCBiomeGroupData(BIOME_BWG_SKYBLOCK_GROUP, defaultBiomeGroupBWGSkyblock));
+        defaultBiomeGroupMap.put(BIOME_BWG_SKYLAND_GROUP, new MoCBiomeGroupData(BIOME_BWG_SKYLAND_GROUP, defaultBiomeGroupBWGSkyland));
+        defaultBiomeGroupMap.put(BIOME_BWG_SURVIVALISLAND_GROUP, new MoCBiomeGroupData(BIOME_BWG_SURVIVALISLAND_GROUP, defaultBiomeGroupBWGSurvivalIsland));
+        defaultBiomeGroupMap.put(BIOME_BWG_TROPICALISLAND_GROUP, new MoCBiomeGroupData(BIOME_BWG_TROPICALISLAND_GROUP, defaultBiomeGroupBWGTropicalIsland));
 
         // sort default lists
-        Collections.sort(defaultBiomeGroupForest);
-        Collections.sort(defaultBiomeGroupArctic);
-        Collections.sort(defaultBiomeGroupNormal);
-        Collections.sort(defaultBiomeGroupLake);
-        Collections.sort(defaultBiomeGroupMountain);
-        Collections.sort(defaultBiomeGroupJungle);
-        Collections.sort(defaultBiomeGroupSwamp);
-        Collections.sort(defaultBiomeGroupDesert);
-        Collections.sort(defaultBiomeGroupRivers);
-        Collections.sort(defaultBiomeGroupOcean);
-        Collections.sort(defaultBiomeGroupMushroom);
-        Collections.sort(defaultBiomeGroupMobs);
-        Collections.sort(defaultBiomeGroupNether);
-        Collections.sort(defaultBiomeGroupTheEnd);
-        Collections.sort(defaultBiomeGroupWyvern);
-        Collections.sort(defaultBiomeGroupTwilight);
+        for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : defaultBiomeGroupMap.entrySet())
+        {
+            Collections.sort(biomeGroupEntry.getValue().getBiomeList());
+        }
 
         entityTypes.put("UNDEFINED", null);
         entityTypes.put("CREATURE", EnumCreatureType.creature);
@@ -495,6 +524,7 @@ public class MoCProxy implements IGuiHandler {
 
         modKeyMap.put("drzhark", new ArrayList(Arrays.asList("MOC", "MoCreatures.cfg")));
         modKeyMap.put("biomesop", new ArrayList(Arrays.asList("BOP", "BiomesOPlenty.cfg")));
+        modKeyMap.put("ted80", new ArrayList(Arrays.asList("BWG", "BWG.cfg")));
         modKeyMap.put("extrabiomes", new ArrayList(Arrays.asList("XL", "ExtraBiomesXL.cfg")));
         modKeyMap.put("twilightforest", new ArrayList(Arrays.asList("TL", "TwilightForest.cfg")));
         modKeyMap.put("gaia", new ArrayList(Arrays.asList("GAI", "GrimoireOfGaia.cfg")));
@@ -965,12 +995,14 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Bamboo Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Birch Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Boreal Forest");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Brushland");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Cherry Blossom Grove");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Coniferous Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Dead Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Deciduous Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Forest"); // BOP VANILLA
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Grove");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Hot Springs");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Jade Cliffs");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Maple Woods");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Mystic Grove");
@@ -982,10 +1014,11 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Seasonal Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Spruce Woods");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Temperate Rainforest");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Timber");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Tropical Rainforest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Tropics");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Woodland");
-        
+
         // XL
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Autumn Woods");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Birch Forest");
@@ -997,14 +1030,25 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Rainforest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Temperate Rainforest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Woodlands");
+
+        // BWG
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Forest");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Forest Hills");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Rainforest");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Savanna Forest");
+        // BWG Alpha
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|rainforest");
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|seasonalForest");
+        // BWG Tropical Island
+        defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Tropical Island");
+
         // MC
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Forest");
         defaultBiomeGroupForest.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|ForestHills");
-        
+
         /********** NORMAL **********/
-        // BoP
+        // BOP
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Chaparral");
-        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Drylands");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Field");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Garden");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Oasis");
@@ -1021,16 +1065,35 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Thicket");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Deadlands");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Promised Land");
+
         // XL
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Meadow");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Savanna");
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Shrubland");
-        // Vanilla
+
+        // MC
         defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Plains");
-        
+
+        // BWG
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Plains");
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Pines");
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Shrubland");
+        // BWG Alpha
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|plains");
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|shrubland");
+        // BWG Beta
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|tundra");
+        // BWG Infdev
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Infdev");
+        // BWG Survival Island
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Island");
+        // BWG Survival Skyland
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Skyland");
+        // BWG Survival Skyblock
+        defaultBiomeGroupNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Skyblock");
 
         /********** SWAMP **********/
-        // BoP
+        // BOP
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Bayou");
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Bog");
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Fen");
@@ -1042,15 +1105,22 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Swampland"); // BOP VANILLA
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Swampwoods");
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Wetland");
+
         // XL
-        
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Green Swamplands");
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Marsh");
-        // Vanilla
+
+        // BWG
+        defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Grassland");
+        defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Swampland");
+        // BWG Alpha
+        defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|swampland");
+
+        // MC
         defaultBiomeGroupSwamp.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Swampland");
 
         /********** DESERT **********/
-        // BoP
+        // BOP
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Badlands");
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Dunes");
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Desert"); // BOP VANILLA
@@ -1065,24 +1135,31 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Mountain Ridge");
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Wasteland");
 
+        // BWG
+        defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Desert");
+        defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Savanna");
+        // BWG Alpha
+        defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|desert");
+        defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|savanna");
+
         // MC
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert");
         defaultBiomeGroupDesert.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|DesertHills");
 
         /********** ARCTIC **********/
-        // BoP
-        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Frost Forest");
+        // BOP
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Arctic Forest");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Alps");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Arctic");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Coniferous Forest");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Snowy Dead Forest");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Frost Forest");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Glacier");
-        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Ice Sheet");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Icy Hills");
-        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Snowy Woods");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Taiga");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Tundra");
 
-        // vanilla
+        // MC
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Taiga");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|FrozenOcean");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|FrozenRiver");
@@ -1098,18 +1175,38 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Snowy Rainforest");
         defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Tundra");
 
+        // BWG
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Snow Forest");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Snow Hills");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Snow Pines");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Snow Plains");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Snow Taiga");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Taiga");
+        // BWG Alpha
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|taiga");
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|tundra");
+        // BWG Infdev
+        defaultBiomeGroupArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Infdev Snow");
+
         /********** JUNGLE **********/
         // BOP
         defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Jungle"); // BOP VANILLA
+
         // XL
         defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Extreme Jungle");
         defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Mini Jungle");
+
+        // BWG
+        defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Jungle");
+        // BWG Jungle Island
+        defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Jungle Island");
+
         // MC
         defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Jungle");
         defaultBiomeGroupJungle.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|JungleHills");
 
         /********** MOUNTAIN **********/
-        // BoP
+        // BOP
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Canyon");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Crag");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Extreme Hills"); // BOP VANILLA
@@ -1117,10 +1214,15 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Moor");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Mountain");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Sacred Springs");
+
+        // BWG
+        defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|SandStone Hill");
+
         // XL
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Green Hills");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Forested Hills");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_EXTRABIOMESXL).getModTag() + "|Mountain Ridge");
+
         // MC
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Extreme Hills");
         defaultBiomeGroupMountain.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Extreme Hills Edge");
@@ -1128,34 +1230,69 @@ public class MoCProxy implements IGuiHandler {
         /********** OCEAN **********/
         // BOP
         defaultBiomeGroupOcean.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Shore");
+
+        // BWG
+        defaultBiomeGroupOcean.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Ocean");
+
         // MC
         defaultBiomeGroupOcean.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Ocean");
         defaultBiomeGroupOcean.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|FrozenOcean");
-        
+
         /********** RIVER **********/
+        // BWG
+        defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|River_green");
+        defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|River_ice");
+        defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|River_normal");
+        defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|River_sand");
+
+        // MC
         defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|River");
         defaultBiomeGroupRivers.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|FrozenRiver");
 
         /********** BEACH **********/
+        // BWG
+        defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Beach");
+        defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Beach Dunes");
+
+        // MC
         defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Beach");
         defaultBiomeGroupBeaches.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Shore");
 
         /********** LAKE ***********/ //Biomes that create lake like structures to spawn aquatics
+        // BOP
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Desert"); // BOP VANILLA
+
+        // BWG
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Desert");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Forest Lakes");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Plains");
+        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Swampland");
+
+        // MC
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Plains"); 
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Extreme Hills");
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert"); 
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Swampland");
         defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Jungle");
-        defaultBiomeGroupLake.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Desert");
 
         /********** MUSHROOM **********/
-        defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIsland");
-        defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIslandShore");
+        // BOP
         defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Fungi Forest");
 
+        // BWG
+        defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Mushroom Island");
+
+        // MC
+        defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIsland");
+        defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIslandShore");
+
         /********** NETHER **********/
+        // BWG
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Hell");
+
+        // MC
         defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Hell");
-        
+
         /********** THEEND **********/
         defaultBiomeGroupTheEnd.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|Sky");
 
@@ -1183,6 +1320,48 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupTwilight.add(biomeModMap.get(MOD_KEY_TWILIGHT).getModTag() + "|Twilight Lake");
         defaultBiomeGroupTwilight.add(biomeModMap.get(MOD_KEY_TWILIGHT).getModTag() + "|Twilight Stream");
         defaultBiomeGroupTwilight.add(biomeModMap.get(MOD_KEY_TWILIGHT).getModTag() + "|Twilight Swamp");
+
+        /********** BWG *********/
+        // Alpha Arctic
+        defaultBiomeGroupBWGAlphaArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|taiga");
+        defaultBiomeGroupBWGAlphaArctic.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|tundra");
+
+        // Alpha Desert
+        defaultBiomeGroupBWGAlphaDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|desert");
+        defaultBiomeGroupBWGAlphaDesert.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|savanna");
+
+        // Alpha Forest
+        defaultBiomeGroupBWGAlphaForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|rainforest");
+        defaultBiomeGroupBWGAlphaForest.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|seasonalForest");
+
+        // Alpha Normal
+        defaultBiomeGroupBWGAlphaNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|plains");
+        defaultBiomeGroupBWGAlphaNormal.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|shrubland");
+
+        // Alpha Swamp
+        defaultBiomeGroupBWGAlphaSwamp.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|swampland");
+
+        // Beta
+        defaultBiomeGroupBWGBeta.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|plains");
+        defaultBiomeGroupBWGBeta.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|tundra");
+        // Infdev
+        defaultBiomeGroupBWGInfDev.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Infdev");
+        defaultBiomeGroupBWGInfDev.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Infdev Snow");
+
+        // Survival Island
+        defaultBiomeGroupBWGSurvivalIsland.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Island");
+
+        // Survival Skyland
+        defaultBiomeGroupBWGSkyland.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Skyland");
+
+        // Survival Skyblock
+        defaultBiomeGroupBWGSkyblock.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Survival Skyblock");
+
+        // Tropical Island
+        defaultBiomeGroupBWGTropicalIsland.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Tropical Island");
+
+        // Jungle Island
+        defaultBiomeGroupBWGJungleIsland.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Jungle Island");
 
         /********** MOBS **********/
         //Contains a list of all of the biomes except for the Nether, End and custom ones (like wyvernLair)
