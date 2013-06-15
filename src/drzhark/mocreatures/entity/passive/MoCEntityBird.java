@@ -477,7 +477,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
                     int j2 = worldObj.getBlockId(k1, l1, i2);
-                    if ((j2 != 0) && (Block.blocksList[j2].blockMaterial == material)) { return (new int[] { k1, l1, i2 }); }
+                    if ((j2 > 0 && Block.blocksList[j2] != null) && (Block.blocksList[j2].blockMaterial == material)) { return (new int[] { k1, l1, i2 }); }
                 }
 
             }
