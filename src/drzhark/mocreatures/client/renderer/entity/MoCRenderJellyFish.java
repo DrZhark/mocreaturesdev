@@ -16,7 +16,6 @@ public class MoCRenderJellyFish extends RenderLiving {
     public MoCRenderJellyFish(ModelBase modelbase, float f)
     {
         super(modelbase, f);
-        tempJellyFish = (MoCModelJellyFish) modelbase;
     }
 
     @Override
@@ -100,6 +99,5 @@ public class MoCRenderJellyFish extends RenderLiving {
         GL11.glScalef(scale, scale2, scale);
     }
 
-    private final MoCModelJellyFish tempJellyFish;
     float depth = 0F;
 }
