@@ -1259,9 +1259,6 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        
-        
-        
         if (super.interact(entityplayer)) { return false; }
         if (this.getType() == 60 && !getIsTamed() && isZebraRunning()) // zebra
         { return false; }

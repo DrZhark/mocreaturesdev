@@ -393,41 +393,41 @@ public class MoCreatures {
 
     private void AddEntities()
     {
-        registerEntity(MoCEntityBunny.class, "Bunny", 12623485, 9141102, true);//, 0x05600, 0x006500);
-        registerEntity(MoCEntitySnake.class, "Snake", 14020607, 13749760, true);//, 0x05800, 0x006800);
-        registerEntity(MoCEntityTurtle.class, "Turtle", 14772545, 9320590, true);//, 0x04800, 0x004500);
-        registerEntity(MoCEntityBird.class, "Bird", 14020607, 14020607, true);// 0x03600, 0x003500);
-        registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0, true);//, 0x02600, 0x002500);
-        registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBunny.class, "Bunny", 12623485, 9141102, proxy.useGlobalEntityRegistration);//, 0x05600, 0x006500);
+        registerEntity(MoCEntitySnake.class, "Snake", 14020607, 13749760, proxy.useGlobalEntityRegistration);//, 0x05800, 0x006800);
+        registerEntity(MoCEntityTurtle.class, "Turtle", 14772545, 9320590, proxy.useGlobalEntityRegistration);//, 0x04800, 0x004500);
+        registerEntity(MoCEntityBird.class, "Bird", 14020607, 14020607, proxy.useGlobalEntityRegistration);// 0x03600, 0x003500);
+        registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0, proxy.useGlobalEntityRegistration);//, 0x02600, 0x002500);
+        registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBear.class, "Bear", 14772545, 1, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBear.class, "Bear", 14772545, 1, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBigCat.class, "BigCat", 12623485, 16622, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBigCat.class, "BigCat", 12623485, 16622, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityWWolf.class, "WWolf", 16711680, 13749760, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityWraith.class, "Wraith", 16711680, 0, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFlameWraith.class, "FlameWraith", 16711680, 12623485, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFox.class, "Fox", 14772545, 5253242, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFox.class, "Fox", 14772545, 5253242, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityWerewolf.class, "Werewolf", 16711680, 7434694, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityShark.class, "Shark", 33023, 9013643, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityDolphin.class, "Dolphin", 33023, 15631086, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityShark.class, "Shark", 33023, 9013643, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityDolphin.class, "Dolphin", 33023, 15631086, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFishy.class, "Fishy", 33023, 65407, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityKitty.class, "Kitty", 12623485, 5253242, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityKittyBed.class, "KittyBed", true);
-        registerEntity(MoCEntityLitterBox.class, "LitterBox", true);
+        registerEntity(MoCEntityKitty.class, "Kitty", 12623485, 5253242, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityKittyBed.class, "KittyBed", proxy.useGlobalEntityRegistration);
+        registerEntity(MoCEntityLitterBox.class, "LitterBox", proxy.useGlobalEntityRegistration);
         registerEntity(MoCEntityRat.class, "Rat", 12623485, 9141102, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102, false);//14772545, 9141102);
         registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069, true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityEgg.class, "Egg", true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFishBowl.class, "FishBowl", true);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167, true);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityEgg.class, "Egg", proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFishBowl.class, "FishBowl", proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167, proxy.useGlobalEntityRegistration);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFly.class, "Fly", 65407, 1, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityDragonfly.class, "DragonFly", 65407, 14020607, false);//, 0x2600, 0x052500);
@@ -437,11 +437,11 @@ public class MoCreatures {
         registerEntity(MoCEntityButterfly.class, "ButterFly", 65407, 7434694, false);//, 0x22600, 0x012500);
         registerEntity(MoCEntityThrowableRock.class, "TRock", false);
         registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622, false);
-        registerEntity(MoCEntityPetScorpion.class, "PetScorpion", true);
+        registerEntity(MoCEntityPetScorpion.class, "PetScorpion", proxy.useGlobalEntityRegistration);
         registerEntity(MoCEntityPlatform.class, "MoCPlatform", false);
-        registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423, true);
-        registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423, true);
-        registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407, true);
+        registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423, proxy.useGlobalEntityRegistration);
+        registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423, proxy.useGlobalEntityRegistration);
+        registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407, proxy.useGlobalEntityRegistration);
         registerEntity(MoCEntityRoach.class, "Roach", 65407, 13749760, false);
         registerEntity(MoCEntityMaggot.class, "Maggot", 65407, 9141102, false);
         registerEntity(MoCEntityCrab.class, "Crab", 65407, 13749760, false);
@@ -527,6 +527,7 @@ public class MoCreatures {
         {
             LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", entityName);
             int entityID = EntityRegistry.findGlobalUniqueEntityId();
+            if (proxy.debugLogging) log.info("registerEntity " + entityClass + " with Global ID " + entityID);
             EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID);
             EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
         }
@@ -543,6 +544,7 @@ public class MoCreatures {
         if (useGlobalID)
         {
             int entityID = EntityRegistry.findGlobalUniqueEntityId();
+            if (proxy.debugLogging) log.info("registerEntity " + entityClass + " with Global ID " + entityID);
             EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID, eggColor, eggDotsColor);
             LanguageRegistry.instance().addStringLocalization("entity." + entityName + ".name", "en_US", visibleName);
             EntityRegistry.registerModEntity(entityClass, entityName, entityID, instance, 128, 1, true);
@@ -550,6 +552,7 @@ public class MoCreatures {
         else
         {
             LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", "en_US", visibleName);
+            if (proxy.debugLogging) log.info("registerEntity " + entityClass + " with Mod ID " + MoCEntityID);
             EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
             EntityList.IDtoClassMapping.put(MoCEntityID, entityClass);
             EntityList.entityEggs.put(Integer.valueOf(MoCEntityID), new EntityEggInfo(MoCEntityID, eggColor, eggDotsColor));
