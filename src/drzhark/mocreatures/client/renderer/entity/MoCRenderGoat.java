@@ -4,8 +4,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +20,38 @@ import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderGoat extends RenderLiving {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat1.png");
+    private static final ResourceLocation TEXTURE_GOAT2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat2.png");
+    private static final ResourceLocation TEXTURE_GOAT3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat3.png");
+    private static final ResourceLocation TEXTURE_GOAT4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat4.png");
+    private static final ResourceLocation TEXTURE_GOAT5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat5.png");
+    private static final ResourceLocation TEXTURE_GOAT6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat6.png");
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityGoat)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityGoat goat)
+    {
+        switch (goat.getType())
+        {
+        case 2:
+            return TEXTURE_GOAT2;
+        case 3:
+            return TEXTURE_GOAT3;
+        case 4:
+            return TEXTURE_GOAT4;
+        case 5:
+            return TEXTURE_GOAT5;
+        case 6:
+            return TEXTURE_GOAT6;
+
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
+
     public MoCRenderGoat(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -24,7 +59,7 @@ public class MoCRenderGoat extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         GL11.glTranslatef(0.0F, depth, 0.0F);
         stretch((MoCEntityGoat) entityliving);
@@ -106,7 +141,7 @@ public class MoCRenderGoat extends RenderLiving {
                     }
                     tessellator.startDrawingQuads();
                     // might break SSP
-                    float f6 = entitygoat.getHealth();
+                    float f6 = entitygoat.func_110143_aJ();
                     // maxhealth is always 30 for dolphins so we do not need to use a datawatcher
                     float f7 = entitygoat.getMaxHealth();
                     float f8 = f6 / f7;

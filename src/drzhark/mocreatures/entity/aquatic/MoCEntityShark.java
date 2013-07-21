@@ -23,10 +23,10 @@ public class MoCEntityShark extends MoCEntityAquatic {
     public MoCEntityShark(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "shark.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "shark.png";
         setSize(1.5F, 0.8F);
         setEdad(100 + rand.nextInt(100));
-        health = 25;
+        //health = 25;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MoCEntityShark extends MoCEntityAquatic {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
         {
@@ -77,7 +77,7 @@ public class MoCEntityShark extends MoCEntityAquatic {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 25;
     }
@@ -169,7 +169,7 @@ public class MoCEntityShark extends MoCEntityAquatic {
     @Override
     public void setDead()
     {
-        if (!worldObj.isRemote && getIsTamed() && (health > 0))
+        if (!worldObj.isRemote && getIsTamed() && (func_110143_aJ() > 0))
         {
             return;
         }

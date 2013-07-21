@@ -1,18 +1,48 @@
 package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderBunny extends MoCRenderMoC {
 
-    //private boolean textureset = false;
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunny.png");
+    private static final ResourceLocation TEXTURE_BUNNY2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyb.png");
+    private static final ResourceLocation TEXTURE_BUNNY3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyc.png");
+    private static final ResourceLocation TEXTURE_BUNNY4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyd.png");
+    private static final ResourceLocation TEXTURE_BUNNY5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnye.png");
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityBunny)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityBunny bunny)
+    {
+        switch (bunny.getType())
+        {
+        case 2:
+            return TEXTURE_BUNNY2;
+        case 3:
+            return TEXTURE_BUNNY3;
+        case 4:
+            return TEXTURE_BUNNY4;
+        case 5:
+            return TEXTURE_BUNNY5;
+
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
 
     public MoCRenderBunny(ModelBase modelbase, float f)
     {
@@ -27,7 +57,7 @@ public class MoCRenderBunny extends MoCRenderMoC {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    protected float handleRotationFloat(EntityLivingBase entityliving, float f)
     {
         MoCEntityBunny entitybunny = (MoCEntityBunny) entityliving;
         if (!entitybunny.getIsAdult())
@@ -38,7 +68,7 @@ public class MoCRenderBunny extends MoCRenderMoC {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         rotBunny((MoCEntityBunny) entityliving);
         if (entityliving.ridingEntity != null)

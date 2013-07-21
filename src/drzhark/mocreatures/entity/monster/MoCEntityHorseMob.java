@@ -23,7 +23,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         super(world);
         setSize(1.4F, 1.6F);
-        health = 20;
+        //health = 20;
     }
 
     public int mouthCounter;
@@ -61,78 +61,13 @@ public class MoCEntityHorseMob extends MoCEntityMob
             }
         }
     }
-    
+
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }
 
-    /**
-     * Overridden for the dynamic nightmare texture.
-     * * 23 Undead 
-     * 24 Undead Unicorn 
-     * 25 Undead Pegasus 
-     * 
-     * 26 skeleton
-     * 27 skeleton unicorn
-     * 28 skeleton pegasus
-     * 
-     * 30 bug horse
-     * 
-     * 32 Bat Horse
-     */
-    @Override
-    public String getTexture()
-    {
-        
-        switch (getType())
-        {
-            case 23://undead horse
-                
-                if (!MoCreatures.proxy.getAnimateTextures()) 
-                {
-                    return MoCreatures.proxy.MODEL_TEXTURE + "horseundead.png";
-                }
-                String baseTex = MoCreatures.proxy.MODEL_TEXTURE + "horseundead";
-                int max = 79;
-
-                if (rand.nextInt(3)== 0) textCounter++;
-                if (textCounter < 10) textCounter = 10;
-                if (textCounter > max) textCounter = 10;
-                
-                String iteratorTex = "" + textCounter;
-                iteratorTex = iteratorTex.substring(0,1);
-                String decayTex = "" + (getEdad()/100);
-                decayTex = decayTex.substring(0,1);
-                return baseTex + decayTex + iteratorTex + ".png";
-
-            case 26:
-                return MoCreatures.proxy.MODEL_TEXTURE + "horseskeleton.png";
-            
-            case 32:
-                return MoCreatures.proxy.MODEL_TEXTURE + "horsebat.png";
-
-            case 38:
-                if (!MoCreatures.proxy.getAnimateTextures()) 
-                {
-                    return MoCreatures.proxy.MODEL_TEXTURE + "horsenightmare1.png";
-                }
-                textCounter++;
-                if (textCounter < 10) textCounter = 10;
-                if (textCounter > 59) textCounter = 10;
-                String NTA = MoCreatures.proxy.MODEL_TEXTURE + "horsenightmare";
-                String NTB = "" + textCounter;
-                NTB = NTB.substring(0,1);
-                String NTC = ".png";
-
-                return NTA + NTB + NTC;
-
-            default:
-                return MoCreatures.proxy.MODEL_TEXTURE + "horseundead.png";
-        }
-    }
-    
     @Override
     protected String getDeathSound()
     {

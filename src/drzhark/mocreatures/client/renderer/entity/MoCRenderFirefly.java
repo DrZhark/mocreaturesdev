@@ -2,18 +2,27 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelFirefly;
 import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderFirefly extends MoCRenderInsect {
+
+    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "firefly.png");
+    private static final ResourceLocation TEXTURE_GLOW = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "fireflyglow.png");
+
     public MoCRenderFirefly(ModelBase modelbase)
     {
         super(modelbase);
@@ -24,13 +33,13 @@ public class MoCRenderFirefly extends MoCRenderInsect {
      * Queries whether should render the specified pass or not.
      */
     @Override
-    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
+    protected int shouldRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3)
     {
         return this.setTailBrightness((MoCEntityFirefly) par1EntityLiving, par2, par3);
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
+    protected void preRenderCallback(EntityLivingBase par1EntityLiving, float par2)
     {
         MoCEntityFirefly firefly = (MoCEntityFirefly) par1EntityLiving;
         if (firefly.getIsFlying())
@@ -50,11 +59,6 @@ public class MoCRenderFirefly extends MoCRenderInsect {
 
     }
 
-    /* protected void rotateAnimal(EntityLiving entityliving)
-     {
-         GL11.glRotatef(90F, -1F, 0.0F, 0.0F);
-     }*/
-
     /**
      * Sets the glowing belly
      */
@@ -66,7 +70,8 @@ public class MoCRenderFirefly extends MoCRenderInsect {
         }
         else
         {
-            this.loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "fireflyglow.png");
+            //this.loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "fireflyglow.png");
+            textureManager.func_110577_a(TEXTURE_GLOW);
             float var4 = 1.0F;
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_ALPHA_TEST);

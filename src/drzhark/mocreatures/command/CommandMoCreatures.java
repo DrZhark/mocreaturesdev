@@ -32,6 +32,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -113,7 +114,7 @@ public class CommandMoCreatures extends CommandBase {
 
     public String getCommandUsage(ICommandSender par1ICommandSender)
     {
-        return par1ICommandSender.translateString("commands.mocreatures.usage", new Object[0]);
+        return "commands.mocreatures.usage";
     }
 
     public void processCommand(ICommandSender par1ICommandSender, String[] par2ArrayOfStr)
@@ -149,7 +150,7 @@ public class CommandMoCreatures extends CommandBase {
                         {
                             for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
                             {
-                                par1ICommandSender.sendChatToPlayer(modEntry.getKey() + " uses tag " + EnumChatFormatting.AQUA + modEntry.getValue().getModTag());
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(modEntry.getKey() + " uses tag " + EnumChatFormatting.AQUA + modEntry.getValue().getModTag()));
                             }
 
                             doNotShowHelp = true;
@@ -159,7 +160,7 @@ public class CommandMoCreatures extends CommandBase {
                         {
                             for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry: MoCreatures.proxy.biomeGroupMap.entrySet())
                             {
-                                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.AQUA + biomeGroupEntry.getKey());
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.AQUA + biomeGroupEntry.getKey()));
                             }
                             doNotShowHelp = true;
                             break OUTER;
@@ -196,18 +197,18 @@ public class CommandMoCreatures extends CommandBase {
                                                         if (owner != null && owner.equalsIgnoreCase(playername))
                                                         {
                                                             entityCount++;
-                                                            par1ICommandSender.sendChatToPlayer("Found " + entity.getEntityName() + " with name " + name + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId);
+                                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Found " + entity.getEntityName() + " with name " + name + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId));
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-                                        par1ICommandSender.sendChatToPlayer("Listed count : " + entityCount + ", Recorded count : " + player.getEntityData().getInteger("NumberTamed"));
+                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Listed count : " + entityCount + ", Recorded count : " + player.getEntityData().getInteger("NumberTamed")));
                                         doNotShowHelp = true;
                                         break OUTER;
                                     }
                                 }
-                                par1ICommandSender.sendChatToPlayer("Player " + playername + " does not have any tamed animals.");
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Player " + playername + " does not have any tamed animals."));
                                 doNotShowHelp = true;
                                 break OUTER;
                             }
@@ -225,14 +226,14 @@ public class CommandMoCreatures extends CommandBase {
                                     {
                                         for (int i = 0; i < entityData.getBiomeGroups().size(); i++)
                                         {
-                                            par1ICommandSender.sendChatToPlayer(entityData.getBiomeGroups().get(i));
+                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(entityData.getBiomeGroups().get(i)));
                                         }
                                         doNotShowHelp = true;
                                         break OUTER;
                                     }
                                 }
                             }
-                            par1ICommandSender.sendChatToPlayer("Entity " + par2 + " is invalid. Please enter a valid entity.");
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Entity " + par2 + " is invalid. Please enter a valid entity."));
                             doNotShowHelp = true;
                             break OUTER;
                         }
@@ -251,7 +252,7 @@ public class CommandMoCreatures extends CommandBase {
                         }
                         catch (NumberFormatException e)
                         {
-                            par1ICommandSender.sendChatToPlayer("INVALID ENTITY ID");
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("INVALID ENTITY ID"));
                             doNotShowHelp = true;
                             break OUTER;
                         }
@@ -305,11 +306,11 @@ public class CommandMoCreatures extends CommandBase {
                                                         world.resetUpdateEntityTick();
                                                         DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                                                     }
-                                                    par1ICommandSender.sendChatToPlayer(name + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension);
+                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(name + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension));
                                                     doNotShowHelp = true;
                                                     break OUTER;
                                                 }
-                                                par1ICommandSender.sendChatToPlayer("Unable to transfer entity ID " + entityId + ". It may only be transferred to " + owner);
+                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Unable to transfer entity ID " + entityId + ". It may only be transferred to " + owner));
                                                 doNotShowHelp = true;
                                                 break OUTER;
                                             }
@@ -317,7 +318,7 @@ public class CommandMoCreatures extends CommandBase {
                                     } // end for
                                 } // end for
                                 doNotShowHelp = true;
-                                par1ICommandSender.sendChatToPlayer("Tamed entity could not be located.");
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Tamed entity could not be located."));
                                 break OUTER;
                             } // end if
                     } // end for
@@ -337,13 +338,13 @@ public class CommandMoCreatures extends CommandBase {
                             if (compound != null && compound.hasKey("NumberTamed"))
                             {
                                 int tamedCount = compound.getInteger("NumberTamed");
-                                par1ICommandSender.sendChatToPlayer(playername + "'s recorded tamed count is " + tamedCount);
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(playername + "'s recorded tamed count is " + tamedCount));
                                 doNotShowHelp = true;
                                 break OUTER;
                             }
                         }
                     }
-                    par1ICommandSender.sendChatToPlayer("Could not find player " + playername + ". Please verify the player is online and/or name was entered correctly.");
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Could not find player " + playername + ". Please verify the player is online and/or name was entered correctly."));
                     doNotShowHelp = true;
                     break OUTER;
                 }
@@ -368,7 +369,7 @@ public class CommandMoCreatures extends CommandBase {
                                         MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
                                         prop.valueList.set(0, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " frequency to " + par4 + ".");
+                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + entityData.getEntityName() + " frequency to " + par4 + "."));
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -383,7 +384,7 @@ public class CommandMoCreatures extends CommandBase {
                                         MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
                                         prop.valueList.set(1, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " minGroupSpawn to " + par4 + ".");
+                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + entityData.getEntityName() + " minGroupSpawn to " + par4 + "."));
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -398,7 +399,7 @@ public class CommandMoCreatures extends CommandBase {
                                         MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
                                         prop.valueList.set(2, par4);
                                         saved = true;
-                                        par1ICommandSender.sendChatToPlayer("Set " + entityData.getEntityName() + " maxGroupSpawn to " + par4 + ".");
+                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + entityData.getEntityName() + " maxGroupSpawn to " + par4 + "."));
                                     }
                                     catch(NumberFormatException ex)
                                     {
@@ -420,10 +421,10 @@ public class CommandMoCreatures extends CommandBase {
                                             {
                                                 if (!MoCreatures.proxy.biomeGroupMap.containsKey(value))
                                                 {
-                                                    par1ICommandSender.sendChatToPlayer("Invalid Biome Group entered. Please choose a biome group from the following list : ");
+                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Invalid Biome Group entered. Please choose a biome group from the following list : "));
                                                     for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : MoCreatures.proxy.biomeGroupMap.entrySet())
                                                     {
-                                                        par1ICommandSender.sendChatToPlayer(biomeGroupEntry.getKey());
+                                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(biomeGroupEntry.getKey()));
                                                     }
                                                     doNotShowHelp = true;
                                                     break OUTER;
@@ -436,15 +437,15 @@ public class CommandMoCreatures extends CommandBase {
                                                     // update lists
                                                     MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
                                                 }
-                                                par1ICommandSender.sendChatToPlayer("Added biome group " + value + " to entity " + entityData.getEntityName() + ".");
+                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Added biome group " + value + " to entity " + entityData.getEntityName() + "."));
                                                 break OUTER;
                                             }
                                             else 
                                             {
-                                                par1ICommandSender.sendChatToPlayer("Biome Group " + value + " already exists!!, please choose another from the following list :");
+                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Biome Group " + value + " already exists!!, please choose another from the following list :"));
                                                 for (int i = 0; i < MoCreatures.proxy.biomeGroupMap.size(); i++)
                                                 {
-                                                    par1ICommandSender.sendChatToPlayer(MoCreatures.proxy.biomeGroupMap.get(i).getBiomeGroupName());
+                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(MoCreatures.proxy.biomeGroupMap.get(i).getBiomeGroupName()));
                                                 }
                                             }
                                         }
@@ -461,14 +462,14 @@ public class CommandMoCreatures extends CommandBase {
                                                         // update lists
                                                         MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
                                                     }
-                                                    par1ICommandSender.sendChatToPlayer("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + ".");
+                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Removed biome group " + value.toUpperCase() + " from entity " + entityData.getEntityName() + "."));
                                                     break OUTER;
                                                 }
                                             }
-                                            par1ICommandSender.sendChatToPlayer("Invalid biomegroup entered, please choose from the following list :");
+                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Invalid biomegroup entered, please choose from the following list :"));
                                             for (int i = 0; i < biomeGroups.size(); i++)
                                             {
-                                                par1ICommandSender.sendChatToPlayer(biomeGroups.get(i));
+                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(biomeGroups.get(i)));
                                             }
                                             doNotShowHelp = true;
                                         }
@@ -512,7 +513,7 @@ public class CommandMoCreatures extends CommandBase {
                                 {
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer("Set " + propEntry.getKey() + " to " + par2 + ".");
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + propEntry.getKey() + " to " + par2 + "."));
                                 }
                             }
                             else if (propEntry.getValue().getType() == Type.INTEGER)
@@ -521,11 +522,11 @@ public class CommandMoCreatures extends CommandBase {
                                     Integer.parseInt(par2);
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer("Set " + propEntry.getKey() + " to " + par2 + ".");
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + propEntry.getKey() + " to " + par2 + "."));
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    par1ICommandSender.sendChatToPlayer("Invalid value entered. Please enter a valid number.");
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Invalid value entered. Please enter a valid number."));
                                 }
                                 
                             }
@@ -535,11 +536,11 @@ public class CommandMoCreatures extends CommandBase {
                                     Double.parseDouble(par2);
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer("Set " + propEntry.getKey() + " to " + par2 + ".");
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + propEntry.getKey() + " to " + par2 + "."));
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    par1ICommandSender.sendChatToPlayer("Invalid value entered. Please enter a valid number.");
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Invalid value entered. Please enter a valid number."));
                                 }
                             }
                             break OUTER; // exit since we found the property we need to save
@@ -578,12 +579,12 @@ public class CommandMoCreatures extends CommandBase {
             }
 
             int k = Math.min((j + 1) * b0, list.size());
-            par1ICommandSender.sendChatToPlayer(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---");
+            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---"));
 
             for (int l = j * b0; l < k; ++l)
             {
                 String command = list.get(l);
-                par1ICommandSender.sendChatToPlayer(command);
+                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(command));
             }
         }
         // END HELP COMMAND
@@ -603,17 +604,16 @@ public class CommandMoCreatures extends CommandBase {
      * Returns a sorted list of all possible commands for the given ICommandSender.
      */
     protected List getSortedPossibleCommands(ICommandSender par1ICommandSender)
-    {
-        Collections.sort(this.commands);
+    {        Collections.sort(this.commands);
         return this.commands;
     }
 
     public void sendCommandHelp(ICommandSender sender)
     {
-        sender.sendChatToPlayer("\u00a72Listing MoCreatures commands");
+        sender.sendChatToPlayer(ChatMessageComponent.func_111077_e("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++)
         {
-            sender.sendChatToPlayer(commands.get(i));
+            sender.sendChatToPlayer(ChatMessageComponent.func_111077_e(commands.get(i)));
         }
     }
 }

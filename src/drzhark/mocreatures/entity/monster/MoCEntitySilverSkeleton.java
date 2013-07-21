@@ -14,9 +14,9 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
     public MoCEntitySilverSkeleton(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "silverskeleton.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "silverskeleton.png";
         setSize(0.9F, 1.4F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
     }
 
     public int attackCounterLeft;
@@ -122,7 +122,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 25;
     }

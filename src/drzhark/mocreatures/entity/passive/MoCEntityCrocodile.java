@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -30,10 +31,10 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     public MoCEntityCrocodile(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "crocodile.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "crocodile.png";
         setSize(2F, 0.6F);
         myMoveSpeed = 0.5F;
-        health = 25;
+        //health = 25;
         setEdad(50 + rand.nextInt(50));
         setTamed(false);
     }
@@ -45,6 +46,12 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isBiting - 0 false 1 true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isResting - 0 false 1 true
         dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // caughtPrey - 0 false 1 true
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(25.0D); // setMaxHealth
     }
 
     public boolean getIsBiting()
@@ -241,7 +248,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
                 if (!isInsideOfMaterial(Material.water))
                 {
                     waterbound = true;
-                    if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).getHealth() > 0)
+                    if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).func_110143_aJ() > 0)
                     {
                         ((EntityLiving) riddenByEntity).deathTime = 0;
                     }
@@ -369,7 +376,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (riddenByEntity != null)
         {
@@ -533,7 +540,7 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
 
         if (riddenByEntity != null)
         {
-            if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).getHealth() > 0)
+            if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).func_110143_aJ() > 0)
             {
                 ((EntityLiving) riddenByEntity).deathTime = 0;
             }

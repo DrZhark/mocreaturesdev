@@ -1,17 +1,33 @@
 package drzhark.mocreatures.client.renderer.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderPetScorpion extends MoCRenderMoC {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
+    private static final ResourceLocation TEXTURE_DIRTSADDLE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirtsaddle.png");
+    private static final ResourceLocation TEXTURE_CAVE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpioncave.png");
+    private static final ResourceLocation TEXTURE_CAVESADDLE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpioncavesaddle.png");
+    private static final ResourceLocation TEXTURE_NETHER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png");
+    private static final ResourceLocation TEXTURE_NETHERSADDLE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionnethersaddle.png");
+    private static final ResourceLocation TEXTURE_FROST = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png");
+    private static final ResourceLocation TEXTURE_FROSTSADDLE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrostsaddle.png");
+    private static final ResourceLocation TEXTURE_UNDEAD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionundead.png");
+    private static final ResourceLocation TEXTURE_UNDEADSADDLE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpionundeadsaddle.png");
+
     public MoCRenderPetScorpion(MoCModelScorpion modelbase, float f)
     {
         super(modelbase, f);
@@ -25,7 +41,7 @@ public class MoCRenderPetScorpion extends MoCRenderMoC {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityPetScorpion entityscorpion = (MoCEntityPetScorpion) entityliving;
 
@@ -86,4 +102,32 @@ public class MoCRenderPetScorpion extends MoCRenderMoC {
         GL11.glScalef(f, f, f);
     }
 
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityPetScorpion)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityPetScorpion scorpion)
+    {
+        boolean saddle = scorpion.getIsRideable();
+        switch (scorpion.getType())
+        {
+            case 1:
+                if (!saddle) { return TEXTURE_DEFAULT; }
+                return TEXTURE_DIRTSADDLE;
+            case 2:
+                if (!saddle) { return TEXTURE_CAVE; }
+                return TEXTURE_CAVESADDLE;
+            case 3:
+                if (!saddle) { return TEXTURE_NETHER; }
+                return TEXTURE_NETHERSADDLE;
+            case 4:
+                if (!saddle) { return TEXTURE_FROST; }
+                return TEXTURE_FROSTSADDLE;
+            case 5:
+                if (!saddle) { return TEXTURE_UNDEAD; }
+                return TEXTURE_UNDEADSADDLE;
+            default:
+                return TEXTURE_DEFAULT;
+        }
+    }
 }

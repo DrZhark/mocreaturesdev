@@ -14,10 +14,12 @@ import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 
 public class MoCEntityEgg extends EntityLiving {
@@ -37,7 +39,7 @@ public class MoCEntityEgg extends EntityLiving {
         setSize(0.25F, 0.25F);
         tCounter = 0;
         lCounter = 0;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
     }
 
     public MoCEntityEgg(World world, double d, double d1, double d2)
@@ -47,7 +49,13 @@ public class MoCEntityEgg extends EntityLiving {
         setSize(0.25F, 0.25F);
         tCounter = 0;
         lCounter = 0;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     @Override
@@ -387,7 +395,7 @@ public class MoCEntityEgg extends EntityLiving {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-            entityplayer.sendChatToPlayer("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area");
+            entityplayer.sendChatToPlayer(ChatMessageComponent.func_111077_e("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
         }
     }
     public int getSize()
@@ -406,8 +414,7 @@ public class MoCEntityEgg extends EntityLiving {
         this.eggType = eggType;
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 10;
     }

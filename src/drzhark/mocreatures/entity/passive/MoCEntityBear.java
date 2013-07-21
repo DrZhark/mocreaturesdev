@@ -5,6 +5,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,6 +54,12 @@ public class MoCEntityBear extends MoCEntityAnimal {
         this.dataWatcher.addObject(23, Byte.valueOf((byte)0));
     }
 
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+    }
+ 
     /**
      * 0 - bear is on fours 1 - standing 2 - sitting
      * 
@@ -90,27 +97,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
                 setType(3);
             }
 
-            health = getMaxHealth();
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bearbrowm.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bearblack.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bearpanda.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bearpolar.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bearbrowm.png";
+            this.setEntityHealth(getMaxHealth());
         }
     }
 
@@ -138,8 +125,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
         }
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         switch (getType())
         {
@@ -236,7 +222,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -354,7 +340,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
                 {
                     entityitem.setDead();
                     worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                 }
 
             }
@@ -377,7 +363,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             eatingAnimal();
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {

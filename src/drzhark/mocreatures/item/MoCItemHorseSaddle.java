@@ -2,6 +2,8 @@ package drzhark.mocreatures.item;
 
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class MoCItemHorseSaddle extends MoCItem {
@@ -13,7 +15,7 @@ public class MoCItemHorseSaddle extends MoCItem {
     }
 
     @Override
-    public boolean itemInteractionForEntity(ItemStack itemstack, EntityLiving entityliving)
+    public boolean func_111207_a(ItemStack itemstack, EntityPlayer entityplayer, EntityLivingBase entityliving)
     {
         if (entityliving instanceof MoCEntityHorse)
         {

@@ -20,7 +20,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
         
     }
@@ -29,12 +29,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     public void selectType()
     {
         setType(1);
-    }
-    
-    @Override
-    public String getTexture()
-    {
-       return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_piranha.png";
     }
 
     
@@ -50,7 +44,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     }
     
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
         {
@@ -69,7 +63,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 6;
     }

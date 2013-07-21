@@ -23,8 +23,8 @@ public class MoCEntityBee extends MoCEntityInsect
     public MoCEntityBee(World world)
     {
         super(world);
-        health = 4;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "bee.png";
+        //health = 4;
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "bee.png";
     }
 
     @Override
@@ -46,6 +46,11 @@ public class MoCEntityBee extends MoCEntityInsect
                 setIsFlying(false);
             }
         }
+    }
+
+    public float getMaxHealth()
+    {
+        return 4;
     }
 
     private String getMySound()
@@ -97,7 +102,7 @@ public class MoCEntityBee extends MoCEntityInsect
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

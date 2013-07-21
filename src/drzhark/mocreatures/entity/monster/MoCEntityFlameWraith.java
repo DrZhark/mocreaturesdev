@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -12,16 +13,23 @@ import net.minecraft.world.World;
 public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
 
     protected int burningTime;
+    private float moveSpeed;
 
     public MoCEntityFlameWraith(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "flamewraith.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "flamewraith.png";
         setSize(1.5F, 1.5F);
         isImmuneToFire = true;
         burningTime = 30;
-        health = 15;
+        //health = 15;
         moveSpeed = 1.1F;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(this.moveSpeed); // setMoveSpeed
     }
 
     @Override
@@ -65,7 +73,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
                 float f = getBrightness(1.0F);
                 if ((f > 0.5F) && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && ((rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F)))
                 {
-                    health -= 2;
+                    this.setEntityHealth(func_110143_aJ() - 2);
                 }
             }
         }

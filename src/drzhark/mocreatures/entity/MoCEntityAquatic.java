@@ -10,6 +10,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWaterMob;
@@ -39,6 +41,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     public EntityLiving roper;
     public boolean fishHooked;
     private boolean riderIsDisconnecting;
+    protected float moveSpeed;
 
     public MoCEntityAquatic(World world)
     {
@@ -46,6 +49,14 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         outOfWater = 0;
         setTamed(false);
         setTemper(50);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        selectType();
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     /**
@@ -56,13 +67,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     public void selectType()
     {
         setType(1);
-    }
-
-    @Override
-    public void initCreature()
-    {
-        selectType();
-        super.initCreature();
     }
 
     @Override
@@ -248,10 +252,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         return entityitem;
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
-        return maxHealth;
+        return 6;
     }
 
     public void setMaxHealth(int i)
@@ -523,7 +526,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         if (riddenByEntity != null)
         {
             EntityPlayer ep = (EntityPlayer) riddenByEntity;
-            if (ep.isJumping)
+            if (ep.isAirBorne) // TODO TEST
             {
                 motionY += 0.09D;
             }
@@ -593,7 +596,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), ((EntityMob)entity).getAttackStrength(this));
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }
@@ -629,10 +632,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
                 }
             }
             
-            if (getIsTamed() && rand.nextInt(100) == 0)
+            /*if (getIsTamed() && rand.nextInt(100) == 0)
             {
-                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
-            }
+                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            }*/
 
             if (forceUpdates() && rand.nextInt(500) == 0)
             {
@@ -916,7 +919,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
@@ -929,7 +932,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         }
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
         }
 
         return super.attackEntityFrom(damagesource, i);
@@ -1021,7 +1024,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             return true;
         }
@@ -1068,8 +1071,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     @Override
     public void setDead()
     {
-        // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && !this.riderIsDisconnecting)
+        if (this.riddenByEntity != null)
+            this.riddenByEntity.mountEntity(null);
+        if (MoCreatures.isServer() && getIsTamed() && func_110143_aJ() > 0)
         {
             return;
         }
@@ -1186,10 +1190,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         return false;
     }
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

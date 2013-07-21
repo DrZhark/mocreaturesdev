@@ -12,12 +12,12 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     {
         super(world);
         setSize(0.2F, 0.2F);
-        health = 2;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "maggot.png";
+        //health = 2;
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "maggot.png";
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 2;
     }

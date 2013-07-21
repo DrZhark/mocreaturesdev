@@ -26,9 +26,10 @@ public class MoCSounds {
 
         for (String soundName : soundNames)
         {
-            manager.soundPoolSounds.addSound(soundName, this.getClass().getResource("/drzhark/mocreatures/client/resources/newsound/" + soundName));
+           // manager.soundPoolSounds.addSound(soundName, this.getClass().getResource("/drzhark/mocreatures/client/resources/newsound/" + soundName));
+        	manager.soundPoolSounds.addSound( (this.getClass().getResource("/drzhark/mocreatures/client/resources/newsound/").toString() + soundName));
         }
-        manager.soundPoolStreaming.addSound("shuffling.ogg", this.getClass().getResource("/drzhark/mocreatures/client/resources/streaming/shuffling.ogg"));
+        manager.soundPoolStreaming.addSound(this.getClass().getResource("/drzhark/mocreatures/client/resources/streaming/shuffling.ogg").toString());
     }
 
     private static String soundZipPath = "/resources/";
@@ -159,13 +160,13 @@ public class MoCSounds {
 
         }
 
-        if (soundFile.canRead() && soundFile.isFile())
+        /*if (soundFile.canRead() && soundFile.isFile())
         {
-            MoCClientProxy.mc.installResource(filepath + filename, soundFile);
+            MoCClientProxy.mc.sndManager.func_130081_a(soundFile);
         }
         else
         {
             System.err.println("Could not load file: " + soundFile);
-        }
+        }*/
     }
 }

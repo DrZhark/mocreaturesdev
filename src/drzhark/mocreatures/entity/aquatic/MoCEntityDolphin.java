@@ -26,7 +26,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
         super(world);
         setSize(1.5F, 0.8F);
         setEdad(80 + rand.nextInt(100));
-        health = 30;
+        //health = 30;
     }
 
     @Override
@@ -59,29 +59,6 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
             {
                 setType(6);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin2.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin3.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin4.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin5.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin6.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dolphin.png";
         }
     }
 
@@ -152,7 +129,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 30;
     }
@@ -198,7 +175,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
         {
@@ -330,9 +307,9 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
                     setTemper(getMaxTemper() - 1);
                 }
 
-                if ((health += 15) > getMaxHealth())
+                if ((func_110143_aJ() + 15) > getMaxHealth())
                 {
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                 }
 
                 if (!getIsAdult())
@@ -364,9 +341,9 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            if ((health += 25) > getMaxHealth())
+            if ((func_110143_aJ() + 25) > getMaxHealth())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             setHasEaten(true);
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
@@ -425,7 +402,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
                         {
                             setTemper(getMaxTemper() - 1);
                         }
-                        health = getMaxHealth();
+                        this.setEntityHealth(getMaxHealth());
                     }
                 }
             }
@@ -494,7 +471,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && (health > 0))
+        if (MoCreatures.isServer() && getIsTamed() && (func_110143_aJ() > 0))
         {
             return;
         }

@@ -13,7 +13,7 @@ public class MoCEntityFly extends MoCEntityInsect
     public MoCEntityFly(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "fly.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fly.png";
     }
 
     private int soundCount;// = 50;

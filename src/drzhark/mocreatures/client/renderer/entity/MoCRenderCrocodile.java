@@ -2,22 +2,34 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelCrocodile;
+import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderCrocodile extends RenderLiving {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "crocodile.png");
+
     public MoCRenderCrocodile(MoCModelCrocodile modelbase, float f)
     {
         super(modelbase, f);
         croc = modelbase;
+    }
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return TEXTURE_DEFAULT;
     }
 
     @Override
@@ -29,7 +41,7 @@ public class MoCRenderCrocodile extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityCrocodile entitycrocodile = (MoCEntityCrocodile) entityliving;
         croc.biteProgress = entitycrocodile.biteProgress;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,8 +23,8 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     {
         super(world);
         setSize(0.8F, 0.8F);
-        health = getMaxHealth();
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "raccoon.png";
+        //health = getMaxHealth();
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "raccoon.png";
         setEdad(70 + rand.nextInt(30));
     }
 
@@ -42,7 +43,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -61,7 +62,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 8;
     }
@@ -82,7 +83,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
 
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {

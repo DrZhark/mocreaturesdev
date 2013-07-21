@@ -2,24 +2,43 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelJellyFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderJellyFish extends RenderLiving {
+
+    float depth = 0F;
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfisha.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishb.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishc.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishd.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishe.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishf.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH7 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishg.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH8 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishh.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH9 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishi.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH10 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishj.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH11 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishk.png");
+    private static final ResourceLocation TEXTURE_JELLYFISH12 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "jellyfishl.png");
+
     public MoCRenderJellyFish(ModelBase modelbase, float f)
     {
         super(modelbase, f);
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         GL11.glTranslatef(0.0F, depth, 0.0F);
         MoCEntityJellyFish jelly = (MoCEntityJellyFish) entityliving;
@@ -99,5 +118,41 @@ public class MoCRenderJellyFish extends RenderLiving {
         GL11.glScalef(scale, scale2, scale);
     }
 
-    float depth = 0F;
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityJellyFish)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityJellyFish jellyfish)
+    {
+        switch (jellyfish.getType())
+        {
+        case 1:
+            return TEXTURE_DEFAULT;
+        case 2:
+            return TEXTURE_JELLYFISH2;
+        case 3:
+            return TEXTURE_JELLYFISH3;
+        case 4:
+            return TEXTURE_JELLYFISH4;
+        case 5:
+            return TEXTURE_JELLYFISH5;
+        case 6:
+            return TEXTURE_JELLYFISH6;
+        case 7:
+            return TEXTURE_JELLYFISH7;
+        case 8:
+            return TEXTURE_JELLYFISH8;
+        case 9:
+            return TEXTURE_JELLYFISH9;
+        case 10:
+            return TEXTURE_JELLYFISH10;
+        case 11:
+            return TEXTURE_JELLYFISH11;
+        case 12:
+            return TEXTURE_JELLYFISH12;
+
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
 }

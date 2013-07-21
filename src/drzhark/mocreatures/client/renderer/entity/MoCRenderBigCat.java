@@ -3,7 +3,10 @@ package drzhark.mocreatures.client.renderer.entity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
@@ -13,12 +16,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelBigCat1;
 import drzhark.mocreatures.client.model.MoCModelBigCat2;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
+import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderBigCat extends RenderLiving {
 
     public MoCModelBigCat2 bigcat1;
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionf.png");
+    private static final ResourceLocation TEXTURE_BIG = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionb.png");
+    private static final ResourceLocation TEXTURE_CHILD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionc.png");
+    private static final ResourceLocation TEXTURE_PANTHER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "panther.png");
+    private static final ResourceLocation TEXTURE_CHEETAH = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "cheetah.png");
+    private static final ResourceLocation TEXTURE_TIGER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "tiger.png");
+    private static final ResourceLocation TEXTURE_TIGERW = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "tigerw.png");
+    private static final ResourceLocation TEXTURE_LEOPARD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "leopard.png");
 
     public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f)
     {
@@ -27,49 +40,27 @@ public class MoCRenderBigCat extends RenderLiving {
         bigcat1 = modelbigcat2;
     }
 
-    /*
-     * protected boolean a(MoCEntityBigCat entitybigcat, int i)
-     * {
-     * if((entitybigcat.getBigCatType() == 2) && entitybigcat.getIsAdult())
-     * {
-     * this.loadTexture(MoCreatures.proxy.MODEL_TEXTURE + " lionb.png");
-     * }
-     * else
-     * {
-     * this.loadTexture(MoCreatures.proxy.MODEL_TEXTURE + " lionc.png");
-     * }
-     * return i == 0;
-     * }
-     * /**
-     * @param entityliving Entity to render
-     * @param i
-     * @param f unused
-     */
-    // @Override
-    /*
-     * protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
-     * {
-     * return this.a((MoCEntityBigCat) entityliving, i);
-     * }
-     */
-
     protected int setWoolColorAndRender(MoCEntityBigCat entitybigcat, int i)
     {
         if (entitybigcat.getType() == 2 && entitybigcat.getIsAdult())
         {
-            loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "lionb.png");
+            func_110776_a(TEXTURE_BIG);
         }
         else
         {
-            loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "lionc.png");
+            func_110776_a(TEXTURE_CHILD);
         }
-        return 1;//i == 0 ;//&& !entitybigcat.lionboolean;
+        return 1;
     }
 
     @Override
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
     {
         return setWoolColorAndRender((MoCEntityBigCat) entityliving, i);
+    }
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    	return this.getTexture((MoCEntityBigCat)par1Entity);
     }
 
     @Override
@@ -111,15 +102,15 @@ public class MoCRenderBigCat extends RenderLiving {
                     tessellator1.startDrawingQuads();
                     // may break SSP, need to test
                     float f8;
-                    f8 = entitybigcat.getHealth();
+                    f8 = entitybigcat.func_110143_aJ();
 
                     /*if(MoCreatures.mc.isMultiplayerWorld())
                     {
-                        f8 = entitybigcat.getHealth();
+                        f8 = entitybigcat.func_110143_aJ();
                     }
                     else
                     {
-                        f8 = entitybigcat.getHealth();
+                        f8 = entitybigcat.func_110143_aJ();
                     }
                     */
                     float f9 = entitybigcat.getMaxHealth();
@@ -210,7 +201,7 @@ public class MoCRenderBigCat extends RenderLiving {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    protected float handleRotationFloat(EntityLivingBase entityliving, float f)
     {
         MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entityliving;
         stretch(entitybigcat);
@@ -218,7 +209,7 @@ public class MoCRenderBigCat extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entityliving;
         bigcat1.sitting = entitybigcat.getIsSitting();
@@ -233,5 +224,24 @@ public class MoCRenderBigCat extends RenderLiving {
             f = 1.0F;
         }
         GL11.glScalef(f * entitybigcat.getWidthF(), f * entitybigcat.getHeightF(), f * entitybigcat.getLengthF());
+    }
+
+    protected ResourceLocation getTexture(MoCEntityBigCat bigcat)
+    {
+        switch (bigcat.getType())
+        {
+        case 3:
+            return TEXTURE_PANTHER;
+        case 4:
+            return TEXTURE_CHEETAH;
+        case 5:
+            return TEXTURE_TIGER;
+        case 6:
+            return TEXTURE_LEOPARD;
+        case 7:
+            return TEXTURE_TIGERW;
+        default:
+            return TEXTURE_DEFAULT;
+        }
     }
 }

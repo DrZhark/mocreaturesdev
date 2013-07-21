@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumToolMaterial;
@@ -13,7 +14,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 public class MoCItemWeapon extends MoCItem {
-    private final int weaponDamage;
+    private final float weaponDamage;
     private final EnumToolMaterial toolMaterial;
     private int specialWeaponType = 0;
     private boolean breakable = false;
@@ -58,7 +59,7 @@ public class MoCItemWeapon extends MoCItem {
      * entry argument beside ev. They just raise the damage on the stack.
      */
     @Override
-    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving)
     {
         int i = 1;
         if (breakable)
@@ -101,7 +102,7 @@ public class MoCItemWeapon extends MoCItem {
      * Returns the damage against a given entity.
      */
     @Override
-    public int getDamageVsEntity(Entity par1Entity)
+    public float getDamageVsEntity(Entity par1Entity, ItemStack itemstack)
     {
         return this.weaponDamage;
     }

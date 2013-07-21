@@ -24,16 +24,15 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     public MoCEntityMiniGolem(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "minigolem.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "minigolem.png";
         setSize(1.0F, 1.0F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
     }
 
     @Override
     protected void entityInit()
     {
         super.entityInit();
-
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // angry 0 = false, 1 = true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasRock 0 = false, 1 = true
     }
@@ -244,7 +243,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }

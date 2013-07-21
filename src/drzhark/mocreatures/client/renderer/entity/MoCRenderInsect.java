@@ -2,6 +2,7 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 import org.lwjgl.opengl.GL11;
 
@@ -18,7 +19,7 @@ public class MoCRenderInsect extends MoCRenderMoC {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
+    protected void preRenderCallback(EntityLivingBase par1EntityLiving, float par2)
     {
         MoCEntityInsect insect = (MoCEntityInsect) par1EntityLiving;
 

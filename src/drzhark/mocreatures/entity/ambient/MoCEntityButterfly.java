@@ -43,37 +43,6 @@ public class MoCEntityButterfly extends MoCEntityInsect
         }
     }
 
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfagalaisurticae.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfargyreushyperbius.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfathymanefte.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfcatopsiliapomona.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfmorphopeleides.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfvanessaatalanta.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfpierisrapae.png";
-        case 8:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mothcamptogrammabilineata.png";
-        case 9:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mothidiaaemula.png";
-        case 10:
-            return MoCreatures.proxy.MODEL_TEXTURE + "moththyatirabatis.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bfpierisrapae.png";
-        }
-    }
-
     /**
      * Used to flicker ghosts
      * 

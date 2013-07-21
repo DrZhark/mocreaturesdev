@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -31,7 +32,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         super(world);
         setSize(1.4F, 0.9F);
-        health = 15;
+        //health = 15;
         poisontimer = 0;
         setAdult(true);
         setEdad(20);
@@ -57,24 +58,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         if (getType() == 0)
         {
             setType(1);
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncave.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
         }
     }
 
@@ -141,7 +124,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }
@@ -256,7 +239,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -284,7 +267,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             {
                 if ((rand.nextInt(80) == 0))
                 {
-                    EntityLiving entityliving = getClosestEntityLiving(this, 10D);
+                    EntityLivingBase entityliving = getClosestEntityLiving(this, 10D);
                 if (entityliving != null && !(entityliving instanceof EntityPlayer) && this.canEntityBeSeen(entityliving)) // blood - add LoS requirement
                     return entityliving;
                 }

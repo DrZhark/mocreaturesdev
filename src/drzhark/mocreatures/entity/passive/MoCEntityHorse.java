@@ -3,12 +3,13 @@ package drzhark.mocreatures.entity.passive;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCloth;
+import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockJukeBox;
 import net.minecraft.block.StepSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +62,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     {
         super(world);
         setSize(1.4F, 1.6F);
-        health = 20;
+        //health = 20;
         gestationtime = 0;
         eatenpumpkin = false;
         nightmareInt = 0;
@@ -96,8 +97,14 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         dataWatcher.addObject(26, Byte.valueOf((byte) 0)); // Bred - 0 false 1 true
     }
 
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(20.0D); // setMaxHealth
+    }
+
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         Entity entity = damagesource.getEntity();
         if ((riddenByEntity != null) && (entity == riddenByEntity)) { return false; }
@@ -637,8 +644,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         return "horsemad";
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         int maximumHealth = 10;
         if (getType() < 6) // tier 1
@@ -720,363 +726,6 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     public int getTalkInterval()
     {
         return 400;
-    }
-
-    /**
-     * Overridden for the dynamic nightmare texture.
-     */
-    @Override
-    public String getTexture()
-    {
-        String tempTexture;
-
-        switch (getType())
-        {
-        case 1:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsewhite.png";
-            break;
-        case 2:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsecreamy.png";
-            break;
-        case 3:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebrown.png";
-            break;
-        case 4:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsedarkbrown.png";
-            break;
-        case 5:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseblack.png";
-            break;
-        case 6:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebrightcreamy.png";
-            break;
-        case 7:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsespeckled.png";
-            break;
-        case 8:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsepalebrown.png";
-            break;
-        case 9:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsegrey.png";
-            break;
-        case 11:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsepinto.png";
-            break;
-        case 12:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebrightpinto.png";
-            break;
-        case 13:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsepalespeckles.png";
-            break;
-        case 16:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsespotted.png";
-            break;
-        case 17:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsecow.png";
-            break;
-
-        case 21:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseghost.png";
-            break;
-        case 22:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseghostb.png";
-            break;
-        case 23:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseundead.png";
-            break;
-        case 24:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadunicorn.png";
-            break;
-        case 25:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadpegasus.png";
-            break;
-        case 26:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseskeleton.png";
-            break;
-        case 27:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseunicornskeleton.png";
-            break;
-        case 28:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsepegasusskeleton.png";
-            break;
-        case 30:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebug.png";
-            break;
-        case 32:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebat.png";
-            break;
-        case 36:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horseunicorn.png";
-            break;
-        case 38:
-            isImmuneToFire = true;
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsenightmare.png";
-            break;
-        case 39:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsepegasus.png";
-            break;
-        case 40:
-            isImmuneToFire = true;
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsedarkpegasus.png";
-            break;
-            /*
-        case 44:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            break;
-        case 45:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            break;
-        case 46:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            break;
-            
-        case 47:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            break;*/
-        case 48:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyyellow.png";
-            break;
-        case 49:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairypurple.png";
-            break;
-        case 50:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairywhite.png";
-            break;
-        case 51:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyblue.png";
-            break;
-        case 52:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairypink.png";
-            break;
-        case 53:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairylightgreen.png";
-            break;
-        case 54:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyblack.png";
-            break;
-        case 55:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyred.png";
-            break;
-        case 56:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            break;
-        case 57:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairycyan.png";
-            break;
-        case 58:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairygreen.png";
-            break;
-        case 59:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyorange.png";
-            break;
-        
-        case 60:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsezebra.png";
-            break;
-        case 61:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsezorse.png";
-            break;
-        case 65:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsedonkey.png";
-            break;
-        case 66:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsemule.png";
-            break;
-        case 67:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsezonky.png";
-            break;
-
-        default:
-            tempTexture = MoCreatures.proxy.MODEL_TEXTURE + "horsebug.png";
-        }
-
-        if ((isArmored() || isMagicHorse()) && getArmorType() > 0)
-        {
-            String armorTex = "";
-            if (getArmorType() == 1)
-            {
-                armorTex = "metal.png";
-            }
-            if (getArmorType() == 2)
-            {
-                armorTex = "gold.png";
-            }
-            if (getArmorType() == 3)
-            {
-                armorTex = "diamond.png";
-            }
-            if (getArmorType() == 4)
-            {
-                armorTex = "crystaline.png";
-            }
-            return tempTexture.replace(".png", armorTex);
-        }
-
-        
-        if (this.isUndead() && this.getType() < 26)
-        {
-            String baseTex = MoCreatures.proxy.MODEL_TEXTURE + "horseundead";
-            int max = 79;
-            if (this.getType() == 25) // undead pegasus
-            {
-                baseTex = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadpegasus";
-                // max = 79; //undead pegasus have an extra animation
-
-            }
-            if (this.getType() == 24)// undead unicorn
-            {
-                baseTex = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadunicorn";
-                max = 69; // undead unicorn have an animation less
-            }
-            
-            String iteratorTex = "1";
-            if (MoCreatures.proxy.getAnimateTextures())
-            {
-                if (rand.nextInt(3) == 0)
-                {
-                    textCounter++;
-                }
-                if (textCounter < 10)
-                {
-                    textCounter = 10;
-                }
-                if (textCounter > max)
-                {
-                    textCounter = 10;
-                }
-                iteratorTex = "" + textCounter;
-                iteratorTex = iteratorTex.substring(0, 1);
-            }
-           
-            String decayTex = "" + (getEdad() / 100);
-            decayTex = decayTex.substring(0, 1);
-            return baseTex + decayTex + iteratorTex + ".png";
-        }
-        
-        // if animate textures is off, return plain textures
-        if (!MoCreatures.proxy.getAnimateTextures()) { return tempTexture; }
-
-        
-        if (this.isNightmare())
-        {
-            if (rand.nextInt(1) == 0)
-            {
-                textCounter++;
-            }
-            if (textCounter < 10)
-            {
-                textCounter = 10;
-            }
-            if (textCounter > 59)
-            {
-                textCounter = 10;
-            }
-            String NTA = MoCreatures.proxy.MODEL_TEXTURE + "horsenightmare";
-            String NTB = "" + textCounter;
-            NTB = NTB.substring(0, 1);
-            String NTC = ".png";
-
-            return NTA + NTB + NTC;
-        }
-
-        
-
-        if (transformCounter != 0 && transformType != 0)
-        {
-            String newText = MoCreatures.proxy.MODEL_TEXTURE + "horseundead.png";
-            if (transformType == 23)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horseundead.png";
-            }
-            if (transformType == 24)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadunicorn.png";
-            }
-            if (transformType == 25)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horseundeadpegasus.png";
-            }
-            if (transformType == 36)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horseunicorn.png";
-            }
-            if (transformType == 39)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsepegasus.png";
-            }
-            if (transformType == 40)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horseblackpegasus.png";
-            }
-            
-            if (transformType == 48)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyyellow.png";
-            }
-            if (transformType == 49)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairypurple.png";
-            }
-            if (transformType == 50)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairywhite.png";
-            }
-            if (transformType == 51)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyblue.png";
-            }
-            if (transformType == 52)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairypink.png";
-            }
-            if (transformType == 53)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairylightgreen.png";
-            }
-            if (transformType == 54)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyblack.png";
-            }
-            if (transformType == 55)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyred.png";
-            }
-            if (transformType == 56)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairydarkblue.png";
-            }
-            
-            if (transformType == 57)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairycyan.png";
-            }
-            
-            if (transformType == 58)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairygreen.png";
-            }
-            
-            if (transformType == 59)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsefairyorange.png";
-            }
-            
-            if (transformType == 32)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsebat.png";
-            }
-            if (transformType == 38)
-            {
-                newText = MoCreatures.proxy.MODEL_TEXTURE + "horsenightmare1.png";
-            }
-            if ((transformCounter % 5) == 0) { return newText; }
-            if (transformCounter > 50 && (transformCounter % 3) == 0) { return newText; }
-
-            if (transformCounter > 75 && (transformCounter % 4) == 0) { return newText; }
-        }
-
-        return tempTexture;
-
     }
 
     /**
@@ -1350,7 +999,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if (this.isUndead() || isGhost())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
 
             }
 
@@ -1393,11 +1042,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if (this.isNightmare())
             {
-                if (getIsAdult() && health == getMaxHealth())
+                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
 
             }
             if (this.getType() == 61)
@@ -1423,11 +1072,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if (this.getType() == 32)
             {
-                if (getIsAdult() && health == getMaxHealth())
+                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
 
             if (this.getType() == 61)
@@ -1458,11 +1107,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if (this.isMagicHorse())
             {
-                if (getIsAdult() && health == getMaxHealth())
+                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
 
             if (this.isNightmare())
@@ -1523,7 +1172,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         if ((itemstack != null) && (itemstack.itemID == Item.dyePowder.itemID) && this.getType() == 50)
         {
 
-            int colorInt = BlockCloth.getBlockFromDye(itemstack.getItemDamage());
+            int colorInt = BlockColored.getBlockFromDye(itemstack.getItemDamage());
             switch (colorInt)
             {
             case 1: //orange
@@ -1609,9 +1258,9 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((health += 5) > getMaxHealth())
+            if ((func_110143_aJ() + 5) > getMaxHealth())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1635,9 +1284,9 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((health += 10) > getMaxHealth())
+            if ((func_110143_aJ() + 10) > getMaxHealth())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1661,9 +1310,9 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((health += 20) > getMaxHealth())
+            if ((func_110143_aJ() + 20) > getMaxHealth())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1684,7 +1333,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
 
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100) && MoCreatures.isServer())
             {
@@ -1718,7 +1367,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             eatingHorse();
             if (!isMagicHorse() && !isUndead())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
 
             return true;
@@ -1757,7 +1406,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             eatenpumpkin = true;
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             eatingHorse();
             return true;
         }
@@ -2133,10 +1782,10 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if ((rand.nextInt(300) == 0) && (deathTime == 0))
             {
-                health++;
-                if (health > getMaxHealth())
+                this.setEntityHealth(func_110143_aJ() + 1);
+                if (func_110143_aJ() > getMaxHealth())
                 {
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                 }
             }
 
@@ -2523,7 +2172,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 setType(60);// zebra
             }
 
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
         }
     }
     
@@ -2791,5 +2440,10 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             return EnumCreatureAttribute.UNDEAD;
         }
         return super.getCreatureAttribute();
+    }
+
+    public void setImmuneToFire(boolean value)
+    {
+        this.isImmuneToFire = value;
     }
 }

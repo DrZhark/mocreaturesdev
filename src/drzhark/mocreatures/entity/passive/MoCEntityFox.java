@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,9 +26,15 @@ public class MoCEntityFox extends MoCEntityAnimal {
     {
         super(world);
         setSize(0.9F, 1.3F);
-        health = 15;
+        //health = 15;
         force = 2;
         attackRange = 4D;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(15.0D); // setMaxHealth
     }
 
     @Override
@@ -54,25 +61,9 @@ public class MoCEntityFox extends MoCEntityAnimal {
             setType(1);
         }
     }   
-    
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fox.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "foxsnow.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fox.png";
-        }
-    }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -91,7 +82,7 @@ public class MoCEntityFox extends MoCEntityAnimal {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }
@@ -112,7 +103,7 @@ public class MoCEntityFox extends MoCEntityAnimal {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
 
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {

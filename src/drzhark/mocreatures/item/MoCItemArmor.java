@@ -5,14 +5,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IArmorTextureProvider;
 
-public class MoCItemArmor extends ItemArmor implements IArmorTextureProvider
+public class MoCItemArmor extends ItemArmor
 {
     public MoCItemArmor(int i, EnumArmorMaterial enumarmormaterial, int j, int k)
     {
@@ -20,7 +20,7 @@ public class MoCItemArmor extends ItemArmor implements IArmorTextureProvider
     }
 
     @Override
-    public String getArmorTextureFile(ItemStack itemstack) 
+    public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, int layer)
     {
         String tempArmorTexture = "croc_1.png";;
         if ((itemstack.itemID == MoCreatures.helmetCroc.itemID) || (itemstack.itemID == MoCreatures.plateCroc.itemID) || (itemstack.itemID == MoCreatures.bootsCroc.itemID))

@@ -13,8 +13,8 @@ public class MoCEntitySnail extends MoCEntityAmbient
     {
         super(world);
         setSize(0.2F, 0.2F);
-        health = 2;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
+        //health = 2;
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 2;
     }
@@ -72,29 +72,6 @@ public class MoCEntitySnail extends MoCEntityAmbient
             {
                 setType(6);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snailb.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snailc.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snaild.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snaile.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snailf.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
         }
     }
 

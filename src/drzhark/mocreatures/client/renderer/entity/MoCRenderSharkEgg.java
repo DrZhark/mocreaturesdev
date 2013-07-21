@@ -2,6 +2,8 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -12,5 +14,11 @@ public class MoCRenderSharkEgg extends RenderLiving {
     public MoCRenderSharkEgg(ModelBase modelbase, float f)
     {
         super(modelbase, f);
+    }
+
+    @Override
+    protected ResourceLocation func_110775_a(Entity entity) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

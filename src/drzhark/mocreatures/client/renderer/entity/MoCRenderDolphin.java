@@ -4,7 +4,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,9 +15,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
+import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderDolphin extends RenderLiving {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin.png");
+    private static final ResourceLocation TEXTURE_DOLPHIN2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin2.png");
+    private static final ResourceLocation TEXTURE_DOLPHIN3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin3.png");
+    private static final ResourceLocation TEXTURE_DOLPHIN4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin4.png");
+    private static final ResourceLocation TEXTURE_DOLPHIN5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin5.png");
+    private static final ResourceLocation TEXTURE_DOLPHIN6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin6.png");
 
     public MoCRenderDolphin(ModelBase modelbase, float f)
     {
@@ -57,7 +68,7 @@ public class MoCRenderDolphin extends RenderLiving {
                     }
                     tessellator.startDrawingQuads();
                     // might break SSP
-                    float f6 = entitydolphin.getHealth();
+                    float f6 = entitydolphin.func_110143_aJ();
                     // maxhealth is always 30 for dolphins so we do not need to use a datawatcher
                     float f7 = entitydolphin.getMaxHealth();
                     float f8 = f6 / f7;
@@ -140,7 +151,7 @@ public class MoCRenderDolphin extends RenderLiving {
                 tessellator.addVertex(i + 1, -1 + byte0, 0.0D);
                 if (MoCreatures.proxy.getDisplayPetHealth())
                 {
-                    float f5 = entitydolphin.getHealth();
+                    float f5 = entitydolphin.func_110143_aJ();
                     float f6 = entitydolphin.getMaxHealth();
                     float f7 = f5 / f6;
                     float f8 = 40F * f7;
@@ -170,7 +181,7 @@ public class MoCRenderDolphin extends RenderLiving {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    protected float handleRotationFloat(EntityLivingBase entityliving, float f)
     {
         stretch((MoCEntityDolphin) entityliving);
         return entityliving.ticksExisted + f;
@@ -179,5 +190,31 @@ public class MoCRenderDolphin extends RenderLiving {
     protected void stretch(MoCEntityDolphin entitydolphin)
     {
         GL11.glScalef(entitydolphin.getEdad() * 0.01F, entitydolphin.getEdad() * 0.01F, entitydolphin.getEdad() * 0.01F);
+    }
+
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityDolphin)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityDolphin dolphin)
+    {
+        switch (dolphin.getType())
+        {
+        case 1:
+            return TEXTURE_DEFAULT;
+        case 2:
+            return TEXTURE_DOLPHIN2;
+        case 3:
+            return TEXTURE_DOLPHIN3;
+        case 4:
+            return TEXTURE_DOLPHIN4;
+        case 5:
+            return TEXTURE_DOLPHIN5;
+        case 6:
+            return TEXTURE_DOLPHIN6;
+        default:
+            return TEXTURE_DEFAULT;
+        }
     }
 }

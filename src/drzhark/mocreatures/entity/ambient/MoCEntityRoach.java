@@ -17,7 +17,7 @@ public class MoCEntityRoach extends MoCEntityInsect
     public MoCEntityRoach(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "roach.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "roach.png";
     }
 
     @Override

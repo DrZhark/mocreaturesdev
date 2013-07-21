@@ -10,9 +10,10 @@ import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCloth;
+import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,7 +33,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     {
         super(world);
         setSize(1.0F, 1.6F);
-        health = 20;
+        //health = 20;
         setEdad(35);
         roper = null;
         this.eggCounter = this.rand.nextInt(1000) + 1000;
@@ -45,8 +46,8 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     public int wingCounter;
     public int sprintCounter;
     public int jumpCounter;
-    private int transformCounter;
-    private int transformType;
+    public int transformCounter;
+    public int transformType;
 
     public MoCAnimalChest localchest;
     public ItemStack localstack;
@@ -146,7 +147,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         //dmg reduction
         if (getIsTamed() && getHelmet() != 0)
@@ -217,7 +218,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         switch (getType())
         {
@@ -268,58 +269,6 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             {
                 setType(4);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-           if (transformCounter != 0 && transformType > 4)
-            {
-                String newText = MoCreatures.proxy.MODEL_TEXTURE + "ostricha.png";
-                if (transformType == 5)
-                {
-                    newText = MoCreatures.proxy.MODEL_TEXTURE + "ostriche.png";
-                }
-                if (transformType == 6)
-                {
-                    newText = MoCreatures.proxy.MODEL_TEXTURE + "ostrichf.png";
-                }
-                if (transformType == 7)
-                {
-                    newText = MoCreatures.proxy.MODEL_TEXTURE + "ostrichg.png";
-                }
-                if (transformType == 8)
-                {
-                    newText = MoCreatures.proxy.MODEL_TEXTURE + "ostrichh.png";
-                }
-                
-                if ((transformCounter % 5) == 0) { return newText; }
-                if (transformCounter > 50 && (transformCounter % 3) == 0) { return newText; }
-
-                if (transformCounter > 75 && (transformCounter % 4) == 0) { return newText; }
-            }
-           
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichc.png"; //chick
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichb.png"; //female
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostricha.png"; //male
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichd.png"; //albino
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostriche.png"; //nether
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichf.png"; //black wyvern
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichg.png"; //undead
-        case 8:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostrichh.png"; //unicorned
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ostricha.png";
         }
     }
 
@@ -447,9 +396,9 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
 
         
 
-        if (getIsTamed() && MoCreatures.isServer() && (rand.nextInt(300) == 0) && (health <= getMaxHealth()) && (deathTime == 0))
+        if (getIsTamed() && MoCreatures.isServer() && (rand.nextInt(300) == 0) && (func_110143_aJ() <= getMaxHealth()) && (deathTime == 0))
         {
-            health++;
+            this.setEntityHealth(func_110143_aJ() + 1);
         }
 
         if (MoCreatures.isServer())
@@ -620,7 +569,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             }
             if (getType() == 6)
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             else
             {
@@ -642,7 +591,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             }
             if (getType() == 7)
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             else
             {
@@ -664,7 +613,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             }
             if (getType() == 8)
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             else
             {
@@ -686,7 +635,7 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
             }
             if (getType() == 5)
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             else
             {

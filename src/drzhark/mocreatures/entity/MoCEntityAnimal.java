@@ -15,6 +15,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -39,10 +42,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     protected boolean jumpPending;
     protected int temper;
     protected boolean isEntityJumping;
-    public EntityLiving roper;
+    public EntityLivingBase roper;
     private PathEntity entitypath;
     // used by MoCPlayerTracker to prevent dupes when a player disconnects on animal from server
     private boolean riderIsDisconnecting;
+    public float moveSpeed;
 
     public MoCEntityAnimal(World world)
     {
@@ -50,6 +54,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
         setTamed(false);
         setAdult(true);
         riderIsDisconnecting = false;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        selectType();
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     /**
@@ -60,13 +72,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     public void selectType()
     {
         setType(1);
-    }
-
-    @Override
-    public void initCreature()
-    {
-        selectType();
-        super.initCreature();
     }
 
     @Override
@@ -298,10 +303,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 MoCTools.forceDataSync(this);
             }
             
-            if (getIsTamed() && rand.nextInt(100) == 0)
+            /*if (getIsTamed() && rand.nextInt(100) == 0)
             {
-                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
-            }
+                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            }*/
         }
 
         if (isNotScared() && fleeingTick > 0)
@@ -474,7 +479,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             return true;
         }
@@ -708,7 +713,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), ((EntityMob)entity).getAttackStrength(this));
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }
@@ -745,8 +750,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
         }
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }
@@ -1676,7 +1680,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
@@ -1684,7 +1688,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
         }
         if (isNotScared())
         {
@@ -1712,7 +1716,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     public void setDead()
     {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && !this.riderIsDisconnecting)
+        if (MoCreatures.isServer() && getIsTamed() && this.func_110143_aJ() > 0 && !this.riderIsDisconnecting)
         {
             return;
         }
@@ -1776,10 +1780,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         return false;
     }
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

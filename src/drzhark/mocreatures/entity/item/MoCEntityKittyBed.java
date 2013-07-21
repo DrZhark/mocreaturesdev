@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.item;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         super(world);
         setSize(1.0F, 0.3F);
         milklevel = 0.0F;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
     }
 
     public MoCEntityKittyBed(World world, double d, double d1, double d2)
@@ -26,13 +27,19 @@ public class MoCEntityKittyBed extends EntityLiving {
         super(world);
         setSize(1.0F, 0.3F);
         milklevel = 0.0F;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
     }
 
     public MoCEntityKittyBed(World world, int i)
     {
         this(world);
         setSheetColor(i);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     @Override
@@ -120,7 +127,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     @Override
     public boolean canEntityBeSeen(Entity entity)
     {
-        return worldObj.rayTraceBlocks(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
+        return worldObj.clip(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
     }
 
     @Override
@@ -276,8 +283,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         nbttagcompound.setFloat("MilkLevel", milklevel);
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }

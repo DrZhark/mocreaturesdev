@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
@@ -43,7 +44,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.2.2")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.3.0")
 public final class CustomSpawner {
     private int maxCreatures;
     private int maxMonsters;
@@ -1040,14 +1041,14 @@ public final class CustomSpawner {
     /**
      * determines if a skeleton spawns on a spider, and if a sheep is a different color
      */
-    private static void creatureSpecificInit(EntityLiving par0EntityLiving, World par1World, float par2, float par3, float par4)
+    private static EntityLivingData creatureSpecificInit(EntityLiving par0EntityLiving, World par1World, float par2, float par3, float par4)
     {
-        if (ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, par2, par3, par4))
+    	EntityLivingData entitylivingdata = null;
+    	if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, par2, par3, par4))
         {
-            return;
+            entitylivingdata = par0EntityLiving.func_110161_a(entitylivingdata);
         }
-
-        par0EntityLiving.initCreature();
+    	return entitylivingdata;
     }
 
     /**

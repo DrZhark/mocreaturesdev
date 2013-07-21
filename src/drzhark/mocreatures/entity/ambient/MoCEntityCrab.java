@@ -17,13 +17,12 @@ public class MoCEntityCrab extends MoCEntityAmbient
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = 6;
+        //health = 6;
         setEdad(50 + rand.nextInt(50));
-        
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 6;
     }
@@ -43,24 +42,6 @@ public class MoCEntityCrab extends MoCEntityAmbient
         }
 
     }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "craba.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "crabb.png";
-        
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "craba.png";
-        }
-    }
-
-    
 
     @Override
     public void onLivingUpdate()

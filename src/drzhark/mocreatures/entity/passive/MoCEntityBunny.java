@@ -7,6 +7,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,9 +33,15 @@ public class MoCEntityBunny extends MoCEntityAnimal {
         setTamed(false);
         setEdad(50);
         setSize(0.4F, 0.4F);
-        health = 4;
+        //health = 4;
         bunnyReproduceTickerA = rand.nextInt(64);
         bunnyReproduceTickerB = 0;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(4.0D); // setMaxHealth
     }
 
     @Override
@@ -89,27 +96,6 @@ public class MoCEntityBunny extends MoCEntityAnimal {
             return true;
         }
         return true;
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunny.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunnyb.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunnyc.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunnyd.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunnye.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "bunny.png";
-        }
     }
 
     @Override
@@ -322,12 +308,6 @@ public class MoCEntityBunny extends MoCEntityAnimal {
     }
 
     @Override
-    public int getMaxHealth()
-    {
-        return 4;
-    }
-
-    @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
         return par1ItemStack != null && par1ItemStack.itemID == Item.carrot.itemID;
@@ -343,7 +323,7 @@ public class MoCEntityBunny extends MoCEntityAnimal {
      * So bunny-hats don't suffer damage
      */
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (this.ridingEntity != null) 
         {

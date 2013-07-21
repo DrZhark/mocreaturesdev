@@ -2,16 +2,43 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderDeer extends RenderLiving {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deer.png");
+    private static final ResourceLocation TEXTURE_DEER2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deerf.png");
+    private static final ResourceLocation TEXTURE_DEER3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deerb.png");
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityDeer)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityDeer deer)
+    {
+        switch (deer.getType())
+        {
+        case 2:
+            return TEXTURE_DEER2;
+        case 3:
+            deer.setAdult(false);
+            return TEXTURE_DEER3;
+
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
 
     public MoCRenderDeer(ModelBase modelbase, float f)
     {
@@ -26,7 +53,7 @@ public class MoCRenderDeer extends RenderLiving {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    protected float handleRotationFloat(EntityLivingBase entityliving, float f)
     {
         MoCEntityDeer entitydeer = (MoCEntityDeer) entityliving;
         stretch(entitydeer);
@@ -34,7 +61,7 @@ public class MoCRenderDeer extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         rotateDeer((MoCEntityDeer) entityliving);
     }

@@ -3,7 +3,11 @@ package drzhark.mocreatures.client.renderer.entity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -18,6 +22,126 @@ import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 public class MoCRenderKitty extends RenderBiped {
 
     public MoCModelKitty pussy1;
+    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycata.png");
+    private static final ResourceLocation TEXTURE_KITTY2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycatb.png");
+    private static final ResourceLocation TEXTURE_KITTY3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycatc.png");
+    private static final ResourceLocation TEXTURE_KITTY4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycatd.png");
+    private static final ResourceLocation TEXTURE_KITTY5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycate.png");
+    private static final ResourceLocation TEXTURE_KITTY6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycatf.png");
+    private static final ResourceLocation TEXTURE_KITTY7 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycatg.png");
+    private static final ResourceLocation TEXTURE_KITTY8 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "pussycath.png");
+    // emotes
+    private static final ResourceLocation TEXTURE_EMOTE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon1.png");
+    private static final ResourceLocation TEXTURE_EMOTE_2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon2.png");
+    private static final ResourceLocation TEXTURE_EMOTE_3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon3.png");
+    private static final ResourceLocation TEXTURE_EMOTE_4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon4.png");
+    private static final ResourceLocation TEXTURE_EMOTE_5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon5.png");
+    private static final ResourceLocation TEXTURE_EMOTE_6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon6.png");
+    private static final ResourceLocation TEXTURE_EMOTE_7 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon7.png");
+    private static final ResourceLocation TEXTURE_EMOTE_8 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon8.png");
+    private static final ResourceLocation TEXTURE_EMOTE_9 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon9.png");
+    private static final ResourceLocation TEXTURE_EMOTE_10 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon10.png");
+    private static final ResourceLocation TEXTURE_EMOTE_11 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon11.png");
+    private static final ResourceLocation TEXTURE_EMOTE_12 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon12.png");
+    private static final ResourceLocation TEXTURE_EMOTE_13 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon13.png");
+    private static final ResourceLocation TEXTURE_EMOTE_16 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon16.png");
+    private static final ResourceLocation TEXTURE_EMOTE_17 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon17.png");
+    private static final ResourceLocation TEXTURE_EMOTE_19 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "emoteicon19.png");
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityKitty)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityKitty kitty)
+    {
+        switch (kitty.getType())
+        {
+        case 2:
+            return TEXTURE_KITTY2;
+        case 3:
+            return TEXTURE_KITTY3;
+        case 4:
+            return TEXTURE_KITTY4;
+        case 5:
+            return TEXTURE_KITTY5;
+        case 6:
+            return TEXTURE_KITTY6;
+        case 7:
+            return TEXTURE_KITTY7;
+        case 8:
+            return TEXTURE_KITTY8;
+
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
+
+    public ResourceLocation getEmoteIcon(MoCEntityKitty kitty)
+    {
+        switch (kitty.getKittyState())
+        {
+        case -1:
+            return TEXTURE_EMOTE_2;
+
+        case 3: // '\003'
+            return TEXTURE_EMOTE_3;
+
+        case 4: // '\004'
+            return TEXTURE_EMOTE_4;
+
+        case 5: // '\005'
+            return TEXTURE_EMOTE_5;
+
+        case 7: // '\007'
+            return TEXTURE_EMOTE_7;
+
+        case 8: // '\b'
+            return TEXTURE_EMOTE_8;
+
+        case 9: // '\t'
+            return TEXTURE_EMOTE_9;
+
+        case 10: // '\n'
+            return TEXTURE_EMOTE_10;
+
+        case 11: // '\013'
+            return TEXTURE_EMOTE_11;
+
+        case 12: // '\f'
+            return TEXTURE_EMOTE_12;
+
+        case 13: // '\r'
+            return TEXTURE_EMOTE_13;
+
+        case 16: // '\020'
+            return TEXTURE_EMOTE_16;
+
+        case 17: // '\021'
+            return TEXTURE_EMOTE_17;
+
+        case 18: // '\022'
+            return TEXTURE_EMOTE_9;
+
+        case 19: // '\023'
+            return TEXTURE_EMOTE_19;
+
+        case 20: // '\024'
+            return TEXTURE_EMOTE_19;
+
+        case 21: // '\025'
+            return TEXTURE_EMOTE_10;
+
+        case 0: // '\0'
+        case 1: // '\001'
+        case 2: // '\002'
+        case 6: // '\006'
+        case 14: // '\016'
+        case 15: // '\017'
+        default:
+            return TEXTURE_EMOTE_DEFAULT;
+        }
+    }
 
     public MoCRenderKitty(MoCModelKitty modelkitty, float f)
     {
@@ -59,14 +183,15 @@ public class MoCRenderKitty extends RenderBiped {
                 if (flag2 && ((MoCEntityKitty) entityliving).getIsEmo())
                 {
                     //if(MoCClientProxy.mc.isMultiplayerWorld() && (((MoCEntityKitty) entityliving).getEmoticon() != null))
-                    if ((((MoCEntityKitty) entityliving).getEmoticon() != null))
-                    {
-                        GL11.glBindTexture(3553 /* GL_TEXTURE_2D */, MoCClientProxy.mc.renderEngine.getTexture(((MoCEntityKitty) entityliving).getEmoticon()));
-                    }
-                    else
-                    {
-                        GL11.glBindTexture(3553 /* GL_TEXTURE_2D */, MoCClientProxy.mc.renderEngine.getTexture(((MoCEntityKitty) entityliving).getEmoticon()));
-                    }
+                    //if (this.getEmoteIcon(((MoCEntityKitty) entityliving)) != null)
+                    //{
+                        //GL11.glBindTexture(3553 /* GL_TEXTURE_2D */, MoCClientProxy.mc.renderEngine.getTexture(((MoCEntityKitty) entityliving).getEmoticon()));
+                    textureManager.func_110577_a(this.getEmoteIcon((MoCEntityKitty) entityliving));
+                    //}
+                    //else
+                    //{
+                      //  GL11.glBindTexture(3553 /* GL_TEXTURE_2D */, MoCClientProxy.mc.renderEngine.getTexture(((MoCEntityKitty) entityliving).getEmoticon()));
+                    //}
                     int i = -83;
                     if (!flag)
                     {
@@ -96,7 +221,7 @@ public class MoCRenderKitty extends RenderBiped {
                     }
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);
                     tessellator.startDrawingQuads();
-                    float f6 = entitykitty.getHealth();
+                    float f6 = entitykitty.func_110143_aJ();
                     float f7 = entitykitty.getMaxHealth();
                     float f8 = f6 / f7;
                     float f10 = 30F * f8;
@@ -149,7 +274,7 @@ public class MoCRenderKitty extends RenderBiped {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    protected float handleRotationFloat(EntityLivingBase entityliving, float f)
     {
         MoCEntityKitty entitykitty = (MoCEntityKitty) entityliving;
         if (!entitykitty.getIsAdult())
@@ -159,7 +284,7 @@ public class MoCRenderKitty extends RenderBiped {
         return entityliving.ticksExisted + f;
     }
 
-    protected void onMaBack(EntityLiving entityliving)
+    protected void onMaBack(EntityLivingBase entityliving)
     {
         GL11.glRotatef(90F, 0.0F, 0.0F, -1F);
 
@@ -174,14 +299,14 @@ public class MoCRenderKitty extends RenderBiped {
 
     }
 
-    protected void onTheSide(EntityLiving entityliving)
+    protected void onTheSide(EntityLivingBase entityliving)
     {
         GL11.glRotatef(90F, 0.0F, 0.0F, -1F);
         GL11.glTranslatef(0.2F, 0.0F, -0.2F);
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityKitty entitykitty = (MoCEntityKitty) entityliving;
         pussy1.isSitting = entitykitty.getIsSitting();
@@ -206,7 +331,7 @@ public class MoCRenderKitty extends RenderBiped {
         }
     }
 
-    protected void rotateAnimal(EntityLiving entityliving)
+    protected void rotateAnimal(EntityLivingBase entityliving)
     {
         if (!entityliving.onGround)
         {
@@ -219,7 +344,7 @@ public class MoCRenderKitty extends RenderBiped {
         GL11.glScalef(entitykitty.getEdad() * 0.01F, entitykitty.getEdad() * 0.01F, entitykitty.getEdad() * 0.01F);
     }
 
-    protected void upsideDown(EntityLiving entityliving)
+    protected void upsideDown(EntityLivingBase entityliving)
     {
         GL11.glRotatef(180F, 0.0F, 0.0F, -1F);
         GL11.glTranslatef(-0.35F, 0F, -0.55F);

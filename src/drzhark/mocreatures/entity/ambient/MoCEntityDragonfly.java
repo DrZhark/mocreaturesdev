@@ -13,7 +13,7 @@ public class MoCEntityDragonfly extends MoCEntityInsect
     public MoCEntityDragonfly(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "dragonflya.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "dragonflya.png";
     }
 
     @Override
@@ -38,26 +38,6 @@ public class MoCEntityDragonfly extends MoCEntityInsect
             {
                 setType(4);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dragonflya.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dragonflyb.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dragonflyc.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dragonflyd.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "dragonflyd.png";
         }
     }
 

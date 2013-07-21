@@ -13,7 +13,7 @@ public class MoCEntityCricket extends MoCEntityInsect
     public MoCEntityCricket(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "cricketa.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "cricketa.png";
     }
 
     private int jumpCounter;
@@ -48,19 +48,6 @@ public class MoCEntityCricket extends MoCEntityInsect
             {
                 setType(2);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-        if (getType() == 1)
-        {
-            return MoCreatures.proxy.MODEL_TEXTURE + "cricketa.png";
-        }
-        else
-        {
-            return MoCreatures.proxy.MODEL_TEXTURE + "cricketb.png";
         }
     }
 

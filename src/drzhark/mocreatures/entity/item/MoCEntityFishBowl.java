@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.item;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,22 +19,26 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         super(world);
         setSize(1.0F, 1.0F);
-
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
     }
 
     public MoCEntityFishBowl(World world, double d, double d1, double d2)
     {
         super(world);
         setSize(1.0F, 1.0F);
-
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
     }
 
     public MoCEntityFishBowl(World world, int i)
     {
         this(world);
         setType(i);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     @Override
@@ -100,7 +105,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     @Override
     public boolean canEntityBeSeen(Entity entity)
     {
-        return worldObj.rayTraceBlocks(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
+        return worldObj.clip(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
     }
 
     @Override
@@ -280,8 +285,7 @@ public class MoCEntityFishBowl extends EntityLiving {
         nbttagcompound.setInteger("SheetColour", getType());
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 5;
     }

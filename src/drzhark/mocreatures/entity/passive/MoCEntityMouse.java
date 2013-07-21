@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
@@ -19,7 +20,13 @@ public class MoCEntityMouse extends MoCEntityAnimal
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = 4;
+        //health = 4;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     public void selectType()
@@ -45,23 +52,6 @@ public class MoCEntityMouse extends MoCEntityAnimal
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-            case 1:
-                return MoCreatures.proxy.MODEL_TEXTURE + "miceg.png";
-            case 2:
-                return MoCreatures.proxy.MODEL_TEXTURE + "miceb.png";
-            case 3:
-                return MoCreatures.proxy.MODEL_TEXTURE + "micew.png";
-            
-            default:
-                return MoCreatures.proxy.MODEL_TEXTURE + "miceg.png";
-        }
-    }
-    
-    @Override
     public boolean checkSpawningBiome()
     {
         int i = MathHelper.floor_double(posX);
@@ -78,7 +68,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 4;
     }

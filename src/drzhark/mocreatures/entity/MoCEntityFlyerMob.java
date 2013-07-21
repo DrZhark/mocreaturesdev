@@ -19,7 +19,7 @@ public abstract class MoCEntityFlyerMob extends MoCEntityMob {
         isCollidedVertically = false;
         setSize(1.5F, 1.5F);
         attackStrength = 3;
-        health = 10;
+        //health = 10;
     }
 
     @Override

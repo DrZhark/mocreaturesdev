@@ -21,7 +21,7 @@ public class MoCItemFishnet extends MoCItem
     private Icon[] icons;
     private int ageCounter;
     private String name;
-    private int health;
+    private float health;
     private int edad;
     private int creatureType;
     private String spawnClass;
@@ -124,7 +124,7 @@ public class MoCItemFishnet extends MoCItem
     public void readFromNBT(NBTTagCompound nbt)
     {
         this.creatureType = nbt.getInteger("CreatureType");
-        this.health = nbt.getInteger("Health");
+        this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getString("SpawnClass");
@@ -134,7 +134,7 @@ public class MoCItemFishnet extends MoCItem
     public void writeToNBT(NBTTagCompound nbt)
     {
         nbt.setInteger("CreatureType", this.creatureType);
-        nbt.setInteger("Health", this.health);
+        nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
         nbt.setString("Name", this.name);
         nbt.setString("SpawnClass", this.spawnClass);

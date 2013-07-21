@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
@@ -17,15 +18,15 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     public MoCEntityDuck(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "duck.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "duck.png";
         setSize(0.3F, 0.4F);
-        health = 4;
+        //health = 4;
     }
 
-    @Override
-    public int getMaxHealth()
+    protected void func_110147_ax()
     {
-        return 4;
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(4.0D); // setMaxHealth
     }
 
     @Override

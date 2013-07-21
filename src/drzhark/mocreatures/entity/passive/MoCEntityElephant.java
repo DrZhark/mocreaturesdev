@@ -12,6 +12,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.StepSound;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,7 +47,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         setTamed(false);
         setEdad(50);
         setSize(1.1F, 3F);
-        health = 40;
+        //health = 40;
         this.stepHeight = 1.0F;
 
         if (MoCreatures.isServer())
@@ -60,6 +61,12 @@ public class MoCEntityElephant extends MoCEntityAnimal {
                 setAdult(true);
             }
         }
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(40.0D); // setMaxHealth
     }
 
     @Override
@@ -78,7 +85,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             {
                 setType(2);
             }
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
         }
     }
 
@@ -124,27 +131,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "elephantafrican.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "elephantindian.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mammoth.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mammothsonghua.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "elephantindianpretty.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "elephantafrican.png";
-        }
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         switch (getType())
         {
@@ -376,7 +363,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             }
             MoCTools.playCustomSound(this, "eating", worldObj);
             temper += 2;
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && temper >= 10)
             {
                 setTamed(true);
@@ -393,7 +380,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
             }
             MoCTools.playCustomSound(this, "eating", worldObj);
             temper += 1;
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && temper >= 10)
             {
                 setTamed(true);
@@ -716,27 +703,27 @@ public class MoCEntityElephant extends MoCEntityAnimal {
         if (currentbiome.temperature <= 0.05F)
         {
             setType(3 + rand.nextInt(2));
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             return true;
         }
         if (s.equals("Desert") || s.equals("DesertHills"))
         {
             setType(1);
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             return true;
         }
 
         if (s.equals("Jungle") || s.equals("JungleHills"))
         {
             setType(2);
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             return true;
         }
 
         if (s.equals("Plains") || s.equals("ForestHills") || s.equals("Forest"))
         {
             setType(1 + rand.nextInt(2));
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             return true;
         }
 
@@ -1191,7 +1178,7 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

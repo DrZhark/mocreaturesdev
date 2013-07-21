@@ -25,7 +25,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
     {
         super(world);
         setSize(1.8F, 0.5F);
-        health = 10;
+        //health = 10;
         setEdad(50 + (rand.nextInt(50)));
         moveSpeed = 0.3F;
     }
@@ -53,22 +53,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mantray.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "stingray.png";
-        }
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         if (getType() == 2)
         {
@@ -150,7 +135,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

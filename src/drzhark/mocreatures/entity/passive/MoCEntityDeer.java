@@ -5,6 +5,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 
 public class MoCEntityDeer extends MoCEntityAnimal {
@@ -16,10 +17,16 @@ public class MoCEntityDeer extends MoCEntityAnimal {
         super(world);
         setEdad(75);
         setSize(0.9F, 1.3F);
-        health = 10;
+        //health = 10;
         setAdult(true);
         myMoveSpeed = 1.7F;
         setTamed(false);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(10.0D); // setMaxHealth
     }
 
     @Override
@@ -40,25 +47,6 @@ public class MoCEntityDeer extends MoCEntityAnimal {
             {
                 setType(3);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "deer.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "deerf.png";
-        case 3:
-            setAdult(false);
-            return MoCreatures.proxy.MODEL_TEXTURE + "deerb.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "deer.png";
         }
     }
 

@@ -30,7 +30,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setEdad(50 + rand.nextInt(50));
     }
 
@@ -45,37 +45,7 @@ public class MoCEntityFishy extends MoCEntityAquatic {
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy1.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy2.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy3.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy4.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy5.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy6.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy7.png";
-        case 8:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy8.png";
-        case 9:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy9.png";
-        case 10:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy10.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "fishy1.png";
-        }
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 6;
     }
@@ -172,9 +142,9 @@ public class MoCEntityFishy extends MoCEntityAquatic {
                 }
             }
 
-            if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
+            if (getIsTamed() && rand.nextInt(100) == 0 && func_110143_aJ() < getMaxHealth())
             {
-                this.health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
 
             if (!ReadyforParenting(this)) { return; }

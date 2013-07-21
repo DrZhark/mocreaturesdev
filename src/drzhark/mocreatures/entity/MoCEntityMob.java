@@ -14,6 +14,8 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,11 +33,22 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     protected int maxHealth;
     private PathEntity entitypath;
     public EntityLiving roper;
+    private boolean riderIsDisconnecting;
+    protected float moveSpeed;
 
     public MoCEntityMob(World world)
     {
         super(world);
         setTamed(false);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        selectType();
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(2.0D); // setAttackStrength
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     /**
@@ -46,13 +59,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     public void selectType()
     {
         setType(1);
-    }
-
-    @Override
-    public void initCreature()
-    {
-        selectType();
-        super.initCreature();
     }
 
     @Override
@@ -204,8 +210,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)));
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }
@@ -226,18 +231,18 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
 
         if (MoCreatures.isServer() && getIsTamed() && rand.nextInt(200) == 0)
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
         }
         moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -543,15 +548,6 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     }
 
     /**
-     * The new attack strength
-     */
-    @Override
-    public int getAttackStrength(Entity par1Entity)
-    {
-        return 2;
-    }
-
-    /**
      * Used to synchronize the attack animation between server and client
      * 
      * @param attackType
@@ -642,7 +638,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     public void setDead()
     {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && (getIsTamed()) && (health > 0)) { return; }
+        if (MoCreatures.isServer() && (getIsTamed()) && (func_110143_aJ() > 0)) { return; }
         super.setDead();
     }
 
@@ -735,5 +731,11 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     public float getAdjustedXOffset()
     {
         return 0F;
+    }
+
+    @Override
+    public void riderIsDisconnecting(boolean flag)
+    {
+        this.riderIsDisconnecting = true;
     }
 }

@@ -15,29 +15,27 @@ public class MoCEntityAnt extends MoCEntityInsect{
     public MoCEntityAnt(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "ant.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "ant.png";
     }
 
      @Override
-        protected void entityInit()
-        {
-            super.entityInit();
-            
-            dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // foundFood 0 = false, 1 = true
-            
+    protected void entityInit()
+    {
+        super.entityInit();
+        dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // foundFood 0 = false, 1 = true
+    }
 
-        }
+    public boolean getHasFood()
+    {
+        return (dataWatcher.getWatchableObjectByte(22) == 1);
+    }
 
-        public boolean getHasFood()
-        {
-            return (dataWatcher.getWatchableObjectByte(22) == 1);
-        }
+    public void setHasFood(boolean flag)
+    {
+        byte input = (byte) (flag ? 1 : 0);
+        dataWatcher.updateObject(22, Byte.valueOf(input));
+    }
 
-        public void setHasFood(boolean flag)
-        {
-            byte input = (byte) (flag ? 1 : 0);
-            dataWatcher.updateObject(22, Byte.valueOf(input));
-        }
     @Override
     public void onLivingUpdate()
     {

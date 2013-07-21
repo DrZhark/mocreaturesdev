@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -21,9 +22,9 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     public MoCEntityBoar(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "boara.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "boara.png";
         setSize(0.9F, 0.9F);
-        health = 10;
+        //health = 10;
         force = 1;
         attackRange = 1.0D;
         setEdad(50);
@@ -36,6 +37,12 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         {
             setAdult(true);
         }
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(10.0D); // setMaxHealth
     }
 
     @Override
@@ -53,21 +60,13 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    public String getTexture()
-    {
-        if (getIsAdult()) { return MoCreatures.proxy.MODEL_TEXTURE + "boara.png"; }
-        return MoCreatures.proxy.MODEL_TEXTURE + "boarb.png";
-
-    }
-
-    @Override
     protected boolean canDespawn()
     {
         return true;
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

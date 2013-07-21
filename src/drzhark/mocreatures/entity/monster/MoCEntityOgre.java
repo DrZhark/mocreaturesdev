@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.monster;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -24,9 +25,15 @@ public class MoCEntityOgre extends MoCEntityMob{
     {
         super(world);
         setSize(1.9F, 3F);
-        health = 35;
+        //health = 35;
         isImmuneToFire = false;
         frequencyA = 30;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(3.0D); // setAttackStrength
     }
 
     @Override
@@ -35,7 +42,7 @@ public class MoCEntityOgre extends MoCEntityMob{
         if (worldObj.provider.isHellWorld)
         {
             setType(rand.nextInt(2)+3);
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             this.isImmuneToFire = true;
 
         }else
@@ -60,32 +67,13 @@ public class MoCEntityOgre extends MoCEntityMob{
                     setType(rand.nextInt(2)+1);
                 }
 
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
         }
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1: 
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ogregreen.png";
-        case 3: 
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ogrered.png";
-        case 5: 
-        case 6: 
-            return MoCreatures.proxy.MODEL_TEXTURE + "ogreblue.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ogregreen.png";
-        }
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         if (getType() > 4)
         {
@@ -105,7 +93,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -239,7 +227,7 @@ public class MoCEntityOgre extends MoCEntityMob{
                     float f = getBrightness(1.0F);
                     if ((f > 0.5F) && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && ((rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F)))
                     {
-                        health -= 5;
+                        this.setEntityHealth(func_110143_aJ() - 5);
                     }
                 }
             }
@@ -281,12 +269,6 @@ public class MoCEntityOgre extends MoCEntityMob{
         }
     }
 
-    @Override
-    public int getAttackStrength(Entity par1Entity)
-    {
-        return 3;
-    }
-    
     @Override
     public void performAnimation(int animationType)
     {

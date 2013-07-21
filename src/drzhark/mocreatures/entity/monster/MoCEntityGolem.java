@@ -34,9 +34,9 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     public MoCEntityGolem(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "golemt.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "golemt.png";
         setSize(1.5F, 4F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         initGolemCubes();
     }
 
@@ -103,15 +103,15 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
 
             if (getGolemState() > 1 && entityToAttack != null && rand.nextInt(20) == 0)
             {
-                if (health >= 30)
+                if (func_110143_aJ() >= 30)
                 {
                     setGolemState(2);
                 }
-                if (health < 30 && health >= 10)
+                if (func_110143_aJ() < 30 && func_110143_aJ() >= 10)
                 {
                     setGolemState(3); //more dangerous
                 }
-                if (health < 10)
+                if (func_110143_aJ() < 10)
                 {
                     setGolemState(4); //dying
                 }
@@ -244,10 +244,10 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             {
                 MoCTools.playCustomSound(this, "golemattach", worldObj, 3F);
                 int h = worldObj.difficultySetting;
-                health += h;
-                if (this.health > getMaxHealth())
+                this.setEntityHealth(func_110143_aJ() + h);
+                if (func_110143_aJ() > getMaxHealth())
                 {
-                    this.health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                 }
                 saveGolemCube(slot, myBlock);
             }
@@ -396,7 +396,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (getGolemState() == 4) { return false; }
 
@@ -1032,28 +1032,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     }
 
     /**
-     * Used for the power texture used on the golem
-     * 
-     * @return
-     */
-    public String getEffectTexture()
-    {
-        switch (getGolemState())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "golemeffect1.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "golemeffect2.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "golemeffect3.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "golemeffect4.png";
-        default:
-            return null;
-        }
-    }
-
-    /**
      * Used for the particle FX
      * 
      * @param i
@@ -1111,7 +1089,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 50;
     }

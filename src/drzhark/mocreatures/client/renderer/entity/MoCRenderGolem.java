@@ -1,12 +1,18 @@
 package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 
@@ -14,6 +20,12 @@ import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 public class MoCRenderGolem extends MoCRenderMoC {
 
     private final ModelBase MoCModelG = new MoCModelGolem();
+    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemt.png");
+    private static final ResourceLocation TEXTURE_EFFECT_1 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect1.png");
+    private static final ResourceLocation TEXTURE_EFFECT_2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect2.png");
+    private static final ResourceLocation TEXTURE_EFFECT_3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect3.png");
+    private static final ResourceLocation TEXTURE_EFFECT_4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect4.png");
 
     public MoCRenderGolem(ModelBase modelbase, float f)
     {
@@ -27,7 +39,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
     {
         boolean depth = true;
 
-        String effectTexture = par1Entity.getEffectTexture();
+        ResourceLocation effectTexture = getEffectTexture(par1Entity);
         if (effectTexture != null)//(!effectTexture.isEmpty())//(par1Entity.getPowered())
         {
             if (depth)
@@ -43,7 +55,8 @@ public class MoCRenderGolem extends MoCRenderMoC {
             {
                 float var4 = (float) par1Entity.ticksExisted + par3;
                 //this.loadTexture("/armor/golemeffect.png");
-                this.loadTexture(effectTexture);
+                //this.loadTexture(effectTexture);
+                textureManager.func_110577_a(effectTexture);
                 GL11.glMatrixMode(GL11.GL_TEXTURE);
                 GL11.glLoadIdentity();
                 float var5 = var4 * 0.01F;
@@ -76,28 +89,34 @@ public class MoCRenderGolem extends MoCRenderMoC {
      * Queries whether should render the specified pass or not.
      */
     @Override
-    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
+    protected int shouldRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3)
     {
         return this.renderGPassModel((MoCEntityGolem) par1EntityLiving, par2, par3);
     }
 
-   /* @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return TEXTURE_DEFAULT;
+    }
+
+    /**
+     * Used for the power texture used on the golem
+     * 
+     * @return
+     */
+    public ResourceLocation getEffectTexture(MoCEntityGolem golem)
     {
-        MoCEntityGolem mocreature = (MoCEntityGolem) entityliving;
-        //adjustTilt(mocreature);
-        super.preRenderCallback(entityliving, f);
-
-    }*/
-
-    /*protected void adjustTilt(MoCEntityGolem mocreature)
-    {
-        int i = mocreature.tiltOffset();
-
-        if (i != 0)
+        switch (golem.getGolemState())
         {
-            GL11.glRotatef((float) i * 10F, 0F, 0F, -1F);
+            case 1:
+                return TEXTURE_EFFECT_1;
+            case 2:
+                return TEXTURE_EFFECT_2;
+            case 3:
+                return TEXTURE_EFFECT_3;
+            case 4:
+                return TEXTURE_EFFECT_4;
+            default:
+                return null;
         }
-    }*/
-
+    }
 }

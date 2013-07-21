@@ -14,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
@@ -35,7 +36,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         super(world);
         setEdad(35);
         setSize(0.9F, 1.3F);
-        health = 25;
+        //health = 25;
         if (rand.nextInt(4) == 0)
         {
             setAdult(false);
@@ -47,6 +48,13 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         }
         setHungry(true);
         setTamed(false);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
     }
 
     /**
@@ -84,7 +92,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
                 setType(5);
             }
 
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
         }
 
         
@@ -115,8 +123,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         }
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         switch (getType())
         {
@@ -261,31 +268,6 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         }
     }
 
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "lionf.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "lionf.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "panther.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "cheetah.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "tiger.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "leopard.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "tigerw.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "lionf.png";
-        }
-    }
-
     /**
      * Initializes datawatchers for entity. Each datawatcher is used to sync
      * server data to client.
@@ -362,7 +344,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -524,7 +506,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
                     continue;
                 }
                 MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity1;
-                if ((getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7) || ((getType() != 2) && (getType() == entitybigcat.getType())) || ((getType() == 2) && (entitybigcat.getType() == 1)) || (health < entitybigcat.health))
+                if ((getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7) || ((getType() != 2) && (getType() == entitybigcat.getType())) || ((getType() == 2) && (entitybigcat.getType() == 1)) || (this.func_110143_aJ() < entitybigcat.func_110143_aJ()))
                 {
                     continue;
                 }
@@ -640,7 +622,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
         }
         if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.porkRaw.itemID || itemstack.itemID == Item.fishRaw.itemID))
         {
-            health = getMaxHealth();
+        	this.setEntityHealth(getMaxHealth());
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHungry(false);
         }
@@ -677,9 +659,10 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
 
         super.onLivingUpdate();
 
-        if ((rand.nextInt(300) == 0) && (health <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
+        if ((rand.nextInt(300) == 0) && (this.func_110143_aJ() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
         {
-            health++;
+            //health++;
+            this.setEntityHealth(func_110143_aJ() + 1);
         }
         if (!getIsAdult() && (rand.nextInt(250) == 0))
         {
@@ -719,7 +702,7 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
                 if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                 {
                     entityitem.setDead();
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                     if (!getIsAdult() && (getEdad() < 80))
                     {
                         setEaten(true);

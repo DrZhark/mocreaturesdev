@@ -21,9 +21,9 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     public MoCEntityWerewolf(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "werehuman.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "werehuman.png";
         setSize(0.9F, 1.6F);
-        health = 15;
+        //health = 15;
         transforming = false;
         tcounter = 0;
         setHumanForm(true);
@@ -59,41 +59,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             {
                 setType(4);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-        if (this.getIsHumanForm()) { return MoCreatures.proxy.MODEL_TEXTURE + "wereblank.png"; }
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfblack.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfbrown.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolftimber.png";
-        case 4:
-            if (!MoCreatures.proxy.getAnimateTextures()) { return MoCreatures.proxy.MODEL_TEXTURE + "wolffire1.png"; }
-            textCounter++;
-            if (textCounter < 10)
-            {
-                textCounter = 10;
-            }
-            if (textCounter > 39)
-            {
-                textCounter = 10;
-            }
-            String NTA = MoCreatures.proxy.MODEL_TEXTURE + "wolffire";
-            String NTB = "" + textCounter;
-            NTB = NTB.substring(0, 1);
-            String NTC = ".png";
-
-            return NTA + NTB + NTC;
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfbrown.png";
         }
     }
 
@@ -155,7 +120,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         Entity entity = damagesource.getEntity();
         if (!getIsHumanForm() && (entity != null) && (entity instanceof EntityPlayer))
@@ -223,7 +188,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }
@@ -455,13 +420,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         if (getIsHumanForm())
         {
             setHumanForm(false);
-            health = 40;
+            this.setEntityHealth(40);
             transforming = false;
         }
         else
         {
             setHumanForm(true);
-            health = 15;
+            this.setEntityHealth(15);
             transforming = false;
         }
     }

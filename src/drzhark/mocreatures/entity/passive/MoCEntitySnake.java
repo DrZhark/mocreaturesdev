@@ -45,7 +45,7 @@ public class MoCEntitySnake extends MoCEntityAnimal {
     {
         super(world);
         setSize(1.4F, 0.5F);
-        health = 10;
+        //health = 10;
         bodyswing = 2F;
         movInt = rand.nextInt(10);
         setEdad(50 + rand.nextInt(50));
@@ -103,33 +103,7 @@ public class MoCEntitySnake extends MoCEntityAnimal {
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-            case 1:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake1.png";
-            case 2:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake2.png";
-            case 3:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake3.png";
-            case 4:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake4.png";
-            case 5:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake5.png";
-            case 6:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake6.png";
-            case 7:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake7.png";
-            case 8:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake8.png";
-            default:
-                return MoCreatures.proxy.MODEL_TEXTURE + "snake1.png";
-        }
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 10;
     }
@@ -618,7 +592,7 @@ public class MoCEntitySnake extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
 
         if (getType() < 3) { return super.attackEntityFrom(damagesource, i); }

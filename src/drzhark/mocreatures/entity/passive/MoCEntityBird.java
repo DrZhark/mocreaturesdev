@@ -32,7 +32,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
     {
         super(world);
         setSize(0.4F, 0.3F);
-        health = 8;
         isCollidedVertically = true;
         wingb = 0.0F;
         wingc = 0.0F;
@@ -76,30 +75,6 @@ public class MoCEntityBird extends MoCEntityAnimal {
             {
                 setType(2);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdwhite.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdblack.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdgreen.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdblue.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdyellow.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdred.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "birdblue.png";
         }
     }
 
@@ -490,7 +465,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && (health > 0))
+        if (MoCreatures.isServer() && getIsTamed() && (this.func_110143_aJ() > 0))
         {
             return;
         }
@@ -576,8 +551,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
 
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 8;
     }

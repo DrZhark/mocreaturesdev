@@ -15,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -253,7 +254,8 @@ public class MoCTools {
             
             if (entityToSpawn != null)
             {
-                entityToSpawn.initCreature();
+            	EntityLivingData entitylivingdata = null;
+                entityToSpawn.func_110161_a(entitylivingdata);
                 entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
@@ -399,7 +401,7 @@ public class MoCTools {
             if (entity instanceof EntityLiving)
             {
                 EntityLiving twisted = (EntityLiving) entity;
-                if (twisted.deathTime > 0 && twisted.ridingEntity == null && twisted.getHealth() > 0)
+                if (twisted.deathTime > 0 && twisted.ridingEntity == null && twisted.func_110143_aJ() > 0)
                 {
                     twisted.deathTime = 0;
                 }
@@ -1530,7 +1532,7 @@ public class MoCTools {
             {
                 //TODO change the 21 to the list given based on the class of the creature
                 nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
-                nbtt.setInteger("Health", entity.getHealth());
+                nbtt.setFloat("Health", entity.func_110143_aJ());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());
@@ -1567,7 +1569,7 @@ public class MoCTools {
             try
             {
                 nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
-                nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
+                nbtt.setFloat("Health", ((EntityLiving)entity).func_110143_aJ());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());

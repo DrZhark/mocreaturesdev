@@ -423,7 +423,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
      * @param dimension
      * @param health
      */
-    public static void sendHealth(int ID, int dimension, int health)
+    public static void sendHealth(int ID, int dimension, float health)
     {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
@@ -431,7 +431,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
         {
             data.writeInt(Integer.valueOf(12));
             data.writeInt(Integer.valueOf(ID));
-            data.writeInt(Integer.valueOf(health));
+            data.writeFloat(Float.valueOf(health));
         }
         catch (IOException e)
         {

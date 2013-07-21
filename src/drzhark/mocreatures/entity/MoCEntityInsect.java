@@ -21,7 +21,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     {
         super(world);
         setSize(0.2F, 0.2F);
-        health = 2;
+        //health = 2;
     }
 
     @Override
@@ -150,6 +150,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     public boolean getCanSpawnHere()
     {
         return super.getCanSpawnHereAnimal()  && super.getCanSpawnHereCreature();
+    }
+
+    public float getMaxHealth()
+    {
+        return 2;
     }
 
     @Override

@@ -118,10 +118,10 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 
 public class MoCProxy implements IGuiHandler {
 
-    public static String ARMOR_TEXTURE = "/mods/mocreatures/textures/armor/";
-    public static String MODEL_TEXTURE = "/mods/mocreatures/textures/models/";
-    public static String GUI_TEXTURE = "/mods/mocreatures/textures/gui/";
-    public static String MISC_TEXTURE = "/mods/mocreatures/textures/misc/";
+    public static String ARMOR_TEXTURE = "textures/armor/";
+    public static String MODEL_TEXTURE = "textures/models/";
+    public static String GUI_TEXTURE = "textures/gui/";
+    public static String MISC_TEXTURE = "textures/misc/";
 
     //CONFIG VARIABLES
     public boolean useDefaultModEntityMappings;

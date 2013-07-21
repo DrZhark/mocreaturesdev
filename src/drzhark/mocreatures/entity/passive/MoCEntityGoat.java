@@ -5,6 +5,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,6 +31,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     private int tailcount; // 90 to -45
     private int earcount; // 20 to 40 default = 30
     private int eatcount;
+    private float moveSpeed;
 
     // TODO
     /*
@@ -39,7 +41,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     {
         super(world);
         setSize(1.4F, 0.9F);
-        health = 12;
+        //health = 12;
 
         setEdad(70);
     }
@@ -50,6 +52,13 @@ public class MoCEntityGoat extends MoCEntityAnimal {
         super.entityInit();
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isUpset - 0 false 1 true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isCharging - 0 false 1 true
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(12.0D); // setMaxHealth
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(this.moveSpeed); // setMoveSpeed
     }
 
     public boolean getUpset()
@@ -123,35 +132,9 @@ public class MoCEntityGoat extends MoCEntityAnimal {
 
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 12;
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat1.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat2.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat3.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat4.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat5.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat6.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat1.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "goat1.png";
-        }
     }
 
     public void calm()
@@ -458,7 +441,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -604,7 +587,7 @@ public class MoCEntityGoat extends MoCEntityAnimal {
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 }
-                this.health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
                 worldObj.playSoundAtEntity(this, "goateating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
 
             }

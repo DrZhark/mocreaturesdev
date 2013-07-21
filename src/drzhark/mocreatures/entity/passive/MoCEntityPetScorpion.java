@@ -9,6 +9,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -32,7 +33,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     {
         super(world);
         setSize(1.4F, 0.9F);
-        health = 15;
+        //health = 15;
         poisontimer = 0;
         setAdult(false);
         setEdad(20);
@@ -47,33 +48,6 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
         if (getType() == 0)
         {
             setType(1);
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        boolean saddle = getIsRideable();
-        switch (getType())
-        {
-            case 1:
-                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png"; }
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirtsaddle.png";
-            case 2:
-                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncave.png"; }
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpioncavesaddle.png";
-            case 3:
-                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnether.png"; }
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionnethersaddle.png";
-            case 4:
-                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrost.png"; }
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionfrostsaddle.png";
-            case 5:
-                if (!saddle) { return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundead.png"; }
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpionundeadsaddle.png";
-            default:
-                return MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png";
         }
     }
 
@@ -152,7 +126,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }
@@ -228,7 +202,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -468,7 +442,7 @@ public class MoCEntityPetScorpion extends MoCEntityAnimal {
             {
                 entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
             }
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             if (MoCreatures.isServer())
             {
                 int i = getType() + 40;

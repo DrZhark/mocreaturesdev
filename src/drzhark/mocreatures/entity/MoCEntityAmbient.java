@@ -7,7 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
@@ -35,13 +37,22 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCreature//, IEntityAdditionalSpawnData
 {
-	private boolean riderIsDisconnecting;
-	
+    protected float moveSpeed;
+    private boolean riderIsDisconnecting;
+
     public MoCEntityAmbient(World world)
     {
         super(world);
         setTamed(false);
         setAdult(true);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        selectType();
+        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     /**
@@ -54,13 +65,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
         setType(1);
     }
 
-    @Override
-    public void initCreature()
-    {
-        selectType();
-        super.initCreature();
-    }
-    
+
     @Override
     public EntityAgeable createChild(EntityAgeable var1)
     {
@@ -461,8 +466,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
         }
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }
@@ -1069,7 +1073,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
@@ -1077,7 +1081,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -1324,7 +1328,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
             return true;
         }
@@ -1365,11 +1369,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
             return true;
         else return false;
     }
-    
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

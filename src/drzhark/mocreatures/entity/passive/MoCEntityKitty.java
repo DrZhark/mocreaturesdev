@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,10 +45,16 @@ public class MoCEntityKitty extends MoCEntityAnimal {
         setEdad(40);
         setKittyState(1);
         kittytimer = 0;
-        health = 15;
+        //health = 15;
         madtimer = rand.nextInt(5);
 
         foundTree = false;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(15.0D); // setMaxHealth
     }
 
     @Override
@@ -92,37 +99,9 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycata.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycatb.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycatc.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycatd.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycate.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycatf.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycatg.png";
-        case 8:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycath.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "pussycata.png";
-        }
     }
 
     @Override
@@ -225,7 +204,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -573,7 +552,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             changeKittyState(3);
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
 
             if (MoCreatures.isServer())
             {
@@ -588,7 +567,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             changeKittyState(9);
             return true;
         }
@@ -616,7 +595,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            health = getMaxHealth();
+            this.setEntityHealth(getMaxHealth());
             changeKittyState(7);
             return true;
         }
@@ -813,18 +792,18 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                     MoCEntityKittyBed entitykittybed1 = (MoCEntityKittyBed) ridingEntity;
                     if ((entitykittybed1 != null) && !entitykittybed1.getHasMilk() && !entitykittybed1.getHasFood())
                     {
-                        health = getMaxHealth();
+                        this.setEntityHealth(getMaxHealth());
                         changeKittyState(5);
                     }
                 }
                 else
                 {
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                     changeKittyState(5);
                 }
                 if (rand.nextInt(2500) == 0)
                 {
-                    health = getMaxHealth();
+                    this.setEntityHealth(getMaxHealth());
                     changeKittyState(7);
                 }
                 break;
@@ -1418,7 +1397,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && (getKittyState() > 2) && (health > 0))
+        if (MoCreatures.isServer() && (getKittyState() > 2) && (func_110143_aJ() > 0))
         {
             return;
         }

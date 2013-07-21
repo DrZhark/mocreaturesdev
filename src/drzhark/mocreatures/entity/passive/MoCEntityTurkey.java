@@ -15,12 +15,12 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
     {
         super(world);
         setSize(0.8F, 1.0F);
-        health = 6;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "turkey.png";
+        //health = 6;
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "turkey.png";
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 6;
     }

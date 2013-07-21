@@ -25,9 +25,9 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     public MoCEntityTurtle(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "turtle.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "turtle.png";
         setSize(0.6F, 0.4F);
-        health = 15;
+        //health = 15;
         setAdult(false);
         setEdad(110);
     }
@@ -40,39 +40,8 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isUpsideDown - 0 false 1 true
     }
 
-    /**
-     * Overridden for the dynamic nightmare texture.
-     */
     @Override
-    public String getTexture()
-    {
-        String tempText = MoCreatures.proxy.MODEL_TEXTURE + "turtle.png";
-
-        if (getName().equals("Donatello") || getName().equals("donatello"))
-        {
-            tempText = MoCreatures.proxy.MODEL_TEXTURE + "turtled.png";
-        }
-
-        if (getName().equals("Leonardo") || getName().equals("leonardo"))
-        {
-            tempText = MoCreatures.proxy.MODEL_TEXTURE + "turtlel.png";
-        }
-
-        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael"))
-        {
-            tempText = MoCreatures.proxy.MODEL_TEXTURE + "turtler.png";
-        }
-
-        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo") || getName().equals("michaelangelo"))
-        {
-            tempText = MoCreatures.proxy.MODEL_TEXTURE + "turtlem.png";
-        }
-
-        return tempText;
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 15;
     }
@@ -260,7 +229,7 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
 
         if (getIsHiding())

@@ -1,17 +1,27 @@
 package drzhark.mocreatures.client.renderer.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderScorpion extends MoCRenderMoC {
+
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
+    private static final ResourceLocation TEXTURE_CAVE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
+    private static final ResourceLocation TEXTURE_NETHER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
+    private static final ResourceLocation TEXTURE_FROST = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
+
     public MoCRenderScorpion(MoCModelScorpion modelbase, float f)
     {
         super(modelbase, f);
@@ -25,7 +35,7 @@ public class MoCRenderScorpion extends MoCRenderMoC {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityScorpion entityscorpion = (MoCEntityScorpion) entityliving;
 
@@ -86,4 +96,24 @@ public class MoCRenderScorpion extends MoCRenderMoC {
         GL11.glScalef(f, f, f);
     }
 
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return this.getTexture((MoCEntityScorpion)par1Entity);
+    }
+
+    protected ResourceLocation getTexture(MoCEntityScorpion scorpion)
+    {
+        switch (scorpion.getType())
+        {
+        case 1:
+            return TEXTURE_DEFAULT;
+        case 2:
+            return TEXTURE_CAVE;
+        case 3:
+            return TEXTURE_NETHER;
+        case 4:
+            return TEXTURE_FROST;
+        default:
+            return TEXTURE_DEFAULT;
+        }
+    }
 }

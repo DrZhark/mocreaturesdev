@@ -29,9 +29,8 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
     {
         super(world);
         setSize(0.6F, 0.3F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
-        
     }
 
     @Override
@@ -44,27 +43,9 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 8;
-    }
-    
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mediumfish_salmon.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mediumfish_cod.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mediumfish_bass.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "mediumfish_salmon.png";
-        }
-        
     }
 
     @Override
@@ -107,9 +88,9 @@ public class MoCEntityMediumFish extends MoCEntityAquatic{
                 }
             }
 
-            if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
+            if (getIsTamed() && rand.nextInt(100) == 0 && func_110143_aJ() < getMaxHealth())
             {
-                this.health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
         }
         if (!this.isInsideOfMaterial(Material.water))

@@ -7,6 +7,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,8 +32,8 @@ public class MoCEntityKomodo extends MoCEntityAnimal
     {
         super(world);
         setSize(1.6F, 0.5F);
-        health = 20;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "komododragon.png";
+        //health = 20;
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "komododragon.png";
         setTamed(false);
         setAdult(false);
         this.stepHeight = 1.0F;
@@ -54,6 +55,12 @@ public class MoCEntityKomodo extends MoCEntityAnimal
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // rideable: 0 nothing, 1 saddle
     }
 
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+    }
+
     public void setRideable(boolean flag)
     {
         byte input = (byte) (flag ? 1 : 0);
@@ -72,7 +79,7 @@ public class MoCEntityKomodo extends MoCEntityAnimal
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }
@@ -350,7 +357,7 @@ public class MoCEntityKomodo extends MoCEntityAnimal
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

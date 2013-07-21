@@ -10,13 +10,11 @@ public class MoCEntityHellRat extends MoCEntityRat {
     public MoCEntityHellRat(World world)
     {
         super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png";
         setSize(0.7F, 0.7F);
-        health = 20;
+        //health = 20;
         isImmuneToFire = true;
     }
-
-    private int textCounter;
 
     @Override
     public void selectType()
@@ -24,31 +22,8 @@ public class MoCEntityHellRat extends MoCEntityRat {
         setType(4);
     }
 
-    /**
-     * Overridden for the dynamic nightmare texture.
-     */
     @Override
-    public String getTexture()
-    {
-        if (rand.nextInt(2) == 0)
-        {
-            textCounter++;
-        }
-        if (textCounter < 10)
-        {
-            textCounter = 10;
-        }
-        if (textCounter > 29)
-        {
-            textCounter = 10;
-        }
-        String textNumber = "" + textCounter;
-        textNumber = textNumber.substring(0, 1);
-        return MoCreatures.proxy.MODEL_TEXTURE + "hellrat" + textNumber + ".png";
-    }
-
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }

@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +21,13 @@ public class MoCEntityRat extends MoCEntityMob {
     {
         super(world);
         setSize(0.5F, 0.5F);
-        health = 10;
+        //health = 10;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(1.0D); // setAttackStrength
     }
 
     @Override
@@ -45,23 +52,6 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ratb.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ratbl.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ratw.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "ratb.png";
-        }
-    }
-
-    @Override
     protected void attackEntity(Entity entity, float f)
     {
         float f1 = getBrightness(1.0F);
@@ -78,7 +68,7 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {
@@ -165,7 +155,7 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 10;
     }
@@ -186,11 +176,5 @@ public class MoCEntityRat extends MoCEntityMob {
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeEntityToNBT(nbttagcompound);
-    }
-
-    @Override
-    public int getAttackStrength(Entity par1Entity)
-    {
-        return 1;
     }
 }

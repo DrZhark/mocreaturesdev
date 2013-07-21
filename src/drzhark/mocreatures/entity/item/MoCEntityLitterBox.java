@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +24,13 @@ public class MoCEntityLitterBox extends EntityLiving {
     {
         super(world);
         setSize(1.0F, 0.3F);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
     @Override
@@ -249,8 +256,7 @@ public class MoCEntityLitterBox extends EntityLiving {
         setUsedLitter(nbttagcompound.getBoolean("UsedLitter"));
     }
 
-    @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 20;
     }

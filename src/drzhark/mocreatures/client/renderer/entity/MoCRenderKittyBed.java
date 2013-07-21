@@ -1,7 +1,11 @@
 package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -18,10 +22,10 @@ import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 public class MoCRenderKittyBed extends RenderLiving {
 
     public MoCModelKittyBed kittybed;
-
     private int mycolor;
-
+    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
     public static float fleeceColorTable[][] = { { 1.0F, 1.0F, 1.0F }, { 0.95F, 0.7F, 0.2F }, { 0.9F, 0.5F, 0.85F }, { 0.6F, 0.7F, 0.95F }, { 0.9F, 0.9F, 0.2F }, { 0.5F, 0.8F, 0.1F }, { 0.95F, 0.7F, 0.8F }, { 0.3F, 0.3F, 0.3F }, { 0.6F, 0.6F, 0.6F }, { 0.3F, 0.6F, 0.7F }, { 0.7F, 0.4F, 0.9F }, { 0.2F, 0.4F, 0.8F }, { 0.5F, 0.4F, 0.3F }, { 0.4F, 0.5F, 0.2F }, { 0.8F, 0.3F, 0.3F }, { 0.1F, 0.1F, 0.1F } };
+    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png");
 
     public MoCRenderKittyBed(MoCModelKittyBed modelkittybed, MoCModelKittyBed2 modelkittybed2, float f)
     {
@@ -31,7 +35,7 @@ public class MoCRenderKittyBed extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
         MoCEntityKittyBed entitykittybed = (MoCEntityKittyBed) entityliving;
         mycolor = entitykittybed.getSheetColor();
@@ -39,28 +43,25 @@ public class MoCRenderKittyBed extends RenderLiving {
         kittybed.hasFood = entitykittybed.getHasFood();
         kittybed.pickedUp = entitykittybed.getPickedUp();
         kittybed.milklevel = entitykittybed.milklevel;
-        //if(MoCClientProxy.mc.isMultiplayerWorld() && (entityliving.ridingEntity == MoCClientProxy.mc.thePlayer))
-        /*if (entityliving.ridingEntity == MoCClientProxy.mc.thePlayer)
-        {
-
-            GL11.glTranslatef(0.0F, 1.1F, 0.0F);
-
-        }*/
     }
 
-    protected int setWoolColorAndRender(EntityLiving entityliving, int i, float f)
+    protected int setWoolColorAndRender(EntityLivingBase entityliving, int i, float f)
     {
-        loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png");
+        //loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png");
+        textureManager.func_110577_a(TEXTURE_DEFAULT);
         float f1 = 0.35F;
         int j = MoCTools.colorize(mycolor);
         GL11.glColor3f(f1 * fleeceColorTable[j][0], f1 * fleeceColorTable[j][1], f1 * fleeceColorTable[j][2]);
-        return 1;//true;
+        return 1;
     }
 
     @Override
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
     {
         return setWoolColorAndRender(entityliving, i, f);
     }
 
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return TEXTURE_DEFAULT;
+    }
 }

@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -13,10 +14,16 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     {
         super(world);
         isCollidedVertically = false;
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "wraith.png";
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "wraith.png";
         setSize(1.5F, 1.5F);
         isImmuneToFire = false;
-        health = 10;
+        //health = 10;
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
     }
 
     public boolean d2()
@@ -73,7 +80,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 10;
     }
@@ -82,12 +89,5 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     public float getMoveSpeed()
     {
         return 1.3F;
-    }
-
-    @Override
-    public int getAttackStrength(Entity par1Entity)
-    {
-        if (worldObj.difficultySetting == 1) { return 2; }
-        return 3;
     }
 }

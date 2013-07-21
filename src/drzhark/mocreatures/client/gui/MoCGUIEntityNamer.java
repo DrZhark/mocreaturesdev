@@ -2,8 +2,10 @@ package drzhark.mocreatures.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -11,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.entity.MoCIMoCreature;
 
@@ -23,6 +26,8 @@ public class MoCGUIEntityNamer extends GuiScreen {
     private String NameToSet;
     protected int xSize;
     protected int ySize;
+    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static final ResourceLocation TEXTURE_MOCNAME = new ResourceLocation("mocreatures", MoCreatures.proxy.GUI_TEXTURE + "mocname.png");
 
     public MoCGUIEntityNamer(MoCIMoCreature mocanimal, String s)
     {
@@ -68,7 +73,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     {
         drawDefaultBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(MoCreatures.proxy.GUI_TEXTURE + "mocname.png");
+        textureManager.func_110577_a(TEXTURE_MOCNAME);
         int l = (width - xSize) / 2;
         int i1 = (height - (ySize + 16)) / 2;
         drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);

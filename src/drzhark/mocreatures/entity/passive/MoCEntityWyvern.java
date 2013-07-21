@@ -36,7 +36,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
     {
         super(world);
         setSize(1.9F, 1.7F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setAdult(false);
         this.stepHeight = 1.0F;
 
@@ -151,34 +151,6 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
     public boolean isNotScared()
     {
         return true;
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wyvernjungle.png";
-        case 2:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernmix.png";
-        case 3:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernsand.png";
-        case 4:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernsun.png";
-        case 5:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernmother.png";
-        case 6:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernundead.png";
-        case 7:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernlight.png";
-        case 8:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyverndark.png";
-        /*case 9:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernnether.png";*/
-        default:
-            return  MoCreatures.proxy.MODEL_TEXTURE +"wyvernsun.png";
-        }
     }
 
     @Override
@@ -534,7 +506,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         if (getType() >= 5)
         {
@@ -626,7 +598,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
         if (super.attackEntityFrom(damagesource, i))
         {

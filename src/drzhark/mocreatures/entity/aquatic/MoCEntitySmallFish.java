@@ -29,7 +29,7 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
     {
         super(world);
         setSize(0.3F, 0.3F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
         
     }
@@ -45,34 +45,9 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
     }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 4;
-    }
-
-    @Override
-    public String getTexture()
-    {
-
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_anchovy.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_angelfish.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_angler.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_clownfish.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_goldfish.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_hippotang.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_manderin.png";
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "smallfish_clownfish.png";
-        }
     }
 
     @Override
@@ -120,9 +95,9 @@ public class MoCEntitySmallFish extends MoCEntityAquatic{
                    MoCTools.runLikeHell(this, entityliving);
                 }
             }
-            if (getIsTamed() && rand.nextInt(100) == 0 && this.health < getMaxHealth())
+            if (getIsTamed() && rand.nextInt(100) == 0 && func_110143_aJ() < getMaxHealth())
             {
-                this.health = getMaxHealth();
+                this.setEntityHealth(getMaxHealth());
             }
         }
         if (!this.isInsideOfMaterial(Material.water))

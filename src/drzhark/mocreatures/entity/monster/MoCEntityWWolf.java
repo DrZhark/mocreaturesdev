@@ -11,6 +11,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
@@ -19,15 +20,22 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityWWolf extends MoCEntityMob {
-    public MoCEntityWWolf(World world)
-    {
-        super(world);
-        texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
-        setSize(0.9F, 1.3F);
-    }
 
     public int mouthCounter;
     public int tailCounter;
+
+    public MoCEntityWWolf(World world)
+    {
+        super(world);
+        //texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
+        setSize(0.9F, 1.3F);
+    }
+
+    protected void func_110147_ax()
+    {
+        super.func_110147_ax();
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
+    }
 
     /**
      * Sets the type and texture of a BigCat if not set already.
@@ -55,27 +63,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
             {
                 setType(4);
             }
-        }
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfblack.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolftimber.png"; //snow wolf
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfdark.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfbright.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
         }
     }
 
@@ -227,12 +214,5 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public int getMaxSpawnedInChunk()
     {
         return 6;
-    }
-
-    @Override
-    public int getAttackStrength(Entity par1Entity)
-    {
-        if (worldObj.difficultySetting == 1) { return 2; }
-        return 3;
     }
 }

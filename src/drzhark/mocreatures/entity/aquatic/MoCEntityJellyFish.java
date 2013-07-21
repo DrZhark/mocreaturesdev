@@ -26,7 +26,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     {
         super(world);
         setSize(0.3F, 0.5F);
-        health = getMaxHealth();
+        //health = getMaxHealth();
         setEdad(50 + (rand.nextInt(50)));
     }
 
@@ -83,7 +83,7 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
       }
 
     @Override
-    public int getMaxHealth()
+    public float getMaxHealth()
     {
         return 6;
     }
@@ -92,41 +92,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     public float getMoveSpeed()
     {
         return 0.1F;
-    }
-
-    @Override
-    public String getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfisha.png";
-        case 2:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishb.png";
-        case 3:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishc.png";
-        case 4:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishd.png";
-        case 5:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishe.png";
-        case 6:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishf.png";
-        case 7:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishg.png";
-        case 8:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishh.png";
-        case 9:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishi.png";
-        case 10:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishj.png";
-        case 11:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishk.png";
-        case 12:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfishl.png";
-
-        default:
-            return MoCreatures.proxy.MODEL_TEXTURE + "jellyfisha.png";
-        }
     }
 
     @Override
