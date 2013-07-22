@@ -1290,6 +1290,13 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIslandShore");
 
         /********** NETHER **********/
+        // BOP
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Boneyard");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Corrupted");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Nether");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Phantasmagoric Inferno");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Undergarden");
+
         // BWG
         defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Hell");
 
