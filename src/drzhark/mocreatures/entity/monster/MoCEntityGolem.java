@@ -643,7 +643,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     public void saveGolemCube(byte slot, byte value)
     {
         golemCubes[slot] = value;
-        if (MoCreatures.isServer())
+        if (MoCreatures.isServer() && MoCreatures.proxy.worldInitDone) // Fixes CMS initialization during world load
         {
             MoCServerPacketHandler.sendTwoBytes(this.entityId, this.worldObj.provider.dimensionId, slot, value);
         }

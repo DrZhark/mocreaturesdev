@@ -55,17 +55,11 @@ public class MoCEventHooks {
             }
         }
     }
-   /* @ForgeSubscribe
+    @ForgeSubscribe
     public void onWorldLoading(WorldEvent.Load event)
     {
-        //String dimensionName = event.world.provider.getDimensionName();
-       // event.world.getSaveHandler().getWorldDirectoryName();
-        if (event.world.provider.dimensionId == MoCreatures.proxy.WyvernDimension)
-        {
-            //MoCConfiguration config = MoCreatures.proxy.MoCconfig;
-            System.out.println("Dimension " + event.world.provider.dimensionId + " is loading.");
-        }
-    }*/
+        MoCreatures.proxy.worldInitDone = true;
+    }
 
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)

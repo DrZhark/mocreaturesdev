@@ -546,6 +546,8 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean worldGenCreatureSpawningW;
     public static MoCSettingBoolean checkAmbientLightLevelB;
     public static WidgetBoolean checkAmbientLightLevelW;
+    public static MoCSettingBoolean enforceMaxSpawnLimitsB;
+    public static WidgetBoolean enforceMaxSpawnLimitsW;
     public static MoCSettingBoolean disallowMonsterSpawningDuringDayB;
     public static WidgetBoolean disallowMonsterSpawningDuringDayW;
 
@@ -932,6 +934,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(checkAmbientLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", checkAmbientLightLevel));
         checkAmbientLightLevelW = new WidgetBoolean(checkAmbientLightLevelB, "Ambients use Lightlvl?", "Yes", "No");
         widgetCustomSpawnerColumns.add(checkAmbientLightLevelW);
+        guiapiSettings.append(enforceMaxSpawnLimitsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", enforceMaxSpawnLimits));
+        enforceMaxSpawnLimitsW = new WidgetBoolean(enforceMaxSpawnLimitsB, "Enforce Max Spawn Limits?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(enforceMaxSpawnLimitsW);
         guiapiSettings.append(disallowMonsterSpawningDuringDayB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", disallowMonsterSpawningDuringDay));
         disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "Stop Mob Spawn at Day?", "Yes", "No");
         widgetCustomSpawnerColumns.add(disallowMonsterSpawningDuringDayW);

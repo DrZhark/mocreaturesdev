@@ -275,7 +275,7 @@ public final class CustomSpawner {
      * 
      * 
      */
-    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype, int mobSpawnRange, int lightLevel, boolean checkAmbientLightLevel)
+    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype, int mobSpawnRange, int lightLevel, boolean checkAmbientLightLevel, boolean enforceMaxSpawnLimits)
     {
         eligibleChunksForSpawning.clear();
         int countTotal;
@@ -453,7 +453,7 @@ public final class CustomSpawner {
                                                         }
                                                         moblimit--;
                                                        // System.out.println("moblimit now = " + moblimit);
-                                                        if (moblimit <= 0)   // If we're past limit, stop spawn
+                                                        if (moblimit <= 0 && enforceMaxSpawnLimits)   // If we're past limit, stop spawn
                                                         {
                                                             continue label108;
                                                         }

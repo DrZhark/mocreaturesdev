@@ -1186,10 +1186,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         return false;
     }
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

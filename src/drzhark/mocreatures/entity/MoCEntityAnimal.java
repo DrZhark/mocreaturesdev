@@ -1776,10 +1776,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         return false;
     }
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

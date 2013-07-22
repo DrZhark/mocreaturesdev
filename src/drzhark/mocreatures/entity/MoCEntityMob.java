@@ -31,6 +31,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     protected int maxHealth;
     private PathEntity entitypath;
     public EntityLiving roper;
+    private boolean riderIsDisconnecting;
 
     public MoCEntityMob(World world)
     {
@@ -735,5 +736,11 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
     public float getAdjustedXOffset()
     {
         return 0F;
+    }
+
+    @Override
+    public void riderIsDisconnecting(boolean flag)
+    {
+        this.riderIsDisconnecting = true;
     }
 }

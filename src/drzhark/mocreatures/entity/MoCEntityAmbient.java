@@ -35,8 +35,8 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCreature//, IEntityAdditionalSpawnData
 {
-	private boolean riderIsDisconnecting;
-	
+    private boolean riderIsDisconnecting;
+
     public MoCEntityAmbient(World world)
     {
         super(world);
@@ -1365,11 +1365,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
             return true;
         else return false;
     }
-    
-    
+
     @Override
     public void riderIsDisconnecting(boolean flag)
     {
-    	this.riderIsDisconnecting = true;
+        this.riderIsDisconnecting = true;
     }
 }

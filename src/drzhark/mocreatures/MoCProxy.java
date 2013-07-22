@@ -169,6 +169,7 @@ public class MoCProxy implements IGuiHandler {
     public boolean debugCMS;
     public boolean checkAmbientLightLevel;
     public boolean disallowMonsterSpawningDuringDay;
+    public boolean enforceMaxSpawnLimits;
     public int despawnLightLevel = 7;
     public int lightLevel = 7;
     public int maxMonsters;
@@ -206,6 +207,7 @@ public class MoCProxy implements IGuiHandler {
     public boolean useGlobalEntityRegistration;
     public boolean needsUpdate = false;
     public boolean useDefaultBiomeGroups;
+    public boolean worldInitDone = false;
     public int activeScreen = -1;
 
     public MoCConfiguration mocGlobalConfig;
@@ -676,7 +678,7 @@ public class MoCProxy implements IGuiHandler {
                     entityName = entityName.substring(entityName.indexOf(".") + 1, entityName.length());
             }
             entityName = entityName.replaceAll("[^A-Za-z0-9]", ""); // remove all non-digits/alphanumeric
-                 
+
             if (clazz != null && EntityLiving.class.isAssignableFrom(clazz))
             {
                 if (debugLogging) MoCreatures.log.info("Detected " + clazz + " in EntityList, checking if valid...");
@@ -1548,6 +1550,7 @@ public class MoCProxy implements IGuiHandler {
         despawnLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", 7, "The light level threshold used to determine whether or not to despawn a creature.").getInt();
         checkAmbientLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", false, "Turns on check for lightLevel for Ambient creature spawns.").getBoolean(false);
         disallowMonsterSpawningDuringDay = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", false, "Prevents monsters from spawning anywhere during the day. Note: this will affect underground spawns as well.").getBoolean(false);
+        enforceMaxSpawnLimits = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", false, "If enabled, all spawns will stop when max spawn limits have been reached for type.").getBoolean(false);
         debugCMS = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);
         useCustomSpawner = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
         useGlobalEntityRegistration = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useGlobalEntityRegistration", true, "If enabled, all tamed animals will be registered using automatic global entity registration. If you disable this for an existing world, all existing tamed animals will be lost. Note: Disable this option if you are experiencing invisible/odd entities.").getBoolean(true);
