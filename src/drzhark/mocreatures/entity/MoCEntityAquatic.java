@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -342,6 +343,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         {
             super.moveEntityWithHeading(f, f1);
         }
+        float par1 = f;
+        float par2 = f1;
+
         if ((riddenByEntity != null) && !getIsTamed() && !isSwimming())
         {
             riddenByEntity.mountEntity(null);
@@ -395,6 +399,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         {
             motionX += riddenByEntity.motionX * (getCustomSpeed() / 5D);
             motionZ += riddenByEntity.motionZ * (getCustomSpeed() / 5D);
+            par1 = ((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F;
+            par2 = ((EntityLivingBase)this.riddenByEntity).moveForward;
 
             if (jumpPending)
             {
@@ -418,7 +424,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
 
             if (MoCreatures.isServer())
             {
-                moveEntity(motionX, motionY, motionZ);
+                //moveEntity(motionX, motionY, motionZ);
+                super.moveEntityWithHeading(par1, par2);
             }
 
             motionX *= 0.95D;

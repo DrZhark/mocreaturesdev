@@ -1,5 +1,6 @@
 package drzhark.mocreatures.client.renderer.entity;
 
+import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
@@ -8,6 +9,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Maps;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,6 +22,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 @SideOnly(Side.CLIENT)
 public class MoCRenderNewHorse extends MoCRenderMoC {
 
+    private static final Map<String, ResourceLocation> RESOURCE_CACHE = Maps.newHashMap();
     private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsebug.png");
     private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsewhite.png");
     private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horseblack.png");
@@ -262,7 +266,9 @@ public class MoCRenderNewHorse extends MoCRenderMoC {
             {
                 armorTex = "crystaline.png";
             }
-            return new ResourceLocation(tempTexture.func_110624_b().replace(".png", armorTex));
+            if (!RESOURCE_CACHE.containsKey(tempTexture.func_110624_b().replace(".png", armorTex)))
+                RESOURCE_CACHE.put(tempTexture.func_110624_b().replace(".png", armorTex), new ResourceLocation(tempTexture.func_110624_b().replace(".png", armorTex)));
+            return RESOURCE_CACHE.get(tempTexture.func_110624_b().replace(".png", armorTex));
         }
 
         
@@ -303,7 +309,9 @@ public class MoCRenderNewHorse extends MoCRenderMoC {
            
             String decayTex = "" + (horse.getEdad() / 100);
             decayTex = decayTex.substring(0, 1);
-            return new ResourceLocation(baseTex.func_110624_b() + decayTex + iteratorTex + ".png");
+            if (!RESOURCE_CACHE.containsKey(baseTex.func_110624_b() + decayTex + iteratorTex + ".png"))
+                RESOURCE_CACHE.put(baseTex.func_110624_b() + decayTex + iteratorTex + ".png", new ResourceLocation(baseTex.func_110624_b() + decayTex + iteratorTex + ".png"));
+            return RESOURCE_CACHE.get(baseTex.func_110624_b() + decayTex + iteratorTex + ".png");
         }
         
         // if animate textures is off, return plain textures
@@ -328,8 +336,9 @@ public class MoCRenderNewHorse extends MoCRenderMoC {
             String NTB = "" + textCounter;
             NTB = NTB.substring(0, 1);
             String NTC = ".png";
-
-            return new ResourceLocation(NTA + NTB + NTC);
+            if (!RESOURCE_CACHE.containsKey(NTA + NTB + NTC))
+                RESOURCE_CACHE.put(NTA + NTB + NTC, new ResourceLocation(NTA + NTB + NTC));
+            return RESOURCE_CACHE.get(NTA + NTB + NTC);
         }
 
         

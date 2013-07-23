@@ -877,23 +877,29 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             super.moveEntityWithHeading(f, f1);
             return;
         }
-
+        float par1 =f;
+        float par2 =f1;
+ 
         if (handleWaterMovement())
         {
             if (riddenByEntity != null)
             {
                 motionX += riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 motionZ += riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
+                par1 = (float) (((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F * (getCustomSpeed() / 2.0D));;
+                par2 = (float) (((EntityLivingBase)this.riddenByEntity).moveForward * (getCustomSpeed() / 2.0D));
+
                 if (jumpPending && !getIsJumping())
                 {
-                    motionY = getCustomJump();
+                    motionY = getCustomJump()*2;
                     setIsJumping(true);
                     jumpPending = false;
                 }
 
                 if (!worldObj.isRemote)
                 {
-                    moveEntity(motionX, motionY, motionZ);
+                    super.moveEntityWithHeading(par1, par2);
+                    //moveEntity(motionX, motionY, motionZ);
                 }
 
                 rotationPitch = riddenByEntity.rotationPitch * 0.5F;
@@ -921,7 +927,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             if (!worldObj.isRemote)
             {
                 moveFlying(f, f1, 0.02F);
-                moveEntity(motionX, motionY, motionZ);
+                //moveEntity(motionX, motionY, motionZ);
+                super.moveEntityWithHeading(par1, par2);
             }
             motionX *= 0.800000011920929D;
             motionY *= 0.800000011920929D;
@@ -938,13 +945,17 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             {
                 motionX += riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 motionZ += riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
+                par1 = (float) (((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F * (getCustomSpeed() / 2.0D));;
+                par2 = (float) (((EntityLivingBase)this.riddenByEntity).moveForward * (getCustomSpeed() / 2.0D));
+
                 if (jumpPending && !getIsJumping())
                 {
                     motionY = getCustomJump();
                     jumpPending = false;
                 }
 
-                moveEntity(motionX, motionY, motionZ);
+                //moveEntity(motionX, motionY, motionZ);
+                super.moveEntityWithHeading(par1, par2);
 
                 rotationPitch = riddenByEntity.rotationPitch * 0.5F;
                 if (rand.nextInt(20) == 0)
@@ -989,6 +1000,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             }
 
             float f3 = 0.162771F / (f2 * f2 * f2);
+            System.out.println("f = " + f + ", f1 = " + f1 + ", f4 = " + (onGround ? 0.1F * f3 : 0.02F));
             moveFlying(f, f1, onGround ? 0.1F * f3 : 0.02F);
 
             if (isOnLadder())
@@ -1011,11 +1023,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                     motionX += rand.nextDouble() / 30D;
                     motionZ += rand.nextDouble() / 10D;
                 }
+
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
                 if (!worldObj.isRemote)
                 {
                     moveEntity(motionX, motionY, motionZ);
                 }
+
                 if (MoCreatures.isServer() && rand.nextInt(50) == 0)
                 {
                     worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
@@ -1050,6 +1064,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 {
                     motionX += riddenByEntity.motionX * getCustomSpeed();
                     motionZ += riddenByEntity.motionZ * getCustomSpeed();
+                    
+                    par1 = (float) (((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F * getCustomSpeed());
+                    par2 = (float) (((EntityLivingBase)this.riddenByEntity).moveForward * getCustomSpeed());
+                    
                 }
 
                 if (jumpPending && (isFlyer()))
@@ -1067,7 +1085,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 }
                 else if (jumpPending && !getIsJumping())
                 {
-                    motionY = getCustomJump();
+                    motionY = getCustomJump()*2;
                     setIsJumping(true);
                     jumpPending = false;
                 }
@@ -1081,7 +1099,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
                 if (MoCreatures.isServer())
                 {
-                    moveEntity(motionX, motionY, motionZ);
+                    //moveEntity(motionX, motionY, motionZ);
+                    super.moveEntityWithHeading(par1, par2);//, motionZ);
                 }
                 if (onGround)
                 {
@@ -1098,7 +1117,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             if (!worldObj.isRemote)
             {
                 //needs to be left in so flying mounts can be controlled
-                moveEntity(motionX, motionY, motionZ);
+                //moveEntity(motionX, motionY, motionZ);
+                super.moveEntityWithHeading(par1, par2);//, motionZ);
             }
             if (isFlyingAlone())
             {
