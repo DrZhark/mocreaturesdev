@@ -323,7 +323,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
         {
             followPlayer();
         }
-        moveSpeed = getMoveSpeed();
+        //moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
     }
 
@@ -1410,7 +1410,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             double d3 = vec3d.yCoord - i;
             float f4 = (float) ((Math.atan2(d2, d1) * 180D) / 3.1415927410125728D) - 90F;
             float f5 = f4 - rotationYaw;
-            moveForward = moveSpeed;
+            moveForward = (float)this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111126_e();
             for (; f5 < -180F; f5 += 360F)
             {
             }
@@ -1686,10 +1686,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName())) { return false; }
 
-        if (MoCreatures.isServer() && getIsTamed())
+        /*if (MoCreatures.isServer() && getIsTamed())
         {
             MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
-        }
+        }*/
         if (isNotScared())
         {
             Entity tempEntity = entityToAttack;

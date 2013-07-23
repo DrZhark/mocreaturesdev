@@ -3,6 +3,7 @@ package drzhark.mocreatures.client.renderer.entity;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -84,5 +85,9 @@ public class MoCRenderFirefly extends MoCRenderInsect {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, var4);
             return 1;
         }
+    }
+
+    protected ResourceLocation func_110775_a(Entity par1Entity) {
+        return TEXTURE_DEFAULT;
     }
 }

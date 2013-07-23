@@ -502,7 +502,7 @@ public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//
             double d3 = vec3d.yCoord - i;
             float f4 = (float) ((Math.atan2(d2, d1) * 180D) / 3.1415927410125728D) - 90F;
             float f5 = f4 - rotationYaw;
-            moveForward = moveSpeed;
+            moveForward = (float)this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111126_e();
             for (; f5 < -180F; f5 += 360F)
             {
             }
