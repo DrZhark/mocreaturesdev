@@ -1000,7 +1000,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             }
 
             float f3 = 0.162771F / (f2 * f2 * f2);
-            System.out.println("f = " + f + ", f1 = " + f1 + ", f4 = " + (onGround ? 0.1F * f3 : 0.02F));
             moveFlying(f, f1, onGround ? 0.1F * f3 : 0.02F);
 
             if (isOnLadder())
@@ -1023,7 +1022,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                     motionX += rand.nextDouble() / 30D;
                     motionZ += rand.nextDouble() / 10D;
                 }
-
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
                 if (!worldObj.isRemote)
                 {
@@ -1043,7 +1041,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 {
                     setIsJumping(false);
                 }
-                //TODO check!, also check nullpointerEx on the (Entityplayer) cast
                 if (MoCreatures.isServer())
                 {
                     int chance = (getMaxTemper() - getTemper());
@@ -1125,7 +1122,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 int distY = MoCTools.distanceToFloor(this);
                 if (distY <= flyingHeight())
                 {
-                    motionY *= f2;
+                    motionY *= 0.3 + (f2);
                 }
                 if (distY <= flyingHeight() && (isCollidedHorizontally || rand.nextInt(100) == 0))
                 {
@@ -1138,11 +1135,21 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
                 if (isOnAir())
                 {
-                    double velX = 0.05F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                    double velZ = 0.05F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
+                    double velX = 0.1F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
+                    double velZ = 0.1F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
                     this.motionX -= velX;
                     this.motionZ -= velZ;
                 }
+                
+                if (motionY < 0)
+                {
+                	motionY *= 0.5D;
+                }
+                /*if (MoCreatures.isServer())
+                {
+                	moveEntity(motionX, motionY, motionZ);
+                    //super.moveEntityWithHeading(par1, par2);//, motionZ);
+                }*/
             }
 
             if (isFlyer() && riddenByEntity == null && entityToAttack != null && entityToAttack.posY < this.posY && rand.nextInt(30) == 0)
@@ -1402,7 +1409,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             entitypath = null;
             return;
         }
-        //TODO 4FIX test!
         Vec3 vec3d = entitypath.getPosition(this); //client
 
         //Vec3D vec3d = entitypath.getPosition(this); //server

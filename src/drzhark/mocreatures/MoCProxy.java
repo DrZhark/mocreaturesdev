@@ -203,7 +203,7 @@ public class MoCProxy implements IGuiHandler {
     public boolean debugLogging;
     public boolean allowInstaSpawn;
     public boolean useCustomSpawner;
-    public boolean useGlobalEntityRegistration;
+    //public boolean useGlobalEntityRegistration;
     public boolean needsUpdate = false;
     public boolean useDefaultBiomeGroups;
     public int activeScreen = -1;
@@ -1550,7 +1550,7 @@ public class MoCProxy implements IGuiHandler {
         disallowMonsterSpawningDuringDay = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", false, "Prevents monsters from spawning anywhere during the day. Note: this will affect underground spawns as well.").getBoolean(false);
         debugCMS = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);
         useCustomSpawner = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
-        useGlobalEntityRegistration = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useGlobalEntityRegistration", true, "If enabled, all tamed animals will be registered using automatic global entity registration. If you disable this for an existing world, all existing tamed animals will be lost. Note: Disable this option if you are experiencing invisible/odd entities.").getBoolean(true);
+        //useGlobalEntityRegistration = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useGlobalEntityRegistration", true, "If enabled, all tamed animals will be registered using automatic global entity registration. If you disable this for an existing world, all existing tamed animals will be lost. Note: Disable this option if you are experiencing invisible/odd entities.").getBoolean(true);
 
         maxTamed = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerPlayer", 10, "Max tamed creatures a player can have. Requires enableOwnership to be set to true.").getInt();
         maxOPTamed = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerOP", 20, "Max tamed creatures an op can have. Requires enableOwnership to be set to true.").getInt();

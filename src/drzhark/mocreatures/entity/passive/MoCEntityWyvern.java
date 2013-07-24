@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -209,7 +210,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
                 }
             }
 
-            if (isFlyingAlone() &&  rand.nextInt(100) == 0 && !isMovementCeased())
+            if (isFlyingAlone() &&  rand.nextInt(60) == 0 && !isMovementCeased())
             {
                 wingFlap();
             }
@@ -587,7 +588,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
                 {
                     MoCreatures.poisonPlayer((EntityPlayer) entity);
                 }
-                ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 200, 0));
+                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 200, 0));
                 MoCTools.playCustomSound(this, "wyvernpoisoning", worldObj);
             }
             int dmg = 5;

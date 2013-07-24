@@ -685,6 +685,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         {
             floating();
             outOfWater = 0;
+            this.setAir(300);
         }
         else
         {
