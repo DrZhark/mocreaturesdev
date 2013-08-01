@@ -71,10 +71,10 @@ public class MoCEventHooks {
     public void structureMapGen(InitMapGenEvent event)
     {
       //  System.out.println("INITMAPGENEVENT " + event.newGen + " , type = " + event.type);
-        if (MoCreatures.proxy.useCustomSpawner)
+        /*if (MoCreatures.proxy.useCustomSpawner)
         {
             String structureClass = event.originalGen.getClass().toString();
             MoCreatures.proxy.structureData.addStructure(event.type, event.originalGen);
-        }
+        }*/
     }
 }

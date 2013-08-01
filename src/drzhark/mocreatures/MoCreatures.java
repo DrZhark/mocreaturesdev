@@ -222,21 +222,21 @@ public class MoCreatures {
     static EnumToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 2, 15);
 
     public static Item horsesaddle;
-    public static Item horsearmormetal;
+    //public static Item horsearmormetal;
     public static Item sharkteeth;
     public static Item haystack;
     public static Item sugarlump;
     public static Item fishyegg;
     public static Item bigcatclaw;
     public static Item whip;
-    public static Item horsearmorgold;
-    public static Item horsearmordiamond;
+    //public static Item horsearmorgold;
+    //public static Item horsearmordiamond;
     public static Item staffunicorn;
     public static Item medallion;
     public static Item kittybed;
     public static Item litterbox;
     public static Item woolball;
-    public static Item rope;
+    //public static Item rope;
     public static Item petfood;
     public static Item staffdiamond;
     public static Item crochide;
@@ -399,7 +399,7 @@ public class MoCreatures {
         registerEntity(MoCEntityBird.class, "Bird", 14020607, 14020607, false);// 0x03600, 0x003500);
         registerEntity(MoCEntityMouse.class, "Mouse", 14772545, 0, false);//, 0x02600, 0x002500);
         registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680, false);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityHorse.class, "Horse", 12623485, 15656192, false);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityHorse.class, "WildHorse", 12623485, 15656192, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407, false);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102, false);//, 0x2600, 0x052500);
@@ -477,7 +477,7 @@ public class MoCreatures {
             {
                 myCustomSpawner.setVerboseConsole(true);
             }
-            proxy.ConfigPostInit(event);
+            //proxy.ConfigPostInit(event);
             updateSettings(); // refresh settings
         }
         else proxy.ConfigPostInit(event);
@@ -486,6 +486,12 @@ public class MoCreatures {
     // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
     @ServerAboutToStart
     public void serverAboutToStart(FMLServerAboutToStartEvent event)
+    {
+        
+    }
+
+    @ServerStarting
+    public void serverStarting(FMLServerStartingEvent event)
     {
         if (proxy.useCustomSpawner)
         {
@@ -502,11 +508,6 @@ public class MoCreatures {
             MoCreatures.proxy.initGUI();
             updateSettings(); // refresh settings
         }
-    }
-
-    @ServerStarting
-    public void serverStarting(FMLServerStartingEvent event)
-    {
         event.registerServerCommand(new CommandMoCreatures());
     }
 
@@ -572,15 +573,18 @@ public class MoCreatures {
 
         recordshuffle = (new MoCItemRecord(MoCItemID++, "shuffling")).setUnlocalizedName("recordshuffle");
         horsesaddle = (new MoCItemHorseSaddle(MoCItemID++)).setUnlocalizedName("horsesaddle");
-        horsearmormetal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armormetal");
+        MoCItemID++;
+        //horsearmormetal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armormetal");
         sharkteeth = (new MoCItem(MoCItemID++)).setUnlocalizedName("sharkteeth");
         haystack = (new MoCItemHayStack(MoCItemID++)).setUnlocalizedName("haystack");
         sugarlump = (new MoCItemSugarLump(MoCItemID++)).setUnlocalizedName("sugarlump");
         fishyegg = (new MoCItemEgg(MoCItemID++)).setUnlocalizedName("moc_egg");
         bigcatclaw = (new MoCItem(MoCItemID++)).setUnlocalizedName("bigcatclaw");
         whip = (new MoCItemWhip(MoCItemID++)).setUnlocalizedName("whip");
-        horsearmorgold = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorgold");
-        horsearmordiamond = (new MoCItem(MoCItemID++)).setUnlocalizedName("armordiamond");
+        MoCItemID++;
+        //horsearmorgold = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorgold");
+        MoCItemID++;
+        //horsearmordiamond = (new MoCItem(MoCItemID++)).setUnlocalizedName("armordiamond");
         staffTeleport = (new ItemStaffTeleport(MoCItemID++)).setUnlocalizedName("staffteleport");
         LanguageRegistry.addName(staffTeleport, "Teleport Staff");
 
@@ -588,7 +592,8 @@ public class MoCreatures {
         kittybed = (new MoCItemKittyBed(MoCItemID++, 0)).setUnlocalizedName("catbed");
         litterbox = (new MoCItemLitterBox(MoCItemID++)).setUnlocalizedName("catlitter");
         woolball = (new MoCItem(MoCItemID++)).setUnlocalizedName("woolball");
-        rope = (new MoCItem(MoCItemID++)).setUnlocalizedName("rope");
+        MoCItemID++;
+        //rope = (new MoCItem(MoCItemID++)).setUnlocalizedName("rope");
         petfood = (new MoCItem(MoCItemID++)).setUnlocalizedName("petfood");
         builderHammer = (new ItemBuilderHammer(MoCItemID++)).setUnlocalizedName("builderhammer");
         LanguageRegistry.addName(builderHammer, "Builder Hammer");
@@ -793,7 +798,7 @@ public class MoCreatures {
         LanguageRegistry.addName(litterbox, "Litter Box");
         LanguageRegistry.addName(woolball, "Wool Ball");
         LanguageRegistry.addName(petfood, "Pet Food");
-        LanguageRegistry.addName(rope, "Rope");
+        //LanguageRegistry.addName(rope, "Rope");
         LanguageRegistry.addName(crochide, "Reptile Hide");
         LanguageRegistry.addName(plateCroc, "Reptile Plate");
         LanguageRegistry.addName(helmetCroc, "Reptile Helmet");
@@ -853,9 +858,9 @@ public class MoCreatures {
         LanguageRegistry.addName(crabmeatcooked, "Crab cooked");
         LanguageRegistry.addName(unicorn, "Unicorn Horn");
 
-        LanguageRegistry.addName(horsearmormetal, "Iron Mount Armor");
-        LanguageRegistry.addName(horsearmorgold, "Gold Mount Armor");
-        LanguageRegistry.addName(horsearmordiamond, "Diamond Mount Armor");
+        //LanguageRegistry.addName(horsearmormetal, "Iron Mount Armor");
+        // LanguageRegistry.addName(horsearmorgold, "Gold Mount Armor");
+        //LanguageRegistry.addName(horsearmordiamond, "Diamond Mount Armor");
         LanguageRegistry.addName(horsearmorcrystal, "Crystal Mount Armor");
 
         LanguageRegistry.addName(animalHide, "Hide");
@@ -1010,13 +1015,13 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(fishnet, 1), new Object[] { " # ", "S#S", "#S#", Character.valueOf('#'), Item.silk, Character.valueOf('S'), sharkteeth });
         
-        GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.itemsList[Block.planks.blockID], Character.valueOf('R'), rope });
+        GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.itemsList[Block.planks.blockID], Character.valueOf('R'), Item.field_111214_ch  });
         
-        GameRegistry.addRecipe(new ItemStack(ironTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('R'), rope });
+        GameRegistry.addRecipe(new ItemStack(ironTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('R'), Item.field_111214_ch });
         
-        GameRegistry.addRecipe(new ItemStack(diamondTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('R'), rope });
+        GameRegistry.addRecipe(new ItemStack(diamondTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('R'), Item.field_111214_ch });
         
-        GameRegistry.addRecipe(new ItemStack(platform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Item.itemsList[Block.wood.blockID], Character.valueOf('R'), rope ,  Character.valueOf('P'), Item.itemsList[Block.planks.blockID]});
+        GameRegistry.addRecipe(new ItemStack(platform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Item.itemsList[Block.wood.blockID], Character.valueOf('R'), Item.field_111214_ch ,  Character.valueOf('P'), Item.itemsList[Block.planks.blockID]});
         
         GameRegistry.addRecipe(new ItemStack(chestSet, 1), new Object[] { " W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 0), Character.valueOf('C'), Item.itemsList[Block.chest.blockID] });
         
@@ -1075,11 +1080,11 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] { "  D", "CDC", "DCD", Character.valueOf('D'), Item.diamond, Character.valueOf('C'), Block.glass });
 
-        GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 15) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 15) });
 
-        GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 14) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 14) });
 
-        GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 11) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 11) });
 
         GameRegistry.addRecipe(new ItemStack(viallight, 1), new Object[] { "X", "Y", "Z", Character.valueOf('X'), vialundead, Character.valueOf('Y'), vialnightmare, Character.valueOf('Z'), vialdarkness });
 
@@ -1115,7 +1120,7 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] { "# #", "# #", "###", Character.valueOf('#'), Block.glass, });
 
-        GameRegistry.addRecipe(new ItemStack(rope, 1), new Object[] { "# #", " # ", "# #", Character.valueOf('#'), Item.silk, });
+        //GameRegistry.addRecipe(new ItemStack(rope, 1), new Object[] { "# #", " # ", "# #", Character.valueOf('#'), Item.silk, });
 
         GameRegistry.addShapelessRecipe(new ItemStack(petfood, 4), new Object[] { new ItemStack(Item.fishRaw, 1), new ItemStack(Item.porkRaw, 1) });
 

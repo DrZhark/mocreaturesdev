@@ -6,11 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockJukeBox;
 import net.minecraft.block.StepSound;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -298,19 +300,19 @@ public class MoCEntityHorse extends MoCEntityAnimal {
 
             if (i == 1)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmormetal, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111215_ce, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 2)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmorgold, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111216_cf, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 3)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmordiamond, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111213_cg, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
@@ -745,11 +747,12 @@ public class MoCEntityHorse extends MoCEntityAnimal {
      * @param entityhorse1
      * @return
      */
-    private int HorseGenetics(MoCEntityHorse entityhorse, MoCEntityHorse entityhorse1)
+    //private int HorseGenetics(MoCEntityHorse entityhorse, MoCEntityHorse entityhorse1)
+    private int HorseGenetics(int typeA, int typeB)
     {
         boolean flag = MoCreatures.proxy.easyBreeding;
-        int typeA = entityhorse.getType();
-        int typeB = entityhorse1.getType();
+        //int typeA = entityhorse.getType();
+        //int typeB = entityhorse1.getType();
 
         // identical horses have so spring
         if (typeA == typeB) { return typeA; }
@@ -924,7 +927,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.horsearmormetal.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111215_ce.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -940,7 +943,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.horsearmorgold.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111216_cf.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -955,7 +958,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.horsearmordiamond.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111213_cg.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1867,7 +1870,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             for (int j = 0; j < list.size(); j++)
             {
                 Entity entity = (Entity) list.get(j);
-                if (entity instanceof MoCEntityHorse)
+                if (entity instanceof MoCEntityHorse || entity instanceof EntityHorse)
                 {
                     i++;
                 }
@@ -1877,16 +1880,23 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             List list1 = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(4D, 2D, 4D));
             for (int k = 0; k < list1.size(); k++)
             {
-                Entity entity1 = (Entity) list1.get(k);
-                if (!(entity1 instanceof MoCEntityHorse) || (entity1 == this))
+                Entity horsemate = (Entity) list1.get(k);
+                boolean flag = (horsemate instanceof EntityHorse);
+                if (!(horsemate instanceof MoCEntityHorse || flag) || (horsemate == this))
                 {
                     continue;
                 }
-                MoCEntityHorse entityhorse = (MoCEntityHorse) entity1;
-                if (!ReadyforParenting(this) || !ReadyforParenting(entityhorse))
+                
+                if (!ReadyforParenting(this)) return;
+                
+                if (!flag)
+                {
+                	if (!ReadyforParenting((MoCEntityHorse)horsemate))
                 {
                     return;
                 }
+                }
+                
                 if (rand.nextInt(100) == 0)
                 {
                     gestationtime++;
@@ -1901,41 +1911,87 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 {
                     continue;
                 }
-                MoCEntityHorse entityhorse1 = new MoCEntityHorse(worldObj);
-                entityhorse1.setPosition(posX, posY, posZ);
-                worldObj.spawnEntityInWorld(entityhorse1);
+                MoCEntityHorse baby = new MoCEntityHorse(worldObj);
+                baby.setPosition(posX, posY, posZ);
+                worldObj.spawnEntityInWorld(baby);
                 worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
                 eatenpumpkin = false;
-
-                entityhorse.eatenpumpkin = false;
                 gestationtime = 0;
                 this.setBred(true);
-                entityhorse.gestationtime = 0;
-                int l = HorseGenetics(this, entityhorse);
+                
+                int horsemateType;// = 0;
+                if (flag)
+                {
+                	horsemateType = TranslateVanillaHorseType((EntityHorse) horsemate);   
+                	if (horsemateType == -1) return;
+                }else
+                {
+                	horsemateType = ((MoCEntityHorse)horsemate).getType();
+                	((MoCEntityHorse)horsemate).eatenpumpkin = false;
+                	((MoCEntityHorse)horsemate).gestationtime = 0;
+                }
+                int l = HorseGenetics(this.getType(), horsemateType);
 
                 if (l == 50) // fairy horse!
                 {
-                    // TODO TEST IF THIS SOUNDS IN CLIENT!
                     MoCTools.playCustomSound(this, "appearmagic", worldObj);
-                    entityhorse.dissapearHorse();
+                    if (!flag) 
+                    	{
+                    	((MoCEntityHorse)horsemate).dissapearHorse();
+                    	}
                     this.dissapearHorse();
                 }
-                entityhorse1.setOwner(this.getOwnerName());
-                entityhorse1.setTamed(true);
-                entityhorse1.setBred(true);
-                entityhorse1.setAdult(false);
+                baby.setOwner(this.getOwnerName());
+                baby.setTamed(true);
+                baby.setBred(true);
+                baby.setAdult(false);
                 EntityPlayer entityplayer = worldObj.getPlayerEntityByName(this.getOwnerName());
                 if (entityplayer != null && (MoCreatures.isServer()))
                 {
-                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityhorse1);
+                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, baby);
                 }
-                entityhorse1.setType(l);
+                baby.setType(l);
                 break;
             }
         }
 
     }
 
+    /**
+     * Obtains the 'Type' of vanilla horse for inbreeding with MoC Horses
+     * @param horse
+     * @return
+     */
+    private int TranslateVanillaHorseType(EntityHorse horse)
+    {
+    	if (horse.func_110265_bP() == 1)
+    	{
+    		return 65; // donkey
+    	}
+    	if (horse.func_110265_bP() == 0)
+    	{
+    		switch((byte)horse.func_110202_bQ())
+    		{
+    			case 0: //white
+    				return 1;
+    			case 1: //creamy
+    				return 2;
+    			case 3: //brown
+    				return 3;
+    			case 4: //black
+    				return 5;
+    			case 5: //gray
+    				return 9;
+    			case 6: //dark brown
+    				return 4;
+    			default:
+    				return 3;
+    		}
+    		
+    	}
+    	return -1;
+    }
+    
     @Override
     public void onUpdate()
     {
@@ -2143,29 +2199,17 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             }
             int j = rand.nextInt(100);
             int i = MoCreatures.proxy.zebraChance;
-            if (j <= (18 - i))
+            if (j <= (33 - i))
             {
-                setType(1);
+                setType(6);
             }
-            else if (j <= (36 - i))
+            else if (j <= (66 - i))
             {
-                setType(2);
-            }
-            else if (j <= (54 - i))
-            {
-                setType(3);
-            }
-            else if (j <= (72 - i))
-            {
-                setType(4);
-            }
-            else if (j <= (90 - i))
-            {
-                setType(5);
+                setType(7);
             }
             else if (j <= (99 - i))
             {
-                setType(65); // donkey
+                setType(8);
             }
             else
             {

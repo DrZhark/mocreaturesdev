@@ -424,7 +424,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
         //changes name
         if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
+                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)  || (itemstack.itemID == Item.field_111212_ci.itemID)) )
         {
             if (MoCreatures.isServer())
             {
@@ -484,7 +484,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             return true;
         }
 
-        //attaches rope
+        /*//attaches rope
         if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && getIsTamed() && (itemstack.itemID == MoCreatures.rope.itemID))
         {
             if (--itemstack.stackSize == 0)
@@ -504,7 +504,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             worldObj.playSoundAtEntity(this, "roping", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             roper = null;
             return true;
-        }
+        }*/
 
         if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.shears.itemID))
         {

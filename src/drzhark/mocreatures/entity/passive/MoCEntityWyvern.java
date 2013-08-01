@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -294,7 +295,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == MoCreatures.horsearmormetal.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111215_ce.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -310,7 +311,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == MoCreatures.horsearmorgold.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111216_cf.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -325,7 +326,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == MoCreatures.horsearmordiamond.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111213_cg.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -480,19 +481,19 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
 
             if (i == 1)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmormetal, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111215_ce, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 2)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmorgold, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111216_cf, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 3)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.horsearmordiamond, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111213_cg, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }

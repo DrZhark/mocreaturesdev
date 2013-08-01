@@ -608,7 +608,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
 
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == MoCreatures.rope.itemID))
+        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == Item.field_111214_ch.itemID))
         {
             changeKittyState(14);
             if (MoCreatures.isServer())
@@ -1107,7 +1107,7 @@ public class MoCEntityKitty extends MoCEntityAnimal {
                     break;
                 }
                 ItemStack itemstack2 = entityplayer2.inventory.getCurrentItem();
-                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.itemID != MoCreatures.rope.itemID)))
+                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.itemID != Item.field_111214_ch.itemID)))
                 {
                     changeKittyState(13);
                 }

@@ -854,9 +854,7 @@ public class MoCTools {
         entityitem10.delayBeforeCanPickup = 10;
         worldObj.spawnEntityInWorld(entityitem10);
 
-        EntityItem entityitem11 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.horsearmorgold, 12));
-        entityitem11.delayBeforeCanPickup = 10;
-        worldObj.spawnEntityInWorld(entityitem11);
+       
 
         EntityItem entityitem12 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Block.plantRed, 6));
         entityitem12.delayBeforeCanPickup = 10;
