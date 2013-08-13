@@ -134,6 +134,46 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             return true;
         }
+        
+        //stores in petAmulet
+        if (itemstack != null && itemstack.itemID == MoCreatures.superAmulet.itemID && this.canBeTrappedInNet()) 
+        {
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if (MoCreatures.isServer())
+            {
+            	this.dropMyStuff();
+                MoCTools.dropAmulet(this, 2);
+                this.isDead = true;
+            }
+
+            return true;
+        }
+        
+        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.shears.itemID))
+        {
+            if (MoCreatures.isServer())
+            {
+                dropMyStuff();
+            }
+            
+            return true;
+        }
+        
+      //heals
+        if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
+        {
+            if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            if (MoCreatures.isServer())
+            {
+                health = getMaxHealth();
+            }
+            return true;
+        }
+        
         return super.interact(entityplayer);
     }
 

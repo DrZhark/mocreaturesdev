@@ -4,13 +4,14 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class MoCEntityCrab extends MoCEntityAmbient
+public class MoCEntityCrab extends MoCEntityTameableAmbient
 
 {
     public MoCEntityCrab(World world)

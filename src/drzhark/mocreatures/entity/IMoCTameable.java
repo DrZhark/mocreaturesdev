@@ -23,4 +23,10 @@ public interface IMoCTameable {
     public void writeEntityToNBT(NBTTagCompound nbttagcompound);
 
     public void readEntityFromNBT(NBTTagCompound nbttagcompound);
+
+	public int getEdad();
+	
+	public int getOwnerPetId();
+
+	public boolean getIsAdult();
 }

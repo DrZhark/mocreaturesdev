@@ -1,5 +1,9 @@
 package drzhark.mocreatures.item;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -10,10 +14,25 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class MoCItemAmulet extends MoCItem {
 
+    private int ageCounter;
+    private String name;
+    private float health;
+    private int edad;
+    private int creatureType;
+    private int spawnClass;
+    private boolean rideable;
+    private byte armor;
+    private boolean adult;
+    private String ownerName;
+    private int PetId;
+    
     public MoCItemAmulet(int i)
     {
         super(i);
@@ -31,12 +50,7 @@ public class MoCItemAmulet extends MoCItem {
 
         if (MoCreatures.isServer())
         {
-            if( itemstack.stackTagCompound == null )
-            {
-                itemstack.setTagCompound(new NBTTagCompound());
-            }
-            NBTTagCompound nbtcompound = itemstack.stackTagCompound;
-            readFromNBT(nbtcompound);
+        	initAndReadNBT(itemstack);
         }
         
         if (spawnClass == 21 || spawnClass == 0) // horses or old amulets
@@ -86,7 +100,7 @@ public class MoCItemAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); //quick fix before migrating
+                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -126,19 +140,9 @@ public class MoCItemAmulet extends MoCItem {
         return itemstack;
     }
 
-    private int ageCounter;
-    private String name;
-    private float health;
-    private int edad;
-    private int creatureType;
-    private int spawnClass;
-    private boolean rideable;
-    private byte armor;
-    private boolean adult;
-    private String ownerName;
-    
     public void readFromNBT(NBTTagCompound nbt)
     {
+    	this.PetId = nbt.getInteger("PetId");
         this.creatureType = nbt.getInteger("CreatureType");
         this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
@@ -152,6 +156,7 @@ public class MoCItemAmulet extends MoCItem {
     
     public void writeToNBT(NBTTagCompound nbt)
     {
+    	nbt.setInteger("PetID", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
@@ -161,5 +166,28 @@ public class MoCItemAmulet extends MoCItem {
         nbt.setByte("Armor", this.armor);
         nbt.setBoolean("Adult", this.adult);
         nbt.setString("OwnerName", this.ownerName);
+    }
+    
+    @SideOnly(Side.CLIENT)
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @Override
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+    	initAndReadNBT(par1ItemStack);
+    	par3List.add(EnumChatFormatting.BLUE + this.name);
+    	par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
+    }
+    
+    private void initAndReadNBT(ItemStack itemstack)
+    {
+    	if( itemstack.stackTagCompound == null )
+        {
+            itemstack.setTagCompound(new NBTTagCompound());
+        }
+        NBTTagCompound nbtcompound = itemstack.stackTagCompound;
+        readFromNBT(nbtcompound);
     }
 }

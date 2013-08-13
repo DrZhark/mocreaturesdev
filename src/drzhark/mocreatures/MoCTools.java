@@ -283,8 +283,18 @@ public class MoCTools {
         EntityLiving entityToSpawn = null;
         try
         {
+        	Class myClass = null;
+        	if (eName.equals("MoCHorse")) //to avoid conflicts with Vanilla Horses
+        	{
+        		myClass = MoCEntityHorse.class;
+        	}
+        	else
+        	{
             MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
-            Class myClass = entityData.getEntityClass();
+                myClass = entityData.getEntityClass();
+        	}
+            
+            
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
         }catch (Exception e) 
         { 
@@ -1518,7 +1528,7 @@ public class MoCTools {
      * Drops an amulet with the stored information of the entity passed
      * @param entity
      */
-    public static void dropAmulet(MoCEntityAnimal entity)
+    public static void dropAmulet(MoCEntityTameable entity)
     {
         if (MoCreatures.isServer())
         {
@@ -1536,7 +1546,7 @@ public class MoCTools {
             try
             {
                 //TODO change the 21 to the list given based on the class of the creature
-                nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
+                nbtt.setInteger("SpawnClass", 21); 
                 	nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
@@ -1545,6 +1555,7 @@ public class MoCTools {
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setBoolean("Adult", entity.getIsAdult());          
                 nbtt.setString("OwnerName", entity.getOwnerName());
+                nbtt.setInteger("PetId", entity.getOwnerPetId());
             }
             catch (Exception e)
             {
@@ -1557,9 +1568,9 @@ public class MoCTools {
     }
 
     /**
-     * Drops a new EntityItem fishnet with the stored information of the entity
+     * Drops a new amulet/fishnet with the stored information of the entity
      */
-    public static void dropAmulet(IMoCEntity entity, int amuletType)
+    public static void dropAmulet(IMoCTameable entity, int amuletType)
     {
         if (MoCreatures.isServer())
         {
@@ -1578,12 +1589,22 @@ public class MoCTools {
             
             try
             {
+            	
+            	if (entity instanceof MoCEntityHorse)
+            	{
+            		nbtt.setString("SpawnClass", "MoCHorse"); 
+            	}else
+            	{
                 nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+            	}
+                
                 	nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setString("OwnerName", entity.getOwnerName());
+                nbtt.setBoolean("Adult", entity.getIsAdult());
+                nbtt.setInteger("PetId", entity.getOwnerPetId());
             }
             catch (Exception e)
             {

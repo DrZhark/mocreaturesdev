@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity;
 import java.util.List;
 import java.util.Map;
 
+import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 
@@ -10,11 +11,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-public abstract class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTameable
+public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTameable
 {
-    public MoCEntityTameableAquatic(World world)
+    public MoCEntityTameableAmbient(World world)
     {
         super(world);
     }
@@ -151,12 +154,40 @@ public abstract class MoCEntityTameableAquatic extends MoCEntityAquatic implemen
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
-                MoCTools.dropAmulet(this, 1);
+                MoCTools.dropAmulet((IMoCTameable) this, 1);
                 this.isDead = true;
             }
 
             return true;
         }
+        
+        
+      //heals
+        if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
+        {
+            if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            if (MoCreatures.isServer())
+            {
+                health = getMaxHealth();
+            }
+            return true;
+        }
+
+        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.shears.itemID))
+        {
+            if (MoCreatures.isServer())
+            {
+                dropMyStuff();
+            }
+            
+            return true;
+        }
+
+       
         return super.interact(entityplayer);
     }
     /**
@@ -177,6 +208,51 @@ public abstract class MoCEntityTameableAquatic extends MoCEntityAquatic implemen
             double d1 = this.rand.nextGaussian() * 0.02D;
             double d2 = this.rand.nextGaussian() * 0.02D;
             this.worldObj.spawnParticle(s, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
+        }
+    }
+    
+    
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    {
+        super.writeEntityToNBT(nbttagcompound);
+        if (getOwnerPetId() != -1)
+            nbttagcompound.setInteger("PetId", this.getOwnerPetId());
+        if (this instanceof IMoCTameable && getIsTamed())
+        {
+            MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)this, nbttagcompound);
+        }
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    {
+        super.readEntityFromNBT(nbttagcompound);
+        if (nbttagcompound.hasKey("PetId"))
+            setOwnerPetId(nbttagcompound.getInteger("PetId"));
+        if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))//this.getEntityData().hasKey("PetId"))
+        {
+           // System.out.println("mapdata = " + MoCreatures.instance.mapData);
+            System.out.println("PET ID = " + nbttagcompound.getInteger("PetId"));
+            MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+            NBTTagList tag = petData.getPetData().getTagList("TamedList");
+            for (int i = 0; i < tag.tagCount(); i++)
+            {
+                System.out.println("found tag " + tag.tagAt(i));
+                NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
+                if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
+                {
+                    // check if cloned and if so kill
+                    if (nbt.hasKey("Cloned"))
+                    {
+                        // entity was cloned
+                        System.out.println("CLONED!!, killing self");
+                        nbt.removeTag("Cloned"); // clear flag
+                        this.setTamed(false);
+                        this.setDead();
+                    }
+                }
+            }
         }
     }
 }

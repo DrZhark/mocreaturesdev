@@ -936,29 +936,11 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     }
 
-    @Override
-    public boolean interact(EntityPlayer entityplayer)
-    {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
-        {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            if (MoCreatures.isServer())
-            {
-                MoCTools.dropAmulet(this, 1);
-                this.isDead = true;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
 
     protected boolean canBeTrappedInNet() 
     {
-        return false;
+        return (this instanceof IMoCTameable) && getIsTamed();
     }
 
     protected void dropMyStuff() {

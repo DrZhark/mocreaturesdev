@@ -1,5 +1,7 @@
 package drzhark.mocreatures.item;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -8,6 +10,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
@@ -27,6 +30,8 @@ public class MoCItemFishnet extends MoCItem
     private String spawnClass;
     private String ownerName;
     private int amuletType;
+    private boolean adult;
+    private int PetId;
 
     public MoCItemFishnet(int i) 
     {
@@ -76,13 +81,7 @@ public class MoCItemFishnet extends MoCItem
             
             if (MoCreatures.isServer())
             {
-                if( itemstack.stackTagCompound == null )
-                {
-                    itemstack.setTagCompound(new NBTTagCompound());
-                }
-
-                NBTTagCompound nbtcompound = itemstack.stackTagCompound;
-                readFromNBT(nbtcompound);
+            	initAndReadNBT(itemstack);
                 
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {
@@ -113,13 +112,14 @@ public class MoCItemFishnet extends MoCItem
                             }
                         }
 
-                        if (MoCreatures.proxy.enableOwnership) storedCreature.setOwner(ownerName);
+                        storedCreature.setOwner(ownerName);
 
                         entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
                         MoCServerPacketHandler.sendAppearPacket(((EntityLiving)storedCreature).entityId, worldObj.provider.dimensionId);
 
                         ((EntityLiving)storedCreature).setEntityHealth((int)health);
                         storedCreature.setEdad(edad);
+                        storedCreature.setAdult(adult);
                         if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
                         {
                              MoCTools.tameWithName(entityplayer, storedCreature);
@@ -136,21 +136,25 @@ public class MoCItemFishnet extends MoCItem
 
     public void readFromNBT(NBTTagCompound nbt)
     {
+    	this.PetId = nbt.getInteger("PetId");
         this.creatureType = nbt.getInteger("CreatureType");
         this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getString("SpawnClass");
+        this.adult = nbt.getBoolean("Adult");
         this.ownerName = nbt.getString("OwnerName");
     }
 
     public void writeToNBT(NBTTagCompound nbt)
     {
+    	nbt.setInteger("PetID", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
         nbt.setString("Name", this.name);
         nbt.setString("SpawnClass", this.spawnClass);
+        nbt.setBoolean("Adult", this.adult);
         nbt.setString("OwnerName", this.ownerName);
     }
 
@@ -183,5 +187,28 @@ public class MoCItemFishnet extends MoCItem
             return icons[0];
         }
         return icons[1];
+    }
+    
+    @SideOnly(Side.CLIENT)
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @Override
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+    	initAndReadNBT(par1ItemStack);
+    	par3List.add(EnumChatFormatting.BLUE + this.name);
+    	par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
+    }
+    
+    private void initAndReadNBT(ItemStack itemstack)
+    {
+    	if( itemstack.stackTagCompound == null )
+        {
+            itemstack.setTagCompound(new NBTTagCompound());
+        }
+        NBTTagCompound nbtcompound = itemstack.stackTagCompound;
+        readFromNBT(nbtcompound);
     }
 }
