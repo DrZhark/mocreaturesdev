@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCItemFishnet extends MoCItem
@@ -91,9 +91,9 @@ public class MoCItemFishnet extends MoCItem
                 try
                 {
                     EntityLiving tempLiving = MoCTools.spawnListByNameClass(spawnClass, worldObj);
-                    if (tempLiving != null && tempLiving instanceof MoCIMoCreature)
+                    if (tempLiving != null && tempLiving instanceof IMoCEntity)
                     {
-                        MoCIMoCreature storedCreature = (MoCIMoCreature) tempLiving;
+                        IMoCEntity storedCreature = (IMoCEntity) tempLiving;
                         ((EntityLiving)storedCreature).setPosition(newPosX, newPosY, newPosZ);
                         storedCreature.setType(creatureType);
                         storedCreature.setTamed(true);

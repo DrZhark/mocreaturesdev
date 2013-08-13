@@ -58,7 +58,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import drzhark.mocreatures.MoCProperty.Type;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
@@ -181,7 +181,7 @@ public class MoCProxy implements IGuiHandler {
     public int ambientSpawnTickRate;
     public int waterSpawnTickRate;
     public int despawnTickRate;
-    public int monsterSpawnRange;
+    public int entitySpawnRange;
     public int maxTamed;
     public int maxOPTamed;
     public int zebraChance;
@@ -356,7 +356,7 @@ public class MoCProxy implements IGuiHandler {
     private static List defaultBiomeGroupBWGSurvivalIsland = new ArrayList();
     private static List defaultBiomeGroupBWGTropicalIsland = new ArrayList();
 
-    protected static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
+    public static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
     private static final Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>();
     private static final Map<String, MoCEntityData> vanillaEntityMap = new TreeMap<String, MoCEntityData>();
     private static Map<String, EnumCreatureType> entityTypes = new HashMap<String, EnumCreatureType>();
@@ -1548,7 +1548,7 @@ public class MoCProxy implements IGuiHandler {
         ambientSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", 60, "The amount of ticks it takes to spawn ambients. A tick rate of 100 would cause Custom Spawner to spawn ambients every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 60, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
-        monsterSpawnRange = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnRange", 8, "Mob limit radius to spawn distance (chunks aren't loaded)").getInt();
+        entitySpawnRange = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "entitySpawnRange", 8, "Max entity spawn distance from the player (chunks aren't loaded). Note: This value must be equal or greater than view-distance.").getInt();
         spawnCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnCreatures", true, "Allow creatures to spawn. Turn off to disable all creature entity types.").getBoolean(true);
         spawnMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnMonsters", true, "Allow monsters to spawn. Turn off to disable all monster entity types.").getBoolean(true);
         spawnWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnWaterCreatures", true, "Allow watercreatures to spawn. Turn off to disable all watercreature entity types.").getBoolean(true);
@@ -1597,7 +1597,15 @@ public class MoCProxy implements IGuiHandler {
         blockStoneID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", 202, "Basic block for terrain generation, needs to be less than 256").getInt();
         WyvernDimension = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", -17).getInt();
         WyvernBiomeID = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", 207).getInt();
-
+        // refresh CMS vars too
+        if (this.useCustomSpawner && MoCreatures.myCustomSpawner != null)
+        {
+            MoCreatures.myCustomSpawner.setMaxAmbients(maxAmbients);
+            MoCreatures.myCustomSpawner.setMaxCreatures(maxCreatures);
+            MoCreatures.myCustomSpawner.setMaxWaterCreatures(maxWaterCreatures);
+            MoCreatures.myCustomSpawner.setMaxMonsters(maxMonsters);
+            MoCreatures.myCustomSpawner.verboseConsole = debugCMS;
+        }
         mocGlobalConfig.save();
     }
 
@@ -1637,7 +1645,7 @@ public class MoCProxy implements IGuiHandler {
      * @param player
      * @param mocanimal
      */
-    public void setName(EntityPlayer player, MoCIMoCreature mocanimal) {
+    public void setName(EntityPlayer player, IMoCEntity mocanimal) {
         //client side only
     }
 

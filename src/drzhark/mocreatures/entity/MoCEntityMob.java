@@ -25,7 +25,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public abstract class MoCEntityMob extends EntityMob implements MoCIMoCreature//, IEntityAdditionalSpawnData
+public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
     protected boolean divePending;
     protected int maxHealth;

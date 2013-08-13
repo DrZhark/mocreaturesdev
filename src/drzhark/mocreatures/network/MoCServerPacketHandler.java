@@ -10,15 +10,19 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet20NamedEntitySpawn;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 public class MoCServerPacketHandler implements IPacketHandler {
@@ -36,16 +40,38 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 {
                     int entID = dataStream.readInt();
                     String name = dataStream.readUTF();
+                    String ownerName = "";
 
                     EntityPlayer player = (EntityPlayer) playerEntity;
+                    Entity pet = null;
                     List<Entity> entList = player.worldObj.loadedEntityList;
 
                     for (Entity ent : entList)
                     {
-                        if (ent.entityId == entID && ent instanceof MoCIMoCreature)
+                        if (ent.entityId == entID && ent instanceof IMoCTameable)
                         {
-                            ((MoCIMoCreature) ent).setName(name);
+                            ((IMoCEntity) ent).setName(name);
+                            ownerName = ((IMoCEntity) ent).getOwnerName();
+                            pet = ent;
                             break;
+                        }
+                    }
+                    // update petdata
+                    System.out.println("RECEIVED NAME");
+                    MoCPetData petData = MoCreatures.instance.mapData.getPetData(ownerName);
+                    if (petData != null && pet != null && pet.getEntityData().hasKey("PetId"))
+                    {
+                        int id = pet.getEntityData().getInteger("PetId");
+                        NBTTagList tag = petData.getPetData().getTagList("TamedList");
+                        for (int i = 0; i < tag.tagList.size(); i++)
+                        {
+                            System.out.println("found tag " + tag.tagList.get(i));
+                            NBTTagCompound nbt = (NBTTagCompound)tag.tagList.get(i);
+                            if (nbt.getInteger("PetId") == id)
+                            {
+                                System.out.println("SET PET NAME TO " + name);
+                                nbt.setString("PetName", name);
+                            }
                         }
                     }
                 }
@@ -54,9 +80,9 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 {
                     EntityPlayer player = (EntityPlayer) playerEntity;
 
-                    if (player.ridingEntity != null && player.ridingEntity instanceof MoCIMoCreature)
+                    if (player.ridingEntity != null && player.ridingEntity instanceof IMoCEntity)
                     {
-                        ((MoCIMoCreature) player.ridingEntity).makeEntityJump();
+                        ((IMoCEntity) player.ridingEntity).makeEntityJump();
 
                     }
                 }
@@ -100,9 +126,9 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 if (packetID == 24) // server receives entity dive command packet.
                 {
                     EntityPlayer player = (EntityPlayer) playerEntity;
-                    if (player.ridingEntity != null && player.ridingEntity instanceof MoCIMoCreature)
+                    if (player.ridingEntity != null && player.ridingEntity instanceof IMoCEntity)
                     {
-                        ((MoCIMoCreature) player.ridingEntity).makeEntityDive();
+                        ((IMoCEntity) player.ridingEntity).makeEntityDive();
 
                     }
                 }
@@ -110,9 +136,9 @@ public class MoCServerPacketHandler implements IPacketHandler {
                 if (packetID == 25) // server receives entity dismount command packet.
                 {
                     EntityPlayer player = (EntityPlayer) playerEntity;
-                    if (player.ridingEntity != null && player.ridingEntity instanceof MoCIMoCreature)
+                    if (player.ridingEntity != null && player.ridingEntity instanceof IMoCEntity)
                     {
-                        ((MoCIMoCreature) player.ridingEntity).dismountEntity();
+                        ((IMoCEntity) player.ridingEntity).dismountEntity();
 
                     }
                 }

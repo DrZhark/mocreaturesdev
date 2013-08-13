@@ -3,11 +3,12 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.World;
 
-public class MoCEntityDeer extends MoCEntityAnimal {
+public class MoCEntityDeer extends MoCEntityTameable {
 
     private float myMoveSpeed;
 

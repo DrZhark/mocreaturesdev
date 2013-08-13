@@ -36,7 +36,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
-                        ambientSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.ambient, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
+                        ambientSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.ambient, MoCreatures.proxy.entitySpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + ambientSpawns + " Ambients");
                     }
                 }
@@ -54,7 +54,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
-                        waterSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.waterCreature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
+                        waterSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.waterCreature, MoCreatures.proxy.entitySpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + waterSpawns + " Water Creatures");
                     }
                 }
@@ -71,7 +71,7 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                     
                     if (worldObj.playerEntities.size() > 0 && spawnPassive)
                     {
-                        animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.creature, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
+                        animalSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.creature, MoCreatures.proxy.entitySpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + animalSpawns + " Creatures");
                     }
                 }
@@ -79,10 +79,11 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.monsterSpawnTickRate == 0L) && MoCreatures.proxy.spawnMonsters && worldObj.difficultySetting > 0 && MoCreatures.proxy.maxMonsters > 0) 
                 {
                     int mobSpawns = 0;
-
+                    //System.out.println("worldObj.playerEntities.size() = " + worldObj.playerEntities.size() + " for dimension " + worldObj.provider.dimensionId + ", disallowMonsterSpawningDuringDay = " + MoCreatures.proxy.disallowMonsterSpawningDuringDay + ", entitySpawnRange" + MoCreatures.proxy.entitySpawnRange + ", enforceMaxSpawnLimits = " + MoCreatures.proxy.enforceMaxSpawnLimits + ", lightLevel = " + MoCreatures.proxy.lightLevel);
                     if (worldObj.playerEntities.size() > 0 && !MoCreatures.proxy.disallowMonsterSpawningDuringDay)
                     {
-                        mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.monsterSpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
+                        mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.entitySpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
+                        //System.out.println("Mo'Creatures Spawned " + mobSpawns + " Mobs");
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");
                     }
                 }

@@ -2,7 +2,7 @@ package drzhark.mocreatures.entity;
 
 import net.minecraft.entity.Entity;
 
-public interface MoCIMoCreature {
+public interface IMoCEntity {
 
     public void riderIsDisconnecting(boolean flag);// = false;
 

@@ -18,11 +18,12 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCEntityWyvern extends MoCEntityAnimal{
+public class MoCEntityWyvern extends MoCEntityTameable {
 
     
     public MoCAnimalChest localchest;

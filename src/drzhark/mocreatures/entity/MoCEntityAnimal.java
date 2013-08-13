@@ -1,7 +1,10 @@
 package drzhark.mocreatures.entity;
 
 import java.util.List;
+import java.util.Map;
 
+import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCPetMapData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -12,8 +15,10 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -25,7 +30,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -33,7 +40,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 
-public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCreature
+public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 {
     protected boolean divePending;
     protected boolean jumpPending;
@@ -42,7 +49,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     public EntityLiving roper;
     private PathEntity entitypath;
     // used by MoCPlayerTracker to prevent dupes when a player disconnects on animal from server
-    private boolean riderIsDisconnecting;
+    protected boolean riderIsDisconnecting;
+    private int petDataId = -1;
 
     public MoCEntityAnimal(World world)
     {
@@ -171,12 +179,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
         isEntityJumping = flag;
     }
 
-    @Override
-    protected boolean canDespawn()
-    {
-        return !getIsTamed();
-    }
-
     /**
      * called in getCanSpawnHere to make sure the right type of creature spawns
      * in the right biome i.e. snakes, rays, bears, BigCats and later wolves,
@@ -243,7 +245,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                 || (entity instanceof EntityPlayer ) 
                 || (entity instanceof MoCEntityKittyBed) 
                 || (entity instanceof MoCEntityLitterBox) 
-                || (this.getIsTamed() && (entity instanceof MoCIMoCreature && ((MoCIMoCreature) entity).getIsTamed())) 
+                || (this.getIsTamed() && (entity instanceof IMoCEntity && ((IMoCEntity) entity).getIsTamed())) 
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                 || (entity.width >= this.width || entity.height >= this.height)
@@ -384,86 +386,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        //before ownership check 
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) 
-                && MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                if (MoCreatures.proxy.enableOwnership) 
-                {
-                    EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
-                    if (epOwner != null)
-                    {
-                        MoCTools.reduceTamedByPlayer(epOwner);
-                    }
-                    else
-                    {
-                        MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
-                    }
-                }
-                this.setOwner("");
-                
-            }
-            return true;
-        }
-        //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) 
-        {
-            return true; 
-        }
-
-        //changes name
-        if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-        {
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-            return true;
-        }
-        
-        //sets it free, untamed
-        if ((itemstack != null) && getIsTamed() 
-                && ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
-                this.setOwner("");
-                this.setName("");
-                this.dropMyStuff();
-                this.setTamed(false);
-            }
-            
-            return true;
-        }
-
-        //removes owner, any other player can claim it by renaming it
-        if ((itemstack != null) && getIsTamed() 
-                    && ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                
-                if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
-                this.setOwner("");
-            }
-            return true;
-        }
         //heals
         if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
         {
@@ -869,6 +791,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         super.readEntityFromNBT(nbttagcompound);
         setTamed(nbttagcompound.getBoolean("Tamed"));
+        if (getIsTamed())
+            System.out.println("readEntityFromNBT Entity " + this.getOwnerName());
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
         setName(nbttagcompound.getString("Name"));
@@ -1038,7 +962,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                     setIsJumping(false);
                 }
                 //TODO check!, also check nullpointerEx on the (Entityplayer) cast
-                if (MoCreatures.isServer())
+                if (MoCreatures.isServer() && this instanceof MoCEntityTameable)
                 {
                     int chance = (getMaxTemper() - getTemper());
                     if (chance <= 0)
@@ -1047,7 +971,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
                     }
                     if (rand.nextInt(chance * 8) == 0)
                     {
-                        MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, this);
+                        MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, (MoCEntityTameable)this);
                     }
                 }
             }
@@ -1671,19 +1595,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             dropMyStuff();
         }
 
-        if (MoCreatures.proxy.enableOwnership && this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
-        {
-            EntityPlayer ep = worldObj.getPlayerEntityByName(this.getOwnerName());
-            if (ep != null)
-            {
-                MoCTools.reduceTamedByPlayer(ep);
-            }
-            else
-            {
-                MoCTools.reduceTamedByOfflinePlayer(getOwnerName());
-            }
-        }
-
         super.onDeath(damagesource);
     }
 
@@ -1718,18 +1629,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     }
 
     public void setRideable(boolean b) {}
-    
- // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
-    @Override
-    public void setDead()
-    {
-        // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && this.health > 0 && !this.riderIsDisconnecting)
-        {
-            return;
-        }
-        super.setDead();
-    }
 
     @Override
     public void setArmorType(byte i) {}
@@ -1794,4 +1693,5 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
     {
         this.riderIsDisconnecting = true;
     }
+
 }

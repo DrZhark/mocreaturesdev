@@ -19,7 +19,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.gui.MoCGUIEntityNamer;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
@@ -126,9 +126,9 @@ public class MoCClientPacketHandler implements IPacketHandler {
                     List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
                     for (Entity ent : entList)
                     {
-                        if (ent.entityId == EntityID && ent instanceof MoCIMoCreature)
+                        if (ent.entityId == EntityID && ent instanceof IMoCEntity)
                         {
-                            MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((MoCIMoCreature) ent), ((MoCIMoCreature) ent).getName()));
+                            MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) ent), ((IMoCEntity) ent).getName()));
                             break;
                         }
                     }
@@ -186,9 +186,9 @@ public class MoCClientPacketHandler implements IPacketHandler {
                     List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
                     for (Entity ent : entList)
                     {
-                        if (ent.entityId == entID && ent instanceof MoCIMoCreature)
+                        if (ent.entityId == entID && ent instanceof IMoCEntity)
                         {
-                            ((MoCIMoCreature) ent).performAnimation(attackType);
+                            ((IMoCEntity) ent).performAnimation(attackType);
                             break;
                         }
                     }

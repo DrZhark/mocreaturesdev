@@ -2,6 +2,7 @@ package drzhark.mocreatures;
 
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.NETHER_BRIDGE;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,11 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import drzhark.customspawner.CustomSpawner;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -45,7 +48,7 @@ public class MoCEventHooks {
         if (MoCreatures.proxy.useCustomSpawner)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
-           //System.out.println("entityData = " + entityData);
+            //System.out.println("entityData = " + entityData);
             if (entityData != null)
             {
                 //System.out.println("LIVINGPACKSIZE " + event.entityLiving + " setting to " + entityData.getMaxInChunk());
@@ -55,11 +58,37 @@ public class MoCEventHooks {
             }
         }
     }
-    @ForgeSubscribe
-    public void onWorldLoading(WorldEvent.Load event)
+
+   /* @ForgeSubscribe // override maxSpawnInChunk values
+    public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
     {
-        MoCreatures.proxy.worldInitDone = true;
-    }
+        //System.out.println("onLivingSpawn event = " + event.entity);
+        if (MoCreatures.proxy.useCustomSpawner)
+        {
+            MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
+            if (entityData != null && entityData.getUseVanillaSpawner() && entityData.getCanSpawn())
+            {
+                WorldServer world = DimensionManager.getWorld(event.entityLiving.worldObj.provider.dimensionId);
+                if (world != null && (MoCreatures.myCustomSpawner.isValidLightLevel(event.entityLiving, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel) && MoCreatures.myCustomSpawner.getEntityCount(world, entityData.getType()) <= MoCreatures.myCustomSpawner.getMax(entityData.getType()) * MoCreatures.myCustomSpawner.eligibleChunksForSpawning.size() / 256))
+                {
+                    event.setResult(Result.ALLOW);
+                }
+                else
+                {
+                    if (MoCreatures.proxy.debugCMS) 
+                        MoCreatures.myCustomSpawner.log.info("Denied vanilla spawner from spawning entity " + entityData.getEntityName()+ ".");
+                    //System.out.println("Denied vanilla spawner from spawning entity " + entityData.getEntityName() + ".");
+                    event.setResult(Result.DENY);
+                }
+            }
+            else if (entityData != null && !entityData.getCanSpawn())
+            {
+                if (MoCreatures.proxy.debugCMS) 
+                    MoCreatures.myCustomSpawner.log.info("Denied CMS from spawning entity " + entityData.getEntityName() + ". CanSpawn set to false.");
+                event.setResult(Result.DENY);
+            }
+        }
+    }*/
 
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)
@@ -71,4 +100,5 @@ public class MoCEventHooks {
             MoCreatures.proxy.structureData.addStructure(event.type, event.originalGen);
         }
     }
+
 }

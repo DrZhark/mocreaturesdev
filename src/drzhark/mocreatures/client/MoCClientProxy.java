@@ -171,7 +171,7 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderWWolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWerewolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWraith;
 import drzhark.mocreatures.client.settings.MoCKeyHandler;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
@@ -335,7 +335,7 @@ public class MoCClientProxy extends MoCProxy {
      * @param mocanimal
      */
     @Override
-    public void setName(EntityPlayer player, MoCIMoCreature mocanimal)
+    public void setName(EntityPlayer player, IMoCEntity mocanimal)
     {
         mc.displayGuiScreen(new MoCGUIEntityNamer(mocanimal, mocanimal.getName()));
 

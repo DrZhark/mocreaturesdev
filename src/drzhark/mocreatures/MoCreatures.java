@@ -51,6 +51,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
@@ -176,7 +177,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.5")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.5d1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -188,6 +189,7 @@ public class MoCreatures {
     public static MoCProxy proxy;
     public static CustomSpawner myCustomSpawner;
     public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    public MoCPetMapData mapData;
 
     /**
      * ITEMS
@@ -508,6 +510,36 @@ public class MoCreatures {
     @ServerStarting
     public void serverStarting(FMLServerStartingEvent event)
     {
+        if (DimensionManager.getWorld(0) != null) // if overworld has loaded, use its mapstorage
+        {
+            MoCPetMapData data = (MoCPetMapData)DimensionManager.getWorld(0).mapStorage.loadData(MoCPetMapData.class, "mocreatures");
+            System.out.println("data = " + data);
+            if (data == null)
+            {
+                System.out.println("MOCPETMAPDATA IS NULL!!! creating NEW FILE");
+                data = new MoCPetMapData("mocreatures");
+            }
+            System.out.println("LOADING MOCPETMAPDATA");
+            DimensionManager.getWorld(0).mapStorage.setData("mocreatures", data);
+            DimensionManager.getWorld(0).mapStorage.saveAllData();
+            this.mapData = data;
+            MoCreatures.proxy.worldInitDone = true;
+        }
+        BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
+        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+        {
+            if (BiomeGenBase.biomeList[j] != null)
+            {
+                biomeList.add(BiomeGenBase.biomeList[j]);
+            }
+        }
+        if (biomeList.size() > 0)
+        {
+           // if (proxy.debugLogging) log.info("Removing entity " + entityData.getEntityClass() + " with type " + entityData.getType() + " from all biome spawnlists.");
+            allBiomes = biomeList.toArray(allBiomes);
+            myCustomSpawner.copyVanillaSpawnLists(allBiomes);
+        }
         event.registerServerCommand(new CommandMoCreatures());
     }
 
@@ -726,7 +758,7 @@ public class MoCreatures {
         scrollOfOwner = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofowner");
         
         superAmulet = (new MoCItemFishnet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
-        
+
         //new blocks
         mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");
         GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
@@ -1253,6 +1285,7 @@ public class MoCreatures {
                 for (Map.Entry<String, MoCEntityData> entityEntry : entityList.get(i).entrySet())
                 {
                     MoCEntityData entityData = entityEntry.getValue();
+                   // System.out.println(entityData.getEntityName() + " biome size = " + entityData.getSpawnBiomes().size());
                     if (entityData.getSpawnBiomes() != null && entityData.getSpawnBiomes().size() > 0)
                     {
                         BiomeGenBase[] biomesToSpawn = new BiomeGenBase[entityData.getSpawnBiomes().size()];
@@ -1283,6 +1316,7 @@ public class MoCreatures {
                             
                         }
                     }
+                    else entityData.setUseVanillaSpawner(true);
                     // handle entity removals
                     if (proxy.useCustomSpawner)
                     {
@@ -1294,6 +1328,7 @@ public class MoCreatures {
                         || ((MoCreatures.proxy.maxWaterCreatures == 0 || !MoCreatures.proxy.spawnWaterCreatures) && entityData.getType() == EnumCreatureType.waterCreature)))
                         {
                             // remove from all biomes
+                           // System.out.println("Entity " + entityData.getEntityClass() + " is not allowed to spawn due to configuration settings. Please check your confirm your settings if this is a mistake.");
                             if (proxy.debugLogging) log.info("Entity " + entityData.getEntityClass() + " is not allowed to spawn due to configuration settings. Please check your confirm your settings if this is a mistake.");
                             removeAllBiomeSpawns(entityData, false);
                         }
@@ -1320,23 +1355,11 @@ public class MoCreatures {
             allBiomes = biomeList.toArray(allBiomes);
             if (!vanillaOnly)
                 myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-            if (entityData.getType() != null)
-            {
-                // special case for ocelots since they are added to monster spawnlists as creature
-                if (entityData.getEntityName().equals("Ozelot"))
-                {
-                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
-                }
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-            }
-            else
-            {
-                // handle undefined types
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
-            }
+            // handle undefined types
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
         }
     }
 

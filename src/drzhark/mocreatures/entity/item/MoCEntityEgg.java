@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.item;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
 import drzhark.mocreatures.entity.aquatic.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityPiranha;
@@ -170,7 +171,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
+                            if (MoCreatures.isServer() && this instanceof IMoCTameable)
                             {
                                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                             }

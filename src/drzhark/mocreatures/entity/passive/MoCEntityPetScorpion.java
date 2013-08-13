@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
@@ -20,7 +21,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class MoCEntityPetScorpion extends MoCEntityAnimal {
+public class MoCEntityPetScorpion extends MoCEntityTameable {
     public static final String scorpionNames[] = { "Dirt", "Cave", "Nether", "Frost", "Undead" };
     private boolean isPoisoning;
     private int poisontimer;

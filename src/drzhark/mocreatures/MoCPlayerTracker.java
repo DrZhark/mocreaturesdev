@@ -3,7 +3,7 @@ package drzhark.mocreatures;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.IPlayerTracker;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 
 public class MoCPlayerTracker implements IPlayerTracker
 {
@@ -14,9 +14,9 @@ public class MoCPlayerTracker implements IPlayerTracker
     @Override
     public void onPlayerLogout(EntityPlayer player) {
         //System.out.println("onPlayerLogout " + player);
-        if (player.ridingEntity != null && (player.ridingEntity instanceof MoCIMoCreature))
+        if (player.ridingEntity != null && (player.ridingEntity instanceof IMoCEntity))
         {
-            MoCIMoCreature mocEntity = (MoCIMoCreature)player.ridingEntity;
+            IMoCEntity mocEntity = (IMoCEntity)player.ridingEntity;
             mocEntity.riderIsDisconnecting(true);// = true;
         }
     }

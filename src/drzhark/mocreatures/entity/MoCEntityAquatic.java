@@ -25,7 +25,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoCreature//, IEntityAdditionalSpawnData
+public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
     protected boolean divePending;
     protected boolean jumpPending;
@@ -374,7 +374,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             {
                 setIsJumping(false);
             }
-            if (MoCreatures.isServer())
+            if (MoCreatures.isServer() && this instanceof IMoCTameable)
             {
                 int chance = (getMaxTemper() - getTemper());
                 if (chance <= 0)
@@ -941,91 +941,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        //before ownership check 
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) && MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                if (MoCreatures.proxy.enableOwnership) 
-                {
-                    EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
-                    if (epOwner != null)
-                    {
-                        MoCTools.reduceTamedByPlayer(epOwner);
-                    }
-                    else
-                    {
-                        MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
-                    }
-                }
-                this.setOwner("");
-            }
-            return true;
-        }
-        //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
-    
-        //changes name
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
-        {
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-            return true;
-        }
-
-        //sets it free, untamed
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
-                this.setOwner("");
-                this.setName("");
-                this.dropMyStuff();
-                this.setTamed(false);
-            }
-            return true;
-        }
-
-        //removes owner, any other player can claim it by renaming it
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            if (MoCreatures.isServer())
-            {
-                if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
-                this.setOwner("");
-            }
-            return true;
-        }
-
-        if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            if (MoCreatures.isServer())
-            {
-                health = getMaxHealth();
-            }
-            return true;
-        }
-
         if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -1046,7 +961,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
         return false;
     }
 
-    private void dropMyStuff() {
+    protected void dropMyStuff() {
         // TODO Auto-generated method stub
     }
 
