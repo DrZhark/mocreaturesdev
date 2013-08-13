@@ -63,10 +63,10 @@ public class MoCServerPacketHandler implements IPacketHandler {
                     {
                         int id = pet.getEntityData().getInteger("PetId");
                         NBTTagList tag = petData.getPetData().getTagList("TamedList");
-                        for (int i = 0; i < tag.tagList.size(); i++)
+                        for (int i = 0; i < tag.tagCount(); i++)
                         {
-                            System.out.println("found tag " + tag.tagList.get(i));
-                            NBTTagCompound nbt = (NBTTagCompound)tag.tagList.get(i);
+                            System.out.println("found tag " + tag.tagAt(i));
+                            NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                             if (nbt.getInteger("PetId") == id)
                             {
                                 System.out.println("SET PET NAME TO " + name);

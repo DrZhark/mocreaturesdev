@@ -73,14 +73,13 @@ public class MoCPetData {
 
     public boolean removePet(int id)
     {
-        Iterator iter = this.tamedList.tagList.iterator();
-        while (iter.hasNext())
+        for (int i = 0; i < this.tamedList.tagCount(); i++)
         {
-            NBTTagCompound nbt = (NBTTagCompound)iter.next();
+            NBTTagCompound nbt = (NBTTagCompound)this.tamedList.tagAt(i);
             if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == id)
             {
                 System.out.println("FOUND MATCH PET " + nbt.getString("Name") + " for owner " + ownerName);
-                iter.remove();
+                this.tamedList.removeTag(i);
                 System.out.println("REMOVED!!!");
                 this.usedPetIds.remove(new Integer(id));
                 this.IDMap.clear(id); // clear bit so it can be reused again

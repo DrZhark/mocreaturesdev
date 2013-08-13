@@ -232,10 +232,10 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             System.out.println("PET ID = " + nbttagcompound.getInteger("PetId"));
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             NBTTagList tag = petData.getPetData().getTagList("TamedList");
-            for (int i = 0; i < tag.tagList.size(); i++)
+            for (int i = 0; i < tag.tagCount(); i++)
             {
-                System.out.println("found tag " + tag.tagList.get(i));
-                NBTTagCompound nbt = (NBTTagCompound)tag.tagList.get(i);
+                System.out.println("found tag " + tag.tagAt(i));
+                NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                 if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                 {
                     // check if cloned and if so kill
@@ -249,29 +249,6 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
                     }
                 }
             }
-            /*MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
-            if (petData != null)
-            {
-                int id = this.getEntityData().getInteger("PetId");
-                NBTTagList tag = petData.getPetData().getTagList("TamedList");
-                for (int i = 0; i < tag.tagList.size(); i++)
-                {
-                    System.out.println("found tag " + tag.tagList.get(i));
-                    NBTTagCompound nbt = (NBTTagCompound)tag.tagList.get(i);
-                    if (nbt.getInteger("PetId") == id)
-                    {
-                        // check if cloned and if so kill
-                        if (nbt.hasKey("Cloned"))
-                        {
-                            // entity was cloned
-                            System.out.println("CLONED!!, killing self");
-                            nbt.removeTag("Cloned"); // clear flag
-                            this.setTamed(false);
-                            this.setDead();
-                        }
-                    }
-                }
-            }*/
         }
     }
 }

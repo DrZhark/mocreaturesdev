@@ -94,10 +94,10 @@ public class MoCPetMapData extends WorldSavedData
             int id = -1;
             id = pet.getEntityData().getInteger("PetId");
             System.out.println("READNBT PetId = " + id + " for " + this);
-            for (int i = 0; i < tag.tagList.size(); i++)
+            for (int i = 0; i < tag.tagCount(); i++)
             {
-                System.out.println("found tag " + tag.tagList.get(i));
-                NBTTagCompound nbt = (NBTTagCompound)tag.tagList.get(i);
+                System.out.println("found tag " + tag.tagAt(i));
+                NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                 if (nbt.getInteger("PetId") == id)
                 {
                     System.out.println("UPDATING " + pet.getName() + " PETDATA with ID " + id);
@@ -117,11 +117,6 @@ public class MoCPetMapData extends WorldSavedData
      */
     public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        for (Object obj : par1NBTTagCompound.tagMap.entrySet())
-        {
-            Map.Entry<String, NBTBase> tagEntry = (Map.Entry<String, NBTBase>)obj;
-            System.out.println("Found data " + tagEntry.getKey() + " with value " + tagEntry.getValue());
-        }
         for (Object nbtTag : par1NBTTagCompound.getTags())
         {
             NBTTagCompound nbt = (NBTTagCompound)nbtTag;
@@ -129,7 +124,7 @@ public class MoCPetMapData extends WorldSavedData
             if (!this.petMap.containsKey(nbt.getName()))
             {
                 System.out.println("ADDING OWNER " + nbt.getName() + " PET DATA to mocreatures.dat");
-                for (Object obj : nbt.tagMap.entrySet())
+                for (Object obj : nbt.getTags())
                 {
                     Map.Entry<String, NBTBase> tagEntry = (Map.Entry<String, NBTBase>)obj;
                     System.out.println("Found " + nbt.getName() + " data " + tagEntry.getKey() + " with value " + tagEntry.getValue());

@@ -230,10 +230,9 @@ public class CommandMoCreatures extends CommandBase {
                                         MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
                                         if (ownerPetData != null)
                                         {
-                                            Iterator iter = ownerPetData.getTamedList().tagList.iterator();
-                                            while (iter.hasNext())
+                                            for (i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
                                             {
-                                                NBTTagCompound nbt = (NBTTagCompound)iter.next();
+                                                NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
                                                 if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
                                                 {
                                                     entityCount++;
@@ -296,10 +295,9 @@ public class CommandMoCreatures extends CommandBase {
                                         MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
                                         if (ownerPetData != null)
                                         {
-                                            Iterator iter = ownerPetData.getTamedList().tagList.iterator();
-                                            while (iter.hasNext())
+                                            for (i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
                                             {
-                                                NBTTagCompound nbt = (NBTTagCompound)iter.next();
+                                                NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
                                                 if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
                                                 {
                                                     entityCount++;
@@ -430,10 +428,9 @@ public class CommandMoCreatures extends CommandBase {
                                 System.out.println("petData = " + ownerPetData);
                                 if (ownerPetData != null)
                                 {
-                                    Iterator iter = ownerPetData.getTamedList().tagList.iterator();
-                                    while (iter.hasNext())
+                                    for (i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
                                     {
-                                        NBTTagCompound nbt = (NBTTagCompound)iter.next();
+                                        NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
                                         if (nbt.hasKey("Name") && nbt.getString("Name").equalsIgnoreCase(petName) || nbt.hasKey("PetId") && nbt.getInteger("PetId") == entityId)
                                         {
                                             par1ICommandSender.sendChatToPlayer("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosX")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosY")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosZ")) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId"));
