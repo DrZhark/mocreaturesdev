@@ -124,11 +124,6 @@ public class MoCPetMapData extends WorldSavedData
             if (!this.petMap.containsKey(nbt.getName()))
             {
                 System.out.println("ADDING OWNER " + nbt.getName() + " PET DATA to mocreatures.dat");
-                for (Object obj : nbt.getTags())
-                {
-                    Map.Entry<String, NBTBase> tagEntry = (Map.Entry<String, NBTBase>)obj;
-                    System.out.println("Found " + nbt.getName() + " data " + tagEntry.getKey() + " with value " + tagEntry.getValue());
-                }
                 this.petMap.put(nbt.getName(), new MoCPetData(nbt));
             }
         }
