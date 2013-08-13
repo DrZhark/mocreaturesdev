@@ -479,6 +479,18 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             return true;
         }
 
+        if (itemstack != null && itemstack.itemID == MoCreatures.superAmulet.itemID && this.canBeTrappedInNet()) 
+        {
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if (MoCreatures.isServer())
+            {
+            	this.dropMyStuff();
+                MoCTools.dropAmulet(this, 2);
+                this.isDead = true;
+            }
+
+            return true;
+        }
         //attaches rope
         if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && getIsTamed() && (itemstack.itemID == MoCreatures.rope.itemID))
         {
@@ -516,7 +528,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
-                MoCTools.dropFishnet(this);
+                MoCTools.dropAmulet(this, 1);
                 this.isDead = true;
             }
             return true;
@@ -1774,7 +1786,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
     protected boolean canBeTrappedInNet() 
     {
-        return false;
+        return getIsTamed();
     }
 
     @Override

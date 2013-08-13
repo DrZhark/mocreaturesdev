@@ -176,7 +176,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.3")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "5.2.5")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -359,6 +359,7 @@ public class MoCreatures {
     public static Item crabmeatcooked;
 
     public static Item fishnet;
+    public static Item superAmulet;
 
     public static Logger log;
     public static MoCPlayerTracker tracker;
@@ -724,6 +725,8 @@ public class MoCreatures {
         
         scrollOfOwner = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofowner");
         
+        superAmulet = (new MoCItemFishnet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
+        
         //new blocks
         mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");
         GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
@@ -918,6 +921,7 @@ public class MoCreatures {
         LanguageRegistry.addName(garment, "Elephant Garment");
         LanguageRegistry.addName(platform, "Mammoth Platform");
         LanguageRegistry.addName(fishnet, "Fish Net");
+        LanguageRegistry.addName(superAmulet, "Pet Amulet");
 
         for (int i = 0; i < 91; i++)
         {
@@ -1100,6 +1104,8 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(bootsFur, 1), new Object[] { "X X", "X X", Character.valueOf('X'), fur });
 
         GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] { "  #", " # ", "X  ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), Item.ingotIron, });
+
+        GameRegistry.addRecipe(new ItemStack(superAmulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.diamond });
 
         GameRegistry.addRecipe(new ItemStack(amuletbone, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Item.bone, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.enderPearl });
 

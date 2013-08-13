@@ -94,7 +94,7 @@ public class MoCItemAmulet extends MoCItem {
                     storedCreature.setEdad(edad);
                     storedCreature.setName(name);
                     storedCreature.setArmorType(armor);
-                    storedCreature.setEntityHealth(health);
+                    storedCreature.setEntityHealth((int)health);
                     storedCreature.setAdult(adult);
                     
                     //if the player using the amulet is different than the original owner
@@ -128,7 +128,7 @@ public class MoCItemAmulet extends MoCItem {
 
     private int ageCounter;
     private String name;
-    private int health;
+    private float health;
     private int edad;
     private int creatureType;
     private int spawnClass;
@@ -140,7 +140,7 @@ public class MoCItemAmulet extends MoCItem {
     public void readFromNBT(NBTTagCompound nbt)
     {
         this.creatureType = nbt.getInteger("CreatureType");
-        this.health = nbt.getInteger("Health");
+        this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getInteger("SpawnClass");
@@ -153,7 +153,7 @@ public class MoCItemAmulet extends MoCItem {
     public void writeToNBT(NBTTagCompound nbt)
     {
         nbt.setInteger("CreatureType", this.creatureType);
-        nbt.setInteger("Health", this.health);
+        nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
         nbt.setString("Name", this.name);
         nbt.setInteger("SpawnClass", this.spawnClass);

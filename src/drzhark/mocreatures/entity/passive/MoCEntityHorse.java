@@ -1789,7 +1789,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     }
 
     /**
-     * Can this horse be trapped in an amulet?
+     * Can this horse be trapped in a special amulet?
      */
     public boolean isAmuletHorse()
     {
@@ -2791,5 +2791,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
             return EnumCreatureAttribute.UNDEAD;
         }
         return super.getCreatureAttribute();
+    }
+    
+    @Override
+    protected boolean canBeTrappedInNet() 
+    {
+        return getIsTamed() && !isAmuletHorse();
     }
 }

@@ -1530,7 +1530,7 @@ public class MoCTools {
             {
                 //TODO change the 21 to the list given based on the class of the creature
                 nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
-                nbtt.setInteger("Health", entity.getHealth());
+                	nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());
@@ -1552,11 +1552,16 @@ public class MoCTools {
     /**
      * Drops a new EntityItem fishnet with the stored information of the entity
      */
-    public static void dropFishnet(MoCIMoCreature entity)
+    public static void dropAmulet(MoCIMoCreature entity, int amuletType)
     {
         if (MoCreatures.isServer())
         {
-            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
+        		ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); 
+        	   if (amuletType == 2)
+        	   {
+        		   stack = new ItemStack(MoCreatures.superAmulet, 1, 1);
+        	   }
+               
 
             if( stack.stackTagCompound == null )
             {
@@ -1567,7 +1572,7 @@ public class MoCTools {
             try
             {
                 nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
-                nbtt.setInteger("Health", ((EntityLiving)entity).getHealth());
+                	nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());

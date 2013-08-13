@@ -21,11 +21,12 @@ public class MoCItemFishnet extends MoCItem
     private Icon[] icons;
     private int ageCounter;
     private String name;
-    private int health;
+    private float health;
     private int edad;
     private int creatureType;
     private String spawnClass;
     private String ownerName;
+    private int amuletType;
 
     public MoCItemFishnet(int i) 
     {
@@ -35,6 +36,12 @@ public class MoCItemFishnet extends MoCItem
         ageCounter = 0;
     }
 
+    public MoCItemFishnet(int i, int type) 
+    {
+    	this(i);
+    	this.amuletType = type;
+    }
+    
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
@@ -59,7 +66,13 @@ public class MoCItemFishnet extends MoCItem
             double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
             double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
 
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
+            ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
+            if (this.amuletType == 1)
+            {
+            	emptyAmulet = new ItemStack(MoCreatures.superAmulet, 1, 0);
+            }
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+            //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
             
             if (MoCreatures.isServer())
             {
@@ -105,7 +118,7 @@ public class MoCItemFishnet extends MoCItem
                         entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
                         MoCServerPacketHandler.sendAppearPacket(((EntityLiving)storedCreature).entityId, worldObj.provider.dimensionId);
 
-                        ((EntityLiving)storedCreature).setEntityHealth(health);
+                        ((EntityLiving)storedCreature).setEntityHealth((int)health);
                         storedCreature.setEdad(edad);
                         if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
                         {
@@ -114,7 +127,7 @@ public class MoCItemFishnet extends MoCItem
                     }
                 }catch (Exception ex) 
                 {
-                    if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Error spawning creature from fishnet " + ex);
+                    if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Error spawning creature from fishnet/amulet " + ex);
                 }
             }
        }
@@ -124,7 +137,7 @@ public class MoCItemFishnet extends MoCItem
     public void readFromNBT(NBTTagCompound nbt)
     {
         this.creatureType = nbt.getInteger("CreatureType");
-        this.health = nbt.getInteger("Health");
+        this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getString("SpawnClass");
@@ -134,7 +147,7 @@ public class MoCItemFishnet extends MoCItem
     public void writeToNBT(NBTTagCompound nbt)
     {
         nbt.setInteger("CreatureType", this.creatureType);
-        nbt.setInteger("Health", this.health);
+        nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
         nbt.setString("Name", this.name);
         nbt.setString("SpawnClass", this.spawnClass);
@@ -145,16 +158,26 @@ public class MoCItemFishnet extends MoCItem
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        icons = new Icon[2];
+        icons = new Icon[4];
         icons[0] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":")); //empty fishnet
         icons[1] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":") + "full"); //fishnet with generic fish
-        //TODO add more icons
+        icons[2] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":")); //empty superamulet
+        icons[3] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":") + "full"); //full superamulet
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public Icon getIconFromDamage(int par1)
     {
+    	if (this.amuletType == 1)
+    	{
+    		if (par1 < 1)
+    		{
+    			return icons[2];
+    		}
+    		return icons[3];
+    	}
+        
         if (par1 < 1)
         {
             return icons[0];

@@ -1227,7 +1227,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
 
     protected boolean canBeTrappedInNet() 
     {
-        return false;
+        return getIsTamed();
     }
 
     @Override
@@ -1344,7 +1344,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements MoCIMoCr
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
-                MoCTools.dropFishnet(this);
+                MoCTools.dropAmulet(this, 2);
                 this.isDead = true;
             }
             return true;

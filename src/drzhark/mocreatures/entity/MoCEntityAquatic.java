@@ -1031,7 +1031,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements MoCIMoC
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
-                MoCTools.dropFishnet(this);
+                MoCTools.dropAmulet(this, 1);
                 this.isDead = true;
             }
 
