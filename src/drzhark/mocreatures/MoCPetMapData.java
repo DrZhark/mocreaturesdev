@@ -42,11 +42,11 @@ public class MoCPetMapData extends WorldSavedData
     {
         if (this.petMap.get(pet.getOwnerName()) != null) // required since getInteger will always return 0 if no key is found
         {
-            System.out.println("REMOVING PET " + this + " WITH ID " + ((Entity)pet).getEntityData().getInteger("PetId"));
+            System.out.println("REMOVING PET " + this + " WITH ID " + pet.getOwnerPetId());
            if (this.petMap.get(pet.getOwnerName()).removePet(petId))
            {
                this.markDirty();
-               ((Entity)pet).getEntityData().removeTag("PetId");
+               pet.setOwnerPetId(-1);
                return true;
            }
         }
@@ -55,7 +55,7 @@ public class MoCPetMapData extends WorldSavedData
 
     public void updateOwnerPet(IMoCTameable pet, NBTTagCompound petNBT)
     {
-        if (!pet.getEntityData().hasKey("PetId") || petMap.get(pet.getOwnerName()) == null)
+        if (pet.getOwnerPetId() == -1 || petMap.get(pet.getOwnerName()) == null)
         {
             System.out.println("SAVING OWNER PET DATA FOR " + this + " with name " + pet.getName());
             String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.username;
@@ -78,10 +78,9 @@ public class MoCPetMapData extends WorldSavedData
                 petMap.put(owner, petData);
                 this.markDirty();
             }
-            pet.getEntityData().setInteger("PetId", id);
-            System.out.println("customentitydata = " +pet.getEntityData());
+            pet.setOwnerPetId(id);
             System.out.println("created new pet save data with id " + id + " for entity " + this);
-            System.out.println("entityData pet ID = " + pet.getEntityData().getInteger("PetId"));
+            System.out.println("entityData pet ID = " + pet.getOwnerPetId());
         }
         else
         {
@@ -92,7 +91,7 @@ public class MoCPetMapData extends WorldSavedData
             NBTTagList tag = petData.getPetData().getTagList("TamedList");
             System.out.println("writeEntityFromNBT Checking entityData tag map for " + this);
             int id = -1;
-            id = pet.getEntityData().getInteger("PetId");
+            id = pet.getOwnerPetId();
             System.out.println("READNBT PetId = " + id + " for " + this);
             for (int i = 0; i < tag.tagCount(); i++)
             {

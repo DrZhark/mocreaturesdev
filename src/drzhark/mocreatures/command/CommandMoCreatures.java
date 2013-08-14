@@ -243,7 +243,7 @@ public class CommandMoCreatures extends CommandBase {
                                                 }
                                             }
                                         }
-                                        par1ICommandSender.sendChatToPlayer("Listed tamed count : " + EnumChatFormatting.AQUA + entityCount + EnumChatFormatting.WHITE + ", Recorded count : " + EnumChatFormatting.AQUA + player.getEntityData().getInteger("NumberTamed"));
+                                        par1ICommandSender.sendChatToPlayer("Listed tamed count : " + EnumChatFormatting.AQUA + entityCount + EnumChatFormatting.WHITE + ", Recorded count : " + EnumChatFormatting.AQUA + MoCreatures.instance.mapData.getPetData(player.username).getTamedList().tagCount());
                                         doNotShowHelp = true;
                                         break OUTER;
                                     }
@@ -308,7 +308,7 @@ public class CommandMoCreatures extends CommandBase {
                                                 }
                                             }
                                         }
-                                        par1ICommandSender.sendChatToPlayer("Listed tamed count : " + EnumChatFormatting.AQUA + entityCount + EnumChatFormatting.WHITE); //+ ", Recorded count : " + EnumChatFormatting.AQUA + player.getEntityData().getInteger("NumberTamed"));
+                                        par1ICommandSender.sendChatToPlayer("Listed tamed count : " + EnumChatFormatting.AQUA + entityCount + EnumChatFormatting.WHITE);
                                         doNotShowHelp = true;
                                         break OUTER;
                                     }

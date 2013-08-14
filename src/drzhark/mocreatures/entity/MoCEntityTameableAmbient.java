@@ -52,9 +52,9 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
                 
@@ -88,9 +88,9 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
                 this.setName("");
@@ -111,9 +111,9 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
             }
@@ -216,9 +216,8 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
         super.readEntityFromNBT(nbttagcompound);
         if (nbttagcompound.hasKey("PetId"))
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
-        if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))//this.getEntityData().hasKey("PetId"))
+        if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))
         {
-           // System.out.println("mapdata = " + MoCreatures.instance.mapData);
             System.out.println("PET ID = " + nbttagcompound.getInteger("PetId"));
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             NBTTagList tag = petData.getPetData().getTagList("TamedList");

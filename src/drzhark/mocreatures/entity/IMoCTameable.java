@@ -20,8 +20,6 @@ public interface IMoCTameable {
 
     public int getType();
 
-    public NBTTagCompound getEntityData();
-
     public void writeEntityToNBT(NBTTagCompound nbttagcompound);
 
     public void readEntityFromNBT(NBTTagCompound nbttagcompound);

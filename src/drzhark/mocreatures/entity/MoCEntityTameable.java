@@ -53,9 +53,9 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
             }
@@ -88,10 +88,9 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                System.out.println("hasKey PetId ? " + this.getEntityData().hasKey("PetId"));
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
                 System.out.println("SETTING NAME TO BLANK!!!");
@@ -113,9 +112,9 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+                if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
             }
@@ -169,9 +168,9 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
     {
         if (this.getIsTamed())
             System.out.println("onDeath for entity " + this + " with name " + this.getName());
-        if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+        if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
         {
-            MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+            MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
         }
         super.onDeath(damagesource);
     }
@@ -187,11 +186,11 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
         {
             return;
         }
-        if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+        if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
         {
             System.out.println("getIsTamed() = " + getIsTamed() + ", health = " + this.health + ", riderIsDisconnecting = " + this.riderIsDisconnecting);
             System.out.println("SETTING " + this + " with name " + this.getName() + " to DEAD!!");
-            MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
+            MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
         }
         super.setDead();
     }
@@ -241,9 +240,8 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
         super.readEntityFromNBT(nbttagcompound);
         if (nbttagcompound.hasKey("PetId"))
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
-        if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))//this.getEntityData().hasKey("PetId"))
+        if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))
         {
-           // System.out.println("mapdata = " + MoCreatures.instance.mapData);
             System.out.println("PET ID = " + nbttagcompound.getInteger("PetId"));
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             NBTTagList tag = petData.getPetData().getTagList("TamedList");
