@@ -12,6 +12,8 @@ public interface IMoCTameable {
 
     public String getName();
 
+    public void setName(String name);
+
     public void setTamed(boolean par1);
 
     public void setDead();

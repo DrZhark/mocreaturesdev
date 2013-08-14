@@ -70,7 +70,8 @@ public class MoCServerPacketHandler implements IPacketHandler {
                             if (nbt.getInteger("PetId") == id)
                             {
                                 System.out.println("SET PET NAME TO " + name);
-                                nbt.setString("PetName", name);
+                                nbt.setString("Name", name);
+                                ((IMoCTameable)pet).setName(name);
                             }
                         }
                     }

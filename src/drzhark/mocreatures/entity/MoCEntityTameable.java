@@ -194,7 +194,7 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
                 MoCTools.reduceTamedByOfflinePlayer(getOwnerName());
             }
         }
-        if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+        if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
         {
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
         }
@@ -212,10 +212,9 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
         {
             return;
         }
-        if (MoCreatures.isServer() && getIsTamed() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
+        if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
         {
             System.out.println("SETTING " + this + " with name " + this.getName() + " to DEAD!!");
-            this.setTamed(false);
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
         }
         super.setDead();

@@ -301,7 +301,10 @@ public class CommandMoCreatures extends CommandBase {
                                                 if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
                                                 {
                                                     entityCount++;
-                                                    par1ICommandSender.sendChatToPlayer("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosX")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosY")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosZ")) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId"));
+                                                    double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                                                    double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                                                    double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                                                    par1ICommandSender.sendChatToPlayer("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId"));
                                                 }
                                             }
                                         }
@@ -433,7 +436,10 @@ public class CommandMoCreatures extends CommandBase {
                                         NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
                                         if (nbt.hasKey("Name") && nbt.getString("Name").equalsIgnoreCase(petName) || nbt.hasKey("PetId") && nbt.getInteger("PetId") == entityId)
                                         {
-                                            par1ICommandSender.sendChatToPlayer("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosX")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosY")) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(nbt.getDouble("PosZ")) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId"));
+                                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                                            par1ICommandSender.sendChatToPlayer("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId"));
                                             if (!player.worldObj.isRemote)// transfer entity to player dimension
                                             {
                                                 System.out.println("ENTITY CLASS = " + nbt.getString("id"));
