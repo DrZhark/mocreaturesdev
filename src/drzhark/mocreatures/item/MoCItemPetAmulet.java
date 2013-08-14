@@ -99,7 +99,7 @@ public class MoCItemPetAmulet extends MoCItem
                         storedCreature.setType(creatureType);
                         storedCreature.setTamed(true);
                         storedCreature.setName(name);
-                        ((IMoCTameable)storedCreature).setOwnerPetId(PetId);
+                        storedCreature.setOwnerPetId(PetId);
 
                         //if the player using the amulet is different than the original owner
                         if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
@@ -152,7 +152,8 @@ public class MoCItemPetAmulet extends MoCItem
                         ((EntityLiving)storedCreature).setEntityHealth((int)health);
                         storedCreature.setEdad(edad);
                         storedCreature.setAdult(adult);
-                        storedCreature.setOwnerPetId(PetId);
+                        storedCreature.setOwner(entityplayer.username);
+                        
                         if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
                         {
                              MoCTools.tameWithName(entityplayer, storedCreature);

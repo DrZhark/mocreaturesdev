@@ -10,6 +10,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
@@ -102,7 +103,7 @@ public class MoCItemHorseAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); 
+                    MoCEntityTameable storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -112,8 +113,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setArmorType(armor);
                     storedCreature.setEntityHealth((int)health);
                     storedCreature.setAdult(adult);
-                    storedCreature.setOwner(entityplayer.username);
-                    ((IMoCTameable)storedCreature).setOwnerPetId(PetId);
+                    storedCreature.setOwnerPetId(PetId);
 
                     //if the player using the amulet is different than the original owner
                     if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
@@ -159,6 +159,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                             }
                         }
                     }
+                      storedCreature.setOwner(entityplayer.username);
 
                     entityplayer.worldObj.spawnEntityInWorld(storedCreature);
                     MoCServerPacketHandler.sendAppearPacket(storedCreature.entityId, worldObj.provider.dimensionId);
@@ -211,8 +212,8 @@ public class MoCItemHorseAmulet extends MoCItem {
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
     	initAndReadNBT(par1ItemStack);
-    	par3List.add(EnumChatFormatting.BLUE + this.name);
-    	par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
+    	if (name != "") par3List.add(EnumChatFormatting.BLUE + this.name);
+    	if (ownerName != "") par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
     }
     
     private void initAndReadNBT(ItemStack itemstack)
