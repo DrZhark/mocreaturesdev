@@ -230,8 +230,9 @@ public class MoCItemPetAmulet extends MoCItem
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
     	initAndReadNBT(par1ItemStack);
+    	if (spawnClass != "") par3List.add(EnumChatFormatting.AQUA + this.spawnClass);
     	if (name != "")	par3List.add(EnumChatFormatting.BLUE + this.name);
-    	if (ownerName != "") par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
+    	if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
     }
     
     private void initAndReadNBT(ItemStack itemstack)
