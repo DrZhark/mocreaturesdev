@@ -52,18 +52,6 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                /*if (MoCreatures.proxy.enableOwnership) 
-                {
-                    EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
-                    if (epOwner != null)
-                    {
-                        MoCTools.reduceTamedByPlayer(epOwner);
-                    }
-                    else
-                    {
-                        MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
-                    }
-                }*/
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
@@ -100,7 +88,6 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                //if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
@@ -124,7 +111,6 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             }
             if (MoCreatures.isServer())
             {
-                //if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());

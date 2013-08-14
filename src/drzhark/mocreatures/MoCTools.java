@@ -290,7 +290,7 @@ public class MoCTools {
         	}
         	else
         	{
-        		MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+            MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
                 myClass = entityData.getEntityClass();
         	}
             
@@ -1332,9 +1332,6 @@ public class MoCTools {
      */
     public static boolean tameWithName(EntityPlayer ep, IMoCTameable storedCreature) 
     {
-        if (!(storedCreature instanceof IMoCTameable))
-            return false;
-        //System.out.println("tameWithName " + storedCreature + " for player " + ep);
         int max = 0;
         if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
         {
@@ -1350,14 +1347,6 @@ public class MoCTools {
                 MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
                 return false;
             } 
-            /*else 
-            {
-                if (!storedCreature.getOwnerName().equals(ep.username)) 
-                {
-                    NBTTagCompound nbtt = ep.getEntityData();
-                    nbtt.setInteger("NumberTamed", count + 1);
-                }
-            }*/
         }
         storedCreature.setOwner(ep.username); // ALWAYS SET OWNER. Required for our new pet save system.
         System.out.println("Entity " + storedCreature + " owner now = " + storedCreature.getOwnerName());
@@ -1377,82 +1366,14 @@ public class MoCTools {
      */
     public static int numberTamedByPlayer(EntityPlayer ep)
     {
-    	return MoCreatures.instance.mapData.getPetData(ep.username).getTamedList().tagCount();
-        /*NBTTagCompound nbtt = ep.getEntityData();
-        int count = nbtt.getInteger("NumberTamed");
-        return count;*/
-    }
-
-    /**
-     * Decreases the number of entity tamed by the player by 1
-     * 
-     * @param ep
-     */
-    public static void reduceTamedByPlayer2(EntityPlayer ep)
-    {
-        int count = MoCTools.numberTamedByPlayer(ep);
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("tamed entities for online player " + ep.username + " =" + count);
-        NBTTagCompound nbtt = ep.getEntityData();
-        count--;
-        if (count < 0)
+        if (MoCreatures.instance.mapData != null)
         {
-            count = 0;
-        }
-        nbtt.setInteger("NumberTamed", count);
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("reducing tamed count for player " + ep.username + " the count now is " + nbtt.getInteger("NumberTamed"));
-    }
-
-    /**
-     * Reduces the counter on the offline player
-     * 
-     * @param playername
-     */
-    public static void reduceTamedByOfflinePlayer2(String playername)
-    {
-        NBTTagCompound compound = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler()).getPlayerData(playername);
-        if (compound != null && compound.hasKey("ForgeData"))
-        {
-            NBTTagCompound nbtt = compound.getCompoundTag("ForgeData");
-            int count = nbtt.getInteger("NumberTamed");
-
-            count--;
-            if (count < 0)
+            if (MoCreatures.instance.mapData.getPetData(ep.username) != null)
             {
-                count = 0;
-            }
-            nbtt.setInteger("NumberTamed", count);
-            compound.setCompoundTag("ForgeData", nbtt);
-
-            try
-            {
-                SaveHandler saveHandler = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler());
-                // as long as we know the world folder name we can generate the path to players directory
-                // still need to test how other worlds will work
-                String playersDirectory = "." + File.separator + saveHandler.getWorldDirectoryName() + File.separator + "players" + File.separator;
-                File playerFile = new File(playersDirectory + playername + ".dat");
-                File playerFileNew = new File(playersDirectory, playername + ".tmp");
-
-                CompressedStreamTools.writeCompressed(compound, new FileOutputStream(playerFileNew));
-
-                if (playerFile.exists())
-                {
-                    playerFile.delete();
-                }
-
-                playerFileNew.renameTo(playerFile);
-
-                // test to see if changes took effect
-                compound = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler()).getPlayerData(playername);
-                if (compound.hasKey("ForgeData"))
-                {
-                    NBTTagCompound nbttest = compound.getCompoundTag("ForgeData");
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
+                return MoCreatures.instance.mapData.getPetData(ep.username).getTamedList().tagCount();
             }
         }
+        return 0;
     }
 
     /**
@@ -1548,7 +1469,7 @@ public class MoCTools {
             {
                 //TODO change the 21 to the list given based on the class of the creature
                 nbtt.setInteger("SpawnClass", 21); 
-                nbtt.setFloat("Health", entity.getHealth());
+                	nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());
@@ -1596,10 +1517,10 @@ public class MoCTools {
             		nbtt.setString("SpawnClass", "MoCHorse"); 
             	}else
             	{
-            		nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+                nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
             	}
                 
-                nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
+                	nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());

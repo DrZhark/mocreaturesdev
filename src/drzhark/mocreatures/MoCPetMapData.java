@@ -55,7 +55,7 @@ public class MoCPetMapData extends WorldSavedData
 
     public void updateOwnerPet(IMoCTameable pet, NBTTagCompound petNBT)
     {
-        if (!pet.getEntityData().hasKey("PetId"))
+        if (!pet.getEntityData().hasKey("PetId") || petMap.get(pet.getOwnerName()) == null)
         {
             System.out.println("SAVING OWNER PET DATA FOR " + this + " with name " + pet.getName());
             String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.username;
@@ -104,6 +104,7 @@ public class MoCPetMapData extends WorldSavedData
                     nbt = (NBTTagCompound)petNBT.copy();
                     System.out.println("id = " + id);
                     System.out.println("name = " + petNBT.getString("Name"));
+                    //nbt.setString("Name", pet.getName());
                     nbt.setInteger("ChunkX", ((Entity)pet).chunkCoordX);
                     nbt.setInteger("ChunkY", ((Entity)pet).chunkCoordY);
                     nbt.setInteger("ChunkZ", ((Entity)pet).chunkCoordZ);

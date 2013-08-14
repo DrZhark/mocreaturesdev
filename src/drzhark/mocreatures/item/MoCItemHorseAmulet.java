@@ -4,11 +4,12 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
@@ -101,7 +102,7 @@ public class MoCItemHorseAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityTameable storedCreature = new MoCEntityHorse(worldObj); 
+                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -111,24 +112,54 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setArmorType(armor);
                     storedCreature.setEntityHealth((int)health);
                     storedCreature.setAdult(adult);
-                    storedCreature.setOwnerPetId(PetId);
-                    
+                    storedCreature.setOwner(entityplayer.username);
+                    ((IMoCTameable)storedCreature).setOwnerPetId(PetId);
+
                     //if the player using the amulet is different than the original owner
-                    if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) )
-                      {
-                    	//TODO new code
-                          /*EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
-                          if (epOwner != null)
-                          {
-                              MoCTools.reduceTamedByPlayer(epOwner);
-                          }
-                          else
-                          {
-                              MoCTools.reduceTamedByOfflinePlayer(ownerName);
-                          }*/
-                      }
-                      storedCreature.setOwner(entityplayer.username);
-                    
+                    if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
+                    {
+                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
+                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.username);
+                        int maxCount = MoCreatures.proxy.maxTamed;
+                        if (MoCTools.isThisPlayerAnOP(epOwner))
+                        {
+                            maxCount = MoCreatures.proxy.maxOPTamed;
+                        }
+                        if (newOwner == null)
+                        {
+                            if (maxCount > 0)
+                            {
+                                // create new PetData for new owner
+                                NBTTagCompound petNBT = new NBTTagCompound();
+                                storedCreature.writeEntityToNBT(petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                            }
+                        }
+                        else // add pet to existing pet data
+                        {
+                            if (newOwner.getTamedList().tagCount() < maxCount)
+                            {
+                                NBTTagCompound petNBT = new NBTTagCompound();
+                                storedCreature.writeEntityToNBT(petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                            }
+                        }
+                        // remove pet entry from old owner
+                        if (oldOwner != null)
+                        {
+                            for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++)
+                            {
+                                NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().tagAt(j);
+                                if (petEntry.getInteger("PetId") == PetId)
+                                {
+                                    // found match, remove
+                                    oldOwner.getTamedList().removeTag(j);
+                                }
+                            }
+                        }
+                    }
+
                     entityplayer.worldObj.spawnEntityInWorld(storedCreature);
                     MoCServerPacketHandler.sendAppearPacket(storedCreature.entityId, worldObj.provider.dimensionId);
                     MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
@@ -142,7 +173,7 @@ public class MoCItemHorseAmulet extends MoCItem {
 
         return itemstack;
     }
-   
+
     public void readFromNBT(NBTTagCompound nbt)
     {
     	this.PetId = nbt.getInteger("PetId");

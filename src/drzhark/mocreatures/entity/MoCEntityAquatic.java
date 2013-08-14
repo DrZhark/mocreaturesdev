@@ -896,25 +896,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         this.dataWatcher.updateObject(21, par1Str);
     }
 
-    /*@Override
-    public void onDeath(DamageSource damagesource)
-    {
-        if (this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
-        {
-            EntityPlayer ep = worldObj.getPlayerEntityByName(this.getOwnerName());
-            if (ep != null)
-            {
-                MoCTools.reduceTamedByPlayer(ep);
-            }
-            else
-            {
-                MoCTools.reduceTamedByOfflinePlayer(getOwnerName());
-            }
-        }
-
-        super.onDeath(damagesource);
-    }*/
-
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
@@ -936,7 +917,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     }
 
-    
+
 
     protected boolean canBeTrappedInNet() 
     {

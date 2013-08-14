@@ -1050,24 +1050,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         this.dataWatcher.updateObject(20, par1Str);
     }
 
-    /*@Override
-    public void onDeath(DamageSource damagesource)
-    {
-        if (MoCreatures.proxy.enableOwnership && this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
-        {
-            EntityPlayer ep = worldObj.getPlayerEntityByName(this.getOwnerName());
-            if (ep != null)
-            {
-                MoCTools.reduceTamedByPlayer(ep);
-            }
-            else
-            {
-                MoCTools.reduceTamedByOfflinePlayer(getOwnerName());
-            }
-        }
-        super.onDeath(damagesource);
-    }*/
-
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
@@ -1230,7 +1212,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     	return (this instanceof IMoCTameable) && getIsTamed();
     }
 
-    
+
 
     /**
      * Returns true if the entity is of the @link{EnumCreatureType} provided

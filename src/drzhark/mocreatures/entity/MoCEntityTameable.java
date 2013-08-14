@@ -53,18 +53,6 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                /*if (MoCreatures.proxy.enableOwnership) 
-                {
-                    EntityPlayer epOwner = this.worldObj.getPlayerEntityByName(this.getOwnerName());
-                    if (epOwner != null)
-                    {
-                        MoCTools.reduceTamedByPlayer(epOwner);
-                    }
-                    else
-                    {
-                        MoCTools.reduceTamedByOfflinePlayer(this.getOwnerName());
-                    }
-                }*/
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
@@ -100,13 +88,13 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                //if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 System.out.println("hasKey PetId ? " + this.getEntityData().hasKey("PetId"));
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
                 }
                 this.setOwner("");
+                System.out.println("SETTING NAME TO BLANK!!!");
                 this.setName("");
                 this.dropMyStuff();
                 this.setTamed(false);
@@ -125,7 +113,6 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
             }
             if (MoCreatures.isServer())
             {
-                //if (MoCreatures.proxy.enableOwnership) MoCTools.reduceTamedByPlayer(entityplayer);
                 if (this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
@@ -182,18 +169,6 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
     {
         if (this.getIsTamed())
             System.out.println("onDeath for entity " + this + " with name " + this.getName());
-        /*if (MoCreatures.proxy.enableOwnership && this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
-        {
-            EntityPlayer ep = worldObj.getPlayerEntityByName(this.getOwnerName());
-            if (ep != null)
-            {
-                MoCTools.reduceTamedByPlayer(ep);
-            }
-            else
-            {
-                MoCTools.reduceTamedByOfflinePlayer(getOwnerName());
-            }
-        }*/
         if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
         {
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
@@ -214,6 +189,7 @@ public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCT
         }
         if (MoCreatures.isServer() && this.getEntityData().hasKey("PetId")) // required since getInteger will always return 0 if no key is found
         {
+            System.out.println("getIsTamed() = " + getIsTamed() + ", health = " + this.health + ", riderIsDisconnecting = " + this.riderIsDisconnecting);
             System.out.println("SETTING " + this + " with name " + this.getName() + " to DEAD!!");
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getEntityData().getInteger("PetId"));//this.getOwnerPetId());
         }

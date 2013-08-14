@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
@@ -33,7 +34,7 @@ public class MoCItemPetAmulet extends MoCItem
     private int amuletType;
     private boolean adult;
     private int PetId;
-    
+
     public MoCItemPetAmulet(int i) 
     {
         super(i);
@@ -83,7 +84,7 @@ public class MoCItemPetAmulet extends MoCItem
             if (MoCreatures.isServer())
             {
             	initAndReadNBT(itemstack);
-            	
+                
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {
                     return itemstack;
@@ -98,24 +99,52 @@ public class MoCItemPetAmulet extends MoCItem
                         storedCreature.setType(creatureType);
                         storedCreature.setTamed(true);
                         storedCreature.setName(name);
+                        ((IMoCTameable)storedCreature).setOwnerPetId(PetId);
 
                         //if the player using the amulet is different than the original owner
-                        if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) )
+                        if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
                         {
-                        	//TODO new code
-                        	
-                            /*EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
-                            if (epOwner != null)
+                            MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
+                            MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
+                            EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.username);
+                            int maxCount = MoCreatures.proxy.maxTamed;
+                            if (MoCTools.isThisPlayerAnOP(epOwner))
                             {
-                                MoCTools.reduceTamedByPlayer(epOwner);
+                                maxCount = MoCreatures.proxy.maxOPTamed;
                             }
-                            else
+                            if (newOwner == null)
                             {
-                                MoCTools.reduceTamedByOfflinePlayer(ownerName);
-                            }*/
+                                if (maxCount > 0)
+                                {
+                                    // create new PetData for new owner
+                                    NBTTagCompound petNBT = new NBTTagCompound();
+                                    storedCreature.writeEntityToNBT(petNBT);
+                                    MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                                }
+                            }
+                            else // add pet to existing pet data
+                            {
+                                if (newOwner.getTamedList().tagCount() < maxCount)
+                                {
+                                    NBTTagCompound petNBT = new NBTTagCompound();
+                                    storedCreature.writeEntityToNBT(petNBT);
+                                    MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                                }
+                            }
+                            // remove pet entry from old owner
+                            if (oldOwner != null)
+                            {
+                                for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++)
+                                {
+                                    NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().tagAt(j);
+                                    if (petEntry.getInteger("PetId") == PetId)
+                                    {
+                                        // found match, remove
+                                        oldOwner.getTamedList().removeTag(j);
+                                    }
+                                }
+                            }
                         }
-
-                        storedCreature.setOwner(entityplayer.username);
 
                         entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
                         MoCServerPacketHandler.sendAppearPacket(((EntityLiving)storedCreature).entityId, worldObj.provider.dimensionId);
@@ -186,7 +215,7 @@ public class MoCItemPetAmulet extends MoCItem
     		return icons[3];
     	}
         
-    	if (par1 < 1)
+        if (par1 < 1)
         {
             return icons[0];
         }
