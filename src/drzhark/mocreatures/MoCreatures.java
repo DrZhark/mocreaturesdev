@@ -160,11 +160,11 @@ import drzhark.mocreatures.item.ItemBuilderHammer;
 import drzhark.mocreatures.item.ItemStaffTeleport;
 import drzhark.mocreatures.item.ItemStaffPortal;
 import drzhark.mocreatures.item.MoCItem;
-import drzhark.mocreatures.item.MoCItemAmulet;
+import drzhark.mocreatures.item.MoCItemHorseAmulet;
 import drzhark.mocreatures.item.MoCItemArmor;
 import drzhark.mocreatures.item.MoCItemEgg;
 import drzhark.mocreatures.item.MoCItemFishBowl;
-import drzhark.mocreatures.item.MoCItemFishnet;
+import drzhark.mocreatures.item.MoCItemPetAmulet;
 import drzhark.mocreatures.item.MoCItemFood;
 import drzhark.mocreatures.item.MoCItemHayStack;
 import drzhark.mocreatures.item.MoCItemHorseSaddle;
@@ -658,14 +658,14 @@ public class MoCreatures {
         key = (new MoCItem(MoCItemID++)).setUnlocalizedName("key");
         vialdarkness = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencedarkness");
         vialnightmare = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencefire");
-        amuletbone = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletbone");
-        amuletbonefull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletbonefull");
-        amuletghost = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletghost");
-        amuletghostfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletghostfull");
-        amuletfairy = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletfairy");
-        amuletfairyfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletfairyfull");
-        amuletpegasus = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasus");
-        amuletpegasusfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasusfull");
+        amuletbone = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbone");
+        amuletbonefull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbonefull");
+        amuletghost = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghost");
+        amuletghostfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghostfull");
+        amuletfairy = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairy");
+        amuletfairyfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairyfull");
+        amuletpegasus = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasus");
+        amuletpegasusfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasusfull");
 
         vialundead = (new MoCItem(MoCItemID++)).setUnlocalizedName("essenceundead");
         viallight = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencelight");
@@ -682,7 +682,7 @@ public class MoCreatures {
         ostrichcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");
         unicorn = (new MoCItem(MoCItemID++)).setUnlocalizedName("unicorn");
 
-        fishnet = (new MoCItemFishnet(MoCItemID++)).setUnlocalizedName("fishnet");
+        fishnet = (new MoCItemPetAmulet(MoCItemID++)).setUnlocalizedName("fishnet");
         MoCItemID++;
         horsearmorcrystal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorcrystal");
         MoCItemID++;
@@ -757,7 +757,7 @@ public class MoCreatures {
         
         scrollOfOwner = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofowner");
         
-        superAmulet = (new MoCItemFishnet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
+        superAmulet = (new MoCItemPetAmulet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
 
         //new blocks
         mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");

@@ -31,4 +31,14 @@ public interface IMoCTameable {
 	public int getOwnerPetId();
 
 	public boolean getIsAdult();
+
+	public void setType(int creatureType);
+
+	public void setOwner(String username);
+
+	public void setEdad(int edad);
+
+	public void setAdult(boolean adult);
+
+	public void setOwnerPetId(int petId);
 }

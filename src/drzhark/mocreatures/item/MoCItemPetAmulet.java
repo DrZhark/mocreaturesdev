@@ -15,11 +15,12 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCItemFishnet extends MoCItem
+public class MoCItemPetAmulet extends MoCItem
 {
     private Icon[] icons;
     private int ageCounter;
@@ -32,8 +33,8 @@ public class MoCItemFishnet extends MoCItem
     private int amuletType;
     private boolean adult;
     private int PetId;
-
-    public MoCItemFishnet(int i) 
+    
+    public MoCItemPetAmulet(int i) 
     {
         super(i);
         maxStackSize = 1;
@@ -41,7 +42,7 @@ public class MoCItemFishnet extends MoCItem
         ageCounter = 0;
     }
 
-    public MoCItemFishnet(int i, int type) 
+    public MoCItemPetAmulet(int i, int type) 
     {
     	this(i);
     	this.amuletType = type;
@@ -82,7 +83,7 @@ public class MoCItemFishnet extends MoCItem
             if (MoCreatures.isServer())
             {
             	initAndReadNBT(itemstack);
-                
+            	
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {
                     return itemstack;
@@ -92,7 +93,7 @@ public class MoCItemFishnet extends MoCItem
                     EntityLiving tempLiving = MoCTools.spawnListByNameClass(spawnClass, worldObj);
                     if (tempLiving != null && tempLiving instanceof IMoCEntity)
                     {
-                        IMoCEntity storedCreature = (IMoCEntity) tempLiving;
+                        IMoCTameable storedCreature = (IMoCTameable) tempLiving;
                         ((EntityLiving)storedCreature).setPosition(newPosX, newPosY, newPosZ);
                         storedCreature.setType(creatureType);
                         storedCreature.setTamed(true);
@@ -101,7 +102,9 @@ public class MoCItemFishnet extends MoCItem
                         //if the player using the amulet is different than the original owner
                         if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) )
                         {
-                            EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
+                        	//TODO new code
+                        	
+                            /*EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
                             if (epOwner != null)
                             {
                                 MoCTools.reduceTamedByPlayer(epOwner);
@@ -109,10 +112,10 @@ public class MoCItemFishnet extends MoCItem
                             else
                             {
                                 MoCTools.reduceTamedByOfflinePlayer(ownerName);
-                            }
+                            }*/
                         }
 
-                        storedCreature.setOwner(ownerName);
+                        storedCreature.setOwner(entityplayer.username);
 
                         entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
                         MoCServerPacketHandler.sendAppearPacket(((EntityLiving)storedCreature).entityId, worldObj.provider.dimensionId);
@@ -120,6 +123,7 @@ public class MoCItemFishnet extends MoCItem
                         ((EntityLiving)storedCreature).setEntityHealth((int)health);
                         storedCreature.setEdad(edad);
                         storedCreature.setAdult(adult);
+                        storedCreature.setOwnerPetId(PetId);
                         if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
                         {
                              MoCTools.tameWithName(entityplayer, storedCreature);
@@ -182,7 +186,7 @@ public class MoCItemFishnet extends MoCItem
     		return icons[3];
     	}
         
-        if (par1 < 1)
+    	if (par1 < 1)
         {
             return icons[0];
         }
@@ -198,8 +202,8 @@ public class MoCItemFishnet extends MoCItem
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
     	initAndReadNBT(par1ItemStack);
-    	par3List.add(EnumChatFormatting.BLUE + this.name);
-    	par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
+    	if (name != "")	par3List.add(EnumChatFormatting.BLUE + this.name);
+    	if (ownerName != "") par3List.add(EnumChatFormatting.AQUA + "Owned by " + this.ownerName);
     }
     
     private void initAndReadNBT(ItemStack itemstack)

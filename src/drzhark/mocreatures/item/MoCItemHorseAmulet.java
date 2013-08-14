@@ -8,6 +8,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
@@ -19,7 +20,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class MoCItemAmulet extends MoCItem {
+public class MoCItemHorseAmulet extends MoCItem {
 
     private int ageCounter;
     private String name;
@@ -33,7 +34,7 @@ public class MoCItemAmulet extends MoCItem {
     private String ownerName;
     private int PetId;
     
-    public MoCItemAmulet(int i)
+    public MoCItemHorseAmulet(int i)
     {
         super(i);
         maxStackSize = 1;
@@ -100,7 +101,7 @@ public class MoCItemAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); 
+                    MoCEntityTameable storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -110,11 +111,13 @@ public class MoCItemAmulet extends MoCItem {
                     storedCreature.setArmorType(armor);
                     storedCreature.setEntityHealth((int)health);
                     storedCreature.setAdult(adult);
+                    storedCreature.setOwnerPetId(PetId);
                     
                     //if the player using the amulet is different than the original owner
                     if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) )
                       {
-                          EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
+                    	//TODO new code
+                          /*EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
                           if (epOwner != null)
                           {
                               MoCTools.reduceTamedByPlayer(epOwner);
@@ -122,7 +125,7 @@ public class MoCItemAmulet extends MoCItem {
                           else
                           {
                               MoCTools.reduceTamedByOfflinePlayer(ownerName);
-                          }
+                          }*/
                       }
                       storedCreature.setOwner(entityplayer.username);
                     
@@ -139,7 +142,7 @@ public class MoCItemAmulet extends MoCItem {
 
         return itemstack;
     }
-
+   
     public void readFromNBT(NBTTagCompound nbt)
     {
     	this.PetId = nbt.getInteger("PetId");

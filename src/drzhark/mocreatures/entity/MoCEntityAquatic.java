@@ -383,7 +383,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                 }
                 if (rand.nextInt(chance * 8) == 0)
                 {
-                    MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, this);
+                    MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, (IMoCTameable) this);
                 }
 
             }
@@ -896,7 +896,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         this.dataWatcher.updateObject(21, par1Str);
     }
 
-    @Override
+    /*@Override
     public void onDeath(DamageSource damagesource)
     {
         if (this.getIsTamed() && (this.getOwnerName() != null) && MoCreatures.isServer())
@@ -913,7 +913,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         }
 
         super.onDeath(damagesource);
-    }
+    }*/
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
@@ -936,7 +936,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     }
 
-
+    
 
     protected boolean canBeTrappedInNet() 
     {

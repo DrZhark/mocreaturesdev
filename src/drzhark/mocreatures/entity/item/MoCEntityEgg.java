@@ -173,7 +173,7 @@ public class MoCEntityEgg extends EntityLiving {
                         {
                             if (MoCreatures.isServer() && this instanceof IMoCTameable)
                             {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                             }
                         }
                     }
@@ -190,7 +190,7 @@ public class MoCEntityEgg extends EntityLiving {
                         {
                             if (MoCreatures.isServer())
                             {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                             }
                         }
                     }
@@ -207,7 +207,7 @@ public class MoCEntityEgg extends EntityLiving {
                         {
                             if (MoCreatures.isServer())
                             {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                             }
                         }
                     }
@@ -225,7 +225,7 @@ public class MoCEntityEgg extends EntityLiving {
                         {
                             if (MoCreatures.isServer())
                             {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                             }
                         }
                     }
@@ -243,7 +243,7 @@ public class MoCEntityEgg extends EntityLiving {
                         {
                             if (MoCreatures.isServer())
                             {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                             }
                         }
                     }

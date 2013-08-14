@@ -290,7 +290,7 @@ public class MoCTools {
         	}
         	else
         	{
-            MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+        		MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
                 myClass = entityData.getEntityClass();
         	}
             
@@ -1327,14 +1327,14 @@ public class MoCTools {
      * player.username as the owner of the entity, and name the entity.
      * 
      * @param ep
-     * @param entity
+     * @param storedCreature
      * @return
      */
-    public static boolean tameWithName(EntityPlayer ep, IMoCEntity entity) 
+    public static boolean tameWithName(EntityPlayer ep, IMoCTameable storedCreature) 
     {
-        if (!(entity instanceof IMoCTameable))
+        if (!(storedCreature instanceof IMoCTameable))
             return false;
-        System.out.println("tameWithName " + entity + " for player " + ep);
+        //System.out.println("tameWithName " + storedCreature + " for player " + ep);
         int max = 0;
         if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
         {
@@ -1350,22 +1350,22 @@ public class MoCTools {
                 MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
                 return false;
             } 
-            else 
+            /*else 
             {
-                if (!entity.getOwnerName().equals(ep.username)) 
+                if (!storedCreature.getOwnerName().equals(ep.username)) 
                 {
                     NBTTagCompound nbtt = ep.getEntityData();
                     nbtt.setInteger("NumberTamed", count + 1);
                 }
-            }
+            }*/
         }
-        entity.setOwner(ep.username); // ALWAYS SET OWNER. Required for our new pet save system.
-        System.out.println("Entity " + entity + " owner now = " + entity.getOwnerName());
+        storedCreature.setOwner(ep.username); // ALWAYS SET OWNER. Required for our new pet save system.
+        System.out.println("Entity " + storedCreature + " owner now = " + storedCreature.getOwnerName());
         if (MoCreatures.isServer()) 
         {
-            MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) entity).entityId);
+            MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) storedCreature).entityId);
         }
-        entity.setTamed(true);
+        storedCreature.setTamed(true);
         return true;
     }
 
@@ -1377,9 +1377,10 @@ public class MoCTools {
      */
     public static int numberTamedByPlayer(EntityPlayer ep)
     {
-        NBTTagCompound nbtt = ep.getEntityData();
+    	return MoCreatures.instance.mapData.getPetData(ep.username).getTamedList().tagCount();
+        /*NBTTagCompound nbtt = ep.getEntityData();
         int count = nbtt.getInteger("NumberTamed");
-        return count;
+        return count;*/
     }
 
     /**
@@ -1387,7 +1388,7 @@ public class MoCTools {
      * 
      * @param ep
      */
-    public static void reduceTamedByPlayer(EntityPlayer ep)
+    public static void reduceTamedByPlayer2(EntityPlayer ep)
     {
         int count = MoCTools.numberTamedByPlayer(ep);
         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("tamed entities for online player " + ep.username + " =" + count);
@@ -1406,7 +1407,7 @@ public class MoCTools {
      * 
      * @param playername
      */
-    public static void reduceTamedByOfflinePlayer(String playername)
+    public static void reduceTamedByOfflinePlayer2(String playername)
     {
         NBTTagCompound compound = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler()).getPlayerData(playername);
         if (compound != null && compound.hasKey("ForgeData"))
@@ -1547,7 +1548,7 @@ public class MoCTools {
             {
                 //TODO change the 21 to the list given based on the class of the creature
                 nbtt.setInteger("SpawnClass", 21); 
-                	nbtt.setFloat("Health", entity.getHealth());
+                nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());
@@ -1595,10 +1596,10 @@ public class MoCTools {
             		nbtt.setString("SpawnClass", "MoCHorse"); 
             	}else
             	{
-                nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+            		nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
             	}
                 
-                	nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
+                nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());
