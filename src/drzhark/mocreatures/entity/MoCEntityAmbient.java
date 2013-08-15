@@ -1055,7 +1055,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName())) { return false; }
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
 
         if (MoCreatures.isServer() && getIsTamed())
         {

@@ -510,21 +510,6 @@ public class MoCreatures {
     @ServerStarting
     public void serverStarting(FMLServerStartingEvent event)
     {
-        if (DimensionManager.getWorld(0) != null) // if overworld has loaded, use its mapstorage
-        {
-            MoCPetMapData data = (MoCPetMapData)DimensionManager.getWorld(0).mapStorage.loadData(MoCPetMapData.class, "mocreatures");
-            System.out.println("data = " + data);
-            if (data == null)
-            {
-                System.out.println("MOCPETMAPDATA IS NULL!!! creating NEW FILE");
-                data = new MoCPetMapData("mocreatures");
-            }
-            System.out.println("LOADING MOCPETMAPDATA");
-            DimensionManager.getWorld(0).mapStorage.setData("mocreatures", data);
-            DimensionManager.getWorld(0).mapStorage.saveAllData();
-            this.mapData = data;
-            MoCreatures.proxy.worldInitDone = true;
-        }
         BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
         List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
         for (int j = 0; j < BiomeGenBase.biomeList.length; j++)

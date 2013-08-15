@@ -59,36 +59,35 @@ public class MoCEventHooks {
         }
     }
 
-   /* @ForgeSubscribe // override maxSpawnInChunk values
-    public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
+    @ForgeSubscribe
+    public void onWorldUnload(WorldEvent.Unload event)
     {
-        //System.out.println("onLivingSpawn event = " + event.entity);
-        if (MoCreatures.proxy.useCustomSpawner)
+        // if overworld has been deleted or unloaded, reset our flag
+        if (event.world.provider.dimensionId == 0)
         {
-            MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
-            if (entityData != null && entityData.getUseVanillaSpawner() && entityData.getCanSpawn())
-            {
-                WorldServer world = DimensionManager.getWorld(event.entityLiving.worldObj.provider.dimensionId);
-                if (world != null && (MoCreatures.myCustomSpawner.isValidLightLevel(event.entityLiving, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel) && MoCreatures.myCustomSpawner.getEntityCount(world, entityData.getType()) <= MoCreatures.myCustomSpawner.getMax(entityData.getType()) * MoCreatures.myCustomSpawner.eligibleChunksForSpawning.size() / 256))
-                {
-                    event.setResult(Result.ALLOW);
-                }
-                else
-                {
-                    if (MoCreatures.proxy.debugCMS) 
-                        MoCreatures.myCustomSpawner.log.info("Denied vanilla spawner from spawning entity " + entityData.getEntityName()+ ".");
-                    //System.out.println("Denied vanilla spawner from spawning entity " + entityData.getEntityName() + ".");
-                    event.setResult(Result.DENY);
-                }
-            }
-            else if (entityData != null && !entityData.getCanSpawn())
-            {
-                if (MoCreatures.proxy.debugCMS) 
-                    MoCreatures.myCustomSpawner.log.info("Denied CMS from spawning entity " + entityData.getEntityName() + ". CanSpawn set to false.");
-                event.setResult(Result.DENY);
-            }
+            MoCreatures.proxy.worldInitDone = false;
         }
-    }*/
+    }
+
+    @ForgeSubscribe
+    public void onWorldLoad(WorldEvent.Load event)
+    {
+        if (DimensionManager.getWorld(0) != null && !MoCreatures.proxy.worldInitDone) // if overworld has loaded, use its mapstorage
+        {
+            MoCPetMapData data = (MoCPetMapData)DimensionManager.getWorld(0).mapStorage.loadData(MoCPetMapData.class, "mocreatures");
+            System.out.println("data = " + data);
+            if (data == null)
+            {
+                System.out.println("MOCPETMAPDATA IS NULL!!! creating NEW FILE");
+                data = new MoCPetMapData("mocreatures");
+            }
+            System.out.println("LOADING MOCPETMAPDATA");
+            DimensionManager.getWorld(0).mapStorage.setData("mocreatures", data);
+            DimensionManager.getWorld(0).mapStorage.saveAllData();
+            MoCreatures.instance.mapData = data;
+            MoCreatures.proxy.worldInitDone = true;
+        }
+    }
 
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)

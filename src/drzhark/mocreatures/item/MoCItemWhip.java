@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
@@ -55,7 +56,7 @@ public class MoCItemWhip extends MoCItem {
                 if (entity instanceof MoCEntityAnimal)
                 {
                     MoCEntityAnimal animal = (MoCEntityAnimal) entity;
-                    if (MoCreatures.proxy.enableOwnership && animal.getOwnerName() != null && !animal.getOwnerName().equals("") && !entityplayer.username.equals(animal.getOwnerName())) 
+                    if (MoCreatures.proxy.enableOwnership && animal.getOwnerName() != null && !animal.getOwnerName().equals("") && !entityplayer.username.equals(animal.getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) 
                     { 
                        continue;
                     }

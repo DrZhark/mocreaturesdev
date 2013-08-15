@@ -1469,7 +1469,7 @@ public class MoCTools {
             {
                 //TODO change the 21 to the list given based on the class of the creature
                 nbtt.setInteger("SpawnClass", 21); 
-                	nbtt.setFloat("Health", entity.getHealth());
+                nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());

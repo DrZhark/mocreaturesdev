@@ -24,19 +24,19 @@ public interface IMoCTameable {
 
     public void readEntityFromNBT(NBTTagCompound nbttagcompound);
 
-	public int getEdad();
-	
-	public int getOwnerPetId();
+    public int getEdad();
 
-	public boolean getIsAdult();
+    public int getOwnerPetId();
 
-	public void setType(int creatureType);
+    public boolean getIsAdult();
 
-	public void setOwner(String username);
+    public void setType(int creatureType);
 
-	public void setEdad(int edad);
+    public void setOwner(String username);
 
-	public void setAdult(boolean adult);
+    public void setEdad(int edad);
 
-	public void setOwnerPetId(int petId);
+    public void setAdult(boolean adult);
+
+    public void setOwnerPetId(int petId);
 }

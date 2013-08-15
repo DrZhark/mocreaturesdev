@@ -80,6 +80,9 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc enableresetownerscroll <boolean>");
         commands.add("/moc entityspawnrange <int>");
         commands.add("/moc golemsdestroyblocks <boolean>");
+        commands.add("/moc killall");
+        commands.add("/moc killall <tag|entity>");
+        commands.add("/moc killall tamed <playername>");
         commands.add("/moc lightlevel <int>");
         commands.add("/moc list biomegroups");
         commands.add("/moc list <tag> <entity> biomegroups");
@@ -207,22 +210,15 @@ public class CommandMoCreatures extends CommandBase {
                                             for (int j = 0; j < world.loadedEntityList.size(); j++)
                                             {
                                                 Entity entity = (Entity) world.loadedEntityList.get(j);
-                                                // search for entities that are MoCEntityAnimal's
-                                                if (MoCEntityAnimal.class.isAssignableFrom(entity.getClass()))
+                                                if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
                                                 {
-                                                    // grab the entity data
-                                                    NBTTagCompound compound = new NBTTagCompound();
-                                                    entity.writeToNBT(compound);
-                                                    if (compound != null && compound.getString("Owner") != null)
+                                                    IMoCTameable mocreature = (IMoCTameable)entity;
+                                                    if (mocreature.getOwnerName().equalsIgnoreCase(playername))
                                                     {
-                                                        String owner = compound.getString("Owner");
-                                                        String name = compound.getString("Name");
-                                                        if (owner != null && owner.equalsIgnoreCase(playername))
-                                                        {
-                                                            entityCount++;
-                                                            foundIds.add(compound.getCompoundTag("ForgeData").getInteger("PetId"));
-                                                            par1ICommandSender.sendChatToPlayer("Found pet " + EnumChatFormatting.GREEN + entity.getEntityName() + " with name " + EnumChatFormatting.AQUA + name + EnumChatFormatting.WHITE + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId);
-                                                        }
+                                                        entityCount++;
+                                                        System.out.println("FOUND PET ID " + mocreature.getOwnerPetId());
+                                                        foundIds.add(mocreature.getOwnerPetId());
+                                                        par1ICommandSender.sendChatToPlayer("Found pet " + EnumChatFormatting.GREEN + entity.getEntityName() + " with name " + EnumChatFormatting.AQUA + mocreature.getName() + EnumChatFormatting.WHITE + ", owned by " + EnumChatFormatting.LIGHT_PURPLE + mocreature.getOwnerName() + EnumChatFormatting.WHITE + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId);
                                                     }
                                                 }
                                             }
@@ -270,24 +266,15 @@ public class CommandMoCreatures extends CommandBase {
                                             for (int j = 0; j < world.loadedEntityList.size(); j++)
                                             {
                                                 Entity entity = (Entity) world.loadedEntityList.get(j);
-                                                // search for entities that are MoCEntityAnimal's
-                                                if (MoCEntityAnimal.class.isAssignableFrom(entity.getClass()))
+                                                if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
                                                 {
-                                                    // grab the entity data
-                                                    NBTTagCompound compound = new NBTTagCompound();
-                                                    entity.writeToNBT(compound);
-                                                   // System.out.println("found entity " + entity);
-                                                    if (compound != null && compound.getString("Owner") != null)
+                                                    IMoCTameable mocreature = (IMoCTameable)entity;
+                                                    if (mocreature.getOwnerName().equalsIgnoreCase(playername))
                                                     {
-                                                        String owner = compound.getString("Owner");
-                                                        String name = compound.getString("Name");
-                                                        //System.out.println("owner = " + owner + ", name = " + name);
-                                                        if ((owner != null && !owner.equalsIgnoreCase("")) || (name != null && !name.equalsIgnoreCase("")))
-                                                        {
-                                                            entityCount++;
-                                                            foundIds.add(compound.getCompoundTag("ForgeData").getInteger("PetId"));
-                                                            par1ICommandSender.sendChatToPlayer("Found pet " + EnumChatFormatting.GREEN + entity.getEntityName() + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + name + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ) + EnumChatFormatting.WHITE + " with ID " + EnumChatFormatting.BLUE + entity.entityId + EnumChatFormatting.WHITE + " in dimension " + EnumChatFormatting.GRAY + dimension);
-                                                        }
+                                                        entityCount++;
+                                                        System.out.println("FOUND PET ID " + mocreature.getOwnerPetId());
+                                                        foundIds.add(mocreature.getOwnerPetId());
+                                                        par1ICommandSender.sendChatToPlayer("Found pet " + EnumChatFormatting.GREEN + entity.getEntityName() + " with name " + EnumChatFormatting.AQUA + mocreature.getName() + EnumChatFormatting.WHITE + ", owned by " + EnumChatFormatting.LIGHT_PURPLE + mocreature.getOwnerName() + EnumChatFormatting.WHITE + " at location " + Math.round(entity.posX) + ", " + Math.round(entity.posY) + ", " + Math.round(entity.posZ) + " with ID " + entity.entityId);
                                                     }
                                                 }
                                             }
@@ -499,7 +486,7 @@ public class CommandMoCreatures extends CommandBase {
                 }
                 else if (par1.equalsIgnoreCase("killall"))
                 {
-                    if (!MoCProxy.entityMap.containsKey(par2))
+                    if (!MoCProxy.entityMap.containsKey(par2) && par2ArrayOfStr.length == 2)
                     {
                         String list = "";
                         List<String> entityTypes = new ArrayList();
@@ -520,7 +507,8 @@ public class CommandMoCreatures extends CommandBase {
                         doNotShowHelp = true;
                         break OUTER;
                     }
-                    else {
+                    else if (par2.contains("|")) // tagged entity
+                    {
                         // get entity type
                         MoCEntityData entityData = MoCProxy.entityMap.get(par2);
                         String playername = par1ICommandSender.getCommandSenderName();
@@ -567,6 +555,38 @@ public class CommandMoCreatures extends CommandBase {
                                 par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
                                 doNotShowHelp = true;
                                 break OUTER;
+                            }
+                        }
+                    }
+                    else if (par2.equalsIgnoreCase("tamed")) // kill all tamed creatures of owner specified
+                    {
+                        if (par2ArrayOfStr.length > 2)
+                        {
+                            String playername =  par2ArrayOfStr[2];
+                            List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+                            for (int i = 0; i < players.size(); i++)
+                            {
+                                EntityPlayerMP player = (EntityPlayerMP) players.get(i);
+                                if (player.username.equalsIgnoreCase(playername))
+                                {
+                                    int count = 0;
+                                    for (int j = 0; j < player.worldObj.loadedEntityList.size(); j++)
+                                    {
+                                        Entity entity = (Entity) player.worldObj.loadedEntityList.get(j);
+                                        // check if one of ours
+                                        if (entity instanceof IMoCTameable && ((IMoCTameable)entity).getOwnerName().equalsIgnoreCase(playername))
+                                        {
+                                            IMoCTameable mocreature = (IMoCTameable)entity;
+                                            MoCreatures.instance.mapData.removeOwnerPet(mocreature, mocreature.getOwnerPetId());
+                                            entity.isDead = true;
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
+                                            count++;
+                                        }
+                                    }
+                                    par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.LIGHT_PURPLE + " tamed" + EnumChatFormatting.WHITE + " pets with owner " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + ".");
+                                    doNotShowHelp = true;
+                                    break OUTER;
+                                }
                             }
                         }
                     }
