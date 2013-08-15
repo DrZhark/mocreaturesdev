@@ -27,7 +27,7 @@ public class MoCPetData {
     private NBTTagList tamedList;
     private static BitSet IDMap = new BitSet(Long.SIZE << 4);
     private final String ownerName;
-    private static ArrayList<Integer> usedPetIds = new ArrayList();
+    private ArrayList<Integer> usedPetIds = new ArrayList();
 
     public MoCPetData(IMoCTameable pet)
     {
@@ -115,7 +115,7 @@ public class MoCPetData {
      * Return the next free pet ID.
      * @return the next free pet ID
      */
-    public static int getNextFreePetId() {
+    public int getNextFreePetId() {
         int next = 0;
         while (true)
         {
@@ -151,7 +151,7 @@ public class MoCPetData {
         return dataMap;
     }
 
-    public static void loadPetDataMap(NBTTagCompound compoundTag)
+    public void loadPetDataMap(NBTTagCompound compoundTag)
     {
         if (compoundTag == null)
         {

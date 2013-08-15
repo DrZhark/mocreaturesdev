@@ -106,7 +106,7 @@ public class MoCItemPetAmulet extends MoCItem
                         storedCreature.setAdult(adult);
 
                         //if the player using the amulet is different than the original owner
-                        if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
+                        if (ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
                         {
                             MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
                             MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
@@ -118,7 +118,7 @@ public class MoCItemPetAmulet extends MoCItem
                             }
                             if (newOwner == null)
                             {
-                                if (maxCount > 0)
+                                if (maxCount > 0 || !MoCreatures.proxy.enableOwnership)
                                 {
                                     // create new PetData for new owner
                                     NBTTagCompound petNBT = new NBTTagCompound();
@@ -128,7 +128,7 @@ public class MoCItemPetAmulet extends MoCItem
                             }
                             else // add pet to existing pet data
                             {
-                                if (newOwner.getTamedList().tagCount() < maxCount)
+                                if (newOwner.getTamedList().tagCount() < maxCount || !MoCreatures.proxy.enableOwnership)
                                 {
                                     NBTTagCompound petNBT = new NBTTagCompound();
                                     storedCreature.writeEntityToNBT(petNBT);
