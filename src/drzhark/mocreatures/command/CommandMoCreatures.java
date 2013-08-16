@@ -18,6 +18,7 @@ import drzhark.mocreatures.MoCConfiguration;
 import drzhark.mocreatures.MoCEntityModData;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCProxy;
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.MoCEntityData;
@@ -199,56 +200,54 @@ public class CommandMoCreatures extends CommandBase {
                                 ArrayList foundIds = new ArrayList();
                                 ArrayList<String> tamedlist = new ArrayList<String>();
                                 String playername = par2ArrayOfStr[2];
-                                List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                                for (int i = 0; i < players.size(); i++)
+                                // search for tamed entity
+                                for (int dimension : DimensionManager.getIDs())
                                 {
-                                    EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                                    if (player.username.equalsIgnoreCase(playername))
+                                    WorldServer world = DimensionManager.getWorld(dimension);
+                                    for (int j = 0; j < world.loadedEntityList.size(); j++)
                                     {
-                                        // search for tamed entity
-                                        for (int dimension : DimensionManager.getIDs())
+                                        Entity entity = (Entity) world.loadedEntityList.get(j);
+                                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
                                         {
-                                            WorldServer world = DimensionManager.getWorld(dimension);
-                                            for (int j = 0; j < world.loadedEntityList.size(); j++)
+                                            IMoCTameable mocreature = (IMoCTameable)entity;
+                                            if (mocreature.getOwnerName().equalsIgnoreCase(playername))
                                             {
-                                                Entity entity = (Entity) world.loadedEntityList.get(j);
-                                                if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
-                                                {
-                                                    IMoCTameable mocreature = (IMoCTameable)entity;
-                                                    if (mocreature.getOwnerName().equalsIgnoreCase(playername))
-                                                    {
-                                                        loadedCount++;
-                                                        foundIds.add(mocreature.getOwnerPetId());
-                                                        tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
-                                                    }
-                                                }
+                                                loadedCount++;
+                                                foundIds.add(mocreature.getOwnerPetId());
+                                                tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
                                             }
                                         }
-                                        MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
-                                        if (ownerPetData != null)
-                                        {
-                                            for (i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
-                                            {
-                                                NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
-                                                if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
-                                                {
-                                                    unloadedCount++;
-                                                    double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
-                                                    double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
-                                                    double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
-                                                    tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
-                                                }
-                                            }
-                                        }
-                                        sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
-                                        par1ICommandSender.sendChatToPlayer("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0));
-                                        doNotShowHelp = true;
-                                        break OUTER;
                                     }
                                 }
-                                par1ICommandSender.sendChatToPlayer("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals.");
-                                doNotShowHelp = true;
-                                break OUTER;
+                                MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
+                                if (ownerPetData != null)
+                                {
+                                    for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
+                                    {
+                                        NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
+                                        if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
+                                        {
+                                            unloadedCount++;
+                                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                                            tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
+                                        }
+                                    }
+                                }
+                                if (tamedlist.size() > 0)
+                                {
+                                    sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
+                                    par1ICommandSender.sendChatToPlayer("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0));
+                                    doNotShowHelp = true;
+                                    break OUTER;
+                                }
+                                else
+                                {
+                                    par1ICommandSender.sendChatToPlayer("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals.");
+                                    doNotShowHelp = true;
+                                    break OUTER;
+                                }
                             }
                             else
                             {
@@ -360,7 +359,7 @@ public class CommandMoCreatures extends CommandBase {
                                         // search for entities that are MoCEntityAnimal's
                                         if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
                                         {
-                                            if (entity.entityId == entityId || ((MoCEntityAnimal)entity).getName().equalsIgnoreCase(petName))
+                                            if (entity.entityId == entityId || ((IMoCTameable)entity).getName().equalsIgnoreCase(petName))
                                             {
                                                 // grab the entity data
                                                 NBTTagCompound compound = new NBTTagCompound();
@@ -461,14 +460,10 @@ public class CommandMoCreatures extends CommandBase {
                         EntityPlayerMP player = (EntityPlayerMP) players.get(i);
                         if (player.username.equalsIgnoreCase(playername))
                         {
-                            NBTTagCompound compound = player.getEntityData();
-                            if (compound != null && compound.hasKey("NumberTamed"))
-                            {
-                                int tamedCount = compound.getInteger("NumberTamed");
-                                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount);
-                                doNotShowHelp = true;
-                                break OUTER;
-                            }
+                            int tamedCount = MoCTools.numberTamedByPlayer(player);
+                            par1ICommandSender.sendChatToPlayer(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount);
+                            doNotShowHelp = true;
+                            break OUTER;
                         }
                     }
                     par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly.");
