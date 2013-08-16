@@ -25,7 +25,7 @@ public class MoCPetData {
 
     private NBTTagCompound ownerData;
     private NBTTagList tamedList;
-    private static BitSet IDMap = new BitSet(Long.SIZE << 4);
+    private BitSet IDMap = new BitSet(Long.SIZE << 4);
     private final String ownerName;
     private ArrayList<Integer> usedPetIds = new ArrayList();
 
@@ -127,7 +127,7 @@ public class MoCPetData {
         }
     }
 
-    public static NBTTagCompound savePetDataMap()
+    public NBTTagCompound savePetDataMap()
     {
         int[] data = new int[(IDMap.length() + Integer.SIZE - 1 )/ Integer.SIZE];
         NBTTagCompound dataMap = new NBTTagCompound();
