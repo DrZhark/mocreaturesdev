@@ -38,6 +38,11 @@ public class MoCPetMapData extends WorldSavedData
         return petMap.get(owner);
     }
 
+    public Map<String, MoCPetData> getPetMap()
+    {
+        return petMap;
+    }
+
     public boolean removeOwnerPet(IMoCTameable pet, int petId)
     {
         if (this.petMap.get(pet.getOwnerName()) != null) // required since getInteger will always return 0 if no key is found
