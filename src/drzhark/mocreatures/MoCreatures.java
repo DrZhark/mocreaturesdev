@@ -1373,6 +1373,6 @@ public class MoCreatures {
 
     public static boolean isServer()
     {
-        return (FMLCommonHandler.instance().getSide() == Side.SERVER);
+        return (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER);
     }
 }
