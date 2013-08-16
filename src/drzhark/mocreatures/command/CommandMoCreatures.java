@@ -879,71 +879,68 @@ public class CommandMoCreatures extends CommandBase {
                             entityData = MoCProxy.entityMap.get(par2);
                         String playername = par1ICommandSender.getCommandSenderName();
                         List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                        for (int i = 0; i < players.size(); i++)
+                        int count = 0;
+                        for (int dimension : DimensionManager.getIDs())
                         {
-                            EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                           // if (player.username.equalsIgnoreCase(playername))
-                            //{
-                                int count = 0;
-                                for (int j = 0; j < player.worldObj.loadedEntityList.size(); j++)
+                            WorldServer world = DimensionManager.getWorld(dimension);
+                            for (int j = 0; j < world.loadedEntityList.size(); j++)
+                            {
+                                Entity entity = (Entity) world.loadedEntityList.get(j);
+                                if (entity instanceof EntityPlayer)
+                                    continue;
+                                if (killall)
                                 {
-                                    Entity entity = (Entity) player.worldObj.loadedEntityList.get(j);
-                                    if (entity instanceof EntityPlayer)
-                                        continue;
-                                    if (entityData == null)
+                                    if (entity instanceof IMoCEntity)
                                     {
-                                        if (entity instanceof IMoCEntity)
+                                        IMoCEntity mocreature = (IMoCEntity)entity;
+                                        if (!mocreature.getIsTamed())
                                         {
-                                            IMoCEntity mocreature = (IMoCEntity)entity;
-                                            if (!mocreature.getIsTamed())
-                                            {
-                                                entity.isDead = true;
-                                                entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                                count++;
-                                            }
-                                        }
-                                        else if (entity instanceof EntityTameable)
-                                        {
-                                            EntityTameable tameableEntity = (EntityTameable)entity;
-                                            if (!tameableEntity.isTamed())
-                                            {
-                                                entity.isDead = true;
-                                                entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                                count++;
-                                            }
-                                        }
-                                        else {
                                             entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3);
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
                                             count++;
                                         }
                                     }
-                                    else if (entityData.getEntityClass().isInstance(entity))
+                                    else if (entity instanceof EntityTameable)
                                     {
-                                        // check if one of ours
-                                        if (entity instanceof IMoCEntity)
+                                        EntityTameable tameableEntity = (EntityTameable)entity;
+                                        if (!tameableEntity.isTamed())
                                         {
-                                            IMoCEntity mocreature = (IMoCEntity)entity;
-                                            if (!mocreature.getIsTamed())
-                                            {
-                                                entity.isDead = true;
-                                                entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                                count++;
-                                            }
-                                        }
-                                        else {
                                             entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3);
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
                                             count++;
                                         }
+                                    }
+                                    else {
+                                        entity.isDead = true;
+                                        entity.worldObj.setEntityState(entity, (byte)3);
+                                        count++;
                                     }
                                 }
-                                if (!killall)
-                                    par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
-                                else par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.WHITE + ".");
-                                doNotShowHelp = true;
-                            //}
+                                else if (entityData != null && entityData.getEntityClass().isInstance(entity))
+                                {
+                                    // check if one of ours
+                                    if (entity instanceof IMoCEntity)
+                                    {
+                                        IMoCEntity mocreature = (IMoCEntity)entity;
+                                        if (!mocreature.getIsTamed())
+                                        {
+                                            entity.isDead = true;
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
+                                            count++;
+                                        }
+                                    }
+                                    else {
+                                        entity.isDead = true;
+                                        entity.worldObj.setEntityState(entity, (byte)3);
+                                        count++;
+                                    }
+                                }
+                            }
                         }
+                        if (!killall && entityData != null)
+                            par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
+                        else par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.WHITE + ".");
+                        doNotShowHelp = true;
                     }
                 }
             }
