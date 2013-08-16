@@ -75,13 +75,11 @@ public class MoCEventHooks {
         if (DimensionManager.getWorld(0) != null && !MoCreatures.proxy.worldInitDone) // if overworld has loaded, use its mapstorage
         {
             MoCPetMapData data = (MoCPetMapData)DimensionManager.getWorld(0).mapStorage.loadData(MoCPetMapData.class, "mocreatures");
-            System.out.println("data = " + data);
             if (data == null)
             {
-                System.out.println("MOCPETMAPDATA IS NULL!!! creating NEW FILE");
                 data = new MoCPetMapData("mocreatures");
             }
-            System.out.println("LOADING MOCPETMAPDATA");
+
             DimensionManager.getWorld(0).mapStorage.setData("mocreatures", data);
             DimensionManager.getWorld(0).mapStorage.saveAllData();
             MoCreatures.instance.mapData = data;

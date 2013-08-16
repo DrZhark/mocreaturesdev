@@ -54,8 +54,6 @@ public class MoCPetData {
             int id = getNextFreePetId();
             petNBT.setInteger("PetId", id);
             NBTTagCompound petData = (NBTTagCompound)petNBT.copy();
-            System.out.println("id = " + id);
-            System.out.println("name = " + petNBT.getString("Name"));
             petData.setInteger("ChunkX", coords.posX);
             petData.setInteger("ChunkY", coords.posY);
             petData.setInteger("ChunkZ", coords.posZ);
@@ -66,7 +64,6 @@ public class MoCPetData {
         }
         else
         {
-            System.out.println("ERROR COULD NOT SAVE PET " + pet);
             return -1;
         }
     }
@@ -78,9 +75,7 @@ public class MoCPetData {
             NBTTagCompound nbt = (NBTTagCompound)this.tamedList.tagAt(i);
             if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == id)
             {
-                System.out.println("FOUND MATCH PET " + nbt.getString("Name") + " for owner " + ownerName);
                 this.tamedList.removeTag(i);
-                System.out.println("REMOVED!!!");
                 this.usedPetIds.remove(new Integer(id));
                 this.IDMap.clear(id); // clear bit so it can be reused again
                 if (this.usedPetIds.size() == 0)
@@ -122,12 +117,10 @@ public class MoCPetData {
             next = IDMap.nextClearBit(next);
             if (usedPetIds.contains(new Integer(next)))
             {
-                System.out.println("getNextFreePetId ID " + next + " already exists in usedPetIds, checking next...");
                 IDMap.set(next);
             }
             else
             {
-                System.out.println("getNextFreePetId FOUND AVAILABLE ID " + next);
                 usedPetIds.add(new Integer(next));
                 return next;
             }

@@ -42,7 +42,6 @@ public class MoCPetMapData extends WorldSavedData
     {
         if (this.petMap.get(pet.getOwnerName()) != null) // required since getInteger will always return 0 if no key is found
         {
-            System.out.println("REMOVING PET " + this + " WITH ID " + pet.getOwnerPetId());
            if (this.petMap.get(pet.getOwnerName()).removePet(petId))
            {
                this.markDirty();
@@ -57,11 +56,7 @@ public class MoCPetMapData extends WorldSavedData
     {
         if (pet.getOwnerPetId() == -1 || petMap.get(pet.getOwnerName()) == null)
         {
-            System.out.println("SAVING OWNER PET DATA FOR " + this + " with name " + pet.getName());
             String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.username;
-            if (((Entity)pet).worldObj.isRemote)
-                System.out.println("savePetForOwner CLIENT USERNAME = " + Minecraft.getMinecraft().thePlayer.username);
-            else System.out.println("savePetForOwner SERVER USERNAME = " + pet.getOwnerName());
             MoCPetData petData = null;
             int id = -1;
             if (petMap.containsKey(owner))
@@ -74,36 +69,26 @@ public class MoCPetMapData extends WorldSavedData
             {
                 petData = new MoCPetData(pet);
                 id = petData.addPet(pet, petNBT);
-                System.out.println("STORING PET DATA FOR OWNER " + owner);
                 petMap.put(owner, petData);
                 this.markDirty();
             }
             pet.setOwnerPetId(id);
-            System.out.println("created new pet save data with id " + id + " for entity " + this);
-            System.out.println("entityData pet ID = " + pet.getOwnerPetId());
         }
         else
         {
             // update pet data
-            System.out.println("UPDATING PET DATA...");
             String owner = pet.getOwnerName();
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(owner);
             NBTTagList tag = petData.getPetData().getTagList("TamedList");
-            System.out.println("writeEntityFromNBT Checking entityData tag map for " + this);
             int id = -1;
             id = pet.getOwnerPetId();
-            System.out.println("READNBT PetId = " + id + " for " + this);
+
             for (int i = 0; i < tag.tagCount(); i++)
             {
-                System.out.println("found tag " + tag.tagAt(i));
                 NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                 if (nbt.getInteger("PetId") == id)
                 {
-                    System.out.println("UPDATING " + pet.getName() + " PETDATA with ID " + id);
                     nbt = (NBTTagCompound)petNBT.copy();
-                    System.out.println("id = " + id);
-                    System.out.println("name = " + petNBT.getString("Name"));
-                    //nbt.setString("Name", pet.getName());
                     nbt.setInteger("ChunkX", ((Entity)pet).chunkCoordX);
                     nbt.setInteger("ChunkY", ((Entity)pet).chunkCoordY);
                     nbt.setInteger("ChunkZ", ((Entity)pet).chunkCoordZ);
@@ -120,10 +105,8 @@ public class MoCPetMapData extends WorldSavedData
         for (Object nbtTag : par1NBTTagCompound.getTags())
         {
             NBTTagCompound nbt = (NBTTagCompound)nbtTag;
-            System.out.println("readFromNBT found key " + nbt.getName());
             if (!this.petMap.containsKey(nbt.getName()))
             {
-                System.out.println("ADDING OWNER " + nbt.getName() + " PET DATA to mocreatures.dat");
                 this.petMap.put(nbt.getName(), new MoCPetData(nbt));
             }
         }
@@ -136,7 +119,6 @@ public class MoCPetMapData extends WorldSavedData
     {
         for (Map.Entry<String, MoCPetData> ownerEntry : petMap.entrySet())
         {
-            System.out.println("Found petdata with owner key " + ownerEntry.getKey());
             par1NBTTagCompound.setTag(ownerEntry.getKey(), ownerEntry.getValue().getPetData());
         }
     }

@@ -749,8 +749,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     {
         super.readEntityFromNBT(nbttagcompound);
         setTamed(nbttagcompound.getBoolean("Tamed"));
-        if (getIsTamed())
-            System.out.println("readEntityFromNBT Entity " + this.getOwnerName());
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
         setName(nbttagcompound.getString("Name"));

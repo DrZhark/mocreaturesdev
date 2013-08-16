@@ -1348,8 +1348,8 @@ public class MoCTools {
                 return false;
             } 
         }
+
         storedCreature.setOwner(ep.username); // ALWAYS SET OWNER. Required for our new pet save system.
-        System.out.println("Entity " + storedCreature + " owner now = " + storedCreature.getOwnerName());
         if (MoCreatures.isServer()) 
         {
             MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) storedCreature).entityId);

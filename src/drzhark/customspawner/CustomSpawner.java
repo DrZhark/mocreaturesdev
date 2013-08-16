@@ -46,7 +46,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.2.3.d1")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.2.3.d2")
 public final class CustomSpawner {
     private int maxCreatures;
     private int maxMonsters;
@@ -673,7 +673,6 @@ public final class CustomSpawner {
                             if (iterator != null)
                             {
                                 SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
-                                System.out.println("Adding vanilla spawnlistentry " + spawnlistentry.entityClass);
                                 fulllist[x].add(spawnlistentry);
                                 iterator.remove();
                             }
@@ -693,7 +692,7 @@ public final class CustomSpawner {
         return 0;
     }
 
-    private List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
+    public List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
     {
         if (enumcreaturetype == EnumCreatureType.monster) { return customMonsterSpawnList; }
         if (enumcreaturetype == EnumCreatureType.creature) { return customCreatureSpawnList; }

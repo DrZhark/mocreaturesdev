@@ -218,14 +218,12 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
         if (this.getIsTamed() && nbttagcompound.hasKey("PetId"))
         {
-            System.out.println("PET ID = " + nbttagcompound.getInteger("PetId"));
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             if (petData != null)
             {
                 NBTTagList tag = petData.getPetData().getTagList("TamedList");
                 for (int i = 0; i < tag.tagCount(); i++)
                 {
-                    System.out.println("found tag " + tag.tagAt(i));
                     NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                     if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                     {
@@ -233,7 +231,6 @@ public abstract class MoCEntityTameableAmbient extends MoCEntityAmbient implemen
                         if (nbt.hasKey("Cloned"))
                         {
                             // entity was cloned
-                            System.out.println("CLONED!!, killing self");
                             nbt.removeTag("Cloned"); // clear flag
                             this.setTamed(false);
                             this.setDead();

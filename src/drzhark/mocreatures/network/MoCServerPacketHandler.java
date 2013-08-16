@@ -57,7 +57,6 @@ public class MoCServerPacketHandler implements IPacketHandler {
                         }
                     }
                     // update petdata
-                    System.out.println("RECEIVED NAME");
                     MoCPetData petData = MoCreatures.instance.mapData.getPetData(ownerName);
                     if (petData != null && pet != null && ((IMoCTameable)pet).getOwnerPetId() != -1)
                     {
@@ -65,11 +64,9 @@ public class MoCServerPacketHandler implements IPacketHandler {
                         NBTTagList tag = petData.getPetData().getTagList("TamedList");
                         for (int i = 0; i < tag.tagCount(); i++)
                         {
-                            System.out.println("found tag " + tag.tagAt(i));
                             NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
                             if (nbt.getInteger("PetId") == id)
                             {
-                                System.out.println("SET PET NAME TO " + name);
                                 nbt.setString("Name", name);
                                 ((IMoCTameable)pet).setName(name);
                             }
