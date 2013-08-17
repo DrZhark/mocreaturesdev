@@ -34,7 +34,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     @Override
     protected String getDeathSound()
     {
-        return "wraithdying";
+        return "mocreatures:wraithdying";
     }
 
     @Override
@@ -46,13 +46,13 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     @Override
     protected String getHurtSound()
     {
-        return "wraithhurt";
+        return "mocreatures:wraithhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "wraith";
+        return "mocreatures:wraith";
     }
 
     @Override

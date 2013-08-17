@@ -1067,7 +1067,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     @Override
     protected void playStepSound(int par1, int par2, int par3, int par4)
     {
-        this.playSound("golemwalk", 1.0F, 1.0F);
+        this.playSound("mocreatures:golemwalk", 1.0F, 1.0F);
     }
 
     @Override
@@ -1079,7 +1079,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     @Override
     protected String getHurtSound()
     {
-        return "golemgrunt";
+        return "mocreatures:golemgrunt";
     }
 
     @Override

@@ -112,7 +112,7 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     @Override
     protected String getDeathSound()
     {
-        return "raccoondying";
+        return "mocreatures:raccoondying";
     }
 
     @Override
@@ -124,13 +124,13 @@ public class MoCEntityRaccoon extends MoCEntityAnimal{
     @Override
     protected String getHurtSound()
     {
-        return "raccoonhurt";
+        return "mocreatures:raccoonhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "raccoongrunt";
+        return "mocreatures:raccoongrunt";
     }
 
     @Override

@@ -911,7 +911,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements MoCIMoCrea
 
                 if (MoCreatures.isServer() && !getIsTamed())
                 {
-                    worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     riddenByEntity.motionY += 0.3D;
                     riddenByEntity.motionZ -= 0.3D;
                     riddenByEntity.mountEntity(null);

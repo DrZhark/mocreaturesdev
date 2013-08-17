@@ -28,19 +28,19 @@ public class MoCEntityTurkey extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "turkeyhurt";
+        return "mocreatures:turkeyhurt";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "turkeyhurt";
+        return "mocreatures:turkeyhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "turkey";
+        return "mocreatures:turkey";
     }
 
     @Override

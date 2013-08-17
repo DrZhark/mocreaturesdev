@@ -221,19 +221,19 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     @Override
     protected void playStepSound(int par1, int par2, int par3, int par4)
     {
-        this.playSound("minigolemwalk", 1.0F, 1.0F);
+        this.playSound("mocreatures:minigolemwalk", 1.0F, 1.0F);
     }
 
     @Override
     protected String getDeathSound()
     {
-        return "golemgrunt";
+        return "mocreatures:golemgrunt";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "golemgrunt";
+        return "mocreatures:golemgrunt";
     }
 
     @Override

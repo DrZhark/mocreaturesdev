@@ -187,7 +187,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
     @Override
     protected String getDeathSound()
     {
-        return "wolfdeath";
+        return "mocreatures:wolfdeath";
     }
 
     @Override
@@ -200,14 +200,14 @@ public class MoCEntityWWolf extends MoCEntityMob {
     protected String getHurtSound()
     {
         openMouth();
-        return "wolfhurt";
+        return "mocreatures:wolfhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         openMouth();
-        return "wolfgrunt";
+        return "mocreatures:wolfgrunt";
     }
 
     @Override

@@ -127,7 +127,7 @@ public class MoCEntityRat extends MoCEntityMob {
     @Override
     protected String getDeathSound()
     {
-        return "ratdying";
+        return "mocreatures:ratdying";
     }
 
     @Override
@@ -139,13 +139,13 @@ public class MoCEntityRat extends MoCEntityMob {
     @Override
     protected String getHurtSound()
     {
-        return "rathurt";
+        return "mocreatures:rathurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "ratgrunt";
+        return "mocreatures:ratgrunt";
     }
 
     @Override

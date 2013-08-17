@@ -604,11 +604,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                 stand();
             }
         }
-        if (this.isUndead()) { return "horsehurtundead"; }
-        if (this.isGhost()) { return "horsehurtghost"; }
-        if (this.getType() == 60 || this.getType() == 61) { return "zebrahurt"; }
-        if (this.getType() >= 65 && this.getType() <= 67) { return "donkeyhurt"; }
-        return "horsehurt";
+        if (this.isUndead()) { return "mocreatures:horsehurtundead"; }
+        if (this.isGhost()) { return "mocreatures:horsehurtghost"; }
+        if (this.getType() == 60 || this.getType() == 61) { return "mocreatures:zebrahurt"; }
+        if (this.getType() >= 65 && this.getType() <= 67) { return "mocreatures:donkeyhurt"; }
+        return "mocreatures:horsehurt";
     }
 
     public boolean getIsRideable()
@@ -624,11 +624,11 @@ public class MoCEntityHorse extends MoCEntityAnimal {
         {
             stand();
         }
-        if (this.isUndead()) { return "horsegruntundead"; }
-        if (this.isGhost()) { return "horsegruntghost"; }
-        if (this.getType() == 60 || this.getType() == 61) { return "zebragrunt"; }
-        if (this.getType() >= 65 && this.getType() <= 67) { return "donkeygrunt"; }
-        return "horsegrunt";
+        if (this.isUndead()) { return "mocreatures:horsegruntundead"; }
+        if (this.isGhost()) { return "mocreatures:horsegruntghost"; }
+        if (this.getType() == 60 || this.getType() == 61) { return "mocreatures:zebragrunt"; }
+        if (this.getType() >= 65 && this.getType() <= 67) { return "mocreatures:donkeygrunt"; }
+        return "mocreatures:horsegrunt";
     }
 
     /**
@@ -1896,7 +1896,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
                     return;
                 }
                 }
-                
+
                 if (rand.nextInt(100) == 0)
                 {
                     gestationtime++;

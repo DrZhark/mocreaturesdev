@@ -381,13 +381,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     protected String getDeathSound()
     {
-        return "scorpiondying";
+        return "mocreatures:scorpiondying";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "scorpionhurt";
+        return "mocreatures:scorpionhurt";
     }
 
     @Override
@@ -397,7 +397,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         {
             MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 3);
         }
-        return "scorpiongrunt";
+        return "mocreatures:scorpiongrunt";
     }
 
     @Override

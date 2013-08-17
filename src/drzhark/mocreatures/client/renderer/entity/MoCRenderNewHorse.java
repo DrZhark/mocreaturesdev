@@ -30,7 +30,7 @@ public class MoCRenderNewHorse extends MoCRenderMoC {
     private static final ResourceLocation TEXTURE_DARKBROWN = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsedarkbrown.png");
     private static final ResourceLocation TEXTURE_CREAMY = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsecreamy.png");
     private static final ResourceLocation TEXTURE_BRIGHTCREAMY = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsebrightcreamy.png");
-    private static final ResourceLocation TEXTURE_PECKLED = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsepeckled.png");
+    private static final ResourceLocation TEXTURE_PECKLED = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsespeckled.png");
     private static final ResourceLocation TEXTURE_PALEBROWN = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsepalebrown.png");
     private static final ResourceLocation TEXTURE_GREY = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsegrey.png");
     private static final ResourceLocation TEXTURE_PINTO = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "horsepinto.png");

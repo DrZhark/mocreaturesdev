@@ -386,7 +386,7 @@ public class MoCEntityBear extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "beardying";
+        return "mocreatures:beardying";
     }
 
     @Override
@@ -399,14 +399,14 @@ public class MoCEntityBear extends MoCEntityAnimal {
     protected String getHurtSound()
     {
         openMouth();
-        return "bearhurt";
+        return "mocreatures:bearhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         openMouth();
-        return "beargrunt";
+        return "mocreatures:beargrunt";
     }
 
     @Override

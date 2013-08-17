@@ -1057,13 +1057,13 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "elephantdying";
+        return "mocreatures:elephantdying";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "elephanthurt";
+        return "mocreatures:elephanthurt";
     }
 
     @Override
@@ -1071,9 +1071,9 @@ public class MoCEntityElephant extends MoCEntityAnimal {
     {
         if (!getIsAdult() && getEdad() < 80)
         {
-            return "elephantcalf";
+            return "mocreatures:elephantcalf";
         }
-        return "elephantgrunt";
+        return "mocreatures:elephantgrunt";
     }
     
     @Override

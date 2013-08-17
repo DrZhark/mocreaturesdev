@@ -671,19 +671,19 @@ public class MoCEntitySnake extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "snakedying";
+        return "mocreatures:snakedying";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "snakehurt";
+        return "mocreatures:snakehurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "snakehiss";
+        return "mocreatures:snakehiss";
     }
 
     @Override

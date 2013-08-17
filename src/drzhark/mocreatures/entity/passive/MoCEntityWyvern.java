@@ -520,21 +520,21 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
     @Override
     protected String getDeathSound()
     {
-        return "wyverndying";
+        return "mocreatures:wyverndying";
     }
 
     @Override
     protected String getHurtSound()
     {
         openMouth();
-        return "wyvernhurt";
+        return "mocreatures:wyvernhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         openMouth();
-        return "wyverngrunt";
+        return "mocreatures:wyverngrunt";
     }
 
     @Override

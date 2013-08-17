@@ -372,19 +372,19 @@ public class MoCEntityTurtle extends MoCEntityAnimal {
     @Override
     protected String getHurtSound()
     {
-        return "turtlehurt";
+        return "mocreatures:turtlehurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "turtlegrunt";
+        return "mocreatures:turtlegrunt";
     }
 
     @Override
     protected String getDeathSound()
     {
-        return "turtledying";
+        return "mocreatures:turtledying";
     }
 
     @Override

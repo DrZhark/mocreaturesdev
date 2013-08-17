@@ -348,11 +348,11 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     {
         if (getKittyState() == 10)
         {
-            return "kittendying";
+            return "mocreatures:kittendying";
         }
         else
         {
-            return "kittydying";
+            return "mocreatures:kittydying";
         }
     }
 
@@ -433,11 +433,11 @@ public class MoCEntityKitty extends MoCEntityAnimal {
     {
         if (getKittyState() == 10)
         {
-            return "kittenhurt";
+            return "mocreatures:kittenhurt";
         }
         else
         {
-            return "kittyhurt";
+            return "mocreatures:kittyhurt";
         }
     }
 
@@ -492,23 +492,23 @@ public class MoCEntityKitty extends MoCEntityAnimal {
             if (ridingEntity != null)
             {
                 MoCEntityKittyBed entitykittybed = (MoCEntityKittyBed) ridingEntity;
-                if ((entitykittybed != null) && !entitykittybed.getHasMilk()) { return "kittyeatingm"; }
-                if ((entitykittybed != null) && !entitykittybed.getHasFood()) { return "kittyeatingf"; }
+                if ((entitykittybed != null) && !entitykittybed.getHasMilk()) { return "mocreatures:kittyeatingm"; }
+                if ((entitykittybed != null) && !entitykittybed.getHasFood()) { return "mocreatures:kittyeatingf"; }
             }
             return null;
         }
-        if (getKittyState() == 6) { return "kittylitter"; }
-        if (getKittyState() == 3) { return "kittyfood"; }
-        if (getKittyState() == 10) { return "kittengrunt"; }
-        if (getKittyState() == 13) { return "kittyupset"; }
-        if (getKittyState() == 17) { return "kittytrapped"; }
+        if (getKittyState() == 6) { return "mocreatures:kittylitter"; }
+        if (getKittyState() == 3) { return "mocreatures:kittyfood"; }
+        if (getKittyState() == 10) { return "mocreatures:kittengrunt"; }
+        if (getKittyState() == 13) { return "mocreatures:kittyupset"; }
+        if (getKittyState() == 17) { return "mocreatures:kittytrapped"; }
         if ((getKittyState() == 18) || (getKittyState() == 12))
         {
-            return "kittypurr";
+            return "mocreatures:kittypurr";
         }
         else
         {
-            return "kittygrunt";
+            return "mocreatures:kittygrunt";
         }
     }
 

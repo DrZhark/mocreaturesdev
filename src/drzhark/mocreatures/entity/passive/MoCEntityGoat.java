@@ -634,23 +634,23 @@ public class MoCEntityGoat extends MoCEntityAnimal {
     @Override
     protected String getHurtSound()
     {
-        return "goathurt";
+        return "mocreatures:goathurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         setBleating(true);
-        if (getType() == 1) { return "goatkid"; }
-        if (getType() > 2 && getType() < 5) { return "goatfemale"; }
+        if (getType() == 1) { return "mocreatures:goatkid"; }
+        if (getType() > 2 && getType() < 5) { return "mocreatures:goatfemale"; }
 
-        return "goatgrunt";
+        return "mocreatures:goatgrunt";
     }
 
     @Override
     protected String getDeathSound()
     {
-        return "goatdying";
+        return "mocreatures:goatdying";
     }
 
     @Override

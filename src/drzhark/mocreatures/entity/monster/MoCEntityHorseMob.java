@@ -72,7 +72,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     protected String getDeathSound()
     {
         openMouth();
-        return "horsedyingundead";
+        return "mocreatures:horsedyingundead";
     }
     
     @Override
@@ -80,7 +80,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         openMouth();
         stand();
-        return "horsehurtundead";
+        return "mocreatures:horsehurtundead";
     }
 
         
@@ -89,7 +89,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         openMouth();
         if (rand.nextInt(10)== 0) stand();
-        return "horsegruntundead";
+        return "mocreatures:horsegruntundead";
     }
 
     public boolean isOnAir()

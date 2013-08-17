@@ -139,7 +139,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     @Override
     protected String getDeathSound()
     {
-        return "micedying";
+        return "mocreatures:micedying";
     }
 
     @Override
@@ -151,13 +151,13 @@ public class MoCEntityMouse extends MoCEntityAnimal
     @Override
     protected String getHurtSound()
     {
-        return "micehurt";
+        return "mocreatures:micehurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "micegrunt";
+        return "mocreatures:micegrunt";
     }
 
     @Override

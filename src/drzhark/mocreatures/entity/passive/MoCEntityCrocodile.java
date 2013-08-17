@@ -499,20 +499,20 @@ public class MoCEntityCrocodile extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "crocdying";
+        return "mocreatures:crocdying";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "crochurt";
+        return "mocreatures:crochurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        if (getIsResting()) { return "crocresting"; }
-        return "crocgrunt";
+        if (getIsResting()) { return "mocreatures:crocresting"; }
+        return "mocreatures:crocgrunt";
     }
 
     @Override

@@ -239,7 +239,7 @@ public class MoCEntityBird extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "birddying";
+        return "mocreatures:birddying";
     }
 
     @Override
@@ -251,23 +251,23 @@ public class MoCEntityBird extends MoCEntityAnimal {
     @Override
     protected String getHurtSound()
     {
-        return "birdhurt";
+        return "mocreatures:birdhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        if (getType() == 1) { return "birdwhite"; }
-        if (getType() == 2) { return "birdblack"; }
-        if (getType() == 3) { return "birdgreen"; }
-        if (getType() == 4) { return "birdblue"; }
+        if (getType() == 1) { return "mocreatures:birdwhite"; }
+        if (getType() == 2) { return "mocreatures:birdblack"; }
+        if (getType() == 3) { return "mocreatures:birdgreen"; }
+        if (getType() == 4) { return "mocreatures:birdblue"; }
         if (getType() == 5)
         {
-            return "birdyellow";
+            return "mocreatures:birdyellow";
         }
         else
         {
-            return "birdred";
+            return "mocreatures:birdred";
         }
     }
 

@@ -527,11 +527,11 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     {
         if (getIsAdult())
         {
-            return "liondeath";
+            return "mocreatures:liondeath";
         }
         else
         {
-            return "cubdying";
+            return "mocreatures:cubdying";
         }
     }
 
@@ -546,11 +546,11 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     {
         if (getIsAdult())
         {
-            return "lionhurt";
+            return "mocreatures:lionhurt";
         }
         else
         {
-            return "cubhurt";
+            return "mocreatures:cubhurt";
         }
     }
 
@@ -559,11 +559,11 @@ public class MoCEntityBigCat extends MoCEntityAnimal {
     {
         if (getIsAdult())
         {
-            return "liongrunt";
+            return "mocreatures:liongrunt";
         }
         else
         {
-            return "cubgrunt";
+            return "mocreatures:cubgrunt";
         }
     }
 

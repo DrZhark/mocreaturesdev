@@ -253,7 +253,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     @Override
     protected String getDeathSound()
     {
-        return "dolphindying";
+        return "mocreatures:dolphindying";
     }
 
     @Override
@@ -265,13 +265,13 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     @Override
     protected String getHurtSound()
     {
-        return "dolphinhurt";
+        return "mocreatures:dolphinhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "dolphin";
+        return "mocreatures:dolphin";
     }
 
     @Override
@@ -283,7 +283,7 @@ public class MoCEntityDolphin extends MoCEntityAquatic {
     @Override
     protected String getUpsetSound()
     {
-        return "dolphinupset";
+        return "mocreatures:dolphinupset";
     }
 
     @Override

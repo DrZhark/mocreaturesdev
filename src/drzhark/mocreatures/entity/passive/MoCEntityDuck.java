@@ -32,19 +32,19 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     @Override
     protected String getDeathSound()
     {
-        return "duckhurt";
+        return "mocreatures:duckhurt";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "duckhurt";
+        return "mocreatures:duckhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "duck";
+        return "mocreatures:duck";
     }
 
     @Override

@@ -177,7 +177,7 @@ public class MoCEntityFox extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "foxdying";
+        return "mocreatures:foxdying";
     }
 
     @Override
@@ -189,13 +189,13 @@ public class MoCEntityFox extends MoCEntityAnimal {
     @Override
     protected String getHurtSound()
     {
-        return "foxhurt";
+        return "mocreatures:foxhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "foxcall";
+        return "mocreatures:foxcall";
     }
 
     @Override

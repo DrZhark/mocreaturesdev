@@ -64,7 +64,7 @@ public class MoCEntityDeer extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "deerdying";
+        return "mocreatures:deerdying";
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MoCEntityDeer extends MoCEntityAnimal {
     @Override
     protected String getHurtSound()
     {
-        return "deerhurt";
+        return "mocreatures:deerhurt";
     }
 
     @Override
@@ -84,11 +84,11 @@ public class MoCEntityDeer extends MoCEntityAnimal {
     {
         if (!getIsAdult())
         {
-            return "deerbgrunt";
+            return "mocreatures:deerbgrunt";
         }
         else
         {
-            return "deerfgrunt";
+            return "mocreatures:deerfgrunt";
         }
     }
 

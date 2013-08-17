@@ -264,12 +264,12 @@ public class MoCTools {
 
     public static void playCustomSound(Entity entity, String customSound, World worldObj)
     {
-        worldObj.playSoundAtEntity(entity, customSound, 1.0F, 1.0F + ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F));
+        worldObj.playSoundAtEntity(entity, "mocreatures:" + customSound, 1.0F, 1.0F + ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F));
     }
 
     public static void playCustomSound(Entity entity, String customSound, World worldObj, float volume)
     {
-        worldObj.playSoundAtEntity(entity, customSound, volume, 1.0F + ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F));
+        worldObj.playSoundAtEntity(entity, "mocreatures:" + customSound, volume, 1.0F + ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F));
     }
 
     /**
@@ -853,8 +853,6 @@ public class MoCTools {
         EntityItem entityitem10 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Item.silk, 32));
         entityitem10.delayBeforeCanPickup = 10;
         worldObj.spawnEntityInWorld(entityitem10);
-
-       
 
         EntityItem entityitem12 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Block.plantRed, 6));
         entityitem12.delayBeforeCanPickup = 10;

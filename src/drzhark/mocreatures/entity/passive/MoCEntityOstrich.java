@@ -797,23 +797,23 @@ public class MoCEntityOstrich extends MoCEntityAnimal {
     protected String getHurtSound()
     {
         openMouth();
-        return "ostrichhurt";
+        return "mocreatures:ostrichhurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         openMouth();
-        if (getType() == 1) { return "ostrichchick"; }
+        if (getType() == 1) { return "mocreatures:ostrichchick"; }
 
-        return "ostrichgrunt";
+        return "mocreatures:ostrichgrunt";
     }
 
     @Override
     protected String getDeathSound()
     {
         openMouth();
-        return "ostrichdying";
+        return "mocreatures:ostrichdying";
     }
 
     @Override

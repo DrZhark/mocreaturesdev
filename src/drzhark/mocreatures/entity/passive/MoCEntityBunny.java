@@ -106,13 +106,13 @@ public class MoCEntityBunny extends MoCEntityAnimal {
     @Override
     protected String getDeathSound()
     {
-        return "rabbitdeath";
+        return "mocreatures:rabbitdeath";
     }
 
     @Override
     protected String getHurtSound()
     {
-        return "rabbithurt";
+        return "mocreatures:rabbithurt";
     }
 
     @Override

@@ -132,7 +132,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     @Override
     protected String getDeathSound()
     {
-        return "ogredying";
+        return "mocreatures:ogredying";
     }
 
     @Override
@@ -157,13 +157,13 @@ public class MoCEntityOgre extends MoCEntityMob{
     @Override
     protected String getHurtSound()
     {
-        return "ogrehurt";
+        return "mocreatures:ogrehurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-        return "ogre";
+        return "mocreatures:ogre";
     }
 
     @Override

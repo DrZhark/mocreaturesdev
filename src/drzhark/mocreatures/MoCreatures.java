@@ -58,6 +58,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
@@ -363,7 +364,7 @@ public class MoCreatures {
     public static Logger log;
     public static MoCPlayerTracker tracker;
 
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         MinecraftForge.TERRAIN_GEN_BUS.register(new MoCEventHooks()); // register our event subscriptions
@@ -377,7 +378,7 @@ public class MoCreatures {
 
     //how to check for client: if(FMLCommonHandler.instance().getSide().isClient())
 
-    @Init
+    @EventHandler
     public void load(FMLInitializationEvent event)
     {
         this.InitItems();
@@ -465,7 +466,7 @@ public class MoCreatures {
          */
     }
 
-    @PostInit
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
@@ -484,13 +485,12 @@ public class MoCreatures {
     }
 
     // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
-    @ServerAboutToStart
+    @EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
-        
     }
 
-    @ServerStarting
+    @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
         if (proxy.useCustomSpawner)
@@ -511,7 +511,7 @@ public class MoCreatures {
         event.registerServerCommand(new CommandMoCreatures());
     }
 
-    @ServerStarted
+    @EventHandler
     public void serverStarted(FMLServerStartedEvent event)
     {
     }

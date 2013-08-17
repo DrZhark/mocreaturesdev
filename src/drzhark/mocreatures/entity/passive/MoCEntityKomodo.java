@@ -89,21 +89,21 @@ public class MoCEntityKomodo extends MoCEntityAnimal
     {
         openmouth();
         
-        return "snakedying";//"komododying";
+        return "mocreatures:snakedying";//"komododying";
     }
 
     @Override
     protected String getHurtSound()
     {
         openmouth();
-        return "snakehurt";//"komodohurt";
+        return "mocreatures:snakehurt";//"komodohurt";
     }
 
     @Override
     protected String getLivingSound()
     {
         openmouth();
-        return "snakehiss";//"komodo";
+        return "mocreatures:snakehiss";//"komodo";
     }
 
     @Override

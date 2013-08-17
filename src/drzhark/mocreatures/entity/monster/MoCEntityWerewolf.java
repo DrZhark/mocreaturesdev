@@ -179,11 +179,11 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     {
         if (getIsHumanForm())
         {
-            return "werehumandying";
+            return "mocreatures:werehumandying";
         }
         else
         {
-            return "werewolfdying";
+            return "mocreatures:werewolfdying";
         }
     }
 
@@ -258,11 +258,11 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     {
         if (getIsHumanForm())
         {
-            return "werehumanhurt";
+            return "mocreatures:werehumanhurt";
         }
         else
         {
-            return "werewolfhurt";
+            return "mocreatures:werewolfhurt";
         }
     }
 
@@ -276,11 +276,11 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     {
         if (getIsHumanForm())
         {
-            return "werehumangrunt";
+            return "mocreatures:werehumangrunt";
         }
         else
         {
-            return "werewolfgrunt";
+            return "mocreatures:werewolfgrunt";
         }
     }
 
