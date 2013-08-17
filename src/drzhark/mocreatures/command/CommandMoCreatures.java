@@ -498,82 +498,79 @@ public class CommandMoCreatures extends CommandBase {
                         // get entity type
                         MoCEntityData entityData = MoCProxy.entityMap.get(par2);
                         String playername = par1ICommandSender.getCommandSenderName();
-                        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                        for (int i = 0; i < players.size(); i++)
+                        int count = 0;
+                        for (int dimension : DimensionManager.getIDs())
                         {
-                            EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                            if (player.username.equalsIgnoreCase(playername))
+                            WorldServer world = DimensionManager.getWorld(dimension);
+                            for (int i = 0; i < world.loadedEntityList.size(); i++)
                             {
-                                int count = 0;
-                                for (int j = 0; j < player.worldObj.loadedEntityList.size(); j++)
+                                Entity entity = (Entity) world.loadedEntityList.get(i);
+                                if (entityData.getEntityClass().isInstance(entity))
                                 {
-                                    Entity entity = (Entity) player.worldObj.loadedEntityList.get(j);
-                                    if (entityData.getEntityClass().isInstance(entity))
+                                    // check if one of ours
+                                    if (entity instanceof IMoCEntity)
                                     {
-                                        // check if one of ours
-                                        if (entity instanceof IMoCEntity)
+                                        IMoCEntity mocreature = (IMoCEntity)entity;
+                                        if (!mocreature.getIsTamed())
                                         {
-                                            IMoCEntity mocreature = (IMoCEntity)entity;
-                                            if (!mocreature.getIsTamed())
-                                            {
-                                                entity.isDead = true;
-                                                entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                                count++;
-                                            }
+                                            entity.isDead = true;
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
+                                            count++;
                                         }
-                                        else if (entity instanceof EntityTameable)
+                                    }
+                                    else if (entity instanceof EntityTameable)
+                                    {
+                                        EntityTameable tameableEntity = (EntityTameable)entity;
+                                        if (!tameableEntity.isTamed())
                                         {
-                                            EntityTameable tameableEntity = (EntityTameable)entity;
-                                            if (!tameableEntity.isTamed())
-                                            {
-                                                entity.isDead = true;
-                                                entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                                count++;
-                                            }
+                                            entity.isDead = true;
+                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
+                                            count++;
                                         }
-                                        else {
+                                    }
+                                    else {
+                                        NBTTagCompound nbt = new NBTTagCompound();
+                                        entity.writeToNBT(nbt);
+                                        if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
+                                        {
                                             entity.isDead = true;
                                             entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
                                             count++;
                                         }
                                     }
                                 }
-                                par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
-                                doNotShowHelp = true;
-                                break OUTER;
                             }
                         }
+                        par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
+                        doNotShowHelp = true;
+                        break OUTER;
                     }
                     else if (par2.equalsIgnoreCase("tamed")) // kill all tamed creatures of owner specified
                     {
                         if (par2ArrayOfStr.length > 2)
                         {
                             String playername =  par2ArrayOfStr[2];
-                            List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                            for (int i = 0; i < players.size(); i++)
+                            int count = 0;
+                            for (int dimension : DimensionManager.getIDs())
                             {
-                                EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                                if (player.username.equalsIgnoreCase(playername))
+                                WorldServer world = DimensionManager.getWorld(dimension);
+                                for (int i = 0; i < world.loadedEntityList.size(); i++)
                                 {
-                                    int count = 0;
-                                    for (int j = 0; j < player.worldObj.loadedEntityList.size(); j++)
+                                    Entity entity = (Entity) world.loadedEntityList.get(i);
+                                    // check if one of ours
+                                    if (entity instanceof IMoCTameable && ((IMoCTameable)entity).getOwnerName().equalsIgnoreCase(playername))
                                     {
-                                        Entity entity = (Entity) player.worldObj.loadedEntityList.get(j);
-                                        // check if one of ours
-                                        if (entity instanceof IMoCTameable && ((IMoCTameable)entity).getOwnerName().equalsIgnoreCase(playername))
-                                        {
-                                            IMoCTameable mocreature = (IMoCTameable)entity;
-                                            MoCreatures.instance.mapData.removeOwnerPet(mocreature, mocreature.getOwnerPetId());
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
+                                        IMoCTameable mocreature = (IMoCTameable)entity;
+                                        MoCreatures.instance.mapData.removeOwnerPet(mocreature, mocreature.getOwnerPetId());
+                                        entity.isDead = true;
+                                        entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
+                                        count++;
                                     }
-                                    par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.LIGHT_PURPLE + " tamed" + EnumChatFormatting.WHITE + " pets with owner " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + ".");
-                                    doNotShowHelp = true;
-                                    break OUTER;
                                 }
                             }
+                            par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.LIGHT_PURPLE + " tamed" + EnumChatFormatting.WHITE + " pets with owner " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + ".");
+                            doNotShowHelp = true;
+                            break OUTER;
                         }
                     }
                 }
