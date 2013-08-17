@@ -37,6 +37,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -533,6 +534,10 @@ public class CommandMoCreatures extends CommandBase {
                                         entity.writeToNBT(nbt);
                                         if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
                                         {
+                                            if ((entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
+                                            {
+                                                continue;
+                                            }
                                             entity.isDead = true;
                                             entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
                                             count++;
@@ -843,13 +848,7 @@ public class CommandMoCreatures extends CommandBase {
                 }
                 else if (par1.equalsIgnoreCase("killall"))
                 {
-                    boolean killall = false;
-                    if (par2.equals("") || par2 == null)
-                    {
-                        killall = true;
-                    }
-
-                    if (!killall && !MoCProxy.entityMap.containsKey(par2))
+                    if (!par2.equals("") && !MoCProxy.entityMap.containsKey(par2))
                     {
                         String list = "";
                         List<String> entityTypes = new ArrayList();
@@ -872,10 +871,11 @@ public class CommandMoCreatures extends CommandBase {
                     else {
                         // get entity type
                         MoCEntityData entityData = null;
-                        if (!killall)
+                        if (!par2.equals(""))
+                        {
                             entityData = MoCProxy.entityMap.get(par2);
+                        }
                         String playername = par1ICommandSender.getCommandSenderName();
-                        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
                         int count = 0;
                         for (int dimension : DimensionManager.getIDs())
                         {
@@ -885,7 +885,7 @@ public class CommandMoCreatures extends CommandBase {
                                 Entity entity = (Entity) world.loadedEntityList.get(j);
                                 if (entity instanceof EntityPlayer)
                                     continue;
-                                if (killall)
+                                if (par2.equals("") || entityData != null && entityData.getEntityClass().isInstance(entity))
                                 {
                                     if (entity instanceof IMoCEntity)
                                     {
@@ -908,33 +908,23 @@ public class CommandMoCreatures extends CommandBase {
                                         }
                                     }
                                     else {
-                                        entity.isDead = true;
-                                        entity.worldObj.setEntityState(entity, (byte)3);
-                                        count++;
-                                    }
-                                }
-                                else if (entityData != null && entityData.getEntityClass().isInstance(entity))
-                                {
-                                    // check if one of ours
-                                    if (entity instanceof IMoCEntity)
-                                    {
-                                        IMoCEntity mocreature = (IMoCEntity)entity;
-                                        if (!mocreature.getIsTamed())
+                                        NBTTagCompound nbt = new NBTTagCompound();
+                                        entity.writeToNBT(nbt);
+                                        if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
                                         {
+                                            if ((entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
+                                            {
+                                                continue;
+                                            }
                                             entity.isDead = true;
                                             entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
                                             count++;
                                         }
                                     }
-                                    else {
-                                        entity.isDead = true;
-                                        entity.worldObj.setEntityState(entity, (byte)3);
-                                        count++;
-                                    }
                                 }
                             }
                         }
-                        if (!killall && entityData != null)
+                        if (entityData != null)
                             par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + ".");
                         else par1ICommandSender.sendChatToPlayer(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.WHITE + ".");
                         doNotShowHelp = true;

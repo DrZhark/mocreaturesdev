@@ -585,6 +585,10 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean attackwolvesW;
     public static MoCSettingBoolean destroyitemsB;
     public static WidgetBoolean destroyitemsW;
+    public static MoCSettingBoolean killallVillagersB;
+    public static WidgetBoolean killallVillagersW;
+    public static MoCSettingBoolean killallUseLightLevelB;
+    public static WidgetBoolean killallUseLightLevelW;
     public static WidgetBoolean spawnpiranhaW;
     public static MoCSettingInt pegasusChanceS;
     public static WidgetInt pegasusChanceW;
@@ -800,6 +804,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(destroyitemsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", destroyDrops));
         destroyitemsW = new WidgetBoolean(destroyitemsB, "Destroy drops?", "Yes", "No");
         widgetCreatureSettingsColumns.add(destroyitemsW);
+        guiapiSettings.append(killallVillagersB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", killallVillagers));
+        killallVillagersW = new WidgetBoolean(killallVillagersB, "Killall Villagers?", "Yes", "No");
+        widgetCreatureSettingsColumns.add(killallVillagersW);
         //**********************************************************//
 
 
@@ -940,6 +947,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(disallowMonsterSpawningDuringDayB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", disallowMonsterSpawningDuringDay));
         disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "Stop Mob Spawn at Day?", "Yes", "No");
         widgetCustomSpawnerColumns.add(disallowMonsterSpawningDuringDayW);
+        guiapiSettings.append(killallUseLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", killallUseLightLevel));
+        killallUseLightLevelW = new WidgetBoolean(killallUseLightLevelB, "Killall Use LightLevel?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(killallUseLightLevelW);
         //**********************************************************//
 
        

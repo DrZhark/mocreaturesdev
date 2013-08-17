@@ -19,11 +19,6 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         health = 10;
     }
 
-    public boolean d2()
-    {
-        return super.getCanSpawnHere();
-    }
-
     @Override
     protected String getDeathSound()
     {

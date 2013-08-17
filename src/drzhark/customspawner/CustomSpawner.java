@@ -1010,11 +1010,13 @@ public final class CustomSpawner {
 
     public boolean isValidLightLevel(Entity entity, WorldServer worldObj, int lightLevel, boolean checkAmbientLightLevel)
     {
-        if (checkAmbientLightLevel && !entity.isCreatureType(EnumCreatureType.ambient, true) && !entity.isCreatureType(EnumCreatureType.creature, true) && !entity.isCreatureType(EnumCreatureType.monster, true))
+        if (entity.isCreatureType(EnumCreatureType.monster, false)) // ignore monsters since monsters should be checking ValidLightLevel
+            return true;
+        else if (entity.isCreatureType(EnumCreatureType.ambient, false) && !checkAmbientLightLevel)
         {
             return true;
         }
-        else if (!entity.isCreatureType(EnumCreatureType.creature, true) && !entity.isCreatureType(EnumCreatureType.monster, true))
+        else if (!entity.isCreatureType(EnumCreatureType.creature, false))
         {
             return true;
         }
