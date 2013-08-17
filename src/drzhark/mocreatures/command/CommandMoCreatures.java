@@ -912,7 +912,7 @@ public class CommandMoCreatures extends CommandBase {
                                         entity.writeToNBT(nbt);
                                         if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
                                         {
-                                            if ((entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
+                                            if (entity instanceof IBossDisplayData || (entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
                                             {
                                                 continue;
                                             }
