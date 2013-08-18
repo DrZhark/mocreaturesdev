@@ -10,6 +10,8 @@ import java.util.Map;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 import drzhark.customspawner.CustomSpawner;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.WorldServer;
@@ -42,19 +44,30 @@ public class MoCEventHooks {
         }
     }
 
-    @ForgeSubscribe // override maxSpawnInChunk values
+    @ForgeSubscribe
     public void onLivingPackSize(LivingPackSizeEvent event)
     {
         if (MoCreatures.proxy.useCustomSpawner)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
-            //System.out.println("entityData = " + entityData);
             if (entityData != null)
             {
-                //System.out.println("LIVINGPACKSIZE " + event.entityLiving + " setting to " + entityData.getMaxInChunk());
                 event.maxPackSize = entityData.getMaxInChunk();
-               // System.out.println("new size = " + event.maxPackSize);
                 event.setResult(Result.ALLOW); // needed for changes to take effect
+            }
+        }
+    }
+
+    @ForgeSubscribe
+    public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
+    {
+        if (MoCreatures.proxy.useCustomSpawner && MoCreatures.myCustomSpawner != null)
+        {
+            MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
+            if (entityData != null && !entityData.getCanSpawn())
+            {
+                if (MoCreatures.proxy.debugCMS) MoCreatures.myCustomSpawner.log.info("Denied spawn for entity " + entityData.getEntityClass() + ". CanSpawn set to false or frequency set to 0!");
+                event.setResult(Result.DENY);
             }
         }
     }
