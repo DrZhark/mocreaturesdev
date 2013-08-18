@@ -32,6 +32,7 @@ public class MoCEntityData {
     private int minGroup = 1;
     private int maxGroup = 1;
     private int maxSpawnInChunk = 1;
+    private boolean useVanillaSpawner = false;
     private MoCEntityModData modData;
 
     public MoCEntityData(Class<? extends EntityLiving> entityClass, String name)
@@ -328,6 +329,16 @@ public class MoCEntityData {
     public void setBiomeGroups(List<String> valueList)
     {
         this.biomeGroups = valueList;
+    }
+
+    public void setUseVanillaSpawner(boolean flag)
+    {
+        this.useVanillaSpawner = flag;
+    }
+
+    public boolean getUseVanillaSpawner()
+    {
+        return this.useVanillaSpawner;
     }
 
     public void removeBiomeGroup(String biome)

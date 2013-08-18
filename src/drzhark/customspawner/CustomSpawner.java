@@ -37,6 +37,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeEventFactory;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -50,8 +51,7 @@ public final class CustomSpawner {
     private int maxMonsters;
     private int maxWaterCreatures;
     private int maxAmbients;
-    private static boolean verboseConsole;
-    private static byte spawnRadius = 0;
+    public static boolean verboseConsole;
 
     public List<BiomeGenBase> biomeList;
     public List[] entityClasses;
@@ -271,44 +271,63 @@ public final class CustomSpawner {
         return countTotal;
     }
 
+    // Spigot start - get entity count only from chunks being processed in theChunkProviderServer
+    public static final int getEntityCount(WorldServer server, EnumCreatureType type)
+    {
+        int i = 0;
+        Iterator iterator = eligibleChunksForSpawning.keySet().iterator();
+        while (iterator.hasNext())
+        {
+            ChunkCoordIntPair chunkcoordintpair1 = (ChunkCoordIntPair)iterator.next();
+
+            if (server.theChunkProviderServer.chunkExists(chunkcoordintpair1.chunkXPos, chunkcoordintpair1.chunkZPos))
+            {
+                for (List<Entity> entitySlice : server.getChunkFromChunkCoords(chunkcoordintpair1.chunkXPos, chunkcoordintpair1.chunkZPos).entityLists)
+                {
+                    for (Entity entity : entitySlice)
+                    {
+                        if (entity.isCreatureType(type, true))
+                        {
+                            ++i;
+                        }
+                    }
+                }
+            }
+        }
+        return i;
+    }
+    // Spigot end
+
     /**
      * New customSpawner
      * 
      * 
      */
-    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype, int mobSpawnRange, int lightLevel, boolean checkAmbientLightLevel)
+    public final int doCustomSpawning(WorldServer worldObj, EnumCreatureType enumcreaturetype, int mobSpawnRange, int lightLevel, boolean checkAmbientLightLevel, boolean enforceMaxSpawnLimits)
     {
         eligibleChunksForSpawning.clear();
         int countTotal;
         int var6;
 
-        if (spawnRadius == 0)
-        {
-            spawnRadius = (byte) mobSpawnRange;
-
-            if (spawnRadius > (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
-            {
-                spawnRadius = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance();
-            }
-
-            if (spawnRadius > 8)
-            {
-                spawnRadius = 8;
-            }
-        }
- 
+        byte spawnRadius = 8;
         for (countTotal = 0; countTotal < worldObj.playerEntities.size(); ++countTotal)
         {
             EntityPlayer entityplayer = (EntityPlayer) worldObj.playerEntities.get(countTotal);
             int var5 = MathHelper.floor_double(entityplayer.posX / 16.0D);
             var6 = MathHelper.floor_double(entityplayer.posZ / 16.0D);
-            byte var7 = spawnRadius;
+           // spawnRadius = 8;
+            spawnRadius = (byte) mobSpawnRange;
+            // Spigot Start
 
-            for (int var8 = -var7; var8 <= var7; ++var8)
+            spawnRadius = (spawnRadius > FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance() ) ? (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance() : spawnRadius;
+            spawnRadius = ( spawnRadius > 8 ) ? 8 : spawnRadius;
+            // Spigot End
+
+            for (int var8 = -spawnRadius; var8 <= spawnRadius; ++var8)
             {
-                for (int var9 = -var7; var9 <= var7; ++var9)
+                for (int var9 = -spawnRadius; var9 <= spawnRadius; ++var9)
                 {
-                    boolean var10 = var8 == -var7 || var8 == var7 || var9 == -var7 || var9 == var7;
+                    boolean var10 = var8 == -spawnRadius || var8 == spawnRadius || var9 == -spawnRadius || var9 == spawnRadius;
                     ChunkCoordIntPair var11 = new ChunkCoordIntPair(var8 + var5, var9 + var6);
 
                     if (!var10)
@@ -353,15 +372,16 @@ public final class CustomSpawner {
         int mobcnt = 0;
 
         //modified to allow custom creature counts instead of vanillas
-        if (worldObj.countEntities(enumcreaturetype, true) <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256)
+        //System.out.println("countEntity = " + worldObj.countEntities(enumcreaturetype, true) + ", max = " + (getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256));
+        //System.out.println("getEntityCount = " + getEntityCount(worldObj, enumcreaturetype));
+        if ((mobcnt = getEntityCount(worldObj, enumcreaturetype)) <= getMax(enumcreaturetype) * eligibleChunksForSpawning.size() / 256)
         {
             Iterator iterator = eligibleChunksForSpawning.keySet().iterator();
             ArrayList<ChunkCoordIntPair> tmp = new ArrayList(eligibleChunksForSpawning.keySet());
             Collections.shuffle(tmp);
             iterator = tmp.iterator();
-            int moblimit = (limit * eligibleChunksForSpawning.size() / 256) - mobcnt + 1; // CraftBukkit - up to 1 more than limit
-            //System.out.println("moblimit = " + limit);
-            label108: while (iterator.hasNext() && (moblimit > 0))
+            int moblimit = (limit * eligibleChunksForSpawning.size() / 256) - mobcnt + 1;
+            label108: while (iterator.hasNext() && moblimit > 0)
             {
                 ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator.next();
 
@@ -452,11 +472,14 @@ public final class CustomSpawner {
                                                         {
                                                             continue label108;
                                                         }
-                                                        moblimit--;
-                                                       // System.out.println("moblimit now = " + moblimit);
-                                                        if (moblimit <= 0)   // If we're past limit, stop spawn
+                                                        if (enforceMaxSpawnLimits)
                                                         {
-                                                            continue label108;
+                                                            moblimit--;
+                                                           // System.out.println("moblimit now = " + moblimit);
+                                                            if (moblimit <= 0)  // If we're past limit, stop spawn
+                                                            {
+                                                                continue label108;
+                                                            }
                                                         }
                                                     }
                                                     else
@@ -601,7 +624,7 @@ public final class CustomSpawner {
 
             if (fulllist != null)
             {
-                int x = biomeList.indexOf(element.biomeName);
+                int x = biomeList.indexOf(element);
                 if (x >= 0) // don't iterate through list if biome wasn't found
                 {
                     for (Iterator iterator = fulllist[x].iterator(); iterator.hasNext();)
@@ -617,9 +640,46 @@ public final class CustomSpawner {
                     }
                 }
             }
-
         }
+    }
 
+    public void copyVanillaSpawnLists(BiomeGenBase abiomegenbase[])
+    {
+        if (abiomegenbase == null)
+        {
+            abiomegenbase = new BiomeGenBase[biomeList.size()];
+            abiomegenbase = biomeList.toArray(abiomegenbase);
+        }
+       // System.out.println("abiomegenbase size = " + abiomegenbase.length);
+        for (BiomeGenBase element : abiomegenbase)
+        {
+           // System.out.println("Checking biome " + element);
+            for (EnumCreatureType enumType : EnumCreatureType.values())
+            {
+                //System.out.println("found type " + enumType);
+                List[] fulllist = getCustomSpawnableList(enumType);
+                //System.out.println("fulllist = " + fulllist + ", size = " + fulllist.length);
+                if (fulllist != null)
+                {
+                    //System.out.println("checking biome name " + element.biomeName);
+                    int x = biomeList.indexOf(element);
+                   // System.out.println("x = " + x);
+                    if (x >= 0) // don't iterate through list if biome wasn't found
+                    {
+                       // System.out.println("element.getSpawnableList for type " + enumType + " = " + element.getSpawnableList(enumType));
+                        for (Iterator iterator = element.getSpawnableList(enumType).iterator(); iterator.hasNext();)
+                        {
+                            if (iterator != null)
+                            {
+                                SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
+                                fulllist[x].add(spawnlistentry);
+                                iterator.remove();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private int getEnumIndex(EnumCreatureType enumcreaturetype)
@@ -631,7 +691,7 @@ public final class CustomSpawner {
         return 0;
     }
 
-    private List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
+    public List[] getCustomSpawnableList(EnumCreatureType enumcreaturetype)
     {
         if (enumcreaturetype == EnumCreatureType.monster) { return customMonsterSpawnList; }
         if (enumcreaturetype == EnumCreatureType.creature) { return customCreatureSpawnList; }
@@ -668,27 +728,6 @@ public final class CustomSpawner {
         }
     }
 
-    public void checkSpawnLists(Class<? extends EntityLiving> clazz, EnumCreatureType type)
-    {
-        List[] customList = getCustomSpawnableList(type);
-        for (int i = 0; i < customList.length; i++)
-        {
-            List spawnList = customList[i];
-            BiomeGenBase biome = biomeList.get(i);
-            for (int j = 0; j < spawnList.size(); j++)
-            {
-                SpawnListEntry spawnlistentry = (SpawnListEntry)spawnList.get(j);
-                if (spawnlistentry.entityClass == clazz)
-                {
-             /*       if (verboseConsole) log.info("updateSpawnListEntry " + clazz + " to " + freq + ":" + min + ":" + max + " in biome " + biome.biomeName);
-                    spawnlistentry.itemWeight = freq;
-                    spawnlistentry.minGroupCount = min;
-                    spawnlistentry.maxGroupCount = max;*/
-                }
-            }
-        }
-    }
-
     public void updateSpawnListBiomes(Class<? extends EntityLiving> clazz, EnumCreatureType type, int freq, int min, int max, List<BiomeGenBase> biomes)
     {
         if (biomes != null)
@@ -707,7 +746,7 @@ public final class CustomSpawner {
         return null;
     }
 
-    private int getMax(EnumCreatureType enumcreaturetype)
+    public int getMax(EnumCreatureType enumcreaturetype)
     {
         if (enumcreaturetype == EnumCreatureType.monster) { return getMaxMonsters(); }
         if (enumcreaturetype == EnumCreatureType.creature) { return getMaxCreatures(); }
@@ -795,7 +834,6 @@ public final class CustomSpawner {
     //New DesPawner stuff
     protected final int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int despawnLightLevel)
     {
-        
         if (entityliving instanceof EntityWolf && ((EntityWolf) entityliving).isTamed()) { return 0; }
         if (!isValidDespawnLightLevel(entityliving, worldObj, despawnLightLevel)) { return 0; }
 
@@ -968,13 +1006,15 @@ public final class CustomSpawner {
         }
     }
 
-    protected boolean isValidLightLevel(Entity entity, WorldServer worldObj, int lightLevel, boolean checkAmbientLightLevel)
+    public boolean isValidLightLevel(Entity entity, WorldServer worldObj, int lightLevel, boolean checkAmbientLightLevel)
     {
-        if (checkAmbientLightLevel && !entity.isCreatureType(EnumCreatureType.ambient, true) && !entity.isCreatureType(EnumCreatureType.creature, true) && !entity.isCreatureType(EnumCreatureType.monster, true))
+        if (entity.isCreatureType(EnumCreatureType.monster, false)) // ignore monsters since monsters should be checking ValidLightLevel
+            return true;
+        else if (entity.isCreatureType(EnumCreatureType.ambient, false) && !checkAmbientLightLevel)
         {
             return true;
         }
-        else if (!entity.isCreatureType(EnumCreatureType.creature, true) && !entity.isCreatureType(EnumCreatureType.monster, true))
+        else if (!entity.isCreatureType(EnumCreatureType.creature, false))
         {
             return true;
         }

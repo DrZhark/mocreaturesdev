@@ -2,6 +2,7 @@ package drzhark.mocreatures;
 
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.NETHER_BRIDGE;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,11 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import drzhark.customspawner.CustomSpawner;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -45,7 +48,7 @@ public class MoCEventHooks {
         if (MoCreatures.proxy.useCustomSpawner)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
-           //System.out.println("entityData = " + entityData);
+            //System.out.println("entityData = " + entityData);
             if (entityData != null)
             {
                 //System.out.println("LIVINGPACKSIZE " + event.entityLiving + " setting to " + entityData.getMaxInChunk());
@@ -55,26 +58,44 @@ public class MoCEventHooks {
             }
         }
     }
-   /* @ForgeSubscribe
-    public void onWorldLoading(WorldEvent.Load event)
-    {
-        //String dimensionName = event.world.provider.getDimensionName();
-       // event.world.getSaveHandler().getWorldDirectoryName();
-        if (event.world.provider.dimensionId == MoCreatures.proxy.WyvernDimension)
-        {
-            //MoCConfiguration config = MoCreatures.proxy.MoCconfig;
-            System.out.println("Dimension " + event.world.provider.dimensionId + " is loading.");
-        }
-    }*/
 
     @ForgeSubscribe
+    public void onWorldUnload(WorldEvent.Unload event)
+    {
+        // if overworld has been deleted or unloaded, reset our flag
+        if (event.world.provider.dimensionId == 0)
+        {
+            MoCreatures.proxy.worldInitDone = false;
+        }
+    }
+
+    @ForgeSubscribe
+    public void onWorldLoad(WorldEvent.Load event)
+    {
+        if (DimensionManager.getWorld(0) != null && !MoCreatures.proxy.worldInitDone) // if overworld has loaded, use its mapstorage
+        {
+            MoCPetMapData data = (MoCPetMapData)DimensionManager.getWorld(0).mapStorage.loadData(MoCPetMapData.class, "mocreatures");
+            if (data == null)
+            {
+                data = new MoCPetMapData("mocreatures");
+            }
+
+            DimensionManager.getWorld(0).mapStorage.setData("mocreatures", data);
+            DimensionManager.getWorld(0).mapStorage.saveAllData();
+            MoCreatures.instance.mapData = data;
+            MoCreatures.proxy.worldInitDone = true;
+        }
+    }
+
+    /*@ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)
     {
       //  System.out.println("INITMAPGENEVENT " + event.newGen + " , type = " + event.type);
-        /*if (MoCreatures.proxy.useCustomSpawner)
+        if (MoCreatures.proxy.useCustomSpawner)
         {
             String structureClass = event.originalGen.getClass().toString();
             MoCreatures.proxy.structureData.addStructure(event.type, event.originalGen);
-        }*/
-    }
+        }
+    }*/
+
 }

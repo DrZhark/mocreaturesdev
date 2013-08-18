@@ -193,7 +193,7 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderWerewolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWraith;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWyvern;
 import drzhark.mocreatures.client.settings.MoCKeyHandler;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
@@ -357,7 +357,7 @@ public class MoCClientProxy extends MoCProxy {
      * @param mocanimal
      */
     @Override
-    public void setName(EntityPlayer player, MoCIMoCreature mocanimal)
+    public void setName(EntityPlayer player, IMoCEntity mocanimal)
     {
         mc.displayGuiScreen(new MoCGUIEntityNamer(mocanimal, mocanimal.getName()));
 
@@ -568,6 +568,8 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean worldGenCreatureSpawningW;
     public static MoCSettingBoolean checkAmbientLightLevelB;
     public static WidgetBoolean checkAmbientLightLevelW;
+    public static MoCSettingBoolean enforceMaxSpawnLimitsB;
+    public static WidgetBoolean enforceMaxSpawnLimitsW;
     public static MoCSettingBoolean disallowMonsterSpawningDuringDayB;
     public static WidgetBoolean disallowMonsterSpawningDuringDayW;
 
@@ -605,6 +607,10 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean attackwolvesW;
     public static MoCSettingBoolean destroyitemsB;
     public static WidgetBoolean destroyitemsW;
+    public static MoCSettingBoolean killallVillagersB;
+    public static WidgetBoolean killallVillagersW;
+    public static MoCSettingBoolean killallUseLightLevelB;
+    public static WidgetBoolean killallUseLightLevelW;
     public static WidgetBoolean spawnpiranhaW;
     public static MoCSettingInt pegasusChanceS;
     public static WidgetInt pegasusChanceW;
@@ -820,6 +826,9 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(destroyitemsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", destroyDrops));
         destroyitemsW = new WidgetBoolean(destroyitemsB, "Destroy drops?", "Yes", "No");
         widgetCreatureSettingsColumns.add(destroyitemsW);
+        guiapiSettings.append(killallVillagersB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", killallVillagers));
+        killallVillagersW = new WidgetBoolean(killallVillagersB, "Killall Villagers?", "Yes", "No");
+        widgetCreatureSettingsColumns.add(killallVillagersW);
         //**********************************************************//
 
 
@@ -954,9 +963,15 @@ public class MoCClientProxy extends MoCProxy {
         guiapiSettings.append(checkAmbientLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", checkAmbientLightLevel));
         checkAmbientLightLevelW = new WidgetBoolean(checkAmbientLightLevelB, "Ambients use Lightlvl?", "Yes", "No");
         widgetCustomSpawnerColumns.add(checkAmbientLightLevelW);
+        guiapiSettings.append(enforceMaxSpawnLimitsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", enforceMaxSpawnLimits));
+        enforceMaxSpawnLimitsW = new WidgetBoolean(enforceMaxSpawnLimitsB, "Enforce Max Spawn Limits?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(enforceMaxSpawnLimitsW);
         guiapiSettings.append(disallowMonsterSpawningDuringDayB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", disallowMonsterSpawningDuringDay));
         disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "Stop Mob Spawn at Day?", "Yes", "No");
         widgetCustomSpawnerColumns.add(disallowMonsterSpawningDuringDayW);
+        guiapiSettings.append(killallUseLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", killallUseLightLevel));
+        killallUseLightLevelW = new WidgetBoolean(killallUseLightLevelB, "Killall Use LightLevel?", "Yes", "No");
+        widgetCustomSpawnerColumns.add(killallUseLightLevelW);
         //**********************************************************//
 
        

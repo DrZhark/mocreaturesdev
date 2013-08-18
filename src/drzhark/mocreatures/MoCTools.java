@@ -50,8 +50,10 @@ import net.minecraft.world.storage.SaveHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
+import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
 import drzhark.mocreatures.entity.ambient.MoCEntityCrab;
@@ -1137,7 +1139,7 @@ public class MoCTools {
      * Forces a data sync between server/client. currently used to syncrhonize
      * mounts
      */
-    public static void forceDataSync(MoCIMoCreature entityMoCreature)
+    public static void forceDataSync(IMoCEntity entityMoCreature)
     {
         if (entityMoCreature.updateMount() && ((Entity) entityMoCreature).ridingEntity != null)
         {
@@ -1313,10 +1315,10 @@ public class MoCTools {
      * player.username as the owner of the entity, and name the entity.
      * 
      * @param ep
-     * @param entity
+     * @param storedCreature
      * @return
      */
-    public static boolean tameWithName(EntityPlayer ep, MoCIMoCreature entity) 
+    public static boolean tameWithName(EntityPlayer ep, IMoCTameable storedCreature) 
     {
         int max = 0;
         if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
@@ -1332,21 +1334,15 @@ public class MoCTools {
                 String message = "\2474" + ep.username + " can not tame more creatures, limit of " + max + " reached";
                 MoCServerPacketHandler.sendMsgToPlayer((EntityPlayerMP) ep, message);
                 return false;
-            } else 
-            {
-                if (!entity.getOwnerName().equals(ep.username)) 
-            {
-                NBTTagCompound nbtt = ep.getEntityData();
-                nbtt.setInteger("NumberTamed", count + 1);
-            }
+            } 
         }
-        entity.setOwner(ep.username);
-        }
+
+        storedCreature.setOwner(ep.username); // ALWAYS SET OWNER. Required for our new pet save system.
         if (MoCreatures.isServer()) 
         {
-            MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) entity).entityId);
+            MoCServerPacketHandler.sendNameGUI((EntityPlayerMP) ep, ((Entity) storedCreature).entityId);
         }
-        entity.setTamed(true);
+        storedCreature.setTamed(true);
         return true;
     }
 
@@ -1358,81 +1354,14 @@ public class MoCTools {
      */
     public static int numberTamedByPlayer(EntityPlayer ep)
     {
-        NBTTagCompound nbtt = ep.getEntityData();
-        int count = nbtt.getInteger("NumberTamed");
-        return count;
-    }
-
-    /**
-     * Decreases the number of entity tamed by the player by 1
-     * 
-     * @param ep
-     */
-    public static void reduceTamedByPlayer(EntityPlayer ep)
-    {
-        int count = MoCTools.numberTamedByPlayer(ep);
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("tamed entities for online player " + ep.username + " =" + count);
-        NBTTagCompound nbtt = ep.getEntityData();
-        count--;
-        if (count < 0)
+        if (MoCreatures.instance.mapData != null)
         {
-            count = 0;
-        }
-        nbtt.setInteger("NumberTamed", count);
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("reducing tamed count for player " + ep.username + " the count now is " + nbtt.getInteger("NumberTamed"));
-    }
-
-    /**
-     * Reduces the counter on the offline player
-     * 
-     * @param playername
-     */
-    public static void reduceTamedByOfflinePlayer(String playername)
-    {
-        NBTTagCompound compound = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler()).getPlayerData(playername);
-        if (compound != null && compound.hasKey("ForgeData"))
-        {
-            NBTTagCompound nbtt = compound.getCompoundTag("ForgeData");
-            int count = nbtt.getInteger("NumberTamed");
-
-            count--;
-            if (count < 0)
+            if (MoCreatures.instance.mapData.getPetData(ep.username) != null)
             {
-                count = 0;
-            }
-            nbtt.setInteger("NumberTamed", count);
-            compound.setCompoundTag("ForgeData", nbtt);
-
-            try
-            {
-                SaveHandler saveHandler = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler());
-                // as long as we know the world folder name we can generate the path to players directory
-                // still need to test how other worlds will work
-                String playersDirectory = "." + File.separator + saveHandler.getWorldDirectoryName() + File.separator + "players" + File.separator;
-                File playerFile = new File(playersDirectory + playername + ".dat");
-                File playerFileNew = new File(playersDirectory, playername + ".tmp");
-
-                CompressedStreamTools.writeCompressed(compound, new FileOutputStream(playerFileNew));
-
-                if (playerFile.exists())
-                {
-                    playerFile.delete();
-                }
-
-                playerFileNew.renameTo(playerFile);
-
-                // test to see if changes took effect
-                compound = ((SaveHandler) ((WorldServer) MinecraftServer.getServer().worldServerForDimension(0)).getSaveHandler()).getPlayerData(playername);
-                if (compound.hasKey("ForgeData"))
-                {
-                    NBTTagCompound nbttest = compound.getCompoundTag("ForgeData");
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
+                return MoCreatures.instance.mapData.getPetData(ep.username).getTamedList().tagCount();
             }
         }
+        return 0;
     }
 
     /**
@@ -1509,7 +1438,7 @@ public class MoCTools {
      * Drops an amulet with the stored information of the entity passed
      * @param entity
      */
-    public static void dropAmulet(MoCEntityAnimal entity)
+    public static void dropAmulet(MoCEntityTameable entity)
     {
         if (MoCreatures.isServer())
         {
@@ -1536,6 +1465,7 @@ public class MoCTools {
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setBoolean("Adult", entity.getIsAdult());          
                 nbtt.setString("OwnerName", entity.getOwnerName());
+                nbtt.setInteger("PetId", entity.getOwnerPetId());
             }
             catch (Exception e)
             {
@@ -1548,13 +1478,17 @@ public class MoCTools {
     }
 
     /**
-     * Drops a new EntityItem fishnet with the stored information of the entity
+     * Drops a new amulet/fishnet with the stored information of the entity
      */
-    public static void dropFishnet(MoCIMoCreature entity)
+    public static void dropAmulet(IMoCTameable entity, int amuletType)
     {
         if (MoCreatures.isServer())
         {
-            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); //TODO subtypes or just use the nttb?
+            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); 
+            if (amuletType == 2)
+            {
+               stack = new ItemStack(MoCreatures.superAmulet, 1, 1);
+            }
 
             if( stack.stackTagCompound == null )
             {
@@ -1570,6 +1504,8 @@ public class MoCTools {
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setString("OwnerName", entity.getOwnerName());
+                nbtt.setBoolean("Adult", entity.getIsAdult());
+                nbtt.setInteger("PetId", entity.getOwnerPetId());
             }
             catch (Exception e)
             {

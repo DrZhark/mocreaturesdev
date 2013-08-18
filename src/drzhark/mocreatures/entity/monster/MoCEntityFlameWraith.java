@@ -48,12 +48,6 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && super.d2();
-    }
-
-    @Override
     protected int getDropItemId()
     {
         return Item.redstone.itemID;

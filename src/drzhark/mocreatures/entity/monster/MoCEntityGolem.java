@@ -643,7 +643,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     public void saveGolemCube(byte slot, byte value)
     {
         golemCubes[slot] = value;
-        if (MoCreatures.isServer())
+        if (MoCreatures.isServer() && MoCreatures.proxy.worldInitDone) // Fixes CMS initialization during world load
         {
             MoCServerPacketHandler.sendTwoBytes(this.entityId, this.worldObj.provider.dimensionId, slot, value);
         }
@@ -1097,7 +1097,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.entityId) > 0) && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && (posY > 50D) && super.getCanSpawnHere();
+        return (super.getCanSpawnHere() && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && (posY > 50D));
     }
 
     @Override

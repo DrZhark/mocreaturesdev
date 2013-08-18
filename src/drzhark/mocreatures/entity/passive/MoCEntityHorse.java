@@ -30,11 +30,11 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCEntityHorse extends MoCEntityAnimal {
+public class MoCEntityHorse extends MoCEntityTameable {
     private int gestationtime;
     private int countEating;
     private int textCounter;
@@ -1441,7 +1441,7 @@ public class MoCEntityHorse extends MoCEntityAnimal {
     }
 
     /**
-     * Can this horse be trapped in an amulet?
+     * Can this horse be trapped in a special amulet?
      */
     public boolean isAmuletHorse()
     {

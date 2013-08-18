@@ -16,8 +16,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
-public class MoCEntityRaccoon extends MoCEntityAnimal{
+public class MoCEntityRaccoon extends MoCEntityTameable{
 
     public MoCEntityRaccoon(World world)
     {

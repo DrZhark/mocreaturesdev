@@ -15,12 +15,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.IMoCTameable;
 
 @SideOnly(Side.CLIENT)
 public class MoCGUIEntityNamer extends GuiScreen {
     protected String screenTitle;
-    private final MoCIMoCreature NamedEntity;
+    private final IMoCEntity NamedEntity;
     private int updateCounter;
     private static String allowedCharacters;
     private String NameToSet;
@@ -29,7 +30,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
     private static final ResourceLocation TEXTURE_MOCNAME = new ResourceLocation("mocreatures", MoCreatures.proxy.GUI_TEXTURE + "mocname.png");
 
-    public MoCGUIEntityNamer(MoCIMoCreature mocanimal, String s)
+    public MoCGUIEntityNamer(IMoCEntity mocanimal, String s)
     {
         xSize = 256;
         ySize = 181;
@@ -117,6 +118,11 @@ public class MoCGUIEntityNamer extends GuiScreen {
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
+        if (NamedEntity instanceof IMoCTameable)
+        {
+            IMoCTameable tamedEntity = (IMoCTameable)NamedEntity;
+            tamedEntity.playTameEffect(true);
+        }
     }
 
     @Override

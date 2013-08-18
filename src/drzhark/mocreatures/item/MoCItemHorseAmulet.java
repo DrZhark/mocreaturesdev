@@ -1,20 +1,42 @@
 package drzhark.mocreatures.item;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class MoCItemAmulet extends MoCItem {
+public class MoCItemHorseAmulet extends MoCItem {
 
-    public MoCItemAmulet(int i)
+    private int ageCounter;
+    private String name;
+    private float health;
+    private int edad;
+    private int creatureType;
+    private int spawnClass;
+    private boolean rideable;
+    private byte armor;
+    private boolean adult;
+    private String ownerName;
+    private int PetId;
+    
+    public MoCItemHorseAmulet(int i)
     {
         super(i);
         maxStackSize = 1;
@@ -31,12 +53,7 @@ public class MoCItemAmulet extends MoCItem {
 
         if (MoCreatures.isServer())
         {
-            if( itemstack.stackTagCompound == null )
-            {
-                itemstack.setTagCompound(new NBTTagCompound());
-            }
-            NBTTagCompound nbtcompound = itemstack.stackTagCompound;
-            readFromNBT(nbtcompound);
+        	initAndReadNBT(itemstack);
         }
         
         if (spawnClass == 21 || spawnClass == 0) // horses or old amulets
@@ -86,7 +103,7 @@ public class MoCItemAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityAnimal storedCreature = new MoCEntityHorse(worldObj); //quick fix before migrating
+                    MoCEntityTameable storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -94,24 +111,56 @@ public class MoCItemAmulet extends MoCItem {
                     storedCreature.setEdad(edad);
                     storedCreature.setName(name);
                     storedCreature.setArmorType(armor);
-                    storedCreature.setEntityHealth(health);
+                    storedCreature.setEntityHealth((int)health);
                     storedCreature.setAdult(adult);
-                    
+                    storedCreature.setOwnerPetId(PetId);
+                    storedCreature.setOwner(entityplayer.username);
+
                     //if the player using the amulet is different than the original owner
-                    if (MoCreatures.proxy.enableOwnership && ownerName != "" && !(ownerName.equals(entityplayer.username)) )
-                      {
-                          EntityPlayer epOwner = worldObj.getPlayerEntityByName(ownerName);
-                          if (epOwner != null)
-                          {
-                              MoCTools.reduceTamedByPlayer(epOwner);
-                          }
-                          else
-                          {
-                              MoCTools.reduceTamedByOfflinePlayer(ownerName);
-                          }
-                      }
-                      storedCreature.setOwner(entityplayer.username);
-                    
+                    if (ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
+                    {
+                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
+                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.username);
+                        int maxCount = MoCreatures.proxy.maxTamed;
+                        if (MoCTools.isThisPlayerAnOP(epOwner))
+                        {
+                            maxCount = MoCreatures.proxy.maxOPTamed;
+                        }
+                        if (newOwner == null)
+                        {
+                            if (maxCount > 0 || !MoCreatures.proxy.enableOwnership)
+                            {
+                                // create new PetData for new owner
+                                NBTTagCompound petNBT = new NBTTagCompound();
+                                storedCreature.writeEntityToNBT(petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                            }
+                        }
+                        else // add pet to existing pet data
+                        {
+                            if (newOwner.getTamedList().tagCount() < maxCount || !MoCreatures.proxy.enableOwnership)
+                            {
+                                NBTTagCompound petNBT = new NBTTagCompound();
+                                storedCreature.writeEntityToNBT(petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                            }
+                        }
+                        // remove pet entry from old owner
+                        if (oldOwner != null)
+                        {
+                            for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++)
+                            {
+                                NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().tagAt(j);
+                                if (petEntry.getInteger("PetId") == PetId)
+                                {
+                                    // found match, remove
+                                    oldOwner.getTamedList().removeTag(j);
+                                }
+                            }
+                        }
+                    }
+
                     entityplayer.worldObj.spawnEntityInWorld(storedCreature);
                     MoCServerPacketHandler.sendAppearPacket(storedCreature.entityId, worldObj.provider.dimensionId);
                     MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
@@ -126,19 +175,9 @@ public class MoCItemAmulet extends MoCItem {
         return itemstack;
     }
 
-    private int ageCounter;
-    private String name;
-    private float health;
-    private int edad;
-    private int creatureType;
-    private int spawnClass;
-    private boolean rideable;
-    private byte armor;
-    private boolean adult;
-    private String ownerName;
-    
     public void readFromNBT(NBTTagCompound nbt)
     {
+    	this.PetId = nbt.getInteger("PetId");
         this.creatureType = nbt.getInteger("CreatureType");
         this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
@@ -152,6 +191,7 @@ public class MoCItemAmulet extends MoCItem {
     
     public void writeToNBT(NBTTagCompound nbt)
     {
+    	nbt.setInteger("PetID", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
@@ -161,5 +201,29 @@ public class MoCItemAmulet extends MoCItem {
         nbt.setByte("Armor", this.armor);
         nbt.setBoolean("Adult", this.adult);
         nbt.setString("OwnerName", this.ownerName);
+    }
+    
+    @SideOnly(Side.CLIENT)
+
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    @Override
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+    	initAndReadNBT(par1ItemStack);
+    	if (name != "") par3List.add(EnumChatFormatting.AQUA + "Horse");
+    	if (name != "") par3List.add(EnumChatFormatting.BLUE + this.name);
+    	if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
+    }
+    
+    private void initAndReadNBT(ItemStack itemstack)
+    {
+    	if( itemstack.stackTagCompound == null )
+        {
+            itemstack.setTagCompound(new NBTTagCompound());
+        }
+        NBTTagCompound nbtcompound = itemstack.stackTagCompound;
+        readFromNBT(nbtcompound);
     }
 }

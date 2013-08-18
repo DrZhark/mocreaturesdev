@@ -18,8 +18,9 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 
-public class MoCEntitySmallFish extends MoCEntityAquatic{
+public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
 
     public static final String fishNames[] = { "Anchovy", "Angelfish", "Angler", "Clownfish", "Goldfish", "Hippotang", "Manderin"};
 

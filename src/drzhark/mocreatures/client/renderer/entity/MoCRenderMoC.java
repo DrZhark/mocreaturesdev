@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderMoC extends RenderLiving {
@@ -34,9 +34,10 @@ public class MoCRenderMoC extends RenderLiving {
 
     public void doRenderMoC(Entity entity, double d, double d1, double d2, float f, float f1)
     {
+        //System.out.println("entity = " + entity);
         super.doRender(entity, d, d1, d2, f, f1);
 
-        MoCIMoCreature entityMoC = (MoCIMoCreature) entity;
+        IMoCEntity entityMoC = (IMoCEntity) entity;
 
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
@@ -154,7 +155,7 @@ public class MoCRenderMoC extends RenderLiving {
         }
     }
 
-    protected void stretch(MoCIMoCreature mocreature)
+    protected void stretch(IMoCEntity mocreature)
     {
         float f = mocreature.getSizeFactor();
         if (f != 0)
@@ -166,7 +167,7 @@ public class MoCRenderMoC extends RenderLiving {
     @Override
     protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
-        MoCIMoCreature mocreature = (MoCIMoCreature) entityliving;
+        IMoCEntity mocreature = (IMoCEntity) entityliving;
         /*if (mocreature.getSizeFactor() != 1.0F)
         {
             stretch(mocreature);
@@ -187,7 +188,7 @@ public class MoCRenderMoC extends RenderLiving {
      * Changes the YOffset of the creature, i.e. sitting animals
      * @param mocreature
      */
-    protected void adjustYOffset(MoCIMoCreature mocreature)
+    protected void adjustYOffset(IMoCEntity mocreature)
     {
         float f = mocreature.getAdjustedYOffset();
         if (f != 0)
@@ -201,7 +202,7 @@ public class MoCRenderMoC extends RenderLiving {
      * Tilts the creature to the front / back
      * @param mocreature
      */
-    protected void adjustPitch(MoCIMoCreature mocreature)
+    protected void adjustPitch(IMoCEntity mocreature)
     {
         int i = mocreature.pitchRotationOffset();
 
@@ -215,7 +216,7 @@ public class MoCRenderMoC extends RenderLiving {
      * Rolls creature
      * @param mocreature
      */
-    protected void adjustRoll(MoCIMoCreature mocreature)
+    protected void adjustRoll(IMoCEntity mocreature)
     {
         int i = mocreature.rollRotationOffset();
 
@@ -225,7 +226,7 @@ public class MoCRenderMoC extends RenderLiving {
         }
     }
     
-    protected void adjustYaw(MoCIMoCreature mocreature)
+    protected void adjustYaw(IMoCEntity mocreature)
     {
         int i = mocreature.yawRotationOffset();
         if (i != 0)

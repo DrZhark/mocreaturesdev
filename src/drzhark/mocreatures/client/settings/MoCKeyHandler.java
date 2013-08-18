@@ -16,7 +16,7 @@ import cpw.mods.fml.common.TickType;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 
 public class MoCKeyHandler extends KeyHandler {
     int keyCount;
@@ -75,27 +75,27 @@ public class MoCKeyHandler extends KeyHandler {
 
         EntityPlayer ep = MoCClientProxy.mc.thePlayer;
 
-        if (kbJump && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof MoCIMoCreature)
+        if (kbJump && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
         {
             keyCount = 0;
             // jump code needs to be executed client/server simultaneously to take
-            ((MoCIMoCreature) ep.ridingEntity).makeEntityJump();
+            ((IMoCEntity) ep.ridingEntity).makeEntityJump();
             MoCClientPacketHandler.sendEntityJumpPacket();
         }
 
-        if (kbDive && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof MoCIMoCreature)
+        if (kbDive && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
         {
             keyCount = 0;
             // jump code needs to be executed client/server simultaneously to take
-            ((MoCIMoCreature) ep.ridingEntity).makeEntityDive();
+            ((IMoCEntity) ep.ridingEntity).makeEntityDive();
             MoCClientPacketHandler.sendEntityDivePacket();
         }
 
-        if (kbDismount && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof MoCIMoCreature)
+        if (kbDismount && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
         {
             keyCount = 0;
             // dismount code needs executed client/server simultaneously
-            ((MoCIMoCreature) ep.ridingEntity).dismountEntity();
+            ((IMoCEntity) ep.ridingEntity).dismountEntity();
             MoCClientPacketHandler.sendEntityDismountPacket();
         }
     }

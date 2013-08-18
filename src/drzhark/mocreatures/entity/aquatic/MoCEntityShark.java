@@ -16,10 +16,11 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
-public class MoCEntityShark extends MoCEntityAquatic {
+public class MoCEntityShark extends MoCEntityTameableAquatic {
     public MoCEntityShark(World world)
     {
         super(world);

@@ -5,6 +5,7 @@ import java.util.List;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
@@ -26,7 +27,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class MoCEntityElephant extends MoCEntityAnimal {
+public class MoCEntityElephant extends MoCEntityTameable {
 
     public int sprintCounter;
     public int sitCounter;

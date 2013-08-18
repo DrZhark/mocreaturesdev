@@ -51,6 +51,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
@@ -160,11 +161,11 @@ import drzhark.mocreatures.item.ItemBuilderHammer;
 import drzhark.mocreatures.item.ItemStaffTeleport;
 import drzhark.mocreatures.item.ItemStaffPortal;
 import drzhark.mocreatures.item.MoCItem;
-import drzhark.mocreatures.item.MoCItemAmulet;
+import drzhark.mocreatures.item.MoCItemHorseAmulet;
 import drzhark.mocreatures.item.MoCItemArmor;
 import drzhark.mocreatures.item.MoCItemEgg;
 import drzhark.mocreatures.item.MoCItemFishBowl;
-import drzhark.mocreatures.item.MoCItemFishnet;
+import drzhark.mocreatures.item.MoCItemPetAmulet;
 import drzhark.mocreatures.item.MoCItemFood;
 import drzhark.mocreatures.item.MoCItemHayStack;
 import drzhark.mocreatures.item.MoCItemHorseSaddle;
@@ -189,6 +190,7 @@ public class MoCreatures {
     public static MoCProxy proxy;
     public static CustomSpawner myCustomSpawner;
     public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    public MoCPetMapData mapData;
 
     /**
      * ITEMS
@@ -360,6 +362,7 @@ public class MoCreatures {
     public static Item crabmeatcooked;
 
     public static Item fishnet;
+    public static Item superAmulet;
 
     public static Logger log;
     public static MoCPlayerTracker tracker;
@@ -488,11 +491,6 @@ public class MoCreatures {
     @EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
-    }
-
-    @EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
-    {
         if (proxy.useCustomSpawner)
         {
             proxy.resetAllData();
@@ -507,6 +505,26 @@ public class MoCreatures {
             proxy.initializeEntities();
             MoCreatures.proxy.initGUI();
             updateSettings(); // refresh settings
+        }
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
+        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+        {
+            if (BiomeGenBase.biomeList[j] != null)
+            {
+                biomeList.add(BiomeGenBase.biomeList[j]);
+            }
+        }
+        if (biomeList.size() > 0)
+        {
+           // if (proxy.debugLogging) log.info("Removing entity " + entityData.getEntityClass() + " with type " + entityData.getType() + " from all biome spawnlists.");
+            allBiomes = biomeList.toArray(allBiomes);
+            myCustomSpawner.copyVanillaSpawnLists(allBiomes);
         }
         event.registerServerCommand(new CommandMoCreatures());
     }
@@ -630,14 +648,14 @@ public class MoCreatures {
         key = (new MoCItem(MoCItemID++)).setUnlocalizedName("key");
         vialdarkness = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencedarkness");
         vialnightmare = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencefire");
-        amuletbone = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletbone");
-        amuletbonefull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletbonefull");
-        amuletghost = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletghost");
-        amuletghostfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletghostfull");
-        amuletfairy = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletfairy");
-        amuletfairyfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletfairyfull");
-        amuletpegasus = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasus");
-        amuletpegasusfull = (new MoCItemAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasusfull");
+        amuletbone = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbone");
+        amuletbonefull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbonefull");
+        amuletghost = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghost");
+        amuletghostfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghostfull");
+        amuletfairy = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairy");
+        amuletfairyfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairyfull");
+        amuletpegasus = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasus");
+        amuletpegasusfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasusfull");
 
         vialundead = (new MoCItem(MoCItemID++)).setUnlocalizedName("essenceundead");
         viallight = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencelight");
@@ -654,7 +672,7 @@ public class MoCreatures {
         ostrichcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");
         unicorn = (new MoCItem(MoCItemID++)).setUnlocalizedName("unicorn");
 
-        fishnet = (new MoCItemFishnet(MoCItemID++)).setUnlocalizedName("fishnet");
+        fishnet = (new MoCItemPetAmulet(MoCItemID++)).setUnlocalizedName("fishnet");
         MoCItemID++;
         horsearmorcrystal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorcrystal");
         MoCItemID++;
@@ -729,6 +747,8 @@ public class MoCreatures {
         
         scrollOfOwner = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofowner");
         
+        superAmulet = (new MoCItemPetAmulet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
+
         //new blocks
         mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");
         GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
@@ -923,6 +943,7 @@ public class MoCreatures {
         LanguageRegistry.addName(garment, "Elephant Garment");
         LanguageRegistry.addName(platform, "Mammoth Platform");
         LanguageRegistry.addName(fishnet, "Fish Net");
+        LanguageRegistry.addName(superAmulet, "Pet Amulet");
 
         for (int i = 0; i < 91; i++)
         {
@@ -1106,6 +1127,8 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] { "  #", " # ", "X  ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), Item.ingotIron, });
 
+        GameRegistry.addRecipe(new ItemStack(superAmulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.diamond });
+
         GameRegistry.addRecipe(new ItemStack(amuletbone, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Item.bone, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.enderPearl });
 
         GameRegistry.addRecipe(new ItemStack(amuletghost, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Item.bone, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.ghastTear });
@@ -1282,6 +1305,7 @@ public class MoCreatures {
                             
                         }
                     }
+                    else entityData.setUseVanillaSpawner(true);
                     // handle entity removals
                     if (proxy.useCustomSpawner)
                     {
@@ -1319,23 +1343,11 @@ public class MoCreatures {
             allBiomes = biomeList.toArray(allBiomes);
             if (!vanillaOnly)
                 myCustomSpawner.RemoveCustomSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-            if (entityData.getType() != null)
-            {
-                // special case for ocelots since they are added to monster spawnlists as creature
-                if (entityData.getEntityName().equals("Ozelot"))
-                {
-                    EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
-                }
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), entityData.getType(), allBiomes);
-            }
-            else
-            {
-                // handle undefined types
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
-                EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
-            }
+            // handle undefined types
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.creature, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.waterCreature, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.monster, allBiomes);
+            EntityRegistry.removeSpawn(entityData.getEntityClass(), EnumCreatureType.ambient, allBiomes);
         }
     }
 

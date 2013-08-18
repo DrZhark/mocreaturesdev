@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -27,7 +28,7 @@ import net.minecraft.world.World;
  * 
  */
 
-public class MoCEntitySnake extends MoCEntityAnimal {
+public class MoCEntitySnake extends MoCEntityTameable {
     private float fTongue;
     private float fMouth;
     private boolean isBiting;

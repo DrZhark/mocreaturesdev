@@ -20,11 +20,12 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCEntityWyvern extends MoCEntityAnimal{
+public class MoCEntityWyvern extends MoCEntityTameable {
 
     
     public MoCAnimalChest localchest;
@@ -211,7 +212,7 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
                 }
             }
 
-            if (isFlyingAlone() &&  rand.nextInt(60) == 0 && !isMovementCeased())
+            if (isFlyingAlone() &&  rand.nextInt(100) == 0 && !isMovementCeased())
             {
                 wingFlap();
             }
@@ -232,6 +233,11 @@ public class MoCEntityWyvern extends MoCEntityAnimal{
             else if (!getIsTamed() && rand.nextInt(300)==0)
             {
                 setIsFlying(!getIsFlying());
+            }
+
+            if (!getIsTamed() && (rand.nextInt(50) == 0) && this.posY < 10D)
+            {
+                this.setDead();
             }
         }
 

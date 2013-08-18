@@ -58,7 +58,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import drzhark.mocreatures.MoCProperty.Type;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
-import drzhark.mocreatures.entity.MoCIMoCreature;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
@@ -145,6 +145,7 @@ public class MoCProxy implements IGuiHandler {
     public boolean enableOwnership;
     public boolean enableResetOwnership;
     public boolean elephantBulldozer;
+    public boolean killallVillagers;
 
     // griefing options
     public boolean golemDestroyBlocks;
@@ -169,6 +170,8 @@ public class MoCProxy implements IGuiHandler {
     public boolean debugCMS;
     public boolean checkAmbientLightLevel;
     public boolean disallowMonsterSpawningDuringDay;
+    public boolean killallUseLightLevel;
+    public boolean enforceMaxSpawnLimits;
     public int despawnLightLevel = 7;
     public int lightLevel = 7;
     public int maxMonsters;
@@ -180,7 +183,7 @@ public class MoCProxy implements IGuiHandler {
     public int ambientSpawnTickRate;
     public int waterSpawnTickRate;
     public int despawnTickRate;
-    public int monsterSpawnRange;
+    public int entitySpawnRange;
     public int maxTamed;
     public int maxOPTamed;
     public int zebraChance;
@@ -206,6 +209,7 @@ public class MoCProxy implements IGuiHandler {
     //public boolean useGlobalEntityRegistration;
     public boolean needsUpdate = false;
     public boolean useDefaultBiomeGroups;
+    public boolean worldInitDone = false;
     public int activeScreen = -1;
 
     public MoCConfiguration mocGlobalConfig;
@@ -354,7 +358,7 @@ public class MoCProxy implements IGuiHandler {
     private static List defaultBiomeGroupBWGSurvivalIsland = new ArrayList();
     private static List defaultBiomeGroupBWGTropicalIsland = new ArrayList();
 
-    protected static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
+    public static Map<String, MoCEntityData> entityMap = new HashMap<String, MoCEntityData>();
     private static final Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>();
     private static final Map<String, MoCEntityData> vanillaEntityMap = new TreeMap<String, MoCEntityData>();
     private static Map<String, EnumCreatureType> entityTypes = new HashMap<String, EnumCreatureType>();
@@ -657,6 +661,7 @@ public class MoCProxy implements IGuiHandler {
             String entityName = "";
             clazz = (Class)entry.getKey();
             EntityLiving entityliving = null;
+
             try
             {
                 if (debugLogging) MoCreatures.log.info("Attempting to construct EntityLiving instance from class " + clazz + "...");
@@ -676,7 +681,7 @@ public class MoCProxy implements IGuiHandler {
                     entityName = entityName.substring(entityName.indexOf(".") + 1, entityName.length());
             }
             entityName = entityName.replaceAll("[^A-Za-z0-9]", ""); // remove all non-digits/alphanumeric
-                 
+
             if (clazz != null && EntityLiving.class.isAssignableFrom(clazz))
             {
                 if (debugLogging) MoCreatures.log.info("Detected " + clazz + " in EntityList, checking if valid...");
@@ -1288,6 +1293,13 @@ public class MoCProxy implements IGuiHandler {
         defaultBiomeGroupMushroom.add(biomeModMap.get(MOD_KEY_VANILLA).getModTag() + "|MushroomIslandShore");
 
         /********** NETHER **********/
+        // BOP
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Boneyard");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Corrupted");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Nether");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Phantasmagoric Inferno");
+        defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BIOMESOPLENTY).getModTag() + "|Undergarden");
+
         // BWG
         defaultBiomeGroupNether.add(biomeModMap.get(MOD_KEY_BWG).getModTag() + "|Hell");
 
@@ -1539,7 +1551,7 @@ public class MoCProxy implements IGuiHandler {
         ambientSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", 60, "The amount of ticks it takes to spawn ambients. A tick rate of 100 would cause Custom Spawner to spawn ambients every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         waterSpawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", 60, "The amount of ticks it takes to spawn water creatures. A tick rate of 100 would cause Custom Spawner to spawn water creatures every 5 seconds. Raise this value if you want spawning to occur less. Note: 20 ticks takes about 1 second.").getInt();
         despawnTickRate = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", 111, "The amount of ticks it takes to despawn vanilla creatures. Requires despawnVanilla to be enabled. Note: 20 ticks takes about 1 second.").getInt();
-        monsterSpawnRange = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnRange", 8, "Mob limit radius to spawn distance (chunks aren't loaded)").getInt();
+        entitySpawnRange = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "entitySpawnRange", 8, "Max entity spawn distance from the player (chunks aren't loaded). Note: This value must be equal or greater than view-distance.").getInt();
         spawnCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnCreatures", true, "Allow creatures to spawn. Turn off to disable all creature entity types.").getBoolean(true);
         spawnMonsters = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnMonsters", true, "Allow monsters to spawn. Turn off to disable all monster entity types.").getBoolean(true);
         spawnWaterCreatures = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "spawnWaterCreatures", true, "Allow watercreatures to spawn. Turn off to disable all watercreature entity types.").getBoolean(true);
@@ -1547,7 +1559,9 @@ public class MoCProxy implements IGuiHandler {
         lightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "lightLevel", 7, "The light level threshold used to determine whether or not to spawn a creature.").getInt();
         despawnLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", 7, "The light level threshold used to determine whether or not to despawn a creature.").getInt();
         checkAmbientLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", false, "Turns on check for lightLevel for Ambient creature spawns.").getBoolean(false);
+        killallUseLightLevel = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", false, "Turns on check for lightLevel before killing an entity during a killall. If entity is under lightLevel threshold, it will be killed.").getBoolean(false);
         disallowMonsterSpawningDuringDay = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", false, "Prevents monsters from spawning anywhere during the day. Note: this will affect underground spawns as well.").getBoolean(false);
+        enforceMaxSpawnLimits = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", false, "If enabled, all spawns will stop when max spawn limits have been reached for type.").getBoolean(false);
         debugCMS = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);
         useCustomSpawner = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", true, "If enabled, Custom Spawner will be activated and process all entities in MoCProperties.cfg. Any entity not configured with a biome group will be ignored and used by Vanilla's spawner instead.").getBoolean(true);
         //useGlobalEntityRegistration = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useGlobalEntityRegistration", true, "If enabled, all tamed animals will be registered using automatic global entity registration. If you disable this for an existing world, all existing tamed animals will be lost. Note: Disable this option if you are experiencing invisible/odd entities.").getBoolean(true);
@@ -1566,6 +1580,7 @@ public class MoCProxy implements IGuiHandler {
         attackHorses = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", false, "Allows creatures to attack horses.").getBoolean(false);
         attackWolves = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", false, "Allows creatures to attack wolves.").getBoolean(false);
         destroyDrops = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", false).getBoolean(false);
+        killallVillagers = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", false).getBoolean(false);
 
         modifyVanillaSpawns = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "ModifyVanillaSpawns", true, "Forces Custom Spawner to handle vanilla spawns otherwise the default vanilla spawner is used.").getBoolean(true);
         despawnVanilla = mocGlobalConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "DespawnVanilla", true, "Allows Custom Spawner to despawn vanilla every despawnTickRate. This helps prevent vanilla from overwhelming custom spawns.").getBoolean(true);
@@ -1587,7 +1602,15 @@ public class MoCProxy implements IGuiHandler {
         blockStoneID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", 202, "Basic block for terrain generation, needs to be less than 256").getInt();
         WyvernDimension = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", -17).getInt();
         WyvernBiomeID = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", 207).getInt();
-
+        // refresh CMS vars too
+        if (this.useCustomSpawner && MoCreatures.myCustomSpawner != null)
+        {
+            MoCreatures.myCustomSpawner.setMaxAmbients(maxAmbients);
+            MoCreatures.myCustomSpawner.setMaxCreatures(maxCreatures);
+            MoCreatures.myCustomSpawner.setMaxWaterCreatures(maxWaterCreatures);
+            MoCreatures.myCustomSpawner.setMaxMonsters(maxMonsters);
+            MoCreatures.myCustomSpawner.verboseConsole = debugCMS;
+        }
         mocGlobalConfig.save();
     }
 
@@ -1627,7 +1650,7 @@ public class MoCProxy implements IGuiHandler {
      * @param player
      * @param mocanimal
      */
-    public void setName(EntityPlayer player, MoCIMoCreature mocanimal) {
+    public void setName(EntityPlayer player, IMoCEntity mocanimal) {
         //client side only
     }
 

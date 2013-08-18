@@ -5,6 +5,7 @@ import java.util.List;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
@@ -19,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class MoCEntityFishy extends MoCEntityAquatic {
+public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public int gestationtime;
     private boolean hasEaten;

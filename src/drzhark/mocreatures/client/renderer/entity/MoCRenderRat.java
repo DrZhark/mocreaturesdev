@@ -18,7 +18,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityRat;
 public class MoCRenderRat extends RenderLiving {
 
     private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratb.png");
-    private static final ResourceLocation TEXTURE_RAT2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratb1.png");
+    private static final ResourceLocation TEXTURE_RAT2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratbl.png");
     private static final ResourceLocation TEXTURE_RAT3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratw.png");
 
     public MoCRenderRat(ModelBase modelbase, float f)

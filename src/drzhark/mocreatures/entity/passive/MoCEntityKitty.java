@@ -5,6 +5,7 @@ import java.util.List;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
@@ -26,7 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class MoCEntityKitty extends MoCEntityAnimal {
+public class MoCEntityKitty extends MoCEntityTameable {
 
     private int kittytimer;
     private int madtimer;
