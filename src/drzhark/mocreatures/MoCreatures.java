@@ -58,6 +58,7 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Init;
@@ -474,6 +475,7 @@ public class MoCreatures {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        proxy.isBWGinstalled = Loader.isModLoaded("BWG4");
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         if (proxy.useCustomSpawner)
         {
