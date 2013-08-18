@@ -27,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -266,6 +267,30 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         default:
             return 6D;
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+            case 1:
+                return MoCreatures.proxy.getTexture("lionf.png");
+            case 2:
+                return MoCreatures.proxy.getTexture("lionf.png");
+            case 3:
+                return MoCreatures.proxy.getTexture("panther.png");
+            case 4:
+                return MoCreatures.proxy.getTexture("cheetah.png");
+            case 5:
+                return MoCreatures.proxy.getTexture("tiger.png");
+            case 6:
+                return MoCreatures.proxy.getTexture("leopard.png");
+            case 7:
+                return MoCreatures.proxy.getTexture("tigerw.png");
+            default:
+                return MoCreatures.proxy.getTexture("lionf.png");
         }
     }
 

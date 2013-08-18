@@ -15,6 +15,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 
@@ -100,6 +101,32 @@ public class MoCEntitySnake extends MoCEntityTameable {
             {
                 setType(8);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+            case 1:
+                return MoCreatures.proxy.getTexture("snake1.png");
+            case 2:
+                return MoCreatures.proxy.getTexture("snake2.png");
+            case 3:
+                return MoCreatures.proxy.getTexture("snake3.png");
+            case 4:
+                return MoCreatures.proxy.getTexture("snake4.png");
+            case 5:
+                return MoCreatures.proxy.getTexture("snake5.png");
+            case 6:
+                return MoCreatures.proxy.getTexture("snake6.png");
+            case 7:
+                return MoCreatures.proxy.getTexture("snake7.png");
+            case 8:
+                return MoCreatures.proxy.getTexture("snake8.png");
+            default:
+                return MoCreatures.proxy.getTexture("snake1.png");
         }
     }
 

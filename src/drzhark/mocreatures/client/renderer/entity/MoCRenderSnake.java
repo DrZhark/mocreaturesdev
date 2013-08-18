@@ -18,15 +18,6 @@ import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 @SideOnly(Side.CLIENT)
 public class MoCRenderSnake extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake1.png");
-    private static final ResourceLocation TEXTURE_SNAKE2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake2.png");
-    private static final ResourceLocation TEXTURE_SNAKE3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake3.png");
-    private static final ResourceLocation TEXTURE_SNAKE4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake4.png");
-    private static final ResourceLocation TEXTURE_SNAKE5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake5.png");
-    private static final ResourceLocation TEXTURE_SNAKE6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake6.png");
-    private static final ResourceLocation TEXTURE_SNAKE7 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake7.png");
-    private static final ResourceLocation TEXTURE_SNAKE8 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "snake8.png");
-
     public MoCRenderSnake(ModelBase modelbase, float f)
     {
         super(modelbase, 0.0F);
@@ -34,32 +25,7 @@ public class MoCRenderSnake extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntitySnake)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntitySnake snake)
-    {
-        switch (snake.getType())
-        {
-            case 1:
-                return TEXTURE_DEFAULT;
-            case 2:
-                return TEXTURE_SNAKE2;
-            case 3:
-                return TEXTURE_SNAKE3;
-            case 4:
-                return TEXTURE_SNAKE4;
-            case 5:
-                return TEXTURE_SNAKE5;
-            case 6:
-                return TEXTURE_SNAKE6;
-            case 7:
-                return TEXTURE_SNAKE7;
-            case 8:
-                return TEXTURE_SNAKE8;
-            default:
-                return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntitySnake)par1Entity).getTexture();
     }
 
     protected void adjustHeight(EntityLiving entityliving, float FHeight)

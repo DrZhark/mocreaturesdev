@@ -18,36 +18,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityBird;
 @SideOnly(Side.CLIENT)
 public class MoCRenderBird extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdblue.png");
-    private static final ResourceLocation TEXTURE_WHITE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdwhite.png");
-    private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdblack.png");
-    private static final ResourceLocation TEXTURE_GREEN = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdgreen.png");
-    private static final ResourceLocation TEXTURE_BLUE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdblue.png");
-    private static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdyellow.png");
-    private static final ResourceLocation TEXTURE_RED = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "birdred.png");
-
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityBird)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityBird bird)
-    {
-        switch (bird.getType())
-        {
-        case 1:
-            return TEXTURE_WHITE;
-        case 2:
-            return TEXTURE_BLACK;
-        case 3:
-            return TEXTURE_GREEN;
-        case 5:
-            return TEXTURE_YELLOW;
-        case 6:
-            return TEXTURE_RED;
-
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityBird)par1Entity).getTexture();
     }
 
     public MoCRenderBird(ModelBase modelbase, float f)

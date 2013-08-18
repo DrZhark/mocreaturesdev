@@ -14,6 +14,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityRat extends MoCEntityMob {
@@ -48,6 +49,23 @@ public class MoCEntityRat extends MoCEntityMob {
             {
                 setType(3);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("ratb.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("ratbl.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("ratw.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("ratb.png");
         }
     }
 

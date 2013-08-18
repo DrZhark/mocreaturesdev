@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityEgg extends EntityLiving {
@@ -51,6 +52,11 @@ public class MoCEntityEgg extends EntityLiving {
         tCounter = 0;
         lCounter = 0;
         //texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture("egg.png");
     }
 
     protected void func_110147_ax()

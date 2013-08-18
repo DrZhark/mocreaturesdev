@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -62,6 +63,22 @@ public class MoCEntityFox extends MoCEntityTameable {
             setType(1);
         }
     }   
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("fox.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("foxsnow.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("fox.png");
+        }
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)

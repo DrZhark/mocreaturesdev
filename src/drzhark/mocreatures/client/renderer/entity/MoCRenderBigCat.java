@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelBigCat1;
 import drzhark.mocreatures.client.model.MoCModelBigCat2;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -24,14 +26,6 @@ import net.minecraft.util.ResourceLocation;
 public class MoCRenderBigCat extends RenderLiving {
 
     public MoCModelBigCat2 bigcat1;
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionf.png");
-    private static final ResourceLocation TEXTURE_BIG = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionb.png");
-    private static final ResourceLocation TEXTURE_CHILD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "lionc.png");
-    private static final ResourceLocation TEXTURE_PANTHER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "panther.png");
-    private static final ResourceLocation TEXTURE_CHEETAH = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "cheetah.png");
-    private static final ResourceLocation TEXTURE_TIGER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "tiger.png");
-    private static final ResourceLocation TEXTURE_TIGERW = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "tigerw.png");
-    private static final ResourceLocation TEXTURE_LEOPARD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "leopard.png");
 
     public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f)
     {
@@ -44,11 +38,11 @@ public class MoCRenderBigCat extends RenderLiving {
     {
         if (entitybigcat.getType() == 2 && entitybigcat.getIsAdult())
         {
-            func_110776_a(TEXTURE_BIG);
+            func_110776_a(MoCreatures.proxy.getTexture("lionb.png"));
         }
         else
         {
-            func_110776_a(TEXTURE_CHILD);
+            func_110776_a(MoCreatures.proxy.getTexture("lionc.png"));
         }
         return 1;
     }
@@ -60,7 +54,7 @@ public class MoCRenderBigCat extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-    	return this.getTexture((MoCEntityBigCat)par1Entity);
+    	return ((MoCEntityBigCat)par1Entity).getTexture();
     }
 
     @Override
@@ -224,24 +218,5 @@ public class MoCRenderBigCat extends RenderLiving {
             f = 1.0F;
         }
         GL11.glScalef(f * entitybigcat.getWidthF(), f * entitybigcat.getHeightF(), f * entitybigcat.getLengthF());
-    }
-
-    protected ResourceLocation getTexture(MoCEntityBigCat bigcat)
-    {
-        switch (bigcat.getType())
-        {
-        case 3:
-            return TEXTURE_PANTHER;
-        case 4:
-            return TEXTURE_CHEETAH;
-        case 5:
-            return TEXTURE_TIGER;
-        case 6:
-            return TEXTURE_LEOPARD;
-        case 7:
-            return TEXTURE_TIGERW;
-        default:
-            return TEXTURE_DEFAULT;
-        }
     }
 }

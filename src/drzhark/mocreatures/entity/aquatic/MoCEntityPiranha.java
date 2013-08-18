@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityPiranha extends MoCEntitySmallFish{
@@ -22,7 +23,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
         setSize(0.3F, 0.3F);
         //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
-        
     }
 
     @Override
@@ -31,7 +31,11 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
         setType(1);
     }
 
-    
+    public ResourceLocation getTexture()
+    {
+       return MoCreatures.proxy.getTexture("smallfish_piranha.png");
+    }
+
     @Override
     protected Entity findPlayerToAttack()
     {

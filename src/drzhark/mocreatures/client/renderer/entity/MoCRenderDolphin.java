@@ -15,17 +15,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
-import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderDolphin extends RenderLiving {
-
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin.png");
-    private static final ResourceLocation TEXTURE_DOLPHIN2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin2.png");
-    private static final ResourceLocation TEXTURE_DOLPHIN3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin3.png");
-    private static final ResourceLocation TEXTURE_DOLPHIN4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin4.png");
-    private static final ResourceLocation TEXTURE_DOLPHIN5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin5.png");
-    private static final ResourceLocation TEXTURE_DOLPHIN6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "dolphin6.png");
 
     public MoCRenderDolphin(ModelBase modelbase, float f)
     {
@@ -194,27 +186,6 @@ public class MoCRenderDolphin extends RenderLiving {
 
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityDolphin)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityDolphin dolphin)
-    {
-        switch (dolphin.getType())
-        {
-        case 1:
-            return TEXTURE_DEFAULT;
-        case 2:
-            return TEXTURE_DOLPHIN2;
-        case 3:
-            return TEXTURE_DOLPHIN3;
-        case 4:
-            return TEXTURE_DOLPHIN4;
-        case 5:
-            return TEXTURE_DOLPHIN5;
-        case 6:
-            return TEXTURE_DOLPHIN6;
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityDolphin)par1Entity).getTexture();
     }
 }

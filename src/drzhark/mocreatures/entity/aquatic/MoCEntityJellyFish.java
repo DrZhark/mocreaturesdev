@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -92,6 +93,41 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     public float getMoveSpeed()
     {
         return 0.1F;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("jellyfisha.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("jellyfishb.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("jellyfishc.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("jellyfishd.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("jellyfishe.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("jellyfishf.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("jellyfishg.png");
+        case 8:
+            return MoCreatures.proxy.getTexture("jellyfishh.png");
+        case 9:
+            return MoCreatures.proxy.getTexture("jellyfishi.png");
+        case 10:
+            return MoCreatures.proxy.getTexture("jellyfishj.png");
+        case 11:
+            return MoCreatures.proxy.getTexture("jellyfishk.png");
+        case 12:
+            return MoCreatures.proxy.getTexture("jellyfishl.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("jellyfisha.png");
+        }
     }
 
     @Override

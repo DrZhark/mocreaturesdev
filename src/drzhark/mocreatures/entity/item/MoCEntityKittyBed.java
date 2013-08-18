@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -34,6 +35,11 @@ public class MoCEntityKittyBed extends EntityLiving {
     {
         this(world);
         setSheetColor(i);
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture("kittybed.png");
     }
 
     protected void func_110147_ax()

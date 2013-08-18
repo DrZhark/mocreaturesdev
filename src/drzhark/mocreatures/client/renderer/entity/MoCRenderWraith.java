@@ -16,8 +16,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 @SideOnly(Side.CLIENT)
 public class MoCRenderWraith extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "wraith.png");
-
     public MoCRenderWraith(ModelBiped modelbiped, float f)
     {
         //super(modelbiped, f, 1.0F);
@@ -51,6 +49,6 @@ public class MoCRenderWraith extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityWraith)par1Entity).getTexture();
     }
 }

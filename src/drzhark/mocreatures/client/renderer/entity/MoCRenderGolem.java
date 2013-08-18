@@ -21,11 +21,6 @@ public class MoCRenderGolem extends MoCRenderMoC {
 
     private final ModelBase MoCModelG = new MoCModelGolem();
     private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemt.png");
-    private static final ResourceLocation TEXTURE_EFFECT_1 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect1.png");
-    private static final ResourceLocation TEXTURE_EFFECT_2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect2.png");
-    private static final ResourceLocation TEXTURE_EFFECT_3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect3.png");
-    private static final ResourceLocation TEXTURE_EFFECT_4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "golemeffect4.png");
 
     public MoCRenderGolem(ModelBase modelbase, float f)
     {
@@ -39,7 +34,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
     {
         boolean depth = true;
 
-        ResourceLocation effectTexture = getEffectTexture(par1Entity);
+        ResourceLocation effectTexture = par1Entity.getEffectTexture();
         if (effectTexture != null)//(!effectTexture.isEmpty())//(par1Entity.getPowered())
         {
             if (depth)
@@ -95,28 +90,6 @@ public class MoCRenderGolem extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
-    }
-
-    /**
-     * Used for the power texture used on the golem
-     * 
-     * @return
-     */
-    public ResourceLocation getEffectTexture(MoCEntityGolem golem)
-    {
-        switch (golem.getGolemState())
-        {
-            case 1:
-                return TEXTURE_EFFECT_1;
-            case 2:
-                return TEXTURE_EFFECT_2;
-            case 3:
-                return TEXTURE_EFFECT_3;
-            case 4:
-                return TEXTURE_EFFECT_4;
-            default:
-                return null;
-        }
+        return ((MoCEntityGolem)par1Entity).getTexture();
     }
 }

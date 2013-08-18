@@ -23,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -35,11 +36,18 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public EntityLiving roper;
     private boolean riderIsDisconnecting;
     protected float moveSpeed;
+    protected String texture;
 
     public MoCEntityMob(World world)
     {
         super(world);
         setTamed(false);
+        texture = "blank.jpg";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture(texture);
     }
 
     protected void func_110147_ax()

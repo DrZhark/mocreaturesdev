@@ -20,6 +20,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityPetScorpion extends MoCEntityTameable {
@@ -49,6 +50,32 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
         if (getType() == 0)
         {
             setType(1);
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        boolean saddle = getIsRideable();
+        switch (getType())
+        {
+            case 1:
+                if (!saddle) { return MoCreatures.proxy.getTexture("scorpiondirt.png"); }
+                return MoCreatures.proxy.getTexture("scorpiondirtsaddle.png");
+            case 2:
+                if (!saddle) { return MoCreatures.proxy.getTexture("scorpioncave.png"); }
+                return MoCreatures.proxy.getTexture("scorpioncavesaddle.png");
+            case 3:
+                if (!saddle) { return MoCreatures.proxy.getTexture("scorpionnether.png"); }
+                return MoCreatures.proxy.getTexture("scorpionnethersaddle.png");
+            case 4:
+                if (!saddle) { return MoCreatures.proxy.getTexture("scorpionfrost.png"); }
+                return MoCreatures.proxy.getTexture("scorpionfrostsaddle.png");
+            case 5:
+                if (!saddle) { return MoCreatures.proxy.getTexture("scorpionundead.png"); }
+                return MoCreatures.proxy.getTexture("scorpionundeadsaddle.png");
+            default:
+                return MoCreatures.proxy.getTexture("scorpiondirt.png");
         }
     }
 

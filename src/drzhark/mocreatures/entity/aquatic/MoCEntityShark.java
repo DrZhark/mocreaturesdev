@@ -24,7 +24,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     public MoCEntityShark(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "shark.png";
+        texture = "shark.png";
         setSize(1.5F, 0.8F);
         setEdad(100 + rand.nextInt(100));
         //health = 25;

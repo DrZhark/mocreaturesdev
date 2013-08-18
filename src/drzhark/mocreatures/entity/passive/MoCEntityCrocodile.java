@@ -32,7 +32,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     public MoCEntityCrocodile(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "crocodile.png";
+        texture = "crocodile.png";
         setSize(2F, 0.6F);
         myMoveSpeed = 0.5F;
         //health = 25;

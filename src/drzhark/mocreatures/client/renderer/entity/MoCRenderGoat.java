@@ -21,35 +21,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 @SideOnly(Side.CLIENT)
 public class MoCRenderGoat extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat1.png");
-    private static final ResourceLocation TEXTURE_GOAT2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat2.png");
-    private static final ResourceLocation TEXTURE_GOAT3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat3.png");
-    private static final ResourceLocation TEXTURE_GOAT4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat4.png");
-    private static final ResourceLocation TEXTURE_GOAT5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat5.png");
-    private static final ResourceLocation TEXTURE_GOAT6 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "goat6.png");
-
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityGoat)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityGoat goat)
-    {
-        switch (goat.getType())
-        {
-        case 2:
-            return TEXTURE_GOAT2;
-        case 3:
-            return TEXTURE_GOAT3;
-        case 4:
-            return TEXTURE_GOAT4;
-        case 5:
-            return TEXTURE_GOAT5;
-        case 6:
-            return TEXTURE_GOAT6;
-
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityGoat)par1Entity).getTexture();
     }
 
     public MoCRenderGoat(ModelBase modelbase, float f)

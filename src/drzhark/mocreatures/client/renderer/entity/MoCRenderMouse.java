@@ -16,11 +16,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 @SideOnly(Side.CLIENT)
 public class MoCRenderMouse extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "miceg.png");
-    private static final ResourceLocation TEXTURE_MOUSE2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "miceb.png");
-    private static final ResourceLocation TEXTURE_MOUSE3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "micew.png");
-
-
     public MoCRenderMouse(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -74,20 +69,6 @@ public class MoCRenderMouse extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityMouse)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityMouse mouse)
-    {
-        switch (mouse.getType())
-        {
-            case 2:
-                return TEXTURE_MOUSE2;
-            case 3:
-                return TEXTURE_MOUSE3;
-            
-            default:
-                return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityMouse)par1Entity).getTexture();
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -69,6 +70,25 @@ public class MoCEntityOgre extends MoCEntityMob{
 
                 this.setEntityHealth(getMaxHealth());
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1: 
+        case 2:
+            return MoCreatures.proxy.getTexture("ogregreen.png");
+        case 3: 
+        case 4:
+            return MoCreatures.proxy.getTexture("ogrered.png");
+        case 5: 
+        case 6: 
+            return MoCreatures.proxy.getTexture("ogreblue.png");
+        default:
+            return MoCreatures.proxy.getTexture("ogregreen.png");
         }
     }
 

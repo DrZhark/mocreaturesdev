@@ -1135,10 +1135,14 @@ public final class CustomSpawner {
                             }
 
                             entityliving.setLocationAndAngles((double)f, (double)f1, (double)f2, par6Random.nextFloat() * 360.0F, 0.0F);
-                            worldObj.spawnEntityInWorld(entityliving);
-                            if (verboseConsole) log.info("[WorldGen spawned " + entityliving.getEntityName() + " at " + f + ", " + f1 + ", " + f2 + " with CREATURE:" + spawnlistentry.itemWeight + ":" + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":" + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName + "]");
-                            creatureSpecificInit(entityliving, worldObj, f, f1, f2);
-                            flag = true;
+                            Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, worldObj, f, f1, f2);
+                            if (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere()))
+                            {
+                                worldObj.spawnEntityInWorld(entityliving);
+                                if (verboseConsole) log.info("[WorldGen spawned " + entityliving.getEntityName() + " at " + f + ", " + f1 + ", " + f2 + " with CREATURE:" + spawnlistentry.itemWeight + ":" + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":" + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName + "]");
+                                creatureSpecificInit(entityliving, worldObj, f, f1, f2);
+                                flag = true;
+                            }
                         }
 
                         j1 += par6Random.nextInt(5) - par6Random.nextInt(5);

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -33,6 +34,11 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         this(world);
         setType(i);
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture("fishbowl.png");
     }
 
     protected void func_110147_ax()

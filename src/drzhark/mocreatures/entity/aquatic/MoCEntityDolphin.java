@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityDolphin extends MoCEntityTameableAquatic {
@@ -60,6 +61,29 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             {
                 setType(6);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("dolphin.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("dolphin2.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("dolphin3.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("dolphin4.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("dolphin5.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("dolphin6.png");
+        default:
+            return MoCreatures.proxy.getTexture("dolphin.png");
         }
     }
 

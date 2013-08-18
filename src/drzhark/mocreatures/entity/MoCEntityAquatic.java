@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEntity//, IEntityAdditionalSpawnData
@@ -43,6 +44,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     public boolean fishHooked;
     private boolean riderIsDisconnecting;
     protected float moveSpeed;
+    protected String texture;
 
     public MoCEntityAquatic(World world)
     {
@@ -50,6 +52,12 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         outOfWater = 0;
         setTamed(false);
         setTemper(50);
+        texture = "blank.jpg";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture(texture);
     }
 
     protected void func_110147_ax()

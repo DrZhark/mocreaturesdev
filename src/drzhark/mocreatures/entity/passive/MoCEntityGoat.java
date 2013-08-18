@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityGoat extends MoCEntityTameable {
@@ -136,6 +137,31 @@ public class MoCEntityGoat extends MoCEntityTameable {
     public float getMaxHealth()
     {
         return 12;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("goat1.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("goat2.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("goat3.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("goat4.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("goat5.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("goat6.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("goat1.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("goat1.png");
+        }
     }
 
     public void calm()

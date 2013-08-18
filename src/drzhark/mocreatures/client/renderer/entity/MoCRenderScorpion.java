@@ -17,11 +17,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 @SideOnly(Side.CLIENT)
 public class MoCRenderScorpion extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
-    private static final ResourceLocation TEXTURE_CAVE = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
-    private static final ResourceLocation TEXTURE_NETHER = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
-    private static final ResourceLocation TEXTURE_FROST = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "scorpiondirt.png");
-
     public MoCRenderScorpion(MoCModelScorpion modelbase, float f)
     {
         super(modelbase, f);
@@ -97,23 +92,6 @@ public class MoCRenderScorpion extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityScorpion)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityScorpion scorpion)
-    {
-        switch (scorpion.getType())
-        {
-        case 1:
-            return TEXTURE_DEFAULT;
-        case 2:
-            return TEXTURE_CAVE;
-        case 3:
-            return TEXTURE_NETHER;
-        case 4:
-            return TEXTURE_FROST;
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityScorpion)par1Entity).getTexture();
     }
 }

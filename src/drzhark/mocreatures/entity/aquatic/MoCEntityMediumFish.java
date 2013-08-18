@@ -14,6 +14,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -47,6 +48,23 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic{
     public float getMaxHealth()
     {
         return 8;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("mediumfish_salmon.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("mediumfish_cod.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("mediumfish_bass.png");
+        default:
+            return MoCreatures.proxy.getTexture("mediumfish_salmon.png");
+        }
+        
     }
 
     @Override

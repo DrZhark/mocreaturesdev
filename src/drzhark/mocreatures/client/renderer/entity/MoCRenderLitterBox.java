@@ -19,7 +19,6 @@ import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 public class MoCRenderLitterBox extends RenderLiving {
 
     public MoCModelLitterBox litterbox;
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png");
 
     public MoCRenderLitterBox(MoCModelLitterBox modellitterbox, float f)
     {
@@ -35,6 +34,6 @@ public class MoCRenderLitterBox extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityLitterBox)par1Entity).getTexture();
     }
 }

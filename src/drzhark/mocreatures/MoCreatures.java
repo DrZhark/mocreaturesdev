@@ -94,6 +94,7 @@ import drzhark.mocreatures.block.MoCBlockTallGrass;
 import drzhark.mocreatures.block.MultiItemBlock;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
+import drzhark.mocreatures.client.renderer.texture.MoCTextures;
 import drzhark.mocreatures.command.CommandMoCreatures;
 import drzhark.mocreatures.dimension.BiomeGenWyvernLair;
 import drzhark.mocreatures.dimension.WorldProviderWyvernEnd;
@@ -375,6 +376,7 @@ public class MoCreatures {
         log = event.getModLog();
         proxy.ConfigInit(event);
         proxy.initSounds();
+        proxy.initTextures();
         tracker = new MoCPlayerTracker();
         GameRegistry.registerPlayerTracker(tracker);
     }
@@ -487,9 +489,8 @@ public class MoCreatures {
         else proxy.ConfigPostInit(event);
     }
 
-    // CustomSpawner must be initialized here to avoid vanilla spawn lists being populated during world gen
     @EventHandler
-    public void serverAboutToStart(FMLServerAboutToStartEvent event)
+    public void serverStarting(FMLServerStartingEvent event)
     {
         if (proxy.useCustomSpawner)
         {
@@ -506,11 +507,6 @@ public class MoCreatures {
             MoCreatures.proxy.initGUI();
             updateSettings(); // refresh settings
         }
-    }
-
-    @EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
-    {
         BiomeGenBase[] allBiomes = new BiomeGenBase[proxy.biomeMap.size()];
         List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
         for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
@@ -1305,7 +1301,6 @@ public class MoCreatures {
                             
                         }
                     }
-                    else entityData.setUseVanillaSpawner(true);
                     // handle entity removals
                     if (proxy.useCustomSpawner)
                     {

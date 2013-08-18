@@ -16,32 +16,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 @SideOnly(Side.CLIENT)
 public class MoCRenderBunny extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunny.png");
-    private static final ResourceLocation TEXTURE_BUNNY2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyb.png");
-    private static final ResourceLocation TEXTURE_BUNNY3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyc.png");
-    private static final ResourceLocation TEXTURE_BUNNY4 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnyd.png");
-    private static final ResourceLocation TEXTURE_BUNNY5 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bunnye.png");
-
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityBunny)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityBunny bunny)
-    {
-        switch (bunny.getType())
-        {
-        case 2:
-            return TEXTURE_BUNNY2;
-        case 3:
-            return TEXTURE_BUNNY3;
-        case 4:
-            return TEXTURE_BUNNY4;
-        case 5:
-            return TEXTURE_BUNNY5;
-
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityBunny)par1Entity).getTexture();
     }
 
     public MoCRenderBunny(ModelBase modelbase, float f)

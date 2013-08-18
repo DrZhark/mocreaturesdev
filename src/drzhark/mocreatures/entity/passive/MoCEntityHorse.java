@@ -24,6 +24,7 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.tileentity.TileEntityRecordPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -79,7 +80,6 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if (rand.nextInt(5) == 0)
             {
                 setAdult(false);
-
             }
             else
             {
@@ -728,6 +728,363 @@ public class MoCEntityHorse extends MoCEntityTameable {
     public int getTalkInterval()
     {
         return 400;
+    }
+
+    /**
+     * Overridden for the dynamic nightmare texture.
+     */
+    @Override
+    public ResourceLocation getTexture()
+    {
+        String tempTexture;
+
+        switch (getType())
+        {
+        case 1:
+            tempTexture = "horsewhite.png";
+            break;
+        case 2:
+            tempTexture = "horsecreamy.png";
+            break;
+        case 3:
+            tempTexture = "horsebrown.png";
+            break;
+        case 4:
+            tempTexture = "horsedarkbrown.png";
+            break;
+        case 5:
+            tempTexture = "horseblack.png";
+            break;
+        case 6:
+            tempTexture = "horsebrightcreamy.png";
+            break;
+        case 7:
+            tempTexture = "horsespeckled.png";
+            break;
+        case 8:
+            tempTexture = "horsepalebrown.png";
+            break;
+        case 9:
+            tempTexture = "horsegrey.png";
+            break;
+        case 11:
+            tempTexture = "horsepinto.png";
+            break;
+        case 12:
+            tempTexture = "horsebrightpinto.png";
+            break;
+        case 13:
+            tempTexture = "horsepalespeckles.png";
+            break;
+        case 16:
+            tempTexture = "horsespotted.png";
+            break;
+        case 17:
+            tempTexture = "horsecow.png";
+            break;
+
+        case 21:
+            tempTexture = "horseghost.png";
+            break;
+        case 22:
+            tempTexture = "horseghostb.png";
+            break;
+        case 23:
+            tempTexture = "horseundead.png";
+            break;
+        case 24:
+            tempTexture = "horseundeadunicorn.png";
+            break;
+        case 25:
+            tempTexture = "horseundeadpegasus.png";
+            break;
+        case 26:
+            tempTexture = "horseskeleton.png";
+            break;
+        case 27:
+            tempTexture = "horseunicornskeleton.png";
+            break;
+        case 28:
+            tempTexture = "horsepegasusskeleton.png";
+            break;
+        case 30:
+            tempTexture = "horsebug.png";
+            break;
+        case 32:
+            tempTexture = "horsebat.png";
+            break;
+        case 36:
+            tempTexture = "horseunicorn.png";
+            break;
+        case 38:
+            isImmuneToFire = true;
+            tempTexture = "horsenightmare.png";
+            break;
+        case 39:
+            tempTexture = "horsepegasus.png";
+            break;
+        case 40:
+            isImmuneToFire = true;
+            tempTexture = "horsedarkpegasus.png";
+            break;
+            /*
+        case 44:
+            tempTexture = "horsefairydarkblue.png";
+            break;
+        case 45:
+            tempTexture = "horsefairydarkblue.png";
+            break;
+        case 46:
+            tempTexture = "horsefairydarkblue.png";
+            break;
+            
+        case 47:
+            tempTexture = "horsefairydarkblue.png";
+            break;*/
+        case 48:
+            tempTexture = "horsefairyyellow.png";
+            break;
+        case 49:
+            tempTexture = "horsefairypurple.png";
+            break;
+        case 50:
+            tempTexture = "horsefairywhite.png";
+            break;
+        case 51:
+            tempTexture = "horsefairyblue.png";
+            break;
+        case 52:
+            tempTexture = "horsefairypink.png";
+            break;
+        case 53:
+            tempTexture = "horsefairylightgreen.png";
+            break;
+        case 54:
+            tempTexture = "horsefairyblack.png";
+            break;
+        case 55:
+            tempTexture = "horsefairyred.png";
+            break;
+        case 56:
+            tempTexture = "horsefairydarkblue.png";
+            break;
+        case 57:
+            tempTexture = "horsefairycyan.png";
+            break;
+        case 58:
+            tempTexture = "horsefairygreen.png";
+            break;
+        case 59:
+            tempTexture = "horsefairyorange.png";
+            break;
+        
+        case 60:
+            tempTexture = "horsezebra.png";
+            break;
+        case 61:
+            tempTexture = "horsezorse.png";
+            break;
+        case 65:
+            tempTexture = "horsedonkey.png";
+            break;
+        case 66:
+            tempTexture = "horsemule.png";
+            break;
+        case 67:
+            tempTexture = "horsezonky.png";
+            break;
+
+        default:
+            tempTexture = "horsebug.png";
+        }
+
+        if ((isArmored() || isMagicHorse()) && getArmorType() > 0)
+        {
+            String armorTex = "";
+            if (getArmorType() == 1)
+            {
+                armorTex = "metal.png";
+            }
+            if (getArmorType() == 2)
+            {
+                armorTex = "gold.png";
+            }
+            if (getArmorType() == 3)
+            {
+                armorTex = "diamond.png";
+            }
+            if (getArmorType() == 4)
+            {
+                armorTex = "crystaline.png";
+            }
+            return MoCreatures.proxy.getTexture(tempTexture.replace(".png", armorTex));
+        }
+
+        
+        if (this.isUndead() && this.getType() < 26)
+        {
+            String baseTex = "horseundead";
+            int max = 79;
+            if (this.getType() == 25) // undead pegasus
+            {
+                baseTex = "horseundeadpegasus";
+                // max = 79; //undead pegasus have an extra animation
+
+            }
+            if (this.getType() == 24)// undead unicorn
+            {
+                baseTex = "horseundeadunicorn";
+                max = 69; // undead unicorn have an animation less
+            }
+            
+            String iteratorTex = "1";
+            if (MoCreatures.proxy.getAnimateTextures())
+            {
+                if (rand.nextInt(3) == 0)
+                {
+                    textCounter++;
+                }
+                if (textCounter < 10)
+                {
+                    textCounter = 10;
+                }
+                if (textCounter > max)
+                {
+                    textCounter = 10;
+                }
+                iteratorTex = "" + textCounter;
+                iteratorTex = iteratorTex.substring(0, 1);
+            }
+           
+            String decayTex = "" + (getEdad() / 100);
+            decayTex = decayTex.substring(0, 1);
+            return MoCreatures.proxy.getTexture(baseTex + decayTex + iteratorTex + ".png");
+        }
+        
+        // if animate textures is off, return plain textures
+        if (!MoCreatures.proxy.getAnimateTextures()) { return MoCreatures.proxy.getTexture(tempTexture); }
+
+        
+        if (this.isNightmare())
+        {
+            if (rand.nextInt(1) == 0)
+            {
+                textCounter++;
+            }
+            if (textCounter < 10)
+            {
+                textCounter = 10;
+            }
+            if (textCounter > 59)
+            {
+                textCounter = 10;
+            }
+            String NTA = "horsenightmare";
+            String NTB = "" + textCounter;
+            NTB = NTB.substring(0, 1);
+            String NTC = ".png";
+
+            return MoCreatures.proxy.getTexture(NTA + NTB + NTC);
+        }
+
+        
+
+        if (transformCounter != 0 && transformType != 0)
+        {
+            String newText = "horseundead.png";
+            if (transformType == 23)
+            {
+                newText =  "horseundead.png";
+            }
+            if (transformType == 24)
+            {
+                newText = "horseundeadunicorn.png";
+            }
+            if (transformType == 25)
+            {
+                newText = "horseundeadpegasus.png";
+            }
+            if (transformType == 36)
+            {
+                newText = "horseunicorn.png";
+            }
+            if (transformType == 39)
+            {
+                newText = "horsepegasus.png";
+            }
+            if (transformType == 40)
+            {
+                newText = "horseblackpegasus.png";
+            }
+            
+            if (transformType == 48)
+            {
+                newText = "horsefairyyellow.png";
+            }
+            if (transformType == 49)
+            {
+                newText = "horsefairypurple.png";
+            }
+            if (transformType == 50)
+            {
+                newText = "horsefairywhite.png";
+            }
+            if (transformType == 51)
+            {
+                newText = "horsefairyblue.png";
+            }
+            if (transformType == 52)
+            {
+                newText = "horsefairypink.png";
+            }
+            if (transformType == 53)
+            {
+                newText = "horsefairylightgreen.png";
+            }
+            if (transformType == 54)
+            {
+                newText = "horsefairyblack.png";
+            }
+            if (transformType == 55)
+            {
+                newText = "horsefairyred.png";
+            }
+            if (transformType == 56)
+            {
+                newText = "horsefairydarkblue.png";
+            }
+            
+            if (transformType == 57)
+            {
+                newText = "horsefairycyan.png";
+            }
+            
+            if (transformType == 58)
+            {
+                newText = "horsefairygreen.png";
+            }
+            
+            if (transformType == 59)
+            {
+                newText = "horsefairyorange.png";
+            }
+            
+            if (transformType == 32)
+            {
+                newText = "horsebat.png";
+            }
+            if (transformType == 38)
+            {
+                newText = "horsenightmare1.png";
+            }
+            if ((transformCounter % 5) == 0) { return MoCreatures.proxy.getTexture(newText); }
+            if (transformCounter > 50 && (transformCounter % 3) == 0) { return MoCreatures.proxy.getTexture(newText); }
+
+            if (transformCounter > 75 && (transformCounter % 4) == 0) { return MoCreatures.proxy.getTexture(newText); }
+        }
+
+        return MoCreatures.proxy.getTexture(tempTexture);
+
     }
 
     /**

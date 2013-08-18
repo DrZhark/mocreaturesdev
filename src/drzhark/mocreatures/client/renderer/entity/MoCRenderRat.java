@@ -17,10 +17,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityRat;
 @SideOnly(Side.CLIENT)
 public class MoCRenderRat extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratb.png");
-    private static final ResourceLocation TEXTURE_RAT2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratbl.png");
-    private static final ResourceLocation TEXTURE_RAT3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "ratw.png");
-
     public MoCRenderRat(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -62,22 +58,6 @@ public class MoCRenderRat extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityRat)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityRat rat)
-    {
-        switch (rat.getType())
-        {
-        case 1:
-            return TEXTURE_DEFAULT;
-        case 2:
-            return TEXTURE_RAT2;
-        case 3:
-            return TEXTURE_RAT3;
-
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityRat)par1Entity).getTexture();
     }
 }

@@ -18,8 +18,6 @@ import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
 @SideOnly(Side.CLIENT)
 public class MoCRenderFishBowl extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png");
-
     public MoCRenderFishBowl(MoCModelFishBowl modelfishbowl, float f)
     {
         super(modelfishbowl, f);
@@ -41,6 +39,6 @@ public class MoCRenderFishBowl extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityFishBowl)par1Entity).getTexture();
     }
 }

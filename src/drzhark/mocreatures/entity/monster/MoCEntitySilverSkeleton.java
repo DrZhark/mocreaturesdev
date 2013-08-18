@@ -14,7 +14,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
     public MoCEntitySilverSkeleton(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "silverskeleton.png";
+        texture = "silverskeleton.png";
         setSize(0.9F, 1.4F);
         //health = getMaxHealth();
     }

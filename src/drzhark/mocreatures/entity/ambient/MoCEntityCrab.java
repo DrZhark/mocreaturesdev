@@ -9,6 +9,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityCrab extends MoCEntityTameableAmbient
@@ -43,6 +44,22 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         }
 
     }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("craba.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("crabb.png");
+        default:
+            return MoCreatures.proxy.getTexture("craba.png");
+        }
+    }
+
+    
 
     @Override
     public void onLivingUpdate()

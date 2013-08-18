@@ -48,6 +48,7 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.storage.SaveHandler;
@@ -119,6 +120,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 public class MoCProxy implements IGuiHandler {
 
     public static String ARMOR_TEXTURE = "textures/armor/";
+    public static String BLOCK_TEXTURE = "textures/blocks/";
+    public static String ITEM_TEXTURE = "textures/items/";
     public static String MODEL_TEXTURE = "textures/models/";
     public static String GUI_TEXTURE = "textures/gui/";
     public static String MISC_TEXTURE = "textures/misc/";
@@ -217,7 +220,7 @@ public class MoCProxy implements IGuiHandler {
     public MoCConfiguration mocStructureConfig;
     protected File configFile;
 
-    private static final String MOC_BEAR_NAME = "Horse";
+    private static final String MOC_BEAR_NAME = "Bear";
     private static final String MOC_BEE_NAME = "Bee";
     private static final String MOC_BIGCAT_NAME = "BigCat";
     private static final String MOC_BIRD_NAME = "Bird";
@@ -241,7 +244,7 @@ public class MoCProxy implements IGuiHandler {
     private static final String MOC_GOAT_NAME = "Goat";
     private static final String MOC_GOLEM_NAME = "BigGolem";
     private static final String MOC_HELLRAT_NAME = "Hellrat";
-    private static final String MOC_HORSE_NAME = "Horse";
+    private static final String MOC_HORSE_NAME = "WildHorse";
     private static final String MOC_HORSEMOB_NAME = "HorseMob";
     private static final String MOC_JELLYFISH_NAME = "Jellyfish";
     private static final String MOC_KITTY_NAME = "Kitty";
@@ -430,7 +433,7 @@ public class MoCProxy implements IGuiHandler {
         mocEntityMap.put("Fox", new MoCEntityData(MoCEntityFox.class, "Fox", EnumCreatureType.creature, 8, 1, 1, 1, new ArrayList(Arrays.asList("ARCTIC", "FOREST", "NORMAL", "JUNGLE"))));
         mocEntityMap.put("Goat", new MoCEntityData(MoCEntityGoat.class, "Goat", EnumCreatureType.creature, 8, 1, 3, 3, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("HellRat", new MoCEntityData(MoCEntityHellRat.class, "HellRat", EnumCreatureType.monster, 6, 1, 4, 4, new ArrayList(Arrays.asList("NETHER"))));
-        mocEntityMap.put("Horse", new MoCEntityData(MoCEntityHorse.class, "Horse", EnumCreatureType.creature, 10, 2, 4, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
+        mocEntityMap.put("WildHorse", new MoCEntityData(MoCEntityHorse.class, "WildHorse", EnumCreatureType.creature, 10, 2, 4, 4, new ArrayList(Arrays.asList("FOREST", "NORMAL", "MOUNTAIN"))));
         mocEntityMap.put("HorseMob", new MoCEntityData(MoCEntityHorseMob.class, "HorseMob", EnumCreatureType.monster, 8, 1, 3, 3, new ArrayList(Arrays.asList("MOBS", "NETHER"))));
         mocEntityMap.put("JellyFish", new MoCEntityData(MoCEntityJellyFish.class, "JellyFish", EnumCreatureType.waterCreature, 8, 1, 4, 4, new ArrayList(Arrays.asList("OCEAN", "RIVER"))));
         mocEntityMap.put("Kitty", new MoCEntityData(MoCEntityKitty.class, "Kitty", EnumCreatureType.creature, 8, 1, 2, 2, new ArrayList(Arrays.asList("NORMAL"))));
@@ -670,10 +673,13 @@ public class MoCProxy implements IGuiHandler {
             catch (Exception exception)
             {
                 if (debugLogging) MoCreatures.log.info("Failed! " + clazz + " is not a valid EntityLiving, Skipping...");
+                //if (entityliving instanceof IMoCEntity)
+                    System.out.println("Failed! " + clazz + " is not a valid EntityLiving, Skipping...");
                 continue;
             } 
 
             entityName = (String)entry.getValue();
+            if (debugLogging) MoCreatures.log.info("Success! Discovered entity "  + entityName + " with class " + clazz);
             if (debugLogging) MoCreatures.log.info("Success! Discovered entity "  + entityName + " with class " + clazz);
             if (entityName.contains("."))
             {
@@ -767,6 +773,7 @@ public class MoCProxy implements IGuiHandler {
                         {
                             // Found match, use config
                             MoCEntityModData modData = modEntry.getValue();
+                            System.out.println("Matched mod " + modEntry.getKey() + " to " + entityClass);
                             if (debugLogging) MoCreatures.log.info("Matched mod " + modEntry.getKey() + " to " + entityClass);
                             if (!modData.addCreature(entityData))
                             {
@@ -1517,7 +1524,14 @@ public class MoCProxy implements IGuiHandler {
     }
 
     public void initSounds() {}
-    
+
+    public void initTextures() {}
+
+    public ResourceLocation getTexture(String texture) 
+    {
+        return null;
+    }
+
     public EntityPlayer getPlayer()
     {
         return null;

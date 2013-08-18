@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityDeer extends MoCEntityTameable {
@@ -48,6 +49,25 @@ public class MoCEntityDeer extends MoCEntityTameable {
             {
                 setType(3);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("deer.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("deerf.png");
+        case 3:
+            setAdult(false);
+            return MoCreatures.proxy.getTexture("deerb.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("deer.png");
         }
     }
 

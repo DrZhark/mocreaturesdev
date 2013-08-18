@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -34,7 +35,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     public MoCEntityGolem(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "golemt.png";
+        texture = "golemt.png";
         setSize(1.5F, 4F);
         //health = getMaxHealth();
         initGolemCubes();
@@ -1029,6 +1030,28 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
         return x;
+    }
+
+    /**
+     * Used for the power texture used on the golem
+     * 
+     * @return
+     */
+    public ResourceLocation getEffectTexture()
+    {
+        switch (getGolemState())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("golemeffect1.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("golemeffect2.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("golemeffect3.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("golemeffect4.png");
+        default:
+            return null;
+        }
     }
 
     /**

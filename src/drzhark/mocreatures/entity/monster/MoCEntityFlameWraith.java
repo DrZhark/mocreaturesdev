@@ -18,7 +18,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     public MoCEntityFlameWraith(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "flamewraith.png";
+        texture = "flamewraith.png";
         setSize(1.5F, 1.5F);
         isImmuneToFire = true;
         burningTime = 30;

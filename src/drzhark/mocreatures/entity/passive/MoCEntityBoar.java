@@ -13,6 +13,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityBoar extends MoCEntityAnimal {
@@ -57,6 +58,14 @@ public class MoCEntityBoar extends MoCEntityAnimal {
                 MoCTools.destroyDrops(this, 3D);
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        if (getIsAdult()) { return MoCreatures.proxy.getTexture("boara.png"); }
+        return MoCreatures.proxy.getTexture("boarb.png");
+
     }
 
     @Override

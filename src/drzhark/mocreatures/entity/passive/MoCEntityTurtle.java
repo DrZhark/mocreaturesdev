@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityTurtle extends MoCEntityTameable {
@@ -39,6 +40,37 @@ public class MoCEntityTurtle extends MoCEntityTameable {
         super.entityInit();
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isHiding - 0 false 1 true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isUpsideDown - 0 false 1 true
+    }
+
+    /**
+     * Overridden for the dynamic nightmare texture.
+     */
+    @Override
+    public ResourceLocation getTexture()
+    {
+        String tempText = "turtle.png";
+
+        if (getName().equals("Donatello") || getName().equals("donatello"))
+        {
+            tempText = "turtled.png";
+        }
+
+        if (getName().equals("Leonardo") || getName().equals("leonardo"))
+        {
+            tempText = "turtlel.png";
+        }
+
+        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael"))
+        {
+            tempText = "turtler.png";
+        }
+
+        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo") || getName().equals("michaelangelo"))
+        {
+            tempText = "turtlem.png";
+        }
+
+        return MoCreatures.proxy.getTexture(tempText);
     }
 
     @Override

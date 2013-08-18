@@ -36,6 +36,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -52,6 +53,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     protected boolean riderIsDisconnecting;
     private int petDataId = -1;
     public float moveSpeed;
+    protected String texture;
 
     public MoCEntityAnimal(World world)
     {
@@ -59,6 +61,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         setTamed(false);
         setAdult(true);
         riderIsDisconnecting = false;
+        texture = "blank.jpg";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture(texture);
     }
 
     protected void func_110147_ax()

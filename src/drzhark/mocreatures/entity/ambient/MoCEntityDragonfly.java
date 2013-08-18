@@ -4,6 +4,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityDragonfly extends MoCEntityInsect
@@ -13,7 +14,7 @@ public class MoCEntityDragonfly extends MoCEntityInsect
     public MoCEntityDragonfly(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "dragonflya.png";
+        texture = "dragonflya.png";
     }
 
     @Override
@@ -38,6 +39,25 @@ public class MoCEntityDragonfly extends MoCEntityInsect
             {
                 setType(4);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("dragonflya.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("dragonflyb.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("dragonflyc.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("dragonflyd.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("dragonflyd.png");
         }
     }
 

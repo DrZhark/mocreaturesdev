@@ -25,6 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityKitty extends MoCEntityTameable {
@@ -103,6 +104,34 @@ public class MoCEntityKitty extends MoCEntityTameable {
     public float getMaxHealth()
     {
         return 15;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("pussycata.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("pussycatb.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("pussycatc.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("pussycatd.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("pussycate.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("pussycatf.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("pussycatg.png");
+        case 8:
+            return MoCreatures.proxy.getTexture("pussycath.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("pussycata.png");
+        }
     }
 
     @Override
@@ -363,60 +392,60 @@ public class MoCEntityKitty extends MoCEntityTameable {
         return 0;
     }
 
-    public String getEmoticon()
+    public ResourceLocation getEmoteIcon()
     {
         switch (getKittyState())
         {
         case -1:
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon2.png";
+            return MoCreatures.proxy.getTexture("emoticon2.png");
 
         case 3: // '\003'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon3.png";
+            return MoCreatures.proxy.getTexture("emoticon3.png");
 
         case 4: // '\004'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon4.png";
+            return MoCreatures.proxy.getTexture("emoticon4.png");
 
         case 5: // '\005'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon5.png";
+            return MoCreatures.proxy.getTexture("emoticon5.png");
 
         case 7: // '\007'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon7.png";
+            return MoCreatures.proxy.getTexture("emoticon7.png");
 
         case 8: // '\b'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon8.png";
+            return MoCreatures.proxy.getTexture("emoticon8.png");
 
         case 9: // '\t'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon9.png";
+            return MoCreatures.proxy.getTexture("emoticon9.png");
 
         case 10: // '\n'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon10.png";
+            return MoCreatures.proxy.getTexture("emoticon10.png");
 
         case 11: // '\013'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon11.png";
+            return MoCreatures.proxy.getTexture("emoticon11.png");
 
         case 12: // '\f'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon12.png";
+            return MoCreatures.proxy.getTexture("emoticon12.png");
 
         case 13: // '\r'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon13.png";
+            return MoCreatures.proxy.getTexture("emoticon13.png");
 
         case 16: // '\020'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon16.png";
+            return MoCreatures.proxy.getTexture("emoticon16.png");
 
         case 17: // '\021'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon17.png";
+            return MoCreatures.proxy.getTexture("emoticon17.png");
 
         case 18: // '\022'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon9.png";
+            return MoCreatures.proxy.getTexture("emoticon9.png");
 
         case 19: // '\023'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon19.png";
+            return MoCreatures.proxy.getTexture("emoticon19.png");
 
         case 20: // '\024'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon19.png";
+            return MoCreatures.proxy.getTexture("emoticon19.png");
 
         case 21: // '\025'
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon10.png";
+            return MoCreatures.proxy.getTexture("emoticon10.png");
 
         case 0: // '\0'
         case 1: // '\001'
@@ -425,7 +454,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         case 14: // '\016'
         case 15: // '\017'
         default:
-            return MoCreatures.proxy.MISC_TEXTURE + "emoticon1.png";
+            return MoCreatures.proxy.getTexture("emoticon1.png");
         }
     }
 

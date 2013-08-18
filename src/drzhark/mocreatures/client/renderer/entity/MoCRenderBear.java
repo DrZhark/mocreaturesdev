@@ -17,11 +17,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 @SideOnly(Side.CLIENT)
 public class MoCRenderBear extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bearbrowm.png");
-    private static final ResourceLocation TEXTURE_BLACK = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bearblack.png");
-    private static final ResourceLocation TEXTURE_PANDA = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bearpanda.png");
-    private static final ResourceLocation TEXTURE_POLAR = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "bearpolar.png");
-
     public MoCRenderBear(MoCModelBear modelbase, float f)
     {
         super(modelbase, f);
@@ -48,21 +43,6 @@ public class MoCRenderBear extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-    	return this.getTexture((MoCEntityBear)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityBear bear)
-    {
-        switch (bear.getType())
-        {
-	        case 2:
-	            return TEXTURE_BLACK;
-	        case 3:
-	            return TEXTURE_PANDA;
-	        case 4:
-	            return TEXTURE_POLAR;
-	        default:
-	            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityBear)par1Entity).getTexture();
     }
 }

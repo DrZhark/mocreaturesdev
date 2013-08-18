@@ -17,7 +17,7 @@ public class MoCEntityTurkey extends MoCEntityTameable {
         super(world);
         setSize(0.8F, 1.0F);
         //health = 6;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "turkey.png";
+        texture = "turkey.png";
     }
 
     @Override

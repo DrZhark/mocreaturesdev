@@ -34,7 +34,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
         super(world);
         setSize(1.6F, 0.5F);
         //health = 20;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "komododragon.png";
+        texture = "komododragon.png";
         setTamed(false);
         setAdult(false);
         this.stepHeight = 1.0F;

@@ -13,7 +13,7 @@ public class MoCEntityFirefly extends MoCEntityInsect
     public MoCEntityFirefly(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "firefly.png";
+        texture = "firefly.png";
     }
 
     @Override

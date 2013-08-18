@@ -17,6 +17,7 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityWWolf extends MoCEntityMob {
@@ -63,6 +64,27 @@ public class MoCEntityWWolf extends MoCEntityMob {
             {
                 setType(4);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("wolfblack.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("wolfwild.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("wolftimber.png"); //snow wolf
+        case 4:
+            return MoCreatures.proxy.getTexture("wolfdark.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("wolfbright.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("wolfwild.png");
         }
     }
 

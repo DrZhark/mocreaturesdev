@@ -17,27 +17,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityDeer;
 @SideOnly(Side.CLIENT)
 public class MoCRenderDeer extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deer.png");
-    private static final ResourceLocation TEXTURE_DEER2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deerf.png");
-    private static final ResourceLocation TEXTURE_DEER3 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "deerb.png");
-
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityDeer)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityDeer deer)
-    {
-        switch (deer.getType())
-        {
-        case 2:
-            return TEXTURE_DEER2;
-        case 3:
-            deer.setAdult(false);
-            return TEXTURE_DEER3;
-
-        default:
-            return TEXTURE_DEFAULT;
-        }
+        return ((MoCEntityDeer)par1Entity).getTexture();
     }
 
     public MoCRenderDeer(ModelBase modelbase, float f)

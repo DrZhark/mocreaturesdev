@@ -18,7 +18,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     public MoCEntityDuck(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "duck.png";
+        texture = "duck.png";
         setSize(0.3F, 0.4F);
         //health = 4;
     }

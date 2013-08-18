@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 public interface IMoCEntity {
 
@@ -90,4 +91,6 @@ public interface IMoCEntity {
     public float getAdjustedZOffset();
 
     public float getAdjustedXOffset();
+
+    public ResourceLocation getTexture();
 }

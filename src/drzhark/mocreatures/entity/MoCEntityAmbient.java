@@ -25,6 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -39,12 +40,19 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 {
     protected float moveSpeed;
     private boolean riderIsDisconnecting;
+    protected String texture;
 
     public MoCEntityAmbient(World world)
     {
         super(world);
         setTamed(false);
         setAdult(true);
+        texture = "blank.png";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture(texture);
     }
 
     protected void func_110147_ax()

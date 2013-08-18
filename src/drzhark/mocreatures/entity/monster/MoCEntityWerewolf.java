@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityWerewolf extends MoCEntityMob {
@@ -59,6 +60,41 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             {
                 setType(4);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        if (this.getIsHumanForm()) { return MoCreatures.proxy.getTexture("wereblank.png"); }
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("wolfblack.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("wolfbrown.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("wolftimber.png");
+        case 4:
+            if (!MoCreatures.proxy.getAnimateTextures()) { return MoCreatures.proxy.getTexture("wolffire1.png"); }
+            textCounter++;
+            if (textCounter < 10)
+            {
+                textCounter = 10;
+            }
+            if (textCounter > 39)
+            {
+                textCounter = 10;
+            }
+            String NTA = "wolffire";
+            String NTB = "" + textCounter;
+            NTB = NTB.substring(0, 1);
+            String NTC = ".png";
+
+            return MoCreatures.proxy.getTexture(NTA + NTB + NTC);
+        default:
+            return MoCreatures.proxy.getTexture("wolfbrown.png");
         }
     }
 

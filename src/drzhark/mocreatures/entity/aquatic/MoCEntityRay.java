@@ -13,6 +13,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -49,6 +50,21 @@ public class MoCEntityRay extends MoCEntityAquatic {
                 setEdad(70);
             }
             getMaxHealth();
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("mantray.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("stingray.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("stingray.png");
         }
     }
 

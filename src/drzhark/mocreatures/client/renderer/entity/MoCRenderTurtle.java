@@ -19,11 +19,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 public class MoCRenderTurtle extends MoCRenderMoC {
 
     public MoCModelTurtle turtly;
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "turtle.png");
-    private static final ResourceLocation TEXTURE_DONATELLO = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "turtled.png");
-    private static final ResourceLocation TEXTURE_LEONARDO = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "turtlel.png");
-    private static final ResourceLocation TEXTURE_RAFAEL = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "turtler.png");
-    private static final ResourceLocation TEXTURE_MICHELANGELO = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "turtlem.png");
 
     public MoCRenderTurtle(MoCModelTurtle modelbase, float f)
     {
@@ -85,33 +80,6 @@ public class MoCRenderTurtle extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityTurtle)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityTurtle turtle)
-    {
-        ResourceLocation tempText = TEXTURE_DEFAULT;
-
-        if (turtle.getName().equalsIgnoreCase("Donatello"))
-        {
-            tempText = TEXTURE_DONATELLO;
-        }
-
-        if (turtle.getName().equalsIgnoreCase("Leonardo"))
-        {
-            tempText = TEXTURE_LEONARDO;
-        }
-
-        if (turtle.getName().equalsIgnoreCase("Rafael"))
-        {
-            tempText = TEXTURE_RAFAEL;
-        }
-
-        if (turtle.getName().equalsIgnoreCase("Michelangelo"))
-        {
-            tempText = TEXTURE_MICHELANGELO;
-        }
-
-        return tempText;
+        return ((MoCEntityTurtle)par1Entity).getTexture();
     }
 }

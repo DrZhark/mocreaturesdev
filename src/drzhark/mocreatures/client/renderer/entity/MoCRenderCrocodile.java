@@ -20,8 +20,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 @SideOnly(Side.CLIENT)
 public class MoCRenderCrocodile extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "crocodile.png");
-
     public MoCRenderCrocodile(MoCModelCrocodile modelbase, float f)
     {
         super(modelbase, f);
@@ -29,7 +27,7 @@ public class MoCRenderCrocodile extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityCrocodile)par1Entity).getTexture();
     }
 
     @Override

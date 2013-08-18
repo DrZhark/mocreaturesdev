@@ -24,8 +24,9 @@ public class MoCEntityBee extends MoCEntityInsect
     {
         super(world);
         //health = 4;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "bee.png";
+        texture = "bee.png";
     }
+
 
     @Override
     public void onLivingUpdate()

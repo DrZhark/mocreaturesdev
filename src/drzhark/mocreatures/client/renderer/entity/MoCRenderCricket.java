@@ -17,9 +17,6 @@ import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
 @SideOnly(Side.CLIENT)
 public class MoCRenderCricket extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "cricketa.png");
-    private static final ResourceLocation TEXTURE_CRICKET2 = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "cricketb.png");
-
     public MoCRenderCricket(ModelBase modelbase)
     {
         super(modelbase, 0.0F);
@@ -51,18 +48,6 @@ public class MoCRenderCricket extends MoCRenderMoC {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityCricket)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityCricket cricket)
-    {
-        if (cricket.getType() == 1)
-        {
-            return TEXTURE_DEFAULT;
-        }
-        else
-        {
-            return TEXTURE_CRICKET2;
-        }
+        return ((MoCEntityCricket)par1Entity).getTexture();
     }
 }

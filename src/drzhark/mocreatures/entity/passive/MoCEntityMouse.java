@@ -10,6 +10,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -51,6 +52,23 @@ public class MoCEntityMouse extends MoCEntityAnimal
         }
     }
 
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+            case 1:
+                return MoCreatures.proxy.getTexture("miceg.png");
+            case 2:
+                return MoCreatures.proxy.getTexture("miceb.png");
+            case 3:
+                return MoCreatures.proxy.getTexture("micew.png");
+            
+            default:
+                return MoCreatures.proxy.getTexture("miceg.png");
+        }
+    }
+    
     @Override
     public boolean checkSpawningBiome()
     {

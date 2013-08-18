@@ -14,6 +14,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -49,6 +50,31 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
     public float getMaxHealth()
     {
         return 4;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("smallfish_anchovy.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("smallfish_angelfish.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("smallfish_angler.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("smallfish_clownfish.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("smallfish_goldfish.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("smallfish_hippotang.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("smallfish_manderin.png");
+        default:
+            return MoCreatures.proxy.getTexture("smallfish_clownfish.png");
+        }
     }
 
     @Override

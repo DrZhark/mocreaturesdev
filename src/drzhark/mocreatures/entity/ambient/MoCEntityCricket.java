@@ -4,6 +4,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -13,7 +14,7 @@ public class MoCEntityCricket extends MoCEntityInsect
     public MoCEntityCricket(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "cricketa.png";
+        texture = "cricketa.png";
     }
 
     private int jumpCounter;
@@ -24,7 +25,6 @@ public class MoCEntityCricket extends MoCEntityInsect
     {
         //if (onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
         if (jumpCounter == 0 && onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
-
         {
             motionY = 0.45D;
             motionX *= 5D;
@@ -48,6 +48,19 @@ public class MoCEntityCricket extends MoCEntityInsect
             {
                 setType(2);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        if (getType() == 1)
+        {
+            return MoCreatures.proxy.getTexture("cricketa.png");
+        }
+        else
+        {
+            return MoCreatures.proxy.getTexture("cricketb.png");
         }
     }
 

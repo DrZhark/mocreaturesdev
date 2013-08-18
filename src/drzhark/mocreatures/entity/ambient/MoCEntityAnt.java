@@ -15,7 +15,7 @@ public class MoCEntityAnt extends MoCEntityInsect{
     public MoCEntityAnt(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "ant.png";
+        texture = "ant.png";
     }
 
      @Override

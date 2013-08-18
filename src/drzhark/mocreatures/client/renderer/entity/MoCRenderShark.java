@@ -19,8 +19,6 @@ import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 @SideOnly(Side.CLIENT)
 public class MoCRenderShark extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "shark.png");
-
     public MoCRenderShark(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -186,6 +184,6 @@ public class MoCRenderShark extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityShark)par1Entity).getTexture();
     }
 }

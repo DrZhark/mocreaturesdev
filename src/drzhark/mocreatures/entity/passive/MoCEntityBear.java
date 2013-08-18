@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -99,6 +100,26 @@ public class MoCEntityBear extends MoCEntityTameable {
             }
 
             this.setEntityHealth(getMaxHealth());
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("bearbrowm.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("bearblack.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("bearpanda.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("bearpolar.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("bearbrowm.png");
         }
     }
 

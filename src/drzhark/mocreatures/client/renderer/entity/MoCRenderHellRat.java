@@ -18,10 +18,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityHellRat;
 @SideOnly(Side.CLIENT)
 public class MoCRenderHellRat extends MoCRenderRat {
 
-    private Random rand = new Random();
-    private int textCounter;
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png");
-
     public MoCRenderHellRat(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -35,25 +31,6 @@ public class MoCRenderHellRat extends MoCRenderRat {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityHellRat)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityHellRat hellrat)
-    {
-        if (rand.nextInt(2) == 0)
-        {
-            textCounter++;
-        }
-        if (textCounter < 10)
-        {
-            textCounter = 10;
-        }
-        if (textCounter > 29)
-        {
-            textCounter = 10;
-        }
-        String textNumber = "" + textCounter;
-        textNumber = textNumber.substring(0, 1);
-        return new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "hellrat" + textNumber + ".png");
+        return ((MoCEntityHellRat)par1Entity).getTexture();
     }
 }

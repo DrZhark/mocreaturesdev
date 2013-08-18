@@ -24,7 +24,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     public MoCEntityMiniGolem(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "minigolem.png";
+        texture = "minigolem.png";
         setSize(1.0F, 1.0F);
         //health = getMaxHealth();
     }

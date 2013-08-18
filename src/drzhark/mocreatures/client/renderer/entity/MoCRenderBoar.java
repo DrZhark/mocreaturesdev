@@ -18,18 +18,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 @SideOnly(Side.CLIENT)
 public class MoCRenderBoar extends MoCRenderMoC {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "boara.png");
-    private static final ResourceLocation TEXTURE_CHILD = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "boarb.png");
-
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return this.getTexture((MoCEntityBoar)par1Entity);
-    }
-
-    protected ResourceLocation getTexture(MoCEntityBoar boar)
-    {
-        if (boar.getIsAdult()) { return TEXTURE_DEFAULT; }
-        return TEXTURE_CHILD;
-
+        return ((MoCEntityBoar)par1Entity).getTexture();
     }
 
     public MoCRenderBoar(MoCModelBoar modelbase, float f)

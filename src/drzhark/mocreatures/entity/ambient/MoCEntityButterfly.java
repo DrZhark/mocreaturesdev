@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityButterfly extends MoCEntityInsect 
@@ -40,6 +41,36 @@ public class MoCEntityButterfly extends MoCEntityInsect
         if (getType() == 0)
         {
             setType(rand.nextInt(10)+1);
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("bfagalaisurticae.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("bfargyreushyperbius.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("bfathymanefte.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("bfcatopsiliapomona.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("bfmorphopeleides.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("bfvanessaatalanta.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("bfpierisrapae.png");
+        case 8:
+            return MoCreatures.proxy.getTexture("mothcamptogrammabilineata.png");
+        case 9:
+            return MoCreatures.proxy.getTexture("mothidiaaemula.png");
+        case 10:
+            return MoCreatures.proxy.getTexture("moththyatirabatis.png");
+        default:
+            return MoCreatures.proxy.getTexture("bfpierisrapae.png");
         }
     }
 

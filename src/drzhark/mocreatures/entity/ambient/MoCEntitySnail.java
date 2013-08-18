@@ -5,6 +5,7 @@ import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntitySnail extends MoCEntityAmbient
@@ -72,6 +73,28 @@ public class MoCEntitySnail extends MoCEntityAmbient
             {
                 setType(6);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("snaila.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("snailb.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("snailc.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("snaild.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("snaile.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("snailf.png");
+        default:
+            return MoCreatures.proxy.getTexture("snaila.png");
         }
     }
 

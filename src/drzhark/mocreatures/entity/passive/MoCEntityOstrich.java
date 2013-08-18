@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityOstrich extends MoCEntityTameable {
@@ -270,6 +271,58 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             {
                 setType(4);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+       if (transformCounter != 0 && transformType > 4)
+        {
+            String newText = "ostricha.png";
+            if (transformType == 5)
+            {
+                newText = "ostriche.png";
+            }
+            if (transformType == 6)
+            {
+                newText = "ostrichf.png";
+            }
+            if (transformType == 7)
+            {
+                newText = "ostrichg.png";
+            }
+            if (transformType == 8)
+            {
+                newText = "ostrichh.png";
+            }
+            
+            if ((transformCounter % 5) == 0) { return MoCreatures.proxy.getTexture(newText); }
+            if (transformCounter > 50 && (transformCounter % 3) == 0) { return MoCreatures.proxy.getTexture(newText); }
+
+            if (transformCounter > 75 && (transformCounter % 4) == 0) { return MoCreatures.proxy.getTexture(newText); }
+        }
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("ostrichc.png"); //chick
+        case 2:
+            return MoCreatures.proxy.getTexture("ostrichb.png"); //female
+        case 3:
+            return MoCreatures.proxy.getTexture("ostricha.png"); //male
+        case 4:
+            return MoCreatures.proxy.getTexture("ostrichd.png"); //albino
+        case 5:
+            return MoCreatures.proxy.getTexture("ostriche.png"); //nether
+        case 6:
+            return MoCreatures.proxy.getTexture("ostrichf.png"); //black wyvern
+        case 7:
+            return MoCreatures.proxy.getTexture("ostrichg.png"); //undead
+        case 8:
+            return MoCreatures.proxy.getTexture("ostrichh.png"); //unicorned
+        default:
+            return MoCreatures.proxy.getTexture("ostricha.png");
         }
     }
 

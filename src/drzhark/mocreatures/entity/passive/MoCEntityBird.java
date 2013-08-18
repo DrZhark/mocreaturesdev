@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityBird extends MoCEntityTameable {
@@ -76,6 +77,30 @@ public class MoCEntityBird extends MoCEntityTameable {
             {
                 setType(2);
             }
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("birdwhite.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("birdblack.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("birdgreen.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("birdblue.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("birdyellow.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("birdred.png");
+
+        default:
+            return MoCreatures.proxy.getTexture("birdblue.png");
         }
     }
 

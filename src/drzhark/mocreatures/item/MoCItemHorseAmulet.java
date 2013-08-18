@@ -212,7 +212,7 @@ public class MoCItemHorseAmulet extends MoCItem {
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
     	initAndReadNBT(par1ItemStack);
-    	if (name != "") par3List.add(EnumChatFormatting.AQUA + "Horse");
+    	if (name != "") par3List.add(EnumChatFormatting.AQUA + "WildHorse");
     	if (name != "") par3List.add(EnumChatFormatting.BLUE + this.name);
     	if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
     }

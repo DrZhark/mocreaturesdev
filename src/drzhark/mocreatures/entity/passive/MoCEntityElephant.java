@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -129,6 +130,26 @@ public class MoCEntityElephant extends MoCEntityTameable {
     public void setStorage(byte b)
     {
         dataWatcher.updateObject(24, Byte.valueOf(b));
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("elephantafrican.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("elephantindian.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("mammoth.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("mammothsonghua.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("elephantindianpretty.png");
+        default:
+            return MoCreatures.proxy.getTexture("elephantafrican.png");
+        }
     }
 
     @Override

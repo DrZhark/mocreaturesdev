@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityLitterBox extends EntityLiving {
@@ -25,6 +26,11 @@ public class MoCEntityLitterBox extends EntityLiving {
         super(world);
         setSize(1.0F, 0.3F);
         //texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
+    }
+
+    public ResourceLocation getTexture()
+    {
+        return MoCreatures.proxy.getTexture("litterbox.png");
     }
 
     protected void func_110147_ax()

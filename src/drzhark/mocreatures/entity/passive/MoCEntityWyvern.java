@@ -16,6 +16,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -154,6 +155,34 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     public boolean isNotScared()
     {
         return true;
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("wyvernjungle.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("wyvernmix.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("wyvernsand.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("wyvernsun.png");
+        case 5:
+            return MoCreatures.proxy.getTexture("wyvernmother.png");
+        case 6:
+            return MoCreatures.proxy.getTexture("wyvernundead.png");
+        case 7:
+            return MoCreatures.proxy.getTexture("wyvernlight.png");
+        case 8:
+            return MoCreatures.proxy.getTexture("wyverndark.png");
+        /*case 9:
+            return MoCreatures.proxy.getTexture("wyvernnether.png";*/
+        default:
+            return MoCreatures.proxy.getTexture("wyvernsun.png");
+        }
     }
 
     @Override

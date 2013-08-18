@@ -14,7 +14,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     {
         super(world);
         isCollidedVertically = false;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "wraith.png";
+        texture = "wraith.png";
         setSize(1.5F, 1.5F);
         isImmuneToFire = false;
         //health = 10;

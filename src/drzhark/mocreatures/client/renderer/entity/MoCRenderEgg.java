@@ -17,8 +17,6 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 @SideOnly(Side.CLIENT)
 public class MoCRenderEgg extends RenderLiving {
 
-    private static final ResourceLocation TEXTURE_DEFAULT = new ResourceLocation("mocreatures", MoCreatures.proxy.MODEL_TEXTURE + "egg.png");
-
     public MoCRenderEgg(ModelBase modelbase, float f)
     {
         super(modelbase, f);
@@ -42,6 +40,6 @@ public class MoCRenderEgg extends RenderLiving {
     }
 
     protected ResourceLocation func_110775_a(Entity par1Entity) {
-        return TEXTURE_DEFAULT;
+        return ((MoCEntityEgg)par1Entity).getTexture();
     }
 }

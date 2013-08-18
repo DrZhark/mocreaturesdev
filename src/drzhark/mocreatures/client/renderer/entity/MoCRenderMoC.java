@@ -34,7 +34,6 @@ public class MoCRenderMoC extends RenderLiving {
 
     public void doRenderMoC(Entity entity, double d, double d1, double d2, float f, float f1)
     {
-        //System.out.println("entity = " + entity);
         super.doRender(entity, d, d1, d2, f, f1);
 
         IMoCEntity entityMoC = (IMoCEntity) entity;
@@ -256,7 +255,6 @@ public class MoCRenderMoC extends RenderLiving {
 
     @Override
     protected ResourceLocation func_110775_a(Entity entity) {
-        // TODO Auto-generated method stub
-        return null;
+        return ((IMoCEntity)entity).getTexture();
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -58,6 +59,24 @@ public class MoCEntityScorpion extends MoCEntityMob {
         if (getType() == 0)
         {
             setType(1);
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture()
+    {
+        switch (getType())
+        {
+        case 1:
+            return MoCreatures.proxy.getTexture("scorpiondirt.png");
+        case 2:
+            return MoCreatures.proxy.getTexture("scorpioncave.png");
+        case 3:
+            return MoCreatures.proxy.getTexture("scorpionnether.png");
+        case 4:
+            return MoCreatures.proxy.getTexture("scorpionfrost.png");
+        default:
+            return MoCreatures.proxy.getTexture("scorpiondirt.png");
         }
     }
 

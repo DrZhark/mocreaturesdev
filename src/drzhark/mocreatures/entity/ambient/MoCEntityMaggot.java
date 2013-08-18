@@ -13,7 +13,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient
         super(world);
         setSize(0.2F, 0.2F);
         //health = 2;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "maggot.png";
+        texture = "maggot.png";
     }
 
     @Override
