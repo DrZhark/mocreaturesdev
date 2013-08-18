@@ -60,7 +60,7 @@ public final class CustomSpawner {
     protected List[] customCreatureSpawnList;
     protected List[] customWaterCreatureSpawnList;
     private List<Class> vanillaClassList;
-    private static Logger log = Logger.getLogger("CustomSpawner");
+    public static Logger log = Logger.getLogger("CustomSpawner");
 
     private static HashMap eligibleChunksForSpawning = new HashMap();
 
