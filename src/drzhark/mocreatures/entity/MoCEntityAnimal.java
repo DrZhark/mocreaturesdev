@@ -1642,5 +1642,4 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     {
         this.riderIsDisconnecting = true;
     }
-
 }

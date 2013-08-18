@@ -1866,9 +1866,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
      */
     public boolean isMagicHorse()
     {
-        return
-
-        this.getType() == 39 || this.getType() == 36 || this.getType() == 32 || this.getType() == 40 || (this.getType() >= 45 && this.getType() < 60) //fairy
+        return this.getType() == 39 || this.getType() == 36 || this.getType() == 32 || this.getType() == 40 || (this.getType() >= 45 && this.getType() < 60) //fairy
                 || this.getType() == 21 || this.getType() == 22;
     }
 

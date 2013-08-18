@@ -44,18 +44,15 @@ public class MoCEventHooks {
         }
     }
 
-    @ForgeSubscribe // override maxSpawnInChunk values
+    @ForgeSubscribe
     public void onLivingPackSize(LivingPackSizeEvent event)
     {
         if (MoCreatures.proxy.useCustomSpawner)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
-            //System.out.println("entityData = " + entityData);
             if (entityData != null)
             {
-                //System.out.println("LIVINGPACKSIZE " + event.entityLiving + " setting to " + entityData.getMaxInChunk());
                 event.maxPackSize = entityData.getMaxInChunk();
-               // System.out.println("new size = " + event.maxPackSize);
                 event.setResult(Result.ALLOW); // needed for changes to take effect
             }
         }
@@ -64,11 +61,12 @@ public class MoCEventHooks {
     @ForgeSubscribe
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
     {
-        if (MoCreatures.proxy.useCustomSpawner)
+        if (MoCreatures.proxy.useCustomSpawner && MoCreatures.myCustomSpawner != null)
         {
             MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
             if (entityData != null && !entityData.getCanSpawn())
             {
+                if (MoCreatures.proxy.debugCMS) MoCreatures.myCustomSpawner.log.info("Denied spawn for entity " + entityData.getEntityClass() + ". CanSpawn set to false or frequency set to 0!");
                 event.setResult(Result.DENY);
             }
         }
@@ -105,7 +103,6 @@ public class MoCEventHooks {
     @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)
     {
-      //  System.out.println("INITMAPGENEVENT " + event.newGen + " , type = " + event.type);
         if (MoCreatures.proxy.useCustomSpawner)
         {
             String structureClass = event.originalGen.getClass().toString();

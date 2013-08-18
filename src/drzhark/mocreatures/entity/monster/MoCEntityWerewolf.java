@@ -364,7 +364,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                     dropItem(j, 1);
                 }
             }
-
         }
     }
 

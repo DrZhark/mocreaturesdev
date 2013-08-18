@@ -324,6 +324,7 @@ public class MoCProxy implements IGuiHandler {
     private static final String MOD_KEY_VANILLA = "vanilla";
     private static final String MOD_KEY_TWILIGHT = "twilightforest";
     public static MoCStructureData structureData = new MoCStructureData();
+    public boolean isBWGinstalled = false;
 
  // biome groups
     private static List defaultBiomeGroupForest = new ArrayList();
@@ -1379,6 +1380,8 @@ public class MoCProxy implements IGuiHandler {
         //Contains a list of all of the biomes except for the Nether, End and custom ones (like wyvernLair)
         for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : defaultBiomeGroupMap.entrySet())
         {
+            if (biomeGroupEntry.getKey().contains(biomeModMap.get(MOD_KEY_BWG).getModTag()) && !isBWGinstalled)
+                continue;
             MoCBiomeGroupData biomeGroupData = biomeGroupEntry.getValue();
             if (biomeGroupData.getBiomeList() != defaultBiomeGroupNether && biomeGroupData.getBiomeList() != defaultBiomeGroupTheEnd && biomeGroupData.getBiomeList() != defaultBiomeGroupWyvern && biomeGroupData.getBiomeList() != defaultBiomeGroupMushroom && biomeGroupData.getBiomeList() != defaultBiomeGroupMobs)
             {
@@ -1388,6 +1391,8 @@ public class MoCProxy implements IGuiHandler {
         // generate default biome groups
         for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : defaultBiomeGroupMap.entrySet())
         {
+            if (biomeGroupEntry.getKey().contains(biomeModMap.get(MOD_KEY_BWG).getModTag()) && !isBWGinstalled)
+                continue;
             if (!mocBiomeConfig.hasCategory(biomeGroupEntry.getKey()))
             {
                 mocBiomeConfig.get(biomeGroupEntry.getKey(), biomeGroupEntry.getKey(), biomeGroupEntry.getValue().getBiomeList());

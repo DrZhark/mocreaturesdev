@@ -675,7 +675,6 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     @Override
     public void onLivingUpdate()
     {
-
         super.onLivingUpdate();
 
         if ((rand.nextInt(300) == 0) && (health <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
