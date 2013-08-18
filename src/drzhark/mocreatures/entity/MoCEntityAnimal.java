@@ -385,10 +385,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-
-
-
-       
         //attaches rope
         if ((itemstack != null) && (riddenByEntity == null) && (roper == null) && getIsTamed() && (itemstack.itemID == MoCreatures.rope.itemID))
         {
@@ -410,9 +406,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             roper = null;
             return true;
         }
-
-            
-        
         return false;
     }
 

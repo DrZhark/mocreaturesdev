@@ -10,6 +10,8 @@ import java.util.Map;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 import drzhark.customspawner.CustomSpawner;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.WorldServer;
@@ -55,6 +57,19 @@ public class MoCEventHooks {
                 event.maxPackSize = entityData.getMaxInChunk();
                // System.out.println("new size = " + event.maxPackSize);
                 event.setResult(Result.ALLOW); // needed for changes to take effect
+            }
+        }
+    }
+
+    @ForgeSubscribe
+    public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
+    {
+        if (MoCreatures.proxy.useCustomSpawner)
+        {
+            MoCEntityData entityData = MoCreatures.proxy.classToEntityMapping.get(event.entityLiving.getClass());
+            if (entityData != null && !entityData.getCanSpawn())
+            {
+                event.setResult(Result.DENY);
             }
         }
     }

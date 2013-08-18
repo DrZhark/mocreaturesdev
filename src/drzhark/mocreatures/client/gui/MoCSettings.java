@@ -147,11 +147,6 @@ public class MoCSettings extends ModSettings {
         }
         try {
             MoCConfiguration entityConfig = config;
-            File path = ModSettings.getAppDir("/" + ModSettings.contextDatadirs.get(context) + "/" + backendname + "/");
-            ModSettings.dbgout("saving context " + context + " (" + path.getAbsolutePath() + " [" + ModSettings.contextDatadirs.get(context) + "])");
-            if (!path.exists()) {
-                path.mkdirs();
-            }
             // Find setting
             Setting z = null;
             for (int i = 0; i < Settings.size(); i++) {
@@ -172,7 +167,7 @@ public class MoCSettings extends ModSettings {
                 if (modData != null)
                 {
                     int catType = -1;
-                    //System.out.println("backendname = " + z.backendName + ", context = " + z.toString(context));
+
                     if (z.backendName.contains("Type"))
                         catType = 0;
                     else if (z.backendName.contains("Frequency"))

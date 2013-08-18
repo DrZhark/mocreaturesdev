@@ -283,23 +283,24 @@ public class MoCTools {
         EntityLiving entityToSpawn = null;
         try
         {
-        	Class myClass = null;
-        	if (eName.equals("MoCHorse")) //to avoid conflicts with Vanilla Horses
-        	{
-        		myClass = MoCEntityHorse.class;
-        	}
-        	else
-        	{
-            MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
+            Class myClass = null;
+            if (eName.equals("MoCHorse")) //to avoid conflicts with Vanilla Horses
+            {
+                myClass = MoCEntityHorse.class;
+            }
+            else
+            {
+                MoCEntityData entityData = MoCreatures.proxy.entityModMap.get("drzhark").getCreature(eName);
                 myClass = entityData.getEntityClass();
-        	}
-            
-            
+            }
+
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
-        }catch (Exception e) 
+        }
+        catch (Exception e) 
         { 
-            if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Unable to find class for entity " + eName + ", " + e);}
-        return entityToSpawn;        
+            if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Unable to find class for entity " + eName + ", " + e);
+        }
+        return entityToSpawn;
     }
 
     public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat)
@@ -1496,12 +1497,11 @@ public class MoCTools {
     {
         if (MoCreatures.isServer())
         {
-        		ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); 
-        	   if (amuletType == 2)
-        	   {
-        		   stack = new ItemStack(MoCreatures.superAmulet, 1, 1);
-        	   }
-               
+            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1); 
+            if (amuletType == 2)
+            {
+               stack = new ItemStack(MoCreatures.superAmulet, 1, 1);
+            }
 
             if( stack.stackTagCompound == null )
             {
@@ -1511,16 +1511,17 @@ public class MoCTools {
             
             try
             {
-            	
-            	if (entity instanceof MoCEntityHorse)
-            	{
-            		nbtt.setString("SpawnClass", "MoCHorse"); 
-            	}else
-            	{
-                nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
-            	}
+            
+                if (entity instanceof MoCEntityHorse)
+                {
+                    nbtt.setString("SpawnClass", "MoCHorse"); 
+                }
+                else
+                {
+                    nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
+                }
                 
-                	nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
+                nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
                 nbtt.setInteger("CreatureType", entity.getType());

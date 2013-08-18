@@ -33,7 +33,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 
-public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEntity//, IEntityAdditionalSpawnData
+public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEntity
 {
     private boolean riderIsDisconnecting;
 
@@ -1209,10 +1209,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
     protected boolean canBeTrappedInNet() 
     {
-    	return (this instanceof IMoCTameable) && getIsTamed();
+        return (this instanceof IMoCTameable) && getIsTamed();
     }
-
-
 
     /**
      * Returns true if the entity is of the @link{EnumCreatureType} provided
