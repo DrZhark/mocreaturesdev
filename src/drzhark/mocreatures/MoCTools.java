@@ -326,16 +326,6 @@ public class MoCTools {
         return false;
     }
 
-    public static boolean isNearTorch(Entity entity)
-    {
-        return (isNearBlockName(entity, 8D, "tile.torch")) || (isNearBlockName(entity, 8d, "tile.lightgem")) || (isNearBlockName(entity, 8d, "tile.redstoneLight")) || (isNearBlockName(entity, 8d, "tile.litpumpkin"));
-    }
-
-    public static boolean isNearTorch(Entity entity, Double dist)
-    {
-        return isNearBlockName(entity, dist, "tile.torch") || (isNearBlockName(entity, dist, "tile.lightgem")) || (isNearBlockName(entity, dist, "tile.redstoneLight")) || (isNearBlockName(entity, dist, "tile.litpumpkin"));
-    }
-
     public static boolean isNearBlockName(Entity entity, Double dist, String blockName)
     {
         AxisAlignedBB axisalignedbb = entity.boundingBox.expand(dist, dist / 2D, dist);

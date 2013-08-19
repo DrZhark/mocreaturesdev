@@ -128,8 +128,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
     @Override
     public boolean checkSpawningBiome()
     {
-        if (MoCTools.isNearTorch(this)) { return false; }
-
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);

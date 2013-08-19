@@ -79,11 +79,10 @@ public class MoCServerTickHandler implements IScheduledTickHandler
                 if (worldObj != null && (worldObj.getWorldInfo().getWorldTime() % MoCreatures.proxy.monsterSpawnTickRate == 0L) && MoCreatures.proxy.spawnMonsters && worldObj.difficultySetting > 0 && MoCreatures.proxy.maxMonsters > 0) 
                 {
                     int mobSpawns = 0;
-                    //System.out.println("worldObj.playerEntities.size() = " + worldObj.playerEntities.size() + " for dimension " + worldObj.provider.dimensionId + ", disallowMonsterSpawningDuringDay = " + MoCreatures.proxy.disallowMonsterSpawningDuringDay + ", entitySpawnRange" + MoCreatures.proxy.entitySpawnRange + ", enforceMaxSpawnLimits = " + MoCreatures.proxy.enforceMaxSpawnLimits + ", lightLevel = " + MoCreatures.proxy.lightLevel);
+
                     if (worldObj.playerEntities.size() > 0 && !MoCreatures.proxy.disallowMonsterSpawningDuringDay)
                     {
                         mobSpawns = MoCreatures.myCustomSpawner.doCustomSpawning(worldObj, EnumCreatureType.monster, MoCreatures.proxy.entitySpawnRange, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel, MoCreatures.proxy.enforceMaxSpawnLimits);
-                        //System.out.println("Mo'Creatures Spawned " + mobSpawns + " Mobs");
                         if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Mo'Creatures Spawned " + mobSpawns + " Mobs");
                     }
                 }
