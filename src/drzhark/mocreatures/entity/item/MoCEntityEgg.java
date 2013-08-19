@@ -266,7 +266,7 @@ public class MoCEntityEgg extends EntityLiving {
                 }
             }
 
-            else if (getEggType() > 20 && MoCTools.isNearTorch(this, 4D) && (rand.nextInt(20) == 0)) // non aquatic creatures
+            else if (getEggType() > 20 && (rand.nextInt(20) == 0)) // non aquatic creatures
             {
                 tCounter++;
                 //if (getEggType() == 30) tCounter = 0; //with this, wild ostriches won't spawn eggs.
