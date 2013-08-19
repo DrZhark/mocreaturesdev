@@ -2843,6 +2843,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
         return super.getCreatureAttribute();
     }
 
+    @Override
+    protected boolean canBeTrappedInNet() 
+    {
+        return getIsTamed() && !isAmuletHorse();
+    }
     public void setImmuneToFire(boolean value)
     {
         this.isImmuneToFire = value;

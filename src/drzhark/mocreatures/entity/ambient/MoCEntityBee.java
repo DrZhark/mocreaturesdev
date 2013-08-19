@@ -27,7 +27,6 @@ public class MoCEntityBee extends MoCEntityInsect
         texture = "bee.png";
     }
 
-
     @Override
     public void onLivingUpdate()
     {

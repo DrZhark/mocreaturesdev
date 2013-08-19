@@ -189,6 +189,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         isEntityJumping = flag;
     }
 
+    @Override
+    protected boolean canDespawn()
+    {
+        return !getIsTamed();
+    }
+
     /**
      * called in getCanSpawnHere to make sure the right type of creature spawns
      * in the right biome i.e. snakes, rays, bears, BigCats and later wolves,

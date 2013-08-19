@@ -111,7 +111,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setEdad(edad);
                     storedCreature.setName(name);
                     storedCreature.setArmorType(armor);
-                    storedCreature.setEntityHealth((int)health);
+                    storedCreature.setEntityHealth(health);
                     storedCreature.setAdult(adult);
                     storedCreature.setOwnerPetId(PetId);
                     storedCreature.setOwner(entityplayer.username);
