@@ -53,7 +53,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected void func_110147_ax()
     {
         super.func_110147_ax();
-        selectType();
         this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
         this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(2.0D); // setAttackStrength
         this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
@@ -69,6 +68,13 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         setType(1);
     }
 
+    @Override
+    public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
+    {
+    	selectType();
+    	return super.func_110161_a(par1EntityLivingData);
+    }
+    
     @Override
     protected void entityInit()
     {

@@ -23,15 +23,15 @@ public class MoCKeyHandler extends KeyHandler {
     private ModSettingScreen localScreen;
     //static KeyBinding jumpBinding = new KeyBinding("jumpBind", Keyboard.KEY_F);
     static KeyBinding jumpBinding = new KeyBinding("MoCreatures Jump", MoCClientProxy.mc.gameSettings.keyBindJump.keyCode);
-    //static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_F);
+    static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_F);
     static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F6);
-    static KeyBinding dismountBinding = new KeyBinding("MoCreatures Dismount", Keyboard.KEY_F);
+    //static KeyBinding dismountBinding = new KeyBinding("MoCreatures Dismount", Keyboard.KEY_F);
 
     public MoCKeyHandler()
     {
         //the first value is an array of KeyBindings, the second is whether or not the call
         //keyDown should repeat as long as the key is down
-        super(new KeyBinding[] { jumpBinding, dismountBinding, guiBinding }, new boolean[] { true, true, false });
+        super(new KeyBinding[] { jumpBinding, diveBinding, guiBinding }, new boolean[] { true, true, false });
         localScreen = MoCClientProxy.instance.MoCScreen;
     }
 
@@ -91,13 +91,13 @@ public class MoCKeyHandler extends KeyHandler {
             MoCClientPacketHandler.sendEntityDivePacket();
         }
 
-        if (kbDismount && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
+        /*if (kbDismount && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
         {
             keyCount = 0;
             // dismount code needs executed client/server simultaneously
             ((IMoCEntity) ep.ridingEntity).dismountEntity();
             MoCClientPacketHandler.sendEntityDismountPacket();
-        }
+        }*/
     }
 
     @Override
