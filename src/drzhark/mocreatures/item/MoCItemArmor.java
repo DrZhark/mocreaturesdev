@@ -86,7 +86,7 @@ public class MoCItemArmor extends ItemArmor
             tempArmorTexture = "scorpn_2.png";
         }
 
-        return MoCreatures.proxy.ARMOR_TEXTURE + tempArmorTexture;
+        return "mocreatures:" + MoCreatures.proxy.ARMOR_TEXTURE + tempArmorTexture;
     }
 
     @SideOnly(Side.CLIENT)
