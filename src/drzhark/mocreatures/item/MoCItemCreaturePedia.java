@@ -11,6 +11,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -66,12 +67,12 @@ public class MoCItemCreaturePedia extends MoCItem {
             double newPosY = entityplayer.posY - 1D;
 
             double d1 = -1D;
-            EntityLiving entityliving = null;
+            EntityLivingBase entityliving = null;
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.boundingBox.expand(dist, dist, dist));
             for (int i = 0; i < list.size(); i++)
             {
                 Entity entity1 = (Entity) list.get(i);
-                if (entity1 == null || !(entity1 instanceof EntityLiving))
+                if (entity1 == null || !(entity1 instanceof EntityLivingBase))
                 {
                     continue;
                 }
@@ -82,10 +83,10 @@ public class MoCItemCreaturePedia extends MoCItem {
                 }
 
                 double d2 = entity1.getDistanceSq(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
-                if (((dist < 0.0D) || (d2 < (dist * dist))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entityplayer))
+                if (((dist < 0.0D) || (d2 < (dist * dist))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entityplayer))
                 {
                     d1 = d2;
-                    entityliving = (EntityLiving) entity1;
+                    entityliving = (EntityLivingBase) entity1;
                 }
             }
 

@@ -4,6 +4,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -116,7 +117,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
 
         if (!worldObj.isRemote)
         {
-            EntityLiving entityliving = getBoogey(3D);
+            EntityLivingBase entityliving = getBoogey(3D);
             if ((entityliving != null) && entityliving.height > 0.5F && entityliving.width > 0.5F && canEntityBeSeen(entityliving))
             {
                 if (!getIsHiding())

@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -152,14 +153,14 @@ public class MoCEntityThrowableRock extends Entity {
                 {
                     continue;
                 }
-                if (entity1 != null && !(entity1 instanceof EntityLiving))
+                if (entity1 != null && !(entity1 instanceof EntityLivingBase))
                 {
                     continue;
                 }
 
                 if (master != null)
                 {
-                    entity1.attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) master), 4);
+                    entity1.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) master), 4);
                 }
                 else
                 {

@@ -14,6 +14,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -188,10 +189,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     // TODO move this to a class accessible by MocEntityMob and MoCentityAnimals
     // ?? implements?
-    protected EntityLiving getClosestEntityLiving(Entity entity, double d)
+    protected EntityLivingBase getClosestEntityLiving(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
@@ -202,10 +203,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
 

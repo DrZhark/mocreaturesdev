@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -131,7 +132,7 @@ public class MoCEntityDeer extends MoCEntityTameable {
             }
             if (rand.nextInt(5) == 0)
             {
-                EntityLiving entityliving = getBoogey(10D);
+                EntityLivingBase entityliving = getBoogey(10D);
                 if (entityliving != null)
                 {
                     setMySpeed(true);

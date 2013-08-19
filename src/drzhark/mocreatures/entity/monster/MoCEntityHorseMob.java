@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -429,8 +430,8 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         super.updateRiderPosition();
         if (riddenByEntity == null)    return;
-        ((EntityLiving) riddenByEntity).renderYawOffset = this.rotationYaw;
-        ((EntityLiving) riddenByEntity).prevRenderYawOffset = this.rotationYaw;
+        ((EntityLivingBase) riddenByEntity).renderYawOffset = this.rotationYaw;
+        ((EntityLivingBase) riddenByEntity).prevRenderYawOffset = this.rotationYaw;
     }
 
     @Override

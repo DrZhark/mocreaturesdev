@@ -8,6 +8,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
@@ -352,7 +353,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
             {
                 MoCreatures.poisonPlayer((EntityPlayer) entity);
             }
-            ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 150, 0));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 150, 0));
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
         }
     }
@@ -396,7 +397,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
             }
             if ((rand.nextInt(500) == 0))
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 8D);
+                EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
                 return entityliving;
             }
         }

@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -108,7 +109,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
             if ((entityplayer != null) && (rand.nextInt(50) == 0)) { return entityplayer; }
             if (rand.nextInt(80) == 0)
             {
-                EntityLiving entityliving = getClosestTarget(this, 10D);
+                EntityLivingBase entityliving = getClosestTarget(this, 10D);
                 return entityliving;
             }
         }
@@ -116,23 +117,23 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     // TODO find a way to move this
-    public EntityLiving getClosestTarget(Entity entity, double d)
+    public EntityLivingBase getClosestTarget(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLiving) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (height <= entity1.height) || (width <= entity1.width))
+            if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (height <= entity1.height) || (width <= entity1.width))
             {
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posY, entity.posZ, entity.motionX);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
 

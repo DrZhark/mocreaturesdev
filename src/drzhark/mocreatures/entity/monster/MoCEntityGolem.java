@@ -38,7 +38,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         texture = "golemt.png";
         setSize(1.5F, 4F);
         //health = getMaxHealth();
-        initGolemCubes();
     }
 
     @Override
@@ -63,6 +62,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     protected void entityInit()
     {
         super.entityInit();
+        initGolemCubes();
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // gState - 0 spawned / 1 summoning rocks /2 has enemy /3 half life (harder) /4 dying
     }
 

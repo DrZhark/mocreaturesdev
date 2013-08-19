@@ -9,6 +9,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
@@ -81,11 +82,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
                 for (int i = 0; i < list.size(); i++)
                 {
                     Entity entity1 = (Entity) list.get(i);
-                    if (!(entity1 instanceof EntityLiving))
+                    if (!(entity1 instanceof EntityLivingBase))
                     {
                         continue;
                     }
-                    if (((EntityLiving) entity1).width >= 0.4F && ((EntityLiving) entity1).height >= 0.4F && canEntityBeSeen(entity1))
+                    if (((EntityLivingBase) entity1).width >= 0.4F && ((EntityLivingBase) entity1).height >= 0.4F && canEntityBeSeen(entity1))
                     {
                         this.motionY += 0.3D;
                         setIsFlying(true);

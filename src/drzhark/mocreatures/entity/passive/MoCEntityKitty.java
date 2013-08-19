@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -321,7 +322,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     {
         if ((worldObj.difficultySetting > 0) && (getKittyState() != 8) && (getKittyState() != 10) && (getKittyState() != 15) && (getKittyState() != 18) && (getKittyState() != 19) && !isMovementCeased() && getIsHungry())
         {
-            EntityLiving entityliving = getClosestTarget(this, 10D);
+            EntityLivingBase entityliving = getClosestTarget(this, 10D);
             return entityliving;
         }
         else
@@ -332,17 +333,17 @@ public class MoCEntityKitty extends MoCEntityTameable {
 
     //TODO
     //change this so MoCAnimal getBoogey is used instead to decrease duplication of code
-    public EntityLiving getBoogey(double d, boolean flag)
+    public EntityLivingBase getBoogey(double d, boolean flag)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity) list.get(i);
-            if ((entity instanceof EntityLiving) && !(entity instanceof MoCEntityDeer) && !(entity instanceof MoCEntityHorse) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)) && (flag || !(entity instanceof EntityPlayer)))
+            if ((entity instanceof EntityLivingBase) && !(entity instanceof MoCEntityDeer) && !(entity instanceof MoCEntityHorse) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)) && (flag || !(entity instanceof EntityPlayer)))
             {
-                entityliving = (EntityLiving) entity;
+                entityliving = (EntityLivingBase) entity;
             }
         }
 
@@ -741,7 +742,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             case 1: // '\001'
                 if (rand.nextInt(10) == 0)
                 {
-                    EntityLiving entityliving = getBoogey(6D, true);
+                    EntityLivingBase entityliving = getBoogey(6D, true);
                     if (entityliving != null)
                     {
                         MoCTools.runLikeHell(this, entityliving);
@@ -772,7 +773,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 break;
 
             case 2: // '\002'
-                EntityLiving entityliving1 = getBoogey(6D, false);
+                EntityLivingBase entityliving1 = getBoogey(6D, false);
                 if (entityliving1 != null)
                 {
                     MoCTools.runLikeHell(this, entityliving1);

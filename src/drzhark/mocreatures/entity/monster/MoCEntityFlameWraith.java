@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.Item;
@@ -42,7 +43,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
 
             if (MoCreatures.isServer() && !worldObj.provider.isHellWorld)
             {
-                ((EntityLiving) entity).setFire(burningTime);
+                ((EntityLivingBase) entity).setFire(burningTime);
             }
         }
     }

@@ -8,6 +8,7 @@ import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
@@ -655,7 +656,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
             }
             if ((rand.nextInt(100) == 0))
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 8D);
+                EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
                 return entityliving;
             }
         }

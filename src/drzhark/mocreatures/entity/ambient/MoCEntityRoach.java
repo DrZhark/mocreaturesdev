@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public class MoCEntityRoach extends MoCEntityInsect
 
             if (!getIsFlying() && rand.nextInt(10) == 0)
             {
-                EntityLiving entityliving = getBoogey(3D);
+                EntityLivingBase entityliving = getBoogey(3D);
                 if (entityliving != null)
                 {
                     runLikeHell(entityliving);

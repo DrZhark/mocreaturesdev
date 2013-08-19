@@ -668,7 +668,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             }
             if ((rand.nextInt(500) == 0))
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 8D);
+                EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
                 return entityliving;
             }
         }

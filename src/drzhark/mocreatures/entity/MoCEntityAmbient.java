@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -1089,10 +1090,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
     public void setRideable(boolean b) {}
 
-    protected EntityLiving getClosestEntityLiving(Entity entity, double d)
+    protected EntityLivingBase getClosestEntityLiving(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
@@ -1103,10 +1104,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
         return entityliving;
@@ -1138,17 +1139,17 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
      * @param d
      * @return
      */
-    protected EntityLiving getBoogey(double d)
+    protected EntityLivingBase getBoogey(double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity) list.get(i);
             if (entitiesToInclude(entity))
             {
-                entityliving = (EntityLiving) entity;
+                entityliving = (EntityLivingBase) entity;
             }
         }
         return entityliving;

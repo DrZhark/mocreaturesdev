@@ -12,6 +12,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -120,23 +121,23 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     }
 
     // TODO move this
-    public EntityLiving FindTarget(Entity entity, double d)
+    public EntityLivingBase FindTarget(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg) || (entity1 instanceof MoCEntityEgg) || (entity1 instanceof EntityPlayer) || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)))
+            if (!(entity1 instanceof EntityLivingBase) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg) || (entity1 instanceof MoCEntityEgg) || (entity1 instanceof EntityPlayer) || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)))
             {
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
         return entityliving;
@@ -166,7 +167,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
             if (rand.nextInt(5) == 0 && !getIsTamed())
             {
-                EntityLiving entityliving = getBoogey(8D);
+                EntityLivingBase entityliving = getBoogey(8D);
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water))
                 {
                    MoCTools.runLikeHell(this, entityliving);

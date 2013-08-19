@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -100,7 +101,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic{
             
             if (rand.nextInt(5) == 0 && !getIsTamed())
             {
-                EntityLiving entityliving = getBoogey(8D);
+                EntityLivingBase entityliving = getBoogey(8D);
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water))
                 {
                    MoCTools.runLikeHell(this, entityliving);

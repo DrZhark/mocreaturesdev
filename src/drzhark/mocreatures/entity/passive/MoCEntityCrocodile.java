@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -249,9 +250,9 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
                 if (!isInsideOfMaterial(Material.water))
                 {
                     waterbound = true;
-                    if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).func_110143_aJ() > 0)
+                    if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).func_110143_aJ() > 0)
                     {
-                        ((EntityLiving) riddenByEntity).deathTime = 0;
+                        ((EntityLivingBase) riddenByEntity).deathTime = 0;
                     }
 
                     if (MoCreatures.isServer() && rand.nextInt(50) == 0)
@@ -436,7 +437,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
                  return entityplayer; 
             }
             
-            EntityLiving entityliving = getClosestEntityLiving(this, attackD);
+            EntityLivingBase entityliving = getClosestEntityLiving(this, attackD);
             return entityliving;
         }
         return null;
@@ -470,8 +471,8 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
             direction = 1;
         }
 
-        ((EntityLiving) riddenByEntity).renderYawOffset = this.rotationYaw * direction;
-        ((EntityLiving) riddenByEntity).prevRenderYawOffset = this.rotationYaw * direction;
+        ((EntityLivingBase) riddenByEntity).renderYawOffset = this.rotationYaw * direction;
+        ((EntityLivingBase) riddenByEntity).prevRenderYawOffset = this.rotationYaw * direction;
     }
 
     @Override
@@ -541,9 +542,9 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
 
         if (riddenByEntity != null)
         {
-            if (riddenByEntity instanceof EntityLiving && ((EntityLiving) riddenByEntity).func_110143_aJ() > 0)
+            if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).func_110143_aJ() > 0)
             {
-                ((EntityLiving) riddenByEntity).deathTime = 0;
+                ((EntityLivingBase) riddenByEntity).deathTime = 0;
             }
 
             riddenByEntity.mountEntity(null);

@@ -617,7 +617,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }
@@ -1057,17 +1057,17 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
      * @param d
      * @return
      */
-    protected EntityLiving getBoogey(double d)
+    protected EntityLivingBase getBoogey(double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity) list.get(i);
             if (entitiesToInclude(entity))
             {
-                entityliving = (EntityLiving) entity;
+                entityliving = (EntityLivingBase) entity;
             }
         }
         return entityliving;
@@ -1081,7 +1081,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
      */
     public boolean entitiesToInclude(Entity entity)
     {
-        return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
+        return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLivingBase) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
     }
 
     public boolean isNotScared()

@@ -329,7 +329,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     {
                         MoCreatures.poisonPlayer((EntityPlayer) entity);
                     }
-                    ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
+                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
                 }
                 else if (getType() == 4)// blue scorpions
                 {
@@ -337,7 +337,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     {
                         MoCreatures.freezePlayer((EntityPlayer) entity);
                     }
-                    ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
+                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
 
                 }
                 else if (getType() == 3)// red scorpions
@@ -345,7 +345,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     if (flag && MoCreatures.isServer() && !worldObj.provider.isHellWorld)
                     {
                         MoCreatures.burnPlayer((EntityPlayer) entity);
-                        ((EntityLiving) entity).setFire(15);
+                        ((EntityLivingBase) entity).setFire(15);
                     }
                 }
             }

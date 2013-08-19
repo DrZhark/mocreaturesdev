@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -411,7 +412,7 @@ public class MoCEntityBird extends MoCEntityTameable {
         //check added to avoid duplicating behavior on client / server
         if (MoCreatures.isServer())
         {
-            EntityLiving entityliving = getBoogey(5D);
+            EntityLivingBase entityliving = getBoogey(5D);
             if ((entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
             {
                 fleeing = true;

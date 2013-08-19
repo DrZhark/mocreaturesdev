@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -69,12 +70,12 @@ public class MoCEntityPlatform extends Entity {
     {
     }
 
-    private EntityLiving getMaster()
+    private EntityLivingBase getMaster()
     {
         List<Entity> entityList = worldObj.loadedEntityList;
         for (Entity ent : entityList)
         {
-            if (ent.entityId == mastersID && ent instanceof EntityLiving) { return (EntityLiving) ent; }
+            if (ent.entityId == mastersID && ent instanceof EntityLivingBase) { return (EntityLivingBase) ent; }
         }
 
         return null;
@@ -83,7 +84,7 @@ public class MoCEntityPlatform extends Entity {
     @Override
     public void onUpdate()
     {
-        EntityLiving master = getMaster();
+        EntityLivingBase master = getMaster();
         if (master == null || this.riddenByEntity == null)
         {
             if (MoCreatures.isServer())

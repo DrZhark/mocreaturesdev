@@ -212,10 +212,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return true;
     }
 
-    protected EntityLiving getClosestEntityLiving(Entity entity, double d)
+    protected EntityLivingBase getClosestEntityLiving(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
@@ -226,20 +226,20 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
 
         return entityliving;
     }
 
-    protected EntityLiving getClosestSpecificEntity(Entity entity, Class myClass, double d)
+    protected EntityLivingBase getClosestSpecificEntity(Entity entity, Class myClass, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
@@ -253,7 +253,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)))// && ((EntityLiving) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
 
@@ -280,17 +280,17 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * @param d
      * @return
      */
-    protected EntityLiving getBoogey(double d)
+    protected EntityLivingBase getBoogey(double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity = (Entity) list.get(i);
             if (entitiesToInclude(entity))
             {
-                entityliving = (EntityLiving) entity;
+                entityliving = (EntityLivingBase) entity;
             }
         }
         return entityliving;
@@ -587,7 +587,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }

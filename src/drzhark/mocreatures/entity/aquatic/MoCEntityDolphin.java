@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -229,16 +230,16 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     {
         if ((worldObj.difficultySetting > 0) && (getEdad() >= 100) && MoCreatures.proxy.attackDolphins && (rand.nextInt(50) == 0))
         {
-            EntityLiving entityliving = FindTarget(this, 12D);
+            EntityLivingBase entityliving = FindTarget(this, 12D);
             if ((entityliving != null) && entityliving.isInWater()) { return entityliving; }
         }
         return null;
     }
 
-    public EntityLiving FindTarget(Entity entity, double d)
+    public EntityLivingBase FindTarget(Entity entity, double d)
     {
         double d1 = -1D;
-        EntityLiving entityliving = null;
+        EntityLivingBase entityliving = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
         for (int i = 0; i < list.size(); i++)
         {
@@ -248,10 +249,10 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLiving) entity1).canEntityBeSeen(entity))
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
                 d1 = d2;
-                entityliving = (EntityLiving) entity1;
+                entityliving = (EntityLivingBase) entity1;
             }
         }
 

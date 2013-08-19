@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -263,7 +264,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
             {
                 if ((rand.nextInt(80) == 0))
                 {
-                    EntityLiving entityliving = getClosestEntityLiving(this, 10D);
+                    EntityLivingBase entityliving = getClosestEntityLiving(this, 10D);
                     return entityliving;
                 }
 
@@ -306,7 +307,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
                     {
                         MoCreatures.poisonPlayer((EntityPlayer) entity);
                     }
-                    ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
+                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
                 }
                 else if (getType() == 4)// blue scorpions
                 {
@@ -314,7 +315,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
                     {
                         MoCreatures.freezePlayer((EntityPlayer) entity);
                     }
-                    ((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
+                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
 
                 }
                 else if (getType() == 3)// red scorpions
@@ -322,7 +323,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
                     if (flag && MoCreatures.isServer() && !worldObj.provider.isHellWorld)
                     {
                         MoCreatures.burnPlayer((EntityPlayer) entity);
-                        ((EntityLiving) entity).setFire(15);
+                        ((EntityLivingBase) entity).setFire(15);
 
                     }
 

@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -281,7 +282,7 @@ public class MoCEntityBear extends MoCEntityTameable {
             }
             if (rand.nextInt(80) == 0 && this.getType() != 3)
             {
-                EntityLiving entityliving = getClosestEntityLiving(this, 10D);
+                EntityLivingBase entityliving = getClosestEntityLiving(this, 10D);
                 return entityliving;
             }
         }

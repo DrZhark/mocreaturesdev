@@ -3,7 +3,7 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -149,7 +149,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
                 if (this.getType() == 4)
                 {
-                    ((EntityLiving) entity).setFire(10);
+                    ((EntityLivingBase) entity).setFire(10);
                 }
             }
         }

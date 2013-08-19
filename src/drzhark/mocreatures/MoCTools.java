@@ -15,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
@@ -390,9 +391,9 @@ public class MoCTools {
         for (int l = 0; l < world.loadedEntityList.size(); l++)
         {
             Entity entity = (Entity) world.loadedEntityList.get(l);
-            if (entity instanceof EntityLiving)
+            if (entity instanceof EntityLivingBase)
             {
-                EntityLiving twisted = (EntityLiving) entity;
+                EntityLivingBase twisted = (EntityLivingBase) entity;
                 if (twisted.deathTime > 0 && twisted.ridingEntity == null && twisted.func_110143_aJ() > 0)
                 {
                     twisted.deathTime = 0;

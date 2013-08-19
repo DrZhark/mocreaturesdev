@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,7 +102,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     {
         if ((rand.nextInt(80) == 0) && (worldObj.difficultySetting > 0))
         {
-            EntityLiving entityliving = getClosestEntityLiving(this, 8D);
+            EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
             return entityliving;
         }
         else

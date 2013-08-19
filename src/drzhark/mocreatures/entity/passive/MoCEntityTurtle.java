@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -195,7 +196,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
         {
             if (!getIsUpsideDown() && !getIsTamed())
             {
-                EntityLiving entityliving = getBoogey(4D);
+                EntityLivingBase entityliving = getBoogey(4D);
                 if ((entityliving != null) && canEntityBeSeen(entityliving))
                 {
 

@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -236,7 +237,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
         {
             if(rand.nextInt(15) == 0)
             {
-                EntityLiving entityliving = getBoogey(6D);
+                EntityLivingBase entityliving = getBoogey(6D);
                 if(entityliving != null)
                 {
                     MoCTools.runLikeHell(this, entityliving);
