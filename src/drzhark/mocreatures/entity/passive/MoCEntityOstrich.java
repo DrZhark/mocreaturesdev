@@ -947,7 +947,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     public boolean getCanSpawnHere()
     {
         //spawns in deserts and plains
-        return (MoCreatures.proxy.entityModMap.get("drzhark").getCreatureMap().get(this.getEntityName()).getFrequency() > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving() && (!MoCTools.isNearTorch(this));
+        return getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
 
     @Override
