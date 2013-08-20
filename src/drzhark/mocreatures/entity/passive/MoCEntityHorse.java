@@ -119,9 +119,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
         else
         {
             i = i - (getArmorType() + 2);
-            if (i < 0)
+            if (i < 0F)
             {
-                i = 0;
+                i = 0F;
             }
             return super.attackEntityFrom(damagesource, i);
         }
@@ -353,18 +353,18 @@ public class MoCEntityHorse extends MoCEntityTameable {
     {
         if (isFlyer() || isFloater()) { return; }
 
-        int i = (int) Math.ceil(f - 3F);
-        if ((i > 0))
+        float i = (float) (Math.ceil(f - 3F)/2F);
+        if (MoCreatures.isServer() && (i > 0))
         {
             if (getType() >= 10)
             {
-                i /= 3;
+                i /= 2;
             }
-            if (i > 0)
+            if (i > 1F)
             {
                 attackEntityFrom(DamageSource.fall, i);
             }
-            if ((riddenByEntity != null) && (i > 0))
+            if ((riddenByEntity != null) && (i > 1F))
             {
                 riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }

@@ -1446,8 +1446,7 @@ public class MoCTools {
             
             try
             {
-                //TODO change the 21 to the list given based on the class of the creature
-                nbtt.setInteger("SpawnClass", 21); //21 is the spawnlist number for horses //TODO change to a list
+                nbtt.setInteger("SpawnClass", 21); 
                 nbtt.setFloat("Health", entity.func_110143_aJ());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
@@ -1461,10 +1460,18 @@ public class MoCTools {
             catch (Exception e)
             {
             }
+            
+            EntityPlayer epOwner = entity.worldObj.getPlayerEntityByName(entity.getOwnerName());
+			if (epOwner != null)
+			{
+				epOwner.inventory.addItemStackToInventory(stack);
+			}
+			else
+			{
             EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
-
             entityitem.delayBeforeCanPickup = 20;
             entity.worldObj.spawnEntityInWorld(entityitem);
+        }
         }
     }
 
@@ -1501,9 +1508,19 @@ public class MoCTools {
             catch (Exception e)
             {
             }
-            EntityItem entityitem = new EntityItem(((EntityLiving)entity).worldObj, ((EntityLiving)entity).posX, ((EntityLiving)entity).posY, ((EntityLiving)entity).posZ, stack);
+            
+            EntityPlayer epOwner = ((EntityLivingBase)entity).worldObj.getPlayerEntityByName(entity.getOwnerName());
+			if (epOwner != null)
+			{
+				epOwner.inventory.addItemStackToInventory(stack);
+			}
+			else
+			{
+	            EntityItem entityitem = new EntityItem(((EntityLivingBase)entity).worldObj, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY, ((EntityLivingBase)entity).posZ, stack);
             entityitem.delayBeforeCanPickup = 20;
-            ((EntityLiving)entity).worldObj.spawnEntityInWorld(entityitem);
+	            ((EntityLivingBase)entity).worldObj.spawnEntityInWorld(entityitem);
+			}
+            
         }
     }
 

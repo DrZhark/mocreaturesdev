@@ -135,7 +135,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
         
         //stores in fishnet
-        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && this.canBeTrappedInNet()) 
+        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())

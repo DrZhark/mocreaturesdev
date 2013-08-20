@@ -19,6 +19,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCItemPetAmulet extends MoCItem
@@ -91,6 +92,11 @@ public class MoCItemPetAmulet extends MoCItem
                 }
                 try
                 {
+                	
+                	if ( spawnClass.equalsIgnoreCase("MoCHorse") || spawnClass.equalsIgnoreCase("WildHorse"))
+                	{
+                		spawnClass = "WildHorse";
+                	}
                     EntityLiving tempLiving = MoCTools.spawnListByNameClass(spawnClass, worldObj);
                     if (tempLiving != null && tempLiving instanceof IMoCEntity)
                     {
