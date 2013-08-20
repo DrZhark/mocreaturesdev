@@ -257,7 +257,7 @@ public class MoCTools {
             
             if (entityToSpawn != null)
             {
-            	EntityLivingData entitylivingdata = null;
+                EntityLivingData entitylivingdata = null;
                 entityToSpawn.func_110161_a(entitylivingdata);
                 entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
@@ -1462,16 +1462,16 @@ public class MoCTools {
             }
             
             EntityPlayer epOwner = entity.worldObj.getPlayerEntityByName(entity.getOwnerName());
-			if (epOwner != null)
-			{
-				epOwner.inventory.addItemStackToInventory(stack);
-			}
-			else
-			{
-            EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
-            entityitem.delayBeforeCanPickup = 20;
-            entity.worldObj.spawnEntityInWorld(entityitem);
-        }
+            if (epOwner != null)
+            {
+                epOwner.inventory.addItemStackToInventory(stack);
+            }
+            else
+            {
+                EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+                entityitem.delayBeforeCanPickup = 20;
+                entity.worldObj.spawnEntityInWorld(entityitem);
+            }
         }
     }
 
@@ -1493,7 +1493,7 @@ public class MoCTools {
                 stack.setTagCompound(new NBTTagCompound());
             }
             NBTTagCompound nbtt = stack.stackTagCompound;
-            
+
             try
             {
                 nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName()); 
@@ -1508,19 +1508,18 @@ public class MoCTools {
             catch (Exception e)
             {
             }
-            
+
             EntityPlayer epOwner = ((EntityLivingBase)entity).worldObj.getPlayerEntityByName(entity.getOwnerName());
-			if (epOwner != null)
-			{
-				epOwner.inventory.addItemStackToInventory(stack);
-			}
-			else
-			{
-	            EntityItem entityitem = new EntityItem(((EntityLivingBase)entity).worldObj, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY, ((EntityLivingBase)entity).posZ, stack);
-            entityitem.delayBeforeCanPickup = 20;
-	            ((EntityLivingBase)entity).worldObj.spawnEntityInWorld(entityitem);
-			}
-            
+            if (epOwner != null)
+            {
+                epOwner.inventory.addItemStackToInventory(stack);
+            }
+            else
+            {
+                EntityItem entityitem = new EntityItem(((EntityLivingBase)entity).worldObj, ((EntityLivingBase)entity).posX, ((EntityLivingBase)entity).posY, ((EntityLivingBase)entity).posZ, stack);
+                entityitem.delayBeforeCanPickup = 20;
+                ((EntityLivingBase)entity).worldObj.spawnEntityInWorld(entityitem);
+            }
         }
     }
 

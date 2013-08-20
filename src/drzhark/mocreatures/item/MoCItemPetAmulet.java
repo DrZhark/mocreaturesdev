@@ -19,6 +19,9 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
@@ -57,7 +60,7 @@ public class MoCItemPetAmulet extends MoCItem
         { 
             return itemstack; 
         }
-        
+
         ageCounter = 0;
         int i = itemstack.getItemDamage();
        
@@ -92,11 +95,10 @@ public class MoCItemPetAmulet extends MoCItem
                 }
                 try
                 {
-                	
-                	if ( spawnClass.equalsIgnoreCase("MoCHorse") || spawnClass.equalsIgnoreCase("WildHorse"))
-                	{
-                		spawnClass = "WildHorse";
-                	}
+                    if ( spawnClass.equalsIgnoreCase("MoCHorse") || spawnClass.equalsIgnoreCase("WildHorse"))
+                    {
+                        spawnClass = "WildHorse";
+                    }
                     EntityLiving tempLiving = MoCTools.spawnListByNameClass(spawnClass, worldObj);
                     if (tempLiving != null && tempLiving instanceof IMoCEntity)
                     {
@@ -122,24 +124,22 @@ public class MoCItemPetAmulet extends MoCItem
                             {
                                 maxCount = MoCreatures.proxy.maxOPTamed;
                             }
-                            if (newOwner == null)
+                            if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0) || !MoCreatures.proxy.enableOwnership)
                             {
-                                if (maxCount > 0 || !MoCreatures.proxy.enableOwnership)
+                                NBTTagCompound petNBT = new NBTTagCompound();
+                                if (tempLiving instanceof MoCEntityTameable)
                                 {
-                                    // create new PetData for new owner
-                                    NBTTagCompound petNBT = new NBTTagCompound();
-                                    storedCreature.writeEntityToNBT(petNBT);
-                                    MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                                    ((MoCEntityTameable)storedCreature).writeEntityToNBT(petNBT);
                                 }
-                            }
-                            else // add pet to existing pet data
-                            {
-                                if (newOwner.getTamedList().tagCount() < maxCount || !MoCreatures.proxy.enableOwnership)
+                                else if (tempLiving instanceof MoCEntityTameableAquatic)
                                 {
-                                    NBTTagCompound petNBT = new NBTTagCompound();
-                                    storedCreature.writeEntityToNBT(petNBT);
-                                    MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
+                                    ((MoCEntityTameableAquatic)storedCreature).writeEntityToNBT(petNBT);
                                 }
+                                else if (tempLiving instanceof MoCEntityTameableAmbient)
+                                {
+                                    ((MoCEntityTameableAmbient)storedCreature).writeEntityToNBT(petNBT);
+                                }
+                                MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)storedCreature, petNBT);
                             }
                             // remove pet entry from old owner
                             if (oldOwner != null)
