@@ -69,7 +69,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
         //changes name
         if ((itemstack != null) && getIsTamed() //&& MoCreatures.isServer()
-                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
+                && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID))|| (itemstack.itemID == Item.field_111212_ci.itemID))
         {
             if (MoCreatures.isServer())
             {
