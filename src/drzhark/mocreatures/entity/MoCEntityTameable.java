@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public abstract class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
+public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
 {
     public MoCEntityTameable(World world)
     {

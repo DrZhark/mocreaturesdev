@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-public abstract class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTameable
+public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTameable
 {
     public MoCEntityTameableAquatic(World world)
     {
