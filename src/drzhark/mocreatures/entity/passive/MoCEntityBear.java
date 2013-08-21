@@ -57,12 +57,7 @@ public class MoCEntityBear extends MoCEntityTameable {
         this.dataWatcher.addObject(23, Byte.valueOf((byte)0));
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
- 
+    
     /**
      * 0 - bear is on fours 1 - standing 2 - sitting
      * 

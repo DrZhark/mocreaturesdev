@@ -28,7 +28,6 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         texture = "shark.png";
         setSize(1.5F, 0.8F);
         setEdad(100 + rand.nextInt(100));
-        //health = 25;
     }
 
     @Override

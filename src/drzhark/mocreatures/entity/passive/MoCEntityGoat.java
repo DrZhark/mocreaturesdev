@@ -33,18 +33,13 @@ public class MoCEntityGoat extends MoCEntityTameable {
     private int tailcount; // 90 to -45
     private int earcount; // 20 to 40 default = 30
     private int eatcount;
-    private float moveSpeed;
+    //private float moveSpeed;
 
-    // TODO
-    /*
-     * sounds poo
-     */
+   
     public MoCEntityGoat(World world)
     {
         super(world);
         setSize(1.4F, 0.9F);
-        //health = 12;
-
         setEdad(70);
     }
 
@@ -56,12 +51,7 @@ public class MoCEntityGoat extends MoCEntityTameable {
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isCharging - 0 false 1 true
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(12.0D); // setMaxHealth
-        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(this.moveSpeed); // setMoveSpeed
-    }
+    
 
     public boolean getUpset()
     {

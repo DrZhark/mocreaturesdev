@@ -64,22 +64,24 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         texture = "blank.jpg";
     }
 
+    @Override
     public ResourceLocation getTexture()
     {
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void func_110147_ax()
+    
+    protected void registerCustomAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
         this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
-
+    
     @Override
     public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
     {
     	selectType();
+    	registerCustomAttributes();
     	return super.func_110161_a(par1EntityLivingData);
     }
     
@@ -649,12 +651,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         int k = MathHelper.floor_double(this.posZ);
         return this.getBlockPathWeight(i, j, k) >= 0.0F;
     }
-
+    
     public boolean getCanSpawnHereLiving()
     {
         return this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox);
     }
-
+    
     public boolean getCanSpawnHereAquatic()
     {
         return worldObj.checkNoEntityCollision(boundingBox);

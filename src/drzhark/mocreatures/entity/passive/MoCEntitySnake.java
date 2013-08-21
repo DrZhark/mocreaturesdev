@@ -69,39 +69,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
         // 9 sea snake (aggressive - venomous)
         if (getType() == 0)
         {
-            int k = rand.nextInt(100);
-            if (k <= 12)
-            {
-                setType(1);
-            }
-            else if (k <= 25)
-            {
-                setType(2);
-            }
-            else if (k <= 37)
-            {
-                setType(3);
-            }
-            else if (k <= 50)
-            {
-                setType(4);
-            }
-            else if (k <= 62)
-            {
-                setType(5);
-            }
-            else if (k <= 75)
-            {
-                setType(6);
-            }
-            else if (k <= 87)
-            {
-                setType(7);
-            }
-            else
-            {
-                setType(8);
-            }
+        	setType(rand.nextInt(8)+1);
         }
     }
 

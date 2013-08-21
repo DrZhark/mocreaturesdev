@@ -25,7 +25,6 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         super(world);
         setSize(1.4F, 1.6F);
-        //health = 20;
     }
 
     public int mouthCounter;
@@ -52,7 +51,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
                 if (j <= (40))
                 {
                     setType(23); //undead
-                } else if (j <= (80))//TODO CHANGE TO 85
+                } else if (j <= (80))
                 {
                     setType(26); //skeleton horse
                 } 

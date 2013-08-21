@@ -13,9 +13,7 @@ public class MoCEntityHellRat extends MoCEntityRat {
     public MoCEntityHellRat(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "hellrat1.png";
         setSize(0.7F, 0.7F);
-        //health = 20;
         isImmuneToFire = true;
     }
 

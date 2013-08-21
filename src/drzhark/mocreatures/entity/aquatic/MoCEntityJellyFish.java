@@ -27,7 +27,6 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     {
         super(world);
         setSize(0.3F, 0.5F);
-        //health = getMaxHealth();
         setEdad(50 + (rand.nextInt(50)));
     }
 

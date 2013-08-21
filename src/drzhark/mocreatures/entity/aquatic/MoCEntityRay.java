@@ -26,9 +26,7 @@ public class MoCEntityRay extends MoCEntityAquatic {
     {
         super(world);
         setSize(1.8F, 0.5F);
-        //health = 10;
         setEdad(50 + (rand.nextInt(50)));
-        moveSpeed = 0.3F;
     }
 
     @Override

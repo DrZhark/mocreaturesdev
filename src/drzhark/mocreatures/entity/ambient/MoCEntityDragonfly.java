@@ -22,23 +22,7 @@ public class MoCEntityDragonfly extends MoCEntityInsect
     {
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
-            if (i <= 25)
-            {
-                setType(1);
-            }
-            else if (i <= 50)
-            {
-                setType(2);
-            }
-            else if (i <= 75)
-            {
-                setType(3);
-            }
-            else
-            {
-                setType(4);
-            }
+        	setType(rand.nextInt(4)+1);
         }
     }
 

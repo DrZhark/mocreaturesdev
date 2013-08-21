@@ -25,7 +25,6 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     {
         super(world);
         setSize(0.8F, 0.8F);
-        //health = getMaxHealth();
         texture = "raccoon.png";
         setEdad(70 + rand.nextInt(30));
     }

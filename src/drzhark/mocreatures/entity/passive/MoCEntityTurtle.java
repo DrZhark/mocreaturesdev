@@ -28,9 +28,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     public MoCEntityTurtle(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "turtle.png";
         setSize(0.6F, 0.4F);
-        //health = 15;
         setAdult(false);
         setEdad(110);
     }

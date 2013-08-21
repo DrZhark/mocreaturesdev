@@ -49,31 +49,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     {
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
-            if (i <= 17)
-            {
-                setType(1);
-            }
-            else if (i <= 34)
-            {
-                setType(2);
-            }
-            else if (i <= 55)
-            {
-                setType(3);
-            }
-            else if (i <= 75)
-            {
-                setType(4);
-            }
-            else if (i <= 90)
-            {
-                setType(5);
-            }
-            else
-            {
-                setType(6);
-            }
+        	setType(rand.nextInt(6)+1);
         }
     }
 

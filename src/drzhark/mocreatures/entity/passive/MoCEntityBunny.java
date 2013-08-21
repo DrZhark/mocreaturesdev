@@ -40,10 +40,10 @@ public class MoCEntityBunny extends MoCEntityTameable {
         bunnyReproduceTickerB = 0;
     }
 
-    protected void func_110147_ax()
+    @Override
+    public float getMaxHealth()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(4.0D); // setMaxHealth
+        return 4;
     }
 
     @Override
@@ -59,27 +59,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         
         if (getType() == 0)
         {
-            int k = rand.nextInt(100);
-            if (k <= 20)
-            {
-                setType(1);
-            }
-            else if (k <= 40)
-            {
-                setType(2);
-            }
-            else if (k <= 60)
-            {
-                setType(3);
-            }
-            else if (k <= 80)
-            {
-                setType(4);
-            }
-            else
-            {
-                setType(5);
-            }
+        	setType(rand.nextInt(5)+1);
         }
 
     }

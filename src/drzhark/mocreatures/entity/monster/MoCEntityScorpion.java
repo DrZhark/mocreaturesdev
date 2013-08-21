@@ -33,7 +33,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         super(world);
         setSize(1.4F, 0.9F);
-        //health = 15;
         poisontimer = 0;
         setAdult(true);
         setEdad(20);

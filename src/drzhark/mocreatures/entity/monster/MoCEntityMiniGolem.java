@@ -26,7 +26,6 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         super(world);
         texture = "minigolem.png";
         setSize(1.0F, 1.0F);
-        //health = getMaxHealth();
     }
 
     @Override

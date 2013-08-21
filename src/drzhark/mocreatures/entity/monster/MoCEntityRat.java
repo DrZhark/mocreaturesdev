@@ -22,15 +22,9 @@ public class MoCEntityRat extends MoCEntityMob {
     {
         super(world);
         setSize(0.5F, 0.5F);
-        //health = 10;
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(1.0D); // setAttackStrength
-    }
-
+    
     @Override
     public void selectType()
     {
@@ -52,6 +46,12 @@ public class MoCEntityRat extends MoCEntityMob {
         }
     }
 
+    @Override
+    protected double getAttackStrenght() 
+    {
+		return 1D;
+	}
+    
     @Override
     public ResourceLocation getTexture()
     {

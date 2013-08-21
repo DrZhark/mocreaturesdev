@@ -23,15 +23,10 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
         setSize(1.5F, 1.5F);
         isImmuneToFire = true;
         burningTime = 30;
-        //health = 15;
-        moveSpeed = 1.1F;
+        
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(this.moveSpeed); // setMoveSpeed
-    }
+   
 
     @Override
     protected void attackEntity(Entity entity, float f)
@@ -80,4 +75,12 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     {
         return 1.1F;
     }
+    
+    @Override
+    public float getMaxHealth()
+    {
+        return 15;
+    }
+
+   
 }

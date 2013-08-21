@@ -57,12 +57,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // rideable: 0 nothing, 1 saddle
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
-
+   
     public void setRideable(boolean flag)
     {
         byte input = (byte) (flag ? 1 : 0);

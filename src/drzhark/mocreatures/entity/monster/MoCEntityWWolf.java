@@ -29,42 +29,21 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public MoCEntityWWolf(World world)
     {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "wolfwild.png";
         setSize(0.9F, 1.3F);
     }
 
-    protected void func_110147_ax()
+    @Override
+    protected double getAttackStrenght() 
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
-    }
-
-    /**
-     * Sets the type and texture of a BigCat if not set already.
-     */
+		return 3D;
+	}
+    
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-
-            int i = rand.nextInt(100);
-            if (i <= 25)
-            {
-                setType(1);
-            }
-            else if (i <= 50)
-            {
-                setType(2);
-            }
-            else if (i <= 75)
-            {
-                setType(5);
-            }
-            else
-            {
-                setType(4);
-            }
+        	setType(rand.nextInt(4)+1);
         }
     }
 

@@ -16,7 +16,6 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
         super(world);
         texture = "silverskeleton.png";
         setSize(0.9F, 1.4F);
-        //health = getMaxHealth();
     }
 
     public int attackCounterLeft;
@@ -117,8 +116,9 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
         }
     public float getMoveSpeed()
     {
-        if (isSprinting()) return 1.2F;
-        return 0.8F;
+    	return 1.2F;
+        /*if (isSprinting()) return 1.2F;
+        return 0.8F;*/
     }
 
     @Override

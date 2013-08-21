@@ -25,31 +25,14 @@ public class MoCEntityMouse extends MoCEntityAnimal
         //health = 4;
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
-
+   
     public void selectType()
     {
         checkSpawningBiome();
         
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
-            if (i <= 50)
-            {
-                setType(1);
-            } 
-            else if (i <= 80)
-            {
-                setType(2);
-            } 
-            else
-            {
-                setType(3);
-            }
+        	setType(rand.nextInt(3)+1);
         }
     }
 

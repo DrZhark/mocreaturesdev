@@ -51,15 +51,19 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void func_110147_ax()
+    protected void registerCustomAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(2.0D); // setAttackStrength
+    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(getAttackStrenght()); // setAttackStrength
         this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
+    
+    protected double getAttackStrenght() 
+    {
+		return 2D;
+	}
 
-    /**
+	/**
      * Put your code to choose a texture / the mob type in here. Will be called
      * by default MocEntity constructors.
      */
@@ -73,6 +77,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
     {
     	selectType();
+    	registerCustomAttributes();
     	return super.func_110161_a(par1EntityLivingData);
     }
     

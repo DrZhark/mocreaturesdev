@@ -60,10 +60,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void func_110147_ax()
+    protected void registerCustomAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
+    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
         this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
     }
 
@@ -71,6 +70,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
     {
     	selectType();
+    	registerCustomAttributes();
     	return super.func_110161_a(par1EntityLivingData);
     }
 

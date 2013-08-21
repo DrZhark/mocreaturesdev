@@ -33,13 +33,7 @@ public class MoCEntityFox extends MoCEntityTameable {
         force = 2;
         attackRange = 4D;
     }
-
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(15.0D); // setMaxHealth
-    }
-
+    
     @Override
     protected void attackEntity(Entity entity, float f)
     {

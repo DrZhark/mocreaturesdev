@@ -99,12 +99,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         dataWatcher.addObject(26, Byte.valueOf((byte) 0)); // Bred - 0 false 1 true
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(20.0D); // setMaxHealth
-    }
-
+   
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
@@ -362,11 +357,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
             }
             if (i > 1F)
             {
-                attackEntityFrom(DamageSource.fall, i);
+            	attackEntityFrom(DamageSource.fall, i);
             }
             if ((riddenByEntity != null) && (i > 1F))
             {
-                riddenByEntity.attackEntityFrom(DamageSource.fall, i);
+            	riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }
 
             int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023221D - prevRotationPitch), MathHelper.floor_double(posZ));
@@ -1271,7 +1266,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         if (super.interact(entityplayer)) { return false; }
         if (this.getType() == 60 && !getIsTamed() && isZebraRunning()) // zebra
         { return false; }
-
+        
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
         if ((itemstack != null) && !getIsRideable() && itemstack.itemID == Item.saddle.itemID)
@@ -1283,7 +1278,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             setRideable(true);
             return true;
         }
-
+        
         if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111215_ce.itemID && isArmored())
         {
             if (getArmorType() == 0)
@@ -2249,11 +2244,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 if (!flag)
                 {
                 	if (!ReadyforParenting((MoCEntityHorse)horsemate))
-                {
-                    return;
+                	{	
+                		return;
+                	}
                 }
-                }
-
+                
                 if (rand.nextInt(100) == 0)
                 {
                     gestationtime++;

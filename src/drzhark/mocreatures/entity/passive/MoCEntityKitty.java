@@ -54,50 +54,13 @@ public class MoCEntityKitty extends MoCEntityTameable {
         foundTree = false;
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(15.0D); // setMaxHealth
-    }
-
+    
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
-            if (i <= 15)
-            {
-                setType(1);
-            }
-            else if (i <= 30)
-            {
-                setType(2);
-            }
-            else if (i <= 45)
-            {
-                setType(3);
-            }
-            else if (i <= 60)
-            {
-                setType(4);
-            }
-            else if (i <= 70)
-            {
-                setType(5);
-            }
-            else if (i <= 80)
-            {
-                setType(6);
-            }
-            else if (i <= 90)
-            {
-                setType(7);
-            }
-            else
-            {
-                setType(8);
-            }
+        	setType(rand.nextInt(8)+1);
         }
     }
 

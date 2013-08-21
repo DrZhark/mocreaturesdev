@@ -26,17 +26,17 @@ public class MoCEntityOgre extends MoCEntityMob{
     {
         super(world);
         setSize(1.9F, 3F);
-        //health = 35;
         isImmuneToFire = false;
         frequencyA = 30;
     }
 
-    protected void func_110147_ax()
+    @Override
+    protected double getAttackStrenght() 
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(3.0D); // setAttackStrength
-    }
-
+		return 3D;
+	}
+    
+    
     @Override
     public void selectType()
     {

@@ -40,7 +40,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     {
         super(world);
         setSize(1.9F, 1.7F);
-        //health = getMaxHealth();
         setAdult(false);
         this.stepHeight = 1.0F;
 

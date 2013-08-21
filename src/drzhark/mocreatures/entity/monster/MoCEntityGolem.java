@@ -37,7 +37,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         super(world);
         texture = "golemt.png";
         setSize(1.5F, 4F);
-        //health = getMaxHealth();
     }
 
     @Override

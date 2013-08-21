@@ -21,7 +21,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     {
         super(world);
         setSize(0.3F, 0.3F);
-        //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
     }
 
@@ -35,7 +34,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     {
        return MoCreatures.proxy.getTexture("smallfish_piranha.png");
     }
-
+    
     @Override
     protected Entity findPlayerToAttack()
     {

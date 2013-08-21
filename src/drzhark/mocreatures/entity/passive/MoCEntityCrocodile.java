@@ -50,10 +50,10 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
         dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // caughtPrey - 0 false 1 true
     }
 
-    protected void func_110147_ax()
+    @Override
+    public float getMaxHealth()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(25.0D); // setMaxHealth
+        return 25;
     }
 
     public boolean getIsBiting()

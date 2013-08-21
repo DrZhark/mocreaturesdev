@@ -41,10 +41,10 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         }
     }
 
-    protected void func_110147_ax()
+    @Override
+    public float getMaxHealth()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(10.0D); // setMaxHealth
+        return 10;
     }
 
     @Override

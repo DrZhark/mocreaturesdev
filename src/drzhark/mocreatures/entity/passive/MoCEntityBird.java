@@ -49,35 +49,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     {
         if (getType() == 0)
         {
-            int i = rand.nextInt(100);
-            if (i <= 15)
-            {
-                setType(1);// = 1;
-            }
-            else if (i <= 30)
-            {
-                setType(2);
-            }
-            else if (i <= 45)
-            {
-                setType(3);
-            }
-            else if (i <= 60)
-            {
-                setType(4);
-            }
-            else if (i <= 75)
-            {
-                setType(5);
-            }
-            else if (i <= 90)
-            {
-                setType(6);
-            }
-            else
-            {
-                setType(2);
-            }
+        	setType(rand.nextInt(6)+1);
         }
     }
 

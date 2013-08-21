@@ -32,7 +32,6 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
     {
         super(world);
         setSize(0.3F, 0.3F);
-        //health = getMaxHealth();
         setEdad(30 + rand.nextInt(70));
         
     }

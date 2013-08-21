@@ -65,12 +65,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
         }
     }
 
-    protected void func_110147_ax()
-    {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(40.0D); // setMaxHealth
-    }
-
+    
     @Override
     public void selectType()
     {
