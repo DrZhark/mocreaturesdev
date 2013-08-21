@@ -935,8 +935,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 boundingBox.maxY = riddenByEntity.boundingBox.maxY;
                 if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir()))
                 {
-                    motionX += riddenByEntity.motionX * getCustomSpeed();
-                    motionZ += riddenByEntity.motionZ * getCustomSpeed();
+                    //motionX += riddenByEntity.motionX * getCustomSpeed();
+                    //motionZ += riddenByEntity.motionZ * getCustomSpeed();
                     
                     par1 = (float) (((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.5F * getCustomSpeed());
                     par2 = (float) (((EntityLivingBase)this.riddenByEntity).moveForward * getCustomSpeed());
@@ -1035,7 +1035,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
             if (isFlyer() && (riddenByEntity != null) && getIsTamed())
             {
-            	motionY += 0.08D;
+            	motionY += 0.15D;
                 motionY *= myFallSpeed();//0.6D;
             }
             else if (!isFlyingAlone())
