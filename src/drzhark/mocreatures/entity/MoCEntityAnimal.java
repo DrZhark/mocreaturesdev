@@ -306,7 +306,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      */
     public boolean entitiesToInclude(Entity entity)
     {
-        return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
+        return ( (entity.getClass() != this.getClass()) && (entity instanceof EntityLivingBase) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
     }
 
     @Override
@@ -589,7 +589,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }

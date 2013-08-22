@@ -3,6 +3,7 @@ package drzhark.mocreatures.client.renderer.entity;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,15 +31,9 @@ public class MoCRenderTRock extends Render {
     {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) par2, (float) par4, (float) par6);
-        //GL11.glRotatef((float) ((150 - entitytrock.acceleration) * 10F), 0F, -1F, 0.0F);
         GL11.glRotatef((float) (((100 - entitytrock.acceleration) / 10F) * 36F), 0F, -1F, 0.0F);
-        //this.loadTexture("/terrain.png");
-        textureManager.func_110577_a(TEXTURE_TERRAIN);
+        this.func_110777_b(entitytrock);
         this.blockRenderer.renderBlockAsItem(entitytrock.getMyBLock(), entitytrock.getMetadata(), entitytrock.getBrightness(par9));
-        //float rotF = (float) entitytrock.acceleration;
-        //GL11.glRotatef(rotF, -1F, 0.0F, 0.0F);
-        //GL11.glRotatef((float) (entitytrock.acceleration * 180F), -1F, 0.0F, 0.0F);
-
         GL11.glPopMatrix();
     }
 
@@ -48,10 +43,13 @@ public class MoCRenderTRock extends Render {
         this.renderMyRock((MoCEntityThrowableRock) par1Entity, par2, par4, par6, par8, par9);
     }
 
-    @Override
-    protected ResourceLocation func_110775_a(Entity entity) {
-        // TODO Auto-generated method stub
-        return null;
+    protected ResourceLocation func_110808_a(MoCEntityThrowableRock trock)
+    {
+        return TextureMap.field_110575_b;
     }
 
+    protected ResourceLocation func_110775_a(Entity par1Entity)
+    {
+        return this.func_110808_a((MoCEntityThrowableRock)par1Entity);
+    }
 }

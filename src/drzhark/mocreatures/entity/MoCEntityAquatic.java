@@ -615,9 +615,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                         continue;
                     }
                     float f = getDistanceToEntity(entity);
-                    if ((f < 2.0F) && (rand.nextInt(10) == 0))
+                    if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                    	attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
                     }
                 }
             }

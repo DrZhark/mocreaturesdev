@@ -1163,7 +1163,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
      */
     public boolean entitiesToInclude(Entity entity)
     {
-        return ((entity instanceof EntityLiving) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
+        return ((entity instanceof EntityLivingBase) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
     }
 
     public void runLikeHell(Entity entity)
