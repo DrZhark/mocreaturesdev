@@ -82,6 +82,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     {
     	selectType();
     	registerCustomAttributes();
+    	this.setEntityHealth((float) this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111126_e());
     	return super.func_110161_a(par1EntityLivingData);
     }
     
