@@ -4,6 +4,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,6 +38,16 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); //hunched
     }
 
+    @Override
+    public void setEntityHealth(float par1)
+    {
+    	if (this.getIsHumanForm() && par1>15F)
+    	{
+    		par1 = 15F;
+    	}
+    	super.setEntityHealth(par1);
+    }
+    
     @Override
     public void selectType()
     {
@@ -225,7 +236,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     @Override
     public float getMaxHealth()
     {
-        return 15;
+        return 40F;
     }
 
     @Override

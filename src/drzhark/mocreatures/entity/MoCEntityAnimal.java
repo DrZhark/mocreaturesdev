@@ -345,7 +345,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         {
             followPlayer();
         }
-        //moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
     }
 
