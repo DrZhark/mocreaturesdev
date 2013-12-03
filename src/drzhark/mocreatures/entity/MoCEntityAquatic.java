@@ -622,10 +622,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                     }
                 }
             }
-            if (entityplayer.isSneaking())
+            /*if (entityplayer.isSneaking())
             {
                 this.makeEntityDive();
-            }
+            }*/
         }
     }
 

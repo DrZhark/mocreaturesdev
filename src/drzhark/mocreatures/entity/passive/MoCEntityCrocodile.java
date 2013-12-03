@@ -386,7 +386,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
             Entity entity = damagesource.getEntity();
             if (entity != null && riddenByEntity == entity)
             {
-                if (rand.nextInt(10) != 0)
+                if (rand.nextInt(2) != 0)
                 {
                     return false;
                 }

@@ -60,7 +60,7 @@ public class MoCKeyHandler extends KeyHandler {
         if (kbGui)
         {
             localScreen = MoCClientProxy.instance.MoCScreen;
-            if (MoCClientProxy.mc.inGameHasFocus)
+            if (MoCClientProxy.mc.inGameHasFocus && (localScreen.theWidget != null))
             {
                 GuiModScreen.show(localScreen.theWidget);
             }

@@ -1,46 +1,16 @@
 package drzhark.mocreatures;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
-import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityCaveSpider;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
@@ -48,31 +18,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.storage.MapStorage;
-import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerAboutToStart;
-import cpw.mods.fml.common.Mod.ServerStarted;
-import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -83,9 +41,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.customspawner.CustomSpawner;
-import drzhark.mocreatures.block.MoCBlock;
 import drzhark.mocreatures.block.MoCBlockDirt;
-import drzhark.mocreatures.block.MoCBlockFarm;
 import drzhark.mocreatures.block.MoCBlockGrass;
 import drzhark.mocreatures.block.MoCBlockLeaf;
 import drzhark.mocreatures.block.MoCBlockLog;
@@ -93,9 +49,7 @@ import drzhark.mocreatures.block.MoCBlockPlanks;
 import drzhark.mocreatures.block.MoCBlockRock;
 import drzhark.mocreatures.block.MoCBlockTallGrass;
 import drzhark.mocreatures.block.MultiItemBlock;
-import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
-import drzhark.mocreatures.client.renderer.texture.MoCTextures;
 import drzhark.mocreatures.command.CommandMoCreatures;
 import drzhark.mocreatures.dimension.BiomeGenWyvernLair;
 import drzhark.mocreatures.dimension.WorldProviderWyvernEnd;
@@ -130,7 +84,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityHellRat;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
 import drzhark.mocreatures.entity.monster.MoCEntityMiniGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityRat;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
@@ -146,11 +99,13 @@ import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityDeer;
 import drzhark.mocreatures.entity.passive.MoCEntityDuck;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
+import drzhark.mocreatures.entity.passive.MoCEntityEnt;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityMole;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -160,19 +115,19 @@ import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.item.ItemBuilderHammer;
-import drzhark.mocreatures.item.ItemStaffTeleport;
 import drzhark.mocreatures.item.ItemStaffPortal;
+import drzhark.mocreatures.item.ItemStaffTeleport;
 import drzhark.mocreatures.item.MoCItem;
-import drzhark.mocreatures.item.MoCItemHorseAmulet;
 import drzhark.mocreatures.item.MoCItemArmor;
 import drzhark.mocreatures.item.MoCItemEgg;
 import drzhark.mocreatures.item.MoCItemFishBowl;
-import drzhark.mocreatures.item.MoCItemPetAmulet;
 import drzhark.mocreatures.item.MoCItemFood;
 import drzhark.mocreatures.item.MoCItemHayStack;
+import drzhark.mocreatures.item.MoCItemHorseAmulet;
 import drzhark.mocreatures.item.MoCItemHorseSaddle;
 import drzhark.mocreatures.item.MoCItemKittyBed;
 import drzhark.mocreatures.item.MoCItemLitterBox;
+import drzhark.mocreatures.item.MoCItemPetAmulet;
 import drzhark.mocreatures.item.MoCItemRecord;
 import drzhark.mocreatures.item.MoCItemSugarLump;
 import drzhark.mocreatures.item.MoCItemTurtleSoup;
@@ -180,7 +135,7 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.0.0.dev5")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -224,7 +179,7 @@ public class MoCreatures {
     static EnumArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", 20, new int[] { 3, 7, 6, 3 }, 15);
     static EnumArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
     static EnumArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", 15, new int[] { 2, 6, 5, 2 }, 15);
-    static EnumToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 2, 15);
+    static EnumToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 4, 15);
 
     public static Item horsesaddle;
     //public static Item horsearmormetal;
@@ -459,6 +414,10 @@ public class MoCreatures {
         registerEntity(MoCEntityMediumFish.class, "MediumFish", 33023, 16622, false);
         registerEntity(MoCEntitySmallFish.class, "SmallFish", 33023, 65407, false);
         registerEntity(MoCEntityPiranha.class, "Piranha", 33023, 16711680, false);
+        registerEntity(MoCEntityEnt.class, "Ent", 12623485, 16711680, false);
+        registerEntity(MoCEntityMole.class, "Mole", 14020607, 16711680, false);
+
+        
         
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -518,7 +477,7 @@ public class MoCreatures {
                 biomeList.add(BiomeGenBase.biomeList[j]);
             }
         }
-        if (biomeList.size() > 0)
+        if (proxy.useCustomSpawner && biomeList.size() > 0)
         {
            // if (proxy.debugLogging) log.info("Removing entity " + entityData.getEntityClass() + " with type " + entityData.getType() + " from all biome spawnlists.");
             allBiomes = biomeList.toArray(allBiomes);

@@ -72,7 +72,7 @@ public class MoCRenderScorpion extends MoCRenderMoC {
 
     protected void adjustHeight(EntityLiving entityliving)
     {
-        GL11.glTranslatef(0.0F, -0.2F, 0.0F);
+        GL11.glTranslatef(0.0F, -0.1F, 0.0F);
     }
 
     protected void rotateAnimal(EntityLiving entityliving)

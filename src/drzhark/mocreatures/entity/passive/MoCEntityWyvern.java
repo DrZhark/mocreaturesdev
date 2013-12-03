@@ -34,7 +34,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     public int mouthCounter;
     public int wingFlapCounter;
     public int diveCounter;
-	public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark" };
+	public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave", "Mountain", "Sea" };
     
     public MoCEntityWyvern(World world)
     {
@@ -127,21 +127,37 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
-            if (i <= 25)
+            if (i <= 12)
             {
                 setType(1);
             }
-            else if (i <= 50)
+            else if (i <= 24)
             {
                 setType(2);
             }
-            else if (i <= 75)
+            else if (i <= 36)
             {
                 setType(3);
             }
-            else if (i <= 95)
+            else if (i <= 48)
             {
                 setType(4);
+            }
+            else if (i <= 60)
+            {
+                setType(9);
+            }
+            else if (i <= 72)
+            {
+                setType(10);
+            }
+            else if (i <= 84)
+            {
+                setType(11);
+            }
+            else if (i <= 95)
+            {
+                setType(12);
             }
             else
             {
@@ -177,6 +193,14 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return MoCreatures.proxy.getTexture("wyvernlight.png");
         case 8:
             return MoCreatures.proxy.getTexture("wyverndark.png");
+        case 9:
+            return MoCreatures.proxy.getTexture("wyvernarctic.png");
+        case 10:
+            return MoCreatures.proxy.getTexture("wyverncave.png");
+        case 11:
+            return MoCreatures.proxy.getTexture("wyvernmountain.png");
+        case 12:
+            return MoCreatures.proxy.getTexture("wyvernsea.png");
         /*case 9:
             return MoCreatures.proxy.getTexture("wyvernnether.png";*/
         default:

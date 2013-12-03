@@ -45,7 +45,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.3.0.dev1")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "2.3.1")
 public final class CustomSpawner {
     private int maxCreatures;
     private int maxMonsters;

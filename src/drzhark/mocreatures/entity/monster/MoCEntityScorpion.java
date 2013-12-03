@@ -529,4 +529,10 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         return EnumCreatureAttribute.ARTHROPOD;
     }
+    
+    @Override
+    public float getAdjustedYOffset()
+    {
+        return 30F;
+    }
 }

@@ -1462,7 +1462,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (this.isMagicHorse())
             {
-                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
+                if (getIsAdult())// && func_110143_aJ() == getMaxHealth()) //TODO CHECK FIX FAIRY BUG
                 {
                     this.eatenpumpkin = true;
                 }
