@@ -439,4 +439,10 @@ public class MoCEntityEgg extends EntityLiving {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setInteger("EggType", getEggType());
     }
+    
+    @Override
+    public boolean isEntityInsideOpaqueBlock()
+    {
+        return false;
+    }
 }

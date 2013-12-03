@@ -236,6 +236,12 @@ public class MoCEntityBunny extends MoCEntityTameable {
                     MoCEntityBunny entitybunny1 = new MoCEntityBunny(worldObj);
                     entitybunny1.setPosition(posX, posY, posZ);
                     entitybunny1.setAdult(false);
+                    int babytype = this.getType();
+                    if (rand.nextInt(2) == 0)
+                    {
+                    	babytype = entitybunny.getType();
+                    }
+                    entitybunny1.setType(babytype);
                     worldObj.spawnEntityInWorld(entitybunny1);
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
                     proceed();
@@ -333,5 +339,11 @@ public class MoCEntityBunny extends MoCEntityTameable {
             return false;
         }
         return super.attackEntityFrom(damagesource, i);
+    }
+    
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
     }
 }

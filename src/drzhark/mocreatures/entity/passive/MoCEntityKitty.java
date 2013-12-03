@@ -1302,6 +1302,12 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 for (int l2 = 0; l2 < i2; l2++)
                 {
                     MoCEntityKitty entitykitty1 = new MoCEntityKitty(worldObj);
+                    int babytype = this.getType();
+                    if (rand.nextInt(2) == 0)
+                    {
+                    	babytype = (rand.nextInt(8)+1);
+                    }
+                    entitykitty1.setType(babytype);
                     entitykitty1.setPosition(posX, posY, posZ);
                     worldObj.spawnEntityInWorld(entitykitty1);
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
@@ -1476,5 +1482,11 @@ public class MoCEntityKitty extends MoCEntityTameable {
             }
         }
         super.onDeath(damagesource);
+    }
+    
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
     }
 }

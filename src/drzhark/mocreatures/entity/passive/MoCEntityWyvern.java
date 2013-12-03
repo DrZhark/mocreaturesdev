@@ -896,4 +896,10 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         }
         return super.getCreatureAttribute();
     }
+    
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
+    }
 }

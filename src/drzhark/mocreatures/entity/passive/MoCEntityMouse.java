@@ -254,4 +254,11 @@ public class MoCEntityMouse extends MoCEntityAnimal
     {
         return true;
     }
+    
+    
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
+    }
 }

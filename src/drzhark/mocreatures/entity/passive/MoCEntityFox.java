@@ -176,6 +176,10 @@ public class MoCEntityFox extends MoCEntityTameable {
             {
                 continue;
             }
+            if (this.getIsTamed() && entity1 instanceof MoCEntityTameable && ((MoCEntityTameable)entity1).getIsTamed())
+            {
+            	continue;
+            }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
             if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
             {
@@ -239,5 +243,11 @@ public class MoCEntityFox extends MoCEntityTameable {
     public double roperYOffset()
     {
         return 0.8D;
+    }
+    
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
     }
 }
