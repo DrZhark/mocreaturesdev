@@ -1,12 +1,8 @@
 package drzhark.mocreatures.entity.monster;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -14,7 +10,6 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityMiniGolem extends MoCEntityMob {
 
@@ -26,6 +21,12 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         super(world);
         texture = "minigolem.png";
         setSize(1.0F, 1.0F);
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
     }
 
     @Override
@@ -239,11 +240,5 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     protected String getLivingSound()
     {
         return null;
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 15;
     }
 }

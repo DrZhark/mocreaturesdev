@@ -1,12 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import java.util.List;
-import java.util.Map;
-
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -14,6 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTameable
 {
@@ -68,7 +64,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         }
 
         //changes name
-        if (itemstack != null && getIsTamed() && (itemstack.itemID == MoCreatures.medallion.itemID || itemstack.itemID == Item.book.itemID || itemstack.itemID == Item.field_111212_ci.itemID))
+        if (itemstack != null && getIsTamed() && (itemstack.itemID == MoCreatures.medallion.itemID || itemstack.itemID == Item.book.itemID || itemstack.itemID == Item.nameTag.itemID))
         {
             if (MoCreatures.isServer())
             {
@@ -128,7 +124,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             return true;
         }
@@ -157,7 +153,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             return true;
         }

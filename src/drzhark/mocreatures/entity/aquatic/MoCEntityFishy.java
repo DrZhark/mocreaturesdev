@@ -2,25 +2,23 @@ package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
@@ -34,6 +32,12 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(50 + rand.nextInt(50));
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -73,12 +77,6 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         default:
             return MoCreatures.proxy.getTexture("fishy1.png");
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 6;
     }
 
     @Override
@@ -173,9 +171,9 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 }
             }
 
-            if (getIsTamed() && rand.nextInt(100) == 0 && func_110143_aJ() < getMaxHealth())
+            if (getIsTamed() && rand.nextInt(100) == 0 && getHealth() < getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
 
             if (!ReadyforParenting(this)) { return; }

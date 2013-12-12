@@ -1,9 +1,5 @@
 package drzhark.mocreatures.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +7,10 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCItemArmor extends ItemArmor
 {

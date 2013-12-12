@@ -1,10 +1,8 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,6 +11,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
 
 public class MoCEntityWerewolf extends MoCEntityMob {
     private boolean transforming;
@@ -30,6 +30,12 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         setHumanForm(true);
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40.0D);
+    }
+
     @Override
     protected void entityInit()
     {
@@ -39,13 +45,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public void setEntityHealth(float par1)
+    public void setHealth(float par1)
     {
-    	if (this.getIsHumanForm() && par1>15F)
-    	{
-    		par1 = 15F;
-    	}
-    	super.setEntityHealth(par1);
+        if (this.getIsHumanForm() && par1>15F)
+        {
+            par1 = 15F;
+        }
+        super.setHealth(par1);
     }
     
     @Override
@@ -234,12 +240,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 40F;
-    }
-
-    @Override
     protected int getDropItemId()
     {
         int i = rand.nextInt(12);
@@ -328,12 +328,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         {
             return "mocreatures:werewolfgrunt";
         }
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 1;
     }
 
     public boolean IsNight()
@@ -466,13 +460,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         if (getIsHumanForm())
         {
             setHumanForm(false);
-            this.setEntityHealth(40);
+            this.setHealth(40);
             transforming = false;
         }
         else
         {
             setHumanForm(true);
-            this.setEntityHealth(15);
+            this.setHealth(15);
             transforming = false;
         }
     }

@@ -1,11 +1,11 @@
 package drzhark.mocreatures.entity.ambient;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityInsect;
 
 public class MoCEntityDragonfly extends MoCEntityInsect
 {
@@ -22,7 +22,7 @@ public class MoCEntityDragonfly extends MoCEntityInsect
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(4)+1);
+            setType(rand.nextInt(4)+1);
         }
     }
 

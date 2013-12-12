@@ -1,23 +1,21 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCEntityRay extends MoCEntityAquatic {
+public class MoCEntityRay extends MoCEntityTameableAquatic {
 
     private int poisoncounter;
     private int tailCounter;
@@ -27,6 +25,12 @@ public class MoCEntityRay extends MoCEntityAquatic {
         super(world);
         setSize(1.8F, 0.5F);
         setEdad(50 + (rand.nextInt(50)));
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() == 2 ? 10.0D : 20.0D);
     }
 
     @Override
@@ -64,16 +68,6 @@ public class MoCEntityRay extends MoCEntityAquatic {
         default:
             return MoCreatures.proxy.getTexture("stingray.png");
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        if (getType() == 2)
-        {
-            return 10;
-        }
-        return 20;
     }
 
     @Override
@@ -174,8 +168,9 @@ public class MoCEntityRay extends MoCEntityAquatic {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (s != "Ocean")
+        //String s = MoCTools.BiomeName(worldObj, i, j, k);
+        BiomeGenBase biome = MoCTools.Biomekind(worldObj, i, j, k);
+        if (!BiomeDictionary.isBiomeOfType(biome, Type.WATER))
         {
             setType(2);
         }

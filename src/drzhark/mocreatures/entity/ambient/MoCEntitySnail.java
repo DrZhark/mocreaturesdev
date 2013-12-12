@@ -1,13 +1,12 @@
 package drzhark.mocreatures.entity.ambient;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAmbient;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAmbient;
 
 public class MoCEntitySnail extends MoCEntityAmbient
 {
@@ -26,16 +25,17 @@ public class MoCEntitySnail extends MoCEntityAmbient
         dataWatcher.addObject(22, Byte.valueOf((byte) 0));
     }
 
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
+
     @Override
     protected boolean isMovementCeased()
     {
         return (getIsHiding());
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 2;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(6)+1);
+            setType(rand.nextInt(6)+1);
         }
     }
 
@@ -150,7 +150,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     }
 
     @Override
-    protected void jump()
+    public void jump()
     {
     }
 }

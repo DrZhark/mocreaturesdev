@@ -1,9 +1,8 @@
 package drzhark.mocreatures.entity.ambient;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 
 public class MoCEntityMaggot extends MoCEntityAmbient
@@ -16,10 +15,10 @@ public class MoCEntityMaggot extends MoCEntityAmbient
         texture = "maggot.png";
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 2;
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(2.0D);
     }
 
     @Override
@@ -51,8 +50,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     }
 
     @Override
-    protected void jump()
+    public void jump()
     {
     }
-
 }

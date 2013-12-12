@@ -1,12 +1,10 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import drzhark.mocreatures.entity.MoCEntityMob;
 
 public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 {
@@ -20,10 +18,11 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         //health = 10;
     }
 
-    protected void func_110147_ax()
+    protected void applyEntityAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
     }
 
     public boolean d2()
@@ -77,12 +76,6 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     public boolean isFlyer()
     {
         return true;
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 10;
     }
 
     @Override

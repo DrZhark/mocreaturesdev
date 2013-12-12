@@ -2,7 +2,6 @@ package drzhark.mocreatures.dimension;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
@@ -21,6 +20,12 @@ public class BiomeGenWyvernLair extends BiomeGenBase
     {
         super(par1);
         spawnableCreatureList.clear();
+        spawnableMonsterList.clear();
+        spawnableWaterCreatureList.clear();
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntityBunny.class, 8, 2, 3));
+        //spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 8, 1, 2));
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3));
         topBlock = (byte)MoCreatures.mocGrass.blockID;
         fillerBlock = (byte)MoCreatures.mocDirt.blockID;
         this.minHeight = 0.3F;
@@ -31,7 +36,6 @@ public class BiomeGenWyvernLair extends BiomeGenBase
         this.theBiomeDecorator.flowersPerChunk = -999;
         this.theBiomeDecorator.mushroomsPerChunk = 20;
         this.theBiomeDecorator.treesPerChunk = 4;
-        this.spawnableMonsterList.clear();
     }
 
     /**

@@ -21,7 +21,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 @SideOnly(Side.CLIENT)
 public class MoCRenderGoat extends RenderLiving {
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityGoat)par1Entity).getTexture();
     }
 
@@ -114,7 +114,7 @@ public class MoCRenderGoat extends RenderLiving {
                     }
                     tessellator.startDrawingQuads();
                     // might break SSP
-                    float f6 = entitygoat.func_110143_aJ();
+                    float f6 = entitygoat.getHealth();
                     // maxhealth is always 30 for dolphins so we do not need to use a datawatcher
                     float f7 = entitygoat.getMaxHealth();
                     float f8 = f6 / f7;

@@ -10,9 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelTurtle;
-import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 
 @SideOnly(Side.CLIENT)
@@ -79,7 +77,7 @@ public class MoCRenderTurtle extends MoCRenderMoC {
         GL11.glScalef(f, f, f);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityTurtle)par1Entity).getTexture();
     }
 }

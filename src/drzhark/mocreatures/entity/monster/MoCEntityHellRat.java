@@ -1,10 +1,11 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityHellRat extends MoCEntityRat {
 
@@ -15,6 +16,12 @@ public class MoCEntityHellRat extends MoCEntityRat {
         super(world);
         setSize(0.7F, 0.7F);
         isImmuneToFire = true;
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
     }
 
     @Override
@@ -41,12 +48,6 @@ public class MoCEntityHellRat extends MoCEntityRat {
         String textNumber = "" + textCounter;
         textNumber = textNumber.substring(0, 1);
         return MoCreatures.proxy.getTexture("hellrat" + textNumber + ".png");
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 20;
     }
 
     @Override

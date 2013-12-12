@@ -1,14 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,6 +14,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityBird extends MoCEntityTameable {
     private boolean fleeing;
@@ -44,12 +43,18 @@ public class MoCEntityBird extends MoCEntityTameable {
         setTamed(false);
     }
 
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(8.0D);
+    }
+
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(6)+1);
+            setType(rand.nextInt(6)+1);
         }
     }
 
@@ -270,12 +275,6 @@ public class MoCEntityBird extends MoCEntityTameable {
         }
     }
 
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
-    }
-
     public boolean getPicked()
     {
         return isPicked;
@@ -464,7 +463,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && (this.func_110143_aJ() > 0))
+        if (MoCreatures.isServer() && getIsTamed() && (this.getHealth() > 0))
         {
             return;
         }
@@ -548,11 +547,6 @@ public class MoCEntityBird extends MoCEntityTameable {
     {
         return -40;
 
-    }
-
-    public float getMaxHealth()
-    {
-        return 8;
     }
 
     @Override

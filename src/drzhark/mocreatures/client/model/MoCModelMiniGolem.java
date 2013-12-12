@@ -1,11 +1,11 @@
 
 package drzhark.mocreatures.client.model;
 
-import drzhark.mocreatures.entity.monster.MoCEntityMiniGolem;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
+import drzhark.mocreatures.entity.monster.MoCEntityMiniGolem;
 
 public class MoCModelMiniGolem extends ModelBase
 {
@@ -114,12 +114,12 @@ public class MoCModelMiniGolem extends ModelBase
     
     if (angry)
     {
-    	HeadRed.render(f5);
-    	BodyRed.render(f5);
+        HeadRed.render(f5);
+        BodyRed.render(f5);
     }else
     {
-    	Head.render(f5);
-    	Body.render(f5);
+        Head.render(f5);
+        Body.render(f5);
     }
     
     LeftShoulder.render(f5);
@@ -145,8 +145,8 @@ public class MoCModelMiniGolem extends ModelBase
   
   public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, boolean hasRock)
   {
-	  float hRotY = f3 / 57.29578F;
-	  float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
+      float hRotY = f3 / 57.29578F;
+      float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
       float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
       
       RightLeg.rotateAngleX = RLegXRot;
@@ -159,13 +159,13 @@ public class MoCModelMiniGolem extends ModelBase
       
       if (hasRock)
       {
-    	  LeftShoulder.rotateAngleZ = 0F;
+          LeftShoulder.rotateAngleZ = 0F;
           LeftShoulder.rotateAngleX = -180F / radianF;
           RightShoulder.rotateAngleZ =  0F;
           RightShoulder.rotateAngleX = -180F / radianF;
       }else
       {
-    	  LeftShoulder.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
+          LeftShoulder.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
           LeftShoulder.rotateAngleX = RLegXRot;
           RightShoulder.rotateAngleZ = -(MathHelper.cos(f2 * 0.09F) * 0.05F) + 0.05F;
           RightShoulder.rotateAngleX = LLegXRot;

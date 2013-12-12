@@ -2,23 +2,19 @@ package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
-import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 
 public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
@@ -30,6 +26,12 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         setSize(1.5F, 0.8F);
         setEdad(80 + rand.nextInt(100));
         //health = 30;
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(30.0D);
     }
 
     @Override
@@ -152,12 +154,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         default:
             return 1.5D;
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 30;
     }
 
     @Override
@@ -333,9 +329,9 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                     setTemper(getMaxTemper() - 1);
                 }
 
-                if ((func_110143_aJ() + 15) > getMaxHealth())
+                if ((getHealth() + 15) > getMaxHealth())
                 {
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                 }
 
                 if (!getIsAdult())
@@ -348,28 +344,15 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
             return true;
         }
-        if ((itemstack != null) && ((itemstack.itemID == Item.appleRed.itemID) || (itemstack.itemID == Item.appleGold.itemID)))
-        {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
-
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
-            return true;
-        }
         if ((itemstack != null) && (itemstack.itemID == Item.fishCooked.itemID) && getIsTamed() && getIsAdult())
         {
             if (--itemstack.stackSize == 0)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            if ((func_110143_aJ() + 25) > getMaxHealth())
+            if ((getHealth() + 25) > getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             setHasEaten(true);
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
@@ -428,7 +411,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                         {
                             setTemper(getMaxTemper() - 1);
                         }
-                        this.setEntityHealth(getMaxHealth());
+                        this.setHealth(getMaxHealth());
                     }
                 }
             }
@@ -497,7 +480,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && (func_110143_aJ() > 0))
+        if (MoCreatures.isServer() && getIsTamed() && (getHealth() > 0))
         {
             return;
         }
@@ -520,5 +503,11 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("DisplayName", getDisplayName());
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 1;
     }
 }

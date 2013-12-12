@@ -1,16 +1,13 @@
 package drzhark.mocreatures.entity.ambient;
 
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAmbient;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.item.Item;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityCrab extends MoCEntityTameableAmbient
 
@@ -23,10 +20,10 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         setEdad(50 + rand.nextInt(50));
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 6;
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -107,7 +104,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
     }
 
     @Override
-    protected void jump()
+    public void jump()
     {
     }
 

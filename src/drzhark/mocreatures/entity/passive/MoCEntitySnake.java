@@ -1,14 +1,9 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
@@ -18,6 +13,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 
 /**
@@ -31,6 +33,7 @@ import net.minecraft.world.World;
  */
 
 public class MoCEntitySnake extends MoCEntityTameable {
+
     private float fTongue;
     private float fMouth;
     private boolean isBiting;
@@ -54,6 +57,12 @@ public class MoCEntitySnake extends MoCEntityTameable {
         setEdad(50 + rand.nextInt(50));
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+    }
+
     @Override
     public void selectType()
     {
@@ -69,7 +78,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
         // 9 sea snake (aggressive - venomous)
         if (getType() == 0)
         {
-        	setType(rand.nextInt(8)+1);
+            setType(rand.nextInt(8)+1);
         }
     }
 
@@ -100,12 +109,6 @@ public class MoCEntitySnake extends MoCEntityTameable {
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 10;
-    }
-
-    @Override
     public float getMoveSpeed()
     {
         return 0.6F;
@@ -131,7 +134,9 @@ public class MoCEntitySnake extends MoCEntityTameable {
     @Override
     protected boolean canDespawn()
     {
-        return !getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return false;
     }
 
     public boolean pickedUp()
@@ -712,13 +717,15 @@ public class MoCEntitySnake extends MoCEntityTameable {
          * Extreme Hills Edge Jungle JungleHills
          * 
          */
-
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
         int l = rand.nextInt(10);
 
-        if (s.equals("Taiga") || s.equals("FrozenOcean") || s.equals("FrozenRiver") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills")) { return false;
-
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
+        { 
+            return false;
         }
-        if (s.equals("Desert") || s.equals("DesertHills"))
+
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))
         {
             if (l < 5)
             {
@@ -730,11 +737,11 @@ public class MoCEntitySnake extends MoCEntityTameable {
             }
         }
 
-        if (getType() == 7 && !(s.equals("Desert") || s.equals("DesertHills"))) 
+        if (getType() == 7 && !(BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))) 
         { 
             return false;
         }
-        if (s.equals("Extreme Hills") || s.equals("ForestHills") || s.equals("Extreme Hills Edge"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.HILLS))
         {
             if (l < 4)
             {
@@ -749,7 +756,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
                 setType(6);
             }
         }
-        if (s.equals("Swampland"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SWAMP))
         {
             // python or bright green bright orange
             if (l < 4)
@@ -791,5 +798,11 @@ public class MoCEntitySnake extends MoCEntityTameable {
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
         return par1ItemStack != null && (par1ItemStack.itemID == MoCreatures.ratRaw.itemID);
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 2;
     }
 }

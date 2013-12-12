@@ -1,31 +1,11 @@
 package drzhark.mocreatures.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.MoCBiomeData;
-import drzhark.mocreatures.MoCBiomeGroupData;
-import drzhark.mocreatures.MoCConfigCategory;
-import drzhark.mocreatures.MoCConfiguration;
-import drzhark.mocreatures.MoCEntityModData;
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCProxy;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.MoCEntityData;
-import drzhark.mocreatures.MoCProperty;
-import drzhark.mocreatures.MoCProperty.Type;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCEntity;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommand;
@@ -34,92 +14,55 @@ import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.boss.IBossDisplayData;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraftforge.common.DimensionManager;
+import cpw.mods.fml.common.FMLCommonHandler;
+import drzhark.mocreatures.MoCEntityData;
+import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.configuration.MoCConfigCategory;
+import drzhark.mocreatures.configuration.MoCConfiguration;
+import drzhark.mocreatures.configuration.MoCProperty;
+import drzhark.mocreatures.entity.IMoCTameable;
 
 public class CommandMoCreatures extends CommandBase {
 
     private static List<String> commands = new ArrayList<String>();
     private static List aliases = new ArrayList<String>();
-    private static List<String> commandsCustomSpawner = new ArrayList<String>();
     private static Map<String, String> commmentMap = new TreeMap<String, String>();
 
     static {
-        commands.add("/moc ambientspawntickrate <int>");
         commands.add("/moc attackdolphins <boolean>");
         commands.add("/moc attackhorses <boolean>");
         commands.add("/moc attackwolves <boolean>");
         commands.add("/moc caveogrechance <float>");
         commands.add("/moc caveogrestrength <float>");
         commands.add("/moc creaturespawntickrate <int>");
-        commands.add("/moc checkambientlightlevel <boolean>");
-        commands.add("/moc debugCMS <boolean>");
         commands.add("/moc debuglogging <boolean>");
         commands.add("/moc deletepets <playername>");
-        commands.add("/moc despawnlightlevel <boolean>");
-        commands.add("/moc despawnvanilla <boolean>");
-        commands.add("/moc despawntickrate <int>");
         commands.add("/moc destroydrops <boolean>");
-        commands.add("/moc disallowmonsterspawningduringday <boolean>");
-        commands.add("/moc enforcemaxspawnlimits <boolean>");
         commands.add("/moc fireogrechance <int>");
         commands.add("/moc fireogrestrength <float>");
         commands.add("/moc easybreeding <boolean>");
         commands.add("/moc elephantbulldozer <boolean>");
         commands.add("/moc enableownership <boolean>");
         commands.add("/moc enableresetownerscroll <boolean>");
-        commands.add("/moc entityspawnrange <int>");
-        commands.add("/moc golemsdestroyblocks <boolean>");
-        commands.add("/moc killall");
-        commands.add("/moc killall <tag|entity>");
-        commands.add("/moc killall tamed <playername>");
-        commands.add("/moc lightlevel <int>");
-        commands.add("/moc list biomegroups");
-        commands.add("/moc list <tag> <entity> biomegroups");
-        commands.add("/moc list tags");
+        commands.add("/moc golemdestroyblocks <boolean>");
         commands.add("/moc list tamed");
         commands.add("/moc list tamed <playername>");
-        commands.add("/moc maxambients <int>");
-        commands.add("/moc maxcreatures <int>");
-        commands.add("/moc maxmonsters <int>");
         commands.add("/moc maxtamedperop <int>");
         commands.add("/moc maxtamedperplayer <int>");
-        commands.add("/moc maxwatercreatures <int>");
-        commands.add("/moc modifyvanillaspawns <boolean>");
-        commands.add("/moc monsterspawntickrate <int>");
         commands.add("/moc ogreattackrange <int>");
         commands.add("/moc ogrestrength <float>");
-        commands.add("/moc spawnambients <boolean>");
-        commands.add("/moc spawncreatures <boolean>");
-        commands.add("/moc spawnmonsters <boolean>");
-        commands.add("/moc spawnpiranhas <boolean>");
-        commands.add("/moc spawnwatercreatures <boolean>");
-        commands.add("/moc tag");
-        commands.add("/moc <tag> <entity> biomegroup add <group>");
-        commands.add("/moc <tag> <entity> biomegroup remove <group>");
-        commands.add("/moc <tag> <entity> frequency <int>");
-        commands.add("/moc <tag> <entity> min <int>");
-        commands.add("/moc <tag> <entity> max <int>");
         commands.add("/moc tamedcount <playername>");
         commands.add("/moc tp <entityid> <playername>");
         commands.add("/moc tp <petname> <playername>");
-        commands.add("/moc usecustomspawner <boolean>");
-        commands.add("/moc waterspawntickrate <int>");
-        commands.add("/moc worldgencreaturespawning <boolean>");
         commands.add("/moc zebrachance <int>");
         aliases.add("moc");
     }
@@ -175,26 +118,7 @@ public class CommandMoCreatures extends CommandBase {
                 {
                     if (par2 != null)
                     {
-                        if (par2.equalsIgnoreCase("tags"))
-                        {
-                            for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + modEntry.getKey() + EnumChatFormatting.WHITE + " uses tag " + EnumChatFormatting.LIGHT_PURPLE + modEntry.getValue().getModTag()));
-                            }
-
-                            doNotShowHelp = true;
-                            break OUTER;
-                        }
-                        if (par2.equalsIgnoreCase("biomegroups") || par2.equalsIgnoreCase("bg"))
-                        {
-                            for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry: MoCreatures.proxy.biomeGroupMap.entrySet())
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.AQUA + biomeGroupEntry.getKey()));
-                            }
-                            doNotShowHelp = true;
-                            break OUTER;
-                        }
-                        else if (par2.equalsIgnoreCase("tamed") || par2.equalsIgnoreCase("tame"))
+                        if (par2.equalsIgnoreCase("tamed") || par2.equalsIgnoreCase("tame"))
                         {
                             if (par2ArrayOfStr.length > 2 && !Character.isDigit(par2ArrayOfStr[2].charAt(0)))
                             {
@@ -241,13 +165,13 @@ public class CommandMoCreatures extends CommandBase {
                                 if (tamedlist.size() > 0)
                                 {
                                     sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
                                     doNotShowHelp = true;
                                     break OUTER;
                                 }
                                 else
                                 {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals."));
                                     doNotShowHelp = true;
                                     break OUTER;
                                 }
@@ -298,34 +222,10 @@ public class CommandMoCreatures extends CommandBase {
                                     }
                                 }
                                 sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + (!MoCreatures.isServer() ? ", Unloaded Count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (loadedCount + unloadedCount) : "")));
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + (!MoCreatures.isServer() ? ", Unloaded Count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (loadedCount + unloadedCount) : "")));
                                 doNotShowHelp = true;
                                 break OUTER;
                             }
-                        }
-                        else if (par2ArrayOfStr.length == 4)// handle entity biomegroup listings
-                        {
-                            String tag = par2ArrayOfStr[1];
-                            String name = par2ArrayOfStr[2];
-                            for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
-                            {
-                                if (modEntry.getValue().getModTag().equalsIgnoreCase(tag))
-                                {
-                                    MoCEntityData entityData = modEntry.getValue().getCreature(name);
-                                    if (entityData != null)
-                                    {
-                                        for (int i = 0; i < entityData.getBiomeGroups().size(); i++)
-                                        {
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(entityData.getBiomeGroups().get(i)));
-                                        }
-                                        doNotShowHelp = true;
-                                        break OUTER;
-                                    }
-                                }
-                            }
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Entity " + EnumChatFormatting.GREEN + par2 + EnumChatFormatting.RED + " is invalid. Please enter a valid entity."));
-                            doNotShowHelp = true;
-                            break OUTER;
                         }
                     }
                     break OUTER;
@@ -397,11 +297,11 @@ public class CommandMoCreatures extends CommandBase {
                                                             world.resetUpdateEntityTick();
                                                             DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                                                         }
-                                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + name + EnumChatFormatting.WHITE + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension));
+                                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + name + EnumChatFormatting.WHITE + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension));
                                                         doNotShowHelp = true;
                                                         break OUTER;
                                                     }
-                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Unable to transfer entity ID " + EnumChatFormatting.GREEN + entityId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA + owner));
+                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Unable to transfer entity ID " + EnumChatFormatting.GREEN + entityId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA + owner));
                                                     doNotShowHelp = true;
                                                     break OUTER;
                                                 }
@@ -421,7 +321,7 @@ public class CommandMoCreatures extends CommandBase {
                                             double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
                                             double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
                                             double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
+                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
                                             if (!player.worldObj.isRemote)// transfer entity to player dimension
                                             {
                                                 Entity newEntity = EntityList.createEntityByName(nbt.getString("id"), player.worldObj);
@@ -447,7 +347,7 @@ public class CommandMoCreatures extends CommandBase {
                                     }
                                 }
                                 doNotShowHelp = true;
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Tamed entity could not be located."));
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Tamed entity could not be located."));
                                 break OUTER;
                             } // end if
                     } // end for
@@ -464,122 +364,14 @@ public class CommandMoCreatures extends CommandBase {
                         if (player.username.equalsIgnoreCase(playername))
                         {
                             int tamedCount = MoCTools.numberTamedByPlayer(player);
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount));
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount));
                             doNotShowHelp = true;
                             break OUTER;
                         }
                     }
-                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly."));
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly."));
                     doNotShowHelp = true;
                     break OUTER;
-                }
-                else if (par1.equalsIgnoreCase("killall"))
-                {
-                    if (!MoCProxy.entityMap.containsKey(par2) && par2ArrayOfStr.length == 2)
-                    {
-                        String list = "";
-                        List<String> entityTypes = new ArrayList();
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Must specify a valid entity type to kill. Current types are : "));
-                        for (Map.Entry<String, MoCEntityData> entityEntry : MoCProxy.entityMap.entrySet())
-                        {
-                            MoCEntityData entityData = entityEntry.getValue();
-                            entityTypes.add(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
-                        }
-                        Collections.sort(entityTypes);
-                        for (int i = 0; i < entityTypes.size(); i++)
-                        {
-                            if (i == entityTypes.size() - 1)
-                                list += entityTypes.get(i) + ".";
-                            else list += entityTypes.get(i) + ", ";
-                        }
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(list));
-                        doNotShowHelp = true;
-                        break OUTER;
-                    }
-                    else if (par2.contains("|")) // tagged entity
-                    {
-                        // get entity type
-                        MoCEntityData entityData = MoCProxy.entityMap.get(par2);
-                        String playername = par1ICommandSender.getCommandSenderName();
-                        int count = 0;
-                        for (int dimension : DimensionManager.getIDs())
-                        {
-                            WorldServer world = DimensionManager.getWorld(dimension);
-                            for (int i = 0; i < world.loadedEntityList.size(); i++)
-                            {
-                                Entity entity = (Entity) world.loadedEntityList.get(i);
-                                if (entityData.getEntityClass().isInstance(entity))
-                                {
-                                    // check if one of ours
-                                    if (entity instanceof IMoCEntity)
-                                    {
-                                        IMoCEntity mocreature = (IMoCEntity)entity;
-                                        if (!mocreature.getIsTamed())
-                                        {
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                    else if (entity instanceof EntityTameable)
-                                    {
-                                        EntityTameable tameableEntity = (EntityTameable)entity;
-                                        if (!tameableEntity.isTamed())
-                                        {
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                    else {
-                                        NBTTagCompound nbt = new NBTTagCompound();
-                                        entity.writeToNBT(nbt);
-                                        if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
-                                        {
-                                            if ((entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
-                                            {
-                                                continue;
-                                            }
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + "."));
-                        doNotShowHelp = true;
-                        break OUTER;
-                    }
-                    else if (par2.equalsIgnoreCase("tamed")) // kill all tamed creatures of owner specified
-                    {
-                        if (par2ArrayOfStr.length > 2)
-                        {
-                            String playername =  par2ArrayOfStr[2];
-                            int count = 0;
-                            for (int dimension : DimensionManager.getIDs())
-                            {
-                                WorldServer world = DimensionManager.getWorld(dimension);
-                                for (int i = 0; i < world.loadedEntityList.size(); i++)
-                                {
-                                    Entity entity = (Entity) world.loadedEntityList.get(i);
-                                    // check if one of ours
-                                    if (entity instanceof IMoCTameable && ((IMoCTameable)entity).getOwnerName().equalsIgnoreCase(playername))
-                                    {
-                                        IMoCTameable mocreature = (IMoCTameable)entity;
-                                        MoCreatures.instance.mapData.removeOwnerPet(mocreature, mocreature.getOwnerPetId());
-                                        entity.isDead = true;
-                                        entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                        count++;
-                                    }
-                                }
-                            }
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.LIGHT_PURPLE + " tamed" + EnumChatFormatting.WHITE + " pets with owner " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + "."));
-                            doNotShowHelp = true;
-                            break OUTER;
-                        }
-                    }
                 }
                 // START ENTITY FREQUENCY/BIOME SECTION
                 else if (par2ArrayOfStr.length >=3 && (par3.equalsIgnoreCase("frequency") || par3.equalsIgnoreCase("min") || par3.equalsIgnoreCase("max") || par3.equalsIgnoreCase("chunk") || par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg")))
@@ -589,182 +381,122 @@ public class CommandMoCreatures extends CommandBase {
                     String par4 = null;
                     if (par2ArrayOfStr.length >=4)
                         par4 = par2ArrayOfStr[3];
-                    for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
+                    MoCEntityData entityData = MoCreatures.mocEntityMap.get(name);//modEntry.getValue().getCreature(name);
+                    if (entityData != null)
                     {
-                        if (modEntry.getValue().getModTag().equalsIgnoreCase(tag))
+                        if (par3.equalsIgnoreCase("frequency"))
                         {
-                            MoCEntityData entityData = modEntry.getValue().getCreature(name);
-                            if (entityData != null)
+                            if (par4 == null)
                             {
-                                if (par3.equalsIgnoreCase("frequency"))
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
+                                doNotShowHelp = true;
+                            }
+                            else {
+                                try 
                                 {
-                                    if (par4 == null)
-                                    {
-                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
-                                        doNotShowHelp = true;
-                                    }
-                                    else {
-                                        try 
-                                        {
-                                            entityData.setFrequency(Integer.parseInt(par4));
-                                            MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                            prop.valueList.set(0, par4);
-                                            saved = true;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                        }
-                                        catch(NumberFormatException ex)
-                                        {
-                                            this.sendCommandHelp(par1ICommandSender);
-                                        }
-                                    }
+                                    entityData.setFrequency(Integer.parseInt(par4));
+                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                    prop.valueList.set(0, par4);
+                                    saved = true;
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
                                 }
-                                else if (par3.equalsIgnoreCase("min"))
+                                catch(NumberFormatException ex)
                                 {
-                                    if (par4 == null)
-                                    {
-                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
-                                        doNotShowHelp = true;
-                                    }
-                                    else {
-                                        try 
-                                        {
-                                            entityData.setMinSpawn(Integer.parseInt(par4));
-                                            MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                            prop.valueList.set(1, par4);
-                                            saved = true;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                        }
-                                        catch(NumberFormatException ex)
-                                        {
-                                            this.sendCommandHelp(par1ICommandSender);
-                                        }
-                                    }
+                                    this.sendCommandHelp(par1ICommandSender);
                                 }
-                                else if (par3.equalsIgnoreCase("max"))
-                                {
-                                    if (par4 == null)
-                                    {
-                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
-                                        doNotShowHelp = true;
-                                    }
-                                    else {
-                                        try 
-                                        {
-                                            entityData.setMaxSpawn(Integer.parseInt(par4));
-                                            MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                            prop.valueList.set(2, par4);
-                                            saved = true;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                        }
-                                        catch(NumberFormatException ex)
-                                        {
-                                            this.sendCommandHelp(par1ICommandSender);
-                                        }
-                                    }
-                                }
-                                else if (par3.equalsIgnoreCase("chunk"))
-                                {
-                                    if (par4 == null)
-                                    {
-                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
-                                        doNotShowHelp = true;
-                                    }
-                                    else {
-                                        try 
-                                        {
-                                            entityData.setMaxSpawn(Integer.parseInt(par4));
-                                            MoCProperty prop = entityData.getEntityConfig().get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                            prop.valueList.set(2, par4);
-                                            saved = true;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                        }
-                                        catch(NumberFormatException ex)
-                                        {
-                                            this.sendCommandHelp(par1ICommandSender);
-                                        }
-                                    }
-                                }
-                                // handle biome groups
-                                else if (par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg"))
-                                {
-                                    if (par2ArrayOfStr.length != 5)
-                                        break OUTER;
-                                    String value = par2ArrayOfStr[4].toUpperCase();
-                                    try 
-                                    {
-                                        List<String> biomeGroups = entityData.getBiomeGroups();
-                                        if (par2ArrayOfStr[3].equalsIgnoreCase("add"))
-                                        {
-                                            if (!biomeGroups.contains(value))
-                                            {
-                                                if (!MoCreatures.proxy.biomeGroupMap.containsKey(value))
-                                                {
-                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Invalid Biome Group entered. Please choose a biome group from the following list : "));
-                                                    for (Map.Entry<String, MoCBiomeGroupData> biomeGroupEntry : MoCreatures.proxy.biomeGroupMap.entrySet())
-                                                    {
-                                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(biomeGroupEntry.getKey()));
-                                                    }
-                                                    doNotShowHelp = true;
-                                                    break OUTER;
-                                                }
-                                                biomeGroups.add(value);
-                                                Collections.sort(biomeGroups);
-                                                saved = true;
-                                                if (MoCreatures.myCustomSpawner != null)
-                                                {
-                                                    // update lists
-                                                    MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
-                                                }
-                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Added biome group " + EnumChatFormatting.GREEN + value + " to entity " + EnumChatFormatting.AQUA + entityData.getEntityName() + EnumChatFormatting.WHITE + "."));
-                                                break OUTER;
-                                            }
-                                            else 
-                                            {
-                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Biome Group " + value + " already exists!!, please choose another from the following list :"));
-                                                for (int i = 0; i < MoCreatures.proxy.biomeGroupMap.size(); i++)
-                                                {
-                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(MoCreatures.proxy.biomeGroupMap.get(i).getBiomeGroupName()));
-                                                }
-                                            }
-                                        }
-                                        else if (par4.equalsIgnoreCase("rem") || par4.equalsIgnoreCase("remove"))
-                                        {
-                                            for (int i = 0; i < biomeGroups.size(); i++)
-                                            {
-                                                if (value.equals(biomeGroups.get(i)))
-                                                {
-                                                    biomeGroups.remove(i);
-                                                    saved = true;
-                                                    if (MoCreatures.myCustomSpawner != null)
-                                                    {
-                                                        // update lists
-                                                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(value));
-                                                    }
-                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Removed biome group " + EnumChatFormatting.GREEN + value.toUpperCase() + EnumChatFormatting.WHITE + " from entity " + EnumChatFormatting.AQUA + entityData.getEntityName() + EnumChatFormatting.WHITE + "."));
-                                                    break OUTER;
-                                                }
-                                            }
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Invalid biomegroup entered, please choose from the following list :"));
-                                            for (int i = 0; i < biomeGroups.size(); i++)
-                                            {
-                                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(biomeGroups.get(i)));
-                                            }
-                                            doNotShowHelp = true;
-                                        }
-                                    }
-                                    catch(NumberFormatException ex)
-                                    {
-                                        this.sendCommandHelp(par1ICommandSender);
-                                    }
-                                    break OUTER;
-                                }
-                                if (MoCreatures.myCustomSpawner != null && saved == true && (par3.equalsIgnoreCase("frequency") || par3.equalsIgnoreCase("min") || par3.equalsIgnoreCase("max")))
-                                {
-                                   MoCreatures.myCustomSpawner.updateSpawnListEntry(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
-                                }
-                                break OUTER;
                             }
                         }
+                        else if (par3.equalsIgnoreCase("min"))
+                        {
+                            if (par4 == null)
+                            {
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
+                                doNotShowHelp = true;
+                            }
+                            else {
+                                try 
+                                {
+                                    entityData.setMinSpawn(Integer.parseInt(par4));
+                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                    prop.valueList.set(1, par4);
+                                    saved = true;
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
+                                }
+                                catch(NumberFormatException ex)
+                                {
+                                    this.sendCommandHelp(par1ICommandSender);
+                                }
+                            }
+                        }
+                        else if (par3.equalsIgnoreCase("max"))
+                        {
+                            if (par4 == null)
+                            {
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
+                                doNotShowHelp = true;
+                            }
+                            else {
+                                try 
+                                {
+                                    entityData.setMaxSpawn(Integer.parseInt(par4));
+                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                    prop.valueList.set(2, par4);
+                                    saved = true;
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
+                                }
+                                catch(NumberFormatException ex)
+                                {
+                                    this.sendCommandHelp(par1ICommandSender);
+                                }
+                            }
+                        }
+                        else if (par3.equalsIgnoreCase("chunk"))
+                        {
+                            if (par4 == null)
+                            {
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
+                                doNotShowHelp = true;
+                            }
+                            else {
+                                try 
+                                {
+                                    entityData.setMaxSpawn(Integer.parseInt(par4));
+                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
+                                    prop.valueList.set(3, par4);
+                                    saved = true;
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
+                                }
+                                catch(NumberFormatException ex)
+                                {
+                                    this.sendCommandHelp(par1ICommandSender);
+                                }
+                            }
+                        }
+                        else if (par3.equalsIgnoreCase("canspawn"))
+                        {
+                          if (par4 == null)
+                          {
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn is " + EnumChatFormatting.AQUA + entityData.getCanSpawn() + EnumChatFormatting.WHITE + "."));
+                            doNotShowHelp = true;
+                          }
+                          else
+                          {
+                            try
+                            {
+                              entityData.setCanSpawn(Boolean.parseBoolean(par4));
+                              MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get("entity-canspawn-settings", entityData.getEntityName());
+                              prop.value = par4;
+                              saved = true;
+                              par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
+                            }
+                            catch (NumberFormatException ex)
+                            {
+                              sendCommandHelp(par1ICommandSender);
+                            }
+                          }
+                        }
+                        // TODO - remove spawnlist entry from vanilla list and readd it
+                        break OUTER;
                     }
                 }
                 // END ENTITY FREQUENCY/BIOME SECTION
@@ -781,45 +513,45 @@ public class CommandMoCreatures extends CommandBase {
                                 continue;
                             MoCProperty property = propEntry.getValue();
                             List<String> propList = propEntry.getValue().valueList;
-                            String propValue = propEntry.getValue().value;
+                            String propValue = propEntry.getValue().getString();
 
                             if (propList == null && propValue == null)
                                 continue;
 
-                            if (propEntry.getValue().getType() == Type.BOOLEAN)
+                            if (propEntry.getValue().getType() == MoCProperty.Type.BOOLEAN)
                             {
                                 if (par2.equalsIgnoreCase("true") || par2.equalsIgnoreCase("false"))
                                 {
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
                                 }
                             }
-                            else if (propEntry.getValue().getType() == Type.INTEGER)
+                            else if (propEntry.getValue().getType() == MoCProperty.Type.INTEGER)
                             {
                                 try {
                                     Integer.parseInt(par2);
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
                                 }
                                 
                             }
-                            else if (propEntry.getValue().getType() == Type.DOUBLE)
+                            else if (propEntry.getValue().getType() == MoCProperty.Type.DOUBLE)
                             {
                                 try {
                                     Double.parseDouble(par2);
                                     property.set(par2);
                                     saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
                                 }
                                 catch (NumberFormatException ex)
                                 {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
+                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
                                 }
                             }
                             break OUTER; // exit since we found the property we need to save
@@ -830,110 +562,6 @@ public class CommandMoCreatures extends CommandBase {
             }
         }
         else {
-            if (par1.equalsIgnoreCase("tag") || par1.equalsIgnoreCase("tags"))
-            {
-                for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
-                {
-                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + modEntry.getKey() + EnumChatFormatting.WHITE + " uses tag " + EnumChatFormatting.LIGHT_PURPLE + modEntry.getValue().getModTag()));
-                }
-                doNotShowHelp = true;
-            }
-            else if (par1.equalsIgnoreCase("killall"))
-            {
-                if (par1.equalsIgnoreCase("tag") || par1.equalsIgnoreCase("tags"))
-                {
-                    for (Map.Entry<String, MoCEntityModData> modEntry : MoCreatures.proxy.entityModMap.entrySet())
-                    {
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + modEntry.getKey() + EnumChatFormatting.WHITE + " uses tag " + EnumChatFormatting.LIGHT_PURPLE + modEntry.getValue().getModTag()));
-                    }
-                    doNotShowHelp = true;
-                }
-                else if (par1.equalsIgnoreCase("killall"))
-                {
-                    if (!par2.equals("") && !MoCProxy.entityMap.containsKey(par2))
-                    {
-                        String list = "";
-                        List<String> entityTypes = new ArrayList();
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e("Must specify a valid entity type to kill. Current types are : "));
-                        for (Map.Entry<String, MoCEntityData> entityEntry : MoCProxy.entityMap.entrySet())
-                        {
-                            MoCEntityData entityData = entityEntry.getValue();
-                            entityTypes.add(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
-                        }
-                        Collections.sort(entityTypes);
-                        for (int i = 0; i < entityTypes.size(); i++)
-                        {
-                            if (i == entityTypes.size() - 1)
-                                list += entityTypes.get(i) + ".";
-                            else list += entityTypes.get(i) + ", ";
-                        }
-                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(list));
-                        doNotShowHelp = true;
-                    }
-                    else {
-                        // get entity type
-                        MoCEntityData entityData = null;
-                        if (!par2.equals(""))
-                        {
-                            entityData = MoCProxy.entityMap.get(par2);
-                        }
-                        String playername = par1ICommandSender.getCommandSenderName();
-                        int count = 0;
-                        for (int dimension : DimensionManager.getIDs())
-                        {
-                            WorldServer world = DimensionManager.getWorld(dimension);
-                            for (int j = 0; j < world.loadedEntityList.size(); j++)
-                            {
-                                Entity entity = (Entity) world.loadedEntityList.get(j);
-                                if (entity instanceof EntityPlayer)
-                                    continue;
-                                if (par2.equals("") || entityData != null && entityData.getEntityClass().isInstance(entity))
-                                {
-                                    if (entity instanceof IMoCEntity)
-                                    {
-                                        IMoCEntity mocreature = (IMoCEntity)entity;
-                                        if (!mocreature.getIsTamed())
-                                        {
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                    else if (entity instanceof EntityTameable)
-                                    {
-                                        EntityTameable tameableEntity = (EntityTameable)entity;
-                                        if (!tameableEntity.isTamed())
-                                        {
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                    else {
-                                        NBTTagCompound nbt = new NBTTagCompound();
-                                        entity.writeToNBT(nbt);
-                                        if (!nbt.hasKey("Owner") || nbt.getString("Owner").equalsIgnoreCase("")) // Support Thaumcraft Golems
-                                        {
-                                            if (entity instanceof IBossDisplayData || (entity instanceof EntityVillager && !MoCreatures.proxy.killallVillagers) || (MoCreatures.proxy.useCustomSpawner && MoCreatures.proxy.killallUseLightLevel && !MoCreatures.myCustomSpawner.isValidLightLevel(entity, world, MoCreatures.proxy.lightLevel, MoCreatures.proxy.checkAmbientLightLevel)))
-                                            {
-                                                continue;
-                                            }
-                                            entity.isDead = true;
-                                            entity.worldObj.setEntityState(entity, (byte)3); // inform the client that the entity is dead
-                                            count++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (entityData != null)
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + "."));
-                        else par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + EnumChatFormatting.WHITE + "."));
-                        doNotShowHelp = true;
-                    }
-                }
-            }
-            else {
                 OUTER: for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet())
                 {
                     String catName = catEntry.getValue().getQualifiedName();
@@ -951,13 +579,12 @@ public class CommandMoCreatures extends CommandBase {
                             continue;
                         if (par2.equals(""))
                         {
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.GREEN + propEntry.getKey() + EnumChatFormatting.WHITE + " is " + EnumChatFormatting.AQUA + propValue));
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + propEntry.getKey() + EnumChatFormatting.WHITE + " is " + EnumChatFormatting.AQUA + propValue));
                             doNotShowHelp = true;
                             break OUTER;
                         }
                     }
                 }
-            }
         }
         // START HELP COMMAND
         if (par1.equalsIgnoreCase("help"))
@@ -988,12 +615,12 @@ public class CommandMoCreatures extends CommandBase {
             }
 
             int k = Math.min((j + 1) * b0, list.size());
-            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---"));
+            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures help page " + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---"));
 
             for (int l = j * b0; l < k; ++l)
             {
                 String command = list.get(l);
-                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.func_111077_e(command));
+                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(command));
             }
         }
         // END HELP COMMAND
@@ -1020,10 +647,10 @@ public class CommandMoCreatures extends CommandBase {
 
     public void sendCommandHelp(ICommandSender sender)
     {
-        sender.sendChatToPlayer(ChatMessageComponent.func_111077_e("\u00a72Listing MoCreatures commands"));
+        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++)
         {
-            sender.sendChatToPlayer(ChatMessageComponent.func_111077_e(commands.get(i)));
+            sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(commands.get(i)));
         }
     }
 
@@ -1057,12 +684,12 @@ public class CommandMoCreatures extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.sendChatToPlayer(ChatMessageComponent.func_111077_e(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures Help Info " + EnumChatFormatting.AQUA + Integer.valueOf(j + 1) + EnumChatFormatting.WHITE + " of " + EnumChatFormatting.AQUA + Integer.valueOf(x + 1) + EnumChatFormatting.GRAY + " (/moc " + par1 + " " + par2 + " <page>)" + EnumChatFormatting.DARK_GREEN + "---"));
+        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures Help Info " + EnumChatFormatting.AQUA + Integer.valueOf(j + 1) + EnumChatFormatting.WHITE + " of " + EnumChatFormatting.AQUA + Integer.valueOf(x + 1) + EnumChatFormatting.GRAY + " (/moc " + par1 + " " + par2 + " <page>)" + EnumChatFormatting.DARK_GREEN + "---"));
 
         for (int l = j * pagelimit; l < k; ++l)
         {
             String tamedInfo = list.get(l);
-            sender.sendChatToPlayer(ChatMessageComponent.func_111077_e(tamedInfo));
+            sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(tamedInfo));
         }
     }
 }

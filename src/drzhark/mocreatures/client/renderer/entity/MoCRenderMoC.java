@@ -70,8 +70,8 @@ public class MoCRenderMoC extends RenderLiving {
                     }
                     tessellator1.startDrawingQuads();
                     // might break SSP
-                    float f8 = ((EntityLiving)entityMoC).func_110143_aJ();
-                    float f9 = ((EntityLiving)entityMoC).func_110138_aP();
+                    float f8 = ((EntityLiving)entityMoC).getHealth();
+                    float f9 = ((EntityLiving)entityMoC).getMaxHealth();
                     float f10 = f8 / f9;
                     float f11 = 40F * f10;
                     tessellator1.setColorRGBA_F(0.7F, 0.0F, 0.0F, 1.0F);
@@ -230,7 +230,7 @@ public class MoCRenderMoC extends RenderLiving {
         int i = mocreature.yawRotationOffset();
         if (i != 0)
         {
-        	GL11.glRotatef((float) i, 0.0F, -1.0F, 0.0F);
+            GL11.glRotatef((float) i, 0.0F, -1.0F, 0.0F);
         }
     }
 
@@ -254,7 +254,7 @@ public class MoCRenderMoC extends RenderLiving {
     }
 
     @Override
-    protected ResourceLocation func_110775_a(Entity entity) {
+    protected ResourceLocation getEntityTexture(Entity entity) {
         return ((IMoCEntity)entity).getTexture();
     }
 }

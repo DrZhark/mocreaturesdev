@@ -2,13 +2,8 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
@@ -16,7 +11,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWaterMob;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -28,6 +22,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
 
 public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
@@ -55,24 +51,23 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         texture = "blank.jpg";
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
+    }
+
     public ResourceLocation getTexture()
     {
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void registerCustomAttributes()
-    {
-    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
-
     @Override
-    public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
     {
-    	selectType();
-    	registerCustomAttributes();
-    	this.setEntityHealth((float) this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111126_e());
-    	return super.func_110161_a(par1EntityLivingData);
+        selectType();
+        return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
     /**
@@ -220,7 +215,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     @Override
     protected boolean canDespawn()
     {
-        return !getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return false;
     }
 
     @Override
@@ -266,16 +263,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         }
 
         return entityitem;
-    }
-
-    public float getMaxHealth()
-    {
-        return 6;
-    }
-
-    public void setMaxHealth(int i)
-    {
-        maxHealth = i;
     }
 
     @Override
@@ -447,7 +434,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
             motionZ *= 0.95D;
         }
 
-        this.prevLimbYaw = this.limbYaw;
+        this.prevLimbSwingAmount = this.limbSwingAmount;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
         float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
@@ -456,8 +443,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
             f4 = 1.0F;
         }
 
-        this.limbYaw += (f4 - this.limbYaw) * 0.4F;
-        this.limbSwing += this.limbYaw;
+        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
     protected boolean MoveToNextEntity(Entity entity)
@@ -618,7 +605,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                    	attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue());
                     }
                 }
             }
@@ -656,7 +643,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
             
             /*if (getIsTamed() && rand.nextInt(100) == 0)
             {
-                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
             }*/
 
             if (forceUpdates() && rand.nextInt(500) == 0)
@@ -936,7 +923,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         }
         /*if (MoCreatures.isServer() && getIsTamed())
         {
-            //MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            //MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
         }*/
 
         return super.attackEntityFrom(damagesource, i);
@@ -972,7 +959,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && getIsTamed() && func_110143_aJ() > 0 && !this.riderIsDisconnecting)
+        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
         {
             return;
         }

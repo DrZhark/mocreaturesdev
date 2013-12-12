@@ -196,7 +196,7 @@ public class MoCModelRaccoon extends ModelBase
   
   public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
   {
-	  Head.rotateAngleY = f3 / 57.29578F;
+      Head.rotateAngleY = f3 / 57.29578F;
       Head.rotateAngleX = f4 / 57.29578F;
       Snout.rotateAngleY = Head.rotateAngleY;
       Snout.rotateAngleX = Head.rotateAngleX;
@@ -210,25 +210,25 @@ public class MoCModelRaccoon extends ModelBase
       //LeftSideburn.rotateAngleY = (30F/radianF) + Head.rotateAngleY;
       
       float RLegXRot = MathHelper.cos((f * 1.0F) + 3.141593F) * 0.8F * f1;
-	  float LLegXRot = MathHelper.cos(f * 1.0F) * 0.8F * f1;
-		
-	  RightFrontLegA.rotateAngleX = (30F/radianF) + RLegXRot;
-	  LeftFrontLegA.rotateAngleX = (30F/radianF) + LLegXRot;
-	  RightRearLegA.rotateAngleX = (53F/radianF) + LLegXRot;
-	  LeftRearLegA.rotateAngleX = (53F/radianF) + RLegXRot;
-	  
-	  RightFrontLegB.rotateAngleX = (-21F/radianF) + RLegXRot;
-	  RightFrontFoot.rotateAngleX = RLegXRot;
-	  LeftFrontLegB.rotateAngleX = (-21F/radianF) + LLegXRot;
-	  LeftFrontFoot.rotateAngleX = LLegXRot;
-	  
-	  RightRearLegB.rotateAngleX = (53F/radianF) + LLegXRot;
-	  RightRearFoot.rotateAngleX = LLegXRot;
-	  LeftRearLegB.rotateAngleX = (53F/radianF) + RLegXRot;
-	  LeftRearFoot.rotateAngleX = RLegXRot;
-	  
-	  TailA.rotateAngleY = MathHelper.cos(f * 0.6662F) * 0.7F * f1;
-	  TailB.rotateAngleY = TailA.rotateAngleY;
+      float LLegXRot = MathHelper.cos(f * 1.0F) * 0.8F * f1;
+        
+      RightFrontLegA.rotateAngleX = (30F/radianF) + RLegXRot;
+      LeftFrontLegA.rotateAngleX = (30F/radianF) + LLegXRot;
+      RightRearLegA.rotateAngleX = (53F/radianF) + LLegXRot;
+      LeftRearLegA.rotateAngleX = (53F/radianF) + RLegXRot;
+      
+      RightFrontLegB.rotateAngleX = (-21F/radianF) + RLegXRot;
+      RightFrontFoot.rotateAngleX = RLegXRot;
+      LeftFrontLegB.rotateAngleX = (-21F/radianF) + LLegXRot;
+      LeftFrontFoot.rotateAngleX = LLegXRot;
+      
+      RightRearLegB.rotateAngleX = (53F/radianF) + LLegXRot;
+      RightRearFoot.rotateAngleX = LLegXRot;
+      LeftRearLegB.rotateAngleX = (53F/radianF) + RLegXRot;
+      LeftRearFoot.rotateAngleX = RLegXRot;
+      
+      TailA.rotateAngleY = MathHelper.cos(f * 0.6662F) * 0.7F * f1;
+      TailB.rotateAngleY = TailA.rotateAngleY;
   }
 }
 

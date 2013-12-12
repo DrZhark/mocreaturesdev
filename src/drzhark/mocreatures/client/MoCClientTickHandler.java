@@ -1,19 +1,11 @@
 package drzhark.mocreatures.client;
 
 import java.util.EnumSet;
-import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 
 public class MoCClientTickHandler implements ITickHandler {
 

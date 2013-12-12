@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -91,7 +90,7 @@ public class MoCRenderPetScorpion extends MoCRenderMoC {
         GL11.glScalef(f, f, f);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityPetScorpion)par1Entity).getTexture();
     }
 }

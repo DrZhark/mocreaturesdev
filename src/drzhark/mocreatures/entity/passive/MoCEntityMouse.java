@@ -1,11 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +10,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 public class MoCEntityMouse extends MoCEntityAnimal
 {
@@ -25,14 +26,19 @@ public class MoCEntityMouse extends MoCEntityAnimal
         //health = 4;
     }
 
-   
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
+    }
+
     public void selectType()
     {
         checkSpawningBiome();
         
         if (getType() == 0)
         {
-        	setType(rand.nextInt(3)+1);
+            setType(rand.nextInt(3)+1);
         }
     }
 
@@ -52,7 +58,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
                 return MoCreatures.proxy.getTexture("miceg.png");
         }
     }
-    
+
     @Override
     public boolean checkSpawningBiome()
     {
@@ -62,17 +68,11 @@ public class MoCEntityMouse extends MoCEntityAnimal
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
         String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(3); //white mice!
         }
         return true;
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 4;
     }
 
     @Override
@@ -163,9 +163,8 @@ public class MoCEntityMouse extends MoCEntityAnimal
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
+    protected void fall(float f)
     {
-        return 6;
     }
 
     @Override
@@ -254,7 +253,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     {
         return true;
     }
-    
+
     
     @Override
     public boolean swimmerEntity()

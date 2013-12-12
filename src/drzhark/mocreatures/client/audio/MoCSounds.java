@@ -10,15 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 
-import cpw.mods.fml.common.FMLLog;
-
-import net.minecraft.client.audio.SoundManager;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.client.MoCClientProxy;
 
 public class MoCSounds {
 

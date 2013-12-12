@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockJukeBox;
 import net.minecraft.block.StepSound;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -27,6 +26,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraftforge.event.world.BlockEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.MoCTools;
@@ -88,6 +91,12 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+    }
+
     @Override
     protected void entityInit()
     {
@@ -136,19 +145,21 @@ public class MoCEntityHorse extends MoCEntityTameable {
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
 
+        BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
         String s = MoCTools.BiomeName(worldObj, i, j, k);
 
-        if (s.toLowerCase().contains("plains"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS))
         {
             if (rand.nextInt(3) == 0)
             {
                 setType(60);// zebra
             }
         }
-        if (s.toLowerCase().contains("savanna"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))
         {
                 setType(60);// zebra
         }
+        // TODO
         if (s.toLowerCase().contains("prairie"))//prairies spawn only regular horses, no zebras there
         {
                 setType(rand.nextInt(5) + 1);
@@ -295,19 +306,19 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (i == 1)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111215_ce, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorIron, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 2)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111216_cf, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorGold, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 3)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111213_cg, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorDiamond, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
@@ -357,11 +368,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
             }
             if (i > 1F)
             {
-            	attackEntityFrom(DamageSource.fall, i);
+                attackEntityFrom(DamageSource.fall, i);
             }
             if ((riddenByEntity != null) && (i > 1F))
             {
-            	riddenByEntity.attackEntityFrom(DamageSource.fall, i);
+                riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }
 
             int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023221D - prevRotationPitch), MathHelper.floor_double(posZ));
@@ -641,7 +652,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         return "horsemad";
     }
 
-    public float getMaxHealth()
+    public float calculateMaxHealth()
     {
         int maximumHealth = 10;
         if (getType() < 6) // tier 1
@@ -687,12 +698,6 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         return maximumHealth;
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
     }
 
     /**
@@ -1279,7 +1284,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
         
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111215_ce.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorIron.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1295,7 +1300,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111216_cf.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorGold.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1310,7 +1315,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.field_111213_cg.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorDiamond.itemID && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1354,7 +1359,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (this.isUndead() || isGhost())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
 
             }
 
@@ -1397,11 +1402,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (this.isNightmare())
             {
-                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
+                if (getIsAdult() && getHealth() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
 
             }
             if (this.getType() == 61)
@@ -1427,11 +1432,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (this.getType() == 32)
             {
-                if (getIsAdult() && func_110143_aJ() == getMaxHealth())
+                if (getIsAdult() && getHealth() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
 
             if (this.getType() == 61)
@@ -1462,11 +1467,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (this.isMagicHorse())
             {
-                if (getIsAdult())// && func_110143_aJ() == getMaxHealth()) //TODO CHECK FIX FAIRY BUG
+                if (getIsAdult() && getHealth() == getMaxHealth())
                 {
                     this.eatenpumpkin = true;
                 }
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
 
             if (this.isNightmare())
@@ -1613,9 +1618,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((func_110143_aJ() + 5) > getMaxHealth())
+            if ((getHealth() + 5) > getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1639,9 +1644,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((func_110143_aJ() + 10) > getMaxHealth())
+            if ((getHealth() + 10) > getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1665,9 +1670,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                     setTemper(getMaxTemper() - 5);
                 }
             }
-            if ((func_110143_aJ() + 20) > getMaxHealth())
+            if ((getHealth() + 20) > getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100))
@@ -1688,7 +1693,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
 
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             eatingHorse();
             if (!getIsAdult() && (getEdad() < 100) && MoCreatures.isServer())
             {
@@ -1722,7 +1727,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             eatingHorse();
             if (!isMagicHorse() && !isUndead())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
 
             return true;
@@ -1761,7 +1766,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             eatenpumpkin = true;
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             eatingHorse();
             return true;
         }
@@ -2011,13 +2016,20 @@ public class MoCEntityHorse extends MoCEntityTameable {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        worldObj.setBlock(i - 1, j, k - 1, Block.fire.blockID, 0, 3);//MC1.5
-        EntityPlayer entityplayer = (EntityPlayer) riddenByEntity;
-        if ((entityplayer != null) && (entityplayer.isBurning()))
+        int id = worldObj.getBlockId(i - 1, j, k - 1);
+        Block block = Block.blocksList[id];
+        int metadata = worldObj.getBlockMetadata(i - 1, j, k - 1);
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(worldObj, "[MoCreatures]"));
+        if (!event.isCanceled())
         {
-            entityplayer.extinguish();
+            worldObj.setBlock(i - 1, j, k - 1, Block.fire.blockID, 0, 3);//MC1.5
+            EntityPlayer entityplayer = (EntityPlayer) riddenByEntity;
+            if ((entityplayer != null) && (entityplayer.isBurning()))
+            {
+                entityplayer.extinguish();
+            }
+            setNightmareInt(getNightmareInt() - 1);
         }
-        setNightmareInt(getNightmareInt() - 1);
     }
 
     @Override
@@ -2137,10 +2149,10 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if ((rand.nextInt(300) == 0) && (deathTime == 0))
             {
-                this.setEntityHealth(func_110143_aJ() + 1);
-                if (func_110143_aJ() > getMaxHealth())
+                this.setHealth(getHealth() + 1);
+                if (getHealth() > getMaxHealth())
                 {
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                 }
             }
 
@@ -2243,10 +2255,10 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 
                 if (!flag)
                 {
-                	if (!ReadyforParenting((MoCEntityHorse)horsemate))
-                	{	
-                		return;
-                	}
+                    if (!ReadyforParenting((MoCEntityHorse)horsemate))
+                    {    
+                        return;
+                    }
                 }
                 
                 if (rand.nextInt(100) == 0)
@@ -2274,13 +2286,13 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 int horsemateType;// = 0;
                 if (flag)
                 {
-                	horsemateType = TranslateVanillaHorseType((EntityHorse) horsemate);   
-                	if (horsemateType == -1) return;
+                    horsemateType = TranslateVanillaHorseType((EntityHorse) horsemate);   
+                    if (horsemateType == -1) return;
                 }else
                 {
-                	horsemateType = ((MoCEntityHorse)horsemate).getType();
-                	((MoCEntityHorse)horsemate).eatenpumpkin = false;
-                	((MoCEntityHorse)horsemate).gestationtime = 0;
+                    horsemateType = ((MoCEntityHorse)horsemate).getType();
+                    ((MoCEntityHorse)horsemate).eatenpumpkin = false;
+                    ((MoCEntityHorse)horsemate).gestationtime = 0;
                 }
                 int l = HorseGenetics(this.getType(), horsemateType);
 
@@ -2288,9 +2300,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 {
                     MoCTools.playCustomSound(this, "appearmagic", worldObj);
                     if (!flag) 
-                    	{
-                    	((MoCEntityHorse)horsemate).dissapearHorse();
-                    	}
+                        {
+                        ((MoCEntityHorse)horsemate).dissapearHorse();
+                        }
                     this.dissapearHorse();
                 }
                 baby.setOwner(this.getOwnerName());
@@ -2316,32 +2328,32 @@ public class MoCEntityHorse extends MoCEntityTameable {
      */
     private int TranslateVanillaHorseType(EntityHorse horse)
     {
-    	if (horse.func_110265_bP() == 1)
-    	{
-    		return 65; // donkey
-    	}
-    	if (horse.func_110265_bP() == 0)
-    	{
-    		switch((byte)horse.func_110202_bQ())
-    		{
-    			case 0: //white
-    				return 1;
-    			case 1: //creamy
-    				return 2;
-    			case 3: //brown
-    				return 3;
-    			case 4: //black
-    				return 5;
-    			case 5: //gray
-    				return 9;
-    			case 6: //dark brown
-    				return 4;
-    			default:
-    				return 3;
-    		}
-    		
-    	}
-    	return -1;
+        if (horse.getHorseType() == 1)
+        {
+            return 65; // donkey
+        }
+        if (horse.getHorseType() == 0)
+        {
+            switch((byte)horse.getHorseVariant())
+            {
+                case 0: //white
+                    return 1;
+                case 1: //creamy
+                    return 2;
+                case 3: //brown
+                    return 3;
+                case 4: //black
+                    return 5;
+                case 5: //gray
+                    return 9;
+                case 6: //dark brown
+                    return 4;
+                default:
+                    return 3;
+            }
+            
+        }
+        return -1;
     }
     
     @Override
@@ -2568,7 +2580,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 setType(60);// zebra
             }
 
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
         }
     }
     
@@ -2846,5 +2858,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
     public void setImmuneToFire(boolean value)
     {
         this.isImmuneToFire = value;
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 4;
     }
 }

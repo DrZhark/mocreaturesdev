@@ -11,14 +11,13 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderTRock extends Render {
 
-    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
     private final RenderBlocks blockRenderer = new RenderBlocks();
     private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
 
@@ -32,7 +31,7 @@ public class MoCRenderTRock extends Render {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) par2, (float) par4, (float) par6);
         GL11.glRotatef((float) (((100 - entitytrock.acceleration) / 10F) * 36F), 0F, -1F, 0.0F);
-        this.func_110777_b(entitytrock);
+        this.bindEntityTexture(entitytrock);
         this.blockRenderer.renderBlockAsItem(entitytrock.getMyBLock(), entitytrock.getMetadata(), entitytrock.getBrightness(par9));
         GL11.glPopMatrix();
     }
@@ -45,10 +44,10 @@ public class MoCRenderTRock extends Render {
 
     protected ResourceLocation func_110808_a(MoCEntityThrowableRock trock)
     {
-        return TextureMap.field_110575_b;
+        return TextureMap.locationBlocksTexture;
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity)
+    protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
         return this.func_110808_a((MoCEntityThrowableRock)par1Entity);
     }

@@ -1,10 +1,10 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
 public class MoCItemLitterBox extends MoCItem {
 

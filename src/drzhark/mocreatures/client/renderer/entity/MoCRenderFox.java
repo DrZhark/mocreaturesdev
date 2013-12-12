@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 
 @SideOnly(Side.CLIENT)
@@ -17,7 +16,7 @@ public class MoCRenderFox extends RenderLiving {
         super(modelbase, 0.5F);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityFox)par1Entity).getTexture();
     }
 }

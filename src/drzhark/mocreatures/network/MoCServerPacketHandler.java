@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet20NamedEntitySpawn;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -21,8 +20,8 @@ import cpw.mods.fml.common.network.Player;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 public class MoCServerPacketHandler implements IPacketHandler {

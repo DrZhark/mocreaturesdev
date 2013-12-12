@@ -6,21 +6,17 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelBigCat1;
 import drzhark.mocreatures.client.model.MoCModelBigCat2;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
-import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderBigCat extends RenderLiving {
@@ -38,11 +34,11 @@ public class MoCRenderBigCat extends RenderLiving {
     {
         if (entitybigcat.getType() == 2 && entitybigcat.getIsAdult())
         {
-            func_110776_a(MoCreatures.proxy.getTexture("lionb.png"));
+            bindTexture(MoCreatures.proxy.getTexture("lionb.png"));
         }
         else
         {
-            func_110776_a(MoCreatures.proxy.getTexture("lionc.png"));
+            bindTexture(MoCreatures.proxy.getTexture("lionc.png"));
         }
         return 1;
     }
@@ -53,8 +49,8 @@ public class MoCRenderBigCat extends RenderLiving {
         return setWoolColorAndRender((MoCEntityBigCat) entityliving, i);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
-    	return ((MoCEntityBigCat)par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
+        return ((MoCEntityBigCat)par1Entity).getTexture();
     }
 
     @Override
@@ -96,15 +92,15 @@ public class MoCRenderBigCat extends RenderLiving {
                     tessellator1.startDrawingQuads();
                     // may break SSP, need to test
                     float f8;
-                    f8 = entitybigcat.func_110143_aJ();
+                    f8 = entitybigcat.getHealth();
 
                     /*if(MoCreatures.mc.isMultiplayerWorld())
                     {
-                        f8 = entitybigcat.func_110143_aJ();
+                        f8 = entitybigcat.getHealth();
                     }
                     else
                     {
-                        f8 = entitybigcat.func_110143_aJ();
+                        f8 = entitybigcat.getHealth();
                     }
                     */
                     float f9 = entitybigcat.getMaxHealth();

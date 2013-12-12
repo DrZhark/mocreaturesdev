@@ -1,12 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import java.util.List;
-import java.util.Map;
-
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -15,6 +8,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
 {
@@ -68,7 +66,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         }
 
         //changes name
-        if (itemstack != null && getIsTamed() && (itemstack.itemID == MoCreatures.medallion.itemID || itemstack.itemID == Item.book.itemID || itemstack.itemID == Item.field_111212_ci.itemID))
+        if (itemstack != null && getIsTamed() && (itemstack.itemID == MoCreatures.medallion.itemID || itemstack.itemID == Item.book.itemID || itemstack.itemID == Item.nameTag.itemID))
         {
             if (MoCreatures.isServer())
             {
@@ -125,7 +123,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
-            	this.dropMyStuff();
+                this.dropMyStuff();
                 MoCTools.dropAmulet(this, 2);
                 this.isDead = true;
             }
@@ -153,7 +151,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             if (MoCreatures.isServer())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             return true;
         }
@@ -176,7 +174,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
     public void setDead()
     {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && func_110143_aJ() > 0 && !this.riderIsDisconnecting)
+        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
         {
             return;
         }
@@ -190,7 +188,9 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
     @Override
     protected boolean canDespawn()
     {
-        return !this.getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return false;
     }
 
     /**
@@ -258,6 +258,32 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             {
                 this.setOwnerPetId(-1);
             }
+        }
+    }
+
+    public boolean isBreedingItem(ItemStack par1ItemStack)
+    {
+        return false;
+    }
+
+    // Override to fix heart animation on clients
+    @SideOnly(Side.CLIENT)
+    public void handleHealthUpdate(byte par1)
+    {
+        if (par1 == 2)
+        {
+            this.limbSwingAmount = 1.5F;
+            this.hurtResistantTime = this.maxHurtResistantTime;
+            this.hurtTime = (this.maxHurtTime = 10);
+            this.attackedAtYaw = 0.0F;
+            playSound(getHurtSound(), getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+            attackEntityFrom(DamageSource.generic, 0.0F);
+        }
+        else if (par1 == 3)
+        {
+            playSound(getDeathSound(), getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+            setHealth(0.0F);
+            onDeath(DamageSource.generic);
         }
     }
 }

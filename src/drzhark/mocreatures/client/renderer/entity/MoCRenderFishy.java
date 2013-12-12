@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
 
 @SideOnly(Side.CLIENT)
@@ -55,7 +54,7 @@ public class MoCRenderFishy extends RenderLiving {
         GL11.glScalef(entityfishy.getEdad() * 0.01F, entityfishy.getEdad() * 0.01F, entityfishy.getEdad() * 0.01F);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityFishy)par1Entity).getTexture();
     }
 }

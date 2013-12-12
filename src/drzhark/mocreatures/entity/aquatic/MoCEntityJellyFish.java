@@ -1,25 +1,16 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 
-public class MoCEntityJellyFish extends MoCEntityAquatic {
+public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     public float pulsingSize;
     private int poisoncounter;
 
@@ -28,6 +19,12 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         super(world);
         setSize(0.3F, 0.5F);
         setEdad(50 + (rand.nextInt(50)));
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -72,20 +69,14 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }
 
-      public boolean isGlowing()
-      {
-          if (dataWatcher.getWatchableObjectByte(22) == 1)
-          {
-              EntityPlayer entityplayer = worldObj.getClosestPlayer(posX, posY, posZ, 12D);
-              return (entityplayer != null);
-          }
-          return false;
-      }
-
-    @Override
-    public float getMaxHealth()
+    public boolean isGlowing()
     {
-        return 6;
+        if (dataWatcher.getWatchableObjectByte(22) == 1)
+        {
+            EntityPlayer entityplayer = worldObj.getClosestPlayer(posX, posY, posZ, 12D);
+            return (entityplayer != null);
+        }
+        return false;
     }
 
     @Override
@@ -163,13 +154,13 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
 
             if (!getIsTamed() && ++poisoncounter > 250 && (worldObj.difficultySetting > 0)  && rand.nextInt(30) == 0)
             {
-            	EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
-            	if (entityplayertarget != null)
+                EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
+                if (entityplayertarget != null)
                 {
-            		//System.out.println("attempting poisioning" + this);
-            	}
-            	
-            	if (MoCTools.findNearPlayerAndPoison(this, true))
+                    //System.out.println("attempting poisioning" + this);
+                }
+                
+                if (MoCTools.findNearPlayerAndPoison(this, true))
                 {
                     poisoncounter = 0;
                 }
@@ -205,14 +196,14 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
   
     
     @Override
-	public int pitchRotationOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return 90;
-    	}
-		return 0;
-	}
+    public int pitchRotationOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return 90;
+        }
+        return 0;
+    }
     
     @Override
     public boolean renderName()
@@ -222,49 +213,49 @@ public class MoCEntityJellyFish extends MoCEntityAquatic {
     
     @Override
     public int nameYOffset()
-    { 	int yOff = (int) (getEdad() * -1 /2.3);
-	 	return yOff;
+    {     int yOff = (int) (getEdad() * -1 /2.3);
+         return yOff;
     }
       
     @Override
-	public float getAdjustedZOffset()
-	{
-    	if (!this.isInsideOfMaterial(Material.water))
-    	{
-    		return -0.6F;
-    	}
-		return 0F;
-	}
+    public float getAdjustedZOffset()
+    {
+        if (!this.isInsideOfMaterial(Material.water))
+        {
+            return -0.6F;
+        }
+        return 0F;
+    }
     
     @Override
     public float getAdjustedYOffset()
     {
-    	if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
-    	{
-    		return -0.3F;
-    	}
-    	return 0.4F;
+        if (!this.isInsideOfMaterial(Material.water))// && this.health > 0)
+        {
+            return -0.3F;
+        }
+        return 0.4F;
     }
     
     @Override
     public float getSizeFactor() 
     {  
-    	float pulseSize = 0F;
-    	if (this.isInsideOfMaterial(Material.water))
-    	{
-    		pulseSize = this.pulsingSize;
+        float pulseSize = 0F;
+        if (this.isInsideOfMaterial(Material.water))
+        {
+            pulseSize = this.pulsingSize;
             if (pulseSize > 0.2F)
             {
                 pulseSize = 0.2F - (pulseSize - 0.2F);
             }
-    	}
-    	
-    	return (float)getEdad() * 0.01F + (pulseSize/4);
+        }
+        
+        return (float)getEdad() * 0.01F + (pulseSize/4);
     }
     
     @Override
     protected boolean canBeTrappedInNet() 
     {
-	return true;
+        return true;
     }
 }

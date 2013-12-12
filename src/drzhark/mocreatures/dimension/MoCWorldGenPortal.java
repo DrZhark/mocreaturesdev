@@ -2,10 +2,6 @@ package drzhark.mocreatures.dimension;
 
 import java.util.Random;
 
-import drzhark.mocreatures.MoCreatures;
-
-import net.minecraft.block.Block;
-import net.minecraft.src.*;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 

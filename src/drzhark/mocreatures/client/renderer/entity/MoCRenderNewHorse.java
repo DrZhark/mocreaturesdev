@@ -1,8 +1,5 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import java.util.Map;
-import java.util.Random;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,13 +7,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Maps;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelNewHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityGoat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 @SideOnly(Side.CLIENT)
@@ -28,7 +21,7 @@ public class MoCRenderNewHorse extends MoCRenderMoC {
 
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityHorse)par1Entity).getTexture();
     }
 

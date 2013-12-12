@@ -30,20 +30,25 @@ public class MoCEntityOgre extends MoCEntityMob{
         frequencyA = 30;
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() > 4 ? 50.0D : 35.0D);
+    }
+
     @Override
     protected double getAttackStrenght() 
     {
-		return 3D;
-	}
-    
-    
+        return 3D;
+    }
+
     @Override
     public void selectType()
     {
         if (worldObj.provider.isHellWorld)
         {
             setType(rand.nextInt(2)+3);
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             this.isImmuneToFire = true;
 
         }else
@@ -68,7 +73,7 @@ public class MoCEntityOgre extends MoCEntityMob{
                     setType(rand.nextInt(2)+1);
                 }
 
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
         }
     }
@@ -90,16 +95,6 @@ public class MoCEntityOgre extends MoCEntityMob{
         default:
             return MoCreatures.proxy.getTexture("ogregreen.png");
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        if (getType() > 4)
-        {
-        return 50;
-        }
-        return 35;
     }
 
     @Override
@@ -186,12 +181,6 @@ public class MoCEntityOgre extends MoCEntityMob{
         return "mocreatures:ogre";
     }
 
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 2;
-    }
-
     public boolean getOgreFire()
     {
         if(getType() == 3 || getType() == 4)
@@ -247,7 +236,7 @@ public class MoCEntityOgre extends MoCEntityMob{
                     float f = getBrightness(1.0F);
                     if ((f > 0.5F) && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && ((rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F)))
                     {
-                        this.setEntityHealth(func_110143_aJ() - 5);
+                        this.setHealth(getHealth() - 5);
                     }
                 }
             }

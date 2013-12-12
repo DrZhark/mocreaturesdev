@@ -1,25 +1,16 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import java.util.List;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 
 public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
@@ -36,6 +27,12 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
         
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
+    }
+
     @Override
     public void selectType()
     {
@@ -44,12 +41,6 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
             setType(rand.nextInt(7) + 1); 
         }
         
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 4;
     }
 
     @Override
@@ -122,9 +113,9 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic{
                    MoCTools.runLikeHell(this, entityliving);
                 }
             }
-            if (getIsTamed() && rand.nextInt(100) == 0 && func_110143_aJ() < getMaxHealth())
+            if (getIsTamed() && rand.nextInt(100) == 0 && getHealth() < getMaxHealth())
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
         }
         if (!this.isInsideOfMaterial(Material.water))

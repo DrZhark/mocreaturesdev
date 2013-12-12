@@ -1,11 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
@@ -34,8 +32,8 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     public int mouthCounter;
     public int wingFlapCounter;
     public int diveCounter;
-	public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave", "Mountain", "Sea" };
-    
+    public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave", "Mountain", "Sea" };
+
     public MoCEntityWyvern(World world)
     {
         super(world);
@@ -53,7 +51,12 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         }
     }
 
-    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() >= 5 ? 80.0D : 40.0D);
+    }
+
     @Override
     protected void entityInit()
     {
@@ -353,7 +356,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111215_ce.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.horseArmorIron.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -369,7 +372,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111216_cf.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.horseArmorGold.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -384,7 +387,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.field_111213_cg.itemID)
+        if ((itemstack != null) && this.getIsTamed() && getEdad() > 90 && itemstack.itemID == Item.horseArmorDiamond.itemID)
         {
             if (getArmorType() == 0)
             {
@@ -539,19 +542,19 @@ public class MoCEntityWyvern extends MoCEntityTameable {
 
             if (i == 1)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111215_ce, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorIron, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 2)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111216_cf, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorGold, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 3)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.field_111213_cg, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorDiamond, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
@@ -563,16 +566,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     public boolean rideableEntity()
     {
         return true;
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        if (getType() >= 5)
-        {
-            return 80;
-        }
-        return 40;
     }
 
     @Override
@@ -896,7 +889,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         }
         return super.getCreatureAttribute();
     }
-    
+
     @Override
     public boolean swimmerEntity()
     {

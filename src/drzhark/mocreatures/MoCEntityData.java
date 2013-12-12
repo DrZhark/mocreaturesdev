@@ -1,130 +1,65 @@
 package drzhark.mocreatures;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import sharose.mods.guiapi.WidgetSimplewindow;
-import sharose.mods.guiapi.WidgetSingleRow;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.client.gui.WidgetSimplewindow;
 
 public class MoCEntityData {
 
-    private Class<? extends EntityLiving> clazz;
     private EnumCreatureType typeOfCreature;
+    private SpawnListEntry spawnListEntry;
     private String entityName;
     private boolean canSpawn = true;
-    private boolean vanillaControl = false;
     private int entityId;
-    private MoCConfiguration config;
+    private List<Type> biomeTypes;
     @SideOnly(Side.CLIENT)
     private WidgetSimplewindow entityWindow;
 
-    private List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
-    private List<String> biomeGroups = new ArrayList<String>();
-    private Map<String, List<BiomeGenBase>> biomeGroupSpawnMap = new HashMap<String, List<BiomeGenBase>>();
     private int frequency = 8;
     private int minGroup = 1;
     private int maxGroup = 1;
     private int maxSpawnInChunk = 1;
-    private MoCEntityModData modData;
 
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, String name)
+    public MoCEntityData(String name,  int maxchunk, EnumCreatureType type, SpawnListEntry spawnListEntry, List<Type> biomeTypes)
     {
-        this.clazz = entityClass;
-        this.typeOfCreature = null;
         this.entityName = name;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, String name)
-    {
-        this.clazz = entityClass;
-        this.entityId = id;
         this.typeOfCreature = type;
-        this.entityName = name;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, int freq, int min, int max)
-    {
-        this.clazz = entityClass;
-        this.entityId = id;
-        this.typeOfCreature = type;
-        this.frequency = freq;
-        this.minGroup = min;
-        this.maxGroup = max;
-        if (frequency <= 0 || min == 0 || max == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, int freq, int min, int max, int maxchunk)
-    {
-        this.clazz = entityClass;
-        this.entityId = id;
-        this.typeOfCreature = type;
-        this.frequency = freq;
-        this.minGroup = min;
-        this.maxGroup = max;
+        this.biomeTypes = biomeTypes;
+        this.frequency = spawnListEntry.itemWeight;
+        this.minGroup = spawnListEntry.minGroupCount;
+        this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
-        if (frequency <= 0 || min == 0 || max == 0)
+        this.spawnListEntry = spawnListEntry;
+        if (this.spawnListEntry.itemWeight <= 0 || this.spawnListEntry.minGroupCount == 0 || this.spawnListEntry.maxGroupCount == 0)
             this.canSpawn = false;
         else this.canSpawn = true;
     }
 
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, String name, EnumCreatureType type, int freq, int min, int max, List<String> biomeGroups)
+    public MoCEntityData(String name, int id, int maxchunk, EnumCreatureType type, SpawnListEntry spawnListEntry, List<Type> biomeTypes)
     {
-        this.clazz = entityClass;
         this.entityId = id;
         this.entityName = name;
         this.typeOfCreature = type;
-        this.frequency = freq;
-        this.minGroup = min;
-        this.maxGroup = max;
-        this.biomeGroups = biomeGroups;
-        if (frequency <= 0 || min == 0 || max == 0 || biomeGroups.size() == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, String name, EnumCreatureType type, int freq, int min, int max, int maxchunk, List<String> biomeGroups)
-    {
-        this.clazz = entityClass;
-      //  this.entityId = -1;
-        this.typeOfCreature = type;
-        this.frequency = freq;
-        this.minGroup = min;
-        this.maxGroup = max;
-        this.biomeGroups = biomeGroups;
+        this.biomeTypes = biomeTypes;
+        this.frequency = spawnListEntry.itemWeight;
+        this.minGroup = spawnListEntry.minGroupCount;
+        this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
-        this.entityName = name;
-        if (frequency <= 0 || min == 0 || max == 0 || biomeGroups.size() == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
-    }
-
-    public MoCEntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, int freq, int min, int max, int maxchunk, List<String> biomeGroups)
-    {
-        this.clazz = entityClass;
-        this.entityId = id;
-        this.typeOfCreature = type;
-        this.frequency = freq;
-        this.minGroup = min;
-        this.maxGroup = max;
-        this.biomeGroups = biomeGroups;
-        this.maxSpawnInChunk = maxchunk;
-        if (frequency <= 0 || min == 0 || max == 0 || biomeGroups.size() == 0)
+        this.spawnListEntry = spawnListEntry;
+        if (this.spawnListEntry.itemWeight <= 0 || this.spawnListEntry.minGroupCount == 0 || this.spawnListEntry.maxGroupCount == 0)
             this.canSpawn = false;
         else this.canSpawn = true;
     }
 
     public Class<? extends EntityLiving> getEntityClass()
     {
-        return this.clazz;
+        return this.spawnListEntry.entityClass;
     }
 
     public EnumCreatureType getType()
@@ -139,6 +74,11 @@ public class MoCEntityData {
         this.typeOfCreature = type;
     }
 
+    public List<Type> getBiomeTypes()
+    {
+        return this.biomeTypes;
+    }
+
     public int getEntityID()
     {
         return this.entityId;
@@ -147,16 +87,6 @@ public class MoCEntityData {
     public void setEntityID(int id)
     {
         this.entityId = id;
-    }
-
-    public MoCConfiguration getEntityConfig()
-    {
-        return this.config;
-    }
-
-    public void setEntityConfig(MoCConfiguration config)
-    {
-        this.config = config;
     }
 
     public int getFrequency()
@@ -170,7 +100,6 @@ public class MoCEntityData {
         {
             this.frequency = 0;
             this.canSpawn = false;
-            this.vanillaControl = false;
         }
         else 
         {
@@ -236,16 +165,6 @@ public class MoCEntityData {
         }
     }
 
-    public boolean getVanillaControl()
-    {
-        return this.vanillaControl;
-    }
-
-    public void setVanillaControl(boolean flag)
-    {
-        this.vanillaControl = flag;
-    }
-
     public String getEntityName()
     {
         return this.entityName;
@@ -256,16 +175,6 @@ public class MoCEntityData {
         this.entityName = name;
     }
 
-    public MoCEntityModData getEntityMod()
-    {
-    	return this.modData;
-    }
-
-    public void setEntityMod(MoCEntityModData mod)
-    {
-        this.modData = mod;
-    }
-
     public void setCanSpawn(boolean flag)
     {
         this.canSpawn = flag;
@@ -273,14 +182,12 @@ public class MoCEntityData {
 
     public boolean getCanSpawn()
     {
-        if (this.frequency > 0 
-         && ((this.getType() == EnumCreatureType.creature && MoCreatures.proxy.spawnCreatures && !(MoCreatures.proxy.maxCreatures <= 0))
-         || (this.getType() == EnumCreatureType.ambient && MoCreatures.proxy.spawnAmbients && !(MoCreatures.proxy.maxAmbients <= 0))
-         || (this.getType() == EnumCreatureType.waterCreature && MoCreatures.proxy.spawnWaterCreatures && !(MoCreatures.proxy.maxWaterCreatures <= 0))
-         || (this.getType() == EnumCreatureType.monster && MoCreatures.proxy.spawnMonsters && !(MoCreatures.proxy.maxMonsters <= 0))))
-            this.canSpawn = true;
-        else this.canSpawn = false;
         return this.canSpawn;
+    }
+
+    public SpawnListEntry getSpawnListEntry()
+    {
+        return this.spawnListEntry;
     }
 
     @SideOnly(Side.CLIENT)
@@ -293,55 +200,5 @@ public class MoCEntityData {
     public void setEntityWindow(WidgetSimplewindow window)
     {
         this.entityWindow = window;
-    }
-
-    public void addBiomeGroupSpawnMap(String biomeGroupName, List<BiomeGenBase> biomes)
-    {
-        this.biomeGroupSpawnMap.put(biomeGroupName, biomes);
-    }
-
-    public List<BiomeGenBase> getBiomeGroupSpawnMap(String biomeGroupName)
-    {
-        return this.biomeGroupSpawnMap.get(biomeGroupName);
-    }
-
-    public void addSpawnBiome(BiomeGenBase biome)
-    {
-        this.spawnBiomes.add(biome);
-    }
-
-    public void removeSpawnBiome(BiomeGenBase biome)
-    {
-        this.spawnBiomes.remove(biome);
-    }
-
-    public List<BiomeGenBase> getSpawnBiomes()
-    {
-        return this.spawnBiomes;
-    }
-
-    public List<String> getBiomeGroups()
-    {
-        return this.biomeGroups;
-    }
-
-    public void setBiomeGroups(List<String> valueList)
-    {
-        this.biomeGroups = valueList;
-    }
-
-    public void removeBiomeGroup(String biome)
-    {
-        this.biomeGroups.remove(biome);
-        if (this.biomeGroups.size() == 0 && this.frequency > 0 && this.minGroup > 0 && this.maxGroup > 0 && this.maxSpawnInChunk > 0)
-        {
-            this.vanillaControl = true;
-        }
-    }
-
-    public void addBiomeGroup(String biome)
-    {
-        this.biomeGroups.add(biome);
-        this.vanillaControl = false;
     }
 }

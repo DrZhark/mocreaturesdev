@@ -1,11 +1,10 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.Item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 
 public class MoCItem extends Item
 {

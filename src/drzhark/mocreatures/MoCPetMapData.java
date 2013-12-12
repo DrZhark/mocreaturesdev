@@ -1,24 +1,14 @@
 package drzhark.mocreatures;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.IMoCEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import net.minecraftforge.common.DimensionManager;
+import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCPetMapData extends WorldSavedData
 {

@@ -1,16 +1,12 @@
 package drzhark.mocreatures.entity.ambient;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityInsect;
 
 public class MoCEntityButterfly extends MoCEntityInsect 
 {

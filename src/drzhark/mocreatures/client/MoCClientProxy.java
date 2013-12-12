@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,25 +12,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import sharose.mods.guiapi.GuiApiHelper;
-import sharose.mods.guiapi.GuiModScreen;
-import sharose.mods.guiapi.ModAction;
-import sharose.mods.guiapi.ModSettingScreen;
-import sharose.mods.guiapi.WidgetBoolean;
-import sharose.mods.guiapi.WidgetClassicTwocolumn;
-import sharose.mods.guiapi.WidgetFloat;
-import sharose.mods.guiapi.WidgetInt;
-import sharose.mods.guiapi.WidgetList;
-import sharose.mods.guiapi.WidgetMulti;
-import sharose.mods.guiapi.WidgetSimplewindow;
-import sharose.mods.guiapi.WidgetSingleRow;
-import sharose.mods.guiapi.WidgetSinglecolumn;
-import sharose.mods.guiapi.WidgetText;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -42,23 +26,30 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleButtonModel;
-import drzhark.mocreatures.MoCBiomeGroupData;
-import drzhark.mocreatures.MoCConfiguration;
 import drzhark.mocreatures.MoCEntityData;
-import drzhark.mocreatures.MoCEntityModData;
-import drzhark.mocreatures.MoCProperty;
 import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.audio.MoCSounds;
-import drzhark.mocreatures.client.gui.MoCGUIEntityNamer;
-import drzhark.mocreatures.client.gui.MoCSettingBoolean;
-import drzhark.mocreatures.client.gui.MoCSettingFloat;
-import drzhark.mocreatures.client.gui.MoCSettingInt;
-import drzhark.mocreatures.client.gui.MoCSettingList;
-import drzhark.mocreatures.client.gui.MoCSettingMulti;
-import drzhark.mocreatures.client.gui.MoCSettingText;
-import drzhark.mocreatures.client.gui.MoCSettings;
+import drzhark.mocreatures.client.gui.GuiApiHelper;
+import drzhark.mocreatures.client.gui.GuiModScreen;
+import drzhark.mocreatures.client.gui.ModAction;
+import drzhark.mocreatures.client.gui.ModSettingScreen;
+import drzhark.mocreatures.client.gui.WidgetBoolean;
+import drzhark.mocreatures.client.gui.WidgetClassicTwocolumn;
+import drzhark.mocreatures.client.gui.WidgetFloat;
+import drzhark.mocreatures.client.gui.WidgetInt;
+import drzhark.mocreatures.client.gui.WidgetList;
+import drzhark.mocreatures.client.gui.WidgetMulti;
+import drzhark.mocreatures.client.gui.WidgetSimplewindow;
+import drzhark.mocreatures.client.gui.WidgetSinglecolumn;
+import drzhark.mocreatures.client.gui.helpers.MoCGUIEntityNamer;
+import drzhark.mocreatures.client.gui.helpers.MoCSettingBoolean;
+import drzhark.mocreatures.client.gui.helpers.MoCSettingFloat;
+import drzhark.mocreatures.client.gui.helpers.MoCSettingInt;
+import drzhark.mocreatures.client.gui.helpers.MoCSettingList;
+import drzhark.mocreatures.client.gui.helpers.MoCSettingMulti;
+import drzhark.mocreatures.client.gui.helpers.MoCSettings;
 import drzhark.mocreatures.client.model.MoCModelAnt;
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.client.model.MoCModelBee;
@@ -157,6 +148,7 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderWerewolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWraith;
 import drzhark.mocreatures.client.renderer.texture.MoCTextures;
 import drzhark.mocreatures.client.settings.MoCKeyHandler;
+import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
@@ -260,67 +252,67 @@ public class MoCClientProxy extends MoCProxy {
     public void registerRenderInformation()
     {
         // Register your custom renderers
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBunny.class, new MoCRenderBunny(new MoCModelBunny(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBird.class, new MoCRenderBird(new MoCModelBird(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityTurtle.class, new MoCRenderTurtle(new MoCModelTurtle(), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMouse.class, new MoCRenderMouse(new MoCModelMouse(), 0.1F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntitySnake.class, new MoCRenderSnake(new MoCModelSnake(), 0.0F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityTurkey.class, new MoCRenderMoC(new MoCModelTurkey(), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityButterfly.class, new MoCRenderButterfly(new MoCModelButterfly()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityHorse.class, new MoCRenderNewHorse(new MoCModelNewHorse()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityHorseMob.class, new MoCRenderHorseMob(new MoCModelNewHorseMob()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBoar.class, new MoCRenderBoar(new MoCModelBoar(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBear.class, new MoCRenderBear(new MoCModelBear(), 0.7F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityDuck.class, new MoCRenderMoC(new MoCModelDuck(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBigCat.class, new MoCRenderBigCat(new MoCModelBigCat2(), new MoCModelBigCat1(), 0.7F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityDeer.class, new MoCRenderDeer(new MoCModelDeer(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityWWolf.class, new MoCRenderWWolf(new MoCModelWolf(), 0.7F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFlameWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityWerewolf.class, new MoCRenderWerewolf(new MoCModelWereHuman(), new MoCModelWere(), 0.7F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFox.class, new MoCRenderMoC(new MoCModelFox(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityShark.class, new MoCRenderShark(new MoCModelShark(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityDolphin.class, new MoCRenderDolphin(new MoCModelDolphin(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFishy.class, new MoCRenderMoC(new MoCModelFishy(), 0.1F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityEgg.class, new MoCRenderEgg(new MoCModelEgg(), 0.0F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityKitty.class, new MoCRenderKitty(new MoCModelKitty(0.0F, 15F), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityKittyBed.class, new MoCRenderKittyBed(new MoCModelKittyBed(), new MoCModelKittyBed2(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityLitterBox.class, new MoCRenderLitterBox(new MoCModelLitterBox(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityRat.class, new MoCRenderRat(new MoCModelRat(), 0.2F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityHellRat.class, new MoCRenderHellRat(new MoCModelRat(), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityScorpion.class, new MoCRenderScorpion(new MoCModelScorpion(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityCrocodile.class, new MoCRenderCrocodile(new MoCModelCrocodile(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityRay.class, new MoCRenderMoC(new MoCModelRay(), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityJellyFish.class, new MoCRenderMoC(new MoCModelJellyFish(), 0.1F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityGoat.class, new MoCRenderGoat(new MoCModelGoat(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFishBowl.class, new MoCRenderFishBowl(new MoCModelFishBowl(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityOstrich.class, new MoCRenderOstrich(new MoCModelOstrich(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityBee.class, new MoCRenderInsect(new MoCModelBee()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFly.class, new MoCRenderInsect(new MoCModelFly()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityDragonfly.class, new MoCRenderInsect(new MoCModelDragonfly()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityFirefly.class, new MoCRenderFirefly(new MoCModelFirefly()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityCricket.class, new MoCRenderCricket(new MoCModelCricket()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntitySnail.class, new MoCRenderMoC(new MoCModelSnail(), 0.0F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityGolem.class, new MoCRenderGolem(new MoCModelGolem(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityThrowableRock.class, new MoCRenderTRock());
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityPetScorpion.class, new MoCRenderPetScorpion(new MoCModelPetScorpion(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityPlatform.class, new MoCRenderPlatform());
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityElephant.class, new MoCRenderMoC(new MoCModelElephant(), 0.7F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityKomodo.class, new MoCRenderMoC(new MoCModelKomodo(), 0.3F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityWyvern.class, new MoCRenderMoC(new MoCModelWyvern(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityOgre.class, new MoCRenderMoC(new MoCModelOgre(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityRoach.class, new MoCRenderInsect(new MoCModelRoach()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMaggot.class, new MoCRenderMoC(new MoCModelMaggot(), 0F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityCrab.class, new MoCRenderMoC(new MoCModelCrab(), 0.2F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityRaccoon.class, new MoCRenderMoC(new MoCModelRaccoon(), 0.4F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMiniGolem.class, new MoCRenderMoC(new MoCModelMiniGolem(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntitySilverSkeleton.class, new MoCRenderMoC(new MoCModelSilverSkeleton(), 0.6F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityAnt.class, new MoCRenderInsect(new MoCModelAnt()));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMediumFish.class, new MoCRenderMoC(new MoCModelMediumFish(), 0.2F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntitySmallFish.class, new MoCRenderMoC(new MoCModelSmallFish(), 0.1F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityPiranha.class, new MoCRenderMoC(new MoCModelSmallFish(), 0.1F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityEnt.class, new MoCRenderMoC(new MoCModelEnt(), 0.5F));
-        RenderingRegistry.instance().registerEntityRenderingHandler(MoCEntityMole.class, new MoCRenderMoC(new MoCModelMole(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBunny.class, new MoCRenderBunny(new MoCModelBunny(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBird.class, new MoCRenderBird(new MoCModelBird(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityTurtle.class, new MoCRenderTurtle(new MoCModelTurtle(), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityMouse.class, new MoCRenderMouse(new MoCModelMouse(), 0.1F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntitySnake.class, new MoCRenderSnake(new MoCModelSnake(), 0.0F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityTurkey.class, new MoCRenderMoC(new MoCModelTurkey(), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityButterfly.class, new MoCRenderButterfly(new MoCModelButterfly()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityHorse.class, new MoCRenderNewHorse(new MoCModelNewHorse()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityHorseMob.class, new MoCRenderHorseMob(new MoCModelNewHorseMob()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBoar.class, new MoCRenderBoar(new MoCModelBoar(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBear.class, new MoCRenderBear(new MoCModelBear(), 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDuck.class, new MoCRenderMoC(new MoCModelDuck(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBigCat.class, new MoCRenderBigCat(new MoCModelBigCat2(), new MoCModelBigCat1(), 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDeer.class, new MoCRenderDeer(new MoCModelDeer(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityWWolf.class, new MoCRenderWWolf(new MoCModelWolf(), 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFlameWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityWerewolf.class, new MoCRenderWerewolf(new MoCModelWereHuman(), new MoCModelWere(), 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFox.class, new MoCRenderMoC(new MoCModelFox(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityShark.class, new MoCRenderShark(new MoCModelShark(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDolphin.class, new MoCRenderDolphin(new MoCModelDolphin(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFishy.class, new MoCRenderMoC(new MoCModelFishy(), 0.1F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityEgg.class, new MoCRenderEgg(new MoCModelEgg(), 0.0F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityKitty.class, new MoCRenderKitty(new MoCModelKitty(0.0F, 15F), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityKittyBed.class, new MoCRenderKittyBed(new MoCModelKittyBed(), new MoCModelKittyBed2(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityLitterBox.class, new MoCRenderLitterBox(new MoCModelLitterBox(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityRat.class, new MoCRenderRat(new MoCModelRat(), 0.2F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityHellRat.class, new MoCRenderHellRat(new MoCModelRat(), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityScorpion.class, new MoCRenderScorpion(new MoCModelScorpion(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityCrocodile.class, new MoCRenderCrocodile(new MoCModelCrocodile(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityRay.class, new MoCRenderMoC(new MoCModelRay(), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityJellyFish.class, new MoCRenderMoC(new MoCModelJellyFish(), 0.1F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityGoat.class, new MoCRenderGoat(new MoCModelGoat(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFishBowl.class, new MoCRenderFishBowl(new MoCModelFishBowl(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityOstrich.class, new MoCRenderOstrich(new MoCModelOstrich(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBee.class, new MoCRenderInsect(new MoCModelBee()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFly.class, new MoCRenderInsect(new MoCModelFly()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDragonfly.class, new MoCRenderInsect(new MoCModelDragonfly()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityFirefly.class, new MoCRenderFirefly(new MoCModelFirefly()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityCricket.class, new MoCRenderCricket(new MoCModelCricket()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntitySnail.class, new MoCRenderMoC(new MoCModelSnail(), 0.0F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityGolem.class, new MoCRenderGolem(new MoCModelGolem(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityThrowableRock.class, new MoCRenderTRock());
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityPetScorpion.class, new MoCRenderPetScorpion(new MoCModelPetScorpion(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityPlatform.class, new MoCRenderPlatform());
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityElephant.class, new MoCRenderMoC(new MoCModelElephant(), 0.7F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityKomodo.class, new MoCRenderMoC(new MoCModelKomodo(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityWyvern.class, new MoCRenderMoC(new MoCModelWyvern(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityOgre.class, new MoCRenderMoC(new MoCModelOgre(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityRoach.class, new MoCRenderInsect(new MoCModelRoach()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityMaggot.class, new MoCRenderMoC(new MoCModelMaggot(), 0F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityCrab.class, new MoCRenderMoC(new MoCModelCrab(), 0.2F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityRaccoon.class, new MoCRenderMoC(new MoCModelRaccoon(), 0.4F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityMiniGolem.class, new MoCRenderMoC(new MoCModelMiniGolem(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntitySilverSkeleton.class, new MoCRenderMoC(new MoCModelSilverSkeleton(), 0.6F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityAnt.class, new MoCRenderInsect(new MoCModelAnt()));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityMediumFish.class, new MoCRenderMoC(new MoCModelMediumFish(), 0.2F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntitySmallFish.class, new MoCRenderMoC(new MoCModelSmallFish(), 0.1F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityPiranha.class, new MoCRenderMoC(new MoCModelSmallFish(), 0.1F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityEnt.class, new MoCRenderMoC(new MoCModelEnt(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityMole.class, new MoCRenderMoC(new MoCModelMole(), 0.3F));
         
     }
 
@@ -567,9 +559,6 @@ public class MoCClientProxy extends MoCProxy {
     public static MoCSettingBoolean animateTexturesB;
     public static WidgetBoolean animateTexturesW;
 
-    public static MoCSettingBoolean useCustomSpawnerS;
-    public static WidgetBoolean useCustomSpawnerW;
-
     public static MoCSettingBoolean displaynameB;
     public static WidgetBoolean displaynameW;
     public static MoCSettingBoolean displayhealthB;
@@ -659,9 +648,6 @@ public class MoCClientProxy extends MoCProxy {
     private WidgetSimplewindow instaSpawnerWindow;
     private MoCSettingInt settingNumberToSpawn;
     private MoCSettingMulti settingClassToSpawn;
-    public WidgetSimplewindow biomesWindow;
-    public WidgetSimplewindow biomeGroupsWindow;
-    public WidgetSimplewindow customSpawnerWindow;
     public WidgetSimplewindow creatureOptionsWindow;
     public WidgetSimplewindow creatureSettingsWindow;
     public WidgetSimplewindow creatureSpawnSettingsWindow;
@@ -673,13 +659,10 @@ public class MoCClientProxy extends MoCProxy {
     public WidgetSimplewindow mobSpawnSettingsWindow;
     public WidgetSimplewindow ambientOptionsWindow;
     public WidgetSimplewindow ambientSpawnSettingsWindow;
-    public WidgetSimplewindow undefinedOptionsWindow;
-    public WidgetSimplewindow undefinedSpawnSettingsWindow;
     public WidgetSimplewindow generalSettingsWindow;
     public WidgetSimplewindow IDSettingsWindow;
     public WidgetSimplewindow vanillamobwindow;
     public WidgetSimplewindow defaultsWindow;
-    public WidgetSimplewindow instaSpaqwnerWindow;
 
     private WidgetClassicTwocolumn widgetCreatureSettingsColumns;
     private WidgetClassicTwocolumn widgetCreatureSpawnSettingsColumns;
@@ -689,28 +672,18 @@ public class MoCClientProxy extends MoCProxy {
     private WidgetClassicTwocolumn widgetWaterMobSpawnSettingsColumns;
     private WidgetClassicTwocolumn widgetAmbientSettingsColumns;
     private WidgetClassicTwocolumn widgetAmbientSpawnSettingsColumns;
-    private WidgetClassicTwocolumn widgetUndefinedSettingsColumns;
-    private WidgetClassicTwocolumn widgetUndefinedSpawnSettingsColumns;
-    private WidgetClassicTwocolumn widgetCustomSpawnerColumns;
     private WidgetClassicTwocolumn widgetGeneralSettingsColumns;
     private WidgetClassicTwocolumn widgetIDSettingsColumns;
-    private WidgetClassicTwocolumn widgetBiomeForestGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeArcticGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeNormalGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeMountainGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeJungleGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeDesertGroupColumns;
-    private WidgetClassicTwocolumn widgetBiomeSwampGroupColumns;
     private WidgetClassicTwocolumn defaultChoices;
-    private WidgetClassicTwocolumn biomeColumns;
     private WidgetSinglecolumn widgetInstaSpawnerColumn;
+    private WidgetClassicTwocolumn spawnColumns;
     private WidgetClassicTwocolumn creatureOptions;
     private WidgetClassicTwocolumn mobOptions;
-    private WidgetClassicTwocolumn waterMobOptions;
+    private WidgetClassicTwocolumn waterOptions;
     private WidgetClassicTwocolumn ambientOptions;
-    private WidgetClassicTwocolumn undefinedOptions;
-    private WidgetClassicTwocolumn biomeGroupOptions;
-    private WidgetClassicTwocolumn biomeButtons;
+    //private WidgetClassicTwocolumn undefinedOptions;
+    //private WidgetClassicTwocolumn biomeGroupOptions;
+    //private WidgetClassicTwocolumn biomeButtons;
 
     private static final String BUTTON_GENERAL_SETTINGS = "General Settings";
     private static final String BUTTON_ID_SETTINGS = "ID Settings";
@@ -722,15 +695,11 @@ public class MoCClientProxy extends MoCProxy {
     private static final String BUTTON_WATERMOB_GENERAL_SETTINGS = "Water Mob General Settings";
     private static final String BUTTON_WATERMOB_SPAWN_SETTINGS = "Water Mob Spawn Settings";
     private static final String BUTTON_AMBIENT_SPAWN_SETTINGS = "Ambient Spawn Settings";
-    private static final String BUTTON_UNDEFINED_SPAWN_SETTINGS = "Undefined Spawn Settings";
-    private static final String BUTTON_CUSTOMSPAWNER_SETTINGS = "Customspawner Settings";
     private static final String BUTTON_OWNERSHIP_SETTINGS = "Ownership Settings";
-    private static final String BUTTON_ENTITY_SPAWN_SETTINGS = "Entity Biome Settings";
     private static final String BUTTON_DEFAULTS = "Reset to Defaults";
     private static final String MOC_SCREEN_TITLE = "DrZhark's Mo'Creatures" ;
 
-    public static final List<String> entityTypes = Arrays.asList("UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
-    private Map<String, WidgetClassicTwocolumn> widgetBiomeGroupMap = new HashMap<String, WidgetClassicTwocolumn>();
+    public static final List<String> entityTypes = Arrays.asList("CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
 
     public MoCEntityData currentSelectedEntity;
 
@@ -741,7 +710,7 @@ public class MoCClientProxy extends MoCProxy {
     }
 
     public void ConfigPostInit(FMLPostInitializationEvent event) {
-        super.ConfigPostInit(event);
+        //super.ConfigPostInit(event);
         initGUI();
     }
 
@@ -757,280 +726,44 @@ public class MoCClientProxy extends MoCProxy {
         ModAction initMobWindow = new ModAction(this, "showMobOptions", new Class[0]);
         ModAction initWaterMobWindow = new ModAction(this, "showWaterMobOptions", new Class[0]);
         ModAction initAmbientWindow = new ModAction(this, "showAmbientOptions", new Class[0]);
-        ModAction initUndefinedWindow = new ModAction(this, "showUndefinedOptions", new Class[0]);
-        ModAction initCustomSpawnerWindow = new ModAction(this, "showCustomSpawnerOptions", new Class[0]);
         ModAction initGeneralSettingsWindow = new ModAction(this, "showGeneralSettings", new Class[0]);
         ModAction initIDSettingsWindow = new ModAction(this, "showIDSettings", new Class[0]);
-        ModAction initBiomeGroupsWindow = new ModAction(this, "showBiomeGroups", new Class[0]);
         ModAction initDefaultsWindow = new ModAction(this, "showDefaults", new Class[0]);
         ModAction showInstaSpawner = new ModAction(this, "showInstaSpawner", new Class[0]);
         MoCScreen.append(GuiApiHelper.makeButton("General Settings", initGeneralSettingsWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("ID Settings", initIDSettingsWindow, true));
-        MoCScreen.append(GuiApiHelper.makeButton("CustomSpawner", initCustomSpawnerWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Insta-Spawner", showInstaSpawner, true));
         MoCScreen.append(GuiApiHelper.makeButton("Creatures", initCreatureWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Mobs", initMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Water Mobs", initWaterMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Ambient", initAmbientWindow, true));
-        MoCScreen.append(GuiApiHelper.makeButton("Undefined", initUndefinedWindow, true));
-        MoCScreen.append(GuiApiHelper.makeButton("Biome Groups", initBiomeGroupsWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Reset to Defaults", initDefaultsWindow, true));
         //**********************************************************//
 
         //******************** Creatures ********************//
         creatureOptions = new WidgetClassicTwocolumn(new Widget[0]);
-
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            if (modEntry.getValue().getCreatureMap().size() != 0)
-                creatureOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.creature), true));
-        }
-
-        SimpleButtonModel simplebuttonmodel2 = new SimpleButtonModel();
-        simplebuttonmodel2.addActionCallback(new ModAction(this, "showCreatureSettings", new Class[0]));
-        Button button2 = new Button(simplebuttonmodel2);
-        button2.setText(BUTTON_CREATURE_GENERAL_SETTINGS);
-        creatureOptions.add(button2);
-        widgetCreatureSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(easybreedingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", easyBreeding));
-        easybreedingW = new WidgetBoolean(easybreedingB, "Easy Horse Breed", "Yes", "No");
-        widgetCreatureSettingsColumns.add(easybreedingW);
-        guiapiSettings.append(pegasusChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", zebraChance, 1, 1, 10));
-        pegasusChanceW = new WidgetInt(pegasusChanceS, "Zebra chance");
-        widgetCreatureSettingsColumns.add(pegasusChanceW);
-        guiapiSettings.append(attackhorses = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", attackHorses));
-        attackhorsesW = new WidgetBoolean(attackhorses, "Target horses?", "Yes", "No");
-        widgetCreatureSettingsColumns.add(attackhorsesW);
-        guiapiSettings.append(attackwolvesB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", attackWolves));
-        attackwolvesW = new WidgetBoolean(attackwolvesB, "Target dogs?", "Yes", "No");
-        widgetCreatureSettingsColumns.add(attackwolvesW);
-        guiapiSettings.append(destroyitemsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", destroyDrops));
-        destroyitemsW = new WidgetBoolean(destroyitemsB, "Destroy drops?", "Yes", "No");
-        widgetCreatureSettingsColumns.add(destroyitemsW);
-        guiapiSettings.append(killallVillagersB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", killallVillagers));
-        killallVillagersW = new WidgetBoolean(killallVillagersB, "Killall Villagers?", "Yes", "No");
-        widgetCreatureSettingsColumns.add(killallVillagersW);
+        // create buttons
+        creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
+        creatureOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showCreatureSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Mobs ********************//
         mobOptions = new WidgetClassicTwocolumn(new Widget[0]);
-
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            if (modEntry.getValue().getMonsterMap().size() != 0)
-                mobOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.monster), true));
-        }
-
-        SimpleButtonModel simplebuttonmodel4 = new SimpleButtonModel();
-        simplebuttonmodel4.addActionCallback(new ModAction(this, "showMobSettings", new Class[0]));
-        Button button4 = new Button(simplebuttonmodel4);
-        button4.setText(BUTTON_MONSTER_GENERAL_SETTINGS);
-        mobOptions.add(button4);
-        widgetMobSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(ogreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreStrength", ogreStrength, 0.1F, 0.1F, 5F));
-        ogreStrengthW = new WidgetFloat(ogreStrengthS, "Ogre Strength");
-        widgetMobSettingsColumns.add(ogreStrengthW);
-        guiapiSettings.append(fireOgreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreStrength", fireOgreStrength, 0.1F, 0.1F, 5F));
-        fireOgreStrengthW = new WidgetFloat(fireOgreStrengthS, "Fire O. Strength");
-        widgetMobSettingsColumns.add(fireOgreStrengthW);
-        guiapiSettings.append(caveOgreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreStrength", caveOgreStrength, 0.1F, 0.1F, 5F));
-        caveOgreStrengthW = new WidgetFloat(caveOgreStrengthS, "Cave O. Strength");
-        widgetMobSettingsColumns.add(caveOgreStrengthW);
-        guiapiSettings.append(ogreAttackRangeS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreAttackRange", ogreAttackRange, 1, 1, 24));
-        ogreAttackRangeW = new WidgetInt(ogreAttackRangeS, "Ogre Attack Range");
-        widgetMobSettingsColumns.add(ogreAttackRangeW);
-        guiapiSettings.append(caveOgreChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "caveOgreChance", caveOgreChance, 0, 1, 100));
-        caveOgreChanceW = new WidgetInt(caveOgreChanceS, "Cave Ogre Chance");
-        widgetMobSettingsColumns.add(caveOgreChanceW);
-        guiapiSettings.append(fireOgreChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "fireOgreChance", fireOgreChance, 0, 1, 100));
-        fireOgreChanceW = new WidgetInt(fireOgreChanceS, "Fire Ogre Chance");
-        widgetMobSettingsColumns.add(fireOgreChanceW);
-        guiapiSettings.append(golemDestroyBlocksB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", golemDestroyBlocks));
-        golemDestroyBlocksW = new WidgetBoolean(golemDestroyBlocksB, "Golem Destroy Blocks?");
-        widgetMobSettingsColumns.add(golemDestroyBlocksW);
+        mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
+        mobOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showMobSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Water Mobs ********************//
-        waterMobOptions = new WidgetClassicTwocolumn(new Widget[0]);
-
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            if (modEntry.getValue().getWaterCreatureMap().size() != 0)
-                waterMobOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.waterCreature), true));
-        }
-
-        SimpleButtonModel simplebuttonmodel5 = new SimpleButtonModel();
-        simplebuttonmodel5.addActionCallback(new ModAction(this, "showWaterMobSettings", new Class[0]));
-
-        Button button5 = new Button(simplebuttonmodel5);
-        button5.setText(BUTTON_WATERMOB_GENERAL_SETTINGS);
-        waterMobOptions.add(button5);
-        widgetWaterMobSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(attackdolphinsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", attackDolphins));
-        attackdolphinsW = new WidgetBoolean(attackdolphinsB, "Aggresive Dolphins?", "Yes", "No");
-        widgetWaterMobSettingsColumns.add(attackdolphinsW);
+        waterOptions = new WidgetClassicTwocolumn(new Widget[0]);
+        waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
+        waterOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showWaterSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Ambient ********************//
         ambientOptions = new WidgetClassicTwocolumn(new Widget[0]);
-
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            if (modEntry.getValue().getAmbientMap().size() != 0)
-                ambientOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class, EnumCreatureType.class).setDefaultArguments(modEntry.getValue(), EnumCreatureType.ambient), true));
-        }
-
-        //******************** Undefined ********************//
-        undefinedOptions = new WidgetClassicTwocolumn(new Widget[0]);
-
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            if (modEntry.getValue().getUndefinedMap().size() != 0)
-                undefinedOptions.add(GuiApiHelper.makeButton(modEntry.getValue().getModConfig().getFileName(), new ModAction(this, "showEntityModSettings", MoCEntityModData.class).setDefaultArguments(modEntry.getValue()), true));
-        }
-
-        //******************** CustomSpawner ********************//
-        widgetCustomSpawnerColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(useCustomSpawnerS = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "useCustomSpawner", useCustomSpawner));
-        useCustomSpawnerW = new WidgetBoolean(useCustomSpawnerS, "Use CustomSpawner?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(useCustomSpawnerW);
-        guiapiSettings.append(CMSLoggingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "debugCMS", debugCMS));
-        CMSLoggingW = new WidgetBoolean(CMSLoggingB, "Show CMS Logging?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(CMSLoggingW);
-        guiapiSettings.append(creatureSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "creatureSpawnTickRate", creatureSpawnTickRate, 1, 1, 1000));
-        creatureSpawnTickRateW = new WidgetInt(creatureSpawnTickRateS, "Anml Spawn Ticks");
-        widgetCustomSpawnerColumns.add(creatureSpawnTickRateW);
-        guiapiSettings.append(monsterSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "monsterSpawnTickRate", monsterSpawnTickRate, 1, 1, 1000));
-        monsterSpawnTickRateW = new WidgetInt(monsterSpawnTickRateS, "Mob Spawn Ticks");
-        widgetCustomSpawnerColumns.add(monsterSpawnTickRateW);
-        guiapiSettings.append(waterSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "waterSpawnTickRate", waterSpawnTickRate, 1, 1, 1000));
-        waterSpawnTickRateW = new WidgetInt(waterSpawnTickRateS, "Wtr Spawn Ticks");
-        widgetCustomSpawnerColumns.add(waterSpawnTickRateW);
-        guiapiSettings.append(ambientSpawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "ambientSpawnTickRate", ambientSpawnTickRate, 1, 1, 1000));
-        ambientSpawnTickRateW = new WidgetInt(ambientSpawnTickRateS, "Ambt Spawn Ticks");
-        widgetCustomSpawnerColumns.add(ambientSpawnTickRateW);
-        guiapiSettings.append(maxMonstersS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxMonsters", maxMonsters, 1, 1, 1000));
-        maxMonstersW = new WidgetInt(maxMonstersS, "Hostiles");
-        widgetCustomSpawnerColumns.add(maxMonstersW);
-        guiapiSettings.append(maxCreaturesS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxCreatures", maxCreatures, 1, 1, 1000));
-        maxCreaturesW = new WidgetInt(maxCreaturesS, "Animals");
-        widgetCustomSpawnerColumns.add(maxCreaturesW);
-        guiapiSettings.append(maxWaterCreaturesS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxWaterCreatures", maxWaterCreatures, 1, 1, 1000));
-        maxWaterCreaturesW = new WidgetInt(maxWaterCreaturesS, "Water Mobs");
-        widgetCustomSpawnerColumns.add(maxWaterCreaturesW);
-        guiapiSettings.append(maxAmbientsS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxAmbients", maxAmbients, 1, 1, 1000));
-        maxWaterCreaturesW = new WidgetInt(maxAmbientsS, "Ambient Mobs");
-        widgetCustomSpawnerColumns.add(maxWaterCreaturesW);
-        guiapiSettings.append(despawnVanillaB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "DespawnVanilla", despawnVanilla));
-        despawnVanillaW = new WidgetBoolean(despawnVanillaB, "Despawn vanilla mobs?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(despawnVanillaW);
-        guiapiSettings.append(despawnTickRateS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnTickRate", despawnTickRate, 1, 1, 1000));
-        despawnTickRateW = new WidgetInt(despawnTickRateS, "Despawn Tick R.");
-        widgetCustomSpawnerColumns.add(despawnTickRateW);
-        guiapiSettings.append(modifyVanillaSpawnsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "ModifyVanillaSpawns", modifyVanillaSpawns));
-        modifyVanillaSpawnsW = new WidgetBoolean(modifyVanillaSpawnsB, "Change vanilla spawns?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(modifyVanillaSpawnsW);
-        guiapiSettings.append(worldGenCreatureSpawningB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", worldGenCreatureSpawning));
-        worldGenCreatureSpawningW = new WidgetBoolean(worldGenCreatureSpawningB, "Chunk Gen Spawning?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(worldGenCreatureSpawningW);
-        guiapiSettings.append(lightLevelS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "lightLevel", lightLevel, 1, 1, 1000));
-        lightLevelW = new WidgetInt(lightLevelS, "LightLevel");
-        widgetCustomSpawnerColumns.add(lightLevelW);
-        guiapiSettings.append(despawnLightLevelS = new MoCSettingInt(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", despawnLightLevel, 1, 1, 1000));
-        despawnLightLevelW = new WidgetInt(despawnLightLevelS, "DespawnLightLevel");
-        widgetCustomSpawnerColumns.add(despawnLightLevelW);
-        guiapiSettings.append(checkAmbientLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", checkAmbientLightLevel));
-        checkAmbientLightLevelW = new WidgetBoolean(checkAmbientLightLevelB, "Ambients use Lightlvl?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(checkAmbientLightLevelW);
-        guiapiSettings.append(enforceMaxSpawnLimitsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", enforceMaxSpawnLimits));
-        enforceMaxSpawnLimitsW = new WidgetBoolean(enforceMaxSpawnLimitsB, "Enforce Max Spawn Limits?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(enforceMaxSpawnLimitsW);
-        guiapiSettings.append(disallowMonsterSpawningDuringDayB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "disallowMonsterSpawningDuringDay", disallowMonsterSpawningDuringDay));
-        disallowMonsterSpawningDuringDayW = new WidgetBoolean(disallowMonsterSpawningDuringDayB, "Stop Mob Spawn at Day?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(disallowMonsterSpawningDuringDayW);
-        guiapiSettings.append(killallUseLightLevelB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", killallUseLightLevel));
-        killallUseLightLevelW = new WidgetBoolean(killallUseLightLevelB, "Killall Use LightLevel?", "Yes", "No");
-        widgetCustomSpawnerColumns.add(killallUseLightLevelW);
-        //**********************************************************//
-
-       
-        //******************** General Settings********************//
-        widgetGeneralSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(debugLoggingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", debugLogging));
-        debugLoggingW = new WidgetBoolean(debugLoggingB, "Show Debug Logging?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(debugLoggingW);
-        guiapiSettings.append(displaynameB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetName", displayPetName));
-        displaynameW = new WidgetBoolean(displaynameB, "Show Pet Name?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(displaynameW);
-        guiapiSettings.append(displayhealthB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetHealth", displayPetHealth));
-        displayhealthW = new WidgetBoolean(displayhealthB, "Show Pet Health?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(displayhealthW);
-        guiapiSettings.append(displayemoB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetIcons", displayPetIcons));
-        displayemoW = new WidgetBoolean(displayemoB, "Show Pet Icons?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(displayemoW);
-        guiapiSettings.append(staticbedB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticBed", staticBed));
-        staticbedW = new WidgetBoolean(staticbedB, "Static K.Bed?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(staticbedW);
-        guiapiSettings.append(staticlitterB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticLitter", staticLitter));
-        staticlitterW = new WidgetBoolean(staticlitterB, "Static Litter?", "Yes", "No");
-        widgetGeneralSettingsColumns.add(staticlitterW);
-        guiapiSettings.append(particleFXS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "particleFX", particleFX, 0, 1, 10));
-        particleFXW = new WidgetInt(particleFXS, "FX Particle density");
-        widgetGeneralSettingsColumns.add(particleFXW);
-        guiapiSettings.append(animateTexturesB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "AnimateTextures", animateTextures));
-        animateTexturesW = new WidgetBoolean(animateTexturesB, "Animate Textures", "Yes", "No");
-        widgetGeneralSettingsColumns.add(animateTexturesW);
-        //**********************************************************//
-
-        //******************** ID Settings ********************//
-        widgetIDSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        guiapiSettings.append(mocitemidA = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "ItemID", itemID, 4096, 1, 60000));
-        mocitemidW = new WidgetInt(mocitemidA, "Item ID");
-        widgetIDSettingsColumns.add(mocitemidW);
-        guiapiSettings.append(blockDirtIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", blockDirtID, 1, 1, 255));
-        blockDirtIdW = new WidgetInt(blockDirtIdS, "DirtBlock ID");
-        widgetIDSettingsColumns.add(blockDirtIdW);
-        guiapiSettings.append(blockGrassIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "GrassBlockID", blockGrassID, 1, 1, 255));
-        blockGrassIdW = new WidgetInt(blockGrassIdS, "GrassBlock ID");
-        widgetIDSettingsColumns.add(blockGrassIdW);
-        guiapiSettings.append(blockStoneIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", blockStoneID, 256, 1, 60000));
-        blockStoneIdW = new WidgetInt(blockStoneIdS, "StoneBlock ID");
-        widgetIDSettingsColumns.add(blockStoneIdW);
-        guiapiSettings.append(blockLeafIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "LeafBlockID", blockLeafID, 256, 1, 60000));
-        blockLeafIdW = new WidgetInt(blockLeafIdS, "LeafBlock ID");
-        widgetIDSettingsColumns.add(blockLeafIdW);
-        guiapiSettings.append(blockLogIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "LogBlockID", blockLogID, 256, 1, 60000));
-        blockLogIdW = new WidgetInt(blockLogIdS, "LogBlock ID");
-        widgetIDSettingsColumns.add(blockLogIdW);
-        guiapiSettings.append(blockTallGrassIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "TallGrassBlockID", blockTallGrassID, 256, 1, 60000));
-        blockTallGrassIdW = new WidgetInt(blockTallGrassIdS, "TallG.Block ID");
-        widgetIDSettingsColumns.add(blockTallGrassIdW);
-        guiapiSettings.append(blockPlanksIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "PlanksBlockID", blockPlanksID, 256, 1, 60000));
-        blockPlanksIdW = new WidgetInt(blockPlanksIdS, "PlanksBlock ID");
-        widgetIDSettingsColumns.add(blockPlanksIdW);
-        guiapiSettings.append(wyvernBiomeIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", WyvernBiomeID, 22, 1, 255));
-        wyvernBiomeIdW = new WidgetInt(wyvernBiomeIdS, "WyvernBiome ID");
-        widgetIDSettingsColumns.add(wyvernBiomeIdW);
-        guiapiSettings.append(wyvernDimensionIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", WyvernDimension, -1000, 1, 60000));
-        wyvernDimensionIdW = new WidgetInt(wyvernDimensionIdS, "Wyv. Dimension");
-        widgetIDSettingsColumns.add(wyvernDimensionIdW);
-        //**********************************************************//
-        
-        
-        //******************** Reset Default Settings ********************//
-        defaultChoices = new WidgetClassicTwocolumn(new Widget[0]);
-        SimpleButtonModel defaultChoiceButtonModel = new SimpleButtonModel();
-        defaultChoiceButtonModel.addActionCallback(new ModAction(this, "resetToDefaults", new Class[0]));
-        Button defaultChoiceButton = new Button(defaultChoiceButtonModel);
-        defaultChoiceButton.setText("Yes");
-        defaultChoices.add(defaultChoiceButton);
-        SimpleButtonModel defaultChoiceButtonModel2 = new SimpleButtonModel();
-        defaultChoiceButtonModel2.addActionCallback(new ModAction(this, "cancelReset", new Class[0]));
-        Button defaultChoiceButton2 = new Button(defaultChoiceButtonModel2);
-        defaultChoiceButton2.setText("No");
-        defaultChoices.add(defaultChoiceButton2);
+        ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Reset All ********************//
@@ -1038,7 +771,6 @@ public class MoCClientProxy extends MoCProxy {
         simplebuttonmodel8.addActionCallback(new ModAction(guiapiSettings, "resetAll", new Class[0]));
         Button button8 = new Button(simplebuttonmodel8);
         button8.setText("Reset to defaults");
-        
         //**********************************************************//
 
         guiapiSettings.load();
@@ -1060,9 +792,27 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (creatureSettingsWindow == null)
         {
+            widgetCreatureSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+            guiapiSettings.append(easybreedingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", easyBreeding));
+            easybreedingW = new WidgetBoolean(easybreedingB, "Easy Horse Breed", "Yes", "No");
+            widgetCreatureSettingsColumns.add(easybreedingW);
+            guiapiSettings.append(pegasusChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", zebraChance, 1, 1, 10));
+            pegasusChanceW = new WidgetInt(pegasusChanceS, "Zebra chance");
+            widgetCreatureSettingsColumns.add(pegasusChanceW);
+            guiapiSettings.append(attackhorses = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", attackHorses));
+            attackhorsesW = new WidgetBoolean(attackhorses, "Target horses?", "Yes", "No");
+            widgetCreatureSettingsColumns.add(attackhorsesW);
+            guiapiSettings.append(attackwolvesB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", attackWolves));
+            attackwolvesW = new WidgetBoolean(attackwolvesB, "Target dogs?", "Yes", "No");
+            widgetCreatureSettingsColumns.add(attackwolvesW);
+            guiapiSettings.append(destroyitemsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", destroyDrops));
+            destroyitemsW = new WidgetBoolean(destroyitemsB, "Destroy drops?", "Yes", "No");
+            widgetCreatureSettingsColumns.add(destroyitemsW);
+            guiapiSettings.append(killallVillagersB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", killallVillagers));
+            killallVillagersW = new WidgetBoolean(killallVillagersB, "Killall Villagers?", "Yes", "No");
+            widgetCreatureSettingsColumns.add(killallVillagersW);
             creatureSettingsWindow = new WidgetSimplewindow(widgetCreatureSettingsColumns, BUTTON_CREATURE_GENERAL_SETTINGS);
         }
-
         GuiModScreen.show(creatureSettingsWindow);
     }
 
@@ -1070,9 +820,16 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (creatureSpawnSettingsWindow == null)
         {
+            // create entity button for each creature
+            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
+            {
+                if (entityEntry.getValue().getType() == EnumCreatureType.creature)
+                {
+                    widgetCreatureSpawnSettingsColumns.add(GuiApiHelper.makeButton(entityEntry.getKey(), new ModAction(this, "showEntitySettings", MoCEntityData.class).setDefaultArguments(entityEntry.getValue()), true));
+                }
+            }
             creatureSpawnSettingsWindow = new WidgetSimplewindow(widgetCreatureSpawnSettingsColumns, BUTTON_CREATURE_SPAWN_SETTINGS);
         }
-
         GuiModScreen.show(creatureSpawnSettingsWindow);
     }
 
@@ -1091,6 +848,14 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (mobSpawnSettingsWindow == null)
         {
+            // create entity button for each mob
+            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
+            {
+                if (entityEntry.getValue().getType() == EnumCreatureType.monster)
+                {
+                    widgetMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entityEntry.getKey(), new ModAction(this, "showEntitySettings", MoCEntityData.class).setDefaultArguments(entityEntry.getValue()), true));
+                }
+            }
             mobSpawnSettingsWindow = new WidgetSimplewindow(widgetMobSpawnSettingsColumns, BUTTON_MONSTER_SPAWN_SETTINGS);
         }
 
@@ -1101,6 +866,28 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (mobSettingsWindow == null)
         {
+            widgetMobSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+            guiapiSettings.append(ogreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreStrength", ogreStrength, 0.1F, 0.1F, 5F));
+            ogreStrengthW = new WidgetFloat(ogreStrengthS, "Ogre Strength");
+            widgetMobSettingsColumns.add(ogreStrengthW);
+            guiapiSettings.append(fireOgreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreStrength", fireOgreStrength, 0.1F, 0.1F, 5F));
+            fireOgreStrengthW = new WidgetFloat(fireOgreStrengthS, "Fire O. Strength");
+            widgetMobSettingsColumns.add(fireOgreStrengthW);
+            guiapiSettings.append(caveOgreStrengthS = new MoCSettingFloat(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreStrength", caveOgreStrength, 0.1F, 0.1F, 5F));
+            caveOgreStrengthW = new WidgetFloat(caveOgreStrengthS, "Cave O. Strength");
+            widgetMobSettingsColumns.add(caveOgreStrengthW);
+            guiapiSettings.append(ogreAttackRangeS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreAttackRange", ogreAttackRange, 1, 1, 24));
+            ogreAttackRangeW = new WidgetInt(ogreAttackRangeS, "Ogre Attack Range");
+            widgetMobSettingsColumns.add(ogreAttackRangeW);
+            guiapiSettings.append(caveOgreChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "caveOgreChance", caveOgreChance, 0, 1, 100));
+            caveOgreChanceW = new WidgetInt(caveOgreChanceS, "Cave Ogre Chance");
+            widgetMobSettingsColumns.add(caveOgreChanceW);
+            guiapiSettings.append(fireOgreChanceS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "fireOgreChance", fireOgreChance, 0, 1, 100));
+            fireOgreChanceW = new WidgetInt(fireOgreChanceS, "Fire Ogre Chance");
+            widgetMobSettingsColumns.add(fireOgreChanceW);
+            guiapiSettings.append(golemDestroyBlocksB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", golemDestroyBlocks));
+            golemDestroyBlocksW = new WidgetBoolean(golemDestroyBlocksB, "Golem Destroy Blocks?");
+            widgetMobSettingsColumns.add(golemDestroyBlocksW);
             mobSettingsWindow = new WidgetSimplewindow(widgetMobSettingsColumns, BUTTON_MONSTER_GENERAL_SETTINGS);
         }
 
@@ -1112,26 +899,38 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (waterMobOptionsWindow == null)
         {
-            waterMobOptionsWindow = new WidgetSimplewindow(waterMobOptions, "Water Mob Options");
+            waterMobOptionsWindow = new WidgetSimplewindow(waterOptions, "Water Mob Options");
         }
 
         GuiModScreen.show(waterMobOptionsWindow);
     }
 
-    public void showWaterMobSpawnSettings()
+    public void showWaterSpawnSettings()
     {
         if (waterMobSpawnSettingsWindow == null)
         {
+            // create entity button for each water creature
+            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
+            {
+                if (entityEntry.getValue().getType() == EnumCreatureType.waterCreature)
+                {
+                    widgetWaterMobSpawnSettingsColumns.add(GuiApiHelper.makeButton(entityEntry.getKey(), new ModAction(this, "showEntitySettings", MoCEntityData.class).setDefaultArguments(entityEntry.getValue()), true));
+                }
+            }
             waterMobSpawnSettingsWindow = new WidgetSimplewindow(widgetWaterMobSpawnSettingsColumns, BUTTON_WATERMOB_SPAWN_SETTINGS);
         }
 
         GuiModScreen.show(waterMobSpawnSettingsWindow);
     }
 
-    public void showWaterMobSettings()
+    public void showWaterSettings()
     {
         if (waterMobSettingsWindow == null)
         {
+            widgetWaterMobSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+            guiapiSettings.append(attackdolphinsB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", attackDolphins));
+            attackdolphinsW = new WidgetBoolean(attackdolphinsB, "Aggresive Dolphins?", "Yes", "No");
+            widgetWaterMobSettingsColumns.add(attackdolphinsW);
             waterMobSettingsWindow = new WidgetSimplewindow(widgetWaterMobSettingsColumns, BUTTON_WATERMOB_GENERAL_SETTINGS);
         }
 
@@ -1153,39 +952,17 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (ambientSpawnSettingsWindow == null)
         {
+            // create entity button for each ambient
+            for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
+            {
+                if (entityEntry.getValue().getType() == EnumCreatureType.ambient)
+                {
+                    widgetAmbientSpawnSettingsColumns.add(GuiApiHelper.makeButton(entityEntry.getKey(), new ModAction(this, "showEntitySettings", MoCEntityData.class).setDefaultArguments(entityEntry.getValue()), true));
+                }
+            }
             ambientSpawnSettingsWindow = new WidgetSimplewindow(widgetAmbientSpawnSettingsColumns, BUTTON_AMBIENT_SPAWN_SETTINGS);
         }
         GuiModScreen.show(ambientSpawnSettingsWindow);
-    }
-
-    // Undefined
-    public void showUndefinedOptions()
-    {
-        if (undefinedOptionsWindow == null)
-        {
-            undefinedOptionsWindow = new WidgetSimplewindow(undefinedOptions, "Undefined Options");
-        }
-
-        GuiModScreen.show(undefinedOptionsWindow);
-    }
-
-    public void showUndefinedSpawnSettings()
-    {
-        if (undefinedSpawnSettingsWindow == null)
-        {
-            undefinedSpawnSettingsWindow = new WidgetSimplewindow(widgetUndefinedSpawnSettingsColumns, BUTTON_UNDEFINED_SPAWN_SETTINGS);
-        }
-        GuiModScreen.show(undefinedSpawnSettingsWindow);
-    }
-
-    public void showCustomSpawnerOptions()
-    {
-        if (customSpawnerWindow == null)
-        {
-            customSpawnerWindow = new WidgetSimplewindow(widgetCustomSpawnerColumns, BUTTON_CUSTOMSPAWNER_SETTINGS);
-        }
-
-        GuiModScreen.show(customSpawnerWindow);
     }
 
     public void showGeneralSpawnerOptions()
@@ -1201,6 +978,31 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (generalSettingsWindow == null)
         {
+            widgetGeneralSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+            guiapiSettings.append(debugLoggingB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", debugLogging));
+            debugLoggingW = new WidgetBoolean(debugLoggingB, "Show Debug Logging?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(debugLoggingW);
+            guiapiSettings.append(displaynameB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetName", displayPetName));
+            displaynameW = new WidgetBoolean(displaynameB, "Show Pet Name?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(displaynameW);
+            guiapiSettings.append(displayhealthB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetHealth", displayPetHealth));
+            displayhealthW = new WidgetBoolean(displayhealthB, "Show Pet Health?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(displayhealthW);
+            guiapiSettings.append(displayemoB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "displayPetIcons", displayPetIcons));
+            displayemoW = new WidgetBoolean(displayemoB, "Show Pet Icons?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(displayemoW);
+            guiapiSettings.append(staticbedB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticBed", staticBed));
+            staticbedW = new WidgetBoolean(staticbedB, "Static K.Bed?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(staticbedW);
+            guiapiSettings.append(staticlitterB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticLitter", staticLitter));
+            staticlitterW = new WidgetBoolean(staticlitterB, "Static Litter?", "Yes", "No");
+            widgetGeneralSettingsColumns.add(staticlitterW);
+            guiapiSettings.append(particleFXS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "particleFX", particleFX, 0, 1, 10));
+            particleFXW = new WidgetInt(particleFXS, "FX Particle density");
+            widgetGeneralSettingsColumns.add(particleFXW);
+            guiapiSettings.append(animateTexturesB = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_MOC_GENERAL_SETTINGS, "AnimateTextures", animateTextures));
+            animateTexturesW = new WidgetBoolean(animateTexturesB, "Animate Textures", "Yes", "No");
+            widgetGeneralSettingsColumns.add(animateTexturesW);
             generalSettingsWindow = new WidgetSimplewindow(widgetGeneralSettingsColumns, BUTTON_GENERAL_SETTINGS);
         }
 
@@ -1211,6 +1013,37 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (IDSettingsWindow == null)
         {
+            widgetIDSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
+            guiapiSettings.append(mocitemidA = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "ItemID", itemID, 4096, 1, 60000));
+            mocitemidW = new WidgetInt(mocitemidA, "Item ID");
+            widgetIDSettingsColumns.add(mocitemidW);
+            guiapiSettings.append(blockDirtIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", blockDirtID, 1, 1, 255));
+            blockDirtIdW = new WidgetInt(blockDirtIdS, "DirtBlock ID");
+            widgetIDSettingsColumns.add(blockDirtIdW);
+            guiapiSettings.append(blockGrassIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "GrassBlockID", blockGrassID, 1, 1, 255));
+            blockGrassIdW = new WidgetInt(blockGrassIdS, "GrassBlock ID");
+            widgetIDSettingsColumns.add(blockGrassIdW);
+            guiapiSettings.append(blockStoneIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", blockStoneID, 256, 1, 60000));
+            blockStoneIdW = new WidgetInt(blockStoneIdS, "StoneBlock ID");
+            widgetIDSettingsColumns.add(blockStoneIdW);
+            guiapiSettings.append(blockLeafIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "LeafBlockID", blockLeafID, 256, 1, 60000));
+            blockLeafIdW = new WidgetInt(blockLeafIdS, "LeafBlock ID");
+            widgetIDSettingsColumns.add(blockLeafIdW);
+            guiapiSettings.append(blockLogIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "LogBlockID", blockLogID, 256, 1, 60000));
+            blockLogIdW = new WidgetInt(blockLogIdS, "LogBlock ID");
+            widgetIDSettingsColumns.add(blockLogIdW);
+            guiapiSettings.append(blockTallGrassIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "TallGrassBlockID", blockTallGrassID, 256, 1, 60000));
+            blockTallGrassIdW = new WidgetInt(blockTallGrassIdS, "TallG.Block ID");
+            widgetIDSettingsColumns.add(blockTallGrassIdW);
+            guiapiSettings.append(blockPlanksIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "PlanksBlockID", blockPlanksID, 256, 1, 60000));
+            blockPlanksIdW = new WidgetInt(blockPlanksIdS, "PlanksBlock ID");
+            widgetIDSettingsColumns.add(blockPlanksIdW);
+            guiapiSettings.append(wyvernBiomeIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", WyvernBiomeID, 22, 1, 255));
+            wyvernBiomeIdW = new WidgetInt(wyvernBiomeIdS, "WyvernBiome ID");
+            widgetIDSettingsColumns.add(wyvernBiomeIdW);
+            guiapiSettings.append(wyvernDimensionIdS = new MoCSettingInt(mocGlobalConfig, CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", WyvernDimension, -1000, 1, 60000));
+            wyvernDimensionIdW = new WidgetInt(wyvernDimensionIdS, "Wyv. Dimension");
+            widgetIDSettingsColumns.add(wyvernDimensionIdW);
             IDSettingsWindow = new WidgetSimplewindow(widgetIDSettingsColumns, BUTTON_ID_SETTINGS);
         }
 
@@ -1221,74 +1054,20 @@ public class MoCClientProxy extends MoCProxy {
     {
         if (defaultsWindow == null)
         {
+            defaultChoices = new WidgetClassicTwocolumn(new Widget[0]);
+            SimpleButtonModel defaultChoiceButtonModel = new SimpleButtonModel();
+            defaultChoiceButtonModel.addActionCallback(new ModAction(this, "resetToDefaults", new Class[0]));
+            Button defaultChoiceButton = new Button(defaultChoiceButtonModel);
+            defaultChoiceButton.setText("Yes");
+            defaultChoices.add(defaultChoiceButton);
+            SimpleButtonModel defaultChoiceButtonModel2 = new SimpleButtonModel();
+            defaultChoiceButtonModel2.addActionCallback(new ModAction(this, "cancelReset", new Class[0]));
+            Button defaultChoiceButton2 = new Button(defaultChoiceButtonModel2);
+            defaultChoiceButton2.setText("No");
+            defaultChoices.add(defaultChoiceButton2);
             defaultsWindow = new WidgetSimplewindow(defaultChoices, "Are you sure ? All settings will be erased.");
         }
         GuiModScreen.show(defaultsWindow);
-    }
-
-    public void showBiomeGroups()
-    {
-        WidgetClassicTwocolumn widgetBiomeGroupColumns = new WidgetClassicTwocolumn(new Widget[0]);
-        for (Map.Entry<String, MoCBiomeGroupData> entry : biomeGroupMap.entrySet())
-        {
-           MoCBiomeGroupData biomeGroupData = entry.getValue();
-
-           String biomeGroupName = entry.getKey();
-           if (biomeGroupData != null)
-           {
-               widgetBiomeGroupColumns.add(GuiApiHelper.makeButton(biomeGroupName, new ModAction(this, "showBiomes", MoCBiomeGroupData.class).setDefaultArguments(biomeGroupData), true));
-           }
-        }
-        biomeGroupsWindow = new WidgetSimplewindow(widgetBiomeGroupColumns);
-        GuiModScreen.show(biomeGroupsWindow);
-    }
-
-    public void showBiomes(MoCBiomeGroupData biomeGroupData)
-    {
-        if (biomeGroupData.getBiomeGroupWindow() == null)
-        {
-            WidgetSinglecolumn widgetBiomesColumn = new WidgetSinglecolumn(new Widget[0]);
-            if (biomeGroupData.getBiomeList() != null)
-            {
-                biomesList = guiapiSettings.addSetting(widgetBiomesColumn, biomeGroupData.getBiomeGroupName() + " Biomes", biomeGroupData.getBiomeGroupName() + " Biomes", (ArrayList)biomeGroupData.getBiomeList(), mocBiomeConfig, biomeGroupData.getBiomeGroupName().toLowerCase());
-            }
-            ((WidgetList) biomesList.displayWidget).listBox.setTheme("/listbox");
-            widgetBiomesColumn.heightOverrideExceptions.put(biomesList.displayWidget, 140);
-            WidgetSingleRow listBoxRow = new WidgetSingleRow(110, 20);
-            MoCSettingText textSetting = new MoCSettingText("", "enter biome");
-            listBoxRow.add(GuiApiHelper.makeButton("Add Biome", new ModAction(this,"addGroupListboxOption", MoCSettingList.class, MoCSettingText.class).setDefaultArguments(biomesList, textSetting), true));
-            guiapiSettings.append(textSetting);
-            listBoxRow.add(new WidgetText(textSetting, ""));
-            listBoxRow.add(GuiApiHelper.makeButton("Remove Selected", new ModAction(this, "removeSelectedListboxOption", MoCSettingList.class).setDefaultArguments(biomesList), true));
-            widgetBiomesColumn.add(listBoxRow);
-            widgetBiomesColumn.widthOverrideExceptions.put(listBoxRow, 0);
-            biomeGroupData.setBiomeGroupWindow(new WidgetSimplewindow(widgetBiomesColumn, biomeGroupData.getBiomeGroupName()));
-        }
-        GuiModScreen.show(biomeGroupData.getBiomeGroupWindow());
-    }
-
-    // handle undefined type
-    public void showEntityModSettings(MoCEntityModData modData)
-    {
-        this.showEntityModSettings(modData, null);
-    }
-
-    public void showEntityModSettings(MoCEntityModData modData, EnumCreatureType type)
-    {
-        if (modData != null)
-        {
-            if (modData.getEntityWindow(type) == null)
-            {
-                WidgetClassicTwocolumn widgetSpawnSettingsColumns = new WidgetClassicTwocolumn(new Widget[0]);
-                Map<String, MoCEntityData> spawnList = modData.getSpawnListFromType(type);
-                for (Map.Entry<String, MoCEntityData> entityEntry : spawnList.entrySet())
-                {
-                    widgetSpawnSettingsColumns.add(GuiApiHelper.makeButton(entityEntry.getKey(), new ModAction(this, "showEntitySettings", MoCEntityData.class).setDefaultArguments(entityEntry.getValue()), true));
-                }
-                modData.setEntityWindow(type, new WidgetSimplewindow(widgetSpawnSettingsColumns, modData.getModKey()));
-            }
-            GuiModScreen.show(modData.getEntityWindow(type));
-        }
     }
 
     public void showEntitySettings(MoCEntityData entityData)
@@ -1298,41 +1077,24 @@ public class MoCClientProxy extends MoCProxy {
             if (entityData.getEntityWindow() == null)
             {
                 WidgetSinglecolumn widgetEntitySettingColumn = new WidgetSinglecolumn(new Widget[0]);
-                MoCSettingMulti settingType = new MoCSettingMulti(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().toString().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
+                MoCSettingMulti settingType = new MoCSettingMulti(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().toString().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
                 guiapiSettings.append(settingType);
                 widgetEntitySettingColumn.add(new WidgetMulti(settingType, "Type"));
-                MoCSettingInt settingFrequency = new MoCSettingInt(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Frequency", entityData.getFrequency(), 0, 1, 20);
+                MoCSettingInt settingFrequency = new MoCSettingInt(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Frequency", entityData.getFrequency(), 0, 1, 20);
                 guiapiSettings.append(settingFrequency);
                 widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, "Frequency"));
-                MoCSettingInt settingMinGroup = new MoCSettingInt(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Min", entityData.getMinSpawn(), 1, 1, 20);
+                MoCSettingInt settingMinGroup = new MoCSettingInt(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Min", entityData.getMinSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMinGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, "Min"));
-                MoCSettingInt settingMaxGroup = new MoCSettingInt(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Max", entityData.getMaxSpawn(), 1, 1, 20);
+                MoCSettingInt settingMaxGroup = new MoCSettingInt(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Max", entityData.getMaxSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMaxGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, "Max"));
-                MoCSettingInt settingChunkGroup = new MoCSettingInt(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Chunk", entityData.getMaxInChunk(), 1, 1, 20);
+                MoCSettingInt settingChunkGroup = new MoCSettingInt(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " Chunk", entityData.getMaxInChunk(), 1, 1, 20);
                 guiapiSettings.append(settingChunkGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingChunkGroup, "Chunk"));
-                MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(entityData.getEntityConfig(), CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " CanSpawn", entityData.getCanSpawn());
+                MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(mocGlobalConfig, CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName() + " CanSpawn", entityData.getCanSpawn());
                 guiapiSettings.append(settingCanSpawn);
                 widgetEntitySettingColumn.add(new WidgetBoolean(settingCanSpawn, "CanSpawn"));
-                if (entityData.getBiomeGroups() != null)
-                {
-                    System.out.println("widgetEntitySettingColumn = " + widgetEntitySettingColumn + ", entityData = " + entityData);
-                    System.out.println("entityMod = " + entityData.getEntityMod());
-                    MoCSettingList entityBiomeList = guiapiSettings.addSetting(widgetEntitySettingColumn, "Biome Groups", entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName() + " Biome Groups", (ArrayList)entityData.getBiomeGroups(), entityData.getEntityConfig(), CATEGORY_ENTITY_BIOME_SETTINGS);
-
-                    ((WidgetList) entityBiomeList.displayWidget).listBox.setTheme("/listbox");
-                    widgetEntitySettingColumn.heightOverrideExceptions.put(entityBiomeList.displayWidget, 140);
-                    WidgetSingleRow listBoxRow = new WidgetSingleRow(110, 20);
-                    MoCSettingText textSetting = new MoCSettingText("", "enter biome");
-                    listBoxRow.add(GuiApiHelper.makeButton("Add Group", new ModAction(this,"addGroupListboxOption", MoCSettingList.class, MoCSettingText.class).setDefaultArguments(entityBiomeList, textSetting), true));
-                    guiapiSettings.append(textSetting);
-                    listBoxRow.add(new WidgetText(textSetting, ""));
-                    listBoxRow.add(GuiApiHelper.makeButton("Remove Selected", new ModAction(this, "removeSelectedListboxOption", MoCSettingList.class).setDefaultArguments(entityBiomeList), true));
-                    widgetEntitySettingColumn.add(listBoxRow);
-                    widgetEntitySettingColumn.widthOverrideExceptions.put(listBoxRow, 0);
-                }
                 entityData.setEntityWindow(new WidgetSimplewindow(widgetEntitySettingColumn, entityData.getEntityName()));
             }
             this.currentSelectedEntity = entityData;
@@ -1345,9 +1107,9 @@ public class MoCClientProxy extends MoCProxy {
         widgetInstaSpawnerColumn = new WidgetSinglecolumn(new Widget[0]);
         
         ArrayList<String> moCreaturesList = new ArrayList<String>();
-        for (Map.Entry<Class<? extends EntityLiving>, MoCEntityData> entityEntry : classToEntityMapping.entrySet())
+        for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
         {
-            moCreaturesList.add(entityEntry.getValue().getEntityMod().getModTag() + "|" + entityEntry.getValue().getEntityName());
+            moCreaturesList.add(entityEntry.getValue().getEntityName());
         }
         Collections.sort(moCreaturesList);
         entityList = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature Type:", "SpawnEntityList", moCreaturesList, mocGlobalConfig, "");
@@ -1355,8 +1117,8 @@ public class MoCClientProxy extends MoCProxy {
         widgetInstaSpawnerColumn.heightOverrideExceptions.put(entityList.displayWidget, 130);
         settingNumberToSpawn = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Number to Spawn", "spawnN", 3, 1, 10);
         widgetInstaSpawnerColumn.add(GuiApiHelper.makeButton("Perform Spawn", new ModAction(this, "instaSpawn", MoCSettingList.class, ArrayList.class).setDefaultArguments(entityList, moCreaturesList), true));
-        instaSpaqwnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the Creature to Spawn");
-        GuiModScreen.show(instaSpaqwnerWindow);
+        instaSpawnerWindow = new WidgetSimplewindow(widgetInstaSpawnerColumn, "Select the Creature to Spawn");
+        GuiModScreen.show(instaSpawnerWindow);
     }
     
     
@@ -1367,137 +1129,25 @@ public class MoCClientProxy extends MoCProxy {
         int selected = listbox.getSelected();
         int numberToSpawn = settingNumberToSpawn.get();//guiapiSettings.getIntSettingValue("spawnN");
         String entityName = aList.get(selected);
-        List<String> nameParts = MoCreatures.proxy.parseName(entityName);
-        if (nameParts != null && nameParts.size() == 2)
+        for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
         {
-            String tag = nameParts.get(0);
-            String name = nameParts.get(1);
-            for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
+            if (entityEntry.getValue().getEntityName().equalsIgnoreCase(entityName))
             {
-                if (modEntry.getValue().getModTag().equalsIgnoreCase(tag))
+                try {
+                    MoCClientPacketHandler.sendInstaSpawnPacket(entityEntry.getValue().getEntityID(), numberToSpawn);
+                }
+                catch (Exception ex)
                 {
-                    MoCEntityData entityData = modEntry.getValue().getCreature(name);
-                    if (entityData != null)
-                    {
-                        try {
-                            MoCClientPacketHandler.sendInstaSpawnPacket(entityData.getEntityID(), numberToSpawn);
-                        }
-                        catch (Exception ex)
-                        {
-                            
-                        }
-                    }
+                    
                 }
             }
         }
-    }
-    
-    public void getClassFromEntityMap(int index)
-    {
-        
-    }
-    
-    @SuppressWarnings("unused")
-    private static void addGroupListboxOption(MoCSettingList setting, MoCSettingText text) {
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("addGroupListboxOption setting backendName = " + setting.backendName + ", category = " + setting.category);
-        ListBox<String> listbox = ((WidgetList) setting.displayWidget).listBox;
-        int selected = listbox.getSelected();
-        if (text.get() != null && text.get() != "")
-        {
-            String[] tokens = setting.backendName.split(" ");
-            MoCProperty prop = null;
-
-            if (setting.backendName.contains("Biome Groups"))
-            {
-                MoCEntityData entityData = entityMap.get(tokens[0]);
-                if (entityData!= null)
-                {
-                    if (MoCreatures.myCustomSpawner != null && setting.category.equals(CATEGORY_ENTITY_BIOME_SETTINGS))
-                    {
-                        // update lists
-                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(text.get()));
-                    }
-                    entityData.addBiomeGroup(text.get());
-                    Collections.sort(setting.get()); // sort list before displaying
-                    setting.displayWidget.update();
-                }
-            }
-            else if (setting.backendName.contains("Biomes"))
-            {
-                MoCBiomeGroupData biomeGroupData = biomeGroupMap.get(tokens[0]);
-                if (biomeGroupData != null)
-                {
-                    biomeGroupData.addBiome(tokens[0]);
-                    Collections.sort(setting.get()); // sort list before displaying
-                    setting.displayWidget.update();
-                }
-            }
-
-                MoCreatures.proxy.mocBiomeConfig.save();
-                setting.config.save();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void removeSelectedListboxOption(MoCSettingList setting) {
-        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("removeSelectedListboxOption setting backendName = " + setting.backendName + ", category = " + setting.category);
-        ListBox<String> listbox = ((WidgetList) setting.displayWidget).listBox;
-        int selected = listbox.getSelected();
-
-        if (selected == -1) {
-            return;
-        }
-
-            String[] tokens = setting.backendName.split(" ");
-            MoCProperty prop = null;
-            if (tokens != null)
-            {
-
-                String entityName = tokens[0].substring(tokens[0].indexOf("|") + 1, tokens[0].length());
-                MoCEntityData entityData = entityMap.get(tokens[0]);
-                prop = setting.config.get(setting.category, entityName);
-    
-                if (prop != null)
-                {
-                    if (MoCreatures.myCustomSpawner != null && setting.category.equals(CATEGORY_ENTITY_BIOME_SETTINGS))
-                    {
-                        // update lists
-                        MoCreatures.myCustomSpawner.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getBiomeGroupSpawnMap(setting.get().get(selected)));
-                    }
-                    setting.get().remove(selected);
-                    setting.displayWidget.update();
-                    MoCreatures.proxy.mocBiomeConfig.save();
-                    setting.config.save();
-
-                    if (selected == listbox.getNumEntries()) // I'm only removing one at a
-                                                                // time, so this is OK.
-                    {
-                        selected--;
-                    }
-                    if (selected == -1) {
-                        return; // This is if there aren't any entries to select left. I
-                                // could also check getNumEntries to see if it's 0.
-                    }
-            
-                    listbox.setSelected(selected);
-                }
-            }
-    }
-
-    @SuppressWarnings("unused")
-    private static void showSelectedListboxOption(MoCSettingList setting) {
-        GuiModScreen.show(GuiApiHelper.makeTextDisplayAndGoBack(
-                "ListBox Status", setting.displayWidget.userString(),
-                "Go Back", false));
     }
 
     public void resetAllData()
     {
         instaSpawnerWindow = null;
         settingNumberToSpawn = null;
-        biomesWindow = null;
-        biomeGroupsWindow = null;
-        customSpawnerWindow = null;
         creatureOptionsWindow = null;
         creatureSettingsWindow = null;
         creatureSpawnSettingsWindow = null;
@@ -1513,11 +1163,6 @@ public class MoCClientProxy extends MoCProxy {
         IDSettingsWindow = null;
         vanillamobwindow = null;
         defaultsWindow = null;
-        for (Map.Entry<String, MoCEntityModData> modEntry : entityModMap.entrySet())
-        {
-            Map<EnumCreatureType, WidgetSimplewindow> windowMap = modEntry.getValue().getWidgetWindows();
-            windowMap =  new HashMap<EnumCreatureType, WidgetSimplewindow>();
-        }
 
         for (int i = 0; i < MoCScreen.modScreens.size(); i++)
         {
@@ -1556,11 +1201,7 @@ public class MoCClientProxy extends MoCProxy {
             }
         }
         resetAllData();
-        MoCreatures.myCustomSpawner.resetCMS();
-        MoCreatures.proxy.initializeBiomes();
-        MoCreatures.proxy.initializeEntities();
         MoCreatures.proxy.initGUI();
-        MoCreatures.updateSettings(); // refresh settings
         GuiModScreen.show(MoCScreen.theWidget);
     }
 

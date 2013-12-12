@@ -13,11 +13,9 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAmbientCreature;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -56,19 +54,18 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void registerCustomAttributes()
+    protected void applyEntityAttributes()
     {
-    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getMaxHealth());
     }
     
     @Override
-    public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
     {
-    	selectType();
-    	registerCustomAttributes();
-    	this.setEntityHealth((float) this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111126_e());
-    	return super.func_110161_a(par1EntityLivingData);
+        selectType();
+        return super.onSpawnWithEgg(par1EntityLivingData);
     }
     
     /**
@@ -178,7 +175,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     @Override
     protected boolean canDespawn()
     {
-        return !getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return false;
     }
 
     /**
@@ -481,11 +480,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         }
     }
 
-    public float getMaxHealth()
-    {
-        return 20;
-    }
-
     public boolean getCanSpawnHereAnimal()
     {
         int i = MathHelper.floor_double(posX);
@@ -782,7 +776,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             motionX *= f2;
             motionZ *= f2;
         }
-        this.prevLimbYaw = this.limbYaw;
+        this.prevLimbSwingAmount = this.limbSwingAmount;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
         float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
@@ -791,8 +785,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             f4 = 1.0F;
         }
 
-        this.limbYaw += (f4 - this.limbYaw) * 0.4F;
-        this.limbSwing += this.limbYaw;
+        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
     /**
@@ -1078,7 +1072,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
         }
         return super.attackEntityFrom(damagesource, i);
     }

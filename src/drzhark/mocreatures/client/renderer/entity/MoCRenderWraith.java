@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 
 @SideOnly(Side.CLIENT)
@@ -48,7 +47,7 @@ public class MoCRenderWraith extends RenderLiving {
 
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityWraith)par1Entity).getTexture();
     }
 }

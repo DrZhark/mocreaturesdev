@@ -2,9 +2,6 @@ package drzhark.mocreatures.entity.item;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 
 public class MoCEntityLitterBox extends EntityLiving {
     public int littertime;
@@ -33,10 +32,10 @@ public class MoCEntityLitterBox extends EntityLiving {
         return MoCreatures.proxy.getTexture("litterbox.png");
     }
 
-    protected void func_110147_ax()
+    protected void applyEntityAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D); // setMaxHealth
     }
 
     @Override
@@ -260,10 +259,5 @@ public class MoCEntityLitterBox extends EntityLiving {
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         setUsedLitter(nbttagcompound.getBoolean("UsedLitter"));
-    }
-
-    public float getMaxHealth()
-    {
-        return 20;
     }
 }

@@ -7,14 +7,13 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.input.Keyboard;
 
-import sharose.mods.guiapi.GuiModScreen;
-import sharose.mods.guiapi.ModSettingScreen;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
+import drzhark.mocreatures.client.gui.GuiModScreen;
+import drzhark.mocreatures.client.gui.ModSettingScreen;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.entity.IMoCEntity;
 
@@ -57,14 +56,15 @@ public class MoCKeyHandler extends KeyHandler {
 
         ++keyCount;
         // handle GUI
-        if (kbGui)
+        if ((kbGui) && (!MoCreatures.isServer()))
         {
-            localScreen = MoCClientProxy.instance.MoCScreen;
-            if (MoCClientProxy.mc.inGameHasFocus && (localScreen.theWidget != null))
+            this.localScreen = MoCClientProxy.instance.MoCScreen;
+            if ((MoCClientProxy.mc.inGameHasFocus) && (this.localScreen != null))
             {
                 GuiModScreen.show(localScreen.theWidget);
             }
-            else {
+            else 
+            {
                 localScreen = null; // kill our instance
             }
         }

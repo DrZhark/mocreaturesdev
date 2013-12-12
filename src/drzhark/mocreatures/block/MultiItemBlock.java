@@ -1,8 +1,8 @@
 package drzhark.mocreatures.block;
 
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import drzhark.mocreatures.MoCreatures;
 
 public class MultiItemBlock extends ItemBlock {
 

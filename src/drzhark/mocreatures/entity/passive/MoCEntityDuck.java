@@ -1,10 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
 {
@@ -23,10 +23,10 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
         //health = 4;
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 4;
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
     }
 
     @Override
@@ -50,7 +50,9 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     @Override
     protected boolean canDespawn()
     {
-        return true;
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return true;
+        else return false;
     }
 
     @Override

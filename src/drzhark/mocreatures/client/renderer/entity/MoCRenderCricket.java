@@ -2,7 +2,6 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
@@ -10,8 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
 import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
 
 @SideOnly(Side.CLIENT)
@@ -47,7 +44,7 @@ public class MoCRenderCricket extends MoCRenderMoC {
         }
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityCricket)par1Entity).getTexture();
     }
 }

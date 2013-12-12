@@ -2,17 +2,8 @@ package drzhark.mocreatures.entity.monster;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
@@ -20,6 +11,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.passive.MoCEntityBear;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 public class MoCEntityWWolf extends MoCEntityMob {
 
@@ -35,15 +35,15 @@ public class MoCEntityWWolf extends MoCEntityMob {
     @Override
     protected double getAttackStrenght() 
     {
-		return 3D;
-	}
+        return 3D;
+    }
     
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(4)+1);
+            setType(rand.nextInt(4)+1);
         }
     }
 
@@ -121,11 +121,10 @@ public class MoCEntityWWolf extends MoCEntityMob {
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
 
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-
+        BiomeGenBase biome = MoCTools.Biomekind(worldObj, i, j, k);
         int l = rand.nextInt(10);
 
-        if (s.equals("Taiga") || s.equals("Frozen Ocean") || s.equals("Frozen River") || s.equals("Ice Plains") || s.equals("Ice Mountains") || s.equals("TaigaHills"))
+        if (BiomeDictionary.isBiomeOfType(biome, Type.FROZEN))
         {
             setType(3);
         }
@@ -208,11 +207,5 @@ public class MoCEntityWWolf extends MoCEntityMob {
     {
         openMouth();
         return "mocreatures:wolfgrunt";
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
     }
 }

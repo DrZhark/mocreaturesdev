@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.item;
 
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -11,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityFishBowl extends EntityLiving {
     private int rotInt = 0;
@@ -41,10 +41,10 @@ public class MoCEntityFishBowl extends EntityLiving {
         return MoCreatures.proxy.getTexture("fishbowl.png");
     }
 
-    protected void func_110147_ax()
+    protected void applyEntityAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(5.0D); // setMaxHealth
     }
 
     @Override
@@ -289,11 +289,6 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setInteger("SheetColour", getType());
-    }
-
-    public float getMaxHealth()
-    {
-        return 5;
     }
 
     public int getRotation()

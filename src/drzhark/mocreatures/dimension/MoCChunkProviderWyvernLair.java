@@ -3,31 +3,24 @@ package drzhark.mocreatures.dimension;
 import java.util.List;
 import java.util.Random;
 
-import drzhark.mocreatures.MoCreatures;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSand;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
-import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenLakes;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCChunkProviderWyvernLair implements IChunkProvider
 {
@@ -735,6 +728,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     }
 
     @Override
-    public void func_104112_b() {
+    public void saveExtraData() {
     }
 }

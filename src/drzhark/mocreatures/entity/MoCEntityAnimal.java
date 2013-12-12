@@ -2,16 +2,6 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCPetMapData;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -30,15 +20,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 
 public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
@@ -64,26 +58,24 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         texture = "blank.jpg";
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
+
     @Override
     public ResourceLocation getTexture()
     {
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    
-    protected void registerCustomAttributes()
-    {
-    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
-    
     @Override
-    public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
     {
-    	selectType();
-    	registerCustomAttributes();
-    	this.setEntityHealth((float) this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111126_e());
-    	return super.func_110161_a(par1EntityLivingData);
+        selectType();
+        return super.onSpawnWithEgg(par1EntityLivingData);
     }
     
     /**
@@ -201,7 +193,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     protected boolean canDespawn()
     {
-        return !getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return false;
     }
 
     /**
@@ -327,7 +321,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             
             /*if (getIsTamed() && rand.nextInt(100) == 0)
             {
-                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
             }*/
         }
 
@@ -345,6 +339,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         {
             followPlayer();
         }
+        this.inLove = 0;
         super.onLivingUpdate();
     }
 
@@ -589,7 +584,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (rand.nextInt(10) == 0))
                     {
-                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).func_110148_a(SharedMonsterAttributes.field_111264_e).func_111126_e());
+                        attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity), (float)((EntityMob)entity).getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue());
                     }
                 }
             }
@@ -624,11 +619,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         {
             setPathToEntity(pathentity);
         }
-    }
-
-    public float getMaxHealth()
-    {
-        return 20;
     }
 
     public MoCEntityAnimal spawnBabyAnimal(EntityAgeable par1EntityAgeable)
@@ -1019,11 +1009,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 
                 if (motionY < 0)
                 {
-                	motionY *= 0.5D;
+                    motionY *= 0.5D;
                 }
                 /*if (MoCreatures.isServer())
                 {
-                	moveEntity(motionX, motionY, motionZ);
+                    moveEntity(motionX, motionY, motionZ);
                     //super.moveEntityWithHeading(par1, par2);//, motionZ);
                 }*/
             }
@@ -1035,7 +1025,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
             if (isFlyer() && (riddenByEntity != null) && getIsTamed())
             {
-            	motionY += 0.15D;
+                motionY += 0.15D;
                 motionY *= myFallSpeed();//0.6D;
             }
             else if (!isFlyingAlone())
@@ -1054,7 +1044,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             motionZ *= f2;
         }
 
-        this.prevLimbYaw = this.limbYaw;
+        this.prevLimbSwingAmount = this.limbSwingAmount;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
         float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
@@ -1063,8 +1053,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             f4 = 1.0F;
         }
 
-        this.limbYaw += (f4 - this.limbYaw) * 0.4F;
-        this.limbSwing += this.limbYaw;
+        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
     /**
@@ -1227,10 +1217,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (entityToAttack != null)
             {
                 entitypath = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
-
             }
         }
-        else if (!entityToAttack.isEntityAlive())
+        // prevent tamed animals attacking other tamed animals
+        else if (!entityToAttack.isEntityAlive() || ((entityToAttack instanceof IMoCTameable) && ((IMoCTameable)entityToAttack).getIsTamed() && this.getIsTamed()))
         {
             entityToAttack = null;
         }
@@ -1239,6 +1229,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             float f1 = entityToAttack.getDistanceToEntity(this);
             if (canEntityBeSeen(entityToAttack))
             {
+                if (entityToAttack instanceof MoCEntityTameable)
+                {
+                    
+                }
                 attackEntity(entityToAttack, f1);
             }
         }
@@ -1312,7 +1306,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             double d3 = vec3d.yCoord - i;
             float f4 = (float) ((Math.atan2(d2, d1) * 180D) / 3.1415927410125728D) - 90F;
             float f5 = f4 - rotationYaw;
-            moveForward = (float)this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111126_e();
+            moveForward = (float)this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue();
             for (; f5 < -180F; f5 += 360F)
             {
             }
@@ -1577,7 +1571,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
         /*if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
         }*/
         if (isNotScared())
         {

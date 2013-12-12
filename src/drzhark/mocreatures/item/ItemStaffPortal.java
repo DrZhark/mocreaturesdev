@@ -1,24 +1,15 @@
 package drzhark.mocreatures.item;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet70GameEvent;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.dimension.MoCDirectTeleporter;
-import drzhark.mocreatures.dimension.WorldGenTower;
 
 public class ItemStaffPortal extends MoCItem
 {

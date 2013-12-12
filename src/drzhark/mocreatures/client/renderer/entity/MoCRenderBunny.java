@@ -10,13 +10,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderBunny extends MoCRenderMoC {
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityBunny)par1Entity).getTexture();
     }
 

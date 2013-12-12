@@ -1,25 +1,14 @@
 package drzhark.mocreatures;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraftforge.common.DimensionManager;
+import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCPetData {
 

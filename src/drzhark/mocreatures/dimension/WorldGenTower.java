@@ -3,7 +3,6 @@ package drzhark.mocreatures.dimension;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.src.*;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -99,23 +98,23 @@ public class WorldGenTower extends WorldGenerator
                 world.setBlock(x+4, Ny+6, z-2, brickBlockID, MainMetadata, t);
                 world.setBlock(x+2, Ny+7, z-4, brickBlockID, MainMetadata, t);
                 world.setBlock(x+1, Ny+7, z-4, brickBlockID, MainMetadata, t);
-			
-			/*world.setBlock(x-1, Ny, z-3, brickBlockID, MainMetadata, t);
-			world.setBlock(x-2, Ny, z-3, brickBlockID, MainMetadata, t);
-			world.setBlock(x-3, Ny+1, z-1, brickBlockID, MainMetadata, t);
-			world.setBlock(x-3, Ny+1, z-2, brickBlockID, MainMetadata, t);
-			world.setBlock(x-3, Ny+2, z+1, brickBlockID, MainMetadata, t);
-			world.setBlock(x-3, Ny+2, z+2, brickBlockID, MainMetadata, t);
-			world.setBlock(x-2, Ny+3, z+3, brickBlockID, MainMetadata, t);
-			world.setBlock(x-1, Ny+3, z+3, brickBlockID, MainMetadata, t);
-			world.setBlock(x+1, Ny+4, z+3, brickBlockID, MainMetadata, t);
-			world.setBlock(x+2, Ny+4, z+3, brickBlockID, MainMetadata, t);
-			world.setBlock(x+3, Ny+5, z+2, brickBlockID, MainMetadata, t);
-			world.setBlock(x+3, Ny+5, z+1, brickBlockID, MainMetadata, t);
-			world.setBlock(x+3, Ny+6, z-1, brickBlockID, MainMetadata, t);
-			world.setBlock(x+3, Ny+6, z-2, brickBlockID, MainMetadata, t);
-			world.setBlock(x+2, Ny+7, z-3, brickBlockID, MainMetadata, t);
-			world.setBlock(x+1, Ny+7, z-3, brickBlockID, MainMetadata, t);*/
+            
+            /*world.setBlock(x-1, Ny, z-3, brickBlockID, MainMetadata, t);
+            world.setBlock(x-2, Ny, z-3, brickBlockID, MainMetadata, t);
+            world.setBlock(x-3, Ny+1, z-1, brickBlockID, MainMetadata, t);
+            world.setBlock(x-3, Ny+1, z-2, brickBlockID, MainMetadata, t);
+            world.setBlock(x-3, Ny+2, z+1, brickBlockID, MainMetadata, t);
+            world.setBlock(x-3, Ny+2, z+2, brickBlockID, MainMetadata, t);
+            world.setBlock(x-2, Ny+3, z+3, brickBlockID, MainMetadata, t);
+            world.setBlock(x-1, Ny+3, z+3, brickBlockID, MainMetadata, t);
+            world.setBlock(x+1, Ny+4, z+3, brickBlockID, MainMetadata, t);
+            world.setBlock(x+2, Ny+4, z+3, brickBlockID, MainMetadata, t);
+            world.setBlock(x+3, Ny+5, z+2, brickBlockID, MainMetadata, t);
+            world.setBlock(x+3, Ny+5, z+1, brickBlockID, MainMetadata, t);
+            world.setBlock(x+3, Ny+6, z-1, brickBlockID, MainMetadata, t);
+            world.setBlock(x+3, Ny+6, z-2, brickBlockID, MainMetadata, t);
+            world.setBlock(x+2, Ny+7, z-3, brickBlockID, MainMetadata, t);
+            world.setBlock(x+1, Ny+7, z-3, brickBlockID, MainMetadata, t);*/
             }
             return true;
         }

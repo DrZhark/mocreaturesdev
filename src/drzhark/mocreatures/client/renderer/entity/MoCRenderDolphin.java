@@ -60,7 +60,7 @@ public class MoCRenderDolphin extends RenderLiving {
                     }
                     tessellator.startDrawingQuads();
                     // might break SSP
-                    float f6 = entitydolphin.func_110143_aJ();
+                    float f6 = entitydolphin.getHealth();
                     // maxhealth is always 30 for dolphins so we do not need to use a datawatcher
                     float f7 = entitydolphin.getMaxHealth();
                     float f8 = f6 / f7;
@@ -143,7 +143,7 @@ public class MoCRenderDolphin extends RenderLiving {
                 tessellator.addVertex(i + 1, -1 + byte0, 0.0D);
                 if (MoCreatures.proxy.getDisplayPetHealth())
                 {
-                    float f5 = entitydolphin.func_110143_aJ();
+                    float f5 = entitydolphin.getHealth();
                     float f6 = entitydolphin.getMaxHealth();
                     float f7 = f5 / f6;
                     float f8 = 40F * f7;
@@ -185,7 +185,7 @@ public class MoCRenderDolphin extends RenderLiving {
     }
 
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityDolphin)par1Entity).getTexture();
     }
 }

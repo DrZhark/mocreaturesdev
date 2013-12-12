@@ -2,16 +2,10 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelLitterBox;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
@@ -33,7 +27,7 @@ public class MoCRenderLitterBox extends RenderLiving {
         litterbox.usedlitter = entitylitterbox.getUsedLitter();
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityLitterBox)par1Entity).getTexture();
     }
 }

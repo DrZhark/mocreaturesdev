@@ -1,22 +1,15 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityRaccoon extends MoCEntityTameable{
@@ -27,6 +20,12 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
         setSize(0.8F, 0.8F);
         texture = "raccoon.png";
         setEdad(70 + rand.nextInt(30));
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(8.0D);
     }
 
     @Override
@@ -63,12 +62,6 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 8;
-    }
-
-    @Override
     public boolean interact(EntityPlayer entityplayer)
     {
         if (super.interact(entityplayer)) { return false; }
@@ -84,7 +77,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
 
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {
@@ -135,12 +128,6 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 2;
-    }
-
-    @Override
     public int nameYOffset()
     {
         return -30;
@@ -180,5 +167,11 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     public int getTalkInterval()
     {
         return 400;
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 2;
     }
 }

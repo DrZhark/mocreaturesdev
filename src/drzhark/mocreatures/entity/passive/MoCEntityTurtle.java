@@ -1,13 +1,9 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,6 +15,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityTurtle extends MoCEntityTameable {
     private boolean isSwinging;
@@ -31,6 +30,12 @@ public class MoCEntityTurtle extends MoCEntityTameable {
         setSize(0.6F, 0.4F);
         setAdult(false);
         setEdad(110);
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
     }
 
     @Override
@@ -70,12 +75,6 @@ public class MoCEntityTurtle extends MoCEntityTameable {
         }
 
         return MoCreatures.proxy.getTexture(tempText);
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 15;
     }
 
     @Override
@@ -445,12 +444,6 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
-    }
-
-    @Override
     public boolean updateMount()
     {
         return getIsTamed();
@@ -466,5 +459,11 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
         return par1ItemStack != null && (par1ItemStack.itemID == Item.reed.itemID || par1ItemStack.itemID == Item.melon.itemID);
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 2;
     }
 }

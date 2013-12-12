@@ -1,10 +1,7 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityPiranha extends MoCEntitySmallFish{
 
@@ -22,6 +21,12 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(30 + rand.nextInt(70));
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -65,12 +70,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
         }
     }
 
-    @Override
-    public float getMaxHealth()
-    {
-        return 6;
-    }
-    
     public boolean isNotScared()
     {
         return true;

@@ -2,10 +2,7 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,16 +10,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCItemPetAmulet extends MoCItem
@@ -44,24 +41,17 @@ public class MoCItemPetAmulet extends MoCItem
         super(i);
         maxStackSize = 1;
         setHasSubtypes(true);
-        ageCounter = 0;
     }
 
     public MoCItemPetAmulet(int i, int type) 
     {
-    	this(i);
-    	this.amuletType = type;
+        this(i);
+        this.amuletType = type;
     }
     
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
-        if (++ageCounter < 2) 
-        { 
-            return itemstack; 
-        }
-
-        ageCounter = 0;
         int i = itemstack.getItemDamage();
        
         if (i == 0) //empty fishnet
@@ -80,14 +70,14 @@ public class MoCItemPetAmulet extends MoCItem
             ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
             if (this.amuletType == 1)
             {
-            	emptyAmulet = new ItemStack(MoCreatures.superAmulet, 1, 0);
+                emptyAmulet = new ItemStack(MoCreatures.superAmulet, 1, 0);
             }
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
             //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
             
             if (MoCreatures.isServer())
             {
-            	initAndReadNBT(itemstack);
+                initAndReadNBT(itemstack);
                 
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {
@@ -109,7 +99,7 @@ public class MoCItemPetAmulet extends MoCItem
                         storedCreature.setName(name);
                         storedCreature.setOwnerPetId(PetId);
                         storedCreature.setOwner(entityplayer.username);
-                        ((EntityLiving)storedCreature).setEntityHealth(health);
+                        ((EntityLiving)storedCreature).setHealth(health);
                         storedCreature.setEdad(edad);
                         storedCreature.setAdult(adult);
 
@@ -174,7 +164,7 @@ public class MoCItemPetAmulet extends MoCItem
 
     public void readFromNBT(NBTTagCompound nbt)
     {
-    	this.PetId = nbt.getInteger("PetId");
+        this.PetId = nbt.getInteger("PetId");
         this.creatureType = nbt.getInteger("CreatureType");
         this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
@@ -186,7 +176,7 @@ public class MoCItemPetAmulet extends MoCItem
 
     public void writeToNBT(NBTTagCompound nbt)
     {
-    	nbt.setInteger("PetID", this.PetId);
+        nbt.setInteger("PetID", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
@@ -211,14 +201,14 @@ public class MoCItemPetAmulet extends MoCItem
     @Override
     public Icon getIconFromDamage(int par1)
     {
-    	if (this.amuletType == 1)
-    	{
-    		if (par1 < 1)
-    		{
-    			return icons[2];
-    		}
-    		return icons[3];
-    	}
+        if (this.amuletType == 1)
+        {
+            if (par1 < 1)
+            {
+                return icons[2];
+            }
+            return icons[3];
+        }
         
         if (par1 < 1)
         {
@@ -235,15 +225,15 @@ public class MoCItemPetAmulet extends MoCItem
     @Override
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
-    	initAndReadNBT(par1ItemStack);
-    	if (spawnClass != "") par3List.add(EnumChatFormatting.AQUA + this.spawnClass);
-    	if (name != "")	par3List.add(EnumChatFormatting.BLUE + this.name);
-    	if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
+        initAndReadNBT(par1ItemStack);
+        if (spawnClass != "") par3List.add(EnumChatFormatting.AQUA + this.spawnClass);
+        if (name != "")    par3List.add(EnumChatFormatting.BLUE + this.name);
+        if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
     }
     
     private void initAndReadNBT(ItemStack itemstack)
     {
-    	if( itemstack.stackTagCompound == null )
+        if( itemstack.stackTagCompound == null )
         {
             itemstack.setTagCompound(new NBTTagCompound());
         }

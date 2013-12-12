@@ -2,25 +2,20 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCItemHorseAmulet extends MoCItem {
 
@@ -53,7 +48,7 @@ public class MoCItemHorseAmulet extends MoCItem {
 
         if (MoCreatures.isServer())
         {
-        	initAndReadNBT(itemstack);
+            initAndReadNBT(itemstack);
         }
         
         if (spawnClass == 21 || spawnClass == 0) // horses or old amulets
@@ -111,7 +106,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setEdad(edad);
                     storedCreature.setName(name);
                     storedCreature.setArmorType(armor);
-                    storedCreature.setEntityHealth(health);
+                    storedCreature.setHealth(health);
                     storedCreature.setAdult(adult);
                     storedCreature.setOwnerPetId(PetId);
                     storedCreature.setOwner(entityplayer.username);
@@ -177,7 +172,7 @@ public class MoCItemHorseAmulet extends MoCItem {
 
     public void readFromNBT(NBTTagCompound nbt)
     {
-    	this.PetId = nbt.getInteger("PetId");
+        this.PetId = nbt.getInteger("PetId");
         this.creatureType = nbt.getInteger("CreatureType");
         this.health = nbt.getFloat("Health");
         this.edad = nbt.getInteger("Edad");
@@ -191,7 +186,7 @@ public class MoCItemHorseAmulet extends MoCItem {
     
     public void writeToNBT(NBTTagCompound nbt)
     {
-    	nbt.setInteger("PetID", this.PetId);
+        nbt.setInteger("PetID", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
@@ -211,15 +206,15 @@ public class MoCItemHorseAmulet extends MoCItem {
     @Override
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
-    	initAndReadNBT(par1ItemStack);
-    	if (name != "") par3List.add(EnumChatFormatting.AQUA + "WildHorse");
-    	if (name != "") par3List.add(EnumChatFormatting.BLUE + this.name);
-    	if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
+        initAndReadNBT(par1ItemStack);
+        if (name != "") par3List.add(EnumChatFormatting.AQUA + "WildHorse");
+        if (name != "") par3List.add(EnumChatFormatting.BLUE + this.name);
+        if (ownerName != "") par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
     }
     
     private void initAndReadNBT(ItemStack itemstack)
     {
-    	if( itemstack.stackTagCompound == null )
+        if( itemstack.stackTagCompound == null )
         {
             itemstack.setTagCompound(new NBTTagCompound());
         }

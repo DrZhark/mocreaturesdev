@@ -1,14 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,6 +15,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityPetScorpion extends MoCEntityTameable {
     public static final String scorpionNames[] = { "Dirt", "Cave", "Nether", "Frost", "Undead" };
@@ -43,6 +41,12 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
         roper = null;
         setHasBabies(false);
         this.stepHeight = 20.0F;
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
     }
 
     @Override
@@ -152,12 +156,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
         {
             mouthCounter = 1;
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 15;
     }
 
     @Override
@@ -471,7 +469,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
             {
                 entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
             }
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             if (MoCreatures.isServer())
             {
                 int i = getType() + 40;

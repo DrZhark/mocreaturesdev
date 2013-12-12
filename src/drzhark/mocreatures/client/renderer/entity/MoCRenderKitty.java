@@ -22,9 +22,9 @@ import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 public class MoCRenderKitty extends RenderBiped {
 
     public MoCModelKitty pussy1;
-    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityKitty)par1Entity).getTexture();
     }
 
@@ -67,7 +67,7 @@ public class MoCRenderKitty extends RenderBiped {
                 byte byte0 = -48;
                 if (flag2 && ((MoCEntityKitty) entityliving).getIsEmo())
                 {
-                    textureManager.func_110577_a(((MoCEntityKitty) entityliving).getEmoteIcon());
+                    textureManager.bindTexture(((MoCEntityKitty) entityliving).getEmoteIcon());
 
                     int i = -83;
                     if (!flag)
@@ -98,7 +98,7 @@ public class MoCRenderKitty extends RenderBiped {
                     }
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);
                     tessellator.startDrawingQuads();
-                    float f6 = entitykitty.func_110143_aJ();
+                    float f6 = entitykitty.getHealth();
                     float f7 = entitykitty.getMaxHealth();
                     float f8 = f6 / f7;
                     float f10 = 30F * f8;

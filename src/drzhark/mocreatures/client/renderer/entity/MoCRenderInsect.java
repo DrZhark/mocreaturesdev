@@ -34,7 +34,7 @@ public class MoCRenderInsect extends MoCRenderMoC {
 
     protected void rotateAnimal(EntityLiving entityliving)
     {
-    	GL11.glRotatef(90F, -1F, 0.0F, 0.0F);
+        GL11.glRotatef(90F, -1F, 0.0F, 0.0F);
     }
 
     protected void stretch(MoCEntityInsect entity)

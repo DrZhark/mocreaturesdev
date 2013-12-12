@@ -2,17 +2,16 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.world.World;
 
 public class MoCEntityInsect extends MoCEntityAmbient {
 
@@ -23,6 +22,12 @@ public class MoCEntityInsect extends MoCEntityAmbient {
         super(world);
         setSize(0.2F, 0.2F);
         //health = 2;
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -151,11 +156,6 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     public boolean getCanSpawnHere()
     {
         return super.getCanSpawnHereAnimal()  && super.getCanSpawnHereCreature();
-    }
-
-    public float getMaxHealth()
-    {
-        return 2;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package drzhark.mocreatures.entity.ambient;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 public class MoCEntityFirefly extends MoCEntityInsect
 {

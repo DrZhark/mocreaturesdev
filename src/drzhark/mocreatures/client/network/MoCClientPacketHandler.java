@@ -17,9 +17,9 @@ import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.client.gui.MoCGUIEntityNamer;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.client.gui.helpers.MoCGUIEntityNamer;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
@@ -204,7 +204,7 @@ public class MoCClientPacketHandler implements IPacketHandler {
                     {
                         if (ent.entityId == entID && ent instanceof EntityLiving)
                         {
-                            ((EntityLiving) ent).setEntityHealth(health);
+                            ((EntityLiving) ent).setHealth(health);
                             break;
                         }
                     }
@@ -383,7 +383,7 @@ public class MoCClientPacketHandler implements IPacketHandler {
     public static void sendInstaSpawnPacket(String entityId, int number)
     {
         // client sending insta spawn command. int ID, int number
-        if (!MoCreatures.proxy.instaSpawnerMap.containsKey(entityId) || number < 1)
+        if (!MoCreatures.instaSpawnerMap.containsKey(entityId) || number < 1)
         {
             return;
         }

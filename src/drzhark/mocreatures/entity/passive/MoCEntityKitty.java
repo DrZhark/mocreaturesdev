@@ -2,14 +2,6 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -28,6 +20,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityKitty extends MoCEntityTameable {
 
@@ -54,20 +52,19 @@ public class MoCEntityKitty extends MoCEntityTameable {
         foundTree = false;
     }
 
-    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
+    }
+
     @Override
     public void selectType()
     {
         if (getType() == 0)
         {
-        	setType(rand.nextInt(8)+1);
+            setType(rand.nextInt(8)+1);
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 15;
     }
 
     @Override
@@ -253,7 +250,9 @@ public class MoCEntityKitty extends MoCEntityTameable {
     @Override
     protected boolean canDespawn()
     {
-        return getKittyState() < 3;
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return getKittyState() < 3;
+        else return false;
     }
 
     private void changeKittyState(int i)
@@ -507,12 +506,6 @@ public class MoCEntityKitty extends MoCEntityTameable {
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 2;
-    }
-
-    @Override
     public double getYOffset()
     {
         if (ridingEntity instanceof EntityPlayer && ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer())
@@ -546,7 +539,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             changeKittyState(3);
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
 
             if (MoCreatures.isServer())
             {
@@ -561,7 +554,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             changeKittyState(9);
             return true;
         }
@@ -589,7 +582,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             changeKittyState(7);
             return true;
         }
@@ -602,7 +595,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
 
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == Item.field_111214_ch.itemID))
+        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == Item.leash.itemID))
         {
             changeKittyState(14);
             if (MoCreatures.isServer())
@@ -786,18 +779,18 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     MoCEntityKittyBed entitykittybed1 = (MoCEntityKittyBed) ridingEntity;
                     if ((entitykittybed1 != null) && !entitykittybed1.getHasMilk() && !entitykittybed1.getHasFood())
                     {
-                        this.setEntityHealth(getMaxHealth());
+                        this.setHealth(getMaxHealth());
                         changeKittyState(5);
                     }
                 }
                 else
                 {
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                     changeKittyState(5);
                 }
                 if (rand.nextInt(2500) == 0)
                 {
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                     changeKittyState(7);
                 }
                 break;
@@ -1101,7 +1094,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     break;
                 }
                 ItemStack itemstack2 = entityplayer2.inventory.getCurrentItem();
-                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.itemID != Item.field_111214_ch.itemID)))
+                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.itemID != Item.leash.itemID)))
                 {
                     changeKittyState(13);
                 }
@@ -1305,7 +1298,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     int babytype = this.getType();
                     if (rand.nextInt(2) == 0)
                     {
-                    	babytype = (rand.nextInt(8)+1);
+                        babytype = (rand.nextInt(8)+1);
                     }
                     entitykitty1.setType(babytype);
                     entitykitty1.setPosition(posX, posY, posZ);
@@ -1397,7 +1390,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     @Override
     public void setDead()
     {
-        if (MoCreatures.isServer() && (getKittyState() > 2) && (func_110143_aJ() > 0))
+        if (MoCreatures.isServer() && (getKittyState() > 2) && (getHealth() > 0))
         {
             return;
         }
@@ -1483,7 +1476,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         }
         super.onDeath(damagesource);
     }
-    
+
     @Override
     public boolean swimmerEntity()
     {

@@ -2,11 +2,6 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
-import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -16,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
 
 public class MoCItemFishBowl extends MoCItem {
 

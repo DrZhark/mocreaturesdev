@@ -1,7 +1,5 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import java.util.Random;
-
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -12,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelNewHorseMob;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
 
@@ -43,7 +40,7 @@ public class MoCRenderHorseMob extends RenderLiving {
 
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityHorseMob)par1Entity).getTexture();
     }
 }

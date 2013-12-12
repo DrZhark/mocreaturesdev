@@ -2,19 +2,10 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -31,6 +22,14 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
 public class MoCEntityBigCat extends MoCEntityTameable {
 
@@ -53,7 +52,12 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         setTamed(false);
     }
 
-       
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+    }
+
     /**
      * Sets the type and texture of a BigCat if not set already.
      */
@@ -89,7 +93,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                 setType(5);
             }
 
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
         }
 
         
@@ -120,7 +124,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         }
     }
 
-    public float getMaxHealth()
+    public float calculateMaxHealth()
     {
         switch (getType())
         {
@@ -364,6 +368,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         }
     }
 
+    // Method used for receiving damage from another source
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
@@ -441,7 +446,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(6); //snow leopard
             return true;
@@ -527,7 +532,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                     continue;
                 }
                 MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity1;
-                if ((getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7) || ((getType() != 2) && (getType() == entitybigcat.getType())) || ((getType() == 2) && (entitybigcat.getType() == 1)) || (this.func_110143_aJ() < entitybigcat.func_110143_aJ()))
+                if ((getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7) || ((getType() != 2) && (getType() == entitybigcat.getType())) || ((getType() == 2) && (entitybigcat.getType() == 1)) || (this.getHealth() < entitybigcat.getHealth()))
                 {
                     continue;
                 }
@@ -607,17 +612,6 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         return entitycreature;
     }
 
-    /*
-     * public int getMaxHealth() {
-     * return(dataWatcher.getWatchableObjectInt(21)); }
-     */
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 3;
-    }
-
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
@@ -643,7 +637,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         }
         if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.porkRaw.itemID || itemstack.itemID == Item.fishRaw.itemID))
         {
-        	this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHungry(false);
         }
@@ -680,10 +674,10 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         super.onLivingUpdate();
 
-        if ((rand.nextInt(300) == 0) && (this.func_110143_aJ() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
+        if ((rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
         {
             //health++;
-            this.setEntityHealth(func_110143_aJ() + 1);
+            this.setHealth(getHealth() + 1);
         }
         if (!getIsAdult() && (rand.nextInt(250) == 0))
         {
@@ -723,7 +717,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                 if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                 {
                     entityitem.setDead();
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                     if (!getIsAdult() && (getEdad() < 80))
                     {
                         setEaten(true);

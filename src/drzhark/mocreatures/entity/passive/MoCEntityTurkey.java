@@ -1,14 +1,14 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityTurkey extends MoCEntityTameable {
 
@@ -19,10 +19,10 @@ public class MoCEntityTurkey extends MoCEntityTameable {
         texture = "turkey.png";
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 6;
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
     }
 
     @Override
@@ -91,5 +91,11 @@ public class MoCEntityTurkey extends MoCEntityTameable {
     public int getTalkInterval()
     {
         return 400;
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 2;
     }
 }

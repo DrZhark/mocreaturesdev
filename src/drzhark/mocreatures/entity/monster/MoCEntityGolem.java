@@ -3,7 +3,9 @@ package drzhark.mocreatures.entity.monster;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,6 +15,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraftforge.event.world.BlockEvent;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -37,6 +41,12 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         super(world);
         texture = "golemt.png";
         setSize(1.5F, 4F);
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(50.0D);
     }
 
     @Override
@@ -103,15 +113,15 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
 
             if (getGolemState() > 1 && entityToAttack != null && rand.nextInt(20) == 0)
             {
-                if (func_110143_aJ() >= 30)
+                if (getHealth() >= 30)
                 {
                     setGolemState(2);
                 }
-                if (func_110143_aJ() < 30 && func_110143_aJ() >= 10)
+                if (getHealth() < 30 && getHealth() >= 10)
                 {
                     setGolemState(3); //more dangerous
                 }
-                if (func_110143_aJ() < 10)
+                if (getHealth() < 10)
                 {
                     setGolemState(4); //dying
                 }
@@ -185,7 +195,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     private void destroyGolem()
     {
         List<Integer> usedBlocks = usedCubes();
-        if (!usedBlocks.isEmpty())
+        if ((!usedBlocks.isEmpty()) && (MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks))
         {
             for (int i = 0; i < usedBlocks.size(); i++)
             {
@@ -220,7 +230,17 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         trock.setBehavior(type);//so the rock: 2 follows the EntityGolem  or 3 - gets around the golem
         
         //destroys the block that was already there
-        if (MoCTools.mobGriefing(worldObj) && MoCreatures.proxy.golemDestroyBlocks) worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], 0, 0, 3);
+        if (MoCTools.mobGriefing(worldObj) && MoCreatures.proxy.golemDestroyBlocks) 
+        {
+            int id = worldObj.getBlockId(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
+            Block block = Block.blocksList[id];
+            int metadata = worldObj.getBlockMetadata(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, metadata, FakePlayerFactory.get(worldObj, "[MoCreatures]"));
+            if (!event.isCanceled())
+            {
+                worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], 0, 0, 3);
+            }
+        }
 
         //spawns the new TRock
         this.worldObj.spawnEntityInWorld(trock);
@@ -244,20 +264,22 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             {
                 MoCTools.playCustomSound(this, "golemattach", worldObj, 3F);
                 int h = worldObj.difficultySetting;
-                this.setEntityHealth(func_110143_aJ() + h);
-                if (func_110143_aJ() > getMaxHealth())
+                this.setHealth(getHealth() + h);
+                if (getHealth() > getMaxHealth())
                 {
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                 }
                 saveGolemCube(slot, myBlock);
             }
             else
             {
                 MoCTools.playCustomSound(this, "turtlehurt", worldObj, 2F);
-                EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(ID, 1, Metadata));
-                entityitem.delayBeforeCanPickup = 10;
-                entityitem.age = 4000;
-                worldObj.spawnEntityInWorld(entityitem);
+                if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks))
+                {
+                    EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(ID, 1, Metadata));
+                    entityitem.delayBeforeCanPickup = 10;
+                    entityitem.age = 4000;
+                }
             }
         }
     }
@@ -487,9 +509,12 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             int blockType = generateBlock(golemCubes[x]);
             saveGolemCube((byte) x, (byte) 30);
             MoCTools.playCustomSound(this, "golemhurt", worldObj, 3F);
-            EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(blockType, 1, 0));
-            entityitem.delayBeforeCanPickup = 10;
-            worldObj.spawnEntityInWorld(entityitem);
+            if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks))
+            {
+                EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(blockType, 1, 0));
+                entityitem.delayBeforeCanPickup = 10;
+                this.worldObj.spawnEntityInWorld(entityitem);
+            }
         }
     }
 
@@ -1111,20 +1136,8 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 50;
-    }
-
-    @Override
     public boolean getCanSpawnHere()
     {
         return (super.getCanSpawnHere() && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && (posY > 50D));
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 1;
     }
 }

@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.item;
 
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -11,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCEntityKittyBed extends EntityLiving {
     public float milklevel;
@@ -42,10 +42,10 @@ public class MoCEntityKittyBed extends EntityLiving {
         return MoCreatures.proxy.getTexture("kittybed.png");
     }
 
-    protected void func_110147_ax()
+    protected void applyEntityAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D); // setMaxHealth
     }
 
     @Override
@@ -287,10 +287,5 @@ public class MoCEntityKittyBed extends EntityLiving {
         nbttagcompound.setInteger("SheetColour", getSheetColor());
         nbttagcompound.setBoolean("HasFood", getHasFood());
         nbttagcompound.setFloat("MilkLevel", milklevel);
-    }
-
-    public float getMaxHealth()
-    {
-        return 20;
     }
 }

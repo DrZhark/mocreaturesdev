@@ -4,15 +4,16 @@
 
 package drzhark.mocreatures.entity.ambient;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityInsect;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityInsect;
 
 public class MoCEntityBee extends MoCEntityInsect
 
@@ -25,6 +26,12 @@ public class MoCEntityBee extends MoCEntityInsect
         super(world);
         //health = 4;
         texture = "bee.png";
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
     }
 
     @Override
@@ -46,11 +53,6 @@ public class MoCEntityBee extends MoCEntityInsect
                 setIsFlying(false);
             }
         }
-    }
-
-    public float getMaxHealth()
-    {
-        return 4;
     }
 
     private String getMySound()

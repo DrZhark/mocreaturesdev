@@ -39,4 +39,6 @@ public interface IMoCTameable {
     public void setAdult(boolean adult);
 
     public void setOwnerPetId(int petId);
+
+    public boolean getIsTamed();
 }

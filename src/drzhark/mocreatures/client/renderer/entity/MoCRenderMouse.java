@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 
 @SideOnly(Side.CLIENT)
@@ -68,7 +67,7 @@ public class MoCRenderMouse extends MoCRenderMoC {
         GL11.glTranslatef(-0.55F, 0F, 0F);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityMouse)par1Entity).getTexture();
     }
 }

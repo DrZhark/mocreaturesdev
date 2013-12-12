@@ -2,13 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -20,6 +14,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityFox extends MoCEntityTameable {
     protected double attackRange;
@@ -33,7 +32,13 @@ public class MoCEntityFox extends MoCEntityTameable {
         force = 2;
         attackRange = 4D;
     }
-    
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
+    }
+
     @Override
     protected void attackEntity(Entity entity, float f)
     {
@@ -95,12 +100,6 @@ public class MoCEntityFox extends MoCEntityTameable {
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 15;
-    }
-
-    @Override
     public boolean interact(EntityPlayer entityplayer)
     {
         if (super.interact(entityplayer)) { return false; }
@@ -116,7 +115,7 @@ public class MoCEntityFox extends MoCEntityTameable {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
 
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {
@@ -156,8 +155,7 @@ public class MoCEntityFox extends MoCEntityTameable {
         int k = MathHelper.floor_double(posZ);
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(2);
         }
@@ -178,7 +176,7 @@ public class MoCEntityFox extends MoCEntityTameable {
             }
             if (this.getIsTamed() && entity1 instanceof MoCEntityTameable && ((MoCEntityTameable)entity1).getIsTamed())
             {
-            	continue;
+                continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
             if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
@@ -213,12 +211,6 @@ public class MoCEntityFox extends MoCEntityTameable {
     protected String getLivingSound()
     {
         return "mocreatures:foxcall";
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 1;
     }
 
     @Override

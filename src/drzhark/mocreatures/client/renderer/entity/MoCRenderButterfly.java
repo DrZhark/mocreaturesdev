@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
 
 @SideOnly(Side.CLIENT)
@@ -43,7 +42,7 @@ public class MoCRenderButterfly extends MoCRenderInsect {
         GL11.glTranslatef(0.0F, FHeight, 0.0F);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityButterfly)par1Entity).getTexture();
     }
 }

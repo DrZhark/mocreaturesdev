@@ -1,15 +1,13 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityDeer extends MoCEntityTameable {
 
@@ -25,13 +23,13 @@ public class MoCEntityDeer extends MoCEntityTameable {
         myMoveSpeed = 1.7F;
         setTamed(false);
     }
-       
-    @Override
-    public float getMaxHealth()
+
+    protected void applyEntityAttributes()
     {
-        return 10;
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
     }
-    
+
     @Override
     public void selectType()
     {

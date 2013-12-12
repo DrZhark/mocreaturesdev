@@ -2,7 +2,6 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
@@ -38,7 +37,7 @@ public class MoCRenderFishBowl extends RenderLiving {
         }
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityFishBowl)par1Entity).getTexture();
     }
 }

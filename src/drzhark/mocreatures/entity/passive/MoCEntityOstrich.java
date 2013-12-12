@@ -2,16 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,28 +10,21 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.inventory.MoCAnimalChest;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityOstrich extends MoCEntityTameable {
-
-    public MoCEntityOstrich(World world)
-    {
-        super(world);
-        setSize(1.0F, 1.6F);
-        //health = 20;
-        setEdad(35);
-        roper = null;
-        this.eggCounter = this.rand.nextInt(1000) + 1000;
-        this.stepHeight = 1.0F;
-    }
 
     private int eggCounter;
     private int hidingCounter;
@@ -53,6 +37,23 @@ public class MoCEntityOstrich extends MoCEntityTameable {
 
     public MoCAnimalChest localchest;
     public ItemStack localstack;
+
+    public MoCEntityOstrich(World world)
+    {
+        super(world);
+        setSize(1.0F, 1.6F);
+        //health = 20;
+        setEdad(35);
+        roper = null;
+        this.eggCounter = this.rand.nextInt(1000) + 1000;
+        this.stepHeight = 1.0F;
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+    }
 
     @Override
     protected void entityInit()
@@ -219,8 +220,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
         }
     }
 
-    @Override
-    public float getMaxHealth()
+    public float calculateMaxHealth()
     {
         switch (getType())
         {
@@ -450,9 +450,9 @@ public class MoCEntityOstrich extends MoCEntityTameable {
 
         
 
-        if (getIsTamed() && MoCreatures.isServer() && (rand.nextInt(300) == 0) && (func_110143_aJ() <= getMaxHealth()) && (deathTime == 0))
+        if (getIsTamed() && MoCreatures.isServer() && (rand.nextInt(300) == 0) && (getHealth() <= getMaxHealth()) && (deathTime == 0))
         {
-            this.setEntityHealth(func_110143_aJ() + 1);
+            this.setHealth(getHealth() + 1);
         }
 
         if (MoCreatures.isServer())
@@ -623,7 +623,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
             if (getType() == 6)
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             else
             {
@@ -645,7 +645,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
             if (getType() == 7)
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             else
             {
@@ -667,7 +667,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
             if (getType() == 8)
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             else
             {
@@ -689,7 +689,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
             if (getType() == 5)
             {
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
             }
             else
             {
@@ -1133,5 +1133,11 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             return EnumCreatureAttribute.UNDEAD;
         }
         return super.getCreatureAttribute();
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 1;
     }
 }

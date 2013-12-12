@@ -2,11 +2,6 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -19,6 +14,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityBunny extends MoCEntityTameable {
     public boolean pickedUp;
@@ -40,10 +40,10 @@ public class MoCEntityBunny extends MoCEntityTameable {
         bunnyReproduceTickerB = 0;
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 4;
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         
         if (getType() == 0)
         {
-        	setType(rand.nextInt(5)+1);
+            setType(rand.nextInt(5)+1);
         }
 
     }
@@ -72,7 +72,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         int k = MathHelper.floor_double(posZ);
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(3); //snow white bunnies!
             return true;
@@ -239,7 +239,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
                     int babytype = this.getType();
                     if (rand.nextInt(2) == 0)
                     {
-                    	babytype = entitybunny.getType();
+                        babytype = entitybunny.getType();
                     }
                     entitybunny1.setType(babytype);
                     worldObj.spawnEntityInWorld(entitybunny1);
@@ -291,12 +291,6 @@ public class MoCEntityBunny extends MoCEntityTameable {
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack par1ItemStack)
-    {
-        return false;
-    }
-
-    @Override
     public boolean updateMount()
     {
         return true;
@@ -311,9 +305,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
     @Override
     public int nameYOffset()
     {
-
         return -40;
-
     }
 
     @Override

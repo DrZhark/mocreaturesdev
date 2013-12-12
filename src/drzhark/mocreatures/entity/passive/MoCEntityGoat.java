@@ -1,11 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +13,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityGoat extends MoCEntityTameable {
     private boolean hungry;
@@ -41,6 +39,12 @@ public class MoCEntityGoat extends MoCEntityTameable {
         super(world);
         setSize(1.4F, 0.9F);
         setEdad(70);
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(12.0D);
     }
 
     @Override
@@ -122,11 +126,6 @@ public class MoCEntityGoat extends MoCEntityTameable {
             }
         }
 
-    }
-
-    public float getMaxHealth()
-    {
-        return 12;
     }
 
     @Override
@@ -597,16 +596,15 @@ public class MoCEntityGoat extends MoCEntityTameable {
 
         if (getIsTamed())
         {
-
             if ((itemstack != null) && (isItemEdible(itemstack.getItem())))
             {
                 if (--itemstack.stackSize == 0)
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 }
-                this.setEntityHealth(getMaxHealth());
+                this.setHealth(getMaxHealth());
                 worldObj.playSoundAtEntity(this, "goateating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-
+                return true;
             }
         }
 
@@ -616,6 +614,7 @@ public class MoCEntityGoat extends MoCEntityTameable {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
+            return true;
         }
 
         return false;

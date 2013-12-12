@@ -1,27 +1,20 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityKomodo extends MoCEntityTameable
 {
@@ -50,6 +43,12 @@ public class MoCEntityKomodo extends MoCEntityTameable
         }
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
+
     @Override
     protected void entityInit()
     {
@@ -73,12 +72,6 @@ public class MoCEntityKomodo extends MoCEntityTameable
     public boolean getCanSpawnHere()
     {
         return getCanSpawnHereCreature() && getCanSpawnHereLiving();
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 20;
     }
 
     @Override
@@ -425,5 +418,11 @@ public class MoCEntityKomodo extends MoCEntityTameable
             dropArmor();
             MoCTools.dropSaddle(this, worldObj);
         }
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk()
+    {
+        return 2;
     }
 }

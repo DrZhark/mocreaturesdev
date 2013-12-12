@@ -11,8 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 
 @SideOnly(Side.CLIENT)
@@ -24,7 +22,7 @@ public class MoCRenderSnake extends MoCRenderMoC {
         //tempSnake = (MoCModelSnake) modelbase;
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntitySnake)par1Entity).getTexture();
     }
 

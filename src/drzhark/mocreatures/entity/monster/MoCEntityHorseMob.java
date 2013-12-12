@@ -2,14 +2,10 @@ package drzhark.mocreatures.entity.monster;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
@@ -18,15 +14,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
 
 public class MoCEntityHorseMob extends MoCEntityMob
 {
-    public MoCEntityHorseMob(World world)
-    {
-        super(world);
-        setSize(1.4F, 1.6F);
-    }
-
     public int mouthCounter;
     public int textCounter;
     public int standCounter;
@@ -35,6 +28,18 @@ public class MoCEntityHorseMob extends MoCEntityMob
     private int fCounter;
     private float transFloat = 0.2F;
     public int wingFlapCounter;
+
+    public MoCEntityHorseMob(World world)
+    {
+        super(world);
+        setSize(1.4F, 1.6F);
+    }
+
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
 
     @Override
     public void selectType()
@@ -61,12 +66,6 @@ public class MoCEntityHorseMob extends MoCEntityMob
                 }
             }
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 20;
     }
 
     /**
@@ -162,12 +161,6 @@ public class MoCEntityHorseMob extends MoCEntityMob
     {
         int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D), MathHelper.floor_double(posZ));
         return (j == 0);
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
     }
 
     @Override

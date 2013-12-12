@@ -12,11 +12,11 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import net.minecraft.util.ResourceLocation;
+
 import com.google.common.collect.Maps;
 
 import drzhark.mocreatures.MoCreatures;
-
-import net.minecraft.util.ResourceLocation;
 
 public class MoCTextures {
 

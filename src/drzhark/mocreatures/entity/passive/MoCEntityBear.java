@@ -1,11 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -18,6 +13,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityBear extends MoCEntityTameable {
 
@@ -44,6 +44,12 @@ public class MoCEntityBear extends MoCEntityTameable {
         {
             setAdult(true);
         }
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
     }
 
     /**
@@ -95,7 +101,7 @@ public class MoCEntityBear extends MoCEntityTameable {
                 setType(3);
             }
 
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
         }
     }
 
@@ -143,7 +149,7 @@ public class MoCEntityBear extends MoCEntityTameable {
         }
     }
 
-    public float getMaxHealth()
+    public float calculateMaxHealth()
     {
         switch (getType())
         {
@@ -358,7 +364,7 @@ public class MoCEntityBear extends MoCEntityTameable {
                 {
                     entityitem.setDead();
                     worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
-                    this.setEntityHealth(getMaxHealth());
+                    this.setHealth(getMaxHealth());
                 }
 
             }
@@ -381,7 +387,7 @@ public class MoCEntityBear extends MoCEntityTameable {
             {
                 MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
             }
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             eatingAnimal();
             if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100))
             {
@@ -428,12 +434,6 @@ public class MoCEntityBear extends MoCEntityTameable {
     }
 
     @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 2;
-    }
-
-    @Override
     public boolean checkSpawningBiome()
     {
         int i = MathHelper.floor_double(posX);
@@ -441,14 +441,14 @@ public class MoCEntityBear extends MoCEntityTameable {
         int k = MathHelper.floor_double(posZ);
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
-        String biomename = MoCTools.BiomeName(worldObj, i, j, k);
-        if (currentbiome.temperature <= 0.05F)
+
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(4);
             return true;
         }
-        //original.toLowerCase().contains(tobeChecked.toLowerCase()) 
-        if (biomename.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
+
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FOREST) || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
         {
             setType(3);//panda
             return true;

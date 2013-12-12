@@ -3,14 +3,6 @@ package drzhark.mocreatures.entity;
 import java.util.List;
 import java.util.Random;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -28,6 +20,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
@@ -46,24 +45,32 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         texture = "blank.jpg";
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(getAttackStrenght());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
+
+    @Override
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
+    {
+        selectType();
+        return super.onSpawnWithEgg(par1EntityLivingData);
+    }
+
     public ResourceLocation getTexture()
     {
         return MoCreatures.proxy.getTexture(texture);
     }
 
-    protected void registerCustomAttributes()
-    {
-    	this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(getMoveSpeed()); // setMoveSpeed
-        this.func_110148_a(SharedMonsterAttributes.field_111264_e).func_111128_a(getAttackStrenght()); // setAttackStrength
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
-    }
-    
     protected double getAttackStrenght() 
     {
-		return 2D;
-	}
+        return 2D;
+    }
 
-	/**
+    /**
      * Put your code to choose a texture / the mob type in here. Will be called
      * by default MocEntity constructors.
      */
@@ -73,15 +80,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         setType(1);
     }
 
-    @Override
-    public EntityLivingData func_110161_a(EntityLivingData par1EntityLivingData)
-    {
-    	selectType();
-    	registerCustomAttributes();
-    	this.setEntityHealth((float) this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111126_e());
-    	return super.func_110161_a(par1EntityLivingData);
-    }
-    
     @Override
     protected void entityInit()
     {
@@ -231,11 +229,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)));
     }
 
-    public float getMaxHealth()
-    {
-        return 20;
-    }
-
     @Override
     public boolean checkSpawningBiome()
     {
@@ -252,7 +245,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
         if (MoCreatures.isServer() && getIsTamed() && rand.nextInt(200) == 0)
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
         }
         moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
@@ -263,7 +256,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     {
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.func_110143_aJ());
+            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -409,7 +402,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 motionY = -0.25D;
             }
         }
-        this.prevLimbYaw = this.limbYaw;
+        this.prevLimbSwingAmount = this.limbSwingAmount;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
         float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
@@ -418,8 +411,8 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             f4 = 1.0F;
         }
 
-        this.limbYaw += (f4 - this.limbYaw) * 0.4F;
-        this.limbSwing += this.limbYaw;
+        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
     }
 
     @Override
@@ -523,7 +516,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             double d3 = vec3d.yCoord - i;
             float f4 = (float) ((Math.atan2(d2, d1) * 180D) / 3.1415927410125728D) - 90F;
             float f5 = f4 - rotationYaw;
-            moveForward = (float)this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111126_e();
+            moveForward = (float)this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue();
             for (; f5 < -180F; f5 += 360F)
             {
             }
@@ -652,14 +645,16 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     protected boolean canDespawn()
     {
-        return !getIsTamed();
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return !getIsTamed();
+        else return true;
     }
 
     @Override
     public void setDead()
     {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && (getIsTamed()) && (func_110143_aJ() > 0)) { return; }
+        if (MoCreatures.isServer() && (getIsTamed()) && (getHealth() > 0)) { return; }
         super.setDead();
     }
 

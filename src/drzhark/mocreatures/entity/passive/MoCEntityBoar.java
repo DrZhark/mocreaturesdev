@@ -2,12 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -16,6 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
 
 public class MoCEntityBoar extends MoCEntityAnimal {
     protected int force;
@@ -41,10 +39,10 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         }
     }
 
-    @Override
-    public float getMaxHealth()
+    protected void applyEntityAttributes()
     {
-        return 10;
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
     }
 
     @Override
@@ -72,7 +70,9 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     @Override
     protected boolean canDespawn()
     {
-        return true;
+        if (MoCreatures.isCustomSpawnerLoaded)
+            return true;
+        else return false;
     }
 
     @Override

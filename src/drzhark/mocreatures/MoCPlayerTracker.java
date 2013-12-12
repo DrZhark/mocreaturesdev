@@ -2,7 +2,6 @@ package drzhark.mocreatures;
 
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.IPlayerTracker;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.IMoCEntity;
 
 public class MoCPlayerTracker implements IPlayerTracker

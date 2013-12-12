@@ -2,14 +2,6 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.entity.item.MoCEntityPlatform;
-import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.StepSound;
 import net.minecraft.entity.Entity;
@@ -27,6 +19,14 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.item.MoCEntityPlatform;
+import drzhark.mocreatures.inventory.MoCAnimalChest;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityElephant extends MoCEntityTameable {
 
@@ -65,7 +65,12 @@ public class MoCEntityElephant extends MoCEntityTameable {
         }
     }
 
-    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+    }
+
     @Override
     public void selectType()
     {
@@ -82,7 +87,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
             {
                 setType(2);
             }
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
         }
     }
 
@@ -147,8 +152,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
         }
     }
 
-    @Override
-    public float getMaxHealth()
+    public float calculateMaxHealth()
     {
         switch (getType())
         {
@@ -380,7 +384,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
             }
             MoCTools.playCustomSound(this, "eating", worldObj);
             temper += 2;
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && temper >= 10)
             {
                 setTamed(true);
@@ -397,7 +401,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
             }
             MoCTools.playCustomSound(this, "eating", worldObj);
             temper += 1;
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && temper >= 10)
             {
                 setTamed(true);
@@ -717,30 +721,30 @@ public class MoCEntityElephant extends MoCEntityTameable {
         
         String s = MoCTools.BiomeName(worldObj, i, j, k);
 
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(3 + rand.nextInt(2));
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             return true;
         }
-        if (s.equals("Desert") || s.equals("DesertHills"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))
         {
             setType(1);
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             return true;
         }
 
-        if (s.equals("Jungle") || s.equals("JungleHills"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.JUNGLE))
         {
             setType(2);
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             return true;
         }
 
-        if (s.equals("Plains") || s.equals("ForestHills") || s.equals("Forest"))
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS) || BiomeDictionary.isBiomeOfType(currentbiome, Type.FOREST))
         {
             setType(1 + rand.nextInt(2));
-            this.setEntityHealth(getMaxHealth());
+            this.setHealth(getMaxHealth());
             return true;
         }
 
@@ -1166,12 +1170,6 @@ public class MoCEntityElephant extends MoCEntityTameable {
         }
         setArmorType((byte) 0);
         
-    }
-    
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 1;
     }
 
     @Override

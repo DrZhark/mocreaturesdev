@@ -3,7 +3,6 @@ package drzhark.mocreatures.client.renderer.entity;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
@@ -11,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
@@ -20,7 +18,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 public class MoCRenderGolem extends MoCRenderMoC {
 
     private final ModelBase MoCModelG = new MoCModelGolem();
-    private static TextureManager textureManager = MoCClientProxy.mc.func_110434_K();
+    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
 
     public MoCRenderGolem(ModelBase modelbase, float f)
     {
@@ -51,7 +49,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
                 float var4 = (float) par1Entity.ticksExisted + par3;
                 //this.loadTexture("/armor/golemeffect.png");
                 //this.loadTexture(effectTexture);
-                textureManager.func_110577_a(effectTexture);
+                textureManager.bindTexture(effectTexture);
                 GL11.glMatrixMode(GL11.GL_TEXTURE);
                 GL11.glLoadIdentity();
                 float var5 = var4 * 0.01F;
@@ -89,7 +87,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
         return this.renderGPassModel((MoCEntityGolem) par1EntityLiving, par2, par3);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityGolem)par1Entity).getTexture();
     }
 }

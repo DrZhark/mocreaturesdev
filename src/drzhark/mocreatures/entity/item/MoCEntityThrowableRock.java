@@ -2,19 +2,17 @@ package drzhark.mocreatures.entity.item;
 
 import java.util.List;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.monster.MoCEntityGolem;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 
 public class MoCEntityThrowableRock extends Entity {
 
@@ -278,7 +276,7 @@ public class MoCEntityThrowableRock extends Entity {
 
     private void transformToItem()
     {
-        if (MoCTools.mobGriefing(this.worldObj)) // don't drop rocks if mobgriefing is set to false, prevents duping
+        if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks)) // don't drop rocks if mobgriefing is set to false, prevents duping
         {
             EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(getType(), 1, getMetadata()));
             entityitem.delayBeforeCanPickup = 10;

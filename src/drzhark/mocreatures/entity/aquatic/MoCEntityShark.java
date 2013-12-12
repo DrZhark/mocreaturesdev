@@ -4,8 +4,8 @@ import java.util.List;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +28,12 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         texture = "shark.png";
         setSize(1.5F, 0.8F);
         setEdad(100 + rand.nextInt(100));
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(25.0D);
     }
 
     @Override
@@ -75,12 +81,6 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         {
             return false;
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 25;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     public void setDead()
     {
-        if (!worldObj.isRemote && getIsTamed() && (func_110143_aJ() > 0))
+        if (!worldObj.isRemote && getIsTamed() && (getHealth() > 0))
         {
             return;
         }

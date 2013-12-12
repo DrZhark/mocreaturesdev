@@ -1,7 +1,6 @@
 package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
@@ -9,10 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderBear extends MoCRenderMoC {
@@ -42,7 +39,7 @@ public class MoCRenderBear extends MoCRenderMoC {
         GL11.glScalef(sizeFactor, sizeFactor, sizeFactor);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityBear)par1Entity).getTexture();
     }
 }

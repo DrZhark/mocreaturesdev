@@ -1,17 +1,11 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -21,6 +15,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.network.MoCServerPacketHandler;
 
 public class MoCEntityScorpion extends MoCEntityMob {
     private boolean isPoisoning;
@@ -48,6 +49,12 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 setHasBabies(false);
             }
         }
+    }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
     }
 
     @Override
@@ -139,12 +146,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         {
             mouthCounter = 1;
         }
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 15;
     }
 
     @Override
@@ -480,10 +481,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
 
-        String s = MoCTools.BiomeName(worldObj, i, j, k);
         BiomeGenBase currentbiome = MoCTools.Biomekind(worldObj, i, j, k);
 
-        if (currentbiome.temperature <= 0.05F)
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN))
         {
             setType(4);
         }

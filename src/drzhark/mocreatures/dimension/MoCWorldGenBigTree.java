@@ -2,12 +2,10 @@ package drzhark.mocreatures.dimension;
 
 import java.util.Random;
 
-import drzhark.mocreatures.MoCreatures;
-
-import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCWorldGenBigTree extends WorldGenerator
 {

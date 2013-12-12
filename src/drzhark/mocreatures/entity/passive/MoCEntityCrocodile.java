@@ -1,9 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -14,6 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameable;
 
 public class MoCEntityCrocodile extends MoCEntityTameable {
     // TODO
@@ -41,6 +40,12 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
         setTamed(false);
     }
 
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(25.0D);
+    }
+
     @Override
     protected void entityInit()
     {
@@ -48,12 +53,6 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
         dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isBiting - 0 false 1 true
         dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isResting - 0 false 1 true
         dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // caughtPrey - 0 false 1 true
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 25;
     }
 
     public boolean getIsBiting()
@@ -250,7 +249,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
                 if (!isInsideOfMaterial(Material.water))
                 {
                     waterbound = true;
-                    if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).func_110143_aJ() > 0)
+                    if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).getHealth() > 0)
                     {
                         ((EntityLivingBase) riddenByEntity).deathTime = 0;
                     }
@@ -542,7 +541,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
 
         if (riddenByEntity != null)
         {
-            if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).func_110143_aJ() > 0)
+            if (riddenByEntity instanceof EntityLiving && ((EntityLivingBase) riddenByEntity).getHealth() > 0)
             {
                 ((EntityLivingBase) riddenByEntity).deathTime = 0;
             }
@@ -550,12 +549,6 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
             riddenByEntity.mountEntity(null);
             setHasCaughtPrey(false);
         }
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 6;
     }
 
     @Override

@@ -1,44 +1,12 @@
 package drzhark.mocreatures.dimension;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.src.*;
-import net.minecraft.util.Direction;
-import net.minecraft.util.LongHashMap;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.PortalPosition;
-import net.minecraft.world.Teleporter;
-import net.minecraft.world.WorldServer;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPortal;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-import drzhark.mocreatures.MoCreatures;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.LongHashMap;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.PortalPosition;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
 public class MoCDirectTeleporter extends Teleporter 

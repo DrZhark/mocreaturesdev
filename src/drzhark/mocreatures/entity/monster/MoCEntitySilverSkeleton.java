@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.monster;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -9,7 +10,10 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 
-public class MoCEntitySilverSkeleton extends MoCEntityMob{
+public class MoCEntitySilverSkeleton extends MoCEntityMob
+{
+    public int attackCounterLeft;
+    public int attackCounterRight;
 
     public MoCEntitySilverSkeleton(World world)
     {
@@ -18,8 +22,11 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
         setSize(0.9F, 1.4F);
     }
 
-    public int attackCounterLeft;
-    public int attackCounterRight;
+    protected void applyEntityAttributes()
+    {
+      super.applyEntityAttributes();
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(25.0D);
+    }
 
     @Override
     public void onLivingUpdate()
@@ -116,33 +123,27 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob{
         }
     public float getMoveSpeed()
     {
-    	return 1.2F;
+        return 1.2F;
         /*if (isSprinting()) return 1.2F;
         return 0.8F;*/
     }
 
     @Override
-    public float getMaxHealth()
-    {
-        return 25;
-    }
-
-    @Override
     protected String getDeathSound()
     {
-	return "mob.skeleton.death";
+    return "mob.skeleton.death";
     }
 
     @Override
     protected String getHurtSound()
     {
-	return "mob.skeleton.hurt";
+    return "mob.skeleton.hurt";
     }
 
     @Override
     protected String getLivingSound()
     {
-	return "mob.skeleton.say";
+    return "mob.skeleton.say";
     }
     
     /**

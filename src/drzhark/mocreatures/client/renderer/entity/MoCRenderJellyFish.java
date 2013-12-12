@@ -11,8 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.client.model.MoCModelJellyFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
 
 @SideOnly(Side.CLIENT)
@@ -106,7 +104,7 @@ public class MoCRenderJellyFish extends RenderLiving {
         GL11.glScalef(scale, scale2, scale);
     }
 
-    protected ResourceLocation func_110775_a(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityJellyFish)par1Entity).getTexture();
     }
 }

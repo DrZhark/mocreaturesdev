@@ -1,5 +1,15 @@
 package drzhark.mocreatures.entity.item;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
@@ -13,16 +23,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 public class MoCEntityEgg extends EntityLiving {
     private int tCounter;
@@ -59,10 +59,10 @@ public class MoCEntityEgg extends EntityLiving {
         return MoCreatures.proxy.getTexture("egg.png");
     }
 
-    protected void func_110147_ax()
+    protected void applyEntityAttributes()
     {
-        super.func_110147_ax();
-        this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(getMaxHealth()); // setMaxHealth
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D); // setMaxHealth
     }
 
     @Override
@@ -320,7 +320,7 @@ public class MoCEntityEgg extends EntityLiving {
                         entityspawn.setType(typeInt);
                         entityspawn.setEdad(35);
                         worldObj.spawnEntityInWorld(entityspawn);
-                        entityspawn.setEntityHealth(entityspawn.getMaxHealth());
+                        entityspawn.setHealth(entityspawn.getMaxHealth());
 
                         if (getEggType() == 31)//stolen egg that hatches a tamed ostrich
                         {
@@ -360,7 +360,7 @@ public class MoCEntityEgg extends EntityLiving {
                         entityspawn.setType(typeInt);
                         entityspawn.setAdult(false);
                         worldObj.spawnEntityInWorld(entityspawn);
-                        entityspawn.setEntityHealth(entityspawn.getMaxHealth());
+                        entityspawn.setHealth(entityspawn.getMaxHealth());
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
@@ -380,7 +380,7 @@ public class MoCEntityEgg extends EntityLiving {
                         entityspawn.setAdult(false);
                         entityspawn.setEdad(30);
                         worldObj.spawnEntityInWorld(entityspawn);
-                        entityspawn.setEntityHealth(entityspawn.getMaxHealth());
+                        entityspawn.setHealth(entityspawn.getMaxHealth());
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
@@ -402,7 +402,7 @@ public class MoCEntityEgg extends EntityLiving {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-            entityplayer.sendChatToPlayer(ChatMessageComponent.func_111077_e("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
+            entityplayer.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
         }
     }
     public int getSize()
@@ -419,11 +419,6 @@ public class MoCEntityEgg extends EntityLiving {
     public void setEggType(int eggType)
     {
         this.eggType = eggType;
-    }
-
-    public float getMaxHealth()
-    {
-        return 10;
     }
 
     @Override

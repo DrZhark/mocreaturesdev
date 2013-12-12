@@ -4,7 +4,6 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ForgeHooksClient;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -79,7 +78,7 @@ public class MoCEntityFXUndead extends EntityFX {
     @Override
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation("mocreatures", MoCreatures.proxy.MISC_TEXTURE + getCurrentTexture()));
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("mocreatures", MoCreatures.proxy.MISC_TEXTURE + getCurrentTexture()));
         float sizeFactor = 0.1F * this.particleScale;
         float var13 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) par2 - interpPosX);
         float var14 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) par2 - interpPosY);

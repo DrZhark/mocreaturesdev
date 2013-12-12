@@ -1,10 +1,10 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
 
 public class MoCItemEgg extends MoCItem {
 

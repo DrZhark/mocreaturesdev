@@ -3,9 +3,6 @@ package drzhark.mocreatures.entity.monster;
 import java.util.Iterator;
 import java.util.List;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,6 +13,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
 
 public class MoCEntityRat extends MoCEntityMob {
     public MoCEntityRat(World world)
@@ -24,7 +23,12 @@ public class MoCEntityRat extends MoCEntityMob {
         setSize(0.5F, 0.5F);
     }
 
-    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+    }
+
     @Override
     public void selectType()
     {
@@ -49,8 +53,8 @@ public class MoCEntityRat extends MoCEntityMob {
     @Override
     protected double getAttackStrenght() 
     {
-		return 1D;
-	}
+        return 1D;
+    }
     
     @Override
     public ResourceLocation getTexture()
@@ -164,18 +168,6 @@ public class MoCEntityRat extends MoCEntityMob {
     protected String getLivingSound()
     {
         return "mocreatures:ratgrunt";
-    }
-
-    @Override
-    public int getMaxSpawnedInChunk()
-    {
-        return 5;
-    }
-
-    @Override
-    public float getMaxHealth()
-    {
-        return 10;
     }
 
     @Override
