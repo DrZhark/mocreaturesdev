@@ -1,11 +1,8 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -160,33 +157,6 @@ public class MoCEntityFox extends MoCEntityTameable {
             setType(2);
         }
         return true;
-    }
-
-    public EntityLivingBase getClosestTarget(Entity entity, double d)
-    {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
-        for (int i = 0; i < list.size(); i++)
-        {
-            Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (height <= entity1.height) || (width <= entity1.width))
-            {
-                continue;
-            }
-            if (this.getIsTamed() && entity1 instanceof MoCEntityTameable && ((MoCEntityTameable)entity1).getIsTamed())
-            {
-                continue;
-            }
-            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
-            {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-
-        return entityliving;
     }
 
     @Override

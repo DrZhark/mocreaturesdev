@@ -25,8 +25,11 @@ public class EntityData {
     private boolean canSpawn = true;
     private boolean vanillaControl = false;
     private int entityId;
-    private int minY = -1;
-    private int maxY = -1;
+    private int minSpawnHeight = -1;
+    private int maxSpawnHeight = -1;
+    private int minLightLevel = -1;
+    private int maxLightLevel = -1;
+    private Boolean opaqueBlock = null;
     private List<String> spawnBlockBlacklist = new ArrayList<String>();
     private EntitySpawnType entitySpawnType;
     private CMSConfiguration config;
@@ -63,8 +66,8 @@ public class EntityData {
             this.canSpawn = false;
         else this.canSpawn = true;
         // TODO
-        this.minY = 0;
-        this.maxY = 0;
+        this.minSpawnHeight = 0;
+        this.maxSpawnHeight = 0;
     }
 
     public Class<? extends EntityLiving> getEntityClass()
@@ -181,24 +184,54 @@ public class EntityData {
         }
     }
 
-    public int getMinY()
+    public int getMinSpawnHeight()
     {
-        return this.minY;
+        return this.minSpawnHeight;
     }
 
-    public int getMaxY()
+    public int getMaxSpawnHeight()
     {
-        return this.maxY;
+        return this.maxSpawnHeight;
     }
 
-    public void setMinY(int y)
+    public void setMinHeight(int y)
     {
-        this.minY = y;
+        this.minSpawnHeight = y;
     }
 
-    public void setMaxY(int y)
+    public void setMaxHeight(int y)
     {
-        this.maxY = y;
+        this.maxSpawnHeight = y;
+    }
+
+    public int getMinLightLevel()
+    {
+        return this.minLightLevel;
+    }
+
+    public void setMinLightLevel(int lightLevel)
+    {
+        this.minLightLevel = lightLevel;
+    }
+
+    public int getMaxLightLevel()
+    {
+        return this.maxLightLevel;
+    }
+
+    public void setMaxLightLevel(int lightLevel)
+    {
+        this.maxLightLevel = lightLevel;
+    }
+
+    public Boolean getOpaqueBlock()
+    {
+        return this.opaqueBlock;
+    }
+
+    public void setOpaqueBlock(Boolean flag)
+    {
+        this.opaqueBlock = flag;
     }
 
     public List<String> getSpawnBlockBlacklist()
@@ -332,7 +365,6 @@ public class EntityData {
 
     public void setLivingSpawnType(EnumCreatureType enumcreaturetype)
     {
-        //System.out.println("checking type " + enumcreaturetype.name().toUpperCase());
         this.entitySpawnType = CustomSpawner.entitySpawnTypes.get(enumcreaturetype == null ? "UNDEFINED" : enumcreaturetype.name().toUpperCase());
     }
 }

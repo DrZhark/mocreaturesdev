@@ -88,7 +88,7 @@ public class ItemStaffPortal extends MoCItem
                             if (j1 == 0 && j2 == 0)
                             {
                                 thePlayer.playerNetServerHandler.setPlayerLocation((double)var2.posX, (double)var2.posY+i1+1, (double)var2.posZ, 0.0F, 0.0F);
-                                if (MoCreatures.proxy.debugLogging) {System.out.println("MoC Staff teleporter found location at spawn");}
+                                if (MoCreatures.proxy.debug) {System.out.println("MoC Staff teleporter found location at spawn");}
                                 foundSpawn = true;
                                 break;
                             }
@@ -96,13 +96,13 @@ public class ItemStaffPortal extends MoCItem
 
                         if (!foundSpawn)
                         {
-                            if (MoCreatures.proxy.debugLogging) {System.out.println("MoC Staff teleporter couldn't find an adequate teleport location at spawn");}
+                            if (MoCreatures.proxy.debug) {System.out.println("MoC Staff teleporter couldn't find an adequate teleport location at spawn");}
                             return false;
                         }
                     }
                     else
                     {
-                        if (MoCreatures.proxy.debugLogging) System.out.println("MoC Staff teleporter couldn't find spawn point");
+                        if (MoCreatures.proxy.debug) System.out.println("MoC Staff teleporter couldn't find spawn point");
                         return false;
                     }
                 }

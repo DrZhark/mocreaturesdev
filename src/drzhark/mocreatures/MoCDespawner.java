@@ -1,7 +1,6 @@
 package drzhark.mocreatures;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -19,19 +18,18 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import drzhark.customspawner.EntitySpawnType;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCDespawner {
 
     public static boolean debug = false;
+    public static int despawnLightLevel = 7;
+    public static int despawnTickRate = 111;
     public List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
     private List<Class> vanillaClassList;
 
@@ -125,79 +123,6 @@ public class MoCDespawner {
         return count;
     }
 
-    public final int despawnMob(WorldServer worldObj)
-    {
-        List<Class> myNullList = null;
-        return despawnMob(worldObj, myNullList);
-    }
-
-    public final int despawnMob(WorldServer worldObj, Class... classList)
-    {
-        List<Class> myList = new ArrayList();
-        for (Class element : classList)
-        {
-            myList.add(element);
-        }
-        return despawnMob(worldObj, myList);
-    }
-
-    public final int despawnMob(WorldServer worldObj, List<Class> classList)
-    {
-        int count = 0;
-        if (classList == null)
-        {
-            classList = vanillaClassList;
-        }
-
-        for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
-        {
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
-            if (!(entity instanceof EntityLiving))
-            {
-                continue;
-            }
-            for (Iterator iterator = classList.iterator(); iterator.hasNext();)
-            {
-                if (iterator != null)
-                {
-                    Class class2 = (Class) iterator.next();
-                    if (class2 == entity.getClass())
-                    {
-                        count += entityDespawnCheck(worldObj, (EntityLiving) entity);
-                    }
-                }
-            }
-
-        }
-        return count;
-    }
-
-    public final int despawnMobWithMinimum(WorldServer worldObj, Class class1, int minimum)
-    {
-        int killedcount = 0;
-        int mobcount = countEntities(class1, worldObj);
-        for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
-        {
-            if ((mobcount - killedcount) <= minimum)
-            {
-                worldObj.updateEntities();
-                return killedcount;
-            }
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
-            if (!(entity instanceof EntityLiving))
-            {
-                continue;
-            }
-            if (class1 == entity.getClass())
-            {
-                killedcount += entityDespawnCheck(worldObj, (EntityLiving) entity);
-            }
-        }
-        worldObj.updateEntities();
-        return killedcount;
-
-    }
-
     public final int countEntities(Class class1, World worldObj)
     {
         int i = 0;
@@ -211,40 +136,6 @@ public class MoCDespawner {
         }
 
         return i;
-    }
-
-    /**
-     * Gets a random custom mob for spawning based on XYZ coordinates
-     */
-    public SpawnListEntry getRandomCustomMob(World worldObj, EntitySpawnType entitySpawnType, int pX, int pY, int pZ)
-    {
-        List list = getPossibleCustomCreatures(worldObj, entitySpawnType, pX, pY, pZ);
-        if (list == null || list.isEmpty())
-        {
-            return null;
-        }
-        else
-        {
-            return (SpawnListEntry) WeightedRandom.getRandomItem(worldObj.rand, list);
-        }
-    }
-
-    /**
-     * Returns a list of creatures of the specified type (mob/aquatic/animal)
-     * that can spawn at the given XYZ location, based on biomes.
-     */
-    public List getPossibleCustomCreatures(World worldObj, EntitySpawnType entitySpawnType, int pX, int pY, int pZ)
-    {
-        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(pX, pZ);
-        if (biomegenbase == null)
-        {
-            return null;
-        }
-        else
-        {
-            //System.out.println("getting biomelist for biome " + biomegenbase.biomeName + ", size = " + entitySpawnType.getBiomeSpawnList(biomegenbase.biomeID).size());
-            return entitySpawnType.getBiomeSpawnList(biomegenbase.biomeID);
-        }
     }
 
     public static boolean isValidLightLevel(Entity entity, WorldServer worldObj, int lightLevel, boolean checkAmbientLightLevel)

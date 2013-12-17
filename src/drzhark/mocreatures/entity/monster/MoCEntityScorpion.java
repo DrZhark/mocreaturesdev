@@ -320,7 +320,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         {
             attackTime = 20;
             boolean flag = (entity instanceof EntityPlayer);
-            if (!getIsPoisoning() && rand.nextInt(5) == 0)
+            if (!getIsPoisoning() && rand.nextInt(5) == 0 && entity instanceof EntityLivingBase)
             {
                 setPoisoning(true);
                 if (getType() <= 2)// regular scorpions
@@ -464,7 +464,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean getCanSpawnHere()
     {
-        return (isValidLightLevel() && MoCreatures.proxy.getFrequency(this.entityId) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
+        return (isValidLightLevel() && MoCreatures.proxy.getFrequency(this.getName()) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
     }
 
     @Override

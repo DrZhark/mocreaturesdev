@@ -250,7 +250,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
+        if (MoCreatures.proxy.forceDespawns)
             return getKittyState() < 3;
         else return false;
     }
@@ -528,8 +528,9 @@ public class MoCEntityKitty extends MoCEntityTameable {
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
+        if (super.interact(entityplayer)) { return false; }
         //Ownership code
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
+        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((getKittyState() == 2) && (itemstack != null) && (itemstack.itemID == MoCreatures.medallion.itemID))

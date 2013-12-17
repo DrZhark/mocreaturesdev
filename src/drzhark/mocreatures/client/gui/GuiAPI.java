@@ -12,15 +12,16 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSmallButton;
 import net.minecraft.client.settings.EnumOptions;
 import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(name = "DrZhark's GuiAPI", modid = "DrZhark's GuiAPI", version = "1.0", acceptedMinecraftVersions = "1.6")
+//@Mod(name = "DrZhark's GuiAPI", modid = "DrZhark's GuiAPI", version = "1.0", acceptedMinecraftVersions = "1.6")
+@SideOnly(Side.CLIENT)
 public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
 
     Object cacheCheck = null;

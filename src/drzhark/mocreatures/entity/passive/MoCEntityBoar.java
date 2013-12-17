@@ -1,11 +1,8 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -70,8 +67,8 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
-            return true;
+        if (MoCreatures.proxy.forceDespawns)
+            return !getIsTamed();
         else return false;
     }
 
@@ -116,29 +113,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         return null;
     }
 
-    // TODO find a way to move this
-    public EntityLivingBase getClosestTarget(Entity entity, double d)
-    {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
-        for (int i = 0; i < list.size(); i++)
-        {
-            Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (height <= entity1.height) || (width <= entity1.width))
-            {
-                continue;
-            }
-            double d2 = entity1.getDistanceSq(entity.posY, entity.posZ, entity.motionX);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
-            {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-
-        return entityliving;
-    }
+    
 
     @Override
     public void onLivingUpdate()

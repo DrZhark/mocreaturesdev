@@ -18,7 +18,6 @@ public class GuiApiButton extends GuiButton {
             par1Minecraft.gameSettings.saveOptions();
             ModSettingScreen.guiContext = "";
             WidgetSetting.updateAll();
-            System.out.println("mousePressed");
             GuiModScreen.show(new GuiModSelect(par1Minecraft.currentScreen));
             return true;
         }

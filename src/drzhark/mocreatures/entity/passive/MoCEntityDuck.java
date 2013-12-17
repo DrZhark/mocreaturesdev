@@ -50,8 +50,8 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
-            return true;
+        if (MoCreatures.proxy.forceDespawns)
+            return !getIsTamed();
         else return false;
     }
 
@@ -86,6 +86,11 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
         }
 
         this.field_70886_e += this.field_70889_i * 2.0F;
+    }
+
+    @Override
+    protected void fall(float f)
+    {
     }
 
     @Override

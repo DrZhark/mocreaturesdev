@@ -193,7 +193,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
+        if (MoCreatures.proxy.forceDespawns)
             return !getIsTamed();
         else return false;
     }
@@ -233,6 +233,30 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return entityliving;
     }
 
+    public EntityLivingBase getClosestTarget(Entity entity, double d)
+    {
+        double d1 = -1D;
+        EntityLivingBase entityliving = null;
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(d, d, d));
+        for (int i = 0; i < list.size(); i++)
+        {
+            Entity entity1 = (Entity) list.get(i);
+            if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (height <= entity1.height) || (width <= entity1.width))
+            {
+                continue;
+            }
+            double d2 = entity1.getDistanceSq(entity.posY, entity.posZ, entity.motionX);
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity))
+            {
+                d1 = d2;
+                entityliving = (EntityLivingBase) entity1;
+            }
+        }
+
+        return entityliving;
+    }
+    
+    
     protected EntityLivingBase getClosestSpecificEntity(Entity entity, Class myClass, double d)
     {
         double d1 = -1D;
@@ -660,7 +684,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCreatures.proxy.getFrequency(this.entityId) <= 0)
+        if (MoCreatures.proxy.getFrequency(this.getName()) <= 0)
             return false;
         if (worldObj.provider.dimensionId != 0)
         {
@@ -1220,7 +1244,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
         }
         // prevent tamed animals attacking other tamed animals
-        else if (!entityToAttack.isEntityAlive() || ((entityToAttack instanceof IMoCTameable) && ((IMoCTameable)entityToAttack).getIsTamed() && this.getIsTamed()))
+        else if (!entityToAttack.isEntityAlive() || MoCTools.isTamed(entityToAttack) || !MoCreatures.proxy.enableHunters) //((entityToAttack instanceof IMoCTameable) && ((IMoCTameable)entityToAttack).getIsTamed() && this.getIsTamed()))
         {
             entityToAttack = null;
         }
@@ -1229,10 +1253,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             float f1 = entityToAttack.getDistanceToEntity(this);
             if (canEntityBeSeen(entityToAttack))
             {
-                if (entityToAttack instanceof MoCEntityTameable)
-                {
-                    
-                }
                 attackEntity(entityToAttack, f1);
             }
         }

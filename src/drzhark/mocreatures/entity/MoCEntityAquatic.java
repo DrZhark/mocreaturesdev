@@ -110,11 +110,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         return this.dataWatcher.getWatchableObjectString(17);
     }
 
-    public boolean getDisplayName()
-    {
-        return (getName() != null && !getName().equals(""));
-    }
-
     @Override
     public boolean getIsAdult()
     {
@@ -215,7 +210,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
+        if (MoCreatures.proxy.forceDespawns)
             return !getIsTamed();
         else return false;
     }
@@ -320,6 +315,11 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     public boolean getIsJumping()
     {
         return isEntityJumping;
+    }
+
+    public boolean getDisplayName()
+    {
+        return (getName() != null && !getName().equals(""));
     }
 
     /**
@@ -894,7 +894,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     @Override
     public boolean getCanSpawnHere()
     {
-        return MoCreatures.proxy.getFrequency(this.entityId) > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
+        return MoCreatures.proxy.getFrequency(this.getName()) > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
     }
 
     @Override

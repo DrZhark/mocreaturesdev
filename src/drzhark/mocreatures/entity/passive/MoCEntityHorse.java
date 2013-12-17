@@ -2408,7 +2408,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if (getVanishC() > 100)
             {
                 setVanishC((byte) 101);
-                MoCTools.dropAmulet(this);
+                MoCTools.dropHorseAmulet(this);
                 dissapearHorse();
             }
 

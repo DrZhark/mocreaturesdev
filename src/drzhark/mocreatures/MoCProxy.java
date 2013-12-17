@@ -10,10 +10,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
+import drzhark.mocreatures.configuration.MoCConfigCategory;
 import drzhark.mocreatures.configuration.MoCConfiguration;
+import drzhark.mocreatures.configuration.MoCProperty;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.utils.MoCLog;
 
 
 public class MoCProxy implements IGuiHandler {
@@ -70,6 +73,7 @@ public class MoCProxy implements IGuiHandler {
     public int maxGroup = 2;
     public int maxSpawnInChunk = 3;
     public float strength = 1;
+    public int despawnLightLevel = 7;
 
     // ogre settings
     public float ogreStrength;
@@ -79,68 +83,51 @@ public class MoCProxy implements IGuiHandler {
     public short fireOgreChance;
     public short caveOgreChance;
 
-    public boolean debugLogging = false;
+    public boolean debug = false;
     public boolean allowInstaSpawn;
-    //public boolean useGlobalEntityRegistration;
     public boolean needsUpdate = false;
     public boolean worldInitDone = false;
-    public boolean useDespawner = false;
+    public boolean forceDespawns = false;
+    public boolean enableHunters = false;
     public int activeScreen = -1;
 
-    public MoCConfiguration mocGlobalConfig;
+    public MoCConfiguration mocSettingsConfig;
+    public MoCConfiguration mocEntityConfig;
     protected File configFile;
-
-    protected static final String MOD_CREATURES_FILE_ROOT = File.separator + "Creatures" + File.separator;
-    private static final String MOD_BIOME_FILE_ROOT = File.separator + "Biomes" + File.separator;
 
     protected static final String CATEGORY_MOC_GENERAL_SETTINGS = "global-settings";
     protected static final String CATEGORY_MOC_CREATURE_GENERAL_SETTINGS = "creature-general-settings";
     protected static final String CATEGORY_MOC_MONSTER_GENERAL_SETTINGS = "monster-general-settings";
     protected static final String CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS = "water-mob-general-settings";
     protected static final String CATEGORY_MOC_AMBIENT_GENERAL_SETTINGS = "ambient-general-settings";
-    protected static final String CATEGORY_MOC_UNDEFINED_FREQUENCIES = "undefined-frequencies";
-    protected static final String CATEGORY_ENTITY_BIOME_SETTINGS = "entity-biome-settings";
-    protected static final String CATEGORY_BIOMEGROUP_DEFAULTS = "biomegroup-defaults";
     protected static final String CATEGORY_MOC_ID_SETTINGS = "custom-id-settings";
-    private static final String CATEGORY_MOD_MAPPINGS = "mod-mappings";
     private static final String CATEGORY_VANILLA_CREATURE_FREQUENCIES = "vanilla-creature-frequencies";
     private static final String CATEGORY_CREATURES = "Creatures";
-    public static final String CATEGORY_ENTITY_CANSPAWN_SETTINGS = "entity-canspawn-settings";
     private static final String CATEGORY_OWNERSHIP_SETTINGS = "ownership-settings";
-    private static final String CATEGORY_ENTITY_SPAWN_TYPES = "entity-spawn-types";
-    private static final String CATEGORY_WORLD_SETTINGS = "world-settings";
-    public static final String CATEGORY_ENTITY_SPAWN_SETTINGS = "entity-spawn-settings";
-
-    private static final String BIOME_GROUP_SETTINGS = "biome-group-settings";
-
-    private static final String MOD_KEY_BIOMESOPLENTY = "biomesop";
-    private static final String MOD_KEY_EXTRABIOMESXL = "extrabiomes";
-    private static final String MOD_KEY_BWG = "ted80";
-    private static final String MOD_KEY_VANILLA = "vanilla";
-    private static final String MOD_KEY_TWILIGHT = "twilightforest";
-    public boolean isBWGinstalled = false;
 
     public void resetAllData()
     {
         //registerEntities();
-        this.readConfigValues();
+        this.readGlobalConfigValues();
     }
 
     //----------------CONFIG INITIALIZATION
     public void ConfigInit(FMLPreInitializationEvent event) 
     {
-        mocGlobalConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCGlobal.cfg"));
+        mocSettingsConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCSettings.cfg"));
+        mocEntityConfig = new MoCConfiguration(new File(event.getSuggestedConfigurationFile().getParent(), "MoCreatures" + File.separator + "MoCreatures.cfg"));
         configFile = event.getSuggestedConfigurationFile();
-        mocGlobalConfig.load();
+        mocSettingsConfig.load();
+        mocEntityConfig.load();
         //registerEntities();
-        this.readConfigValues();
-        if (debugLogging) MoCreatures.log.info("Initializing MoCreatures Server Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCGlobal.cfg");
+        this.readGlobalConfigValues();
+        if (debug) MoCLog.logger.info("Initializing MoCreatures Config File at " + event.getSuggestedConfigurationFile().getParent() + "MoCSettings.cfg");
     }
 
-    public int getFrequency(int entityId)//String entityName, EnumCreatureType type)
+    public int getFrequency(String entityName)//, EnumCreatureType type)
     {
-        if (MoCreatures.mocEntityMap.get(entityId) != null)
-            return MoCreatures.mocEntityMap.get(entityId).getFrequency();
+        if (MoCreatures.mocEntityMap.get(entityName) != null)
+            return MoCreatures.mocEntityMap.get(entityName).getFrequency();
         else return frequency;
     }
 
@@ -214,55 +201,109 @@ public class MoCProxy implements IGuiHandler {
         return biomeParts;
     }
 
+    public void readMocConfigValues()
+    {
+        if (MoCreatures.mocEntityMap != null && !MoCreatures.mocEntityMap.isEmpty())
+        {
+            for (MoCEntityData entityData : MoCreatures.mocEntityMap.values())
+            {
+                MoCConfigCategory cat = mocEntityConfig.getCategory(entityData.getEntityName().toLowerCase());
+                if (!cat.containsKey("frequency"))
+                {
+                    cat.put("frequency", new MoCProperty("frequency", Integer.toString(entityData.getFrequency()), MoCProperty.Type.INTEGER));
+                }
+                else
+                {
+                    entityData.setFrequency(Integer.parseInt(cat.get("frequency").value));
+                }
+                if (!cat.containsKey("minspawn"))
+                {
+                    cat.put("minspawn", new MoCProperty("minspawn", Integer.toString(entityData.getMinSpawn()), MoCProperty.Type.INTEGER));
+                }
+                else
+                {
+                    entityData.setMinSpawn(Integer.parseInt(cat.get("minspawn").value));
+                }
+                if (!cat.containsKey("maxspawn"))
+                {
+                    cat.put("maxspawn", new MoCProperty("maxspawn", Integer.toString(entityData.getMaxSpawn()), MoCProperty.Type.INTEGER));
+                }
+                else
+                {
+                    entityData.setMaxSpawn(Integer.parseInt(cat.get("maxspawn").value));
+                }
+                if (!cat.containsKey("maxchunk"))
+                {
+                    cat.put("maxchunk", new MoCProperty("maxchunk", Integer.toString(entityData.getMaxInChunk()), MoCProperty.Type.INTEGER));
+                }
+                else
+                {
+                    entityData.setMaxInChunk(Integer.parseInt(cat.get("maxchunk").value));
+                }
+                if (!cat.containsKey("canspawn"))
+                {
+                    cat.put("canspawn", new MoCProperty("canspawn", Boolean.toString(entityData.getCanSpawn()), MoCProperty.Type.BOOLEAN));
+                }
+                else
+                {
+                    entityData.setCanSpawn(Boolean.parseBoolean(cat.get("canspawn").value));
+                }
+            }
+        }
+        mocEntityConfig.save();
+    }
+
     /**
      * Reads values from file
      */
-    public void readConfigValues() 
+    public void readGlobalConfigValues() 
     {
         // client-side only
-        displayPetHealth = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetHealth", true, "Shows Pet Health").getBoolean(true);
-        displayPetName = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetName", true, "Shows Pet Name").getBoolean(true);
-        displayPetIcons = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetIcons", true, "Shows Pet Emotes").getBoolean(true);
-        animateTextures = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "animateTextures", true, "Animate Textures").getBoolean(true);
+        displayPetHealth = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetHealth", true, "Shows Pet Health").getBoolean(true);
+        displayPetName = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetName", true, "Shows Pet Name").getBoolean(true);
+        displayPetIcons = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "displayPetIcons", true, "Shows Pet Emotes").getBoolean(true);
+        animateTextures = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "animateTextures", true, "Animate Textures").getBoolean(true);
         // general
-        itemID = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "ItemID", 8772, "The starting ID used for MoCreatures items. Each item will increment this number by 1 for its ID.").getInt();
-        allowInstaSpawn = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
-        debugLogging = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debugLogging", false, "Turns on verbose logging").getBoolean(false);
-        useDespawner = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "useDespawner", false, "If true, despawner will force despawns on all creatures including vanilla for a more dynamic experience while exploring world. If false, all passive mocreatures will not despawn to prevent other creatures from taking over. Note: if you experience issues with farm animals despawning, adjust despawnLightLevel.").getBoolean(false);
-        maxTamed = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerPlayer", 10, "Max tamed creatures a player can have. Requires enableOwnership to be set to true.").getInt();
-        maxOPTamed = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerOP", 20, "Max tamed creatures an op can have. Requires enableOwnership to be set to true.").getInt();
-        enableOwnership = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "enableOwnership", false, "Assigns player as owner for each creature they tame. Only the owner can interact with the tamed creature.").getBoolean(false);
-        enableResetOwnership = mocGlobalConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "enableResetOwnerScroll", false, "Allows players to remove a tamed creatures owner essentially untaming it.").getBoolean(false);
-        easyBreeding = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", false, "Makes horse breeding simpler.").getBoolean(true);
-        elephantBulldozer = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ElephantBulldozer", true).getBoolean(true);
-        zebraChance = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", 10, "The percent for spawning a zebra.").getInt();
-        staticBed = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticBed", true).getBoolean(true);
-        staticLitter = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticLitter", true).getBoolean(true);
-        particleFX = mocGlobalConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "particleFX", 3).getInt();
-        attackDolphins = mocGlobalConfig.get(CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", false, "Allows water creatures to attack dolphins.").getBoolean(false);
-        attackHorses = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", false, "Allows creatures to attack horses.").getBoolean(false);
-        attackWolves = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", false, "Allows creatures to attack wolves.").getBoolean(false);
-        destroyDrops = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", false).getBoolean(false);
-        killallVillagers = mocGlobalConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", false).getBoolean(false);
+        itemID = mocSettingsConfig.get(CATEGORY_MOC_ID_SETTINGS, "ItemID", 8772, "The starting ID used for MoCreatures items. Each item will increment this number by 1 for its ID.").getInt();
+        allowInstaSpawn = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "allowInstaSpawn", false, "Allows you to instantly spawn MoCreatures from GUI.").getBoolean(false);
+        debug = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "debug", false, "Turns on verbose logging").getBoolean(false);
+        despawnLightLevel = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "despawnLightLevel", 7, "The light level threshold used to determine whether or not to despawn a farm animal. Note: Configure this value in CMS if it is installed.").getInt();
+        forceDespawns = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "forceDespawns", false, "If true, it will force despawns on all creatures including vanilla for a more dynamic experience while exploring world. If false, all passive mocreatures will not despawn to prevent other creatures from taking over. Note: if you experience issues with farm animals despawning, adjust despawnLightLevel. If CMS is installed, this setting must remain true if you want MoCreatures to despawn.").getBoolean(false);
+        maxTamed = mocSettingsConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerPlayer", 10, "Max tamed creatures a player can have. Requires enableOwnership to be set to true.").getInt();
+        maxOPTamed = mocSettingsConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "maxTamedPerOP", 20, "Max tamed creatures an op can have. Requires enableOwnership to be set to true.").getInt();
+        enableOwnership = mocSettingsConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "enableOwnership", false, "Assigns player as owner for each creature they tame. Only the owner can interact with the tamed creature.").getBoolean(false);
+        enableResetOwnership = mocSettingsConfig.get(CATEGORY_OWNERSHIP_SETTINGS, "enableResetOwnerScroll", false, "Allows players to remove a tamed creatures owner essentially untaming it.").getBoolean(false);
+        easyBreeding = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", false, "Makes horse breeding simpler.").getBoolean(true);
+        elephantBulldozer = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ElephantBulldozer", true).getBoolean(true);
+        zebraChance = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", 10, "The percent for spawning a zebra.").getInt();
+        staticBed = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticBed", true).getBoolean(true);
+        staticLitter = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticLitter", true).getBoolean(true);
+        particleFX = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "particleFX", 3).getInt();
+        attackDolphins = mocSettingsConfig.get(CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS, "AttackDolphins", false, "Allows water creatures to attack dolphins.").getBoolean(false);
+        attackHorses = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", false, "Allows creatures to attack horses.").getBoolean(false);
+        attackWolves = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", false, "Allows creatures to attack wolves.").getBoolean(false);
+        enableHunters = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EnableHunters", false, "Allows creatures to attack other creatures. Not recommended if despawning is off.").getBoolean(false);
+        destroyDrops = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", false).getBoolean(false);
+        killallVillagers = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", false).getBoolean(false);
 
-        ogreStrength = Float.parseFloat(mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreStrength", 2.5F, "The block destruction radius of green Ogres").getString());
-        caveOgreStrength = Float.parseFloat(mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreStrength", 3.0F, "The block destruction radius of Cave Ogres").getString());
-        fireOgreStrength = Float.parseFloat(mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreStrength", 2.0F, "The block destruction radius of Fire Ogres").getString());
-        ogreAttackRange = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreAttackRange", 12, "The block radius where ogres 'smell' players").getInt();
-        fireOgreChance = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreChance", 25, "The chance percentage of spawning Fire ogres in the Overworld").getInt();
-        caveOgreChance = (short) mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreChance", 75, "The chance percentage of spawning Cave ogres at depth of 50 in the Overworld").getInt();
-        golemDestroyBlocks = mocGlobalConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", true, "Allows Big Golems to break blocks.").getBoolean(true);
+        ogreStrength = Float.parseFloat(mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreStrength", 2.5F, "The block destruction radius of green Ogres").getString());
+        caveOgreStrength = Float.parseFloat(mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreStrength", 3.0F, "The block destruction radius of Cave Ogres").getString());
+        fireOgreStrength = Float.parseFloat(mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreStrength", 2.0F, "The block destruction radius of Fire Ogres").getString());
+        ogreAttackRange = (short) mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "OgreAttackRange", 12, "The block radius where ogres 'smell' players").getInt();
+        fireOgreChance = (short) mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreChance", 25, "The chance percentage of spawning Fire ogres in the Overworld").getInt();
+        caveOgreChance = (short) mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreChance", 75, "The chance percentage of spawning Cave ogres at depth of 50 in the Overworld").getInt();
+        golemDestroyBlocks = mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", true, "Allows Big Golems to break blocks.").getBoolean(true);
         //blocks
-        blockDirtID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", 200, "Basic block for terrain generation, needs to be less than 256").getInt();
-        blockGrassID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "GrassBlockID", 201, "Basic block for terrain generation, needs to be less than 256").getInt();
-        blockLeafID = mocGlobalConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LeafBlockID", 700).getInt();
-        blockLogID = mocGlobalConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LogBlockID", 701).getInt();
-        blockTallGrassID = mocGlobalConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "TallGrassBlockID", 702).getInt();
-        blockPlanksID = mocGlobalConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "PlanksBlockID", 703).getInt();
-        blockStoneID = mocGlobalConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", 202, "Basic block for terrain generation, needs to be less than 256").getInt();
-        WyvernDimension = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", -17).getInt();
-        WyvernBiomeID = mocGlobalConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", 207).getInt();
-        mocGlobalConfig.save();
+        blockDirtID = mocSettingsConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "DirtBlockID", 200, "Basic block for terrain generation, needs to be less than 256").getInt();
+        blockGrassID = mocSettingsConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "GrassBlockID", 201, "Basic block for terrain generation, needs to be less than 256").getInt();
+        blockLeafID = mocSettingsConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LeafBlockID", 700).getInt();
+        blockLogID = mocSettingsConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "LogBlockID", 701).getInt();
+        blockTallGrassID = mocSettingsConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "TallGrassBlockID", 702).getInt();
+        blockPlanksID = mocSettingsConfig.getBlock(CATEGORY_MOC_ID_SETTINGS, "PlanksBlockID", 703).getInt();
+        blockStoneID = mocSettingsConfig.getTerrainBlock(CATEGORY_MOC_ID_SETTINGS, "StoneBlockID", 202, "Basic block for terrain generation, needs to be less than 256").getInt();
+        WyvernDimension = mocSettingsConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", -17).getInt();
+        WyvernBiomeID = mocSettingsConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", 207).getInt();
+        mocSettingsConfig.save();
     }
 
     // Client stuff

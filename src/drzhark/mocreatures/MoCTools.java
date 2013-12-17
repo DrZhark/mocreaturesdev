@@ -23,6 +23,7 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,6 +56,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCTools {
 
@@ -246,7 +248,7 @@ public class MoCTools {
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
         }catch (Exception e) 
         { 
-            if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Unable to find class for entity " + eName + ", " + e);}
+            if (MoCreatures.proxy.debug) MoCLog.logger.warning("Unable to find class for entity " + eName + ", " + e);}
         return entityToSpawn;        
     }
 
@@ -1419,7 +1421,7 @@ public class MoCTools {
      * Drops an amulet with the stored information of the entity passed
      * @param entity
      */
-    public static void dropAmulet(MoCEntityTameable entity)
+    public static void dropHorseAmulet(MoCEntityTameable entity)
     {
         if (MoCreatures.isServer())
         {
@@ -1433,7 +1435,7 @@ public class MoCTools {
                 stack.setTagCompound(new NBTTagCompound());
             }
             NBTTagCompound nbtt = stack.stackTagCompound;
-            
+
             try
             {
                 nbtt.setInteger("SpawnClass", 21); 
@@ -1486,7 +1488,10 @@ public class MoCTools {
 
             try
             {
-                nbtt.setString("SpawnClass", (MoCreatures.mocEntityMap.get(entity.getClass())).getEntityName());
+               // String className = ((EntityLiving)entity).getEntityName();
+               // className.replaceAll("MoCreatures.", "");
+               // className.replaceAll(".name", "");
+                nbtt.setString("SpawnClass", ((EntityLiving)entity).getEntityName());
                 nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
@@ -1497,6 +1502,7 @@ public class MoCTools {
             }
             catch (Exception e)
             {
+                e.printStackTrace();
             }
 
             EntityPlayer epOwner = ((EntityLivingBase)entity).worldObj.getPlayerEntityByName(entity.getOwnerName());
@@ -1685,6 +1691,31 @@ public class MoCTools {
                 MoCreatures.poisonPlayer(entityplayertarget);
                 entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTamed(Entity entity)
+    {
+        if (entity instanceof EntityTameable)
+        {
+            if (((EntityTameable)entity).isTamed())
+            {
+                return true;
+            }
+        }
+        NBTTagCompound nbt = new NBTTagCompound();
+        entity.writeToNBT(nbt);
+        if (nbt != null)
+        {
+            if (nbt.hasKey("Owner") && !nbt.getString("Owner").equals(""))
+            {
+                return true; // ignore
+            }
+            if (nbt.hasKey("Tamed") && nbt.getBoolean("Tamed") == true)
+            {
+                return true; // ignore
             }
         }
         return false;

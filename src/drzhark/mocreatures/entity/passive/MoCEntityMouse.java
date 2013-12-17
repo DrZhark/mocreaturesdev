@@ -127,7 +127,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
         return ( 
-                (MoCreatures.proxy.getFrequency(this.entityId) > 0) &&
+                (MoCreatures.proxy.getFrequency(this.getName()) > 0) &&
                 worldObj.checkNoEntityCollision(boundingBox) 
                 && (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0) 
                 && !worldObj.isAnyLiquid(boundingBox) 

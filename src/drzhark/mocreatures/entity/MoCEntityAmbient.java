@@ -114,11 +114,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
     }
 
-    public boolean getDisplayName()
-    {
-        return (getName() != null && !getName().equals(""));
-    }
-
     @Override
     public boolean getIsAdult()
     {
@@ -175,7 +170,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
+        if (MoCreatures.proxy.forceDespawns)
             return !getIsTamed();
         else return false;
     }
@@ -509,7 +504,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCreatures.proxy.getFrequency(this.entityId) <= 0)
+        if (MoCreatures.proxy.getFrequency(this.getName()) <= 0)
             return false;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -899,6 +894,11 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     public boolean renderName()
     {
         return getDisplayName() && (riddenByEntity == null);
+    }
+
+    public boolean getDisplayName()
+    {
+        return (getName() != null && !getName().equals(""));
     }
 
     @Override

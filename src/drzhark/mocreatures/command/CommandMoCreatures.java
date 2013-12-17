@@ -14,12 +14,15 @@ import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.FMLCommonHandler;
 import drzhark.mocreatures.MoCEntityData;
@@ -36,6 +39,7 @@ public class CommandMoCreatures extends CommandBase {
     private static List<String> commands = new ArrayList<String>();
     private static List aliases = new ArrayList<String>();
     private static Map<String, String> commmentMap = new TreeMap<String, String>();
+    private static List tabCompletionStrings = new ArrayList<String>();
 
     static {
         commands.add("/moc attackdolphins <boolean>");
@@ -43,28 +47,59 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc attackwolves <boolean>");
         commands.add("/moc caveogrechance <float>");
         commands.add("/moc caveogrestrength <float>");
-        commands.add("/moc creaturespawntickrate <int>");
-        commands.add("/moc debuglogging <boolean>");
-        commands.add("/moc deletepets <playername>");
+        commands.add("/moc debug <boolean>");
+        // TODO commands.add("/moc deletepets <playername>");
         commands.add("/moc destroydrops <boolean>");
-        commands.add("/moc fireogrechance <int>");
-        commands.add("/moc fireogrestrength <float>");
         commands.add("/moc easybreeding <boolean>");
         commands.add("/moc elephantbulldozer <boolean>");
         commands.add("/moc enableownership <boolean>");
         commands.add("/moc enableresetownerscroll <boolean>");
+        commands.add("/moc fireogrechance <int>");
+        commands.add("/moc fireogrestrength <float>");
+        commands.add("/moc frequency <entity> <int>");
         commands.add("/moc golemdestroyblocks <boolean>");
-        commands.add("/moc list tamed");
-        commands.add("/moc list tamed <playername>");
+        commands.add("/moc tamed");
+        commands.add("/moc tamed <playername>");
+        commands.add("/moc maxchunk <entity> <int>");
+        commands.add("/moc maxspawn <entity> <int>");
         commands.add("/moc maxtamedperop <int>");
         commands.add("/moc maxtamedperplayer <int>");
+        commands.add("/moc minspawn <entity> <int>");
         commands.add("/moc ogreattackrange <int>");
         commands.add("/moc ogrestrength <float>");
         commands.add("/moc tamedcount <playername>");
-        commands.add("/moc tp <entityid> <playername>");
-        commands.add("/moc tp <petname> <playername>");
+        commands.add("/moc tp <petid> <playername>");
+        commands.add("/moc <command> value");
         commands.add("/moc zebrachance <int>");
         aliases.add("moc");
+        tabCompletionStrings.add("attackdolphins");
+        tabCompletionStrings.add("attackhorses");
+        tabCompletionStrings.add("attackwolves");
+        tabCompletionStrings.add("caveogrechance");
+        tabCompletionStrings.add("caveogrestrength");
+        tabCompletionStrings.add("debug");
+        // TODO tabCompletionStrings.add("deletepets");
+        tabCompletionStrings.add("destroydrops");
+        tabCompletionStrings.add("easybreeding");
+        tabCompletionStrings.add("elephantbulldozer");
+        tabCompletionStrings.add("enableownership");
+        tabCompletionStrings.add("enableresetownerscroll");
+        tabCompletionStrings.add("fireogrechance");
+        tabCompletionStrings.add("fireogrestrength");
+        tabCompletionStrings.add("forcedespawns");
+        tabCompletionStrings.add("frequency");
+        tabCompletionStrings.add("golemdestroyblocks");
+        tabCompletionStrings.add("tamed");
+        tabCompletionStrings.add("maxchunk");
+        tabCompletionStrings.add("maxspawn");
+        tabCompletionStrings.add("maxtamedperop");
+        tabCompletionStrings.add("maxtamedperplayer");
+        tabCompletionStrings.add("minspawn");
+        tabCompletionStrings.add("ogreattackrange");
+        tabCompletionStrings.add("ogreattackstrength");
+        tabCompletionStrings.add("tamedcount");
+        tabCompletionStrings.add("tp");
+        tabCompletionStrings.add("zebrachance");
     }
 
     public String getCommandName()
@@ -90,506 +125,401 @@ public class CommandMoCreatures extends CommandBase {
         return "commands.mocreatures.usage";
     }
 
-    public void processCommand(ICommandSender par1ICommandSender, String[] par2ArrayOfStr)
+    /**
+     * Adds the strings available in this command to the given list of tab completion options.
+     */
+    public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr)
     {
-        String par1 = "";
-        if (par2ArrayOfStr.length == 0)
-            par1 = "help";
-        else par1 = par2ArrayOfStr[0];
+        return getListOfStringsMatchingLastWord(par2ArrayOfStr, (String[])tabCompletionStrings.toArray(new String[tabCompletionStrings.size()]));
+    }
+
+    public void processCommand(ICommandSender par1ICommandSender, String[] charArray)
+    {
+        String command = "";
+        if (charArray.length == 0)
+            command = "help";
+        else command = charArray[0];
         String par2 = "";
-        if (par2ArrayOfStr.length > 1)
-            par2 = par2ArrayOfStr[1];
-
-        MoCConfiguration config = MoCreatures.proxy.mocGlobalConfig;
-        boolean saved = false;
-        boolean doNotShowHelp = false;
-        if (par2ArrayOfStr.length >= 2)
+        if (charArray.length > 1)
+            par2 = charArray[1];
+        String par3 = "";
+        if (charArray.length == 3)
         {
-            OUTER: if (par2ArrayOfStr.length <= 5)
-            {
-                String par3 = "";
-                if (par2ArrayOfStr.length >= 3)
-                {
-                    par3 = par2ArrayOfStr[2];
-                }
+            par3 = charArray[2];
+        }
+        //System.out.println("par1 = " + command + ", par2 = " + par2 + ", par3 = " + par3);
+        MoCConfiguration config = MoCreatures.proxy.mocSettingsConfig;
+        boolean saved = false;
 
-                // START LIST COMMAND
-                if (par1.equalsIgnoreCase("list"))
+        if (command.equalsIgnoreCase("tamed") || command.equalsIgnoreCase("tame"))
+        {
+            if (charArray.length == 2 && !Character.isDigit(charArray[1].charAt(0)))
+            {
+                int unloadedCount = 0;
+                int loadedCount = 0;
+                ArrayList foundIds = new ArrayList();
+                ArrayList<String> tamedlist = new ArrayList<String>();
+                String playername = par2;
+                // search for tamed entity
+                for (int dimension : DimensionManager.getIDs())
                 {
-                    if (par2 != null)
+                    WorldServer world = DimensionManager.getWorld(dimension);
+                    for (int j = 0; j < world.loadedEntityList.size(); j++)
                     {
-                        if (par2.equalsIgnoreCase("tamed") || par2.equalsIgnoreCase("tame"))
+                        Entity entity = (Entity) world.loadedEntityList.get(j);
+                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
                         {
-                            if (par2ArrayOfStr.length > 2 && !Character.isDigit(par2ArrayOfStr[2].charAt(0)))
+                            IMoCTameable mocreature = (IMoCTameable)entity;
+                            if (mocreature.getOwnerName().equalsIgnoreCase(playername))
                             {
-                                int unloadedCount = 0;
-                                int loadedCount = 0;
-                                ArrayList foundIds = new ArrayList();
-                                ArrayList<String> tamedlist = new ArrayList<String>();
-                                String playername = par2ArrayOfStr[2];
-                                // search for tamed entity
-                                for (int dimension : DimensionManager.getIDs())
-                                {
-                                    WorldServer world = DimensionManager.getWorld(dimension);
-                                    for (int j = 0; j < world.loadedEntityList.size(); j++)
-                                    {
-                                        Entity entity = (Entity) world.loadedEntityList.get(j);
-                                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
-                                        {
-                                            IMoCTameable mocreature = (IMoCTameable)entity;
-                                            if (mocreature.getOwnerName().equalsIgnoreCase(playername))
-                                            {
-                                                loadedCount++;
-                                                foundIds.add(mocreature.getOwnerPetId());
-                                                tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
-                                            }
-                                        }
-                                    }
-                                }
-                                MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
-                                if (ownerPetData != null)
-                                {
-                                    for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
-                                    {
-                                        NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
-                                        if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
-                                        {
-                                            unloadedCount++;
-                                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
-                                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
-                                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
-                                            tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
-                                        }
-                                    }
-                                }
-                                if (tamedlist.size() > 0)
-                                {
-                                    sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
-                                    doNotShowHelp = true;
-                                    break OUTER;
-                                }
-                                else
-                                {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals."));
-                                    doNotShowHelp = true;
-                                    break OUTER;
-                                }
-                            }
-                            else
-                            {
-                                String playername = par1ICommandSender.getCommandSenderName();
-                                List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                                int unloadedCount = 0;
-                                int loadedCount = 0;
-                                ArrayList foundIds = new ArrayList();
-                                ArrayList<String> tamedlist = new ArrayList<String>();
-                                // search for mocreature tamed entities
-                                for (int dimension : DimensionManager.getIDs())
-                                {
-                                    WorldServer world = DimensionManager.getWorld(dimension);
-                                    for (int j = 0; j < world.loadedEntityList.size(); j++)
-                                    {
-                                        Entity entity = (Entity) world.loadedEntityList.get(j);
-                                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
-                                        {
-                                            IMoCTameable mocreature = (IMoCTameable)entity;
-                                            if (mocreature.getOwnerPetId() != -1)
-                                            {
-                                                loadedCount++;
-                                                foundIds.add(mocreature.getOwnerPetId());
-                                                tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
-                                            }
-                                        }
-                                    }
-                                }
-                                if (!MoCreatures.isServer())
-                                {
-                                    for (MoCPetData ownerPetData : MoCreatures.instance.mapData.getPetMap().values())
-                                    {
-                                        for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
-                                        {
-                                            NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
-                                            if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
-                                            {
-                                                unloadedCount++;
-                                                double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
-                                                double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
-                                                double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
-                                                tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
-                                            }
-                                        }
-                                    }
-                                }
-                                sendPageHelp(par1ICommandSender, (byte)10, tamedlist, par2ArrayOfStr);
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + (!MoCreatures.isServer() ? ", Unloaded Count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (loadedCount + unloadedCount) : "")));
-                                doNotShowHelp = true;
-                                break OUTER;
+                                loadedCount++;
+                                foundIds.add(mocreature.getOwnerPetId());
+                                tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + ((EntityLiving)mocreature).getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
                             }
                         }
                     }
-                    break OUTER;
                 }
-                // END LIST COMMAND
-                else if (par1.equalsIgnoreCase("tp") && par2ArrayOfStr.length == 3)
+                MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
+                if (ownerPetData != null)
                 {
-                    if (par2 != null)
+                    for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
                     {
-                        int entityId = 0;
-                        String petName = "";
+                        NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
+                        if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
+                        {
+                            unloadedCount++;
+                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                            tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
+                        }
+                    }
+                }
+                if (tamedlist.size() > 0)
+                {
+                    sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray);
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
+                }
+                else
+                {
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.WHITE + " does not have any tamed animals."));
+                }
+            }
+            else if (command.equalsIgnoreCase("tamed") || command.equalsIgnoreCase("tame") && !par2.equals(""))
+            {
+                String playername = par1ICommandSender.getCommandSenderName();
+                List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+                int unloadedCount = 0;
+                int loadedCount = 0;
+                ArrayList foundIds = new ArrayList();
+                ArrayList<String> tamedlist = new ArrayList<String>();
+                // search for mocreature tamed entities
+                for (int dimension : DimensionManager.getIDs())
+                {
+                    WorldServer world = DimensionManager.getWorld(dimension);
+                    for (int j = 0; j < world.loadedEntityList.size(); j++)
+                    {
+                        Entity entity = (Entity) world.loadedEntityList.get(j);
+                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
+                        {
+                            IMoCTameable mocreature = (IMoCTameable)entity;
+                            if (mocreature.getOwnerPetId() != -1)
+                            {
+                                loadedCount++;
+                                foundIds.add(mocreature.getOwnerPetId());
+                                tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + ((EntityLiving)mocreature).getEntityName() + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName() + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + entity.dimension + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(entity.posZ));
+                            }
+                        }
+                    }
+                }
+               // if (!MoCreatures.isServer())
+               // {
+                    for (MoCPetData ownerPetData : MoCreatures.instance.mapData.getPetMap().values())
+                    {
+                        for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
+                        {
+                            NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
+                            if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
+                            {
+                                unloadedCount++;
+                                double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                                double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                                double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                                tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
+                            }
+                        }
+                    }
+                //}
+                sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray);
+                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + (!MoCreatures.isServer() ? ", Unloaded Count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (loadedCount + unloadedCount) : "")));
+            }
+        }
+        else if (command.equalsIgnoreCase("tp") && charArray.length == 3)
+        {
+            int petId = 0;
+            try 
+            {
+                petId = Integer.parseInt(par2);
+            }
+            catch (NumberFormatException e)
+            {
+                petId = -1;
+            }
+            String playername = charArray[2];
+            EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerForUsername(playername);
+            // search for tamed entity in mocreatures.dat
+            MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
+            if (player != null & ownerPetData != null)
+            {
+                for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
+                {
+                    NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
+                    if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == petId)
+                    {
+                        String petName = nbt.getString("Name");
+                        WorldServer world = DimensionManager.getWorld(nbt.getInteger("Dimension"));
+                        if (!teleportLoadedPet(world, player, petId, petName, par1ICommandSender))
+                        {
+                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
+                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
+                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
+                            int x = MathHelper.floor_double( posX );
+                            int z = MathHelper.floor_double( posZ );
+                            Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+                            boolean result = teleportLoadedPet(world, player, petId, petName, par1ICommandSender); // attempt to TP again
+                            if (!result)
+                            {
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Unable to transfer entity ID " + EnumChatFormatting.GREEN + petId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA + player.username));
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Tamed entity could not be located."));
+            }
+        }
+        else if (command.equalsIgnoreCase("tamedcount"))
+        {
+            String playername = par2;
+            List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+            for (int i = 0; i < players.size(); i++)
+            {
+                EntityPlayerMP player = (EntityPlayerMP) players.get(i);
+                if (player.username.equalsIgnoreCase(playername))
+                {
+                    int tamedCount = MoCTools.numberTamedByPlayer(player);
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount));
+                }
+            }
+            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly."));
+        }
+        // START ENTITY FREQUENCY/BIOME SECTION
+        else if (charArray.length >= 2 && (command.equalsIgnoreCase("frequency") || command.equalsIgnoreCase("minspawn") || command.equalsIgnoreCase("maxspawn") || command.equalsIgnoreCase("maxchunk")))
+        {
+            MoCEntityData entityData = MoCreatures.mocEntityMap.get(par2);//modEntry.getValue().getCreature(name);
+
+            if (entityData != null)
+            {
+                if (command.equalsIgnoreCase("frequency"))
+                {
+                    if (par3 == null)
+                    {
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
+                    }
+                    else {
                         try 
                         {
-                            entityId = Integer.parseInt(par2);
+                            entityData.setFrequency(Integer.parseInt(par3));
+                            MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "frequency");
+                            prop.value = par3;
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                         }
-                        catch (NumberFormatException e)
+                        catch(NumberFormatException ex)
                         {
-                            entityId = -1;
-                            petName = par2;
-                        }
-                        String playername = par2ArrayOfStr[2];
-                        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                        for (int i = 0; i < players.size(); i++)
-                        {
-                            EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                            if (player.username.equalsIgnoreCase(playername))
-                            {
-                                for (int dimension : DimensionManager.getIDs())
-                                {
-                                    WorldServer world = DimensionManager.getWorld(dimension);
-                                    for (int j = 0; j < world.loadedEntityList.size(); j++)
-                                    {
-                                        Entity entity = (Entity) world.loadedEntityList.get(j);
-                                        // search for entities that are MoCEntityAnimal's
-                                        if (IMoCTameable.class.isAssignableFrom(entity.getClass()))
-                                        {
-                                            if (entity.entityId == entityId || ((IMoCTameable)entity).getName().equalsIgnoreCase(petName))
-                                            {
-                                                // grab the entity data
-                                                NBTTagCompound compound = new NBTTagCompound();
-                                                entity.writeToNBT(compound);
-                                                if (compound != null && compound.getString("Owner") != null)
-                                                {
-                                                    String owner = compound.getString("Owner");
-                                                    String name = compound.getString("Name");
-                                                    if (owner != null && owner.equalsIgnoreCase(playername))
-                                                    {
-                                                        // check if in same dimension
-                                                        if (entity.dimension == player.dimension)
-                                                            entity.setPosition(player.posX, player.posY, player.posZ);
-                                                        else if (!player.worldObj.isRemote)// transfer entity to player dimension
-                                                        {
-                                                            Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
-                                                            if (newEntity != null)
-                                                            {
-                                                                newEntity.copyDataFrom(entity, true); // transfer all existing data to our new entity
-                                                                newEntity.setPosition(player.posX, player.posY, player.posZ);
-                                                                DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
-                                                            }
-                                                            if (entity.riddenByEntity == null)
-                                                            {
-                                                                entity.isDead = true;
-                                                            }
-                                                            else // dismount players
-                                                            {
-                                                                entity.riddenByEntity.mountEntity(null);
-                                                                entity.isDead = true;
-                                                            }
-                                                            world.resetUpdateEntityTick();
-                                                            DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
-                                                        }
-                                                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + name + EnumChatFormatting.WHITE + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension));
-                                                        doNotShowHelp = true;
-                                                        break OUTER;
-                                                    }
-                                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Unable to transfer entity ID " + EnumChatFormatting.GREEN + entityId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA + owner));
-                                                    doNotShowHelp = true;
-                                                    break OUTER;
-                                                }
-                                            }
-                                        }
-                                    } // end for
-                                } // end for
-                                // search for tamed entity in mocreatures.dat
-                                MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
-                                if (ownerPetData != null)
-                                {
-                                    for (i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
-                                    {
-                                        NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().tagAt(i);
-                                        if (nbt.hasKey("Name") && nbt.getString("Name").equalsIgnoreCase(petName) || nbt.hasKey("PetId") && nbt.getInteger("PetId") == entityId)
-                                        {
-                                            double posX = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(0)).data;
-                                            double posY = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(1)).data;
-                                            double posZ = ((NBTTagDouble)nbt.getTagList("Pos").tagAt(2)).data;
-                                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Found unloaded pet " + EnumChatFormatting.GREEN + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name") + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
-                                            if (!player.worldObj.isRemote)// transfer entity to player dimension
-                                            {
-                                                Entity newEntity = EntityList.createEntityByName(nbt.getString("id"), player.worldObj);
-                                                if (newEntity != null)
-                                                {
-                                                    NBTTagCompound nbttagcompound = new NBTTagCompound();
-                                                    nbttagcompound = (NBTTagCompound)nbt.copy();
-                                                    // remove petdata info
-                                                    nbttagcompound.removeTag("PetId");
-                                                    nbttagcompound.removeTag("Name");
-                                                    nbttagcompound.removeTag("ChunkX");
-                                                    nbttagcompound.removeTag("ChunkY");
-                                                    nbttagcompound.removeTag("ChunkZ");
-                                                    nbttagcompound.removeTag("Dimension");
-                                                    newEntity.readFromNBT(nbttagcompound);
-                                                    nbttagcompound.setBoolean("Cloned", true); // make sure to flag unloaded entity to killself on next load
-                                                    newEntity.setPosition(player.posX, player.posY, player.posZ);
-                                                    DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
-                                                }
-                                                DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
-                                            }
-                                        }
-                                    }
-                                }
-                                doNotShowHelp = true;
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Tamed entity could not be located."));
-                                break OUTER;
-                            } // end if
-                    } // end for
-                    }
-                    break OUTER;
-                }
-                else if (par1.equalsIgnoreCase("tamedcount"))
-                {
-                    String playername = par2;
-                    List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
-                    for (int i = 0; i < players.size(); i++)
-                    {
-                        EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                        if (player.username.equalsIgnoreCase(playername))
-                        {
-                            int tamedCount = MoCTools.numberTamedByPlayer(player);
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + playername + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount));
-                            doNotShowHelp = true;
-                            break OUTER;
+                            this.sendCommandHelp(par1ICommandSender);
                         }
                     }
-                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly."));
-                    doNotShowHelp = true;
-                    break OUTER;
                 }
-                // START ENTITY FREQUENCY/BIOME SECTION
-                else if (par2ArrayOfStr.length >=3 && (par3.equalsIgnoreCase("frequency") || par3.equalsIgnoreCase("min") || par3.equalsIgnoreCase("max") || par3.equalsIgnoreCase("chunk") || par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg")))
+                else if (command.equalsIgnoreCase("min") || command.equalsIgnoreCase("minspawn"))
                 {
-                    String tag = par2ArrayOfStr[0];
-                    String name = par2ArrayOfStr[1];
-                    String par4 = null;
-                    if (par2ArrayOfStr.length >=4)
-                        par4 = par2ArrayOfStr[3];
-                    MoCEntityData entityData = MoCreatures.mocEntityMap.get(name);//modEntry.getValue().getCreature(name);
-                    if (entityData != null)
+                    if (par3 == null)
                     {
-                        if (par3.equalsIgnoreCase("frequency"))
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
+                    }
+                    else {
+                        try 
                         {
-                            if (par4 == null)
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
-                                doNotShowHelp = true;
-                            }
-                            else {
-                                try 
-                                {
-                                    entityData.setFrequency(Integer.parseInt(par4));
-                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                    prop.valueList.set(0, par4);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                }
-                                catch(NumberFormatException ex)
-                                {
-                                    this.sendCommandHelp(par1ICommandSender);
-                                }
-                            }
+                            entityData.setMinSpawn(Integer.parseInt(par3));
+                            MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "minspawn");
+                            prop.value = par3;
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                         }
-                        else if (par3.equalsIgnoreCase("min"))
+                        catch(NumberFormatException ex)
                         {
-                            if (par4 == null)
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
-                                doNotShowHelp = true;
-                            }
-                            else {
-                                try 
-                                {
-                                    entityData.setMinSpawn(Integer.parseInt(par4));
-                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                    prop.valueList.set(1, par4);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                }
-                                catch(NumberFormatException ex)
-                                {
-                                    this.sendCommandHelp(par1ICommandSender);
-                                }
-                            }
+                            this.sendCommandHelp(par1ICommandSender);
                         }
-                        else if (par3.equalsIgnoreCase("max"))
+                    }
+                }
+                else if (command.equalsIgnoreCase("max") || command.equalsIgnoreCase("maxspawn"))
+                {
+                    if (par3 == null)
+                    {
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
+                    }
+                    else {
+                        try 
                         {
-                            if (par4 == null)
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
-                                doNotShowHelp = true;
-                            }
-                            else {
-                                try 
-                                {
-                                    entityData.setMaxSpawn(Integer.parseInt(par4));
-                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                    prop.valueList.set(2, par4);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                }
-                                catch(NumberFormatException ex)
-                                {
-                                    this.sendCommandHelp(par1ICommandSender);
-                                }
-                            }
+                            entityData.setMaxSpawn(Integer.parseInt(par3));
+                            MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxspawn");
+                            prop.value = par3;
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                         }
-                        else if (par3.equalsIgnoreCase("chunk"))
+                        catch(NumberFormatException ex)
                         {
-                            if (par4 == null)
-                            {
-                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
-                                doNotShowHelp = true;
-                            }
-                            else {
-                                try 
-                                {
-                                    entityData.setMaxSpawn(Integer.parseInt(par4));
-                                    MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get(MoCreatures.proxy.CATEGORY_ENTITY_SPAWN_SETTINGS, entityData.getEntityName());
-                                    prop.valueList.set(3, par4);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                                }
-                                catch(NumberFormatException ex)
-                                {
-                                    this.sendCommandHelp(par1ICommandSender);
-                                }
-                            }
+                            this.sendCommandHelp(par1ICommandSender);
                         }
-                        else if (par3.equalsIgnoreCase("canspawn"))
+                    }
+                }
+                else if (command.equalsIgnoreCase("chunk") || command.equalsIgnoreCase("maxchunk"))
+                {
+                    if (par3 == null)
+                    {
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
+                    }
+                    else {
+                        try 
                         {
-                          if (par4 == null)
-                          {
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn is " + EnumChatFormatting.AQUA + entityData.getCanSpawn() + EnumChatFormatting.WHITE + "."));
-                            doNotShowHelp = true;
-                          }
-                          else
-                          {
-                            try
-                            {
-                              entityData.setCanSpawn(Boolean.parseBoolean(par4));
-                              MoCProperty prop = MoCreatures.proxy.mocGlobalConfig.get("entity-canspawn-settings", entityData.getEntityName());
-                              prop.value = par4;
-                              saved = true;
-                              par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par4 + EnumChatFormatting.WHITE + "."));
-                            }
-                            catch (NumberFormatException ex)
-                            {
-                              sendCommandHelp(par1ICommandSender);
-                            }
-                          }
+                            entityData.setMaxSpawn(Integer.parseInt(par3));
+                            MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxchunk");
+                            prop.value = par3;
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                         }
-                        // TODO - remove spawnlist entry from vanilla list and readd it
+                        catch(NumberFormatException ex)
+                        {
+                            this.sendCommandHelp(par1ICommandSender);
+                        }
+                    }
+                }
+                else if (command.equalsIgnoreCase("canspawn"))
+                {
+                  if (par3 == null)
+                  {
+                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn is " + EnumChatFormatting.AQUA + entityData.getCanSpawn() + EnumChatFormatting.WHITE + "."));
+                  }
+                  else
+                  {
+                    try
+                    {
+                      entityData.setCanSpawn(Boolean.parseBoolean(par3));
+                      MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxchunk");
+                      prop.value = par3;
+                      saved = true;
+                      par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                    }
+                    catch (NumberFormatException ex)
+                    {
+                      sendCommandHelp(par1ICommandSender);
+                    }
+                  }
+                }
+                // TODO - remove spawnlist entry from vanilla list and readd it
+            }
+        }
+        else if (charArray.length == 1) 
+        {
+            OUTER: for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet())
+            {
+                String catName = catEntry.getValue().getQualifiedName();
+                if (catName.equalsIgnoreCase("custom-id-settings"))
+                    continue;
+
+                for (Map.Entry<String, MoCProperty> propEntry : catEntry.getValue().entrySet())
+                {
+                    if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(command))
+                        continue;
+                    MoCProperty property = propEntry.getValue();
+                    List<String> propList = propEntry.getValue().valueList;
+                    String propValue = propEntry.getValue().value;
+                    if (propList == null && propValue == null)
+                        continue;
+                    if (par2.equals(""))
+                    {
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + propEntry.getKey() + EnumChatFormatting.WHITE + " is " + EnumChatFormatting.AQUA + propValue));
                         break OUTER;
                     }
                 }
-                // END ENTITY FREQUENCY/BIOME SECTION
-                // START OTHER SECTIONS
-                else 
-                {
-                    for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet())
-                    {
-                        String catName = catEntry.getValue().getQualifiedName();
-
-                        for (Map.Entry<String, MoCProperty> propEntry : catEntry.getValue().entrySet())
-                        {
-                            if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(par1))
-                                continue;
-                            MoCProperty property = propEntry.getValue();
-                            List<String> propList = propEntry.getValue().valueList;
-                            String propValue = propEntry.getValue().getString();
-
-                            if (propList == null && propValue == null)
-                                continue;
-
-                            if (propEntry.getValue().getType() == MoCProperty.Type.BOOLEAN)
-                            {
-                                if (par2.equalsIgnoreCase("true") || par2.equalsIgnoreCase("false"))
-                                {
-                                    property.set(par2);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
-                                }
-                            }
-                            else if (propEntry.getValue().getType() == MoCProperty.Type.INTEGER)
-                            {
-                                try {
-                                    Integer.parseInt(par2);
-                                    property.set(par2);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
-                                }
-                                catch (NumberFormatException ex)
-                                {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
-                                }
-                                
-                            }
-                            else if (propEntry.getValue().getType() == MoCProperty.Type.DOUBLE)
-                            {
-                                try {
-                                    Double.parseDouble(par2);
-                                    property.set(par2);
-                                    saved = true;
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
-                                }
-                                catch (NumberFormatException ex)
-                                {
-                                    par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
-                                }
-                            }
-                            break OUTER; // exit since we found the property we need to save
-                        }
-                    }
-                }
-                // END OTHER SECTIONS
             }
         }
-        else {
-                OUTER: for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet())
+        // END ENTITY FREQUENCY/BIOME SECTION
+        // START OTHER SECTIONS
+        else 
+        {
+            for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet())
+            {
+                String catName = catEntry.getValue().getQualifiedName();
+
+                for (Map.Entry<String, MoCProperty> propEntry : catEntry.getValue().entrySet())
                 {
-                    String catName = catEntry.getValue().getQualifiedName();
-                    if (catName.equalsIgnoreCase("custom-id-settings"))
+                    if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(command))
                         continue;
-    
-                    for (Map.Entry<String, MoCProperty> propEntry : catEntry.getValue().entrySet())
+                    MoCProperty property = propEntry.getValue();
+                    List<String> propList = propEntry.getValue().valueList;
+                    String propValue = propEntry.getValue().getString();
+
+                    if (propList == null && propValue == null)
+                        continue;
+
+                    if (propEntry.getValue().getType() == MoCProperty.Type.BOOLEAN)
                     {
-                        if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(par1))
-                            continue;
-                        MoCProperty property = propEntry.getValue();
-                        List<String> propList = propEntry.getValue().valueList;
-                        String propValue = propEntry.getValue().value;
-                        if (propList == null && propValue == null)
-                            continue;
-                        if (par2.equals(""))
+                        if (par2.equalsIgnoreCase("true") || par2.equalsIgnoreCase("false"))
                         {
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + propEntry.getKey() + EnumChatFormatting.WHITE + " is " + EnumChatFormatting.AQUA + propValue));
-                            doNotShowHelp = true;
-                            break OUTER;
+                            property.set(par2);
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
                         }
                     }
+                    else if (propEntry.getValue().getType() == MoCProperty.Type.INTEGER)
+                    {
+                        try {
+                            Integer.parseInt(par2);
+                            property.set(par2);
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
+                        }
+                        catch (NumberFormatException ex)
+                        {
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
+                        }
+                        
+                    }
+                    else if (propEntry.getValue().getType() == MoCProperty.Type.DOUBLE)
+                    {
+                        try {
+                            Double.parseDouble(par2);
+                            property.set(par2);
+                            saved = true;
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + propEntry.getKey() + " to " + EnumChatFormatting.AQUA + par2 + "."));
+                        }
+                        catch (NumberFormatException ex)
+                        {
+                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.RED + "Invalid value entered. Please enter a valid number."));
+                        }
+                    }
+                    //break OUTER; // exit since we found the property we need to save
                 }
+            }
         }
         // START HELP COMMAND
-        if (par1.equalsIgnoreCase("help"))
+        if (command.equalsIgnoreCase("help"))
         {
-            doNotShowHelp = true;
             List<String> list = this.getSortedPossibleCommands(par1ICommandSender);
             byte b0 = 10;
             int i = (list.size() - 1) / b0;
@@ -597,11 +527,11 @@ public class CommandMoCreatures extends CommandBase {
             ICommand icommand;
             int j = 0;
 
-            if (par2ArrayOfStr.length > 1)
+            if (charArray.length > 1)
             {
                 try
                 {
-                    j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(par1ICommandSender, par2ArrayOfStr[1], 1, i + 1) - 1;
+                    j = charArray.length == 0 ? 0 : parseIntBounded(par1ICommandSender, charArray[1], 1, i + 1) - 1;
                 }
                 catch (NumberInvalidException numberinvalidexception)
                 {
@@ -619,8 +549,8 @@ public class CommandMoCreatures extends CommandBase {
 
             for (int l = j * b0; l < k; ++l)
             {
-                String command = list.get(l);
-                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(command));
+                String commandToSend = list.get(l);
+                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(commandToSend));
             }
         }
         // END HELP COMMAND
@@ -628,11 +558,7 @@ public class CommandMoCreatures extends CommandBase {
         {
             // TODO: update only what is needed instead of everything
             config.save();
-            MoCreatures.proxy.readConfigValues();
-        }
-        else if (!doNotShowHelp)
-        {
-            this.sendCommandHelp(par1ICommandSender);
+            MoCreatures.proxy.readGlobalConfigValues();
         }
     }
 
@@ -645,6 +571,55 @@ public class CommandMoCreatures extends CommandBase {
         return this.commands;
     }
 
+    public boolean teleportLoadedPet(WorldServer world, EntityPlayerMP player, int petId, String petName, ICommandSender par1ICommandSender)
+    {
+        for (int j = 0; j < world.loadedEntityList.size(); j++)
+        {
+            Entity entity = (Entity) world.loadedEntityList.get(j);
+            // search for entities that are MoCEntityAnimal's
+            if (IMoCTameable.class.isAssignableFrom(entity.getClass()) && !((IMoCTameable)entity).getName().equals("") && ((IMoCTameable)entity).getOwnerPetId() == petId)
+            {
+                // grab the entity data
+                NBTTagCompound compound = new NBTTagCompound();
+                entity.writeToNBT(compound);
+                if (compound != null && compound.getString("Owner") != null)
+                {
+                    String owner = compound.getString("Owner");
+                    String name = compound.getString("Name");
+                    if (owner != null && owner.equalsIgnoreCase(player.username))
+                    {
+                        // check if in same dimension
+                        if (entity.dimension == player.dimension)
+                            entity.setPosition(player.posX, player.posY, player.posZ);
+                        else if (!player.worldObj.isRemote)// transfer entity to player dimension
+                        {
+                            Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
+                            if (newEntity != null)
+                            {
+                                newEntity.copyDataFrom(entity, true); // transfer all existing data to our new entity
+                                newEntity.setPosition(player.posX, player.posY, player.posZ);
+                                DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
+                            }
+                            if (entity.riddenByEntity == null)
+                            {
+                                entity.isDead = true;
+                            }
+                            else // dismount players
+                            {
+                                entity.riddenByEntity.mountEntity(null);
+                                entity.isDead = true;
+                            }
+                            world.resetUpdateEntityTick();
+                            DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
+                        }
+                        par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + name + EnumChatFormatting.WHITE + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", " + Math.round(player.posZ) + " in dimension " + player.dimension));
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public void sendCommandHelp(ICommandSender sender)
     {
         sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("\u00a72Listing MoCreatures commands"));

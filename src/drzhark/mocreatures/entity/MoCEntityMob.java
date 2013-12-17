@@ -171,7 +171,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.entityId) > 0 && super.getCanSpawnHere());
+        return (MoCreatures.proxy.getFrequency(this.getName()) > 0 && super.getCanSpawnHere());
     }
 
     public boolean getCanSpawnHereMob()
@@ -645,9 +645,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
-            return !getIsTamed();
-        else return true;
+        return !getIsTamed();
     }
 
     @Override

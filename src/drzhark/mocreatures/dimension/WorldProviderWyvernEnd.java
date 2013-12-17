@@ -103,7 +103,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
      */
     public boolean isSurfaceWorld()
     {
-        return true;
+        return false;
     }
 
     @SideOnly(Side.CLIENT)

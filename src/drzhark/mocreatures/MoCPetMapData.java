@@ -1,7 +1,7 @@
 package drzhark.mocreatures;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -12,7 +12,7 @@ import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCPetMapData extends WorldSavedData
 {
-    private Map<String, MoCPetData> petMap = new HashMap();
+    private Map<String, MoCPetData> petMap = new TreeMap<String, MoCPetData>(String.CASE_INSENSITIVE_ORDER);
 
     public MoCPetMapData(String par1Str)
     {

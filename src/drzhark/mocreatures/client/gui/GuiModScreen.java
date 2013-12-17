@@ -72,7 +72,6 @@ public class GuiModScreen extends GuiScreen {
      *            started.
      */
     public static void show(Widget screen) {
-        System.out.println("show widget " + screen);
         GuiModScreen.show(new GuiModScreen(GuiModScreen.currentScreen, screen));
     }
 

@@ -20,7 +20,9 @@ import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCItemPetAmulet extends MoCItem
 {
@@ -74,18 +76,17 @@ public class MoCItemPetAmulet extends MoCItem
             }
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
             //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
-            
             if (MoCreatures.isServer())
             {
+                System.out.println("spawnClass = " + spawnClass);
                 initAndReadNBT(itemstack);
-                
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {
                     return itemstack;
                 }
                 try
                 {
-                    if ( spawnClass.equalsIgnoreCase("MoCHorse") || spawnClass.equalsIgnoreCase("WildHorse"))
+                    if (spawnClass.equalsIgnoreCase("MoCHorse"))
                     {
                         spawnClass = "WildHorse";
                     }
@@ -102,6 +103,11 @@ public class MoCItemPetAmulet extends MoCItem
                         ((EntityLiving)storedCreature).setHealth(health);
                         storedCreature.setEdad(edad);
                         storedCreature.setAdult(adult);
+                        // special case for kitty
+                        if (spawnClass.equalsIgnoreCase("Kitty"))
+                        {
+                            ((MoCEntityKitty)storedCreature).setKittyState(2); // allows name to render
+                        }
 
                         //if the player using the amulet is different than the original owner
                         if (ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
@@ -155,7 +161,7 @@ public class MoCItemPetAmulet extends MoCItem
                     }
                 }catch (Exception ex) 
                 {
-                    if (MoCreatures.proxy.debugLogging) MoCreatures.log.warning("Error spawning creature from fishnet/amulet " + ex);
+                    if (MoCreatures.proxy.debug) MoCLog.logger.warning("Error spawning creature from fishnet/amulet " + ex);
                 }
             }
        }

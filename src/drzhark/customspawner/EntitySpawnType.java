@@ -2,7 +2,6 @@ package drzhark.customspawner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.material.Material;
@@ -21,9 +20,10 @@ public class EntitySpawnType {
     // optional
     private int spawnLightLevel;
     private int despawnLightLevel;
+    private int minSpawnHeight = 0;
+    private int maxSpawnHeight = 256;
     private boolean allowChunkSpawning;
     private Boolean shouldSeeSky;
-    private List<Integer> blockIDs;
     private int spawnDistance;
     private Map<Integer, ArrayList<SpawnListEntry>> livingSpawnList = new HashMap<Integer, ArrayList<SpawnListEntry>>();
 
@@ -47,6 +47,13 @@ public class EntitySpawnType {
     public EntitySpawnType(String type, int spawnTickRate, int spawnCap, float chunkSpawnChance, Boolean shouldSeeSky)
     {
         this(type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, 8, false, true);
+    }
+
+    public EntitySpawnType(String type, int spawnTickRate, int spawnCap, int minY, int maxY, float chunkSpawnChance, Boolean shouldSeeSky)
+    {
+        this(type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, 8, false, true);
+        this.minSpawnHeight = minY;
+        this.maxSpawnHeight = maxY;
     }
 
     public EntitySpawnType(String type, int spawnTickRate, int spawnCap, float chunkSpawnChance, Material livingMaterial, Boolean shouldSeeSky, int spawnDistance, boolean hardSpawnLimit, boolean enabled)
@@ -128,6 +135,26 @@ public class EntitySpawnType {
         return this.livingMaterial;
     }
 
+    public int getMinSpawnHeight()
+    {
+        return this.minSpawnHeight;
+    }
+
+    public void setMinSpawnHeight(int spawnheight)
+    {
+        this.minSpawnHeight = spawnheight;
+    }
+
+    public int getMaxSpawnHeight()
+    {
+        return this.maxSpawnHeight;
+    }
+
+    public void setMaxSpawnHeight(int spawnheight)
+    {
+        this.maxSpawnHeight = spawnheight;
+    }
+
     public ArrayList<SpawnListEntry> getBiomeSpawnList(int biomeID)
     {
         return this.livingSpawnList.get(biomeID);
@@ -140,7 +167,6 @@ public class EntitySpawnType {
 
     public EnumCreatureType getEnumCreatureType()
     {
-        //System.out.println("livingSpawn = " + entitySpawnType);
         if (this.entitySpawnType.equalsIgnoreCase(EntitySpawnType.AMBIENT))
             return EnumCreatureType.ambient;
         if (this.entitySpawnType.equalsIgnoreCase(EntitySpawnType.CREATURE))

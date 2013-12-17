@@ -18,12 +18,6 @@ public class MoCEntityMole extends MoCEntityTameable {
         setSize(1F, 0.5F);
     }
 
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        //this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
-    }
-
     @Override
     public ResourceLocation getTexture()
     {
@@ -68,7 +62,6 @@ public class MoCEntityMole extends MoCEntityTameable {
             if (isDiggableBlock(iTarget))
             {
                 this.setPosition(newPosX, newPosY, newPosZ);   
-                System.out.println(this + "moved forward");
             }
     }
     
@@ -158,7 +151,6 @@ public class MoCEntityMole extends MoCEntityTameable {
             if (rand.nextInt(20) == 0 && getState() == 2 && (getBoogey(4D) == null))
             {
                 setState((byte)3);
-                //TODO
                 setPathToEntity(null);
             }
 
@@ -174,10 +166,10 @@ public class MoCEntityMole extends MoCEntityTameable {
                 setState((byte)2);
             }
             
-            if (getState() == 2)
+            /*if (getState() == 2)
             {
                 if (rand.nextInt(50) == 0) digForward();
-            }
+            }*/
             
             //digging fx
             if (getState() == 1 || getState() == 2)
@@ -233,7 +225,7 @@ public class MoCEntityMole extends MoCEntityTameable {
     @Override
     public void onDeath(DamageSource damagesource)
     {
-        System.out.println(this + " is dying with health of " + this.getHealth() + " and State of " + getState());
+        //System.out.println(this + " is dying with health of " + this.func_110143_aJ() + " and State of " + getState());
         super.onDeath(damagesource);
     }
     
@@ -243,4 +235,28 @@ public class MoCEntityMole extends MoCEntityTameable {
         if (getState() == 2) return true;
         return super.isEntityInvulnerable();
     }
+    
+    @Override
+    protected int getDropItemId()
+    {
+        return MoCreatures.fur.itemID;
+    }
+    
+     @Override
+        protected String getDeathSound()
+        {
+            return "mocreatures:rabbitdeath";
+        }
+
+        @Override
+        protected String getHurtSound()
+        {
+            return "mocreatures:rabbithurt";
+        }
+
+        @Override
+        protected String getLivingSound()
+        {
+            return null;
+        }
 }

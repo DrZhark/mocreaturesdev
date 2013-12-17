@@ -53,23 +53,15 @@ public class EntityModData {
         boolean result = true;
         if (entityData != null)
         {
-            //System.out.println("ATTEMPTING TO ADD " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
-            //System.out.println("ATTEMPTING TO ADD " + entityData.getEntityClass() + ", entitySpawnType = " + entityData.getLivingSpawnType() + " for mod " + this.modClassID);
-            /*if (entityData.getLivingSpawnType() != null)
-            {
-                System.out.println("entitySpawnType name = " + entityData.getLivingSpawnType().getLivingSpawnTypeName());
-            }*/
             if (CustomSpawner.debug) CMSLog.logger.info("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
             if (this.livingSpawnMap.get(entityData.getLivingSpawnType()) == null)
             {
-                //System.out.println("NEW TYPE " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + ", Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
                 this.livingSpawnMap.put(entityData.getLivingSpawnType(), new HashMap<String, EntityData>());
                 this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
             }
             else if(!this.livingSpawnMap.get(entityData.getLivingSpawnType()).containsKey(entityData.getEntityName()))
             {
-               // System.out.println("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
-                    this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
+                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
             }
             else result = false;
         }

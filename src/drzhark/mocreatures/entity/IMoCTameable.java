@@ -8,8 +8,6 @@ public interface IMoCTameable {
 
     public String getOwnerName();
 
-    public String getEntityName();
-
     public String getName();
 
     public void setName(String name);

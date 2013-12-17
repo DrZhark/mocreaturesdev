@@ -23,6 +23,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCServerPacketHandler implements IPacketHandler {
     @Override
@@ -94,11 +95,11 @@ public class MoCServerPacketHandler implements IPacketHandler {
                     if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) // make sure the client has admin rights on server!
                     {
                         MoCTools.spawnNearPlayer(player, entityId, number);
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
+                        if (MoCreatures.proxy.debug) MoCLog.logger.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
                     }
                     else
                     {
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
+                        if (MoCreatures.proxy.debug) MoCLog.logger.info("Player " + player.username + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
                     }
 
                 }
@@ -149,11 +150,11 @@ public class MoCServerPacketHandler implements IPacketHandler {
                     if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) // make sure the client has admin rights on server!
                     {
                         MoCTools.spawnNearPlayerbyName(player, entityName, number);
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
+                        if (MoCreatures.proxy.debug) MoCLog.logger.info("Player " + player.username + " used MoC instaspawner and got " + number + " creatures spawned");
                     }
                     else
                     {
-                        if (MoCreatures.proxy.debugLogging) MoCreatures.log.info("Player " + player.username + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
+                        if (MoCreatures.proxy.debug) MoCLog.logger.info("Player " + player.username + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
                     }
                 }
             }
@@ -471,7 +472,7 @@ public class MoCServerPacketHandler implements IPacketHandler {
         }
         catch (Exception e)
         {
-            if (MoCreatures.proxy.debugLogging) MoCreatures.log.severe("Exception sending MoCreatures health packet " + e + " to entity ID " + ID);
+            if (MoCreatures.proxy.debug) MoCLog.logger.severe("Exception sending MoCreatures health packet " + e + " to entity ID " + ID);
         }
     }
 

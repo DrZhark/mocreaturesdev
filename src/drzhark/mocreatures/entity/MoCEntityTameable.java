@@ -188,7 +188,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
     @Override
     protected boolean canDespawn()
     {
-        if (MoCreatures.isCustomSpawnerLoaded)
+        if (MoCreatures.proxy.forceDespawns)
             return !getIsTamed();
         else return false;
     }

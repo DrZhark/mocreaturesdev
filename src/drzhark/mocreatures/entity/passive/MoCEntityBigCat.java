@@ -411,7 +411,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     {
         if (roper != null && roper instanceof EntityPlayer) { return getMastersEnemy((EntityPlayer) roper, 12D); }
 
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting > 0 && MoCreatures.isHuntingEnabled())
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, getAttackRange());
             if (!getIsTamed() && (entityplayer != null) && getIsAdult() && getIsHungry())
