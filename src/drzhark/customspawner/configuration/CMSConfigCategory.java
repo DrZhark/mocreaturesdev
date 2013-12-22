@@ -141,7 +141,7 @@ public class CMSConfigCategory implements Map<String, CMSProperty>
 
         write(out, pad0, "####################", NEW_LINE);
 
-        if (!allowedProperties.matchesAllOf(name))
+        if (!allowedProperties.matchesAllOf(name) && name.charAt(0) != '"') // don't append quotes more than once
         {
             name = '"' + name + '"';
         }

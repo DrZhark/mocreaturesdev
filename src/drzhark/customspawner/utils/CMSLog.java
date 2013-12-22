@@ -1,16 +1,39 @@
 package drzhark.customspawner.utils;
 
-import java.util.logging.Logger;
 
-import cpw.mods.fml.common.FMLLog;
+import java.io.File;
+import java.io.IOException;
+
+import net.minecraft.world.biome.SpawnListEntry;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+
+import drzhark.customspawner.CustomSpawner;
+import drzhark.customspawner.environment.EnvironmentSettings;
 
 public class CMSLog {
 
-   public static final Logger logger = Logger.getLogger("CustomSpawner");
+    public final Logger logger;
 
-   public static void initLog() {
-       logger.setParent(FMLLog.getLogger());
-       logger.info("Starting CustomSpawner 2.3.0.d1");
-       logger.info("Copyright (c) DrZhark, Bloodshot 2013");
+    public CMSLog(String environment)
+    {
+        logger = Logger.getLogger(environment);
+        SimpleLayout layout = new SimpleLayout();    
+        FileAppender appender = null;
+     try {
+         appender = new FileAppender(layout,CustomSpawner.ROOT.getPath() + File.separator + "logs" + File.separator + environment + ".log",false);
+     } catch (IOException e) {
+         e.printStackTrace();
+     }    
+        logger.addAppender(appender);
+        logger.info("Logger initialized for environment " + environment);
+    }
+
+   public void logSpawn(EnvironmentSettings environment, String entitySpawnType, String biomeName, String entityName, int x, int y, int z, int moblimit, SpawnListEntry spawnlistentry)
+   {
+       if (environment.debug)
+           logger.info("[" + environment.name() + "]" + "[" + entitySpawnType.toUpperCase() + " TICKHANDLER]:[spawned " + entityName + " at " + x + ", " + y + ", " + z + " with " + entitySpawnType.toUpperCase() + ":" + spawnlistentry.itemWeight + ":" + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + " in biome " + biomeName + "]:[spawns left in limit " + moblimit + "]");
    }
 }

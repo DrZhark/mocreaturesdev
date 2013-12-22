@@ -11,22 +11,22 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.customspawner.CustomSpawner;
-import drzhark.customspawner.EntitySpawnType;
 import drzhark.customspawner.configuration.CMSConfiguration;
+import drzhark.customspawner.environment.EnvironmentSettings;
+import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.mocreatures.client.gui.WidgetSimplewindow;
 
 public class EntityData {
 
-    private Class<? extends EntityLiving> clazz;
     private EnumCreatureType typeOfCreature;
     private SpawnListEntry spawnlistentry;
+    private EnvironmentSettings environment;
     private String entityName;
     private boolean canSpawn = true;
     private boolean vanillaControl = false;
     private int entityId;
-    private int minSpawnHeight = -1;
-    private int maxSpawnHeight = -1;
+    private int minSpawnHeight = 0;
+    private int maxSpawnHeight = 256;
     private int minLightLevel = -1;
     private int maxLightLevel = -1;
     private Boolean opaqueBlock = null;
@@ -45,17 +45,10 @@ public class EntityData {
     private int maxSpawnInChunk = 1;
     private EntityModData modData;
 
-    public EntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, String name)
+    public EntityData(EnvironmentSettings environment, SpawnListEntry spawnlistentry, String name, int id, EnumCreatureType type)
     {
-        this.clazz = entityClass;
-        this.entityId = id;
-        this.typeOfCreature = type;
+        this.environment = environment;
         this.entityName = name;
-    }
-
-    public EntityData(Class<? extends EntityLiving> entityClass, int id, EnumCreatureType type, SpawnListEntry spawnlistentry)
-    {
-        this.clazz = entityClass;
         this.entityId = id;
         this.typeOfCreature = type;
         this.spawnlistentry = spawnlistentry;
@@ -67,12 +60,12 @@ public class EntityData {
         else this.canSpawn = true;
         // TODO
         this.minSpawnHeight = 0;
-        this.maxSpawnHeight = 0;
+        this.maxSpawnHeight = 256;
     }
 
     public Class<? extends EntityLiving> getEntityClass()
     {
-        return this.clazz;
+        return this.spawnlistentry.entityClass;
     }
 
     public EnumCreatureType getType()
@@ -239,6 +232,11 @@ public class EntityData {
         return this.spawnBlockBlacklist;
     }
 
+    public EnvironmentSettings getEnvironment()
+    {
+        return this.environment;
+    }
+
     public void addSpawnBlockToBanlist(String bannedBlock)
     {
         if (this.spawnBlockBlacklist == null)
@@ -365,6 +363,6 @@ public class EntityData {
 
     public void setLivingSpawnType(EnumCreatureType enumcreaturetype)
     {
-        this.entitySpawnType = CustomSpawner.entitySpawnTypes.get(enumcreaturetype == null ? "UNDEFINED" : enumcreaturetype.name().toUpperCase());
+        this.entitySpawnType = this.environment.entitySpawnTypes.get(enumcreaturetype == null ? "UNDEFINED" : enumcreaturetype.name().toUpperCase());
     }
 }

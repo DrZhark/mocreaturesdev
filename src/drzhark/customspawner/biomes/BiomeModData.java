@@ -12,8 +12,7 @@ import drzhark.customspawner.configuration.CMSConfiguration;
 public class BiomeModData {
 
     private CMSConfiguration config;
-    private Map<String, BiomeData> biomeMap = new TreeMap<String, BiomeData>();
-    private List<String> biomes = new ArrayList<String>();
+    private Map<String, BiomeData> biomeMap = new TreeMap<String, BiomeData>(String.CASE_INSENSITIVE_ORDER);
     private String modClassID;
     private String tag;
 
@@ -36,7 +35,9 @@ public class BiomeModData {
 
     public List<String> getBiomes()
     {
-        return this.biomes;
+        List<String> biomeList = new ArrayList<String>();
+        biomeList.addAll(this.biomeMap.keySet());
+        return biomeList;
     }
 
     public List<String> getBiomesForType(Type type)
@@ -69,15 +70,16 @@ public class BiomeModData {
 
     public void addBiome(BiomeData biomeData)
     {
-        this.biomeMap.put(this.tag + "|" + biomeData.getBiomeName(), biomeData);
-        this.biomes.add(this.tag + "|" + biomeData.getBiomeName());
+        if (!this.biomeMap.containsKey(this.tag + "|" + biomeData.getBiomeName()))
+        {
+            this.biomeMap.put(this.tag + "|" + biomeData.getBiomeName(), biomeData);
+        }
     }
 
     public BiomeData removeBiome(BiomeData biomeData)
     {
         if (biomeData != null)
         {
-            this.biomes.remove(biomeData.getBiomeName());
             return this.biomeMap.remove(biomeData.getBiomeID());
         }
         return null;

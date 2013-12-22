@@ -650,14 +650,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return null;
     }
 
-    public boolean getCanSpawnHereAnimal()
-    {
-        int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(boundingBox.minY);
-        int k = MathHelper.floor_double(posZ);
-        return worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID && worldObj.getFullBlockLightValue(i, j, k) > 8;
-    }
-
     public boolean getCanSpawnHereCreature()
     {
         int i = MathHelper.floor_double(this.posX);

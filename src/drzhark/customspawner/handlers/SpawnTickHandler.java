@@ -6,8 +6,8 @@ import net.minecraft.world.WorldServer;
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 import drzhark.customspawner.CustomSpawner;
-import drzhark.customspawner.EntitySpawnType;
-import drzhark.customspawner.utils.CMSLog;
+import drzhark.customspawner.type.EntitySpawnType;
+import drzhark.customspawner.utils.CMSUtils;
 
 public class SpawnTickHandler implements IScheduledTickHandler
 {
@@ -20,38 +20,21 @@ public class SpawnTickHandler implements IScheduledTickHandler
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) 
     {
-        for (EntitySpawnType entitySpawnType : CustomSpawner.entitySpawnTypes.values())
+        WorldServer worldObj = (WorldServer) tickData[0];
+        for (EntitySpawnType entitySpawnType : CMSUtils.getEnvironment(worldObj).entitySpawnTypes.values())
         {
-            if (entitySpawnType == CustomSpawner.LIVINGTYPE_UNDEFINED)
+            if (entitySpawnType.name().equals("UNDEFINED"))
                 continue;
-            //if (entitySpawnType.getLivingSpawnTypeName().equalsIgnoreCase("UNDEFINED"))
-               // continue;
+            if (worldObj != null && (worldObj.getWorldInfo().getWorldTotalTime() % entitySpawnType.getSpawnTickRate() == 0L) && entitySpawnType.allowSpawning() && entitySpawnType.getSpawnCap() > 0) 
+            {
+                int spawnAmount = 0;
 
-                WorldServer worldObj = (WorldServer) tickData[0];
-                if (worldObj != null && (worldObj.getWorldInfo().getWorldTotalTime() % entitySpawnType.getSpawnTickRate() == 0L) && entitySpawnType.allowSpawning() && entitySpawnType.getSpawnCap() > 0) 
+                if (worldObj.playerEntities.size() > 0)
                 {
-                    int spawnAmount = 0;
-
-                    if (worldObj.playerEntities.size() > 0)
-                    {
-                        spawnAmount = CustomSpawner.INSTANCE.doCustomSpawning(worldObj, entitySpawnType, entitySpawnType.getEntitySpawnDistance(), CustomSpawner.checkAmbientLightLevel, entitySpawnType.getHardSpawnLimit());
-                        if (CustomSpawner.debug) CMSLog.logger.info("CustomSpawner Spawned " + spawnAmount + entitySpawnType.getLivingSpawnTypeName().toUpperCase());
-                    }
+                    spawnAmount = CustomSpawner.INSTANCE.doCustomSpawning(worldObj, entitySpawnType, entitySpawnType.getEntitySpawnDistance(), entitySpawnType.getHardSpawnLimit());
+                    //if (CustomSpawner.debug) CMSLog.logger.info("[" + environment.name() + "]" + "CustomSpawner Spawned " + spawnAmount + entitySpawnType.getLivingSpawnTypeName().toUpperCase());
                 }
-
-                // handle despawn logic in EventHooks onLivingDespawn
-                // despawn tick
-                /*if (CustomSpawner.forceDespawns && worldObj != null && (worldObj.getWorldInfo().getWorldTotalTime() % CustomSpawner.despawnTickRate == 0L)) //&& worldObj.provider.dimensionId != MoCreatures.WyvernLairDimensionID)
-                {
-                    if (worldObj.playerEntities.size() > 0)
-                    {
-                        int numDespawns = CustomSpawner.INSTANCE.despawnVanillaAnimals(worldObj, CustomSpawner.despawnLightLevel);
-                        if (CustomSpawner.debug)
-                        {
-                            CMSLog.logger.info("CustomSpawner DeSpawned " + numDespawns + " Creatures");
-                        }
-                    }
-                }*/
+            }
         }
     }
 

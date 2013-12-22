@@ -14,14 +14,21 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldProviderHell;
+import net.minecraft.world.WorldProviderSurface;
+import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import drzhark.customspawner.entity.EntityData;
-import drzhark.customspawner.utils.CMSLog;
+import drzhark.customspawner.environment.EnvironmentSettings;
+import drzhark.customspawner.type.EntitySpawnType;
+import drzhark.customspawner.utils.CMSUtils;
 
 public class EventHooks {
 
@@ -32,19 +39,25 @@ public class EventHooks {
         int par2 = event.chunkZ * 16;
         int x = event.chunkX * 16 + 8 + event.world.rand.nextInt(16);
         int z = event.chunkZ * 16 + 8 + event.world.rand.nextInt(16);
-
-        List customSpawnList = CustomSpawner.INSTANCE.getCustomBiomeSpawnList(event.world.getBiomeGenForCoords(x, z));
-
-        if (customSpawnList != null)
+        CMSUtils.addWorldEnvironment(event.world.provider.getClass()); // make sure world environment has been created
+        EnvironmentSettings environment = CMSUtils.getEnvironment(event.world);
+        for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values())
         {
-            CustomSpawner.INSTANCE.performWorldGenSpawning(event.world, event.world.getBiomeGenForCoords(x, z), par1 + 8, par2 + 8, 16, 16, event.rand, customSpawnList, CustomSpawner.INSTANCE.worldGenCreatureSpawning);
+            if (entitySpawnType.getChunkSpawnChance() > 0)
+            {
+                List<SpawnListEntry> customSpawnList = entitySpawnType.getBiomeSpawnList(event.world.getBiomeGenForCoords(x, z).biomeID);
+                if (customSpawnList != null)
+                {
+                    CustomSpawner.INSTANCE.performWorldGenSpawning(entitySpawnType, event.world, event.world.getBiomeGenForCoords(x, z), par1 + 8, par2 + 8, 16, 16, event.rand, customSpawnList, environment.worldGenCreatureSpawning);
+                }
+            }
         }
     }
 
     @ForgeSubscribe
     public void onLivingPackSize(LivingPackSizeEvent event)
     {
-        EntityData entityData = CustomSpawner.classToEntityMapping.get(event.entityLiving.getClass());
+        EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
         if (entityData != null)
         {
             event.maxPackSize = entityData.getMaxInChunk();
@@ -55,19 +68,15 @@ public class EventHooks {
     @ForgeSubscribe
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
     {
-        EntityData entityData = CustomSpawner.classToEntityMapping.get(event.entityLiving.getClass());
+        EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
         int x = MathHelper.floor_double(event.x);
         int y = MathHelper.floor_double(event.y);
         int z = MathHelper.floor_double(event.z);
         if (entityData != null && !entityData.getCanSpawn())
         {
-            if (CustomSpawner.debug) CMSLog.logger.info("Denied spawn for entity " + entityData.getEntityClass() + ". CanSpawn set to false or frequency set to 0!");
-                event.setResult(Result.DENY);
-        }
-        else if ((entityData.getMinSpawnHeight() != -1 && y < entityData.getMinSpawnHeight()) || (entityData.getMaxSpawnHeight() != -1 && y > entityData.getMaxSpawnHeight()))
-        {
-            if (CustomSpawner.debug) CMSLog.logger.info("Denied spawn for entity " + entityData.getEntityClass() + ". MinY or MaxY exceeded allowed value!");
-                event.setResult(Result.DENY);
+            if (entityData.getEnvironment().debug)
+                entityData.getEnvironment().envLog.logger.info("Denied spawn for entity " + entityData.getEntityClass() + ". CanSpawn set to false or frequency set to 0!");
+            event.setResult(Result.DENY);
         }
         /*BiomeGenBase biome = event.world.getBiomeGenForCoords(x, z);
         if (biome != null)
@@ -100,7 +109,7 @@ public class EventHooks {
             if (event.entityLiving instanceof EntitySheep || event.entityLiving instanceof EntityPig || event.entityLiving instanceof EntityCow || event.entityLiving instanceof EntityChicken)
             {
                 // check lightlevel
-                if (CustomSpawner.isValidDespawnLightLevel(event.entity, event.world, CustomSpawner.despawnLightLevel))
+                if (CustomDespawner.isValidDespawnLightLevel(event.entity, event.world, CustomSpawner.despawnLightLevel))
                 {
                     return;
                 }
@@ -149,25 +158,37 @@ public class EventHooks {
                 int x = MathHelper.floor_double(event.entity.posX);
                 int y = MathHelper.floor_double(event.entity.boundingBox.minY);
                 int z = MathHelper.floor_double(event.entity.posZ);
-                CMSLog.logger.info("Forced Despawn of entity " + event.entityLiving + " at " + x + ", " + y + ", " + z + ". To prevent forced despawns, use /moc forceDespawns false.");
+                CMSUtils.getEnvironment(event.world).envLog.logger.info("Forced Despawn of entity " + event.entityLiving + " at " + x + ", " + y + ", " + z + ". To prevent forced despawns, use /moc forceDespawns false.");
             }
+        }
+        EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
+        if (entityData != null && entityData.getLivingSpawnType() == CMSUtils.getEnvironment(event.entity.worldObj).LIVINGTYPE_UNDERGROUND)
+        {
+            event.setResult(Result.ALLOW);
         }
     }
 
     // this triggers before serverStarting
-    /*@ForgeSubscribe
+    @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event)
     {
-        String worldEnvironment = event.world.provider.getClass().getSimpleName().toLowerCase();
-        worldEnvironment = worldEnvironment.replace("worldprovider", "");
-        worldEnvironment = worldEnvironment.replace("provider", "");
-        System.out.println("Environment = " + worldEnvironment);
-    }*/
+        CMSUtils.addWorldEnvironment(event.world.provider.getClass());
+        GameRules gameRule = event.world.getGameRules();
+        if (gameRule != null) {
+            gameRule.setOrCreateGameRule("doMobSpawning", new Boolean(CustomSpawner.doMobSpawning).toString());
+        }
+    }
 
-    @ForgeSubscribe
+   @ForgeSubscribe
     public void structureMapGen(InitMapGenEvent event)
     {
         String structureClass = event.originalGen.getClass().toString();
-        CustomSpawner.structureData.registerStructure(event.type, event.originalGen);
+
+        if (event.type == event.type.NETHER_BRIDGE)
+            CustomSpawner.environmentMap.get(WorldProviderHell.class).structureData.registerStructure(CustomSpawner.environmentMap.get(WorldProviderHell.class), event.type, event.originalGen);
+        else if (event.type == event.type.SCATTERED_FEATURE)
+        {
+            CustomSpawner.environmentMap.get(WorldProviderSurface.class).structureData.registerStructure(CustomSpawner.environmentMap.get(WorldProviderSurface.class), event.type, event.originalGen);
+        }
     }
 }

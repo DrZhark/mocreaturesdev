@@ -10,9 +10,8 @@ import net.minecraft.world.gen.MapGenBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.customspawner.CustomSpawner;
-import drzhark.customspawner.EntitySpawnType;
 import drzhark.customspawner.configuration.CMSConfiguration;
-import drzhark.customspawner.utils.CMSLog;
+import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.mocreatures.client.gui.WidgetSimplewindow;
 
 public class EntityModData {
@@ -53,7 +52,6 @@ public class EntityModData {
         boolean result = true;
         if (entityData != null)
         {
-            if (CustomSpawner.debug) CMSLog.logger.info("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
             if (this.livingSpawnMap.get(entityData.getLivingSpawnType()) == null)
             {
                 this.livingSpawnMap.put(entityData.getLivingSpawnType(), new HashMap<String, EntityData>());
@@ -83,7 +81,7 @@ public class EntityModData {
     {
         if (entityData != null)
         {
-            if (CustomSpawner.debug) CMSLog.logger.info("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
+            if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().name() + " spawnList for mod " + this.modClassID);
             this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
         }
     }
@@ -92,7 +90,7 @@ public class EntityModData {
     {
         if (entityData != null)
         {
-            if (CustomSpawner.debug) CMSLog.logger.info("Removing " + entityData.getEntityClass() + " from " + entityData.getLivingSpawnType().getLivingSpawnTypeName() + " spawnList for mod " + this.modClassID);
+            if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Removing " + entityData.getEntityClass() + " from " + entityData.getLivingSpawnType().name() + " spawnList for mod " + this.modClassID);
             return (this.livingSpawnMap.get(entityData.getLivingSpawnType()).remove(entityData.getEntityName()));
         }
         return null;

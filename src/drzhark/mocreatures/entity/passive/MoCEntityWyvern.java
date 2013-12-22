@@ -32,8 +32,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     public int mouthCounter;
     public int wingFlapCounter;
     public int diveCounter;
-    //public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave", "Mountain", "Sea" };
-    public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark" };
+    public static final String wyvernNames[] = { "Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave", "Mountain", "Sea" };
 
     public MoCEntityWyvern(World world)
     {
@@ -131,34 +130,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         if (getType() == 0)
         {
             int i = rand.nextInt(100);
-            if (i <= 25)
-            {
-                setType(1);
-            }
-            else if (i <= 50)
-            {
-                setType(2);
-            }
-            else if (i <= 75)
-            {
-                setType(3);
-            }
-            else if (i <= 95)
-            {
-                setType(4);
-            }
-            else
-            {
-                setType(5);
-            }
-        }
-    }
-    /*@Override
-    public void selectType()
-    {
-        if (getType() == 0)
-        {
-            int i = rand.nextInt(100);
             if (i <= 12)
             {
                 setType(1);
@@ -196,7 +167,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
                 setType(5);
             }
         }
-    }*/
+    }
 
     @Override
     public boolean isNotScared()
@@ -225,33 +196,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return MoCreatures.proxy.getTexture("wyvernlight.png");
         case 8:
             return MoCreatures.proxy.getTexture("wyverndark.png");
-        /*case 9:
-            return MoCreatures.proxy.getTexture("wyvernnether.png";*/
-        default:
-            return MoCreatures.proxy.getTexture("wyvernsun.png");
-        }
-    }
-    /*@Override
-    public ResourceLocation getTexture()
-    {
-        switch (getType())
-        {
-        case 1:
-            return MoCreatures.proxy.getTexture("wyvernjungle.png");
-        case 2:
-            return MoCreatures.proxy.getTexture("wyvernmix.png");
-        case 3:
-            return MoCreatures.proxy.getTexture("wyvernsand.png");
-        case 4:
-            return MoCreatures.proxy.getTexture("wyvernsun.png");
-        case 5:
-            return MoCreatures.proxy.getTexture("wyvernmother.png");
-        case 6:
-            return MoCreatures.proxy.getTexture("wyvernundead.png");
-        case 7:
-            return MoCreatures.proxy.getTexture("wyvernlight.png");
-        case 8:
-            return MoCreatures.proxy.getTexture("wyverndark.png");
         case 9:
             return MoCreatures.proxy.getTexture("wyvernarctic.png");
         case 10:
@@ -260,12 +204,10 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return MoCreatures.proxy.getTexture("wyvernmountain.png");
         case 12:
             return MoCreatures.proxy.getTexture("wyvernsea.png");
-        /*case 9:
-            return MoCreatures.proxy.getTexture("wyvernnether.png";*/
-        /*default:
+        default:
             return MoCreatures.proxy.getTexture("wyvernsun.png");
         }
-    }*/
+    }
 
     @Override
     public void onLivingUpdate()

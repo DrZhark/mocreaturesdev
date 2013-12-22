@@ -448,7 +448,7 @@ public class MoCEntityBear extends MoCEntityTameable {
             return true;
         }
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FOREST) || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
+        if (currentbiome.biomeName.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds"))
         {
             setType(3);//panda
             return true;
