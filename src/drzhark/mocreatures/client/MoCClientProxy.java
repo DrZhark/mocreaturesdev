@@ -50,6 +50,7 @@ import drzhark.mocreatures.client.gui.helpers.MoCSettingInt;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingList;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingMulti;
 import drzhark.mocreatures.client.gui.helpers.MoCSettings;
+import drzhark.mocreatures.client.handlers.MoCKeyHandler;
 import drzhark.mocreatures.client.model.MoCModelAnt;
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.client.model.MoCModelBee;
@@ -147,7 +148,6 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderWWolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWerewolf;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderWraith;
 import drzhark.mocreatures.client.renderer.texture.MoCTextures;
-import drzhark.mocreatures.client.settings.MoCKeyHandler;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
@@ -221,9 +221,12 @@ public class MoCClientProxy extends MoCProxy {
 
     public MoCClientProxy()
     {
-        instance = this;
-        TickRegistry.registerTickHandler(new MoCClientTickHandler(), Side.CLIENT);
-        KeyBindingRegistry.registerKeyBinding(new MoCKeyHandler());
+        if (instance == null) // avoid reregistering keybindings
+        {
+            instance = this;
+            TickRegistry.registerTickHandler(new MoCClientTickHandler(), Side.CLIENT);
+            KeyBindingRegistry.registerKeyBinding(new MoCKeyHandler());
+        }
     }
 
     @Override

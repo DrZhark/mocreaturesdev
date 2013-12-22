@@ -8,6 +8,7 @@ import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
+import net.minecraft.block.BlockJukeBox;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -325,15 +326,10 @@ public class MoCTools {
                     int j2 = entity.worldObj.getBlockId(k1, l1, i2);
                     if (j2 != 0)
                     {
-                        String nameToCheck = "";
-                        nameToCheck = Block.blocksList[j2].getUnlocalizedName();
-                        if (nameToCheck != null && nameToCheck != "")
+                        if (Block.blocksList[j2] instanceof BlockJukeBox)
                         {
-                            if (nameToCheck.equals("tile.jukebox"))
-                            {
-                                TileEntityRecordPlayer juky = (TileEntityRecordPlayer) entity.worldObj.getBlockTileEntity(k1, l1, i2);
-                                return juky;
-                            }
+                            TileEntityRecordPlayer juky = (TileEntityRecordPlayer) entity.worldObj.getBlockTileEntity(k1, l1, i2);
+                            return juky;
                         }
                     }
                 }

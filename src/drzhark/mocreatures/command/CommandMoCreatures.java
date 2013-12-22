@@ -197,7 +197,7 @@ public class CommandMoCreatures extends CommandBase {
                 }
                 if (tamedlist.size() > 0)
                 {
-                    sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray);
+                    sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray, "Listing tamed pets");
                     par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + ", Unloaded count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
                 }
                 else
@@ -250,7 +250,7 @@ public class CommandMoCreatures extends CommandBase {
                         }
                     }
                 //}
-                sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray);
+                sendPageHelp(par1ICommandSender, (byte)10, tamedlist, charArray, "Listing tamed pets");
                 par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Loaded tamed count : " + EnumChatFormatting.AQUA + loadedCount + EnumChatFormatting.WHITE + (!MoCreatures.isServer() ? ", Unloaded Count : " + EnumChatFormatting.AQUA + unloadedCount + EnumChatFormatting.WHITE + ", Total count : " + EnumChatFormatting.AQUA + (loadedCount + unloadedCount) : "")));
             }
         }
@@ -629,7 +629,7 @@ public class CommandMoCreatures extends CommandBase {
         }
     }
 
-    public void sendPageHelp(ICommandSender sender, byte pagelimit, ArrayList<String> list, String[] par2ArrayOfStr)
+    public void sendPageHelp(ICommandSender sender, byte pagelimit, ArrayList<String> list, String[] par2ArrayOfStr, String title)
     {
         int x = (list.size() - 1) / pagelimit;
         boolean flag = false;
@@ -645,7 +645,7 @@ public class CommandMoCreatures extends CommandBase {
         {
             try
             {
-                j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(sender, par2ArrayOfStr.length > 3 ? par2ArrayOfStr[3] : par2ArrayOfStr[2], 1, x + 1) - 1;
+                j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(sender, par2ArrayOfStr[par2ArrayOfStr.length - 1], 1, x + 1) - 1;
             }
             catch (NumberInvalidException numberinvalidexception)
             {
@@ -659,7 +659,7 @@ public class CommandMoCreatures extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.DARK_GREEN + "--- Showing MoCreatures Help Info " + EnumChatFormatting.AQUA + Integer.valueOf(j + 1) + EnumChatFormatting.WHITE + " of " + EnumChatFormatting.AQUA + Integer.valueOf(x + 1) + EnumChatFormatting.GRAY + " (/moc " + par1 + " " + par2 + " <page>)" + EnumChatFormatting.DARK_GREEN + "---"));
+        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.WHITE + title + " (pg " + EnumChatFormatting.WHITE + Integer.valueOf(j + 1) + EnumChatFormatting.DARK_GREEN + "/" + EnumChatFormatting.WHITE + Integer.valueOf(x + 1) + ")"));
 
         for (int l = j * pagelimit; l < k; ++l)
         {

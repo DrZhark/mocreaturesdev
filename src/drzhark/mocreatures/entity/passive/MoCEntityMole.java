@@ -55,14 +55,14 @@ public class MoCEntityMole extends MoCEntityTameable {
         double coordZ = this.posZ;
         double coordX = this.posX;
         int x = 1;
-            double newPosY = coordY - Math.cos( (this.rotationPitch- 90F) / 57.29578F) * x;
-            double newPosX = coordX + Math.cos((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
-            double newPosZ = coordZ + Math.sin((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
-            int iTarget = this.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
-            if (isDiggableBlock(iTarget))
-            {
-                this.setPosition(newPosX, newPosY, newPosZ);   
-            }
+        double newPosY = coordY - Math.cos( (this.rotationPitch- 90F) / 57.29578F) * x;
+        double newPosX = coordX + Math.cos((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
+        double newPosZ = coordZ + Math.sin((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
+        int iTarget = this.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
+        if (isDiggableBlock(iTarget))
+        {
+            this.setPosition(newPosX, newPosY, newPosZ);   
+        }
     }
     
     /**
@@ -172,7 +172,7 @@ public class MoCEntityMole extends MoCEntityTameable {
             }*/
             
             //digging fx
-            if (getState() == 1 || getState() == 2)
+            if ((getState() == 1 || getState() == 2) && !this.inWater)
             {
                 setSprinting(true);
             }

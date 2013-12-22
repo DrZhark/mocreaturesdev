@@ -272,7 +272,7 @@ public class CommandCMS extends CommandBase {
                     if (count != 0)
                         countMap.put(count, EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
                 }
-                title = "Showing total entities in world " + world.getWorldInfo().getWorldName() + " in dimension " + world.provider.dimensionId;
+                title = "Showing total entities in dimension " + world.provider.dimensionId;
             }
             ArrayList<String> countList = new ArrayList<String>();
             if (countMap.size() > 0)
@@ -776,7 +776,7 @@ public class CommandCMS extends CommandBase {
         {
             try
             {
-                j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(sender, par2ArrayOfStr.length > 3 ? par2ArrayOfStr[3] : par2ArrayOfStr[2], 1, x + 1) - 1;
+                j = par2ArrayOfStr.length == 0 ? 0 : parseIntBounded(sender, par2ArrayOfStr[par2ArrayOfStr.length - 1], 1, x + 1) - 1;
             }
             catch (NumberInvalidException numberinvalidexception)
             {
@@ -790,7 +790,7 @@ public class CommandCMS extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.WHITE + title + " page " + EnumChatFormatting.WHITE + Integer.valueOf(j + 1) + EnumChatFormatting.WHITE + " of " + EnumChatFormatting.WHITE + Integer.valueOf(x + 1) + EnumChatFormatting.DARK_GREEN + "---"));
+        sender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.WHITE + title + " (pg " + EnumChatFormatting.WHITE + Integer.valueOf(j + 1) + EnumChatFormatting.DARK_GREEN + "/" + EnumChatFormatting.WHITE + Integer.valueOf(x + 1) + ")"));
 
         for (int l = j * pagelimit; l < k; ++l)
         {

@@ -14,6 +14,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraftforge.event.world.BlockEvent;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -177,7 +179,15 @@ public class MoCEntityEnt extends MoCEntityAnimal{
 
         if (blockUnderFeet == 3)
         {
-            this.worldObj.setBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) - 1, MathHelper.floor_double(this.posZ), 2, 0, 3);
+            int xCoord = MathHelper.floor_double(this.posX);
+            int yCoord = MathHelper.floor_double(this.posY - 1);
+            int zCoord = MathHelper.floor_double(this.posZ);
+            Block block = Block.blocksList[2];
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get(this.worldObj, "[MoCreatures]"));
+            if (!event.isCanceled())
+            {
+                this.worldObj.setBlock(xCoord, yCoord, zCoord, 2, 0, 3);
+            }
             return false;
         }
 
@@ -194,14 +204,38 @@ public class MoCEntityEnt extends MoCEntityAnimal{
             {
                 metaD = rand.nextInt(2)+1; //to place grass or fern
             }
+
+            boolean canPlant = true;
+            // check perms first
             for (int x = -1; x <2; x++)
             {
                 for (int z = -1; z <2; z++)
                 {
-                    this.worldObj.setBlock(MathHelper.floor_double(this.posX) + x, MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ) + z, fertileB, metaD, 3);
+                    int xCoord = MathHelper.floor_double(this.posX);
+                    int yCoord = MathHelper.floor_double(this.posY);
+                    int zCoord = MathHelper.floor_double(this.posZ);
+                    Block block = Block.blocksList[fertileB];
+                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, metaD, FakePlayerFactory.get(this.worldObj, "[MoCreatures]"));
+                    if (event.isCanceled())
+                    {
+                        canPlant = false;
+                        break;
+                    }
                 }
             }
-            return true;
+            // plant if perm check passed
+            if (canPlant)
+            {
+                for (int x = -1; x <2; x++)
+                {
+                    for (int z = -1; z <2; z++)
+                    {
+                        this.worldObj.setBlock(MathHelper.floor_double(this.posX) + x, MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ) + z, fertileB, metaD, 3);
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         return false;

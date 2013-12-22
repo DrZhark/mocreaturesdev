@@ -13,8 +13,18 @@ public class MoCItemRecord extends ItemRecord
     }
 
     @SideOnly(Side.CLIENT)
+
+    /**
+     * Return the title for this record.
+     */
+    public String getRecordTitle()
+    {
+        return "MoC - " + this.recordName;
+    }
+
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":"));
+        this.itemIcon = par1IconRegister.registerIcon("mocreatures:recordshuffle");
     }
 }
