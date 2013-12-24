@@ -951,8 +951,8 @@ public class EnvironmentSettings {
     {
         // general
         worldGenCreatureSpawning = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);
-        minDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "minDespawnLightLevel", minDespawnLightLevel, "The minimum light level threshold used to determine whether or not to despawn an entity.").getInt();
-        maxDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxDespawnLightLevel", minDespawnLightLevel, "The maximum light level threshold used to determine whether or not to despawn an entity.").getInt();
+        minDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "minDespawnLightLevel", minDespawnLightLevel, "The minimum light level threshold used to determine whether or not to despawn a farm animal.").getInt();
+        maxDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxDespawnLightLevel", minDespawnLightLevel, "The maximum light level threshold used to determine whether or not to despawn a farm animal.").getInt();
         killallUseLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", true, "Turns on check for lightLevel before killing an entity during a killall. If entity is under lightLevel threshold, it will be killed.").getBoolean(false);
         enforceMaxSpawnLimits = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", false, "If enabled, all spawns will stop when max spawn limits have been reached for type.").getBoolean(false);
         debug = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debug", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);

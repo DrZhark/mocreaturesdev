@@ -23,6 +23,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import drzhark.customspawner.utils.CMSUtils;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCDespawner {
@@ -65,17 +66,12 @@ public class MoCDespawner {
         }
     }
 
-    protected final int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving)
-    {
-        return entityDespawnCheck(worldObj, entityliving, 7);
-    }
-
     //New DesPawner stuff
-    protected final static int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int despawnLightLevel)
+    protected final static int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int minDespawnLightLevel, int maxDespawnLightLevel)
     {
         if (entityliving instanceof EntityWolf && ((EntityWolf) entityliving).isTamed()) { return 0; }
         if (entityliving instanceof EntityOcelot && ((EntityOcelot) entityliving).isTamed()) { return 0; }
-        if (!isValidDespawnLightLevel(entityliving, worldObj, despawnLightLevel)) { return 0; }
+        if (!isValidDespawnLightLevel(entityliving, worldObj, minDespawnLightLevel, maxDespawnLightLevel)) { return 0; }
 
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(entityliving, -1D);
         if (entityplayer != null) //entityliving.canDespawn() && 
@@ -105,7 +101,7 @@ public class MoCDespawner {
         return 0;
     }
 
-    public final static int despawnVanillaAnimals(WorldServer worldObj, int despawnLightLevel)
+    public final static int despawnVanillaAnimals(WorldServer worldObj, int minDespawnLightLevel, int maxDespawnLightLevel)
     {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++)
@@ -117,7 +113,7 @@ public class MoCDespawner {
             }
             if ((entity instanceof EntityHorse || entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig || entity instanceof EntityOcelot || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf || entity instanceof EntityMooshroom))
             {
-                count += entityDespawnCheck(worldObj, (EntityLiving) entity, despawnLightLevel);
+                count += entityDespawnCheck(worldObj, (EntityLiving) entity, minDespawnLightLevel, maxDespawnLightLevel);
             }
         }
         return count;
@@ -169,28 +165,31 @@ public class MoCDespawner {
         return i <= lightLevel;
     }
     
-    protected static boolean isValidDespawnLightLevel(Entity entity, WorldServer worldObj, int despawnLightLevel)
+    public static boolean isValidDespawnLightLevel(Entity entity, World worldObj, int minDespawnLightLevel, int maxDespawnLightLevel)
     {
         int x = MathHelper.floor_double(entity.posX);
         int y = MathHelper.floor_double(entity.boundingBox.minY);
         int z = MathHelper.floor_double(entity.posZ);
-        int i = 0;
+        int blockLightLevel = 0;
         if (y >= 0)
         {
             if (y >= 256)
             {
                 y = 255;
             }
-            i = getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+            blockLightLevel = CMSUtils.getBlockLightValue(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
         }
-        if (i > despawnLightLevel)
+        if (blockLightLevel < minDespawnLightLevel && maxDespawnLightLevel != -1)
         {
-            if (debug) MoCLog.logger.info("Denied despawn! for vanilla " + entity.getEntityName() + ". LightLevel over threshold of " + despawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " under minimum threshold of " + minDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            return false;
         }
-        /*else {
-            if (verboseConsole) CMSLog.logger.info("Valid LightLevel " + i + " found. Proceeding to despawn vanilla " + entity.getEntityName() + " at " + x + ", " + y + ", " + z);
-        }*/
-        return i <= despawnLightLevel;
+        else if (blockLightLevel > maxDespawnLightLevel && maxDespawnLightLevel != -1)
+        {
+            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " over maximum threshold of " + maxDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            return false;
+        }
+        return true;
     }
 
     /**
