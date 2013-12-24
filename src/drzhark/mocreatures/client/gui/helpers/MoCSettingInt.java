@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.gui.helpers;
 
-import drzhark.mocreatures.client.gui.SettingInt;
+import drzhark.guiapi.setting.SettingInt;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 
 public class MoCSettingInt extends SettingInt {

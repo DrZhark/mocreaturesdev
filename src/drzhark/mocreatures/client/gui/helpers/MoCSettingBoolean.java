@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.gui.helpers;
 
-import drzhark.mocreatures.client.gui.SettingBoolean;
+import drzhark.guiapi.setting.SettingBoolean;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 
 public class MoCSettingBoolean extends SettingBoolean {

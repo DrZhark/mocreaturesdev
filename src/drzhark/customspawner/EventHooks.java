@@ -109,7 +109,7 @@ public class EventHooks {
             if (event.entityLiving instanceof EntitySheep || event.entityLiving instanceof EntityPig || event.entityLiving instanceof EntityCow || event.entityLiving instanceof EntityChicken)
             {
                 // check lightlevel
-                if (CustomDespawner.isValidDespawnLightLevel(event.entity, event.world, CustomSpawner.despawnLightLevel))
+                if (CustomDespawner.isValidDespawnLightLevel(event.entity, event.world, CMSUtils.getEnvironment(event.world).minDespawnLightLevel, CMSUtils.getEnvironment(event.world).maxDespawnLightLevel))
                 {
                     return;
                 }
@@ -185,9 +185,15 @@ public class EventHooks {
         String structureClass = event.originalGen.getClass().toString();
 
         if (event.type == event.type.NETHER_BRIDGE)
+        {
+            if (CustomSpawner.environmentMap.get(WorldProviderHell.class) == null)
+                CMSUtils.addWorldEnvironment(WorldProviderHell.class);
             CustomSpawner.environmentMap.get(WorldProviderHell.class).structureData.registerStructure(CustomSpawner.environmentMap.get(WorldProviderHell.class), event.type, event.originalGen);
+        }
         else if (event.type == event.type.SCATTERED_FEATURE)
         {
+            if (CustomSpawner.environmentMap.get(WorldProviderSurface.class) == null)
+                CMSUtils.addWorldEnvironment(WorldProviderSurface.class);
             CustomSpawner.environmentMap.get(WorldProviderSurface.class).structureData.registerStructure(CustomSpawner.environmentMap.get(WorldProviderSurface.class), event.type, event.originalGen);
         }
     }

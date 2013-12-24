@@ -8,7 +8,7 @@ import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.client.gui.WidgetSimplewindow;
+import drzhark.guiapi.widget.WidgetSimplewindow;
 
 public class MoCEntityData {
 

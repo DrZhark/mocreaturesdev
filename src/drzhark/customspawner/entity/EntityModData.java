@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.configuration.CMSConfiguration;
 import drzhark.customspawner.type.EntitySpawnType;
-import drzhark.mocreatures.client.gui.WidgetSimplewindow;
+import drzhark.guiapi.widget.WidgetSimplewindow;
 
 public class EntityModData {
 

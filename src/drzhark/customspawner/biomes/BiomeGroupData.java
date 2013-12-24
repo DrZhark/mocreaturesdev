@@ -4,7 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import drzhark.mocreatures.client.gui.WidgetSimplewindow;
+import drzhark.guiapi.widget.WidgetSimplewindow;
 
 public class BiomeGroupData {
 

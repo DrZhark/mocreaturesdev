@@ -43,11 +43,11 @@ import drzhark.customspawner.utils.CMSUtils;
 public class EnvironmentSettings {
 
     public boolean worldGenCreatureSpawning = true;
-    public boolean checkAmbientLightLevel;
     public boolean killallUseLightLevel;
     public boolean killallVillagers;
     public boolean enforceMaxSpawnLimits;
-    public int despawnLightLevel = 7;
+    public int minDespawnLightLevel = 2;
+    public int maxDespawnLightLevel = 7;
     public boolean forceDespawns;
     public boolean debug;
     private File ROOT_PATH;
@@ -255,6 +255,7 @@ public class EnvironmentSettings {
         // make sure latest config data is loaded, fixes issue where mocreatures don't spawn on initial load
         CMSEnvironmentConfig.load();
         CMSStructureConfig.load();
+        populateSpawnBiomes();
         populateSpawns();
     }
 
@@ -289,7 +290,6 @@ public class EnvironmentSettings {
             return null;
         } 
 
-        //String entityName = (String) EntityList.classToStringMapping.get(clazz);
         String entityName = (String) EntityList.classToStringMapping.get(clazz);
 
         if (debug) envLog.logger.info("Starting registration for "  + entityName);
@@ -304,7 +304,7 @@ public class EnvironmentSettings {
         {
             if (debug) envLog.logger.info("Attempting to find a valid type for " + entityName + "...");
             EnumCreatureType creatureType = null;
-            SpawnListEntry spawnListEntry = CustomSpawner.defaultSpawnListEntryMap.get(clazz);
+            SpawnListEntry spawnListEntry = CustomSpawner.defaultSpawnListEntryMap.get(clazz.getName());
             if (spawnListEntry == null)
             {
                 spawnListEntry = new SpawnListEntry(clazz, 8, 2, 3);
@@ -470,6 +470,7 @@ public class EnvironmentSettings {
             entityCategory.put("opaqueBlock", new CMSProperty("opaqueBlock", entityData.getOpaqueBlock() == null ? "all" : entityData.getOpaqueBlock().toString(), CMSProperty.Type.STRING));
             entityCategory.put("spawnBlockBlacklist", new CMSProperty("spawnBlockBlacklist", entityData.getSpawnBlockBlacklist(), CMSProperty.Type.STRING));
             //entityData.getEntityConfig().get(CATEGORY_ENTITY_SPAWN_SETTINGS, entityName, new ArrayList(Arrays.asList( entityData.getLivingSpawnType().getLivingSpawnTypeName(), new Integer(defaultSpawnListEntryMap.get(clazz.getName()) == null ? frequency : defaultSpawnListEntryMap.get(clazz.getName()).itemWeight).toString(), new Integer(defaultSpawnListEntryMap.get(clazz.getName()) == null ? minGroup : defaultSpawnListEntryMap.get(clazz.getName()).minGroupCount).toString(), new Integer(defaultSpawnListEntryMap.get(clazz.getName()) == null ? maxGroup : defaultSpawnListEntryMap.get(clazz.getName()).maxGroupCount).toString(), new Integer(entityData.getMaxInChunk()).toString())));
+            entityData.getEntityConfig().save();
         }
         else 
         {
@@ -558,91 +559,6 @@ public class EnvironmentSettings {
                 }
             }
         }
-
-        // Add spawnable biomes for each entity
-        if (entityCategory.containsKey("biomegroups"))// && entityBiomeCategory.get(entityName).valueList != null)
-        {
-            List<String> biomeGroups = entityCategory.get("biomegroups").valueList;
-            for (int i = 0; i < biomeGroups.size(); i++)
-            {
-                String biomeGroupName = biomeGroups.get(i);
-                List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
-                // check default entity biome config
-                if (CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).containsKey(entityData.getEntityMod().getModTag().toUpperCase() + "_" + biomeGroupName))
-                {
-                    biomeGroupName = entityData.getEntityMod().getModTag().toUpperCase() + "_" + biomeGroups.get(i);
-                    CMSProperty biomeProps = CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).get(biomeGroupName);
-                    for (int j = 0; j < biomeProps.valueList.size(); j++)
-                    {
-                        List<String> biomeParts = CMSUtils.parseName(biomeProps.valueList.get(j));
-                        BiomeModData biomeModData = CMSUtils.getBiomeModData(biomeModMap, biomeParts.get(0));
-                        if (biomeModData != null)
-                        {
-                            spawnBiomes.add(biomeModData.getBiome(biomeProps.valueList.get(j)));
-                            entityData.addSpawnBiome(biomeModData.getBiome(biomeProps.valueList.get(j)));
-                        }
-                    }
-                    entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
-                }
-                else // search for group in biome mod configs
-                {
-                    for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
-                    {
-                        BiomeModData biomeModData = modEntry.getValue();
-                        CMSConfigCategory cat = biomeModData.getModConfig().getCategory("biomegroups");
-                        if (cat.containsKey(biomeGroupName))
-                        {
-                            CMSProperty biomeProps = cat.get(biomeGroupName);
-                            for (int j = 0; j < biomeProps.valueList.size(); j++)
-                            {
-                                if (spawnBiomes.contains(biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j))))
-                                    continue;
-                                BiomeGenBase biome = biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j));
-                                if (biome == null)
-                                {
-                                    continue;
-                                }
-                                spawnBiomes.add(biome);
-                                entityData.addSpawnBiome(biome);
-                            }
-                        }
-                    }
-                    entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
-                }
-            }
-            entityData.setBiomeGroups(biomeGroups);
-        }
-        else // populate empty list with vanilla entries
-        {
-            ArrayList<String> biomes = new ArrayList<String>();
-            List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
-            ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass());
-            if (entryBiomes != null)
-            {
-                for (int i = 0; i < entryBiomes.size(); i++)
-                {
-                    for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
-                    {
-                        BiomeModData biomeModData = modEntry.getValue();
-                        if (biomeModData.hasBiome(entryBiomes.get(i)))
-                        {
-                            biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
-                            spawnBiomes.add(entryBiomes.get(i));
-                        }
-                    }
-                }
-            }
-            entityData.setSpawnBiomes(spawnBiomes);
-            CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityName.toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
-            CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityName.toUpperCase() + "_DEFAULT", prop);
-            entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityName.toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
-            entityData.setBiomeGroups(prop.valueList);
-            biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityName.toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityName.toUpperCase() + "_DEFAULT", biomes));
-        }
-        // entity config comments
-       // entityData.getEntityConfig().addCustomCategoryComment(CATEGORY_ENTITY_SPAWN_SETTINGS, "S:Name <Type:Frequency:MinSpawn:MaxSpawn:MaxSpawnInChunk>");
-        entityData.getEntityConfig().save();
-        CMSEntityBiomeGroupsConfig.save();
     }
 
     public void initializeBiomes()
@@ -753,7 +669,7 @@ public class EnvironmentSettings {
             }
             CMSProperty prop = new CMSProperty(type.name(), biomes, CMSProperty.Type.STRING);
             if (!biomes.isEmpty())
-            {
+           {
                 if (biomeGroupMap.containsKey(type.name()))
                     biomeGroupMap.remove(type.name());
                 biomeGroupMap.put(type.name(), new BiomeGroupData(type.name(), biomes));
@@ -791,6 +707,120 @@ public class EnvironmentSettings {
         }*/
     }
 
+    public void populateSpawnBiomes()
+    {
+        debug = true;
+        if (debug) envLog.logger.info("Populating spawn biomes for environment " + this.name);
+        CMSEntityBiomeGroupsConfig.load();
+        for (EntityData entityData : entityMap.values())
+        {
+            if (debug) envLog.logger.info("generating biome spawn list for entity " + entityData.getEntityName());
+            entityData.getEntityConfig().load();
+            CMSConfigCategory entityCategory = entityData.getEntityConfig().getCategory(entityData.getEntityName().toLowerCase());
+         // Add spawnable biomes for each entity
+            if (entityCategory.containsKey("biomegroups"))// && entityBiomeCategory.get(entityName).valueList != null)
+            {
+                List<String> biomeGroups = entityCategory.get("biomegroups").valueList;
+                for (int i = 0; i < biomeGroups.size(); i++)
+                {
+                    String biomeGroupName = biomeGroups.get(i);
+                    List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
+                    // check default entity biome config
+                    if (CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).containsKey(entityData.getEntityMod().getModTag().toUpperCase() + "_" + biomeGroupName))
+                    {
+                        biomeGroupName = entityData.getEntityMod().getModTag().toUpperCase() + "_" + biomeGroups.get(i);
+                        CMSProperty biomeProps = CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).get(biomeGroupName);
+                        for (int j = 0; j < biomeProps.valueList.size(); j++)
+                        {
+                            List<String> biomeParts = CMSUtils.parseName(biomeProps.valueList.get(j));
+                            BiomeModData biomeModData = CMSUtils.getBiomeModData(biomeModMap, biomeParts.get(0));
+                            if (biomeModData != null)
+                            {
+                                if (debug) envLog.logger.info("adding spawn biome " + biomeProps.valueList.get(j) + " for entity " + entityData.getEntityName()); 
+                                spawnBiomes.add(biomeModData.getBiome(biomeProps.valueList.get(j)));
+                                entityData.addSpawnBiome(biomeModData.getBiome(biomeProps.valueList.get(j)));
+                            }
+                        }
+                        entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
+                    }
+                    else // search for group in biome mod configs
+                    {
+                        for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
+                        {
+                            BiomeModData biomeModData = modEntry.getValue();
+                            CMSConfigCategory cat = biomeModData.getModConfig().getCategory("biomegroups");
+                            if (cat.containsKey(biomeGroupName))
+                            {
+                                CMSProperty biomeProps = cat.get(biomeGroupName);
+                                for (int j = 0; j < biomeProps.valueList.size(); j++)
+                                {
+                                    if (spawnBiomes.contains(biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j))))
+                                        continue;
+                                    BiomeGenBase biome = biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j));
+                                    if (biome == null)
+                                    {
+                                        continue;
+                                    }
+                                    spawnBiomes.add(biome);
+                                    entityData.addSpawnBiome(biome);
+                                }
+                            }
+                        }
+                        entityData.addBiomeGroupSpawnMap(biomeGroupName, spawnBiomes);
+                    }
+                }
+                entityData.setBiomeGroups(biomeGroups);
+            }
+            else // populate empty list with vanilla entries
+            {
+                if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getEntityName() + ", generating defaults...");
+                ArrayList<String> biomes = new ArrayList<String>();
+                ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
+                if (entityData.getEntityName().equals("Wyvern"))
+                    if (debug) envLog.logger.info("entryBiomes = " + entryBiomes);
+                if (entryBiomes != null)
+                {
+                    for (int i = 0; i < entryBiomes.size(); i++)
+                    {
+                        for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
+                        {
+                            BiomeModData biomeModData = modEntry.getValue();
+                            if (entityData.getEntityName().equals("Wyvern"))
+                            {
+                                for (String biome : biomeModData.getBiomes())
+                                {
+                                    envLog.logger.info("Found biome " + biome + " in mod " + biomeModData.getBiomeModKey() + " with tag " + biomeModData.getModTag());
+                                }
+                            }
+                            if (biomeModData.hasBiome(entryBiomes.get(i)))
+                            {
+                                if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());
+                                biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
+                                entityData.addSpawnBiome(entryBiomes.get(i));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (debug) envLog.logger.info("No default biomes found for entity " + entityData.getEntityName());
+                }
+                CMSConfigCategory entityBiomeGroupCat = CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS);
+                if (!entityBiomeGroupCat.containsKey(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT"))
+                {
+                    CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
+                    CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", prop);
+                    entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getEntityName().toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
+                    entityData.setBiomeGroups(prop.valueList);
+                    biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes));
+                }
+            }
+            // entity config comments
+           // entityData.getEntityConfig().addCustomCategoryComment(CATEGORY_ENTITY_SPAWN_SETTINGS, "S:Name <Type:Frequency:MinSpawn:MaxSpawn:MaxSpawnInChunk>");
+            entityData.getEntityConfig().save();
+            CMSEntityBiomeGroupsConfig.save();
+        }
+    }
     /**
      * Populates spawn lists
      */
@@ -829,7 +859,7 @@ public class EnvironmentSettings {
                     }
                     else
                     {
-                        if (debug) envLog.logger.info("Skipping " + entityData.getEntityClass() + " spawn!!");
+                        if (debug) envLog.logger.info("Skipping " + entityData.getEntityClass() + " spawn!!" + ", spawnbiomes = " + entityData.getSpawnBiomes());
                     }
                 }
             }
@@ -921,8 +951,8 @@ public class EnvironmentSettings {
     {
         // general
         worldGenCreatureSpawning = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "worldGenCreatureSpawning", true, "Allows spawns during world chunk generation.").getBoolean(true);
-        despawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "despawnLightLevel", despawnLightLevel, "The light level threshold used to determine whether or not to despawn a farm animal.").getInt();
-        checkAmbientLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "checkAmbientLightLevel", false, "Turns on check for lightLevel for Ambient creature spawns.").getBoolean(false);
+        minDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "minDespawnLightLevel", minDespawnLightLevel, "The minimum light level threshold used to determine whether or not to despawn an entity.").getInt();
+        maxDespawnLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "maxDespawnLightLevel", minDespawnLightLevel, "The maximum light level threshold used to determine whether or not to despawn an entity.").getInt();
         killallUseLightLevel = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "killallUseLightLevel", true, "Turns on check for lightLevel before killing an entity during a killall. If entity is under lightLevel threshold, it will be killed.").getBoolean(false);
         enforceMaxSpawnLimits = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "enforceMaxSpawnLimits", false, "If enabled, all spawns will stop when max spawn limits have been reached for type.").getBoolean(false);
         debug = CMSEnvironmentConfig.get(CATEGORY_CUSTOMSPAWNER_SETTINGS, "debug", false, "Turns on CustomMobSpawner debug logging.").getBoolean(false);

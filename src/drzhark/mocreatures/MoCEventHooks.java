@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -48,6 +49,11 @@ public class MoCEventHooks {
             DimensionManager.getWorld(0).mapStorage.saveAllData();
             MoCreatures.instance.mapData = data;
             MoCreatures.proxy.worldInitDone = true;
+        }
+        // make sure doMobSpawning is on if CMS is not installed
+        GameRules gameRule = event.world.getGameRules();
+        if (gameRule != null && !MoCreatures.isCustomSpawnerLoaded) {
+            gameRule.setOrCreateGameRule("doMobSpawning", "true");
         }
     }
 
@@ -150,5 +156,4 @@ public class MoCEventHooks {
             return extendedblockstorage.getExtBlocklightValue(x, y & 15, z);
         }
     }
-
 }

@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.gui.helpers;
 
-import drzhark.mocreatures.client.gui.SettingFloat;
+import drzhark.guiapi.setting.SettingFloat;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 
 public class MoCSettingFloat extends SettingFloat {

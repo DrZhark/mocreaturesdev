@@ -2,7 +2,7 @@ package drzhark.mocreatures.client.gui.helpers;
 
 import java.util.ArrayList;
 
-import drzhark.mocreatures.client.gui.SettingList;
+import drzhark.guiapi.setting.SettingList;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 
 public class MoCSettingList extends SettingList {

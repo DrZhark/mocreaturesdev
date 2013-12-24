@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -209,5 +210,15 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
                 this.setOwnerPetId(-1);
             }
         }
+    }
+
+    /**
+     * If the rider should be dismounted from the entity when the entity goes under water
+     *
+     * @param rider The entity that is riding
+     * @return if the entity should be dismounted when under water
+     */
+    public boolean shouldDismountInWater(Entity rider){
+        return !this.getIsTamed();
     }
 }

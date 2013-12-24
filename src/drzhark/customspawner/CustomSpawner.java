@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
@@ -30,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
@@ -68,7 +68,6 @@ public final class CustomSpawner {
     @Instance("CustomSpawner")
     public static CustomSpawner INSTANCE;
 
-    public static int despawnLightLevel = 7;
     public static boolean forceDespawns = false;
     public static boolean debug = false;
     public static boolean doMobSpawning = false;
@@ -76,8 +75,8 @@ public final class CustomSpawner {
     public static CMSLog globalLog;
 
     public static Map<Class<? extends WorldProvider>, EnvironmentSettings> environmentMap = new HashMap<Class<? extends WorldProvider>, EnvironmentSettings>();
-    public static Map<Class<? extends EntityLiving>, ArrayList<BiomeGenBase>> entityDefaultSpawnBiomes = new HashMap<Class<? extends EntityLiving>, ArrayList<BiomeGenBase>>();
-    public static Map<Class<? extends EntityLiving>, SpawnListEntry> defaultSpawnListEntryMap = new HashMap<Class<? extends EntityLiving>, SpawnListEntry>();
+    public static Map<String, ArrayList<BiomeGenBase>> entityDefaultSpawnBiomes = new TreeMap<String, ArrayList<BiomeGenBase>>(String.CASE_INSENSITIVE_ORDER);
+    public static Map<String, SpawnListEntry> defaultSpawnListEntryMap = new TreeMap<String, SpawnListEntry>(String.CASE_INSENSITIVE_ORDER);
     public static Map<String, EnumCreatureType> entityTypes = new HashMap<String, EnumCreatureType>();
 
     private static final String CREATURES_FILE_PATH = File.separator + "Creatures" + File.separator;
@@ -122,14 +121,12 @@ public final class CustomSpawner {
         ROOT = new File(event.getSuggestedConfigurationFile().getParent(), "CustomSpawner");
         globalLog = new CMSLog("Global");
         CMSGlobalConfig = new CMSConfiguration(new File(ROOT, "Global.cfg"));
-        environmentMap.put(WorldProviderSurface.class, new EnvironmentSettings(new File(CustomSpawner.ROOT, "overworld"), "overworld", WorldProviderSurface.class));
-        environmentMap.put(WorldProviderHell.class, new EnvironmentSettings(new File(CustomSpawner.ROOT, "nether"), "nether", WorldProviderHell.class));
-        environmentMap.put(WorldProviderEnd.class, new EnvironmentSettings(new File(CustomSpawner.ROOT, "end"), "end", WorldProviderEnd.class));
-        //initEnvironments(event.getSuggestedConfigurationFile().getParent());
+        CMSGlobalConfig.load();
         MinecraftForge.TERRAIN_GEN_BUS.register(new EventHooks()); // register our event subscriptions
         MinecraftForge.EVENT_BUS.register(new EventHooks());
         debug = CMSGlobalConfig.get(CATEGORY_GLOBAL_SETTINGS, "debug", false, "Turns on global debug logging.").getBoolean(false);
         doMobSpawning = CMSGlobalConfig.get(CATEGORY_GLOBAL_SETTINGS, "doMobSpawning", false, "If false, turns off vanilla spawner completely to provide better compatibility with CMS. Note: if you remove CMS, set back to true and load up game at least once so it reenables vanilla spawner. You can also type /gamerule doMobSpawning true").getBoolean(false);
+        CMSGlobalConfig.save();
         if (debug) globalLog.logger.info("Initializing CustomSpawner Config File at " + event.getSuggestedConfigurationFile().getParent() + "Global.cfg");
     }
 
@@ -146,7 +143,7 @@ public final class CustomSpawner {
         {
             environment.readConfigValues();
         }
-        BiomeDictionary.registerAllBiomes();
+        CMSUtils.registerAllBiomes();
         biomeList = new ArrayList<BiomeGenBase>();
         try
         {
@@ -168,24 +165,7 @@ public final class CustomSpawner {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        // SAFEST POINT TO COPY VANILLA SPAWN LISTS //
-        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
-        {
-            if (BiomeGenBase.biomeList[j] != null)
-            {
-                biomeList.add(BiomeGenBase.biomeList[j]);
-            }
-        }
-        if (biomeList.size() > 0)
-        {
-            BiomeGenBase[] allBiomes = new BiomeGenBase[biomeList.size()];
-            allBiomes = biomeList.toArray(allBiomes);
-            // used for generating default entity biome groups and settings.
-            // the defaults will only generate if a biomegroup category is not found for an entity
-            if (debug) globalLog.logger.info("Copying spawn list data from all biomes...");
-            copyVanillaSpawnData(allBiomes);
-        }
+        CMSUtils.copyVanillaSpawnLists();
         for (EnvironmentSettings environment : environmentMap.values())
         {
             environment.initializeBiomes();
@@ -199,6 +179,7 @@ public final class CustomSpawner {
     public void serverStarted(FMLServerStartedEvent event)
     {
         CMSUtils.dumpEntitySpawnLists();
+        CMSUtils.dumpDefaultSpawnList();
     }
 
     protected static ChunkPosition getRandomSpawningPointInChunk(World worldObj, int par1, int par2)
@@ -554,7 +535,7 @@ public final class CustomSpawner {
         }
     }
 
-    public void copyVanillaSpawnData(BiomeGenBase abiomegenbase[])
+    public static void copyVanillaSpawnData(BiomeGenBase abiomegenbase[])
     {
         if (abiomegenbase == null)
         {
@@ -574,26 +555,23 @@ public final class CustomSpawner {
                     if (iterator != null)
                     {
                         SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
-                        if (BiomeDictionary.isBiomeRegistered(biome))
-                        {
-                            if (entityDefaultSpawnBiomes.containsKey(spawnlistentry.entityClass)) // add biome to existing list
+                            if (entityDefaultSpawnBiomes.containsKey(spawnlistentry.entityClass.getName())) // add biome to existing list
                             {
-                                if (!entityDefaultSpawnBiomes.get(spawnlistentry.entityClass).contains(biome))
+                                if (!entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).contains(biome))
                                 {
-                                    entityDefaultSpawnBiomes.get(spawnlistentry.entityClass).add(biome);
+                                    entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).add(biome);
                                 }
                             }
                             else // create new biome list for entity
                             {
                                 ArrayList<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
                                 biomes.add(biome);
-                                entityDefaultSpawnBiomes.put(spawnlistentry.entityClass, biomes);
-                                if (!defaultSpawnListEntryMap.containsKey(spawnlistentry.entityClass))
+                                entityDefaultSpawnBiomes.put(spawnlistentry.entityClass.getName(), biomes);
+                                if (!defaultSpawnListEntryMap.containsKey(spawnlistentry.entityClass.getName()))
                                 {
-                                    defaultSpawnListEntryMap.put(spawnlistentry.entityClass, spawnlistentry);
+                                    defaultSpawnListEntryMap.put(spawnlistentry.entityClass.getName(), spawnlistentry);
                                 }
                             }
-                        }
                         iterator.remove();
                     }
                 }

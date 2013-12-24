@@ -64,7 +64,7 @@ public class MoCEntityMole extends MoCEntityTameable {
             this.setPosition(newPosX, newPosY, newPosZ);   
         }
     }
-    
+
     /**
      * obtains State
      * @return 0 outside / 1 digging / 2 underground / 3 pick-a-boo
@@ -172,7 +172,7 @@ public class MoCEntityMole extends MoCEntityTameable {
             }*/
             
             //digging fx
-            if ((getState() == 1 || getState() == 2) && !this.inWater)
+            if ((getState() == 1 || getState() == 2))
             {
                 setSprinting(true);
             }
@@ -243,20 +243,26 @@ public class MoCEntityMole extends MoCEntityTameable {
     }
     
      @Override
-        protected String getDeathSound()
-        {
-            return "mocreatures:rabbitdeath";
-        }
+    protected String getDeathSound()
+    {
+        return "mocreatures:rabbitdeath";
+    }
 
-        @Override
-        protected String getHurtSound()
-        {
-            return "mocreatures:rabbithurt";
-        }
+    @Override
+    protected String getHurtSound()
+    {
+        return "mocreatures:rabbithurt";
+    }
 
-        @Override
-        protected String getLivingSound()
-        {
-            return null;
-        }
+    @Override
+    protected String getLivingSound()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean swimmerEntity()
+    {
+        return true;
+    }
 }

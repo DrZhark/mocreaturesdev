@@ -16,33 +16,29 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleButtonModel;
+import drzhark.guiapi.GuiApiHelper;
+import drzhark.guiapi.GuiModScreen;
+import drzhark.guiapi.ModAction;
+import drzhark.guiapi.ModSettingScreen;
+import drzhark.guiapi.widget.WidgetBoolean;
+import drzhark.guiapi.widget.WidgetClassicTwocolumn;
+import drzhark.guiapi.widget.WidgetFloat;
+import drzhark.guiapi.widget.WidgetInt;
+import drzhark.guiapi.widget.WidgetList;
+import drzhark.guiapi.widget.WidgetMulti;
+import drzhark.guiapi.widget.WidgetSimplewindow;
+import drzhark.guiapi.widget.WidgetSinglecolumn;
 import drzhark.mocreatures.MoCEntityData;
 import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.audio.MoCSounds;
-import drzhark.mocreatures.client.gui.GuiApiHelper;
-import drzhark.mocreatures.client.gui.GuiModScreen;
-import drzhark.mocreatures.client.gui.ModAction;
-import drzhark.mocreatures.client.gui.ModSettingScreen;
-import drzhark.mocreatures.client.gui.WidgetBoolean;
-import drzhark.mocreatures.client.gui.WidgetClassicTwocolumn;
-import drzhark.mocreatures.client.gui.WidgetFloat;
-import drzhark.mocreatures.client.gui.WidgetInt;
-import drzhark.mocreatures.client.gui.WidgetList;
-import drzhark.mocreatures.client.gui.WidgetMulti;
-import drzhark.mocreatures.client.gui.WidgetSimplewindow;
-import drzhark.mocreatures.client.gui.WidgetSinglecolumn;
 import drzhark.mocreatures.client.gui.helpers.MoCGUIEntityNamer;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingBoolean;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingFloat;
@@ -50,7 +46,6 @@ import drzhark.mocreatures.client.gui.helpers.MoCSettingInt;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingList;
 import drzhark.mocreatures.client.gui.helpers.MoCSettingMulti;
 import drzhark.mocreatures.client.gui.helpers.MoCSettings;
-import drzhark.mocreatures.client.handlers.MoCKeyHandler;
 import drzhark.mocreatures.client.model.MoCModelAnt;
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.client.model.MoCModelBee;
@@ -221,12 +216,7 @@ public class MoCClientProxy extends MoCProxy {
 
     public MoCClientProxy()
     {
-        if (instance == null) // avoid reregistering keybindings
-        {
-            instance = this;
-            TickRegistry.registerTickHandler(new MoCClientTickHandler(), Side.CLIENT);
-            KeyBindingRegistry.registerKeyBinding(new MoCKeyHandler());
-        }
+        instance = this;
     }
 
     @Override
@@ -670,17 +660,13 @@ public class MoCClientProxy extends MoCProxy {
     private static final String BUTTON_DEFAULTS = "Reset to Defaults";
     private static final String MOC_SCREEN_TITLE = "DrZhark's Mo'Creatures" ;
 
-    public static final List<String> entityTypes = Arrays.asList("UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
+    public static final List<String> entityTypes = Arrays.asList("CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
 
     public MoCEntityData currentSelectedEntity;
 
     @Override
     public void ConfigInit(FMLPreInitializationEvent event) {
         super.ConfigInit(event);
-    }
-
-    public void ConfigPostInit(FMLPostInitializationEvent event) {
-        initGUI();
     }
 
     public void initGUI()
@@ -706,40 +692,44 @@ public class MoCClientProxy extends MoCProxy {
         MoCScreen.append(GuiApiHelper.makeButton("Mobs", initMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Water Mobs", initWaterMobWindow, true));
         MoCScreen.append(GuiApiHelper.makeButton("Ambient", initAmbientWindow, true));
-        MoCScreen.append(GuiApiHelper.makeButton("Reset to Defaults", initDefaultsWindow, true));
+        //MoCScreen.append(GuiApiHelper.makeButton("Reset to Defaults", initDefaultsWindow, true));
         //**********************************************************//
 
         //******************** Creatures ********************//
         creatureOptions = new WidgetClassicTwocolumn(new Widget[0]);
         // create buttons
-        creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
+        if (!MoCreatures.isCustomSpawnerLoaded)
+            creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
         creatureOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showCreatureSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Mobs ********************//
         mobOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
+        if (!MoCreatures.isCustomSpawnerLoaded)
+            mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
         mobOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showMobSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Water Mobs ********************//
         waterOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
+        if (!MoCreatures.isCustomSpawnerLoaded)
+            waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
         waterOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showWaterSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Ambient ********************//
         ambientOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
+        if (!MoCreatures.isCustomSpawnerLoaded)
+            ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Reset All ********************//
-        SimpleButtonModel simplebuttonmodel8 = new SimpleButtonModel();
+        /*SimpleButtonModel simplebuttonmodel8 = new SimpleButtonModel();
         simplebuttonmodel8.addActionCallback(new ModAction(guiapiSettings, "resetAll", new Class[0]));
         Button button8 = new Button(simplebuttonmodel8);
-        button8.setText("Reset to defaults");
+        button8.setText("Reset to defaults");*/
         //**********************************************************//
 
         guiapiSettings.load();

@@ -2,6 +2,7 @@ package drzhark.customspawner.command;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -235,7 +236,7 @@ public class CommandCMS extends CommandBase {
             String title;
             int totalCount = 0;
             World world = par1ICommandSender.getEntityWorld();
-            Map<Integer, String> countMap = new TreeMap<Integer, String>();
+            Map<String, Integer> countMap = new HashMap<String, Integer>();
             int playerChunkCoordX = par1ICommandSender.getPlayerCoordinates().posX >> 4;
             int playerChunkCoordZ = par1ICommandSender.getPlayerCoordinates().posZ >> 4;
             if (par2.equalsIgnoreCase("chunk"))
@@ -246,14 +247,13 @@ public class CommandCMS extends CommandBase {
                     for (int j = 0; j < world.loadedEntityList.size(); j++)
                     {
                         Entity entity = (Entity) world.loadedEntityList.get(j);
-                        //System.out.println("found entity " + entity);
                         if (entity.getClass() == entityData.getEntityClass() && playerChunkCoordX == entity.chunkCoordX && playerChunkCoordZ == entity.chunkCoordZ)
                         {
                             count++;
                         }
                     }
                     if (count != 0)
-                        countMap.put(count, EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
+                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName(), count);
                 }
                 title = "Showing total entities in chunk " + EnumChatFormatting.AQUA + playerChunkCoordX + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.AQUA + playerChunkCoordZ + EnumChatFormatting.WHITE + " ";
             }
@@ -270,16 +270,20 @@ public class CommandCMS extends CommandBase {
                         totalCount++;
                     }
                     if (count != 0)
-                        countMap.put(count, EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
+                    {
+                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName(), count);
+                    }
                 }
                 title = "Showing total entities in dimension " + world.provider.dimensionId;
             }
+
+            Map<String, Integer> sortedMap = CMSUtils.sortByComparator(countMap, false); // sort desc
             ArrayList<String> countList = new ArrayList<String>();
             if (countMap.size() > 0)
             {
-                for (Map.Entry<Integer, String> entityEntry : countMap.entrySet())
+                for (Map.Entry<String, Integer> entityEntry : sortedMap.entrySet())
                 {
-                    countList.add(EnumChatFormatting.WHITE + " " + EnumChatFormatting.AQUA + entityEntry.getKey() + " " + entityEntry.getValue() + EnumChatFormatting.WHITE + ".");
+                    countList.add(EnumChatFormatting.WHITE + " " + EnumChatFormatting.AQUA + entityEntry.getValue() + " " + entityEntry.getKey());
                     //par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.WHITE + " " + EnumChatFormatting.AQUA + entityEntry.getKey() + " " + entityEntry.getValue() + EnumChatFormatting.WHITE + "."));
                 }
                 sendPageHelp(par1ICommandSender, (byte)10, countList, par2ArrayOfStr, title);

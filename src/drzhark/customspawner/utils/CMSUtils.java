@@ -2,8 +2,13 @@ package drzhark.customspawner.utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -20,6 +25,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.common.BiomeDictionary;
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.biomes.BiomeModData;
 import drzhark.customspawner.environment.EnvironmentSettings;
@@ -96,18 +102,22 @@ public class CMSUtils {
             worldEnvironment = worldEnvironment.replace("provider", "");
             if (worldProviderClass == WorldProviderSurface.class) // overworld
             {
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding World Environment " + worldEnvironment + " for class " + worldProviderClass.getName());
                 CustomSpawner.environmentMap.put(worldProviderClass, new EnvironmentSettings(new File(CustomSpawner.ROOT, "overworld"), "overworld", worldProviderClass));
             }
             else if (worldProviderClass == WorldProviderHell.class) // nether
             {
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding World Environment " + worldEnvironment + " for class " + worldProviderClass.getName());
                 CustomSpawner.environmentMap.put(worldProviderClass, new EnvironmentSettings(new File(CustomSpawner.ROOT, "nether"), "nether", worldProviderClass));
             }
             else if (worldProviderClass == WorldProviderEnd.class) // end
             {
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding World Environment " + worldEnvironment + " for class " + worldProviderClass.getName());
                 CustomSpawner.environmentMap.put(worldProviderClass, new EnvironmentSettings(new File(CustomSpawner.ROOT, "end"), "end", worldProviderClass));
             }
             else // custom mod world provider
             {
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding World Environment " + worldEnvironment + " for class " + worldProviderClass.getName());
                 CustomSpawner.environmentMap.put(worldProviderClass, new EnvironmentSettings(new File(CustomSpawner.ROOT, worldEnvironment), worldEnvironment, worldProviderClass));
             }
             return true;
@@ -153,6 +163,22 @@ public class CMSUtils {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public static void dumpDefaultSpawnList()
+    {
+        if (CustomSpawner.debug)
+        {
+            for (Map.Entry<String, ArrayList<BiomeGenBase>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet())
+            {
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
+                for (BiomeGenBase biome : defaultEntry.getValue())
+                {
+                    if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
+                }
+                if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("");
             }
         }
     }
@@ -211,5 +237,75 @@ public class CMSUtils {
                 return spawnListEntry;
         }
         return null;
+    }
+
+    public static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap, final boolean order)
+    {
+
+        List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
+
+        // Sorting the list based on values
+        Collections.sort(list, new Comparator<Entry<String, Integer>>()
+        {
+            public int compare(Entry<String, Integer> o1,
+                    Entry<String, Integer> o2)
+            {
+                if (order)
+                {
+                    return o1.getValue().compareTo(o2.getValue());
+                }
+                else
+                {
+                    return o2.getValue().compareTo(o1.getValue());
+
+                }
+            }
+        });
+
+        // Maintaining insertion order with the help of LinkedList
+        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+        for (Entry<String, Integer> entry : list)
+        {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
+    public static void copyVanillaSpawnLists()
+    {
+        // SAFEST POINT TO COPY VANILLA SPAWN LISTS //
+        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+        {
+            if (BiomeGenBase.biomeList[j] != null)
+            {
+                biomeList.add(BiomeGenBase.biomeList[j]);
+            }
+        }
+
+        if (biomeList.size() > 0)
+        {
+            BiomeGenBase[] allBiomes = new BiomeGenBase[biomeList.size()];
+            allBiomes = biomeList.toArray(allBiomes);
+            // used for generating default entity biome groups and settings.
+            // the defaults will only generate if a biomegroup category is not found for an entity
+            if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Copying spawn list data from all biomes...");
+            CustomSpawner.copyVanillaSpawnData(allBiomes);
+        }
+    }
+
+    public static void registerAllBiomes()
+    {
+        for (int i = 0; i < BiomeGenBase.biomeList.length; i++)
+        {
+            if (BiomeGenBase.biomeList[i] != null)
+            {
+                if(!BiomeDictionary.isBiomeRegistered(BiomeGenBase.biomeList[i]))
+                {
+                    BiomeDictionary.makeBestGuess(BiomeGenBase.biomeList[i]);
+                }
+            }
+        }
     }
 }

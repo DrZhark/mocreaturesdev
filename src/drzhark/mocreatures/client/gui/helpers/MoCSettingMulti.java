@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.gui.helpers;
 
-import drzhark.mocreatures.client.gui.SettingMulti;
+import drzhark.guiapi.setting.SettingMulti;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 
 public class MoCSettingMulti extends SettingMulti {

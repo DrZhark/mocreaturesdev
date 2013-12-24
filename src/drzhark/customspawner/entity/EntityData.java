@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.customspawner.configuration.CMSConfiguration;
 import drzhark.customspawner.environment.EnvironmentSettings;
 import drzhark.customspawner.type.EntitySpawnType;
-import drzhark.mocreatures.client.gui.WidgetSimplewindow;
+import drzhark.guiapi.widget.WidgetSimplewindow;
 
 public class EntityData {
 
@@ -308,7 +308,8 @@ public class EntityData {
 
     public void addSpawnBiome(BiomeGenBase biome)
     {
-        this.spawnBiomes.add(biome);
+        if (!this.spawnBiomes.contains(biome))
+            this.spawnBiomes.add(biome);
     }
 
     public void removeSpawnBiome(BiomeGenBase biome)
@@ -319,11 +320,6 @@ public class EntityData {
     public List<BiomeGenBase> getSpawnBiomes()
     {
         return this.spawnBiomes;
-    }
-
-    public void setSpawnBiomes(List<BiomeGenBase> biomes)
-    {
-        this.spawnBiomes = biomes;
     }
 
     public List<String> getBiomeGroups()

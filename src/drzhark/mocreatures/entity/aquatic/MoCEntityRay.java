@@ -8,8 +8,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraft.world.biome.BiomeGenOcean;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -170,7 +169,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
         int k = MathHelper.floor_double(posZ);
         //String s = MoCTools.BiomeName(worldObj, i, j, k);
         BiomeGenBase biome = MoCTools.Biomekind(worldObj, i, j, k);
-        if (!BiomeDictionary.isBiomeOfType(biome, Type.WATER))
+        if (!(biome instanceof BiomeGenOcean))
         {
             setType(2);
         }
@@ -207,7 +206,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     @Override
     public boolean canBeTrappedInNet()
     {
-        return ( getType() == 2 || (getType()== 1 && getIsTamed()) );
+        return true;
     }
 
     @Override

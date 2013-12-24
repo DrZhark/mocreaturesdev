@@ -27,7 +27,9 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -42,6 +44,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
@@ -51,6 +54,8 @@ import drzhark.mocreatures.block.MoCBlockPlanks;
 import drzhark.mocreatures.block.MoCBlockRock;
 import drzhark.mocreatures.block.MoCBlockTallGrass;
 import drzhark.mocreatures.block.MultiItemBlock;
+import drzhark.mocreatures.client.MoCClientTickHandler;
+import drzhark.mocreatures.client.handlers.MoCKeyHandler;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.command.CommandMoCPets;
 import drzhark.mocreatures.command.CommandMoCTP;
@@ -337,6 +342,11 @@ public class MoCreatures {
         proxy.ConfigInit(event);
         proxy.initSounds();
         proxy.initTextures();
+        if (!isServer())
+        {
+            TickRegistry.registerTickHandler(new MoCClientTickHandler(), Side.CLIENT);
+            KeyBindingRegistry.registerKeyBinding(new MoCKeyHandler());
+        }
         tracker = new MoCPlayerTracker();
         GameRegistry.registerPlayerTracker(tracker);
     }
@@ -357,18 +367,18 @@ public class MoCreatures {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        isCustomSpawnerLoaded = false;//Loader.isModLoaded("CustomSpawner");
+        isCustomSpawnerLoaded = Loader.isModLoaded("CustomSpawner");
         //ForgeChunkManager.setForcedChunkLoadingCallback(instance, new MoCloadCallback());
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         // ***MUST REGISTER BIOMES AT THIS POINT TO MAKE SURE OUR ENTITIES GET ALL BIOMES FROM DICTIONARY****
-        registerEntities();
         this.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
+        registerEntities();
     }
 
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        MoCreatures.proxy.initGUI();
+        proxy.initGUI();
         event.registerServerCommand(new CommandMoCreatures());
         event.registerServerCommand(new CommandMoCTP());
         event.registerServerCommand(new CommandMoCPets());
@@ -541,7 +551,6 @@ public class MoCreatures {
                 }
             }
         }
-
         proxy.readMocConfigValues();
     }
 
