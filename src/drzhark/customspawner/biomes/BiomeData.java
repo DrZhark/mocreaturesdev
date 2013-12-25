@@ -10,7 +10,7 @@ public class BiomeData {
     private boolean defined;
     private BiomeGenBase biome;
     private String tag;
-    private BiomeDictionary.Type type;
+    private BiomeDictionary.Type[] types;
 
     public BiomeData(BiomeGenBase biome)
     {
@@ -69,14 +69,14 @@ public class BiomeData {
         this.defined = flag;
     }
 
-    public void setType(Type type)
+    public void setTypes(Type[] types)
     {
-        this.type = type;
+        this.types = types;
     }
 
-    public Type getType()
+    public Type[] getTypes()
     {
-        return this.type;
+        return this.types;
     }
 
     public boolean isDefined()

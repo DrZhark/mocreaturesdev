@@ -24,6 +24,7 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.Loader;
 import drzhark.customspawner.CustomSpawner;
@@ -563,63 +564,59 @@ public class EnvironmentSettings {
 
     public void initializeBiomes()
     {
-        biomeMap.clear();
-        // initialize moc biome groups
-        // populate default groups
-        // copy map so we can alter main one
-        for (BiomeDictionary.Type type : BiomeDictionary.Type.values())
+        for (int i = 0; i < BiomeGenBase.biomeList.length; i++)
         {
-            for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type))
+            BiomeGenBase biome = BiomeGenBase.biomeList[i];
+            if (biome == null) continue;
+            String biomeName = biome.biomeName;
+            String biomeClass = biome.getClass().getName();
+            BiomeData biomeData = new BiomeData(biome);
+            Type[] types = BiomeDictionary.getTypesForBiome(biome);
+            biomeData.setTypes(types);
+            if (debug) envLog.logger.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + biome.biomeID + " with types " + types);
+            boolean found = false;
+            BiomeModData biomeModData = null;
+            for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
             {
-                String biomeName = biome.biomeName;
-                String biomeClass = biome.getClass().getName();
-                BiomeData biomeData = new BiomeData(biome);
-                biomeData.setType(type);
-                if (debug) envLog.logger.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + biome.biomeID + " with type " + type.name());
-                boolean found = false;
-                BiomeModData biomeModData = null;
-                for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
+                if (biomeClass.contains(modEntry.getKey()))
                 {
-                    if (biomeClass.contains(modEntry.getKey()))
-                    {
-                        // Found match, use config
-                        BiomeModData modData = modEntry.getValue();
-                        biomeData.setTag(modData.getModTag()); // needed for undefined
-                        biomeData.setDefined((true));
-                        modData.addBiome(biomeData);
-                        found = true;
-                        break;
-                    }
-                    else if ((biomeClass.contains("net.minecraft") || biomeClass.length() <= 3) && modEntry.getKey().equalsIgnoreCase("vanilla")) // special case for vanilla
-                    {
-                        if (debug) envLog.logger.info("Matched mod " + modEntry.getKey() + " to " + biomeClass);
-                        BiomeModData modData = modEntry.getValue();
-                        biomeData.setTag(modData.getModTag());
-                        biomeData.setDefined((true));
-                        modData.addBiome(biomeData);
-                        found = true;
-                        break;
-                    }
+                    // Found match, use config
+                    BiomeModData modData = modEntry.getValue();
+                    biomeData.setTag(modData.getModTag()); // needed for undefined
+                    biomeData.setDefined((true));
+                    modData.addBiome(biomeData);
+                    found = true;
+                    break;
                 }
-                if (!found)
+                else if ((biomeClass.contains("net.minecraft") || biomeClass.length() <= 3) && modEntry.getKey().equalsIgnoreCase("vanilla")) // special case for vanilla
                 {
-                    if (debug) envLog.logger.info("Detected Undefined Biome Class " + biomeClass + ". Generating automatic mapping for this class in CMSGlobal.cfg ...");
+                    if (debug) envLog.logger.info("Matched mod " + modEntry.getKey() + " to " + biomeClass);
+                    BiomeModData modData = modEntry.getValue();
+                    biomeData.setTag(modData.getModTag());
+                    biomeData.setDefined((true));
+                    modData.addBiome(biomeData);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                if (debug) envLog.logger.info("Detected Undefined Biome Class " + biomeClass + ". Generating automatic mapping for this class in CMSGlobal.cfg ...");
 
-                    // no mapping for class in config so lets generate one
-                    String modKey = CMSUtils.generateModPackage(biomeClass);
-                    if (!modKey.equals(""))
-                    {
-                        String configName = modKey + ".cfg";
+                // no mapping for class in config so lets generate one
+                String modKey = CMSUtils.generateModPackage(biomeClass);
+                if (!modKey.equals(""))
+                {
+                    String configName = modKey + ".cfg";
 
-                        BiomeModData modData =  new BiomeModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH + configName)));
-                        biomeModMap.put(modKey, modData);
-                        if (debug) envLog.logger.info("Added Automatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
-                        CMSConfigCategory modMapCat = CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
-                        modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)), CMSProperty.Type.STRING, "automatically generated"));
-                        biomeData.setTag(modData.getModTag());
-                        biomeData.setDefined((true));
-                        modData.addBiome(biomeData);
-                    }
+                    BiomeModData modData =  new BiomeModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH + configName)));
+                    biomeModMap.put(modKey, modData);
+                    if (debug) envLog.logger.info("Added Automatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
+                    CMSConfigCategory modMapCat = CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
+                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)), CMSProperty.Type.STRING, "automatically generated"));
+                    biomeData.setTag(modData.getModTag());
+                    biomeData.setDefined((true));
+                    modData.addBiome(biomeData);
                 }
             }
         }
@@ -651,6 +648,7 @@ public class EnvironmentSettings {
 
     public void initDefaultGroups()
     {
+        CMSUtils.registerAllBiomes();
         // scan all biome mods for biome dictionary groups
         for (BiomeDictionary.Type type : BiomeDictionary.Type.values())
         {
@@ -709,7 +707,6 @@ public class EnvironmentSettings {
 
     public void populateSpawnBiomes()
     {
-        debug = true;
         if (debug) envLog.logger.info("Populating spawn biomes for environment " + this.name);
         CMSEntityBiomeGroupsConfig.load();
         for (EntityData entityData : entityMap.values())
@@ -776,8 +773,6 @@ public class EnvironmentSettings {
                 if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getEntityName() + ", generating defaults...");
                 ArrayList<String> biomes = new ArrayList<String>();
                 ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
-                if (entityData.getEntityName().equals("Wyvern"))
-                    if (debug) envLog.logger.info("entryBiomes = " + entryBiomes);
                 if (entryBiomes != null)
                 {
                     for (int i = 0; i < entryBiomes.size(); i++)
@@ -785,13 +780,6 @@ public class EnvironmentSettings {
                         for (Map.Entry<String, BiomeModData> modEntry : biomeModMap.entrySet())
                         {
                             BiomeModData biomeModData = modEntry.getValue();
-                            if (entityData.getEntityName().equals("Wyvern"))
-                            {
-                                for (String biome : biomeModData.getBiomes())
-                                {
-                                    envLog.logger.info("Found biome " + biome + " in mod " + biomeModData.getBiomeModKey() + " with tag " + biomeModData.getModTag());
-                                }
-                            }
                             if (biomeModData.hasBiome(entryBiomes.get(i)))
                             {
                                 if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());

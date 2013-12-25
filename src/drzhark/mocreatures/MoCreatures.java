@@ -3,6 +3,7 @@ package drzhark.mocreatures;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -334,6 +335,7 @@ public class MoCreatures {
     public static MoCPlayerTracker tracker;
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
+    public static List<String> defaultBiomeSupport = new ArrayList<String>();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -372,6 +374,12 @@ public class MoCreatures {
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         // ***MUST REGISTER BIOMES AT THIS POINT TO MAKE SURE OUR ENTITIES GET ALL BIOMES FROM DICTIONARY****
         this.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
+        this.defaultBiomeSupport.add("biomesop");
+        this.defaultBiomeSupport.add("extrabiomes");
+        this.defaultBiomeSupport.add("highlands");
+        this.defaultBiomeSupport.add("ted80");
+        this.defaultBiomeSupport.add("extrabiomes");
+        this.defaultBiomeSupport.add("minecraft");
         registerEntities();
     }
 
@@ -544,7 +552,16 @@ public class MoCreatures {
             {
                 for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type))
                 {
-                    if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry))
+                    boolean match = false;
+                    for (String allowedBiomeMod : defaultBiomeSupport)
+                    {
+                        if (biome.getClass().getName().contains(allowedBiomeMod))
+                        {
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry) && match)
                     {
                         biome.getSpawnableList(entityData.getType()).add(spawnEntry);
                     }

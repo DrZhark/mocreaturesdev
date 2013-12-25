@@ -45,8 +45,11 @@ public class BiomeModData {
         ArrayList<String> biomes = new ArrayList<String>();
         for (BiomeData biome : biomeMap.values())
         {
-            if (biome.getType() == type)
-                biomes.add(biome.getBiomeName());
+            for (Type typeEntry : biome.getTypes())
+            {
+                if (type == typeEntry)
+                    biomes.add(biome.getBiomeName());
+            }
         }
         return biomes;
     }
