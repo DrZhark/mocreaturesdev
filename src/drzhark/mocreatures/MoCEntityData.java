@@ -36,9 +36,6 @@ public class MoCEntityData {
         this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
         this.spawnListEntry = spawnListEntry;
-        if (this.spawnListEntry.itemWeight <= 0 || this.spawnListEntry.minGroupCount == 0 || this.spawnListEntry.maxGroupCount == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
     }
 
     public MoCEntityData(String name, int id, int maxchunk, EnumCreatureType type, SpawnListEntry spawnListEntry, List<Type> biomeTypes)
@@ -52,9 +49,6 @@ public class MoCEntityData {
         this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
         this.spawnListEntry = spawnListEntry;
-        if (this.spawnListEntry.itemWeight <= 0 || this.spawnListEntry.minGroupCount == 0 || this.spawnListEntry.maxGroupCount == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
     }
 
     public Class<? extends EntityLiving> getEntityClass()
@@ -99,12 +93,10 @@ public class MoCEntityData {
         if (freq <= 0)
         {
             this.frequency = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.frequency = freq;
-            this.canSpawn = true;
         }
     }
 
@@ -118,12 +110,10 @@ public class MoCEntityData {
         if (min <= 0)
         {
             this.minGroup = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.minGroup = min;
-            this.canSpawn = true;
         }
     }
 
@@ -137,12 +127,10 @@ public class MoCEntityData {
         if (max <= 0)
         {
             this.maxGroup = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.maxGroup = max;
-            this.canSpawn = true;
         }
     }
 
@@ -156,12 +144,10 @@ public class MoCEntityData {
         if (max <= 0)
         {
             this.maxSpawnInChunk = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.maxSpawnInChunk = max;
-            this.canSpawn = true;
         }
     }
 

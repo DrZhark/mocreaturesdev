@@ -40,6 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -1010,7 +1011,9 @@ public class MoCTools {
                 {
                     Block.blocksList[l4].dropBlockAsItemWithChance(entity.worldObj, j3, l3, j4, entity.worldObj.getBlockMetadata(j3, l3, j4), 0.3F, 1);
                     entity.worldObj.setBlock(j3, l3, j4, 0, 0, 3);
-                    Block.blocksList[l4].onBlockDestroyedByExplosion(entity.worldObj, j3, l3, j4, null);
+                    // pass explosion instance to fix BlockTNT NPE's
+                    Explosion explosion = new Explosion(entity.worldObj, null, j3, l3, j4, 3f);
+                    Block.blocksList[l4].onBlockDestroyedByExplosion(entity.worldObj, j3, l3, j4, explosion);
                 }
             }
         }

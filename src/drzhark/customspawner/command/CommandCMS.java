@@ -505,15 +505,14 @@ public class CommandCMS extends CommandBase {
                                 }
                             }
                         }
-                        else if (par3.equalsIgnoreCase("canspawn"))
+                        else if (par1.equalsIgnoreCase("canspawn"))
                         {
-                          if (par3 == null)
+                            if (par3.equals(""))
                           {
-                            par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn is " + EnumChatFormatting.AQUA + entityData.getCanSpawn() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
                             return;
                           }
-                          else
-                          {
+                            else {
                             try
                             {
                               entityData.setCanSpawn(Boolean.parseBoolean(par3));
@@ -528,9 +527,9 @@ public class CommandCMS extends CommandBase {
                             }
                           }
                         }
-                        if (saved == true && (par1.equalsIgnoreCase("frequency") || par1.equalsIgnoreCase("min") || par1.equalsIgnoreCase("max")))
+                        if (saved == true)
                         {
-                           CustomSpawner.INSTANCE.updateSpawnListEntry(entityData.getEntityClass(), entityData.getLivingSpawnType(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn());
+                           CustomSpawner.INSTANCE.updateSpawnListEntry(entityData);
                            entityData.getEntityConfig().save();
                            return;
                         }

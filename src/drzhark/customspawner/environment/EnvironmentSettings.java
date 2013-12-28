@@ -413,7 +413,6 @@ public class EnvironmentSettings {
                 {
                     String configName = modKey + ".cfg";
 
-                    biomeModMap.put(modKey, new BiomeModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH + configName))));
                     if (debug) envLog.logger.info("AddedAutomatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
                     entityModMap.put(modKey, new EntityModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + configName))));
                     if (debug) envLog.logger.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
@@ -601,7 +600,7 @@ public class EnvironmentSettings {
             }
             if (!found)
             {
-                if (debug) envLog.logger.info("Detected Undefined Biome Class " + biomeClass + ". Generating automatic mapping for this class in CMSGlobal.cfg ...");
+                if (debug) envLog.logger.info("Detected Undefined Biome Class " + biomeClass + ". Generating automatic mapping for this class in Environment.cfg ...");
 
                 // no mapping for class in config so lets generate one
                 String modKey = CMSUtils.generateModPackage(biomeClass);
@@ -610,13 +609,13 @@ public class EnvironmentSettings {
                     String configName = modKey + ".cfg";
 
                     BiomeModData modData =  new BiomeModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH + configName)));
-                    biomeModMap.put(modKey, modData);
                     if (debug) envLog.logger.info("Added Automatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
                     CMSConfigCategory modMapCat = CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
                     modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)), CMSProperty.Type.STRING, "automatically generated"));
                     biomeData.setTag(modData.getModTag());
                     biomeData.setDefined((true));
                     modData.addBiome(biomeData);
+                    biomeModMap.put(modKey, modData);
                 }
             }
         }
@@ -840,6 +839,11 @@ public class EnvironmentSettings {
                         {
                             CustomSpawner.instance().AddCustomSpawn(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getLivingSpawnType(), biomesToSpawn);
                             if (debug) envLog.logger.info("Added " + entityData.getEntityClass() + " to CustomSpawner spawn lists");
+                        }
+                        else
+                        {
+                            if (debug) envLog.logger.info("Removing " + entityData.getEntityClass() + " from CustomSpawner spawn lists");
+                            CustomSpawner.instance().RemoveCustomSpawn(entityData.getEntityClass(), entityData.getLivingSpawnType(), biomesToSpawn);
                         }
                         //otherwise the Forge spawnlist remains populated with duplicated entries on CMS
                         //removeAllBiomeSpawns(entityData, true); // If we add a entity to CMS, we MUST remove it from ALL biomes on vanilla to avoid massive spawning in missing biomes

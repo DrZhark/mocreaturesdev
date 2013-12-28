@@ -88,7 +88,7 @@ public class CMSUtils {
                 modKey = tokens[2];
             if (modKey.equalsIgnoreCase("minecraft") && tokens.length > 2)
                 modKey = tokens[2];
-            return modKey;
+            return modKey.toUpperCase();
         }
         return "";
     }

@@ -55,10 +55,6 @@ public class EntityData {
         this.frequency = spawnlistentry.itemWeight;
         this.minGroup = spawnlistentry.minGroupCount;
         this.maxGroup = spawnlistentry.maxGroupCount;
-        if (this.frequency <= 0 || this.minGroup == 0 || this.maxGroup == 0)
-            this.canSpawn = false;
-        else this.canSpawn = true;
-        // TODO
         this.minSpawnHeight = 0;
         this.maxSpawnHeight = 256;
     }
@@ -110,13 +106,11 @@ public class EntityData {
         if (freq <= 0)
         {
             this.frequency = 0;
-            this.canSpawn = false;
             this.vanillaControl = false;
         }
         else 
         {
             this.frequency = freq;
-            this.canSpawn = true;
         }
     }
 
@@ -130,12 +124,10 @@ public class EntityData {
         if (min <= 0)
         {
             this.minGroup = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.minGroup = min;
-            this.canSpawn = true;
         }
     }
 
@@ -149,12 +141,10 @@ public class EntityData {
         if (max <= 0)
         {
             this.maxGroup = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.maxGroup = max;
-            this.canSpawn = true;
         }
     }
 
@@ -168,12 +158,10 @@ public class EntityData {
         if (max <= 0)
         {
             this.maxSpawnInChunk = 0;
-            this.canSpawn = false;
         }
         else 
         {
             this.maxSpawnInChunk = max;
-            this.canSpawn = true;
         }
     }
 
