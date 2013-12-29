@@ -267,7 +267,9 @@ public class EnvironmentSettings {
             Map.Entry entry = (Map.Entry)obj;
             Class clazz = (Class)entry.getKey();
             if (classToEntityMapping.get(clazz) == null) // don't process if it already exists
+            {
                 registerEntity(clazz);
+            }
             else
             {
                 processEntityConfig(classToEntityMapping.get(clazz));
@@ -413,7 +415,6 @@ public class EnvironmentSettings {
                 {
                     String configName = modKey + ".cfg";
 
-                    if (debug) envLog.logger.info("AddedAutomatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
                     entityModMap.put(modKey, new EntityModData(modKey, modKey, new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + configName))));
                     if (debug) envLog.logger.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
                     CMSConfigCategory modMapCat = CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
@@ -637,7 +638,7 @@ public class EnvironmentSettings {
             }
         }
         
-        CMSEnvironmentConfig.addCustomCategoryComment("mod-mappings", "Mod Biome Mappings\n" + 
+        CMSEnvironmentConfig.addCustomCategoryComment(CATEGORY_MOD_MAPPINGS, "Mod Biome Mappings\n" + 
                 "You may change tag values but do NOT change the default keys since they are used to generate our defaults.\n" +
                 "For example, 'twilightforest=TL:TwilightForest.cfg' may be changed to 'twilightforest=TWL:TWL.cfg' but may NOT be changed to 'twilight=TWL:TWL.cfg'");
         // update tags in our defaults if necessary
@@ -805,8 +806,8 @@ public class EnvironmentSettings {
             // entity config comments
            // entityData.getEntityConfig().addCustomCategoryComment(CATEGORY_ENTITY_SPAWN_SETTINGS, "S:Name <Type:Frequency:MinSpawn:MaxSpawn:MaxSpawnInChunk>");
             entityData.getEntityConfig().save();
-            CMSEntityBiomeGroupsConfig.save();
         }
+        CMSEntityBiomeGroupsConfig.save();
     }
     /**
      * Populates spawn lists
@@ -910,7 +911,7 @@ public class EnvironmentSettings {
         // generate default key mappings
         for (Map.Entry<String, EntityModData> modEntry : defaultModMap.entrySet())
         {
-            List<String> values = new ArrayList(Arrays.asList(modEntry.getValue().getModTag(), modEntry.getValue().getModConfig().getFileName()));
+            List<String> values = new ArrayList(Arrays.asList(modEntry.getValue().getModTag(), modEntry.getValue().getModConfig().getFileName() + ".cfg"));
             modMapCat.put(modEntry.getKey(), new CMSProperty(modEntry.getKey(), values, CMSProperty.Type.STRING));
             biomeModMap.put(modEntry.getKey(), new BiomeModData(modEntry.getKey(), modEntry.getValue().getModTag(), new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH + (modEntry.getValue().getModConfig().getFileName() + ".cfg")))));
             entityModMap.put(modEntry.getKey(), new EntityModData(modEntry.getKey(), modEntry.getValue().getModTag(), new CMSConfiguration(new File(CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + (modEntry.getValue().getModConfig().getFileName() + ".cfg")))));

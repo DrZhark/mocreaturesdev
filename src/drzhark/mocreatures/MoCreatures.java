@@ -61,6 +61,7 @@ import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.command.CommandMoCPets;
 import drzhark.mocreatures.command.CommandMoCTP;
 import drzhark.mocreatures.command.CommandMoCreatures;
+import drzhark.mocreatures.configuration.MoCProperty;
 import drzhark.mocreatures.dimension.BiomeGenWyvernLair;
 import drzhark.mocreatures.dimension.WorldProviderWyvernEnd;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
@@ -146,7 +147,7 @@ import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0.dev.R1b")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0.dev.R2")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -336,6 +337,7 @@ public class MoCreatures {
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
     public static List<String> defaultBiomeSupport = new ArrayList<String>();
+    public static final String CATEGORY_ITEM_IDS = "item-ids";
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -601,170 +603,175 @@ public class MoCreatures {
         MoCEntityID += 1;
     }
 
+    private int getItemId(String name, int defaultId)
+    {
+        return proxy.mocSettingsConfig.get(CATEGORY_ITEM_IDS, "item_" + name, defaultId).getInt();
+    }
+
     protected void InitItems()
     {
         MoCItemID = proxy.itemID;//8772
         WyvernLairDimensionID = proxy.WyvernDimension;//17
 
-        recordshuffle = (new MoCItemRecord(MoCItemID++, "shuffling")).setUnlocalizedName("recordshuffle");
-        horsesaddle = (new MoCItemHorseSaddle(MoCItemID++)).setUnlocalizedName("horsesaddle");
+        recordshuffle = (new MoCItemRecord(getItemId("recordshuffle", MoCItemID++), "shuffling")).setUnlocalizedName("recordshuffle");
+        horsesaddle = (new MoCItemHorseSaddle(getItemId("horsesaddle", MoCItemID++))).setUnlocalizedName("horsesaddle");
         MoCItemID++;
         //horsearmormetal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armormetal");
-        sharkteeth = (new MoCItem(MoCItemID++)).setUnlocalizedName("sharkteeth");
-        haystack = (new MoCItemHayStack(MoCItemID++)).setUnlocalizedName("haystack");
-        sugarlump = (new MoCItemSugarLump(MoCItemID++)).setUnlocalizedName("sugarlump");
-        fishyegg = (new MoCItemEgg(MoCItemID++)).setUnlocalizedName("moc_egg");
-        bigcatclaw = (new MoCItem(MoCItemID++)).setUnlocalizedName("bigcatclaw");
-        whip = (new MoCItemWhip(MoCItemID++)).setUnlocalizedName("whip");
+        sharkteeth = (new MoCItem(getItemId("sharkteeth", MoCItemID++))).setUnlocalizedName("sharkteeth");
+        haystack = (new MoCItemHayStack(getItemId("haystack", MoCItemID++))).setUnlocalizedName("haystack");
+        sugarlump = (new MoCItemSugarLump(getItemId("sugarlump", MoCItemID++))).setUnlocalizedName("sugarlump");
+        fishyegg = (new MoCItemEgg(getItemId("moc_egg", MoCItemID++))).setUnlocalizedName("moc_egg");
+        bigcatclaw = (new MoCItem(getItemId("bigcatclaw", MoCItemID++))).setUnlocalizedName("bigcatclaw");
+        whip = (new MoCItemWhip(getItemId("whip", MoCItemID++))).setUnlocalizedName("whip");
         MoCItemID++;
         //horsearmorgold = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorgold");
         MoCItemID++;
         //horsearmordiamond = (new MoCItem(MoCItemID++)).setUnlocalizedName("armordiamond");
-        staffTeleport = (new ItemStaffTeleport(MoCItemID++)).setUnlocalizedName("staffteleport");
+        staffTeleport = (new ItemStaffTeleport(getItemId("staffteleport", MoCItemID++))).setUnlocalizedName("staffteleport");
         LanguageRegistry.addName(staffTeleport, "Teleport Staff");
 
-        medallion = (new MoCItem(MoCItemID++)).setUnlocalizedName("medallion");
-        kittybed = (new MoCItemKittyBed(MoCItemID++, 0)).setUnlocalizedName("catbed");
-        litterbox = (new MoCItemLitterBox(MoCItemID++)).setUnlocalizedName("catlitter");
-        woolball = (new MoCItem(MoCItemID++)).setUnlocalizedName("woolball");
+        medallion = (new MoCItem(getItemId("medallion", MoCItemID++))).setUnlocalizedName("medallion");
+        kittybed = (new MoCItemKittyBed(getItemId("catbed", MoCItemID++), 0)).setUnlocalizedName("catbed");
+        litterbox = (new MoCItemLitterBox(getItemId("catlitter", MoCItemID++))).setUnlocalizedName("catlitter");
+        woolball = (new MoCItem(getItemId("woolball", MoCItemID++))).setUnlocalizedName("woolball");
         MoCItemID++;
         //rope = (new MoCItem(MoCItemID++)).setUnlocalizedName("rope");
-        petfood = (new MoCItem(MoCItemID++)).setUnlocalizedName("petfood");
-        builderHammer = (new ItemBuilderHammer(MoCItemID++)).setUnlocalizedName("builderhammer");
+        petfood = (new MoCItem(getItemId("petfood", MoCItemID++))).setUnlocalizedName("petfood");
+        builderHammer = (new ItemBuilderHammer(getItemId("buildhammer", MoCItemID++))).setUnlocalizedName("builderhammer");
         LanguageRegistry.addName(builderHammer, "Builder Hammer");
 
-        crochide = (new MoCItem(MoCItemID++)).setUnlocalizedName("reptilehide");
-        plateCroc = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 1)).setUnlocalizedName("reptileplate");
-        helmetCroc = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 0)).setUnlocalizedName("reptilehelmet");
-        legsCroc = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 2)).setUnlocalizedName("reptilelegs");
-        bootsCroc = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 3)).setUnlocalizedName("reptileboots");
-        fishbowl_e = (new MoCItemFishBowl(MoCItemID++, 0)).setUnlocalizedName("bowlempty");
-        fishbowl_w = (new MoCItemFishBowl(MoCItemID++, 11)).setUnlocalizedName("bowlwater");
-        fishbowl_1 = (new MoCItemFishBowl(MoCItemID++, 1)).setUnlocalizedName("bowlfish1");
-        fishbowl_2 = (new MoCItemFishBowl(MoCItemID++, 2)).setUnlocalizedName("bowlfish2");
-        fishbowl_3 = (new MoCItemFishBowl(MoCItemID++, 3)).setUnlocalizedName("bowlfish3");
-        fishbowl_4 = (new MoCItemFishBowl(MoCItemID++, 4)).setUnlocalizedName("bowlfish4");
-        fishbowl_5 = (new MoCItemFishBowl(MoCItemID++, 5)).setUnlocalizedName("bowlfish5");
-        fishbowl_6 = (new MoCItemFishBowl(MoCItemID++, 6)).setUnlocalizedName("bowlfish6");
-        fishbowl_7 = (new MoCItemFishBowl(MoCItemID++, 7)).setUnlocalizedName("bowlfish7");
-        fishbowl_8 = (new MoCItemFishBowl(MoCItemID++, 8)).setUnlocalizedName("bowlfish8");
-        fishbowl_9 = (new MoCItemFishBowl(MoCItemID++, 9)).setUnlocalizedName("bowlfish9");
-        fishbowl_10 = (new MoCItemFishBowl(MoCItemID++, 10)).setUnlocalizedName("bowlfish10");
+        crochide = (new MoCItem(getItemId("reptilehide", MoCItemID++))).setUnlocalizedName("reptilehide");
+        plateCroc = (new MoCItemArmor(getItemId("reptileplate", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("reptileplate");
+        helmetCroc = (new MoCItemArmor(getItemId("reptilehelmet", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("reptilehelmet");
+        legsCroc = (new MoCItemArmor(getItemId("reptilelegs", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("reptilelegs");
+        bootsCroc = (new MoCItemArmor(getItemId("reptileboots", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("reptileboots");
+        fishbowl_e = (new MoCItemFishBowl(getItemId("bowlempty", MoCItemID++), 0)).setUnlocalizedName("bowlempty");
+        fishbowl_w = (new MoCItemFishBowl(getItemId("bowlwater", MoCItemID++), 11)).setUnlocalizedName("bowlwater");
+        fishbowl_1 = (new MoCItemFishBowl(getItemId("bowlfish1", MoCItemID++), 1)).setUnlocalizedName("bowlfish1");
+        fishbowl_2 = (new MoCItemFishBowl(getItemId("bowlfish2", MoCItemID++), 2)).setUnlocalizedName("bowlfish2");
+        fishbowl_3 = (new MoCItemFishBowl(getItemId("bowlfish3", MoCItemID++), 3)).setUnlocalizedName("bowlfish3");
+        fishbowl_4 = (new MoCItemFishBowl(getItemId("bowlfish4", MoCItemID++), 4)).setUnlocalizedName("bowlfish4");
+        fishbowl_5 = (new MoCItemFishBowl(getItemId("bowlfish5", MoCItemID++), 5)).setUnlocalizedName("bowlfish5");
+        fishbowl_6 = (new MoCItemFishBowl(getItemId("bowlfish6", MoCItemID++), 6)).setUnlocalizedName("bowlfish6");
+        fishbowl_7 = (new MoCItemFishBowl(getItemId("bowlfish7", MoCItemID++), 7)).setUnlocalizedName("bowlfish7");
+        fishbowl_8 = (new MoCItemFishBowl(getItemId("bowlfish8", MoCItemID++), 8)).setUnlocalizedName("bowlfish8");
+        fishbowl_9 = (new MoCItemFishBowl(getItemId("bowlfish9", MoCItemID++), 9)).setUnlocalizedName("bowlfish9");
+        fishbowl_10 = (new MoCItemFishBowl(getItemId("bowlfish10", MoCItemID++), 10)).setUnlocalizedName("bowlfish10");
 
-        fur = (new MoCItem(MoCItemID++)).setUnlocalizedName("fur");
-        omelet = (new MoCItemFood(MoCItemID++, 4, 0.6F, false)).setUnlocalizedName("omelet");
-        turtlemeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setUnlocalizedName("turtlemeat");
-        turtlesoup = (new MoCItemTurtleSoup(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("turtlesoup");
+        fur = (new MoCItem(getItemId("fur", MoCItemID++))).setUnlocalizedName("fur");
+        omelet = (new MoCItemFood(getItemId("omelet", MoCItemID++), 4, 0.6F, false)).setUnlocalizedName("omelet");
+        turtlemeat = (new MoCItemFood(getItemId("turtlemeat", MoCItemID++), 2, 0.3F, false)).setUnlocalizedName("turtlemeat");
+        turtlesoup = (new MoCItemTurtleSoup(getItemId("turtlesoup", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("turtlesoup");
 
-        nunchaku = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("nunchaku");
-        sai = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("sai");
-        bo = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("bo");
-        katana = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("katana");
-        sharksword = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("swordshark");
+        nunchaku = (new MoCItemWeapon(getItemId("nunchaku", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("nunchaku");
+        sai = (new MoCItemWeapon(getItemId("sai", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("sai");
+        bo = (new MoCItemWeapon(getItemId("bo", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("bo");
+        katana = (new MoCItemWeapon(getItemId("katana", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("katana");
+        sharksword = (new MoCItemWeapon(getItemId("swordshark", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("swordshark");
 
-        key = (new MoCItem(MoCItemID++)).setUnlocalizedName("key");
-        vialdarkness = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencedarkness");
-        vialnightmare = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencefire");
-        amuletbone = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbone");
-        amuletbonefull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletbonefull");
-        amuletghost = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghost");
-        amuletghostfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletghostfull");
-        amuletfairy = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairy");
-        amuletfairyfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletfairyfull");
-        amuletpegasus = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasus");
-        amuletpegasusfull = (new MoCItemHorseAmulet(MoCItemID++)).setUnlocalizedName("amuletpegasusfull");
+        key = (new MoCItem(getItemId("key", MoCItemID++))).setUnlocalizedName("key");
+        vialdarkness = (new MoCItem(getItemId("essencedarkness", MoCItemID++))).setUnlocalizedName("essencedarkness");
+        vialnightmare = (new MoCItem(getItemId("essencefire", MoCItemID++))).setUnlocalizedName("essencefire");
+        amuletbone = (new MoCItemHorseAmulet(getItemId("amuletbone", MoCItemID++))).setUnlocalizedName("amuletbone");
+        amuletbonefull = (new MoCItemHorseAmulet(getItemId("amuletbonefull", MoCItemID++))).setUnlocalizedName("amuletbonefull");
+        amuletghost = (new MoCItemHorseAmulet(getItemId("amuletghost", MoCItemID++))).setUnlocalizedName("amuletghost");
+        amuletghostfull = (new MoCItemHorseAmulet(getItemId("amuletghostfull", MoCItemID++))).setUnlocalizedName("amuletghostfull");
+        amuletfairy = (new MoCItemHorseAmulet(getItemId("amuletfairy", MoCItemID++))).setUnlocalizedName("amuletfairy");
+        amuletfairyfull = (new MoCItemHorseAmulet(getItemId("amuletfairyfull", MoCItemID++))).setUnlocalizedName("amuletfairyfull");
+        amuletpegasus = (new MoCItemHorseAmulet(getItemId("amuletpegasus", MoCItemID++))).setUnlocalizedName("amuletpegasus");
+        amuletpegasusfull = (new MoCItemHorseAmulet(getItemId("amuletpegasusfull", MoCItemID++))).setUnlocalizedName("amuletpegasusfull");
 
-        vialundead = (new MoCItem(MoCItemID++)).setUnlocalizedName("essenceundead");
-        viallight = (new MoCItem(MoCItemID++)).setUnlocalizedName("essencelight");
+        vialundead = (new MoCItem(getItemId("essenceundead", MoCItemID++))).setUnlocalizedName("essenceundead");
+        viallight = (new MoCItem(getItemId("essencelight", MoCItemID++))).setUnlocalizedName("essencelight");
 
-        plateFur = (new MoCItemArmor(MoCItemID++, furARMOR, 4, 1)).setUnlocalizedName("furplate");
-        helmetFur = (new MoCItemArmor(MoCItemID++, furARMOR, 4, 0)).setUnlocalizedName("furhelmet");
-        legsFur = (new MoCItemArmor(MoCItemID++, furARMOR, 4, 2)).setUnlocalizedName("furlegs");
-        bootsFur = (new MoCItemArmor(MoCItemID++, furARMOR, 4, 3)).setUnlocalizedName("furboots");
+        plateFur = (new MoCItemArmor(getItemId("furplate", MoCItemID++), furARMOR, 4, 1)).setUnlocalizedName("furplate");
+        helmetFur = (new MoCItemArmor(getItemId("furhelmet", MoCItemID++), furARMOR, 4, 0)).setUnlocalizedName("furhelmet");
+        legsFur = (new MoCItemArmor(getItemId("furlegs", MoCItemID++), furARMOR, 4, 2)).setUnlocalizedName("furlegs");
+        bootsFur = (new MoCItemArmor(getItemId("furboots", MoCItemID++), furARMOR, 4, 3)).setUnlocalizedName("furboots");
 
-        heartdarkness = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartdarkness");
-        heartfire = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartfire");
-        heartundead = (new MoCItem(MoCItemID++)).setUnlocalizedName("heartundead");
-        ostrichmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ostrichraw");
-        ostrichcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");
-        unicorn = (new MoCItem(MoCItemID++)).setUnlocalizedName("unicorn");
+        heartdarkness = (new MoCItem(getItemId("heartdarkness", MoCItemID++))).setUnlocalizedName("heartdarkness");
+        heartfire = (new MoCItem(getItemId("heartfire", MoCItemID++))).setUnlocalizedName("heartfire");
+        heartundead = (new MoCItem(getItemId("heartundead", MoCItemID++))).setUnlocalizedName("heartundead");
+        ostrichmeat = (new MoCItemFood(getItemId("ostrichraw", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ostrichraw");
+        ostrichcooked = (new MoCItemFood(getItemId("ostrichcooked", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");
+        unicorn = (new MoCItem(getItemId("unicorn", MoCItemID++))).setUnlocalizedName("unicorn");
 
-        fishnet = (new MoCItemPetAmulet(MoCItemID++)).setUnlocalizedName("fishnet");
+        fishnet = (new MoCItemPetAmulet(getItemId("fishnet", MoCItemID++))).setUnlocalizedName("fishnet");
         MoCItemID++;
-        horsearmorcrystal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorcrystal");
+        horsearmorcrystal = (new MoCItem(getItemId("armorcrystal", MoCItemID++))).setUnlocalizedName("armorcrystal");
         MoCItemID++;
 
-        rawTurkey = (new MoCItemFood(MoCItemID++, 3, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("turkeyraw");
-        cookedTurkey = (new MoCItemFood(MoCItemID++, 8, 0.6F, false)).setUnlocalizedName("turkeycooked");
-        animalHide = (new MoCItem(MoCItemID++)).setUnlocalizedName("hide");
-        plateHide = (new MoCItemArmor(MoCItemID++, hideARMOR, 4, 1)).setUnlocalizedName("hideplate");
-        helmetHide = (new MoCItemArmor(MoCItemID++, hideARMOR, 4, 0)).setUnlocalizedName("hidehelmet");
-        legsHide = (new MoCItemArmor(MoCItemID++, hideARMOR, 4, 2)).setUnlocalizedName("hidelegs");
-        bootsHide = (new MoCItemArmor(MoCItemID++, hideARMOR, 4, 3)).setUnlocalizedName("hideboots");
-        ratRaw = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ratraw");
-        ratCooked = (new MoCItemFood(MoCItemID++, 4, 0.6F, false)).setUnlocalizedName("ratcooked");
-        ratBurger = (new MoCItemFood(MoCItemID++, 8, 0.6F, false)).setUnlocalizedName("ratburger");
+        rawTurkey = (new MoCItemFood(getItemId("turkeyraw", MoCItemID++), 3, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("turkeyraw");
+        cookedTurkey = (new MoCItemFood(getItemId("turkeycooked", MoCItemID++), 8, 0.6F, false)).setUnlocalizedName("turkeycooked");
+        animalHide = (new MoCItem(getItemId("hide", MoCItemID++))).setUnlocalizedName("hide");
+        plateHide = (new MoCItemArmor(getItemId("hideplate", MoCItemID++), hideARMOR, 4, 1)).setUnlocalizedName("hideplate");
+        helmetHide = (new MoCItemArmor(getItemId("hidehelmet", MoCItemID++), hideARMOR, 4, 0)).setUnlocalizedName("hidehelmet");
+        legsHide = (new MoCItemArmor(getItemId("hidelegs", MoCItemID++), hideARMOR, 4, 2)).setUnlocalizedName("hidelegs");
+        bootsHide = (new MoCItemArmor(getItemId("hideboots", MoCItemID++), hideARMOR, 4, 3)).setUnlocalizedName("hideboots");
+        ratRaw = (new MoCItemFood(getItemId("ratraw", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ratraw");
+        ratCooked = (new MoCItemFood(getItemId("ratcooked", MoCItemID++), 4, 0.6F, false)).setUnlocalizedName("ratcooked");
+        ratBurger = (new MoCItemFood(getItemId("ratburger", MoCItemID++), 8, 0.6F, false)).setUnlocalizedName("ratburger");
 
-        chitinCave = (new MoCItem(MoCItemID++)).setUnlocalizedName("chitinblack");
-        chitinFrost = (new MoCItem(MoCItemID++)).setUnlocalizedName("chitinfrost");
-        chitinNether = (new MoCItem(MoCItemID++)).setUnlocalizedName("chitinnether");
-        chitinDirt = (new MoCItem(MoCItemID++)).setUnlocalizedName("chitin");
+        chitinCave = (new MoCItem(getItemId("chitinblack", MoCItemID++))).setUnlocalizedName("chitinblack");
+        chitinFrost = (new MoCItem(getItemId("chitinfrost", MoCItemID++))).setUnlocalizedName("chitinfrost");
+        chitinNether = (new MoCItem(getItemId("chitinnether", MoCItemID++))).setUnlocalizedName("chitinnether");
+        chitinDirt = (new MoCItem(getItemId("chitin", MoCItemID++))).setUnlocalizedName("chitin");
 
-        swordCave = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON, 4, false)).setUnlocalizedName("swordscorpioncave");
-        swordFrost = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON, 2, false)).setUnlocalizedName("swordscorpionfrost");
-        swordNether = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON, 3, false)).setUnlocalizedName("swordscorpionnether");
-        swordDirt = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON, 1, false)).setUnlocalizedName("swordscorpion");
+        swordCave = (new MoCItemWeapon(getItemId("swordscorpioncave", MoCItemID++), EnumToolMaterial.IRON, 4, false)).setUnlocalizedName("swordscorpioncave");
+        swordFrost = (new MoCItemWeapon(getItemId("swordscorpionfrost", MoCItemID++), EnumToolMaterial.IRON, 2, false)).setUnlocalizedName("swordscorpionfrost");
+        swordNether = (new MoCItemWeapon(getItemId("swordscorpionnether", MoCItemID++), EnumToolMaterial.IRON, 3, false)).setUnlocalizedName("swordscorpionnether");
+        swordDirt = (new MoCItemWeapon(getItemId("swordscorpion", MoCItemID++), EnumToolMaterial.IRON, 1, false)).setUnlocalizedName("swordscorpion");
 
-        plateScorpDirt = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 1)).setUnlocalizedName("plate");
-        helmetScorpDirt = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 0)).setUnlocalizedName("helmet");
-        legsScorpDirt = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 2)).setUnlocalizedName("legs");
-        bootsScorpDirt = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 3)).setUnlocalizedName("boots");
+        plateScorpDirt = (new MoCItemArmor(getItemId("scorpplatedirt", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("plate");
+        helmetScorpDirt = (new MoCItemArmor(getItemId("scorphelmetdirt", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmet");
+        legsScorpDirt = (new MoCItemArmor(getItemId("scorplegsdirt", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legs");
+        bootsScorpDirt = (new MoCItemArmor(getItemId("scorpbootsdirt", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("boots");
 
-        plateScorpFrost = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 1)).setUnlocalizedName("platefrost");
-        helmetScorpFrost = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 0)).setUnlocalizedName("helmetfrost");
-        legsScorpFrost = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 2)).setUnlocalizedName("legsfrost");
-        bootsScorpFrost = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 3)).setUnlocalizedName("bootsfrost");
+        plateScorpFrost = (new MoCItemArmor(getItemId("scorpplatefrost", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("platefrost");
+        helmetScorpFrost = (new MoCItemArmor(getItemId("scorphelmetfrost", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetfrost");
+        legsScorpFrost = (new MoCItemArmor(getItemId("scorplegsfrost", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsfrost");
+        bootsScorpFrost = (new MoCItemArmor(getItemId("scorpbootsfrost", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsfrost");
 
-        plateScorpCave = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 1)).setUnlocalizedName("plateblack");
-        helmetScorpCave = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 0)).setUnlocalizedName("helmetblack");
-        legsScorpCave = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 2)).setUnlocalizedName("legsblack");
-        bootsScorpCave = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 3)).setUnlocalizedName("bootsblack");
+        plateScorpCave = (new MoCItemArmor(getItemId("scorpplatecave", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("plateblack");
+        helmetScorpCave = (new MoCItemArmor(getItemId("scorphelmetcave", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetblack");
+        legsScorpCave = (new MoCItemArmor(getItemId("scorplegscave", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsblack");
+        bootsScorpCave = (new MoCItemArmor(getItemId("scorpbootscave", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsblack");
 
-        plateScorpNether = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 1)).setUnlocalizedName("platenether");
-        helmetScorpNether = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 0)).setUnlocalizedName("helmetnether");
-        legsScorpNether = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 2)).setUnlocalizedName("legsnether");
-        bootsScorpNether = (new MoCItemArmor(MoCItemID++, crocARMOR, 4, 3)).setUnlocalizedName("bootsnether");
+        plateScorpNether = (new MoCItemArmor(getItemId("scorpplatenether", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("platenether");
+        helmetScorpNether = (new MoCItemArmor(getItemId("scorphelmetnether", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetnether");
+        legsScorpNether = (new MoCItemArmor(getItemId("scorplegsnether", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsnether");
+        bootsScorpNether = (new MoCItemArmor(getItemId("scorpbootsnether", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsnether");
 
-        stingCave = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.GOLD, 4, true)).setUnlocalizedName("stingcave");
-        stingFrost = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.GOLD, 2, true)).setUnlocalizedName("stingfrost");
-        stingNether = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.GOLD, 3, true)).setUnlocalizedName("stingnether");
-        stingDirt = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.GOLD, 1, true)).setUnlocalizedName("stingdirt");
+        stingCave = (new MoCItemWeapon(getItemId("stingcave", MoCItemID++), EnumToolMaterial.GOLD, 4, true)).setUnlocalizedName("stingcave");
+        stingFrost = (new MoCItemWeapon(getItemId("stingfrost", MoCItemID++), EnumToolMaterial.GOLD, 2, true)).setUnlocalizedName("stingfrost");
+        stingNether = (new MoCItemWeapon(getItemId("stingnether", MoCItemID++), EnumToolMaterial.GOLD, 3, true)).setUnlocalizedName("stingnether");
+        stingDirt = (new MoCItemWeapon(getItemId("stingdirt", MoCItemID++), EnumToolMaterial.GOLD, 1, true)).setUnlocalizedName("stingdirt");
 
-        scrollFreedom = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrolloffreedom");
-        scrollOfSale = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofsale");
+        scrollFreedom = (new MoCItem(getItemId("scrolloffreedom", MoCItemID++))).setUnlocalizedName("scrolloffreedom");
+        scrollOfSale = (new MoCItem(getItemId("scrollofsale", MoCItemID++))).setUnlocalizedName("scrollofsale");
         
-        woodTusks = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.WOOD)).setUnlocalizedName("tuskswood");
-        ironTusks = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.IRON)).setUnlocalizedName("tusksiron");
-        diamondTusks = (new MoCItemWeapon(MoCItemID++, EnumToolMaterial.EMERALD)).setUnlocalizedName("tusksdiamond");
-        harness = (new MoCItem(MoCItemID++)).setUnlocalizedName("harness");
-        chestSet = (new MoCItem(MoCItemID++)).setUnlocalizedName("chestset");
-        garment = (new MoCItem(MoCItemID++)).setUnlocalizedName("garment");
-        howdah = (new MoCItem(MoCItemID++)).setUnlocalizedName("howdah");
-        platform = (new MoCItem(MoCItemID++)).setUnlocalizedName("platform");
+        woodTusks = (new MoCItemWeapon(getItemId("tuskswood", MoCItemID++), EnumToolMaterial.WOOD)).setUnlocalizedName("tuskswood");
+        ironTusks = (new MoCItemWeapon(getItemId("tusksiron", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("tusksiron");
+        diamondTusks = (new MoCItemWeapon(getItemId("tusksdiamond", MoCItemID++), EnumToolMaterial.EMERALD)).setUnlocalizedName("tusksdiamond");
+        harness = (new MoCItem(getItemId("elephantharness", MoCItemID++))).setUnlocalizedName("harness");
+        chestSet = (new MoCItem(getItemId("elephantchest", MoCItemID++))).setUnlocalizedName("chestset");
+        garment = (new MoCItem(getItemId("elephantgarment", MoCItemID++))).setUnlocalizedName("garment");
+        howdah = (new MoCItem(getItemId("elephanthowdah", MoCItemID++))).setUnlocalizedName("howdah");
+        platform = (new MoCItem(getItemId("elephantplatform", MoCItemID++))).setUnlocalizedName("platform");
         
-        crabmeat = (new MoCItemFood(MoCItemID++, 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("crabmeat");
-        crabmeatcooked = (new MoCItemFood(MoCItemID++, 6, 0.6F, false)).setUnlocalizedName("crabmeatcooked");
-        swordsilver = (new MoCItemWeapon(MoCItemID++, this.SILVER)).setUnlocalizedName("swordsilver");
+        crabmeat = (new MoCItemFood(getItemId("crabmeat", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("crabmeat");
+        crabmeatcooked = (new MoCItemFood(getItemId("crabmeatcooked", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("crabmeatcooked");
+        swordsilver = (new MoCItemWeapon(getItemId("swordsilver", MoCItemID++), this.SILVER)).setUnlocalizedName("swordsilver");
         
         multiBlockNames.add ("WyvernLair");
         multiBlockNames.add("OgreLair");
         
-        staffPortal = (new ItemStaffPortal(MoCItemID++)).setUnlocalizedName("staffportal");
+        staffPortal = (new ItemStaffPortal(getItemId("staffportal", MoCItemID++))).setUnlocalizedName("staffportal");
         LanguageRegistry.addName(staffPortal, "Wyvern Portal Staff");
         
-        scrollOfOwner = (new MoCItem(MoCItemID++)).setUnlocalizedName("scrollofowner");
+        scrollOfOwner = (new MoCItem(getItemId("scrollofowner", MoCItemID++))).setUnlocalizedName("scrollofowner");
         
-        superAmulet = (new MoCItemPetAmulet(MoCItemID++, 1)).setUnlocalizedName("superamulet");
+        superAmulet = (new MoCItemPetAmulet(getItemId("superamulet", MoCItemID++), 1)).setUnlocalizedName("superamulet");
 
         //new blocks
         mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");
@@ -820,6 +827,7 @@ public class MoCreatures {
         MinecraftForge.setBlockHarvestLevel(mocStone, 0, "pickaxe", 1);
         
         LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
+        proxy.mocSettingsConfig.save();
     }
 
     private void AddNames()

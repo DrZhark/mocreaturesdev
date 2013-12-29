@@ -120,6 +120,12 @@ public class CMSUtils {
                 if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding World Environment " + worldEnvironment + " for class " + worldProviderClass.getName());
                 CustomSpawner.environmentMap.put(worldProviderClass, new EnvironmentSettings(new File(CustomSpawner.ROOT, worldEnvironment), worldEnvironment, worldProviderClass));
             }
+            // initialize environment settings - fixes Mystcraft spawning
+            EnvironmentSettings environment = CustomSpawner.environmentMap.get(worldProviderClass);
+            CMSUtils.copyVanillaSpawnLists();
+            environment.initializeBiomes();
+            environment.initializeEntities();
+            environment.updateSettings(); // refresh settings
             return true;
                 //CustomSpawner.worldEnvironmentMap.put(worldEnvironment, )
         }

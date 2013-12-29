@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.SpawnListEntry;
@@ -62,7 +63,7 @@ import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.0.0.dev.R1b")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.0.0.dev.R2")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")
@@ -165,12 +166,13 @@ public final class CustomSpawner {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        CMSUtils.copyVanillaSpawnLists();
-        for (EnvironmentSettings environment : environmentMap.values())
+        // We need to run through overworld init a second time since structure gen occurs before all spawns are ready
+        EnvironmentSettings overworld = this.environmentMap.get(WorldProviderSurface.class);
+        if (overworld != null)
         {
-            environment.initializeBiomes();
-            environment.initializeEntities();
-            environment.updateSettings(); // refresh settings
+            //overworld.initializeBiomes();
+            overworld.initializeEntities();
+            overworld.updateSettings(); // refresh settings
         }
         event.registerServerCommand(new CommandCMS());
     }
@@ -555,23 +557,23 @@ public final class CustomSpawner {
                     if (iterator != null)
                     {
                         SpawnListEntry spawnlistentry = (SpawnListEntry) iterator.next();
-                            if (entityDefaultSpawnBiomes.containsKey(spawnlistentry.entityClass.getName())) // add biome to existing list
+                        if (entityDefaultSpawnBiomes.containsKey(spawnlistentry.entityClass.getName())) // add biome to existing list
+                        {
+                            if (!entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).contains(biome))
                             {
-                                if (!entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).contains(biome))
-                                {
-                                    entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).add(biome);
-                                }
+                                entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).add(biome);
                             }
-                            else // create new biome list for entity
+                        }
+                        else // create new biome list for entity
+                        {
+                            ArrayList<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
+                            biomes.add(biome);
+                            entityDefaultSpawnBiomes.put(spawnlistentry.entityClass.getName(), biomes);
+                            if (!defaultSpawnListEntryMap.containsKey(spawnlistentry.entityClass.getName()))
                             {
-                                ArrayList<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
-                                biomes.add(biome);
-                                entityDefaultSpawnBiomes.put(spawnlistentry.entityClass.getName(), biomes);
-                                if (!defaultSpawnListEntryMap.containsKey(spawnlistentry.entityClass.getName()))
-                                {
-                                    defaultSpawnListEntryMap.put(spawnlistentry.entityClass.getName(), spawnlistentry);
-                                }
+                                defaultSpawnListEntryMap.put(spawnlistentry.entityClass.getName(), spawnlistentry);
                             }
+                        }
                         iterator.remove();
                     }
                 }
