@@ -3,11 +3,12 @@ package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityCrab extends MoCEntityTameableAmbient
 
@@ -67,7 +68,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         {
             if (fleeingTick == 3)
             {
-                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
             }
         }
     }
@@ -87,9 +88,9 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.crabmeat.itemID;
+        return MoCreatures.crabmeat;
     }
 
     @Override

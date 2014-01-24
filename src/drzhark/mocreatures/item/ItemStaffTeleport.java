@@ -1,8 +1,10 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -12,9 +14,9 @@ import drzhark.mocreatures.MoCreatures;
 
 public class ItemStaffTeleport extends MoCItem
 {
-    public ItemStaffTeleport(int i)
+    public ItemStaffTeleport(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setMaxDamage(128);
         this.setCreativeTab(CreativeTabs.tabTools);
@@ -64,8 +66,8 @@ public class ItemStaffTeleport extends MoCItem
             double newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * x;
             double newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
             double newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
-            int iTarget = entityplayer.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
-            if (iTarget != 0)
+            Block block = entityplayer.worldObj.getBlock( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
+            if (block != Blocks.air)
             {
                 newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1);
                 newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );

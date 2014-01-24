@@ -74,7 +74,7 @@ public class MoCEntityPlatform extends Entity {
         List<Entity> entityList = worldObj.loadedEntityList;
         for (Entity ent : entityList)
         {
-            if (ent.entityId == mastersID && ent instanceof EntityLivingBase) { return (EntityLivingBase) ent; }
+            if (ent.getEntityId() == mastersID && ent instanceof EntityLivingBase) { return (EntityLivingBase) ent; }
         }
 
         return null;

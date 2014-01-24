@@ -3,9 +3,9 @@ package drzhark.mocreatures.item;
 
 public class MoCItemSugarLump extends MoCItemFood {
 
-    public MoCItemSugarLump(int i)
+    public MoCItemSugarLump(String name)
     {
-        super(i, 3);
+        super(name, 3);
         maxStackSize = 32;
     }
 }

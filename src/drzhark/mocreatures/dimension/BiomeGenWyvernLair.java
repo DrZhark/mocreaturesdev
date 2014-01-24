@@ -4,7 +4,8 @@ import java.util.Random;
 
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
 import net.minecraft.world.gen.feature.WorldGenVines;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -26,8 +27,8 @@ public class BiomeGenWyvernLair extends BiomeGenBase
         //spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
         spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 8, 1, 2));
         spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3));
-        topBlock = (byte)MoCreatures.mocGrass.blockID;
-        fillerBlock = (byte)MoCreatures.mocDirt.blockID;
+        topBlock = MoCreatures.mocGrass;
+        fillerBlock = MoCreatures.mocDirt;
         this.minHeight = 0.3F;
         this.maxHeight = 1.5F;
         this.biomeName = "WyvernBiome";
@@ -42,9 +43,9 @@ public class BiomeGenWyvernLair extends BiomeGenBase
      * Gets a WorldGen appropriate for this biome.
      */
     @Override
-    public WorldGenerator getRandomWorldGenForTrees(Random par1Random)
+    public WorldGenAbstractTree func_150567_a(Random par1Random)
     {
-        return (WorldGenerator) (par1Random.nextInt(10) == 0 ? new MoCWorldGenBigTree(false, MoCreatures.mocLog.blockID, 0, MoCreatures.mocLeaf.blockID, 0, 2, 30, 10) : new WorldGenShrub(3, 0) );
+        return (WorldGenAbstractTree) (par1Random.nextInt(10) == 0 ? new MoCWorldGenBigTree(false, MoCreatures.mocLog, 0, MoCreatures.mocLeaf, 0, 2, 30, 10) : new WorldGenShrub(3, 0) );
         
     }
 
@@ -54,7 +55,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase
     @Override
     public WorldGenerator getRandomWorldGenForGrass(Random par1Random)
     {
-        return new WorldGenWyvernGrass(MoCreatures.mocTallGrass.blockID, 0);
+        return new WorldGenWyvernGrass(MoCreatures.mocTallGrass, 0);
     }
 
     @Override

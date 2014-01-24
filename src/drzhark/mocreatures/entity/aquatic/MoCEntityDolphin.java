@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -199,7 +200,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
-        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
+        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting.getDifficultyId() > 0))
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
@@ -224,7 +225,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if ((worldObj.difficultySetting > 0) && (getEdad() >= 100) && MoCreatures.proxy.attackDolphins && (rand.nextInt(50) == 0))
+        if ((worldObj.difficultySetting.getDifficultyId() > 0) && (getEdad() >= 100) && MoCreatures.proxy.attackDolphins && (rand.nextInt(50) == 0))
         {
             EntityLivingBase entityliving = FindTarget(this, 12D);
             if ((entityliving != null) && entityliving.isInWater()) { return entityliving; }
@@ -279,9 +280,9 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.fishRaw.itemID;
+        return Items.fish;
     }
 
     @Override
@@ -315,7 +316,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         
         
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (itemstack.itemID == Item.fishRaw.itemID))
+        if ((itemstack != null) && (itemstack.getItem() == Items.fish))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -344,7 +345,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
             return true;
         }
-        if ((itemstack != null) && (itemstack.itemID == Item.fishCooked.itemID) && getIsTamed() && getIsAdult())
+        if ((itemstack != null) && (itemstack.getItem() == Items.cooked_fished) && getIsTamed() && getIsAdult())
         {
             if (--itemstack.stackSize == 0)
             {

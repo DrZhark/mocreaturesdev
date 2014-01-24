@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -211,7 +212,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
                     setIsHiding(false);
                     if (!hasPath() && rand.nextInt(50) == 0)
                     {
-                        EntityItem entityitem = getClosestItem(this, 10D, Item.melon.itemID, Item.reed.itemID);
+                        EntityItem entityitem = getClosestItem(this, 10D, Items.melon, Items.reeds);
                         if (entityitem != null)
                         {
                             float f = entityitem.getDistanceToEntity(this);
@@ -419,16 +420,16 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        if (getName().equals("Donatello") || getName().equals("donatello")) { return MoCreatures.bo.itemID; }
+        if (getName().equals("Donatello") || getName().equals("donatello")) { return MoCreatures.bo; }
 
-        if (getName().equals("Leonardo") || getName().equals("leonardo")) { return MoCreatures.katana.itemID; }
+        if (getName().equals("Leonardo") || getName().equals("leonardo")) { return MoCreatures.katana; }
 
-        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")) { return MoCreatures.sai.itemID; }
+        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")) { return MoCreatures.sai; }
 
-        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo") || getName().equals("michaelangelo")) { return MoCreatures.nunchaku.itemID; }
-        return MoCreatures.turtlemeat.itemID;
+        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo") || getName().equals("michaelangelo")) { return MoCreatures.nunchaku; }
+        return MoCreatures.turtlemeat;
     }
 
     /**
@@ -458,7 +459,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && (par1ItemStack.itemID == Item.reed.itemID || par1ItemStack.itemID == Item.melon.itemID);
+        return par1ItemStack != null && (par1ItemStack.getItem() == Items.reeds || par1ItemStack.getItem() == Items.melon);
     }
 
     @Override

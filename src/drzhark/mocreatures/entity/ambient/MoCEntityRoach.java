@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -62,7 +63,7 @@ public class MoCEntityRoach extends MoCEntityInsect
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && par1ItemStack.itemID == Item.rottenFlesh.itemID;
+        return par1ItemStack != null && par1ItemStack.getItem() == Items.rotten_flesh;
     }
 
     @Override

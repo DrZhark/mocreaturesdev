@@ -22,14 +22,14 @@ public class MoCRenderFishy extends RenderLiving {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityFishy entityfishy = (MoCEntityFishy) entityliving;
         if (entityfishy.getType() == 0)// && !MoCreatures.mc.isMultiplayerWorld())
         {
             entityfishy.selectType();
         }
-        super.doRenderLiving(entityfishy, d, d1, d2, f, f1);
+        super.doRender(entityfishy, d, d1, d2, f, f1);
     }
 
     @Override

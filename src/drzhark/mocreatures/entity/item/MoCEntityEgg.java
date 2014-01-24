@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
@@ -402,7 +402,7 @@ public class MoCEntityEgg extends EntityLiving {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-            entityplayer.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
+            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
         }
     }
     public int getSize()

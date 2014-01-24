@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -41,7 +42,7 @@ public class MoCEntityThrowableRock extends Entity {
         this.prevPosX = oPosX = par2;
         this.prevPosY = oPosY = par4;
         this.prevPosZ = oPosZ = par6;
-        this.setMasterID(entitythrower.entityId);
+        this.setMasterID(entitythrower.getEntityId());
     }
 
     public void setMetadata(int i)
@@ -143,7 +144,7 @@ public class MoCEntityThrowableRock extends Entity {
             for (int i = 0; i < list.size(); i++)
             {
                 Entity entity1 = (Entity) list.get(i);
-                if (master != null && entity1.entityId == master.entityId)
+                if (master != null && entity1.getEntityId() == master.getEntityId())
                 {
                     continue;
                 }
@@ -278,7 +279,7 @@ public class MoCEntityThrowableRock extends Entity {
     {
         if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks)) // don't drop rocks if mobgriefing is set to false, prevents duping
         {
-            EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(getType(), 1, getMetadata()));
+            EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Block.getBlockById(getType()), 1, getMetadata()));
             entityitem.delayBeforeCanPickup = 10;
             entityitem.age = 5500;
             worldObj.spawnEntityInWorld(entityitem);
@@ -286,13 +287,13 @@ public class MoCEntityThrowableRock extends Entity {
         this.setDead();
     }
 
-    public Block getMyBLock()
+    public Block getMyBlock()
     {
         if (this.getType() != 0)
         {
-            return Block.blocksList[this.getType()];
+            return Block.getBlockById(this.getType());
         }
-        return Block.blocksList[1];
+        return Blocks.stone;
     }
 
     private Entity getMaster()
@@ -300,7 +301,7 @@ public class MoCEntityThrowableRock extends Entity {
         List<Entity> entityList = worldObj.loadedEntityList;
         for (Entity ent : entityList)
         {
-            if (ent.entityId == getMasterID()) { return ent; }
+            if (ent.getEntityId() == getMasterID()) { return ent; }
         }
 
         return null;

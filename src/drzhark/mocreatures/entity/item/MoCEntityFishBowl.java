@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -200,7 +201,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && ((itemstack.itemID == Item.pickaxeStone.itemID) || (itemstack.itemID == Item.pickaxeWood.itemID) || (itemstack.itemID == Item.pickaxeIron.itemID) || (itemstack.itemID == Item.pickaxeGold.itemID) || (itemstack.itemID == Item.pickaxeDiamond.itemID)))
+        if ((itemstack != null) && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe) || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe)))
         {
             ItemStack mystack = toItemStack(getType());
 
@@ -214,7 +215,7 @@ public class MoCEntityFishBowl extends EntityLiving {
             return true;
         }
 
-        if ((itemstack != null) && (getType() > 0 && getType() < 11) && ((itemstack.itemID == MoCreatures.fishbowl_e.itemID) || (itemstack.itemID == MoCreatures.fishbowl_w.itemID)))
+        if ((itemstack != null) && (getType() > 0 && getType() < 11) && ((itemstack.getItem() == MoCreatures.fishbowl_e) || (itemstack.getItem() == MoCreatures.fishbowl_w)))
         {
             if (--itemstack.stackSize == 0)
             {

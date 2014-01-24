@@ -2,11 +2,12 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -14,6 +15,7 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,7 +66,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     }
 
     @Override
-    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
+    public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
     {
         selectType();
         return super.onSpawnWithEgg(par1EntityLivingData);
@@ -222,7 +224,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     }
 
     @Override
-    protected void playStepSound(int par1, int par2, int par3, int par4)
+    protected void func_145780_a(int par1, int par2, int par3, Block par4)
     {
         // TODO make the sounds
     }
@@ -245,7 +247,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            if ((entityitem1.getEntityItem().itemID != Item.fishRaw.itemID) || !entityitem1.isInWater())
+            if ((entityitem1.getEntityItem().getItem() != Items.fish) || !entityitem1.isInWater())
             {
                 continue;
             }
@@ -289,9 +291,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         int i = (int) posX;
         int j = (int) posY;
         int k = (int) posZ;
-        int l = 1;
-        l = worldObj.getBlockId(i, j + 1, k);
-        return l == 0;
+        return worldObj.isAirBlock(i, j + 1, k);
     }
 
     protected String getUpsetSound()
@@ -643,7 +643,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
             
             /*if (getIsTamed() && rand.nextInt(100) == 0)
             {
-                MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+                MoCServerPacketHandler.sendHealth(this.getEntityId(), this.worldObj.provider.dimensionId, this.getHealth());
             }*/
 
             if (forceUpdates() && rand.nextInt(500) == 0)
@@ -667,9 +667,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         
                     if (entity1 instanceof EntityFishHook)
                     {
-                        if (((EntityFishHook)entity1).bobber == this)
+                        if (((EntityFishHook)entity1).field_146043_c == this)
                         {
-                            ((EntityFishHook)entity1).bobber = null;
+                            ((EntityFishHook)entity1).field_146043_c = null;
                         }
                     }
                 }
@@ -914,7 +914,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
 
         //to prevent tamed aquatics from getting block damage
         if (getIsTamed() && damagesource.getDamageType().equalsIgnoreCase("inWall"))
@@ -923,7 +923,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         }
         /*if (MoCreatures.isServer() && getIsTamed())
         {
-            //MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            //MoCServerPacketHandler.sendHealth(this.getEntityId(), this.worldObj.provider.dimensionId, this.getHealth());
         }*/
 
         return super.attackEntityFrom(damagesource, i);
@@ -996,7 +996,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         if (entityplayer1 != null)
         {
             EntityFishHook fishHook = entityplayer1.fishEntity;
-            if (fishHook != null  && fishHook.bobber == null)
+            if (fishHook != null  && fishHook.field_146043_c == null)
             {
                 float f = fishHook.getDistanceToEntity(this);
                 if (f > 1)
@@ -1005,7 +1005,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                 }
                 else
                 {
-                    fishHook.bobber = this;
+                    fishHook.field_146043_c = this;
                     fishHooked = true;
                 }
             }    

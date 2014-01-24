@@ -5,6 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -131,11 +133,11 @@ public class MoCEntityMouse extends MoCEntityAnimal
                 worldObj.checkNoEntityCollision(boundingBox) 
                 && (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0) 
                 && !worldObj.isAnyLiquid(boundingBox) 
-                && ((worldObj.getBlockId(i, j - 1, k) == Block.cobblestone.blockID) 
-                || (worldObj.getBlockId(i, j - 1, k) == Block.planks.blockID) 
-                || (worldObj.getBlockId(i, j - 1, k) == Block.dirt.blockID) 
-                || (worldObj.getBlockId(i, j - 1, k) == Block.stone.blockID) 
-                || (worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID)));
+                && ((worldObj.getBlock(i, j - 1, k) == Blocks.cobblestone) 
+                || (worldObj.getBlock(i, j - 1, k) == Blocks.planks) 
+                || (worldObj.getBlock(i, j - 1, k) == Blocks.dirt) 
+                || (worldObj.getBlock(i, j - 1, k) == Blocks.stone) 
+                || (worldObj.getBlock(i, j - 1, k) == Blocks.grass)));
     }
 
     @Override
@@ -145,9 +147,9 @@ public class MoCEntityMouse extends MoCEntityAnimal
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.seeds.itemID;
+        return Items.wheat_seeds;
     }
 
     @Override

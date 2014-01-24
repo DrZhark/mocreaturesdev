@@ -12,6 +12,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +27,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityKitty extends MoCEntityTameable {
 
@@ -282,7 +284,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if ((worldObj.difficultySetting > 0) && (getKittyState() != 8) && (getKittyState() != 10) && (getKittyState() != 15) && (getKittyState() != 18) && (getKittyState() != 19) && !isMovementCeased() && getIsHungry())
+        if ((worldObj.difficultySetting.getDifficultyId() > 0) && (getKittyState() != 8) && (getKittyState() != 10) && (getKittyState() != 15) && (getKittyState() != 18) && (getKittyState() != 19) && !isMovementCeased() && getIsHungry())
         {
             EntityLivingBase entityliving = getClosestTarget(this, 10D);
             return entityliving;
@@ -350,9 +352,9 @@ public class MoCEntityKitty extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return 0;
+        return null;
     }
 
     public ResourceLocation getEmoteIcon()
@@ -530,10 +532,10 @@ public class MoCEntityKitty extends MoCEntityTameable {
     {
         if (super.interact(entityplayer)) { return false; }
         //Ownership code
-        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName())) { return true; }
+        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.getCommandSenderName().equals(getOwnerName())) { return true; }
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((getKittyState() == 2) && (itemstack != null) && (itemstack.itemID == MoCreatures.medallion.itemID))
+        if ((getKittyState() == 2) && (itemstack != null) && (itemstack.getItem() == MoCreatures.medallion))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -548,7 +550,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             }
             return true;
         }
-        if ((getKittyState() == 7) && (itemstack != null) && ((itemstack.itemID == Item.cake.itemID) || (itemstack.itemID == Item.fishRaw.itemID) || (itemstack.itemID == Item.fishCooked.itemID)))
+        if ((getKittyState() == 7) && (itemstack != null) && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.fish) || (itemstack.getItem() == Items.cooked_fished)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -559,7 +561,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && (itemstack != null) && (itemstack.itemID == MoCreatures.woolball.itemID) && MoCreatures.isServer())
+        if ((getKittyState() == 11) && (itemstack != null) && (itemstack.getItem() == MoCreatures.woolball) && MoCreatures.isServer())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -576,7 +578,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             entityToAttack = entityitem;
             return true;
         }
-        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.itemID == Item.fishRaw.itemID) || (itemstack.itemID == Item.fishCooked.itemID)))
+        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.fish) || (itemstack.getItem() == Items.cooked_fished)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -587,7 +589,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             changeKittyState(7);
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && ((itemstack.itemID == MoCreatures.medallion.itemID) || (itemstack.itemID == Item.book.itemID)))
+        if ((itemstack != null) && (getKittyState() > 2) && ((itemstack.getItem() == MoCreatures.medallion) || (itemstack.getItem() == Items.book)))
         {
             if (MoCreatures.isServer())
             {
@@ -596,7 +598,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
 
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.itemID == Item.leash.itemID))
+        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.getItem() == Items.lead))
         {
             changeKittyState(14);
             if (MoCreatures.isServer())
@@ -605,7 +607,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             }
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && whipeable() && (itemstack.itemID == MoCreatures.whip.itemID))
+        if ((itemstack != null) && (getKittyState() > 2) && whipeable() && (itemstack.getItem() == MoCreatures.whip))
         {
             setSitting(!getIsSitting());
             return true;
@@ -710,7 +712,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 {
                     break;
                 }
-                EntityItem entityitem = getClosestItem(this, 10D, Item.fishCooked.itemID, Item.fishCooked.itemID);
+                EntityItem entityitem = getClosestItem(this, 10D, Items.cooked_fished, Items.cooked_fished);
                 if (entityitem == null)
                 {
                     break;
@@ -851,7 +853,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     if (entityplayer != null)
                     {
                         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-                        if ((itemstack != null) && (itemstack.itemID == MoCreatures.woolball.itemID))
+                        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.woolball))
                         {
                             changeKittyState(11);
                             break;
@@ -965,7 +967,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     int i = rand.nextInt(10);
                     if (i < 7)
                     {
-                        entityToAttack = getClosestItem(this, 10D, -1, -1);
+                        entityToAttack = getClosestItem(this, 10D, null, null);
                     }
                     else
                     {
@@ -1016,7 +1018,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     break;
                 }
                 ItemStack itemstack1 = entityplayer1.inventory.getCurrentItem();
-                if ((itemstack1 == null) || ((itemstack1 != null) && (itemstack1.itemID != MoCreatures.woolball.itemID)))
+                if ((itemstack1 == null) || ((itemstack1 != null) && (itemstack1.getItem() != MoCreatures.woolball)))
                 {
                     changeKittyState(7);
                     break;
@@ -1095,7 +1097,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     break;
                 }
                 ItemStack itemstack2 = entityplayer2.inventory.getCurrentItem();
-                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.itemID != Item.leash.itemID)))
+                if (itemstack2 == null || ((itemstack2 != null) && (itemstack2.getItem() != Items.lead)))
                 {
                     changeKittyState(13);
                 }
@@ -1132,8 +1134,8 @@ public class MoCEntityKitty extends MoCEntityTameable {
                                 {
                                     break;
                                 }
-                                int k1 = worldObj.getBlockId(ai[0], ai[1] + i1, ai[2]);
-                                if ((k1 != 0) && (Block.blocksList[k1].blockMaterial != Material.wood) && (k1 != 0) && (Block.blocksList[k1].blockMaterial == Material.leaves))
+                                Block block = worldObj.getBlock(ai[0], ai[1] + i1, ai[2]);
+                                if ((block.getMaterial() == Material.leaves))
                                 {
                                     foundTree = true;
                                     treeCoord[0] = ai[0];
@@ -1207,8 +1209,8 @@ public class MoCEntityKitty extends MoCEntityTameable {
                     {
                         break label0;
                     }
-                    int j4 = worldObj.getBlockId(treeCoord[0], treeCoord[1] + i4, treeCoord[2]);
-                    if (j4 == 0)
+                    Block block = worldObj.getBlock(treeCoord[0], treeCoord[1] + i4, treeCoord[2]);
+                    if (block == Blocks.air)
                     {
                         setLocationAndAngles(treeCoord[0], treeCoord[1] + i4, treeCoord[2], rotationYaw, rotationPitch);
                         changeKittyState(17);
@@ -1407,7 +1409,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         //to synchronize, uses the packet handler to invoke the same method in the clients
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 0);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
         }
 
         if (!getIsSwinging())

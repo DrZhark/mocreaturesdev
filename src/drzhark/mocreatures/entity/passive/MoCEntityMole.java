@@ -1,7 +1,9 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -36,8 +38,8 @@ public class MoCEntityMole extends MoCEntityTameable {
 
     public boolean isOnDirt()
     {
-        int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(this.boundingBox.minY - 0.5D), MathHelper.floor_double(posZ));
-        return isDiggableBlock(j);//(j == 2 | j == 3 | j == 12);
+        Block block = worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(this.boundingBox.minY - 0.5D), MathHelper.floor_double(posZ));
+        return isDiggableBlock(Block.getIdFromBlock(block));//(j == 2 | j == 3 | j == 12);
     }
 
     private boolean isDiggableBlock(int i)
@@ -58,8 +60,8 @@ public class MoCEntityMole extends MoCEntityTameable {
         double newPosY = coordY - Math.cos( (this.rotationPitch- 90F) / 57.29578F) * x;
         double newPosX = coordX + Math.cos((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
         double newPosZ = coordZ + Math.sin((MoCTools.realAngle(this.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (this.rotationPitch- 90F) / 57.29578F) * x );
-        int iTarget = this.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
-        if (isDiggableBlock(iTarget))
+        Block block = this.worldObj.getBlock( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
+        if (isDiggableBlock(Block.getIdFromBlock(block)))
         {
             this.setPosition(newPosX, newPosY, newPosZ);   
         }
@@ -237,9 +239,9 @@ public class MoCEntityMole extends MoCEntityTameable {
     }
     
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.fur.itemID;
+        return MoCreatures.fur;
     }
     
      @Override

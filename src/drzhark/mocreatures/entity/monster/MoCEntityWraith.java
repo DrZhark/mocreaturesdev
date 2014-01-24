@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.monster;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -21,7 +22,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(worldObj.difficultySetting == 1 ? 2.0D : 3.0D); // setAttackStrength
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(worldObj.difficultySetting.getDifficultyId() == 1 ? 2.0D : 3.0D); // setAttackStrength
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
     }
 
@@ -37,9 +38,9 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.gunpowder.itemID;
+        return Items.gunpowder;
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -159,8 +160,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
 
     public boolean isOnAir()
     {
-        int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D), MathHelper.floor_double(posZ));
-        return (j == 0);
+        return worldObj.isAirBlock(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D), MathHelper.floor_double(posZ));
     }
 
     @Override
@@ -341,49 +341,49 @@ public class MoCEntityHorseMob extends MoCEntityMob
     }
     
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         boolean flag = (rand.nextInt(5)==0);
 
         if (flag && (this.getType() == 36 || (this.getType() >=50 && this.getType() < 60))) //unicorn
         {
-            return MoCreatures.unicorn.itemID;
+            return MoCreatures.unicorn;
         }
         if (this.getType() == 39) //pegasus
         {
-            return Item.feather.itemID;
+            return Items.feather;
         }
         if (this.getType() == 40) //dark pegasus
         {
-            return Item.feather.itemID;
+            return Items.feather;
         }
         if (this.getType() == 38 && flag && worldObj.provider.isHellWorld) //nightmare
         {
-            return MoCreatures.heartfire.itemID;
+            return MoCreatures.heartfire;
         }
         if (this.getType() == 32 && flag) //bat horse
         {
-            return MoCreatures.heartdarkness.itemID;
+            return MoCreatures.heartdarkness;
         }
         if (this.getType() == 26)//skely
         {
-            return Item.bone.itemID;
+            return Items.bone;
         }
         if ((this.getType() == 23 || this.getType() == 24 || this.getType() == 25))
         {
             if (flag)
             {
-                return MoCreatures.heartundead.itemID;
+                return MoCreatures.heartundead;
             }
-            return Item.rottenFlesh.itemID;
+            return Items.rotten_flesh;
         }
 
         if (this.getType() == 21 || this.getType() == 22)
         {
-            return Item.ghastTear.itemID;
+            return Items.ghast_tear;
         }
 
-        return Item.leather.itemID;
+        return Items.leather;
     }
 
     @Override

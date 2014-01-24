@@ -1,15 +1,15 @@
 package drzhark.mocreatures.item;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemRecord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class MoCItemRecord extends ItemRecord
 {
-    public MoCItemRecord(int par1, String par2Str)
+    public MoCItemRecord(String par2Str)
     {
-        super(par1, par2Str);
+        super(par2Str);
     }
 
     @SideOnly(Side.CLIENT)
@@ -19,11 +19,11 @@ public class MoCItemRecord extends ItemRecord
      */
     public String getRecordTitle()
     {
-        return "MoC - " + this.recordName;
+        return "MoC - " + this.field_150929_a;
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerIcons(IIconRegister par1IconRegister)
     {
         this.itemIcon = par1IconRegister.registerIcon("mocreatures:recordshuffle");
     }

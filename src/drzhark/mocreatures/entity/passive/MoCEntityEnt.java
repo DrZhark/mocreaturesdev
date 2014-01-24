@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
@@ -14,7 +16,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -75,7 +78,7 @@ public class MoCEntityEnt extends MoCEntityAnimal{
                 Item itemheld = currentItem.getItem();
                 if (itemheld != null && itemheld instanceof ItemAxe)
                 {
-                    if ((worldObj.difficultySetting > 0) )
+                    if ((worldObj.difficultySetting != worldObj.difficultySetting.PEACEFUL) )
                     {
                         entityToAttack = ep;
                         
@@ -100,16 +103,16 @@ public class MoCEntityEnt extends MoCEntityAnimal{
         if (getType() == 2) typ = 2;
         if (i == 0)
         {
-            entityDropItem(new ItemStack(Block.wood.blockID, qty, typ), 0.0F);
+            entityDropItem(new ItemStack(Blocks.log, qty, typ), 0.0F);
             return;
         }
         if (i == 1)
         {
-            entityDropItem(new ItemStack(Item.stick.itemID, qty, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.stick, qty, 0), 0.0F);
             return;
 
         }
-        entityDropItem(new ItemStack(Block.sapling.blockID, qty, typ), 0.0F);
+        entityDropItem(new ItemStack(Blocks.sapling, qty, typ), 0.0F);
     }
 
     @Override
@@ -174,33 +177,33 @@ public class MoCEntityEnt extends MoCEntityAnimal{
 
     private boolean plantOnFertileGround() 
     {
-        int blockUnderFeet = this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) - 1, MathHelper.floor_double(this.posZ));
-        int blockOnFeet = this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+        Block blockUnderFeet = this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) - 1, MathHelper.floor_double(this.posZ));
+        Block blockOnFeet = this.worldObj.getBlock(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 
-        if (blockUnderFeet == 3)
+        if (blockUnderFeet == Blocks.dirt)
         {
             int xCoord = MathHelper.floor_double(this.posX);
             int yCoord = MathHelper.floor_double(this.posY - 1);
             int zCoord = MathHelper.floor_double(this.posZ);
-            Block block = Block.blocksList[2];
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get(this.worldObj, "[MoCreatures]"));
+            Block block = Blocks.grass;
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
             if (!event.isCanceled())
             {
-                this.worldObj.setBlock(xCoord, yCoord, zCoord, 2, 0, 3);
+                this.worldObj.setBlock(xCoord, yCoord, zCoord, block, 0, 3);
             }
             return false;
         }
 
-        if (blockUnderFeet == 2 && blockOnFeet == 0)
+        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.air)
         {
             int metaD = 0;
-            int fertileB = getBlockToPlant();
+            Block fertileB = Block.getBlockById(getBlockToPlant());
 
-            if (fertileB == 6)
+            if (fertileB == Blocks.sapling)
             {
                 if (getType() == 2) metaD = 2; //to place the right sapling
             }
-            if (fertileB == 31)
+            if (fertileB == Blocks.tallgrass)
             {
                 metaD = rand.nextInt(2)+1; //to place grass or fern
             }
@@ -214,8 +217,7 @@ public class MoCEntityEnt extends MoCEntityAnimal{
                     int xCoord = MathHelper.floor_double(this.posX);
                     int yCoord = MathHelper.floor_double(this.posY);
                     int zCoord = MathHelper.floor_double(this.posZ);
-                    Block block = Block.blocksList[fertileB];
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, metaD, FakePlayerFactory.get(this.worldObj, "[MoCreatures]"));
+                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, fertileB, metaD, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
                     if (event.isCanceled())
                     {
                         canPlant = false;

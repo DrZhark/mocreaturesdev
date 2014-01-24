@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.event.Event.Result;
-import net.minecraftforge.event.ForgeSubscribe;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import drzhark.customspawner.utils.CMSUtils;
@@ -25,7 +25,7 @@ import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCEventHooks {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event)
     {
         // if overworld has been deleted or unloaded, reset our flag
@@ -35,7 +35,7 @@ public class MoCEventHooks {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event)
     {
         if (DimensionManager.getWorld(0) != null && !MoCreatures.proxy.worldInitDone) // if overworld has loaded, use its mapstorage
@@ -59,7 +59,7 @@ public class MoCEventHooks {
     }
 
     // used for Despawner
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onLivingDespawn(LivingSpawnEvent.AllowDespawn event)
     {
         if (MoCreatures.proxy.forceDespawns && !MoCreatures.isCustomSpawnerLoaded)
@@ -133,12 +133,12 @@ public class MoCEventHooks {
         }
         if (blockLightLevel < minDespawnLightLevel && maxDespawnLightLevel != -1)
         {
-            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " under minimum threshold of " + minDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel + " under minimum threshold of " + minDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
             return false;
         }
         else if (blockLightLevel > maxDespawnLightLevel && maxDespawnLightLevel != -1)
         {
-            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " over maximum threshold of " + maxDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel + " over maximum threshold of " + maxDespawnLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
             return false;
         }
         return true;

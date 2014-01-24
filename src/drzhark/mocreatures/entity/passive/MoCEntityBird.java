@@ -8,6 +8,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -117,8 +118,8 @@ public class MoCEntityBird extends MoCEntityTameable {
         {
             label0: for (int j2 = i1; j2 < l1; j2++)
             {
-                int k2 = worldObj.getBlockId(i2, j, j2);
-                if ((k2 == 0) || (Block.blocksList[k2].blockMaterial != Material.wood))
+                Block block = worldObj.getBlock(i2, j, j2);
+                if ((block.isAir(worldObj, i2, j, j2)) || (block.getMaterial() != Material.wood))
                 {
                     continue;
                 }
@@ -129,8 +130,8 @@ public class MoCEntityBird extends MoCEntityTameable {
                     {
                         continue label0;
                     }
-                    int i3 = worldObj.getBlockId(i2, l2, j2);
-                    if (i3 == 0) { return (new int[] { i2, l2 + 2, j2 }); }
+                    Block block1 = worldObj.getBlock(i2, l2, j2);
+                    if (block1.isAir(worldObj, i2, l2, j2)) { return (new int[] { i2, l2 + 2, j2 }); }
                     l2++;
                 } while (true);
             }
@@ -247,9 +248,9 @@ public class MoCEntityBird extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.feather.itemID;
+        return Items.feather;
     }
 
     @Override
@@ -302,7 +303,7 @@ public class MoCEntityBird extends MoCEntityTameable {
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.itemID == Item.seeds.itemID)
+        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.getItem() == Items.wheat_seeds)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -415,11 +416,11 @@ public class MoCEntityBird extends MoCEntityTameable {
             }
             if (!fleeing)
             {
-                EntityItem entityitem = getClosestItem(this, 12D, Item.seeds.itemID, -1);
+                EntityItem entityitem = getClosestItem(this, 12D, Items.wheat_seeds, null);
                 if (entityitem != null)
                 {
                     FlyToNextEntity(entityitem);
-                    EntityItem entityitem1 = getClosestItem(this, 1.0D, Item.seeds.itemID, -1);
+                    EntityItem entityitem1 = getClosestItem(this, 1.0D, Items.wheat_seeds, null);
                     if ((rand.nextInt(50) == 0) && (entityitem1 != null))
                     {
                         entityitem1.setDead();
@@ -449,8 +450,8 @@ public class MoCEntityBird extends MoCEntityTameable {
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    int j2 = worldObj.getBlockId(k1, l1, i2);
-                    if ((j2 > 0 && Block.blocksList[j2] != null) && (Block.blocksList[j2].blockMaterial == material)) { return (new int[] { k1, l1, i2 }); }
+                    Block block = worldObj.getBlock(k1, l1, i2);
+                    if ((block != null && !block.isAir(worldObj, k1, l1, i2)) && (block.getMaterial() == material)) { return (new int[] { k1, l1, i2 }); }
                 }
 
             }
@@ -552,7 +553,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && par1ItemStack.itemID == Item.seeds.itemID;
+        return par1ItemStack != null && par1ItemStack.getItem() == Items.wheat_seeds;
     }
 
     @Override

@@ -9,6 +9,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -152,7 +154,7 @@ public class MoCEntityLitterBox extends EntityLiving {
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && MoCreatures.isServer() && ((itemstack.itemID == Item.pickaxeStone.itemID) || (itemstack.itemID == Item.pickaxeWood.itemID) || (itemstack.itemID == Item.pickaxeIron.itemID) || (itemstack.itemID == Item.pickaxeGold.itemID) || (itemstack.itemID == Item.pickaxeDiamond.itemID)))
+        if ((itemstack != null) && MoCreatures.isServer() && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe) || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe)))
         {
             entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.litterbox));
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
@@ -160,7 +162,7 @@ public class MoCEntityLitterBox extends EntityLiving {
             return true;
         }
 
-        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.itemID == Block.sand.blockID))
+        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.getItem() == Item.getItemFromBlock(Blocks.sand)))
         {
             if (--itemstack.stackSize == 0)
             {

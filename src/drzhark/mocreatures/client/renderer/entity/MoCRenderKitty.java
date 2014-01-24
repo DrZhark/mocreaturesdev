@@ -35,10 +35,10 @@ public class MoCRenderKitty extends RenderBiped {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityKitty entitykitty = (MoCEntityKitty) entityliving;
-        super.doRenderLiving(entitykitty, d, d1, d2, f, f1);
+        super.doRender(entitykitty, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitykitty.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         boolean flag2 = MoCreatures.proxy.getDisplayPetIcons();
@@ -144,10 +144,10 @@ public class MoCRenderKitty extends RenderBiped {
         }
     }
 
-    public void doRenderLiving2(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender2(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityKitty entitykitty = (MoCEntityKitty) entityliving;
-        super.doRenderLiving(entitykitty, d, d1, d2, f, f1);
+        super.doRender(entitykitty, d, d1, d2, f, f1);
     }
 
     @Override

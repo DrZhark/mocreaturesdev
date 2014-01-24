@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -79,7 +80,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0) && getIsAdult())
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0) && getIsAdult())
             {
                 entityToAttack = entity;
             }
@@ -100,7 +101,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, attackRange);
             if ((entityplayer != null) && (rand.nextInt(50) == 0)) { return entityplayer; }
@@ -118,12 +119,12 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate()
     {
-        if (worldObj.difficultySetting == 1)
+        if (worldObj.difficultySetting.getDifficultyId() == 1)
         {
             attackRange = 2D;
             force = 1;
         }
-        else if (worldObj.difficultySetting > 1)
+        else if (worldObj.difficultySetting.getDifficultyId() > 1)
         {
             attackRange = 3D;
             force = 2;
@@ -141,12 +142,12 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
 
-        if (rand.nextInt(2) == 0) { return Item.porkRaw.itemID; }
+        if (rand.nextInt(2) == 0) { return Items.porkchop; }
 
-        return MoCreatures.animalHide.itemID;
+        return MoCreatures.animalHide;
     }
 
     @Override

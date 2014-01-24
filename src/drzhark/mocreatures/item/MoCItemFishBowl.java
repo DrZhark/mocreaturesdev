@@ -8,8 +8,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -21,17 +21,17 @@ public class MoCItemFishBowl extends MoCItem {
     private int fishBowlType;
     private int ageCounter;
 
-    public MoCItemFishBowl(int i)
+    public MoCItemFishBowl(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 16;
         setHasSubtypes(true);
         ageCounter = 0;
     }
 
-    public MoCItemFishBowl(int i, int j)
+    public MoCItemFishBowl(String name, int j)
     {
-        this(i);
+        this(name);
         fishBowlType = j;
         ageCounter = 0;
     }
@@ -95,13 +95,13 @@ public class MoCItemFishBowl extends MoCItem {
                 }
             }
 
-            if (movingObjectPos.typeOfHit == EnumMovingObjectType.TILE)
+            if (movingObjectPos.typeOfHit == MovingObjectType.BLOCK)
             {
                 int var13 = movingObjectPos.blockX;
                 int var14 = movingObjectPos.blockY;
                 int var15 = movingObjectPos.blockZ;
 
-                if (!worldObj.isRemote && fishBowlType == 0 && worldObj.getBlockMaterial(var13, var14, var15) == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
+                if (!worldObj.isRemote && fishBowlType == 0 && worldObj.getBlock(var13, var14, var15).getMaterial() == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
                 {
 
                     if (--itemstack.stackSize == 0)
@@ -118,7 +118,7 @@ public class MoCItemFishBowl extends MoCItem {
 
                 //TODO
                 //water filling stuff
-                if (MoCreatures.isServer() && (fishBowlType > 0 && fishBowlType < 11) && worldObj.getBlockMaterial(var13, var14, var15) == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
+                if (MoCreatures.isServer() && (fishBowlType > 0 && fishBowlType < 11) && worldObj.getBlock(var13, var14, var15).getMaterial() == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
                 {
                     MoCEntityFishy entityfish = new MoCEntityFishy(worldObj);
                     entityfish.setPosition(var13, var14, var15);
@@ -142,7 +142,7 @@ public class MoCItemFishBowl extends MoCItem {
                     }
                 }
 
-                if (MoCreatures.isServer() && worldObj.getBlockMaterial(var13, var14, var15).isSolid())
+                if (MoCreatures.isServer() && worldObj.getBlock(var13, var14, var15).getMaterial().isSolid())
                 {
                     MoCEntityFishBowl entityfishbowl = new MoCEntityFishBowl(worldObj, itemstack.getItemDamage());
                     entityfishbowl.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);

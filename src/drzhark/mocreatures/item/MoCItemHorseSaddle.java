@@ -7,9 +7,9 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 
 public class MoCItemHorseSaddle extends MoCItem {
 
-    public MoCItemHorseSaddle(int i)
+    public MoCItemHorseSaddle(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 32;
     }
 

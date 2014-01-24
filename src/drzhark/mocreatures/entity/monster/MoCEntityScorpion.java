@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -21,7 +22,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityScorpion extends MoCEntityMob {
     private boolean isPoisoning;
@@ -125,7 +126,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 0);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
         }
         isPoisoning = flag;
     }
@@ -264,7 +265,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         {
             Entity entity = damagesource.getEntity();
 
-            if ((entity != null) && (entity != this) && (worldObj.difficultySetting > 0) && getIsAdult())
+            if ((entity != null) && (entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0) && getIsAdult())
             {
                 entityToAttack = entity;
             }
@@ -279,7 +280,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
+        if (worldObj.difficultySetting.getDifficultyId() > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 12D);
             if ((entityplayer != null)) { return entityplayer; }
@@ -361,7 +362,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
         }
     }
 
@@ -414,34 +415,34 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 3);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 3), this.worldObj.provider.dimensionId);
         }
         return "mocreatures:scorpiongrunt";
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        if (!getIsAdult()) { return Item.silk.itemID; }
+        if (!getIsAdult()) { return Items.string; }
 
         boolean flag = (rand.nextInt(2) == 0);
 
         switch (getType())
         {
         case 1:
-            if (flag) { return MoCreatures.stingDirt.itemID; }
-            return MoCreatures.chitinDirt.itemID;
+            if (flag) { return MoCreatures.stingDirt; }
+            return MoCreatures.chitinDirt;
         case 2:
-            if (flag) { return MoCreatures.stingCave.itemID; }
-            return MoCreatures.chitinCave.itemID;
+            if (flag) { return MoCreatures.stingCave; }
+            return MoCreatures.chitinCave;
         case 3:
-            if (flag) { return MoCreatures.stingNether.itemID; }
-            return MoCreatures.chitinNether.itemID;
+            if (flag) { return MoCreatures.stingNether; }
+            return MoCreatures.chitinNether;
         case 4:
-            if (flag) { return MoCreatures.stingFrost.itemID; }
-            return MoCreatures.chitinFrost.itemID;
+            if (flag) { return MoCreatures.stingFrost; }
+            return MoCreatures.chitinFrost;
         default:
-            return Item.silk.itemID;
+            return Items.string;
         }
     }
 
@@ -449,13 +450,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
     protected void dropFewItems(boolean flag, int x)
     {
         if (!flag) return;
-        int j = this.getDropItemId();
+        Item item = this.func_146068_u();
 
-        if (j > 0)
+        if (item != null)
         {
             if (rand.nextInt(3) == 0)
             {
-                this.dropItem(j, 1);
+                this.func_145779_a(item, 1);
             }
         }
 

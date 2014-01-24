@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,7 +20,7 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 
 /**
@@ -325,7 +326,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
             }
         }
 
-        if (worldObj.difficultySetting > 0 && getNearPlayer() && !getIsTamed() && isNotScared())
+        if (worldObj.difficultySetting.getDifficultyId() > 0 && getNearPlayer() && !getIsTamed() && isNotScared())
         {
 
             hissCounter++;
@@ -578,7 +579,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 0);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
         }
         this.isBiting = flag;
     }
@@ -604,7 +605,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
             Entity entity = damagesource.getEntity();
 
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0))
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0))
             {
                 setPissed(true);
                 entityToAttack = entity;
@@ -620,7 +621,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 4D);
             if (!getIsTamed() && (entityplayer != null)) // && getIsAdult() )
@@ -658,7 +659,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
     }
 
     @Override
-    protected void playStepSound(int par1, int par2, int par3, int par4)
+    protected void func_145780_a(int par1, int par2, int par3, Block par4)
     {
         if (isInsideOfMaterial(Material.water))
         {
@@ -797,7 +798,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && (par1ItemStack.itemID == MoCreatures.ratRaw.itemID);
+        return par1ItemStack != null && (par1ItemStack.getItem() == MoCreatures.ratRaw);
     }
 
     @Override

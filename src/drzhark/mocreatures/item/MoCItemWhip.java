@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
@@ -19,9 +20,9 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 
 public class MoCItemWhip extends MoCItem {
 
-    public MoCItemWhip(int i)
+    public MoCItemWhip(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setMaxDamage(24);
     }
@@ -41,9 +42,9 @@ public class MoCItemWhip extends MoCItem {
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l, float f1, float f2, float f3)
     {
         int i1 = 0;
-        int j1 = world.getBlockId(i, j, k);
-        int k1 = world.getBlockId(i, j + 1, k);
-        if ((l != 0) && (k1 == 0) && (j1 != 0) && (j1 != Block.signPost.blockID))
+        Block block = world.getBlock(i, j, k);
+        Block block1 = world.getBlock(i, j + 1, k);
+        if ((l != 0) && (block == Blocks.air) && (block != Blocks.air) && (block != Blocks.standing_sign))
         {
             whipFX(world, i, j, k);
             world.playSoundAtEntity(entityplayer, "whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
@@ -56,7 +57,7 @@ public class MoCItemWhip extends MoCItem {
                 if (entity instanceof MoCEntityAnimal)
                 {
                     MoCEntityAnimal animal = (MoCEntityAnimal) entity;
-                    if (MoCreatures.proxy.enableOwnership && animal.getOwnerName() != null && !animal.getOwnerName().equals("") && !entityplayer.username.equals(animal.getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) 
+                    if (MoCreatures.proxy.enableOwnership && animal.getOwnerName() != null && !animal.getOwnerName().equals("") && !entityplayer.getCommandSenderName().equals(animal.getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) 
                     { 
                        continue;
                     }
@@ -70,7 +71,7 @@ public class MoCItemWhip extends MoCItem {
                         entitybigcat.setSitting(!entitybigcat.getIsSitting());
                         i1++;
                     }
-                    else if ((world.difficultySetting > 0) && entitybigcat.getIsAdult())
+                    else if ((world.difficultySetting.getDifficultyId() > 0) && entitybigcat.getIsAdult())
                     {
                         entitybigcat.setTarget(entityplayer);
                     }

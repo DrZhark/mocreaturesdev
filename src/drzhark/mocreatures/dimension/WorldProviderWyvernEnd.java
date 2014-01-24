@@ -121,8 +121,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
      */
     public boolean canCoordinateBeSpawn(int par1, int par2)
     {
-        int var3 = this.worldObj.getFirstUncoveredBlock(par1, par2);
-        return var3 == 0 ? false : Block.blocksList[var3].blockMaterial.blocksMovement();
+        return this.worldObj.getTopBlock(par1, par2).getMaterial().blocksMovement();
     }
 
     /**

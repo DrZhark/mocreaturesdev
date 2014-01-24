@@ -6,6 +6,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -175,7 +176,7 @@ public class MoCEntityBear extends MoCEntityTameable {
     public double getAttackRange()
     {
         int factor = 1;
-        if (worldObj.difficultySetting > 1)
+        if (worldObj.difficultySetting.getDifficultyId() > 1)
         {
             factor = 2;
         }
@@ -203,7 +204,7 @@ public class MoCEntityBear extends MoCEntityTameable {
      */
     public int getAttackStrength()
     {
-        int factor = (worldObj.difficultySetting);
+        int factor = (worldObj.difficultySetting.getDifficultyId());
 
         switch (getType())
         {
@@ -252,7 +253,7 @@ public class MoCEntityBear extends MoCEntityTameable {
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0) && this.getType() != 3)
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0) && this.getType() != 3)
             {
                 entityToAttack = entity;
             }
@@ -273,7 +274,7 @@ public class MoCEntityBear extends MoCEntityTameable {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             float f = getBrightness(1.0F);
             if (f < 0.0F && this.getType() == 1 || this.getType() == 4)
@@ -351,7 +352,7 @@ public class MoCEntityBear extends MoCEntityTameable {
 
         if (MoCreatures.isServer() && getType() == 3 && (deathTime == 0) && getBearState() != 2)
         {
-            EntityItem entityitem = getClosestItem(this, 12D, Item.reed.itemID, Item.sugar.itemID);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.reeds, Items.sugar);
             if (entityitem != null)
             {
 
@@ -376,7 +377,7 @@ public class MoCEntityBear extends MoCEntityTameable {
     {
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (getType() == 3) && ((itemstack.itemID == MoCreatures.sugarlump.itemID) || (itemstack.itemID == Item.reed.itemID)))
+        if ((itemstack != null) && (getType() == 3) && ((itemstack.getItem() == MoCreatures.sugarlump) || (itemstack.getItem() == Items.reeds)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -414,9 +415,9 @@ public class MoCEntityBear extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.animalHide.itemID;
+        return MoCreatures.animalHide;
     }
 
     @Override
@@ -501,13 +502,13 @@ public class MoCEntityBear extends MoCEntityTameable {
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack)
     {
-        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.itemID == Item.reed.itemID;
+        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.reeds;
     }
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.itemID == Item.reed.itemID;
+        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.reeds;
     }
 
     @Override

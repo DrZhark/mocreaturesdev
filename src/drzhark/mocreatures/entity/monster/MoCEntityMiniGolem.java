@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -219,7 +220,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
      * Plays step sound at given x, y, z for the entity
      */
     @Override
-    protected void playStepSound(int par1, int par2, int par3, int par4)
+    protected void func_145780_a(int par1, int par2, int par3, Block par4)
     {
         this.playSound("mocreatures:minigolemwalk", 1.0F, 1.0F);
     }

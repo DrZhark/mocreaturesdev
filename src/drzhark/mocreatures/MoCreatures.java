@@ -7,28 +7,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.Block.SoundType;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -40,12 +44,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
@@ -56,8 +58,8 @@ import drzhark.mocreatures.block.MoCBlockRock;
 import drzhark.mocreatures.block.MoCBlockTallGrass;
 import drzhark.mocreatures.block.MultiItemBlock;
 import drzhark.mocreatures.client.MoCClientTickHandler;
+import drzhark.mocreatures.client.MoCCreativeTabs;
 import drzhark.mocreatures.client.handlers.MoCKeyHandler;
-import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.command.CommandMoCPets;
 import drzhark.mocreatures.command.CommandMoCTP;
 import drzhark.mocreatures.command.CommandMoCreatures;
@@ -144,12 +146,23 @@ import drzhark.mocreatures.item.MoCItemSugarLump;
 import drzhark.mocreatures.item.MoCItemTurtleSoup;
 import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.MoCPacketPipeline;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.packet.MoCPacketAppear;
+import drzhark.mocreatures.network.packet.MoCPacketAttachedEntity;
+import drzhark.mocreatures.network.packet.MoCPacketEntityDive;
+import drzhark.mocreatures.network.packet.MoCPacketEntityJump;
+import drzhark.mocreatures.network.packet.MoCPacketExplode;
+import drzhark.mocreatures.network.packet.MoCPacketHealth;
+import drzhark.mocreatures.network.packet.MoCPacketHeart;
+import drzhark.mocreatures.network.packet.MoCPacketInstaSpawn;
+import drzhark.mocreatures.network.packet.MoCPacketNameGUI;
+import drzhark.mocreatures.network.packet.MoCPacketShuffle;
+import drzhark.mocreatures.network.packet.MoCPacketTwoBytes;
+import drzhark.mocreatures.network.packet.MoCPacketVanish;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0.dev.R2")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false,
-clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "7.0.0.dev.R1")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -157,9 +170,10 @@ public class MoCreatures {
 
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")
     public static MoCProxy proxy;
-    public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    //public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
+    public static GameProfile MOCFAKEPLAYER = new GameProfile("", "[MoCreatures]");
 
     /**
      * ITEMS
@@ -183,15 +197,15 @@ public class MoCreatures {
     public static Item staffTeleport;
     public static Item builderHammer;
 
-    static EnumArmorMaterial crocARMOR = EnumHelper.addArmorMaterial("crocARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
-    static EnumArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
-    static EnumArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
-    static EnumArmorMaterial scorpdARMOR = EnumHelper.addArmorMaterial("scorpdARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
-    static EnumArmorMaterial scorpfARMOR = EnumHelper.addArmorMaterial("scorpfARMOR", 18, new int[] { 2, 7, 6, 2 }, 12);
-    static EnumArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", 20, new int[] { 3, 7, 6, 3 }, 15);
-    static EnumArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
-    static EnumArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", 15, new int[] { 2, 6, 5, 2 }, 15);
-    static EnumToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 4, 15);
+    static ArmorMaterial crocARMOR = EnumHelper.addArmorMaterial("crocARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial scorpdARMOR = EnumHelper.addArmorMaterial("scorpdARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial scorpfARMOR = EnumHelper.addArmorMaterial("scorpfARMOR", 18, new int[] { 2, 7, 6, 2 }, 12);
+    static ArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", 20, new int[] { 3, 7, 6, 3 }, 15);
+    static ArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", 15, new int[] { 2, 6, 5, 2 }, 15);
+    static ToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 4, 15);
 
     public static Item horsesaddle;
     //public static Item horsearmormetal;
@@ -338,21 +352,21 @@ public class MoCreatures {
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
     public static List<String> defaultBiomeSupport = new ArrayList<String>();
     public static final String CATEGORY_ITEM_IDS = "item-ids";
+    public static final MoCPacketPipeline packetPipeline = new MoCPacketPipeline();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new MoCEventHooks());
         proxy.ConfigInit(event);
-        proxy.initSounds();
+        //proxy.initSounds();
         proxy.initTextures();
         if (!isServer())
         {
-            TickRegistry.registerTickHandler(new MoCClientTickHandler(), Side.CLIENT);
-            KeyBindingRegistry.registerKeyBinding(new MoCKeyHandler());
+            FMLCommonHandler.instance().bus().register(new MoCClientTickHandler());
+            FMLCommonHandler.instance().bus().register(new MoCKeyHandler());
         }
-        tracker = new MoCPlayerTracker();
-        GameRegistry.registerPlayerTracker(tracker);
+        FMLCommonHandler.instance().bus().register(new MoCPlayerTracker());
     }
 
     //how to check for client: if(FMLCommonHandler.instance().getSide().isClient())
@@ -365,12 +379,27 @@ public class MoCreatures {
         this.AddRecipes();
         proxy.registerRenderers();
         proxy.registerRenderInformation();
+        packetPipeline.initalise();
+        packetPipeline.registerPacket(MoCPacketNameGUI.class);
+        packetPipeline.registerPacket(MoCPacketAnimation.class);
+        packetPipeline.registerPacket(MoCPacketAppear.class);
+        packetPipeline.registerPacket(MoCPacketAttachedEntity.class);
+        packetPipeline.registerPacket(MoCPacketEntityDive.class);
+        packetPipeline.registerPacket(MoCPacketEntityJump.class);
+        packetPipeline.registerPacket(MoCPacketExplode.class);
+        packetPipeline.registerPacket(MoCPacketHealth.class);
+        packetPipeline.registerPacket(MoCPacketHeart.class);
+        packetPipeline.registerPacket(MoCPacketInstaSpawn.class);
+        packetPipeline.registerPacket(MoCPacketShuffle.class);
+        packetPipeline.registerPacket(MoCPacketTwoBytes.class);
+        packetPipeline.registerPacket(MoCPacketVanish.class);
         DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, true);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        packetPipeline.postInitialise();
         isCustomSpawnerLoaded = Loader.isModLoaded("CustomSpawner");
         //ForgeChunkManager.setForcedChunkLoadingCallback(instance, new MoCloadCallback());
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
@@ -548,7 +577,7 @@ public class MoCreatures {
 
         for (MoCEntityData entityData : mocEntityMap.values())
         {
-            if (entityData.getEntityName().equals("Wyvern")) continue;
+            if (entityData.getCommandSenderName().equals("Wyvern")) continue;
             SpawnListEntry spawnEntry = entityData.getSpawnListEntry();
             for (BiomeDictionary.Type type : entityData.getBiomeTypes())
             {
@@ -610,192 +639,190 @@ public class MoCreatures {
 
     protected void InitItems()
     {
-        MoCItemID = proxy.itemID;//8772
         WyvernLairDimensionID = proxy.WyvernDimension;//17
 
-        recordshuffle = (new MoCItemRecord(getItemId("recordshuffle", MoCItemID++), "shuffling")).setUnlocalizedName("recordshuffle");
-        horsesaddle = (new MoCItemHorseSaddle(getItemId("horsesaddle", MoCItemID++))).setUnlocalizedName("horsesaddle");
-        MoCItemID++;
+        recordshuffle = new MoCItemRecord("recordshuffle");
+        horsesaddle = new MoCItemHorseSaddle("horsesaddle");
+
         //horsearmormetal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armormetal");
-        sharkteeth = (new MoCItem(getItemId("sharkteeth", MoCItemID++))).setUnlocalizedName("sharkteeth");
-        haystack = (new MoCItemHayStack(getItemId("haystack", MoCItemID++))).setUnlocalizedName("haystack");
-        sugarlump = (new MoCItemSugarLump(getItemId("sugarlump", MoCItemID++))).setUnlocalizedName("sugarlump");
-        fishyegg = (new MoCItemEgg(getItemId("moc_egg", MoCItemID++))).setUnlocalizedName("moc_egg");
-        bigcatclaw = (new MoCItem(getItemId("bigcatclaw", MoCItemID++))).setUnlocalizedName("bigcatclaw");
-        whip = (new MoCItemWhip(getItemId("whip", MoCItemID++))).setUnlocalizedName("whip");
-        MoCItemID++;
+        sharkteeth = new MoCItem("sharkteeth");
+        haystack = new MoCItemHayStack("haystack");
+        sugarlump = new MoCItemSugarLump("sugarlump");
+        fishyegg = new MoCItemEgg("moc_egg");
+        bigcatclaw = new MoCItem("bigcatclaw");
+        whip = new MoCItemWhip("whip");
+
         //horsearmorgold = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorgold");
-        MoCItemID++;
         //horsearmordiamond = (new MoCItem(MoCItemID++)).setUnlocalizedName("armordiamond");
-        staffTeleport = (new ItemStaffTeleport(getItemId("staffteleport", MoCItemID++))).setUnlocalizedName("staffteleport");
+        staffTeleport = new ItemStaffTeleport("staffteleport");
         LanguageRegistry.addName(staffTeleport, "Teleport Staff");
 
-        medallion = (new MoCItem(getItemId("medallion", MoCItemID++))).setUnlocalizedName("medallion");
-        kittybed = (new MoCItemKittyBed(getItemId("catbed", MoCItemID++), 0)).setUnlocalizedName("catbed");
-        litterbox = (new MoCItemLitterBox(getItemId("catlitter", MoCItemID++))).setUnlocalizedName("catlitter");
-        woolball = (new MoCItem(getItemId("woolball", MoCItemID++))).setUnlocalizedName("woolball");
-        MoCItemID++;
+        medallion = new MoCItem("medallion");
+        kittybed = new MoCItemKittyBed("catbed");
+        litterbox = new MoCItemLitterBox("catlitter");
+        woolball = new MoCItem("woolball");
+
         //rope = (new MoCItem(MoCItemID++)).setUnlocalizedName("rope");
-        petfood = (new MoCItem(getItemId("petfood", MoCItemID++))).setUnlocalizedName("petfood");
-        builderHammer = (new ItemBuilderHammer(getItemId("buildhammer", MoCItemID++))).setUnlocalizedName("builderhammer");
+        petfood = new MoCItem("petfood");
+        builderHammer = new ItemBuilderHammer("builderhammer");
         LanguageRegistry.addName(builderHammer, "Builder Hammer");
 
-        crochide = (new MoCItem(getItemId("reptilehide", MoCItemID++))).setUnlocalizedName("reptilehide");
-        plateCroc = (new MoCItemArmor(getItemId("reptileplate", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("reptileplate");
-        helmetCroc = (new MoCItemArmor(getItemId("reptilehelmet", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("reptilehelmet");
-        legsCroc = (new MoCItemArmor(getItemId("reptilelegs", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("reptilelegs");
-        bootsCroc = (new MoCItemArmor(getItemId("reptileboots", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("reptileboots");
-        fishbowl_e = (new MoCItemFishBowl(getItemId("bowlempty", MoCItemID++), 0)).setUnlocalizedName("bowlempty");
-        fishbowl_w = (new MoCItemFishBowl(getItemId("bowlwater", MoCItemID++), 11)).setUnlocalizedName("bowlwater");
-        fishbowl_1 = (new MoCItemFishBowl(getItemId("bowlfish1", MoCItemID++), 1)).setUnlocalizedName("bowlfish1");
-        fishbowl_2 = (new MoCItemFishBowl(getItemId("bowlfish2", MoCItemID++), 2)).setUnlocalizedName("bowlfish2");
-        fishbowl_3 = (new MoCItemFishBowl(getItemId("bowlfish3", MoCItemID++), 3)).setUnlocalizedName("bowlfish3");
-        fishbowl_4 = (new MoCItemFishBowl(getItemId("bowlfish4", MoCItemID++), 4)).setUnlocalizedName("bowlfish4");
-        fishbowl_5 = (new MoCItemFishBowl(getItemId("bowlfish5", MoCItemID++), 5)).setUnlocalizedName("bowlfish5");
-        fishbowl_6 = (new MoCItemFishBowl(getItemId("bowlfish6", MoCItemID++), 6)).setUnlocalizedName("bowlfish6");
-        fishbowl_7 = (new MoCItemFishBowl(getItemId("bowlfish7", MoCItemID++), 7)).setUnlocalizedName("bowlfish7");
-        fishbowl_8 = (new MoCItemFishBowl(getItemId("bowlfish8", MoCItemID++), 8)).setUnlocalizedName("bowlfish8");
-        fishbowl_9 = (new MoCItemFishBowl(getItemId("bowlfish9", MoCItemID++), 9)).setUnlocalizedName("bowlfish9");
-        fishbowl_10 = (new MoCItemFishBowl(getItemId("bowlfish10", MoCItemID++), 10)).setUnlocalizedName("bowlfish10");
+        crochide = new MoCItem("reptilehide");
+        plateCroc = new MoCItemArmor("reptileplat", crocARMOR, 4, 1);
+        helmetCroc = new MoCItemArmor("reptilehelmet", crocARMOR, 4, 0);
+        legsCroc = new MoCItemArmor("reptilelegs", crocARMOR, 4, 2);
+        bootsCroc = new MoCItemArmor("reptileboots", crocARMOR, 4, 3);
+        fishbowl_e = new MoCItemFishBowl("bowlempty", 0);
+        fishbowl_w = new MoCItemFishBowl("bowlwater", 11);
+        fishbowl_1 = new MoCItemFishBowl("bowlfish1", 1);
+        fishbowl_2 = new MoCItemFishBowl("bowlfish2", 2);
+        fishbowl_3 = new MoCItemFishBowl("bowlfish3", 3);
+        fishbowl_4 = new MoCItemFishBowl("bowlfish4", 4);
+        fishbowl_5 = new MoCItemFishBowl("bowlfish5", 5);
+        fishbowl_6 = new MoCItemFishBowl("bowlfish6", 6);
+        fishbowl_7 = new MoCItemFishBowl("bowlfish7", 7);
+        fishbowl_8 = new MoCItemFishBowl("bowlfish8", 8);
+        fishbowl_9 = new MoCItemFishBowl("bowlfish9", 9);
+        fishbowl_10 = new MoCItemFishBowl("bowlfish10", 10);
 
-        fur = (new MoCItem(getItemId("fur", MoCItemID++))).setUnlocalizedName("fur");
-        omelet = (new MoCItemFood(getItemId("omelet", MoCItemID++), 4, 0.6F, false)).setUnlocalizedName("omelet");
-        turtlemeat = (new MoCItemFood(getItemId("turtlemeat", MoCItemID++), 2, 0.3F, false)).setUnlocalizedName("turtlemeat");
-        turtlesoup = (new MoCItemTurtleSoup(getItemId("turtlesoup", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("turtlesoup");
+        fur = new MoCItem("fur");
+        omelet = new MoCItemFood("omelet", 4, 0.6F, false);
+        turtlemeat = new MoCItemFood("turtlemeat", 2, 0.3F, false);
+        turtlesoup = new MoCItemTurtleSoup("turtlesoup", 6, 0.6F, false);
 
-        nunchaku = (new MoCItemWeapon(getItemId("nunchaku", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("nunchaku");
-        sai = (new MoCItemWeapon(getItemId("sai", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("sai");
-        bo = (new MoCItemWeapon(getItemId("bo", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("bo");
-        katana = (new MoCItemWeapon(getItemId("katana", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("katana");
-        sharksword = (new MoCItemWeapon(getItemId("swordshark", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("swordshark");
+        nunchaku = new MoCItemWeapon("nunchaku", ToolMaterial.IRON);
+        sai = new MoCItemWeapon("sai", ToolMaterial.IRON);
+        bo = new MoCItemWeapon("bo", ToolMaterial.IRON);
+        katana = new MoCItemWeapon("katana", ToolMaterial.IRON);
+        sharksword = new MoCItemWeapon("swordshark", ToolMaterial.IRON);
 
-        key = (new MoCItem(getItemId("key", MoCItemID++))).setUnlocalizedName("key");
-        vialdarkness = (new MoCItem(getItemId("essencedarkness", MoCItemID++))).setUnlocalizedName("essencedarkness");
-        vialnightmare = (new MoCItem(getItemId("essencefire", MoCItemID++))).setUnlocalizedName("essencefire");
-        amuletbone = (new MoCItemHorseAmulet(getItemId("amuletbone", MoCItemID++))).setUnlocalizedName("amuletbone");
-        amuletbonefull = (new MoCItemHorseAmulet(getItemId("amuletbonefull", MoCItemID++))).setUnlocalizedName("amuletbonefull");
-        amuletghost = (new MoCItemHorseAmulet(getItemId("amuletghost", MoCItemID++))).setUnlocalizedName("amuletghost");
-        amuletghostfull = (new MoCItemHorseAmulet(getItemId("amuletghostfull", MoCItemID++))).setUnlocalizedName("amuletghostfull");
-        amuletfairy = (new MoCItemHorseAmulet(getItemId("amuletfairy", MoCItemID++))).setUnlocalizedName("amuletfairy");
-        amuletfairyfull = (new MoCItemHorseAmulet(getItemId("amuletfairyfull", MoCItemID++))).setUnlocalizedName("amuletfairyfull");
-        amuletpegasus = (new MoCItemHorseAmulet(getItemId("amuletpegasus", MoCItemID++))).setUnlocalizedName("amuletpegasus");
-        amuletpegasusfull = (new MoCItemHorseAmulet(getItemId("amuletpegasusfull", MoCItemID++))).setUnlocalizedName("amuletpegasusfull");
+        key = new MoCItem("key");
+        vialdarkness = new MoCItem("essencedarkness");
+        vialnightmare = new MoCItem("essencefire");
+        amuletbone = new MoCItemHorseAmulet("amuletbone");
+        amuletbonefull = new MoCItemHorseAmulet("amuletbonefull");
+        amuletghost = new MoCItemHorseAmulet("amuletghost");
+        amuletghostfull = new MoCItemHorseAmulet("amuletghostfull");
+        amuletfairy = new MoCItemHorseAmulet("amuletfairy");
+        amuletfairyfull = new MoCItemHorseAmulet("amuletfairyfull");
+        amuletpegasus = new MoCItemHorseAmulet("amuletpegasus");
+        amuletpegasusfull = new MoCItemHorseAmulet("amuletpegasusfull");
 
-        vialundead = (new MoCItem(getItemId("essenceundead", MoCItemID++))).setUnlocalizedName("essenceundead");
-        viallight = (new MoCItem(getItemId("essencelight", MoCItemID++))).setUnlocalizedName("essencelight");
+        vialundead = new MoCItem("essenceundead");
+        viallight = new MoCItem("essencelight");
 
-        plateFur = (new MoCItemArmor(getItemId("furplate", MoCItemID++), furARMOR, 4, 1)).setUnlocalizedName("furplate");
-        helmetFur = (new MoCItemArmor(getItemId("furhelmet", MoCItemID++), furARMOR, 4, 0)).setUnlocalizedName("furhelmet");
-        legsFur = (new MoCItemArmor(getItemId("furlegs", MoCItemID++), furARMOR, 4, 2)).setUnlocalizedName("furlegs");
-        bootsFur = (new MoCItemArmor(getItemId("furboots", MoCItemID++), furARMOR, 4, 3)).setUnlocalizedName("furboots");
+        plateFur = new MoCItemArmor("furplate", furARMOR, 4, 1);
+        helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, 0);
+        legsFur = new MoCItemArmor("furlegs", furARMOR, 4, 2);
+        bootsFur = new MoCItemArmor("furboots", furARMOR, 4, 3);
 
-        heartdarkness = (new MoCItem(getItemId("heartdarkness", MoCItemID++))).setUnlocalizedName("heartdarkness");
-        heartfire = (new MoCItem(getItemId("heartfire", MoCItemID++))).setUnlocalizedName("heartfire");
-        heartundead = (new MoCItem(getItemId("heartundead", MoCItemID++))).setUnlocalizedName("heartundead");
-        ostrichmeat = (new MoCItemFood(getItemId("ostrichraw", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ostrichraw");
-        ostrichcooked = (new MoCItemFood(getItemId("ostrichcooked", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("ostrichcooked");
-        unicorn = (new MoCItem(getItemId("unicorn", MoCItemID++))).setUnlocalizedName("unicorn");
+        heartdarkness = new MoCItem("heartdarkness");
+        heartfire = new MoCItem("heartfire");
+        heartundead = new MoCItem("heartundead");
+        ostrichmeat = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        ostrichcooked = new MoCItemFood("ostrichcooked", 6, 0.6F, false);
+        unicorn = new MoCItem("unicorn");
 
-        fishnet = (new MoCItemPetAmulet(getItemId("fishnet", MoCItemID++))).setUnlocalizedName("fishnet");
+        fishnet = new MoCItemPetAmulet("fishnet");
         MoCItemID++;
-        horsearmorcrystal = (new MoCItem(getItemId("armorcrystal", MoCItemID++))).setUnlocalizedName("armorcrystal");
+        horsearmorcrystal = new MoCItem("armorcrystal");
         MoCItemID++;
 
-        rawTurkey = (new MoCItemFood(getItemId("turkeyraw", MoCItemID++), 3, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("turkeyraw");
-        cookedTurkey = (new MoCItemFood(getItemId("turkeycooked", MoCItemID++), 8, 0.6F, false)).setUnlocalizedName("turkeycooked");
-        animalHide = (new MoCItem(getItemId("hide", MoCItemID++))).setUnlocalizedName("hide");
-        plateHide = (new MoCItemArmor(getItemId("hideplate", MoCItemID++), hideARMOR, 4, 1)).setUnlocalizedName("hideplate");
-        helmetHide = (new MoCItemArmor(getItemId("hidehelmet", MoCItemID++), hideARMOR, 4, 0)).setUnlocalizedName("hidehelmet");
-        legsHide = (new MoCItemArmor(getItemId("hidelegs", MoCItemID++), hideARMOR, 4, 2)).setUnlocalizedName("hidelegs");
-        bootsHide = (new MoCItemArmor(getItemId("hideboots", MoCItemID++), hideARMOR, 4, 3)).setUnlocalizedName("hideboots");
-        ratRaw = (new MoCItemFood(getItemId("ratraw", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("ratraw");
-        ratCooked = (new MoCItemFood(getItemId("ratcooked", MoCItemID++), 4, 0.6F, false)).setUnlocalizedName("ratcooked");
-        ratBurger = (new MoCItemFood(getItemId("ratburger", MoCItemID++), 8, 0.6F, false)).setUnlocalizedName("ratburger");
+        rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        cookedTurkey = new MoCItemFood("turkeycooked", 8, 0.6F, false);
+        animalHide = new MoCItem("hide");
+        plateHide = new MoCItemArmor("hideplate", hideARMOR, 4, 1);
+        helmetHide = new MoCItemArmor("hidehelmet", hideARMOR, 4, 0);
+        legsHide = new MoCItemArmor("hidelegs", hideARMOR, 4, 2);
+        bootsHide = new MoCItemArmor("hideboots", hideARMOR, 4, 3);
+        ratRaw = new MoCItemFood("ratraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        ratCooked = new MoCItemFood("ratcooked", 4, 0.6F, false);
+        ratBurger = new MoCItemFood("ratburger", 8, 0.6F, false);
 
-        chitinCave = (new MoCItem(getItemId("chitinblack", MoCItemID++))).setUnlocalizedName("chitinblack");
-        chitinFrost = (new MoCItem(getItemId("chitinfrost", MoCItemID++))).setUnlocalizedName("chitinfrost");
-        chitinNether = (new MoCItem(getItemId("chitinnether", MoCItemID++))).setUnlocalizedName("chitinnether");
-        chitinDirt = (new MoCItem(getItemId("chitin", MoCItemID++))).setUnlocalizedName("chitin");
+        chitinCave = new MoCItem("chitinblack");
+        chitinFrost = new MoCItem("chitinfrost");
+        chitinNether = new MoCItem("chitinnether");
+        chitinDirt = new MoCItem("chitin");
 
-        swordCave = (new MoCItemWeapon(getItemId("swordscorpioncave", MoCItemID++), EnumToolMaterial.IRON, 4, false)).setUnlocalizedName("swordscorpioncave");
-        swordFrost = (new MoCItemWeapon(getItemId("swordscorpionfrost", MoCItemID++), EnumToolMaterial.IRON, 2, false)).setUnlocalizedName("swordscorpionfrost");
-        swordNether = (new MoCItemWeapon(getItemId("swordscorpionnether", MoCItemID++), EnumToolMaterial.IRON, 3, false)).setUnlocalizedName("swordscorpionnether");
-        swordDirt = (new MoCItemWeapon(getItemId("swordscorpion", MoCItemID++), EnumToolMaterial.IRON, 1, false)).setUnlocalizedName("swordscorpion");
+        swordCave = new MoCItemWeapon("swordscorpioncave", ToolMaterial.IRON, 4, false);
+        swordFrost = new MoCItemWeapon("swordscorpionfrost", ToolMaterial.IRON, 2, false);
+        swordNether = new MoCItemWeapon("swordscorpionnether", ToolMaterial.IRON, 3, false);
+        swordDirt = new MoCItemWeapon("swordscorpion", ToolMaterial.IRON, 1, false);
 
-        plateScorpDirt = (new MoCItemArmor(getItemId("scorpplatedirt", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("plate");
-        helmetScorpDirt = (new MoCItemArmor(getItemId("scorphelmetdirt", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmet");
-        legsScorpDirt = (new MoCItemArmor(getItemId("scorplegsdirt", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legs");
-        bootsScorpDirt = (new MoCItemArmor(getItemId("scorpbootsdirt", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("boots");
+        plateScorpDirt = new MoCItemArmor("scorpplatedirt", crocARMOR, 4, 1);
+        helmetScorpDirt = new MoCItemArmor("scorphelmetdirt", crocARMOR, 4, 0);
+        legsScorpDirt = new MoCItemArmor("scorplegsdirt", crocARMOR, 4, 2);
+        bootsScorpDirt = new MoCItemArmor("scorpbootsdirt", crocARMOR, 4, 3);
 
-        plateScorpFrost = (new MoCItemArmor(getItemId("scorpplatefrost", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("platefrost");
-        helmetScorpFrost = (new MoCItemArmor(getItemId("scorphelmetfrost", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetfrost");
-        legsScorpFrost = (new MoCItemArmor(getItemId("scorplegsfrost", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsfrost");
-        bootsScorpFrost = (new MoCItemArmor(getItemId("scorpbootsfrost", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsfrost");
+        plateScorpFrost = new MoCItemArmor("scorpplatefrost", crocARMOR, 4, 1);
+        helmetScorpFrost = new MoCItemArmor("scorphelmetfrost", crocARMOR, 4, 0);
+        legsScorpFrost = new MoCItemArmor("scorplegsfrost", crocARMOR, 4, 2);
+        bootsScorpFrost = new MoCItemArmor("scorpbootsfrost", crocARMOR, 4, 3);
 
-        plateScorpCave = (new MoCItemArmor(getItemId("scorpplatecave", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("plateblack");
-        helmetScorpCave = (new MoCItemArmor(getItemId("scorphelmetcave", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetblack");
-        legsScorpCave = (new MoCItemArmor(getItemId("scorplegscave", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsblack");
-        bootsScorpCave = (new MoCItemArmor(getItemId("scorpbootscave", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsblack");
+        plateScorpCave = new MoCItemArmor("scorpplatecave", crocARMOR, 4, 1);
+        helmetScorpCave = new MoCItemArmor("scorphelmetcave", crocARMOR, 4, 0);
+        legsScorpCave = new MoCItemArmor("scorplegscave", crocARMOR, 4, 2);
+        bootsScorpCave = new MoCItemArmor("scorpbootscave", crocARMOR, 4, 3);
 
-        plateScorpNether = (new MoCItemArmor(getItemId("scorpplatenether", MoCItemID++), crocARMOR, 4, 1)).setUnlocalizedName("platenether");
-        helmetScorpNether = (new MoCItemArmor(getItemId("scorphelmetnether", MoCItemID++), crocARMOR, 4, 0)).setUnlocalizedName("helmetnether");
-        legsScorpNether = (new MoCItemArmor(getItemId("scorplegsnether", MoCItemID++), crocARMOR, 4, 2)).setUnlocalizedName("legsnether");
-        bootsScorpNether = (new MoCItemArmor(getItemId("scorpbootsnether", MoCItemID++), crocARMOR, 4, 3)).setUnlocalizedName("bootsnether");
+        plateScorpNether = new MoCItemArmor("scorpplatenether", crocARMOR, 4, 1);
+        helmetScorpNether = new MoCItemArmor("scorphelmetnether", crocARMOR, 4, 0);
+        legsScorpNether = new MoCItemArmor("scorplegsnether", crocARMOR, 4, 2);
+        bootsScorpNether = new MoCItemArmor("scorpbootsnether", crocARMOR, 4, 3);
 
-        stingCave = (new MoCItemWeapon(getItemId("stingcave", MoCItemID++), EnumToolMaterial.GOLD, 4, true)).setUnlocalizedName("stingcave");
-        stingFrost = (new MoCItemWeapon(getItemId("stingfrost", MoCItemID++), EnumToolMaterial.GOLD, 2, true)).setUnlocalizedName("stingfrost");
-        stingNether = (new MoCItemWeapon(getItemId("stingnether", MoCItemID++), EnumToolMaterial.GOLD, 3, true)).setUnlocalizedName("stingnether");
-        stingDirt = (new MoCItemWeapon(getItemId("stingdirt", MoCItemID++), EnumToolMaterial.GOLD, 1, true)).setUnlocalizedName("stingdirt");
+        stingCave = new MoCItemWeapon("stingcave", ToolMaterial.GOLD, 4, true);
+        stingFrost = new MoCItemWeapon("stingfrost", ToolMaterial.GOLD, 2, true);
+        stingNether = new MoCItemWeapon("stingnether", ToolMaterial.GOLD, 3, true);
+        stingDirt = new MoCItemWeapon("stingdirt", ToolMaterial.GOLD, 1, true);
 
-        scrollFreedom = (new MoCItem(getItemId("scrolloffreedom", MoCItemID++))).setUnlocalizedName("scrolloffreedom");
-        scrollOfSale = (new MoCItem(getItemId("scrollofsale", MoCItemID++))).setUnlocalizedName("scrollofsale");
+        scrollFreedom = new MoCItem("scrolloffreedom");
+        scrollOfSale = new MoCItem("scrollofsale");
         
-        woodTusks = (new MoCItemWeapon(getItemId("tuskswood", MoCItemID++), EnumToolMaterial.WOOD)).setUnlocalizedName("tuskswood");
-        ironTusks = (new MoCItemWeapon(getItemId("tusksiron", MoCItemID++), EnumToolMaterial.IRON)).setUnlocalizedName("tusksiron");
-        diamondTusks = (new MoCItemWeapon(getItemId("tusksdiamond", MoCItemID++), EnumToolMaterial.EMERALD)).setUnlocalizedName("tusksdiamond");
-        harness = (new MoCItem(getItemId("elephantharness", MoCItemID++))).setUnlocalizedName("harness");
-        chestSet = (new MoCItem(getItemId("elephantchest", MoCItemID++))).setUnlocalizedName("chestset");
-        garment = (new MoCItem(getItemId("elephantgarment", MoCItemID++))).setUnlocalizedName("garment");
-        howdah = (new MoCItem(getItemId("elephanthowdah", MoCItemID++))).setUnlocalizedName("howdah");
-        platform = (new MoCItem(getItemId("elephantplatform", MoCItemID++))).setUnlocalizedName("platform");
+        woodTusks = new MoCItemWeapon("tuskswood", ToolMaterial.WOOD);
+        ironTusks = new MoCItemWeapon("tusksiron", ToolMaterial.IRON);
+        diamondTusks = new MoCItemWeapon("tusksdiamond", ToolMaterial.EMERALD);
+        harness = new MoCItem("elephantharness");
+        chestSet = new MoCItem("elephantchest");
+        garment = new MoCItem("elephantgarment");
+        howdah = new MoCItem("elephanthowdah");
+        platform = new MoCItem("elephantplatform");
         
-        crabmeat = (new MoCItemFood(getItemId("crabmeat", MoCItemID++), 2, 0.3F, false)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setUnlocalizedName("crabmeat");
-        crabmeatcooked = (new MoCItemFood(getItemId("crabmeatcooked", MoCItemID++), 6, 0.6F, false)).setUnlocalizedName("crabmeatcooked");
-        swordsilver = (new MoCItemWeapon(getItemId("swordsilver", MoCItemID++), this.SILVER)).setUnlocalizedName("swordsilver");
+        crabmeat = new MoCItemFood("crabmeat", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        crabmeatcooked = new MoCItemFood("crabmeatcooked", 6, 0.6F, false);
+        swordsilver = new MoCItemWeapon("swordsilver", this.SILVER);
         
         multiBlockNames.add ("WyvernLair");
         multiBlockNames.add("OgreLair");
         
-        staffPortal = (new ItemStaffPortal(getItemId("staffportal", MoCItemID++))).setUnlocalizedName("staffportal");
+        staffPortal = new ItemStaffPortal("staffportal");
         LanguageRegistry.addName(staffPortal, "Wyvern Portal Staff");
         
-        scrollOfOwner = (new MoCItem(getItemId("scrollofowner", MoCItemID++))).setUnlocalizedName("scrollofowner");
+        scrollOfOwner = new MoCItem("scrollofowner");
         
-        superAmulet = (new MoCItemPetAmulet(getItemId("superamulet", MoCItemID++), 1)).setUnlocalizedName("superamulet");
+        superAmulet = new MoCItemPetAmulet("superamulet", 1);
 
         //new blocks
-        mocStone = new MoCBlockRock(proxy.blockStoneID).setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("MoCStone");
-        GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
+        mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundTypeStone);
+        //GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
 
-        mocGrass = new MoCBlockGrass(proxy.blockGrassID).setHardness(0.5F).setStepSound(Block.soundGrassFootstep).setUnlocalizedName("MoCGrass");
-        GameRegistry.registerBlock(mocGrass, MultiItemBlock.class, "MoC_Grass");
+        mocGrass = new MoCBlockGrass("MoCGrass").setHardness(0.5F).setStepSound(Block.soundTypeGrass);
+        //GameRegistry.registerBlock(mocGrass, MultiItemBlock.class, "MoC_Grass");
         
-        mocDirt = new MoCBlockDirt(proxy.blockDirtID).setHardness(0.6F).setStepSound(Block.soundGravelFootstep).setUnlocalizedName("MoCDirt");
-        GameRegistry.registerBlock(mocDirt, MultiItemBlock.class, "MoC_Dirt");
+        mocDirt = new MoCBlockDirt("MoCDirt").setHardness(0.6F).setStepSound(Block.soundTypeGravel);
+        //GameRegistry.registerBlock(mocDirt, MultiItemBlock.class, "MoC_Dirt");
         
         //non terrain generator blocks
        
-        mocLeaf = new MoCBlockLeaf(proxy.blockLeafID).setHardness(0.2F).setLightOpacity(1).setStepSound(Block.soundGrassFootstep).setUnlocalizedName("MoCLeaves");
-        GameRegistry.registerBlock(mocLeaf, MultiItemBlock.class, "MoC_Leaf");
+        mocLeaf = new MoCBlockLeaf("MoCLeaves").setHardness(0.2F).setLightOpacity(1).setStepSound(Block.soundTypeGrass);
+        //GameRegistry.registerBlock(mocLeaf, MultiItemBlock.class, "MoC_Leaf");
         
-        mocLog = new MoCBlockLog(proxy.blockLogID).setHardness(2.0F).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("MoCLog");
-        GameRegistry.registerBlock(mocLog, MultiItemBlock.class, "MoC_Log");
+        mocLog = new MoCBlockLog("MoCLog").setHardness(2.0F).setStepSound(Block.soundTypeWood);
+        //GameRegistry.registerBlock(mocLog, MultiItemBlock.class, "MoC_Log");
         
-        mocTallGrass = new MoCBlockTallGrass(proxy.blockTallGrassID, true).setHardness(0.0F).setStepSound(Block.soundGrassFootstep).setUnlocalizedName("MoCTallGrass");
-        GameRegistry.registerBlock(mocTallGrass, MultiItemBlock.class, "MoC_TallGrass");
+        mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F).setStepSound(Block.soundTypeGrass);
+        //GameRegistry.registerBlock(mocTallGrass, MultiItemBlock.class, "MoC_TallGrass");
         
-        mocPlank = new MoCBlockPlanks(proxy.blockPlanksID).setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("MoCWoodPlanks");
-        GameRegistry.registerBlock(mocPlank, MultiItemBlock.class, "MoC_Planks");
+        mocPlank = new MoCBlockPlanks("MoCWoodPlanks").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood);
+        //GameRegistry.registerBlock(mocPlank, MultiItemBlock.class, "MoC_Planks");
 
         for (int i = 0; i < multiBlockNames.size(); i++) 
         {
@@ -822,9 +849,9 @@ public class MoCreatures {
         }
         
       //wyvern lair block harvest settings
-        MinecraftForge.setBlockHarvestLevel(mocDirt, 0, "shovel", 0); 
-        MinecraftForge.setBlockHarvestLevel(mocGrass, 0, "shovel", 0); 
-        MinecraftForge.setBlockHarvestLevel(mocStone, 0, "pickaxe", 1);
+        mocDirt.setHarvestLevel("shovel", 0, 0); 
+        mocGrass.setHarvestLevel("shovel", 0, 0); 
+        mocStone.setHarvestLevel("pickaxe", 1, 0);
         
         LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
         proxy.mocSettingsConfig.save();
@@ -1024,65 +1051,65 @@ public class MoCreatures {
 
     private void AddRecipes()
     {
-        GameRegistry.addSmelting(MoCreatures.crabmeat.itemID, new ItemStack(MoCreatures.crabmeatcooked, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.crabmeat, new ItemStack(MoCreatures.crabmeatcooked, 1), 0F);
         
-        GameRegistry.addSmelting(MoCreatures.ratRaw.itemID, new ItemStack(MoCreatures.ratCooked, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.ratRaw, new ItemStack(MoCreatures.ratCooked, 1), 0F);
 
-        GameRegistry.addSmelting(MoCreatures.ostrichmeat.itemID, new ItemStack(MoCreatures.ostrichcooked, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.ostrichmeat, new ItemStack(MoCreatures.ostrichcooked, 1), 0F);
 
-        GameRegistry.addSmelting(MoCreatures.rawTurkey.itemID, new ItemStack(MoCreatures.cookedTurkey, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.rawTurkey, new ItemStack(MoCreatures.cookedTurkey, 1), 0F);
 
-        GameRegistry.addSmelting(MoCreatures.fishyegg.itemID, new ItemStack(MoCreatures.omelet, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.fishyegg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addSmelting(Item.egg.itemID, new ItemStack(MoCreatures.omelet, 1), 0F);
+        GameRegistry.addSmelting(Items.egg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] { Item.paper, Item.feather, Item.redstone });
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] { Items.paper, Items.feather, Items.redstone });
         
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] { scrollOfSale, Item.redstone });
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] { scrollOfSale, Items.redstone });
         
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] { Item.paper, Item.feather });
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] { Items.paper, Items.feather });
         
         
-        GameRegistry.addShapelessRecipe(new ItemStack(Item.leather, 1), new Object[] { animalHide });
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.leather, 1), new Object[] { animalHide });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(Item.itemsList[Block.cloth.blockID], 1), new Object[] { fur });
+        GameRegistry.addShapelessRecipe(new ItemStack(Blocks.wool, 1), new Object[] { fur });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordNether, 1), new Object[] { Item.swordDiamond, stingNether, stingNether, stingNether });
+        GameRegistry.addShapelessRecipe(new ItemStack(swordNether, 1), new Object[] { Items.diamond_sword, stingNether, stingNether, stingNether });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordFrost, 1), new Object[] { Item.swordDiamond, stingFrost, stingFrost, stingFrost });
+        GameRegistry.addShapelessRecipe(new ItemStack(swordFrost, 1), new Object[] { Items.diamond_sword, stingFrost, stingFrost, stingFrost });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordCave, 1), new Object[] { Item.swordDiamond, stingCave, stingCave, stingCave });
+        GameRegistry.addShapelessRecipe(new ItemStack(swordCave, 1), new Object[] { Items.diamond_sword, stingCave, stingCave, stingCave });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordDirt, 1), new Object[] { Item.swordDiamond, stingDirt, stingDirt, stingDirt });
+        GameRegistry.addShapelessRecipe(new ItemStack(swordDirt, 1), new Object[] { Items.diamond_sword, stingDirt, stingDirt, stingDirt });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] { new ItemStack(turtlemeat, 1), new ItemStack(Item.bowlEmpty, 1) });
+        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] { new ItemStack(turtlemeat, 1), new ItemStack(Items.bowl, 1) });
 
         GameRegistry.addShapelessRecipe(new ItemStack(viallight, 1), new Object[] { vialundead, vialnightmare, vialdarkness });
 
-        GameRegistry.addRecipe(new ItemStack(fishnet, 1), new Object[] { " # ", "S#S", "#S#", Character.valueOf('#'), Item.silk, Character.valueOf('S'), sharkteeth });
+        GameRegistry.addRecipe(new ItemStack(fishnet, 1), new Object[] { " # ", "S#S", "#S#", Character.valueOf('#'), Items.string, Character.valueOf('S'), sharkteeth });
         
-        GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.itemsList[Block.planks.blockID], Character.valueOf('R'), Item.leash  });
+        GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Blocks.planks, Character.valueOf('R'), Items.lead  });
         
-        GameRegistry.addRecipe(new ItemStack(ironTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('R'), Item.leash });
+        GameRegistry.addRecipe(new ItemStack(ironTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.iron_ingot, Character.valueOf('R'), Items.lead });
         
-        GameRegistry.addRecipe(new ItemStack(diamondTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('R'), Item.leash });
+        GameRegistry.addRecipe(new ItemStack(diamondTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.diamond, Character.valueOf('R'), Items.lead });
         
-        GameRegistry.addRecipe(new ItemStack(platform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Item.itemsList[Block.wood.blockID], Character.valueOf('R'), Item.leash ,  Character.valueOf('P'), Item.itemsList[Block.planks.blockID]});
+        GameRegistry.addRecipe(new ItemStack(platform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.lead ,  Character.valueOf('P'), Blocks.planks});
         
-        GameRegistry.addRecipe(new ItemStack(chestSet, 1), new Object[] { " W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 0), Character.valueOf('C'), Item.itemsList[Block.chest.blockID] });
+        GameRegistry.addRecipe(new ItemStack(chestSet, 1), new Object[] { " W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('C'), Blocks.chest });
         
-        GameRegistry.addRecipe(new ItemStack(harness, 1), new Object[] { "HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 0), Character.valueOf('I'), Item.ingotIron });
+        GameRegistry.addRecipe(new ItemStack(harness, 1), new Object[] { "HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('I'), Items.iron_ingot });
         
-        GameRegistry.addRecipe(new ItemStack(howdah, 1), new Object[] { "SRS", "RYR", "SRS", Character.valueOf('S'), Item.stick, Character.valueOf('R'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 14), Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 4) });
+        GameRegistry.addRecipe(new ItemStack(howdah, 1), new Object[] { "SRS", "RYR", "SRS", Character.valueOf('S'), Items.stick, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4) });
 
-        GameRegistry.addRecipe(new ItemStack(garment, 1), new Object[] { "pyg", "RMR", "BYB", Character.valueOf('R'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 14), Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 4), 
-        Character.valueOf('B'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 11), Character.valueOf('M'), medallion,
-        Character.valueOf('p'), new ItemStack(Item.dyePowder, 1, 9), Character.valueOf('y'), new ItemStack(Item.dyePowder, 1, 11),
-        Character.valueOf('g'), new ItemStack(Item.dyePowder, 1, 10)
+        GameRegistry.addRecipe(new ItemStack(garment, 1), new Object[] { "pyg", "RMR", "BYB", Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4), 
+        Character.valueOf('B'), new ItemStack(Blocks.wool, 1, 11), Character.valueOf('M'), medallion,
+        Character.valueOf('p'), new ItemStack(Items.dye, 1, 9), Character.valueOf('y'), new ItemStack(Items.dye, 1, 11),
+        Character.valueOf('g'), new ItemStack(Items.dye, 1, 10)
         });
 
-        //Item.dyePowder.itemID
-        GameRegistry.addRecipe(new ItemStack(ratBurger, 1), new Object[] { "SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Item.bread, Character.valueOf('S'), Item.pumpkinSeeds, Character.valueOf('G'), Item.seeds });
+        //Items.dye.itemID
+        GameRegistry.addRecipe(new ItemStack(ratBurger, 1), new Object[] { "SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.bread, Character.valueOf('S'), Items.pumpkin_seeds, Character.valueOf('G'), Items.wheat_seeds });
 
         GameRegistry.addRecipe(new ItemStack(plateScorpFrost, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinFrost });
 
@@ -1124,23 +1151,23 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsHide, 1), new Object[] { "X X", "X X", Character.valueOf('X'), animalHide });
 
-        GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] { "  D", "CDC", "DCD", Character.valueOf('D'), Item.diamond, Character.valueOf('C'), Block.glass });
+        GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] { "  D", "CDC", "DCD", Character.valueOf('D'), Items.diamond, Character.valueOf('C'), Blocks.glass });
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 15) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 15) });
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 14) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 14) });
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, 11) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 11) });
 
         GameRegistry.addRecipe(new ItemStack(viallight, 1), new Object[] { "X", "Y", "Z", Character.valueOf('X'), vialundead, Character.valueOf('Y'), vialnightmare, Character.valueOf('Z'), vialdarkness });
 
-        GameRegistry.addRecipe(new ItemStack(vialundead, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Item.rottenFlesh, Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Item.glassBottle });
+        GameRegistry.addRecipe(new ItemStack(vialundead, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.rotten_flesh, Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Item.blazePowder, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Item.glassBottle });
+        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.blaze_powder, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Block.fire, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Item.glassBottle });
+        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Blocks.fire, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialdarkness, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Item.enderPearl, Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Item.glassBottle });
+        GameRegistry.addRecipe(new ItemStack(vialdarkness, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.ender_pearl, Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.glass_bottle });
 
         GameRegistry.addRecipe(new ItemStack(plateFur, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), fur });
 
@@ -1150,55 +1177,55 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsFur, 1), new Object[] { "X X", "X X", Character.valueOf('X'), fur });
 
-        GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] { "  #", " # ", "X  ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), Item.ingotIron, });
+        GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] { "  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'), Items.iron_ingot, });
 
-        GameRegistry.addRecipe(new ItemStack(superAmulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.diamond });
+        GameRegistry.addRecipe(new ItemStack(superAmulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond });
 
-        GameRegistry.addRecipe(new ItemStack(amuletbone, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Item.bone, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.enderPearl });
+        GameRegistry.addRecipe(new ItemStack(amuletbone, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.ender_pearl });
 
-        GameRegistry.addRecipe(new ItemStack(amuletghost, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Item.bone, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.ghastTear });
+        GameRegistry.addRecipe(new ItemStack(amuletghost, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.ghast_tear });
 
-        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Block.fire, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), unicorn });
+        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), unicorn });
 
-        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Block.fire, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), viallight });
+        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), viallight });
 
-        GameRegistry.addRecipe(new ItemStack(amuletpegasus, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Block.fire, Character.valueOf('X'), Item.goldNugget, Character.valueOf('Z'), Item.diamond });
+        GameRegistry.addRecipe(new ItemStack(amuletpegasus, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond });
 
-        GameRegistry.addRecipe(new ItemStack(sharksword, 1), new Object[] { "#X#", "#X#", " X ", Character.valueOf('#'), sharkteeth, Character.valueOf('X'), Item.stick, });
+        GameRegistry.addRecipe(new ItemStack(sharksword, 1), new Object[] { "#X#", "#X#", " X ", Character.valueOf('#'), sharkteeth, Character.valueOf('X'), Items.stick, });
 
-        GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] { "# #", "# #", "###", Character.valueOf('#'), Block.glass, });
+        GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] { "# #", "# #", "###", Character.valueOf('#'), Blocks.glass, });
 
         //GameRegistry.addRecipe(new ItemStack(rope, 1), new Object[] { "# #", " # ", "# #", Character.valueOf('#'), Item.silk, });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(petfood, 4), new Object[] { new ItemStack(Item.fishRaw, 1), new ItemStack(Item.porkRaw, 1) });
+        GameRegistry.addShapelessRecipe(new ItemStack(petfood, 4), new Object[] { new ItemStack(Items.fish, 1), new ItemStack(Items.porkchop, 1) });
 
-        GameRegistry.addRecipe(new ItemStack(woolball, 1), new Object[] { " # ", "# #", " # ", Character.valueOf('#'), Item.silk, });
+        GameRegistry.addRecipe(new ItemStack(woolball, 1), new Object[] { " # ", "# #", " # ", Character.valueOf('#'), Items.string, });
 
-        GameRegistry.addRecipe(new ItemStack(litterbox, 1), new Object[] { "###", "#X#", "###", Character.valueOf('#'), Block.planks, Character.valueOf('X'), Block.sand, });
+        GameRegistry.addRecipe(new ItemStack(litterbox, 1), new Object[] { "###", "#X#", "###", Character.valueOf('#'), Blocks.planks, Character.valueOf('X'), Blocks.sand, });
 
-        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] { "# #", "XZX", " X ", Character.valueOf('#'), Item.leather, Character.valueOf('Z'), Item.diamond, Character.valueOf('X'), Item.ingotGold, });
+        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] { "# #", "XZX", " X ", Character.valueOf('#'), Items.leather, Character.valueOf('Z'), Items.diamond, Character.valueOf('X'), Items.gold_ingot, });
 
-        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] { "# #", " X ", Character.valueOf('#'), Item.leather, Character.valueOf('X'), Item.ingotGold, });
+        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] { "# #", " X ", Character.valueOf('#'), Items.leather, Character.valueOf('X'), Items.gold_ingot, });
 
-        GameRegistry.addRecipe(new ItemStack(whip, 1), new Object[] { "#X#", "X X", "# Z", Character.valueOf('#'), bigcatclaw, Character.valueOf('X'), Item.leather, Character.valueOf('Z'), Item.ingotIron });
+        GameRegistry.addRecipe(new ItemStack(whip, 1), new Object[] { "#X#", "X X", "# Z", Character.valueOf('#'), bigcatclaw, Character.valueOf('X'), Items.leather, Character.valueOf('Z'), Items.iron_ingot });
 
-        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] { "XXX", "X#X", "# #", Character.valueOf('#'), Item.ingotIron, Character.valueOf('X'), Item.leather });
+        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] { "XXX", "X#X", "# #", Character.valueOf('#'), Items.iron_ingot, Character.valueOf('X'), Items.leather });
 
-        GameRegistry.addRecipe(new ItemStack(haystack, 1), new Object[] { "XXX", "XXX", Character.valueOf('X'), Item.wheat });
+        GameRegistry.addRecipe(new ItemStack(haystack, 1), new Object[] { "XXX", "XXX", Character.valueOf('X'), Items.wheat });
 
-        GameRegistry.addRecipe(new ItemStack(Item.wheat, 6), new Object[] { "X", Character.valueOf('X'), haystack });
+        GameRegistry.addRecipe(new ItemStack(Items.wheat, 6), new Object[] { "X", Character.valueOf('X'), haystack });
 
-        GameRegistry.addRecipe(new ItemStack(sugarlump, 1), new Object[] { "XX", "##", Character.valueOf('X'), Item.sugar, Character.valueOf('#'), Item.sugar });
+        GameRegistry.addRecipe(new ItemStack(sugarlump, 1), new Object[] { "XX", "##", Character.valueOf('X'), Items.sugar, Character.valueOf('#'), Items.sugar });
 
-        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] { "X", "#", Character.valueOf('X'), Item.saddle, Character.valueOf('#'), Item.ingotIron });
+        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] { "X", "#", Character.valueOf('X'), Items.saddle, Character.valueOf('#'), Items.iron_ingot });
 
-        GameRegistry.addRecipe(new ItemStack(Item.plateChain, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), sharkteeth });
+        GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), sharkteeth });
 
-        GameRegistry.addRecipe(new ItemStack(Item.helmetChain, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), sharkteeth });
+        GameRegistry.addRecipe(new ItemStack(Items.chainmail_helmet, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), sharkteeth });
 
-        GameRegistry.addRecipe(new ItemStack(Item.legsChain, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), sharkteeth });
+        GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), sharkteeth });
 
-        GameRegistry.addRecipe(new ItemStack(Item.bootsChain, 1), new Object[] { "X X", "X X", Character.valueOf('X'), sharkteeth });
+        GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots, 1), new Object[] { "X X", "X X", Character.valueOf('X'), sharkteeth });
 
         GameRegistry.addRecipe(new ItemStack(plateCroc, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), crochide });
 
@@ -1210,10 +1237,10 @@ public class MoCreatures {
 
         for (int i = 0; i < 16; i++)
         {
-            GameRegistry.addShapelessRecipe(new ItemStack(kittybed, 1, i), new Object[] { new ItemStack(Item.dyePowder, 1, i), new ItemStack(kittybed, 1) });
+            GameRegistry.addShapelessRecipe(new ItemStack(kittybed, 1, i), new Object[] { new ItemStack(Items.dye, 1, i), new ItemStack(kittybed, 1) });
 
-            GameRegistry.addRecipe(new ItemStack(kittybed, 1, i), new Object[] { "###", "#X#", "Z  ", Character.valueOf('#'), Block.planks, Character.valueOf('X'), new ItemStack(Item.itemsList[Block.cloth.blockID], 1, MoCTools.colorize(i)), Character.valueOf('Z'), Item.ingotIron, });
-            String s = ItemDye.dyeColorNames[i];
+            GameRegistry.addRecipe(new ItemStack(kittybed, 1, i), new Object[] { "###", "#X#", "Z  ", Character.valueOf('#'), Blocks.planks, Character.valueOf('X'), new ItemStack(Blocks.wool, 1, MoCTools.colorize(i)), Character.valueOf('Z'), Items.iron_ingot, });
+            String s = ItemDye.field_150923_a[i];
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             LanguageRegistry.addName(new ItemStack(kittybed, 1, i), (s + " Kitty Bed"));
         }
@@ -1223,9 +1250,9 @@ public class MoCreatures {
             GameRegistry.addShapelessRecipe(new ItemStack(mocPlank, 4, i), new Object[] { new ItemStack(mocLog, 1, i)});
         }
         
-        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Item.eyeOfEnder, Character.valueOf('U'), unicorn, Character.valueOf('R'), Item.blazeRod });
+        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), unicorn, Character.valueOf('R'), Items.blaze_rod });
         
-        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Item.eyeOfEnder, Character.valueOf('U'), viallight, Character.valueOf('R'), Item.blazeRod });
+        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), viallight, Character.valueOf('R'), Items.blaze_rod });
         
     }
 

@@ -5,6 +5,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -463,7 +464,7 @@ public class MoCEntityGoat extends MoCEntityTameable {
         {
             Entity entity = damagesource.getEntity();
 
-            if ((entity != this) && (worldObj.difficultySetting > 0) && getType() > 4)
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0) && getType() > 4)
             {
                 entityToAttack = entity;
                 setUpset(true);
@@ -580,7 +581,7 @@ public class MoCEntityGoat extends MoCEntityTameable {
     {
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if (itemstack != null && itemstack.itemID == Item.bucketEmpty.itemID)
+        if (itemstack != null && itemstack.getItem() == Items.bucket)
         {
             if (getType() > 4)
             {
@@ -590,7 +591,7 @@ public class MoCEntityGoat extends MoCEntityTameable {
             }
             if (getType() == 1) { return false; }
 
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.bucketMilk));
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.milk_bucket));
             return true;
         }
 
@@ -670,9 +671,9 @@ public class MoCEntityGoat extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.leather.itemID;
+        return Items.leather;
     }
 
     @Override

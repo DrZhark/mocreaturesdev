@@ -11,12 +11,12 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 public class WorldGenWyvernGrass extends WorldGenerator
 {
     /** Stores ID for WorldGenTallGrass */
-    private int tallGrassID;
+    private Block tallGrass;
     private int tallGrassMetadata;
 
-    public WorldGenWyvernGrass(int par1, int par2)
+    public WorldGenWyvernGrass(Block block, int par2)
     {
-        this.tallGrassID = par1;
+        this.tallGrass = block;
         this.tallGrassMetadata = par2;
     }
 
@@ -27,7 +27,7 @@ public class WorldGenWyvernGrass extends WorldGenerator
         Block block = null;
         do 
         {
-            block = Block.blocksList[par1World.getBlockId(par3,  par4, par5)];
+            block = par1World.getBlock(par3,  par4, par5);
             if (block != null && !block.isLeaves(par1World, par3, par4, par5))
             {
                 break;
@@ -41,9 +41,9 @@ public class WorldGenWyvernGrass extends WorldGenerator
             int var9 = par4 + par2Random.nextInt(4) - par2Random.nextInt(4);
             int var10 = par5 + par2Random.nextInt(8) - par2Random.nextInt(8);
 
-            if (par1World.isAirBlock(var8, var9, var10) && Block.blocksList[this.tallGrassID].canBlockStay(par1World, var8, var9, var10))
+            if (par1World.isAirBlock(var8, var9, var10) && tallGrass.canBlockStay(par1World, var8, var9, var10))
             {
-                par1World.setBlock(var8, var9, var10, this.tallGrassID, this.tallGrassMetadata, 3);
+                par1World.setBlock(var8, var9, var10, this.tallGrass, this.tallGrassMetadata, 3);
             }
         }
 

@@ -1,10 +1,12 @@
 package drzhark.mocreatures;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.WorldSavedData;
@@ -51,7 +53,7 @@ public class MoCPetMapData extends WorldSavedData
     {
         if (pet.getOwnerPetId() == -1 || petMap.get(pet.getOwnerName()) == null)
         {
-            String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.username;
+            String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getCommandSenderName();
             MoCPetData petData = null;
             int id = -1;
             if (petMap.containsKey(owner))
@@ -74,13 +76,13 @@ public class MoCPetMapData extends WorldSavedData
             // update pet data
             String owner = pet.getOwnerName();
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(owner);
-            NBTTagList tag = petData.getPetData().getTagList("TamedList");
+            NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
             int id = -1;
             id = pet.getOwnerPetId();
 
             for (int i = 0; i < tag.tagCount(); i++)
             {
-                NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
+                NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);
                 if (nbt.getInteger("PetId") == id)
                 {
                     nbt = (NBTTagCompound)petNBT.copy();
@@ -97,12 +99,15 @@ public class MoCPetMapData extends WorldSavedData
      */
     public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        for (Object nbtTag : par1NBTTagCompound.getTags())
+        Iterator iterator = par1NBTTagCompound.func_150296_c().iterator();
+        while (iterator.hasNext())
         {
-            NBTTagCompound nbt = (NBTTagCompound)nbtTag;
-            if (!this.petMap.containsKey(nbt.getName()))
+            String s = (String)iterator.next();
+            NBTTagCompound nbt = (NBTTagCompound)par1NBTTagCompound.getTag(s);
+
+            if (!this.petMap.containsKey(s))
             {
-                this.petMap.put(nbt.getName(), new MoCPetData(nbt));
+                this.petMap.put(s, new MoCPetData(nbt, s));
             }
         }
     }

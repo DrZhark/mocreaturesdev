@@ -2,13 +2,13 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,12 +21,12 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAppear;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCItemPetAmulet extends MoCItem
 {
-    private Icon[] icons;
+    private IIcon[] icons;
     private int ageCounter;
     private String name;
     private float health;
@@ -38,16 +38,16 @@ public class MoCItemPetAmulet extends MoCItem
     private boolean adult;
     private int PetId;
 
-    public MoCItemPetAmulet(int i) 
+    public MoCItemPetAmulet(String name) 
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setHasSubtypes(true);
     }
 
-    public MoCItemPetAmulet(int i, int type) 
+    public MoCItemPetAmulet(String name, int type) 
     {
-        this(i);
+        this(name);
         this.amuletType = type;
     }
     
@@ -99,7 +99,7 @@ public class MoCItemPetAmulet extends MoCItem
                         storedCreature.setTamed(true);
                         storedCreature.setName(name);
                         storedCreature.setOwnerPetId(PetId);
-                        storedCreature.setOwner(entityplayer.username);
+                        storedCreature.setOwner(entityplayer.getCommandSenderName());
                         ((EntityLiving)storedCreature).setHealth(health);
                         storedCreature.setEdad(edad);
                         storedCreature.setAdult(adult);
@@ -110,11 +110,11 @@ public class MoCItemPetAmulet extends MoCItem
                         }
 
                         //if the player using the amulet is different than the original owner
-                        if (ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
+                        if (ownerName != "" && !(ownerName.equals(entityplayer.getCommandSenderName())) && MoCreatures.instance.mapData != null)
                         {
                             MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
-                            MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
-                            EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.username);
+                            MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getCommandSenderName());
+                            EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getCommandSenderName());
                             int maxCount = MoCreatures.proxy.maxTamed;
                             if (MoCTools.isThisPlayerAnOP(epOwner))
                             {
@@ -142,7 +142,7 @@ public class MoCItemPetAmulet extends MoCItem
                             {
                                 for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++)
                                 {
-                                    NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().tagAt(j);
+                                    NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().getCompoundTagAt(j);
                                     if (petEntry.getInteger("PetId") == PetId)
                                     {
                                         // found match, remove
@@ -153,7 +153,7 @@ public class MoCItemPetAmulet extends MoCItem
                         }
 
                         entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
-                        MoCServerPacketHandler.sendAppearPacket(((EntityLiving)storedCreature).entityId, worldObj.provider.dimensionId);
+                        MoCreatures.packetPipeline.sendToDimension(new MoCPacketAppear(((EntityLiving)storedCreature).getEntityId()), worldObj.provider.dimensionId);
                         if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
                         {
                              MoCTools.tameWithName(entityplayer, storedCreature);
@@ -161,7 +161,7 @@ public class MoCItemPetAmulet extends MoCItem
                     }
                 }catch (Exception ex) 
                 {
-                    if (MoCreatures.proxy.debug) MoCLog.logger.warning("Error spawning creature from fishnet/amulet " + ex);
+                    if (MoCreatures.proxy.debug) MoCLog.logger.warn("Error spawning creature from fishnet/amulet " + ex);
                 }
             }
        }
@@ -194,9 +194,9 @@ public class MoCItemPetAmulet extends MoCItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[4];
+        icons = new IIcon[4];
         icons[0] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":")); //empty fishnet
         icons[1] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":") + "full"); //fishnet with generic fish
         icons[2] = par1IconRegister.registerIcon("mocreatures"+ this.getUnlocalizedName().replaceFirst("item.", ":")); //empty superamulet
@@ -205,7 +205,7 @@ public class MoCItemPetAmulet extends MoCItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIconFromDamage(int par1)
+    public IIcon getIconFromDamage(int par1)
     {
         if (this.amuletType == 1)
         {

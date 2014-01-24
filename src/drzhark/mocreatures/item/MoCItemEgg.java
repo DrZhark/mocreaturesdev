@@ -10,16 +10,16 @@ public class MoCItemEgg extends MoCItem {
 
     int eggType;
 
-    public MoCItemEgg(int i)
+    public MoCItemEgg(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 16;
         setHasSubtypes(true);
     }
 
-    public MoCItemEgg(int i, int j)
+    public MoCItemEgg(String name, int j)
     {
-        this(i);
+        this(name);
         eggType = j;
     }
 

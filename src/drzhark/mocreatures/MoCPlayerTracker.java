@@ -1,31 +1,19 @@
 package drzhark.mocreatures;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.common.IPlayerTracker;
 import drzhark.mocreatures.entity.IMoCEntity;
 
-public class MoCPlayerTracker implements IPlayerTracker
+public class MoCPlayerTracker
 {
-    @Override
-    public void onPlayerLogin(EntityPlayer player) {
-    }
-
-    @Override
-    public void onPlayerLogout(EntityPlayer player) {
-        //System.out.println("onPlayerLogout " + player);
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerLoggedOutEvent event) {
+        EntityPlayer player = event.player;
         if (player.ridingEntity != null && (player.ridingEntity instanceof IMoCEntity))
         {
             IMoCEntity mocEntity = (IMoCEntity)player.ridingEntity;
             mocEntity.riderIsDisconnecting(true);// = true;
         }
-    }
-
-    @Override
-    public void onPlayerChangedDimension(EntityPlayer player) {
-    }
-
-    @Override
-    public void onPlayerRespawn(EntityPlayer player) 
-    {
     }
 }

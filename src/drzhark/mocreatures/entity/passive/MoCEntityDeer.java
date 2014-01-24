@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
@@ -88,9 +89,9 @@ public class MoCEntityDeer extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.fur.itemID;
+        return MoCreatures.fur;
     }
 
     @Override

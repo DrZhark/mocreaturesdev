@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
@@ -33,9 +34,9 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.slimeBall.itemID;
+        return Items.slime_ball;
     }
 
     @Override

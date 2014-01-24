@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.aquatic;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -152,7 +153,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
                 }
             }
 
-            if (!getIsTamed() && ++poisoncounter > 250 && (worldObj.difficultySetting > 0)  && rand.nextInt(30) == 0)
+            if (!getIsTamed() && ++poisoncounter > 250 && (worldObj.difficultySetting.getDifficultyId() > 0)  && rand.nextInt(30) == 0)
             {
                 EntityPlayer entityplayertarget = worldObj.getClosestPlayer(posX, posY, posZ, 3D);
                 if (entityplayertarget != null)
@@ -185,11 +186,11 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         boolean flag = rand.nextInt(2) == 0;
-        if (flag) return Item.slimeBall.itemID;
-        return 0;
+        if (flag) return Items.slime_ball;
+        return null;
     }
     
     

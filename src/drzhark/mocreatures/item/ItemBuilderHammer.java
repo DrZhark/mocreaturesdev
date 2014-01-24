@@ -3,6 +3,7 @@ package drzhark.mocreatures.item;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -14,9 +15,9 @@ import drzhark.mocreatures.MoCreatures;
 
 public class ItemBuilderHammer extends MoCItem
 {
-    public ItemBuilderHammer(int i)
+    public ItemBuilderHammer(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setMaxDamage(2048);
         this.setCreativeTab(CreativeTabs.tabTools);
@@ -61,29 +62,22 @@ public class ItemBuilderHammer extends MoCItem
         double coordY = entityplayer.posY + (double)entityplayer.getEyeHeight();
         double coordZ = entityplayer.posZ;
         double coordX = entityplayer.posX;
-        int wallBlockID = 0;
-        int newWallBlockID = 0;
 
         for (int x = 3; x < 128; x++)
         {
             double newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * x;
             double newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
             double newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * x );
-            newWallBlockID = entityplayer.worldObj.getBlockId( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
+            Block newWallBlock = entityplayer.worldObj.getBlock( MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ)); 
 
-            if (newWallBlockID == 0)
-            {
-                wallBlockID = newWallBlockID;
-                continue;
-             }
 
-            if (newWallBlockID != 0 && wallBlockID == 0)
+            if (newWallBlock != Blocks.air)
             {
 
                 newPosY = coordY - Math.cos( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1);
                 newPosX = coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
                 newPosZ = coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw- 90F) / 57.29578F)) * (Math.sin( (entityplayer.rotationPitch- 90F) / 57.29578F) * (x-1) );
-                if (entityplayer.worldObj.getBlockId(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ)) != 0)  
+                if (!entityplayer.worldObj.isAirBlock(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ)))  
                 {
                     return par1ItemStack;
                 }
@@ -93,9 +87,9 @@ public class ItemBuilderHammer extends MoCItem
                 {
                     if (MoCreatures.isServer())
                     {
-                        entityplayer.worldObj.setBlock(MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ), blockInfo[0], blockInfo[1], 3);
-                        Block block = Block.blocksList[blockInfo[0]];
-                        entityplayer.worldObj.playSoundEffect((double)((float)newPosX + 0.5F), (double)((float)newPosY + 0.5F), (double)((float)newPosZ + 0.5F), block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                        Block block = Block.getBlockById(blockInfo[0]);
+                        entityplayer.worldObj.setBlock(MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ), block, blockInfo[1], 3);
+                        entityplayer.worldObj.playSoundEffect((double)((float)newPosX + 0.5F), (double)((float)newPosY + 0.5F), (double)((float)newPosZ + 0.5F), block.stepSound.func_150496_b(), (block.stepSound.func_150497_c() + 1.0F) / 2.0F, block.stepSound.func_150494_d() * 0.8F);
                     }
                     MoCreatures.proxy.hammerFX(entityplayer);
                     entityplayer.setItemInUse(par1ItemStack, 200);
@@ -135,7 +129,7 @@ public class ItemBuilderHammer extends MoCItem
                         entityplayer.inventory.setInventorySlotContents(y, slotStack);
                     }
                 }
-                return new int[] {itemTemp.itemID, metadata};
+                return new int[] {Item.getIdFromItem(itemTemp), metadata};
             }
         }
         return new int[] {0,0};

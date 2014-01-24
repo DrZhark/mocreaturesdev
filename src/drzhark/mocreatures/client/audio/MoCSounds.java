@@ -13,14 +13,14 @@ import java.util.jar.JarFile;
 
 import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
-import net.minecraftforge.event.ForgeSubscribe;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class MoCSounds {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onSound(SoundLoadEvent event) {
         String[] sounds = null;
 
@@ -37,20 +37,20 @@ public class MoCSounds {
             for (int i = 0; i < sounds.length; i++)
             { 
                 // register our sounds
-                if (sounds[i].contains(".ogg"))
-                    event.manager.addSound("mocreatures:" + sounds[i]);
+                //if (sounds[i].contains(".ogg"))
+                 //   event.manager.addSound("mocreatures:" + sounds[i]);
             }
         }
-        event.manager.addStreaming("mocreatures:shuffling.ogg");
+      //  event.manager.addStreaming("mocreatures:shuffling.ogg");
     }
 
     @SideOnly(Side.CLIENT)
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onPlayStreaming(PlayStreamingEvent event) 
     {
         if (event.name == "shuffling")
         {
-            FMLClientHandler.instance().getClient().sndManager.playStreaming("mocreatures:shuffling", (float) event.x + 0.5F, (float) event.y + 0.5F, (float) event.z + 0.5F);
+            //FMLClientHandler.instance().getClient().sndManager.playStreaming("mocreatures:shuffling", (float) event.x + 0.5F, (float) event.y + 0.5F, (float) event.z + 0.5F);
         }
     }
 

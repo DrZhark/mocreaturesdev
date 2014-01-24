@@ -25,10 +25,10 @@ public class MoCRenderBunny extends MoCRenderMoC {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityBunny entitybunny = (MoCEntityBunny) entityliving;
-        super.doRenderLiving(entitybunny, d, d1, d2, f, f1);
+        super.doRender(entitybunny, d, d1, d2, f, f1);
     }
 
     @Override

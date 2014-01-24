@@ -67,7 +67,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
-        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
+        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting.getDifficultyId() > 0))
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
@@ -95,7 +95,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
                 entityDropItem(new ItemStack(MoCreatures.sharkteeth, 1, 0), 0.0F);
             }
         }
-        else if ((worldObj.difficultySetting > 0) && (getEdad() > 150))
+        else if ((worldObj.difficultySetting.getDifficultyId() > 0) && (getEdad() > 150))
         {
             int k = rand.nextInt(3);
             for (int i1 = 0; i1 < k; i1++)
@@ -108,7 +108,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if ((worldObj.difficultySetting > 0) && (getEdad() >= 100))
+        if ((worldObj.difficultySetting.getDifficultyId() > 0) && (getEdad() >= 100))
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 16D);
             if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) { return entityplayer; }

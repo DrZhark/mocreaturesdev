@@ -7,11 +7,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityInsect extends MoCEntityAmbient {
 
@@ -78,7 +79,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
         {
             if (isOnLadder() && !onGround)
             {
-                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
             }
             
             if (!getIsFlying() && rand.nextInt(getFlyingFreq()) == 0)
@@ -101,7 +102,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
             if (isAttractedToLight() && rand.nextInt(50) == 0)
             {
-                int ai[] = MoCTools.ReturnNearestBlockCoord(this, Block.torchWood.blockID, 8D);
+                int ai[] = MoCTools.ReturnNearestBlockCoord(this, Blocks.torch, 8D);
                 if (ai[0] > -1000)
                 {
                     PathEntity pathentity = worldObj.getEntityPathToXYZ(this,ai[0], ai[1], ai[2], 24F, true, false, false, true);

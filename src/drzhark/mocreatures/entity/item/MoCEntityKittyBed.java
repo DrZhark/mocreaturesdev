@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -186,15 +187,15 @@ public class MoCEntityKittyBed extends EntityLiving {
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.itemID == Item.bucketMilk.itemID))
+        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.getItem() == Items.milk_bucket))
         {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.bucketEmpty, 1));
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.bucket, 1));
             worldObj.playSoundAtEntity(this, "pouringmilk", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHasMilk(true);
             setHasFood(false);
             return true;
         }
-        if ((itemstack != null) && MoCreatures.isServer() && !getHasFood() && (itemstack.itemID == MoCreatures.petfood.itemID))
+        if ((itemstack != null) && MoCreatures.isServer() && !getHasFood() && (itemstack.getItem() == MoCreatures.petfood))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -205,7 +206,7 @@ public class MoCEntityKittyBed extends EntityLiving {
             setHasFood(true);
             return true;
         }
-        if (MoCreatures.isServer() && (itemstack != null) && ((itemstack.itemID == Item.pickaxeStone.itemID) || (itemstack.itemID == Item.pickaxeWood.itemID) || (itemstack.itemID == Item.pickaxeIron.itemID) || (itemstack.itemID == Item.pickaxeGold.itemID) || (itemstack.itemID == Item.pickaxeDiamond.itemID)))
+        if (MoCreatures.isServer() && (itemstack != null) && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe) || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe)))
         {
             entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed, 1, getSheetColor()));
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);

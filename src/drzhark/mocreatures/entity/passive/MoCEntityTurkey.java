@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -44,11 +45,11 @@ public class MoCEntityTurkey extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         boolean flag = (rand.nextInt(2) == 0);
-        if (flag) { return MoCreatures.rawTurkey.itemID; }
-        return Item.feather.itemID;
+        if (flag) { return MoCreatures.rawTurkey; }
+        return Items.feather;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class MoCEntityTurkey extends MoCEntityTameable {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (!getIsTamed() && (itemstack != null) && (itemstack.itemID == Item.melonSeeds.itemID))
+        if (!getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.melon_seeds))
         {
             if (MoCreatures.isServer())
             {
@@ -72,7 +73,7 @@ public class MoCEntityTurkey extends MoCEntityTameable {
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && par1ItemStack.itemID == Item.pumpkinSeeds.itemID;
+        return par1ItemStack != null && par1ItemStack.getItem() == Items.pumpkin_seeds;
     }
 
     @Override

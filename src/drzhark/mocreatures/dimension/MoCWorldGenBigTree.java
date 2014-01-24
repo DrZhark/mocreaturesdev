@@ -2,12 +2,15 @@ package drzhark.mocreatures.dimension;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import drzhark.mocreatures.MoCreatures;
 
-public class MoCWorldGenBigTree extends WorldGenerator
+public class MoCWorldGenBigTree extends WorldGenAbstractTree
 {
     public MoCWorldGenBigTree(boolean par1)
     {
@@ -23,11 +26,11 @@ public class MoCWorldGenBigTree extends WorldGenerator
  * @param heightlimit
  * @param leafdist
  */
-    public MoCWorldGenBigTree(boolean par1, int logblockID, int logmetadata, int leafblockID, int leafmetadata, int trunksize, int heightlimit, int leafdist)
+    public MoCWorldGenBigTree(boolean par1, Block logblock, int logmetadata, Block leafblock, int leafmetadata, int trunksize, int heightlimit, int leafdist)
     {
         super(par1);
-        BlockLogID = logblockID;
-        BlockLeafID = leafblockID;
+        BlockLog = logblock;
+        BlockLeaf = leafblock;
         
         trunkSize = trunksize;
         heightLimitLimit= heightlimit;
@@ -55,8 +58,8 @@ public class MoCWorldGenBigTree extends WorldGenerator
     double branchSlope = 0.381D;
     double scaleWidth = 1.0D;
     double leafDensity = 1.0D;
-    private int BlockLogID;
-    private int BlockLeafID;
+    private Block BlockLog;
+    private Block BlockLeaf;
     private int MetadataLog;
     private int MetadataLeaf;
     
@@ -165,7 +168,7 @@ public class MoCWorldGenBigTree extends WorldGenerator
         System.arraycopy(var2, 0, this.leafNodes, 0, var4);
     }
 
-    void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, int par6)
+    void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, Block par6)
     {
         int var7 = (int)((double)par4 + 0.618D);
         byte var8 = otherCoordPairs[par5];
@@ -191,15 +194,15 @@ public class MoCWorldGenBigTree extends WorldGenerator
                 else
                 {
                     var11[var9] = var10[var9] + var13;
-                    int var14 = this.worldObj.getBlockId(var11[0], var11[1], var11[2]);
+                    Block block = this.worldObj.getBlock(var11[0], var11[1], var11[2]);
 
-                    if (var14 != 0 && var14 != MoCreatures.mocLeaf.blockID)//BlockLeafID)//Block.leaves.blockID)
+                    if (block != Blocks.air && block != MoCreatures.mocLeaf)//BlockLeafID)//Block.leaves)
                     {
                         ++var13;
                     }
                     else
                     {
-                        this.setBlockAndMetadata(this.worldObj, var11[0], var11[1], var11[2], par6, MetadataLeaf);
+                        this.func_150516_a(this.worldObj, var11[0], var11[1], var11[2], par6, MetadataLeaf);
                         ++var13;
                     }
                 }
@@ -255,14 +258,14 @@ public class MoCWorldGenBigTree extends WorldGenerator
         for (int var5 = par2 + this.leafDistanceLimit; var4 < var5; ++var4)
         {
             float var6 = this.leafSize(var4 - par2);
-            this.genTreeLayer(par1, var4, par3, var6, (byte)1, MoCreatures.mocLeaf.blockID);
+            this.genTreeLayer(par1, var4, par3, var6, (byte)1, MoCreatures.mocLeaf);
         }
     }
 
     /**
      * Places a line of the specified block ID into the world from the first coordinate triplet to the second.
      */
-    void placeBlockLine(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, int par3)
+    void placeBlockLine(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, Block par3)
     {
         int[] var4 = new int[] {0, 0, 0};
         byte var5 = 0;
@@ -320,7 +323,7 @@ public class MoCWorldGenBigTree extends WorldGenerator
                     }
                 }
 
-                this.setBlockAndMetadata(this.worldObj, var14[0], var14[1], var14[2], par3, MetadataLog);//var17);
+                this.func_150516_a(this.worldObj, var14[0], var14[1], var14[2], par3, MetadataLog);//var17);
             }
         }
     }
@@ -361,19 +364,19 @@ public class MoCWorldGenBigTree extends WorldGenerator
         int var4 = this.basePos[2];
         int[] var5 = new int[] {var1, var2, var4};
         int[] var6 = new int[] {var1, var3, var4};
-        this.placeBlockLine(var5, var6, MoCreatures.mocLog.blockID);//BlockLogID//Block.wood.blockID);
+        this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
 
         if (this.trunkSize == 2)
         {
             ++var5[0];
             ++var6[0];
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog.blockID);//BlockLogID//Block.wood.blockID);
+            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
             ++var5[2];
             ++var6[2];
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog.blockID);//BlockLogID//Block.wood.blockID);
+            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
             var5[0] += -1;
             var6[0] += -1;
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog.blockID);//BlockLogID//Block.wood.blockID);
+            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
         }
     }
 
@@ -394,7 +397,7 @@ public class MoCWorldGenBigTree extends WorldGenerator
 
             if (this.leafNodeNeedsBase(var6))
             {
-                this.placeBlockLine(var3, var5, MoCreatures.mocLog.blockID);//BlockLogID//Block.wood.blockID);
+                this.placeBlockLine(var3, var5, MoCreatures.mocLog);//BlockLogID//Block.wood);
             }
         }
     }
@@ -449,9 +452,9 @@ public class MoCWorldGenBigTree extends WorldGenerator
                 var13[var5] = par1ArrayOfInteger[var5] + var14;
                 var13[var6] = MathHelper.floor_double((double)par1ArrayOfInteger[var6] + (double)var14 * var9);
                 var13[var7] = MathHelper.floor_double((double)par1ArrayOfInteger[var7] + (double)var14 * var11);
-                int var16 = this.worldObj.getBlockId(var13[0], var13[1], var13[2]);
+                Block block = this.worldObj.getBlock(var13[0], var13[1], var13[2]);
 
-                if (var16 != 0 && var16 != MoCreatures.mocLeaf.blockID)//BlockLeafID)//Block.leaves.blockID)
+                if (block != Blocks.air && block != MoCreatures.mocLeaf)//BlockLeafID)//Block.leaves)
                 {
                     break;
                 }
@@ -469,9 +472,9 @@ public class MoCWorldGenBigTree extends WorldGenerator
     {
         int[] var1 = new int[] {this.basePos[0], this.basePos[1], this.basePos[2]};
         int[] var2 = new int[] {this.basePos[0], this.basePos[1] + this.heightLimit - 1, this.basePos[2]};
-        int var3 = this.worldObj.getBlockId(this.basePos[0], this.basePos[1] - 1, this.basePos[2]);
+        Block block = this.worldObj.getBlock(this.basePos[0], this.basePos[1] - 1, this.basePos[2]);
 
-        if (var3 != MoCreatures.mocDirt.blockID && var3 != MoCreatures.mocGrass.blockID)
+        if (block != MoCreatures.mocDirt && block != MoCreatures.mocGrass)
         {
             //System.out.println("invalid tree location");
             return false;

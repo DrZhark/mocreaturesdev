@@ -6,14 +6,17 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
@@ -23,11 +26,12 @@ public class MoCBlockLeaf extends BlockLeavesBase
     int adjacentTreeBlocks[];
 
     @SideOnly(Side.CLIENT)
-    private Icon[] icons;
+    private IIcon[] icons;
 
-    public MoCBlockLeaf(int i)
+    public MoCBlockLeaf(String name)
     {
-        super(i, Material.leaves, true);
+        super(Material.leaves, true);
+        GameRegistry.registerBlock(this, name);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
@@ -43,8 +47,8 @@ public class MoCBlockLeaf extends BlockLeavesBase
                 {
                     for(int l1 = -l; l1 <= l; l1++)
                     {
-                        int i2 = world.getBlockId(i + j1, j + k1, k + l1);
-                        if(i2 == Block.sapling.blockID)              ///////Leaf/////////////
+                        Block block = world.getBlock(i + j1, j + k1, k + l1);
+                        if(block == Blocks.sapling)              ///////Leaf/////////////
                         {
                             int j2 = world.getBlockMetadata(i + j1, j + k1, k + l1);
                             world.setBlockMetadataWithNotify(i + j1, j + k1, k + l1, j2 | 8,3);
@@ -68,7 +72,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     @Override
     public boolean isOpaqueCube()
     {
-        return !this.graphicsLevel;
+        return !this.field_150121_P;
     }
 
     @Override
@@ -98,13 +102,13 @@ public class MoCBlockLeaf extends BlockLeavesBase
                     {
                         for(int i3 = -byte0; i3 <= byte0; i3++)
                         {
-                            int k3 = world.getBlockId(i + l1, j + k2, k + i3);
-                            if(k3 == MoCreatures.mocLog.blockID) ///////Log//////////////
+                            Block block = world.getBlock(i + l1, j + k2, k + i3);
+                            if(block == MoCreatures.mocLog) ///////Log//////////////
                             {
                                 adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = 0;
                                 continue;
                             }
-                            if(k3 == MoCreatures.mocLeaf.blockID) ///////Leaf///////////
+                            if(block == MoCreatures.mocLeaf) ///////Leaf///////////
                             {
                                 adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = -2;
                             } else
@@ -183,11 +187,11 @@ public class MoCBlockLeaf extends BlockLeavesBase
                 {
                     for (int i2 = -b0; i2 <= b0; ++i2)
                     {
-                        int j2 = par1World.getBlockId(par2 + k1, par3 + l1, par4 + i2);
+                        Block block = par1World.getBlock(par2 + k1, par3 + l1, par4 + i2);
 
-                        if (Block.blocksList[j2] != null)
+                        if (block != null)
                         {
-                            Block.blocksList[j2].beginLeavesDecay(par1World, par2 + k1, par3 + l1, par4 + i2);
+                            block.beginLeavesDecay(par1World, par2 + k1, par3 + l1, par4 + i2);
                         }
                     }
                 }
@@ -210,10 +214,10 @@ public class MoCBlockLeaf extends BlockLeavesBase
     @Override
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.itemID)
+        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() == Items.shears)
         {
-            entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(MoCreatures.mocLeaf.blockID, 1, l & 3));
+            entityplayer.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
+            dropBlockAsItem_do(world, i, j, k, new ItemStack(MoCreatures.mocLeaf, 1, l & 3));
         }
         else
         {
@@ -229,9 +233,9 @@ public class MoCBlockLeaf extends BlockLeavesBase
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[MoCreatures.multiBlockNames.size()];
+        icons = new IIcon[MoCreatures.multiBlockNames.size()];
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
             icons[x] = par1IconRegister.registerIcon("mocreatures:" + "leaves_" + MoCreatures.multiBlockNames.get(x) + "_solid");
@@ -243,7 +247,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-    public Icon getIcon(int par1, int par2)
+    public IIcon getIcon(int par1, int par2)
     {
         if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
@@ -251,23 +255,23 @@ public class MoCBlockLeaf extends BlockLeavesBase
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) 
     {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) 
         {
-            subItems.add(new ItemStack(this, 1, ix));
+            subItems.add(new ItemStack(item, 1, ix));
         }
     }
 
     @Override
-    public int idDropped(int par1, Random par2Random, int par3)
+    public Item getItemDropped(int par1, Random par2Random, int par3)
     {
-        return 0;
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
 
-    public Icon getIconFromDamage(int i)
+    public IIcon getIconFromDamage(int i)
     {
         return icons[i];
     }

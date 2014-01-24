@@ -3,10 +3,11 @@ package drzhark.mocreatures.block;
 import java.util.List;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
@@ -14,11 +15,11 @@ import drzhark.mocreatures.MoCreatures;
 public class MoCBlockRock extends MoCBlock
 {
     @SideOnly(Side.CLIENT)
-    private Icon[] icons;
+    private IIcon[] icons;
     
-    public MoCBlockRock(int par1)
+    public MoCBlockRock(String name)
     {
-        super(par1, Material.rock);
+        super(name, Material.rock);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
@@ -31,9 +32,9 @@ public class MoCBlockRock extends MoCBlock
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[MoCreatures.multiBlockNames.size()];
+        icons = new IIcon[MoCreatures.multiBlockNames.size()];
 
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
@@ -46,7 +47,7 @@ public class MoCBlockRock extends MoCBlock
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-    public Icon getIcon(int par1, int par2)
+    public IIcon getIcon(int par1, int par2)
     {
         if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
@@ -54,7 +55,7 @@ public class MoCBlockRock extends MoCBlock
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(Item par1, CreativeTabs tab, List subItems) 
     {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) 
         {
@@ -63,7 +64,7 @@ public class MoCBlockRock extends MoCBlock
     }
 
     @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage(int i)
+    public IIcon getIconFromDamage(int i)
     {
         return icons[i]; 
     }

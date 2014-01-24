@@ -25,10 +25,10 @@ public class MoCRenderDolphin extends RenderLiving {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityDolphin entitydolphin = (MoCEntityDolphin) entityliving;
-        super.doRenderLiving(entitydolphin, d, d1, d2, f, f1);
+        super.doRender(entitydolphin, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitydolphin.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         //boolean flag2 = MoCreatures.proxy.getdisplayPetIcons();
@@ -107,10 +107,10 @@ public class MoCRenderDolphin extends RenderLiving {
         }
     }
 
-    public void doRenderLiving2(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender2(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityDolphin entitydolphin = (MoCEntityDolphin) entityliving;
-        super.doRenderLiving(entitydolphin, d, d1, d2, f, f1);
+        super.doRender(entitydolphin, d, d1, d2, f, f1);
         if (entitydolphin.renderName())
         {
             float f2 = 1.6F;

@@ -12,7 +12,7 @@ import net.minecraft.world.biome.BiomeGenOcean;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityRay extends MoCEntityTameableAquatic {
 
@@ -114,11 +114,11 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
                 }
             }
 
-            if (!getIsTamed() && getType() > 1 && ++poisoncounter > 250 && (worldObj.difficultySetting > 0) && rand.nextInt(30) == 0)
+            if (!getIsTamed() && getType() > 1 && ++poisoncounter > 250 && (worldObj.difficultySetting.getDifficultyId() > 0) && rand.nextInt(30) == 0)
             {
                 if (MoCTools.findNearPlayerAndPoison(this, true))
                 {
-                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
                     poisoncounter = 0;
                 }
             }
@@ -146,7 +146,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     {
         if (super.attackEntityFrom(damagesource, i))
         {
-            if (getType() == 1 || (worldObj.difficultySetting == 0)) { return true; }
+            if (getType() == 1 || (worldObj.difficultySetting.getDifficultyId() == 0)) { return true; }
             Entity entity = damagesource.getEntity();
 
             if (entity != this)

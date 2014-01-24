@@ -7,11 +7,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
@@ -26,7 +27,7 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketHealth;
 
 public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
@@ -54,7 +55,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
+    public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
     {
         selectType();
         return super.onSpawnWithEgg(par1EntityLivingData);
@@ -245,7 +246,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
         if (MoCreatures.isServer() && getIsTamed() && rand.nextInt(200) == 0)
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(), this.getHealth()), this.worldObj.provider.dimensionId);
         }
         moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
@@ -256,7 +257,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     {
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(), this.getHealth()), this.worldObj.provider.dimensionId);
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -371,10 +372,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             if (onGround)
             {
                 f2 = 0.5460001F;
-                int i = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
-                if (i > 0)
+                Block block = worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
+                if (block != Blocks.air)
                 {
-                    f2 = Block.blocksList[i].slipperiness * 0.91F;
+                    f2 = block.slipperiness * 0.91F;
                 }
             }
             float f3 = 0.162771F / (f2 * f2 * f2);
@@ -383,10 +384,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             if (onGround)
             {
                 f2 = 0.5460001F;
-                int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
-                if (j > 0)
+                Block block = worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
+                if (block != Blocks.air)
                 {
-                    f2 = Block.blocksList[j].slipperiness * 0.91F;
+                    f2 = block.slipperiness * 0.91F;
                 }
             }
             moveEntity(motionX, motionY, motionZ);
@@ -680,7 +681,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             {
                 for (int i1 = 0; i1 <= 4; i1++)
                 {
-                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && worldObj.isBlockNormalCube(i + l, k - 1, j + i1) && !worldObj.isBlockNormalCube(i + l, k, j + i1) && !worldObj.isBlockNormalCube(i + l, k + 1, j + i1))
+                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && worldObj.getBlock(i + l, k - 1, j + i1).isNormalCube() && !worldObj.getBlock(i + l, k, j + i1).isNormalCube() && !worldObj.getBlock(i + l, k + 1, j + i1).isNormalCube())
                     {
                         setLocationAndAngles((i + l) + 0.5F, k, (j + i1) + 0.5F, rotationYaw, rotationPitch);
                         return;

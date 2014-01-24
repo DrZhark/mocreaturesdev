@@ -1,14 +1,15 @@
 package drzhark.mocreatures.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import drzhark.mocreatures.MoCreatures;
 
 public class MultiItemBlock extends ItemBlock {
 
-    public MultiItemBlock(int id) 
+    public MultiItemBlock(Block block) 
     {
-        super(id);
+        super(block);
         setHasSubtypes(true);
         //setItemName("multiBlock"); //TODO
         this.setUnlocalizedName("multiBlock");

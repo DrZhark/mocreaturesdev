@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -16,6 +16,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -32,7 +34,7 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketHealth;
 
 
 public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEntity
@@ -62,7 +64,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     }
     
     @Override
-    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
+    public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData)
     {
         selectType();
         return super.onSpawnWithEgg(par1EntityLivingData);
@@ -236,7 +238,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
      */
     public boolean isItemEdible(Item item1)
     {
-        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1.itemID == Item.wheat.itemID || item1.itemID == Item.sugar.itemID || item1.itemID == Item.cake.itemID || item1.itemID == Item.egg.itemID;
+        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake || item1 == Items.egg;
     }
 
     /**
@@ -277,7 +279,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         return swimmerEntity();
     }
 
-    public EntityItem getClosestItem(Entity entity, double d, int i, int j)
+    public EntityItem getClosestItem(Entity entity, double d, ItemStack item, ItemStack item1)
     {
         double d1 = -1D;
         EntityItem entityitem = null;
@@ -290,7 +292,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            if ((entityitem1.getEntityItem().itemID != i) && (entityitem1.getEntityItem().itemID != j))
+            if ((entityitem1.getEntityItem() != item) && (entityitem1.getEntityItem() != item1))
             {
                 continue;
             }
@@ -461,7 +463,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             {
                 for (int i1 = 0; i1 <= 4; i1++)
                 {
-                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && worldObj.isBlockNormalCube(i + l, k - 1, j + i1) && !worldObj.isBlockNormalCube(i + l, k, j + i1) && !worldObj.isBlockNormalCube(i + l, k + 1, j + i1))
+                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && worldObj.getBlock(i + l, k - 1, j + i1).isNormalCube() && !worldObj.getBlock(i + l, k, j + i1).isNormalCube() && !worldObj.getBlock(i + l, k + 1, j + i1).isNormalCube())
                     {
                         setLocationAndAngles((i + l) + 0.5F, k, (j + i1) + 0.5F, rotationYaw, rotationPitch);
                         return;
@@ -480,7 +482,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        return worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID && worldObj.getFullBlockLightValue(i, j, k) > 8;
+        return worldObj.getBlock(i, j - 1, k) == Blocks.grass && worldObj.getFullBlockLightValue(i, j, k) > 8;
     }
 
     public boolean getCanSpawnHereCreature()
@@ -527,10 +529,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
             if (var2 < 63) { return false; }
 
-            int var4 = this.worldObj.getBlockId(var1, var2 - 1, var3);
-            Block block = Block.blocksList[var4];
+            Block block = this.worldObj.getBlock(var1, var2 - 1, var3);
 
-            if (var4 == Block.grass.blockID || var4 == Block.leaves.blockID || (block != null && block.isLeaves(worldObj, var1, var2 - 1, var3))) { return true; }
+            if (block == Blocks.grass || block == Blocks.leaves || (block != null && block.isLeaves(worldObj, var1, var2 - 1, var3))) { return true; }
         }
 
         return false;
@@ -657,10 +658,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             if (onGround)
             {
                 f2 = 0.5460001F;
-                int i = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
-                if (i > 0)
+                Block block = worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
+                if (block != Blocks.air)
                 {
-                    f2 = Block.blocksList[i].slipperiness * 0.91F;
+                    f2 = block.slipperiness * 0.91F;
                 }
             }
 
@@ -1034,9 +1035,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
     public boolean isOnAir()
     {
-        int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D), MathHelper.floor_double(posZ));
-        int k = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 1.2D), MathHelper.floor_double(posZ));
-        return (j == 0) && (k == 0);
+        return (worldObj.isAirBlock(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D), MathHelper.floor_double(posZ)) &&
+                worldObj.isAirBlock(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 1.2D), MathHelper.floor_double(posZ)));
     }
 
     @Override
@@ -1068,11 +1068,11 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).username.equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
 
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCServerPacketHandler.sendHealth(this.entityId, this.worldObj.provider.dimensionId, this.getHealth());
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(),  this.getHealth()), worldObj.provider.dimensionId);
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -1181,7 +1181,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             int i1 = (i + rand.nextInt(4)) - rand.nextInt(4);
             int j1 = (j + rand.nextInt(3)) - rand.nextInt(3);
             int k1 = (k + rand.nextInt(4)) - rand.nextInt(4);
-            if ((j1 > 4) && ((worldObj.getBlockId(i1, j1, k1) == 0) || (worldObj.getBlockId(i1, j1, k1) == Block.snow.blockID)) && (worldObj.getBlockId(i1, j1 - 1, k1) != 0))
+            if ((j1 > 4) && ((worldObj.isAirBlock(i1, j1, k1)) || (worldObj.getBlock(i1, j1, k1) == Blocks.snow)) && (!worldObj.isAirBlock(i1, j1 - 1, k1)))
             {
                 PathEntity pathentity = worldObj.getEntityPathToXYZ(this, i1, j1, k1, 16F, true, false, false, true);
                 setPathToEntity(pathentity);

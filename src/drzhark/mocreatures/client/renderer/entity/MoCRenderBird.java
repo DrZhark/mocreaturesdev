@@ -26,7 +26,7 @@ public class MoCRenderBird extends MoCRenderMoC {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
 
         /*if (!worldObj.multiplayerWorld)
@@ -35,7 +35,7 @@ public class MoCRenderBird extends MoCRenderMoC {
         {
             entitybird.chooseType();
         }*/
-        super.doRenderLiving(entityliving, d, d1, d2, f, f1);
+        super.doRender(entityliving, d, d1, d2, f, f1);
 
     }
 

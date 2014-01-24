@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -12,7 +14,8 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.packet.MoCPacketExplode;
 
 public class MoCEntityOgre extends MoCEntityMob{
 
@@ -100,7 +103,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     @Override
     protected void attackEntity(Entity entity, float f)
     {
-        if (attackTime <= 0 && (f < 2.5F) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY) && (worldObj.difficultySetting > 0))
+        if (attackTime <= 0 && (f < 2.5F) && (entity.boundingBox.maxY > boundingBox.minY) && (entity.boundingBox.minY < boundingBox.maxY) && (worldObj.difficultySetting.getDifficultyId() > 0))
         {
             attackTime = 20;
             this.attackEntityAsMob(entity);
@@ -114,7 +117,7 @@ public class MoCEntityOgre extends MoCEntityMob{
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0))
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0))
             {
                 entityToAttack = entity;
             }
@@ -139,7 +142,7 @@ public class MoCEntityOgre extends MoCEntityMob{
         if (f < 0.5F)
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, getAttackRange());
-            if ((entityplayer != null) && (worldObj.difficultySetting > 0)) { return entityplayer; }
+            if ((entityplayer != null) && (worldObj.difficultySetting.getDifficultyId() > 0)) { return entityplayer; }
         }
         return null;
     }
@@ -151,22 +154,22 @@ public class MoCEntityOgre extends MoCEntityMob{
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         if (getType() < 3)
         {
-        return Block.obsidian.blockID;
+        return Item.getItemFromBlock(Blocks.obsidian);
         }
         else if (getType() < 5)
         {
              boolean flag = (rand.nextInt(4)==0);
              if (!flag) 
                  {
-                    return Block.fire.blockID;
+                    return Item.getItemFromBlock(Blocks.fire);
                 }
-             return MoCreatures.heartfire.itemID;
+             return MoCreatures.heartfire;
         }
-        return Item.diamond.itemID;
+        return Items.diamond;
     }
 
     @Override
@@ -224,7 +227,7 @@ public class MoCEntityOgre extends MoCEntityMob{
             {
                 pendingSmashAttack = false;
                 DestroyingOgre();
-                MoCServerPacketHandler.sendExplodePacket(this.entityId, (this.worldObj.provider.dimensionId));
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketExplode(this.getEntityId()), this.worldObj.provider.dimensionId);
             }
 
             if (getType() > 2)
@@ -268,12 +271,12 @@ public class MoCEntityOgre extends MoCEntityMob{
             if (leftArmW)
             {
                 attackCounterLeft = 1;
-                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
             }
             else
             {
                 attackCounterRight = 1;
-                MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 2);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 2), this.worldObj.provider.dimensionId);
             }
         }
     }

@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -182,27 +183,27 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             if (itemstack != null)
             {
                 i = 1;
-                if (itemstack.itemID == Item.hoeGold.itemID)
+                if (itemstack.getItem() == Items.golden_hoe)
                 {
                     i = 6;
                 }
-                if (itemstack.itemID == Item.shovelGold.itemID)
+                if (itemstack.getItem() == Items.golden_sword)
                 {
                     i = 7;
                 }
-                if (itemstack.itemID == Item.pickaxeGold.itemID)
+                if (itemstack.getItem() == Items.golden_pickaxe)
                 {
                     i = 8;
                 }
-                if (itemstack.itemID == Item.axeGold.itemID)
+                if (itemstack.getItem() == Items.golden_axe)
                 {
                     i = 9;
                 }
-                if (itemstack.itemID == Item.swordGold.itemID)
+                if (itemstack.getItem() == Items.golden_sword)
                 {
                     i = 10;
                 }
-                if (itemstack.itemID == MoCreatures.swordsilver.itemID)
+                if (itemstack.getItem() == MoCreatures.swordsilver)
                 {
                     i = 10;
                 }
@@ -240,7 +241,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         int i = rand.nextInt(12);
         if (getIsHumanForm())
@@ -248,55 +249,55 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             switch (i)
             {
             case 0: // '\0'
-                return Item.shovelWood.itemID;
+                return Items.wooden_shovel;
 
             case 1: // '\001'
-                return Item.axeWood.itemID;
+                return Items.wooden_axe;
 
             case 2: // '\002'
-                return Item.swordWood.itemID;
+                return Items.wooden_sword;
 
             case 3: // '\003'
-                return Item.hoeWood.itemID;
+                return Items.wooden_hoe;
 
             case 4: // '\004'
-                return Item.pickaxeWood.itemID;
+                return Items.wooden_pickaxe;
             }
-            return Item.stick.itemID;
+            return Items.stick;
         }
         switch (i)
         {
         case 0: // '\0'
-            return Item.hoeIron.itemID;
+            return Items.iron_hoe;
 
         case 1: // '\001'
-            return Item.shovelIron.itemID;
+            return Items.iron_shovel;
 
         case 2: // '\002'
-            return Item.axeIron.itemID;
+            return Items.iron_axe;
 
         case 3: // '\003'
-            return Item.pickaxeIron.itemID;
+            return Items.iron_pickaxe;
 
         case 4: // '\004'
-            return Item.swordIron.itemID;
+            return Items.iron_sword;
 
         case 5: // '\005'
-            return Item.hoeStone.itemID;
+            return Items.stone_hoe;
 
         case 6: // '\006'
-            return Item.shovelStone.itemID;
+            return Items.stone_shovel;
 
         case 7: // '\007'
-            return Item.axeStone.itemID;
+            return Items.stone_axe;
 
         case 8: // '\b'
-            return Item.pickaxeStone.itemID;
+            return Items.stone_pickaxe;
 
         case 9: // '\t'
-            return Item.swordStone.itemID;
+            return Items.stone_sword;
         }
-        return Item.appleGold.itemID;
+        return Items.golden_apple;
     }
 
     @Override
@@ -363,10 +364,10 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         {
             for (int i = 0; i < 2; i++)
             {
-                int j = getDropItemId();
-                if (j > 0)
+                Item item = func_146068_u();
+                if (item != null)
                 {
-                    dropItem(j, 1);
+                    func_145779_a(item, 1);
                 }
             }
 
@@ -421,7 +422,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             }
             if (rand.nextInt(300) == 0)
             {
-                entityAge -= 100 * worldObj.difficultySetting;
+                entityAge -= 100 * worldObj.difficultySetting.getDifficultyId();
                 if (entityAge < 0)
                 {
                     entityAge = 0;

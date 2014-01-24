@@ -5,11 +5,13 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,11 +20,11 @@ import drzhark.mocreatures.MoCreatures;
 public class MoCBlockLog extends MoCBlock
 {
     @SideOnly(Side.CLIENT)
-    private Icon[][] icons;
+    private IIcon[][] icons;
 
-    public MoCBlockLog(int par1)
+    public MoCBlockLog(String name)
     {
-        super(par1, Material.wood);
+        super(name, Material.wood);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
@@ -37,9 +39,9 @@ public class MoCBlockLog extends MoCBlock
     /**
      * Returns the ID of the items to drop on destruction.
      */
-    public int idDropped(int par1, Random par2Random, int par3)
+    public Item getItemDropped(int par1, Random par2Random, int par3)
     {
-        return MoCreatures.mocLog.blockID;
+        return Item.getItemFromBlock(MoCreatures.mocLog);
     }
 
     @Override
@@ -73,9 +75,9 @@ public class MoCBlockLog extends MoCBlock
                 {
                     for (int l = -byte0; l <= byte0; l++)
                     {
-                        int i1 = par1World.getBlockId(par2 + j, par3 + k, par4 + l);
+                        Block block = par1World.getBlock(par2 + j, par3 + k, par4 + l);
 
-                        if (i1 != MoCreatures.mocLeaf.blockID)
+                        if (block != MoCreatures.mocLeaf)
                         {
                             continue;
                         }
@@ -108,11 +110,11 @@ public class MoCBlockLog extends MoCBlock
                 {
                     for (int var11 = -var7; var11 <= var7; ++var11)
                     {
-                        int var12 = par1World.getBlockId(par2 + var9, par3 + var10, par4 + var11);
+                        Block block = par1World.getBlock(par2 + var9, par3 + var10, par4 + var11);
 
-                        if (Block.blocksList[var12] != null)
+                        if (block != null)
                         {
-                            Block.blocksList[var12].beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
+                            block.beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
                         }
                     }
                 }
@@ -121,13 +123,13 @@ public class MoCBlockLog extends MoCBlock
     }
 
     @Override
-    public boolean canSustainLeaves(World world, int x, int y, int z)
+    public boolean canSustainLeaves(IBlockAccess world, int x, int y, int z)
     {
         return true;
     }
 
     @Override
-    public boolean isWood(World world, int x, int y, int z)
+    public boolean isWood(IBlockAccess world, int x, int y, int z)
     {
         return true;
     }
@@ -150,9 +152,9 @@ public class MoCBlockLog extends MoCBlock
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[MoCreatures.multiBlockNames.size()][2];
+        icons = new IIcon[MoCreatures.multiBlockNames.size()][2];
         
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
@@ -166,7 +168,7 @@ public class MoCBlockLog extends MoCBlock
      */
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIcon(int par1Side, int Metadata)
+    public IIcon getIcon(int par1Side, int Metadata)
     {
         if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;
         if (par1Side < 2)

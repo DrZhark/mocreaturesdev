@@ -15,7 +15,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAppear;
 
 public class MoCItemHorseAmulet extends MoCItem {
 
@@ -31,9 +31,9 @@ public class MoCItemHorseAmulet extends MoCItem {
     private String ownerName;
     private int PetId;
     
-    public MoCItemHorseAmulet(int i)
+    public MoCItemHorseAmulet(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setHasSubtypes(true);
         ageCounter = 0;
@@ -109,14 +109,14 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setHealth(health);
                     storedCreature.setAdult(adult);
                     storedCreature.setOwnerPetId(PetId);
-                    storedCreature.setOwner(entityplayer.username);
+                    storedCreature.setOwner(entityplayer.getCommandSenderName());
 
                     //if the player using the amulet is different than the original owner
-                    if (ownerName != "" && !(ownerName.equals(entityplayer.username)) && MoCreatures.instance.mapData != null)
+                    if (ownerName != "" && !(ownerName.equals(entityplayer.getCommandSenderName())) && MoCreatures.instance.mapData != null)
                     {
                         MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(ownerName);
-                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.username);
-                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.username);
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getCommandSenderName());
+                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getCommandSenderName());
                         int maxCount = MoCreatures.proxy.maxTamed;
                         if (MoCTools.isThisPlayerAnOP(epOwner))
                         {
@@ -146,7 +146,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                         {
                             for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++)
                             {
-                                NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().tagAt(j);
+                                NBTTagCompound petEntry = (NBTTagCompound)oldOwner.getTamedList().getCompoundTagAt(j);
                                 if (petEntry.getInteger("PetId") == PetId)
                                 {
                                     // found match, remove
@@ -157,7 +157,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     }
 
                     entityplayer.worldObj.spawnEntityInWorld(storedCreature);
-                    MoCServerPacketHandler.sendAppearPacket(storedCreature.entityId, worldObj.provider.dimensionId);
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAppear(storedCreature.getEntityId()), worldObj.provider.dimensionId);
                     MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
                 }catch (Exception ex) 
                 {

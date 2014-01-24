@@ -1,5 +1,6 @@
 package drzhark.mocreatures.block;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,9 +11,10 @@ public class MoCBlockFarm extends BlockContainer
 {
     private int farmRange = 10;
     
-    public MoCBlockFarm(int par1)
+    public MoCBlockFarm(String name)
     {
-        super(par1, Material.wood);
+        super(Material.wood);
+        GameRegistry.registerBlock(this, name);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
@@ -24,7 +26,8 @@ public class MoCBlockFarm extends BlockContainer
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world) {
+    public TileEntity createNewTileEntity(World var1, int var2)
+    {
         // TODO Auto-generated method stub
         return null;
     }

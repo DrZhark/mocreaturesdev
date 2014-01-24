@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.monster;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -51,10 +53,10 @@ public class MoCEntityHellRat extends MoCEntityRat {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         boolean flag = (rand.nextInt(3) == 0);
-        if (flag) { return Block.fire.blockID; }
-        return Item.redstone.itemID;
+        if (flag) { return Item.getItemFromBlock(Blocks.fire); }
+        return Items.redstone;
     }
 }

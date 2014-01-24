@@ -2,26 +2,27 @@ package drzhark.mocreatures.dimension;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class MoCWorldGenPortal extends WorldGenerator
 {
-    private int pillarBlockID;
-    private int stairBlockID;
-    private int wallBlockID;
-    private int centerBlockID;
+    private Block pillarBlock;
+    private Block stairBlock;
+    private Block wallBlock;
+    private Block centerBlock;
     private int pillarMetadata;
     private int stairMetadata;
     private int wallMetadata;
     private int centerMetadata;
 
-    public MoCWorldGenPortal(int pillar, int pillarMeta, int stair, int stairMeta, int wall, int wallMeta, int center, int centerMeta)
+    public MoCWorldGenPortal(Block pillar, int pillarMeta, Block stair, int stairMeta, Block wall, int wallMeta, Block center, int centerMeta)
     {        
-        pillarBlockID = pillar;
-        stairBlockID = stair;
-        wallBlockID = wall;
-        centerBlockID = center;
+        pillarBlock = pillar;
+        stairBlock = stair;
+        wallBlock = wall;
+        centerBlock = center;
         pillarMetadata = pillarMeta;
         stairMetadata = stairMeta;
         wallMetadata = wallMeta;
@@ -32,7 +33,7 @@ public class MoCWorldGenPortal extends WorldGenerator
     {
         for (int nY = y; nY < y+6; nY++)
         {
-            world.setBlock(x, nY, z, pillarBlockID, pillarMetadata, 2);
+            world.setBlock(x, nY, z, pillarBlock, pillarMetadata, 2);
         }
         return true;
     }
@@ -40,12 +41,12 @@ public class MoCWorldGenPortal extends WorldGenerator
     
     public boolean generate(World world, Random random, int x, int y, int z)
     {
-        if(world.getBlockId(x, y , z) == centerBlockID || world.getBlockId(x, y-1 , z) == centerBlockID || world.getBlockId(x, y+1 , z) == centerBlockID)
+        if(world.getBlock(x, y , z) == centerBlock || world.getBlock(x, y-1 , z) == centerBlock || world.getBlock(x, y+1 , z) == centerBlock)
         {
             return true;
         }
 
-        if(world.getBlockId(x, y , z) == 0 || world.getBlockId(x, y+1, z) !=0)
+        if(world.isAirBlock(x, y , z) || !world.isAirBlock(x, y+1, z))
         {
             return false;
         }
@@ -63,7 +64,7 @@ public class MoCWorldGenPortal extends WorldGenerator
                 {
                     stairMetadata = 3;
                 }
-                world.setBlock(nX, y+1, nZ, stairBlockID, stairMetadata, 2);
+                world.setBlock(nX, y+1, nZ, stairBlock, stairMetadata, 2);
             }
         }
 
@@ -71,7 +72,7 @@ public class MoCWorldGenPortal extends WorldGenerator
         {
             for (int nZ = z-2; nZ < z+2; nZ++)
             {
-                world.setBlock(nX, y+1, nZ, wallBlockID, wallMetadata, 2);
+                world.setBlock(nX, y+1, nZ, wallBlock, wallMetadata, 2);
             }
         }
 
@@ -79,7 +80,7 @@ public class MoCWorldGenPortal extends WorldGenerator
         {
             for (int nZ = z-1; nZ < z+1; nZ++)
             {
-                world.setBlock(nX, y+1, nZ, centerBlockID, centerMetadata, 2);
+                world.setBlock(nX, y+1, nZ, centerBlock, centerMetadata, 2);
             }
         }
 
@@ -87,7 +88,7 @@ public class MoCWorldGenPortal extends WorldGenerator
         {
             for (int nZ = z-3; nZ < z+3; nZ++)
             {
-                world.setBlock(j, y+6, nZ, wallBlockID, wallMetadata, 2);
+                world.setBlock(j, y+6, nZ, wallBlock, wallMetadata, 2);
             }
         }
 

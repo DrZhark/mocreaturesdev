@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityKomodo extends MoCEntityTameable
 {
@@ -165,7 +166,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
         sitCounter = 1;
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, worldObj.provider.dimensionId, 0);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), worldObj.provider.dimensionId);
         }
         setPathToEntity(null);
     }
@@ -196,7 +197,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
        else
        {
        
-        entityDropItem(new ItemStack(MoCreatures.crochide.itemID, 1, 0), 0.0F);
+        entityDropItem(new ItemStack(MoCreatures.crochide, 1, 0), 0.0F);
        }
     }
 
@@ -224,7 +225,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         
         if ((itemstack != null) && getIsTamed() && !getIsRideable() && getEdad() > 90 &&
-                (itemstack.itemID == Item.saddle.itemID || itemstack.itemID == MoCreatures.horsesaddle.itemID))
+                (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -364,7 +365,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
                 return false; 
             }
 
-            if ((entity != this) && (worldObj.difficultySetting > 0))
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0))
             {
                 entityToAttack = entity;
             }
@@ -376,7 +377,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 6D);
             if (!getIsTamed() && (entityplayer != null) && getEdad()>70)
@@ -395,7 +396,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack)
     {
-        return par1ItemStack != null && (par1ItemStack.itemID == MoCreatures.ratRaw.itemID || par1ItemStack.itemID == MoCreatures.rawTurkey.itemID);
+        return par1ItemStack != null && (par1ItemStack.getItem() == MoCreatures.ratRaw || par1ItemStack.getItem() == MoCreatures.rawTurkey);
     }
 
     @Override

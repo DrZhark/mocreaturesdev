@@ -40,7 +40,7 @@ public class MoCRenderGoat extends RenderLiving {
     }
 
     /*@Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityGoat entitygoat = (MoCEntityGoat) entityliving;
         tempGoat.typeInt = entitygoat.type;
@@ -64,13 +64,13 @@ public class MoCRenderGoat extends RenderLiving {
         tempGoat.attacking = entitygoat.attacking;
 
 
-        super.doRenderLiving(entityliving, d, d1, d2, f, f1);
+        super.doRender(entityliving, d, d1, d2, f, f1);
         
         
     }*/
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityGoat entitygoat = (MoCEntityGoat) entityliving;
         tempGoat.typeInt = entitygoat.getType();
@@ -82,7 +82,7 @@ public class MoCRenderGoat extends RenderLiving {
         tempGoat.tailMov = entitygoat.tailMovement();
         tempGoat.eatMov = entitygoat.mouthMovement();
 
-        super.doRenderLiving(entitygoat, d, d1, d2, f, f1);
+        super.doRender(entitygoat, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitygoat.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         //boolean flag2 = MoCreatures.proxy.getdisplayPetIcons();

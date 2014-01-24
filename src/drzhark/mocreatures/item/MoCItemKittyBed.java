@@ -10,16 +10,16 @@ public class MoCItemKittyBed extends MoCItem {
 
     public int itemcolor;
 
-    public MoCItemKittyBed(int i)
+    public MoCItemKittyBed(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 8;
         setHasSubtypes(true);
     }
 
-    public MoCItemKittyBed(int i, int j)
+    public MoCItemKittyBed(String name, int j)
     {
-        this(i);
+        this(name);
         itemcolor = j;
     }
 

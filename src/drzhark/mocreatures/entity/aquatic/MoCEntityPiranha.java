@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -43,7 +44,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     @Override
     protected Entity findPlayerToAttack()
     {
-        if ((worldObj.difficultySetting > 0))
+        if ((worldObj.difficultySetting.getDifficultyId() > 0))
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 12D);
             if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) { return entityplayer; }
@@ -54,7 +55,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i)
     {
-        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting > 0))
+        if (super.attackEntityFrom(damagesource, i) && (worldObj.difficultySetting.getDifficultyId() > 0))
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
@@ -103,7 +104,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish{
         int i = rand.nextInt(100);
         if (i < 70)
         {
-            entityDropItem(new ItemStack(Item.fishRaw.itemID, 1, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
         }
         else
         {

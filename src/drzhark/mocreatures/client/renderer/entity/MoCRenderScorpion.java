@@ -22,10 +22,10 @@ public class MoCRenderScorpion extends MoCRenderMoC {
     }
 
     @Override
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
+    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1)
     {
         MoCEntityScorpion entityscorpion = (MoCEntityScorpion) entityliving;
-        super.doRenderLiving(entityscorpion, d, d1, d2, f, f1);
+        super.doRender(entityscorpion, d, d1, d2, f, f1);
     }
 
     @Override

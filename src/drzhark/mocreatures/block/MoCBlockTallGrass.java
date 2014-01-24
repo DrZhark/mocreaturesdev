@@ -4,46 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCreatures;
 
-public class MoCBlockTallGrass extends BlockFlower implements IShearable
+public class MoCBlockTallGrass extends BlockBush implements IShearable
 {
     @SideOnly(Side.CLIENT)
-    private Icon[] icons;
+    private IIcon[] icons;
 
-    public MoCBlockTallGrass(int par1)
+    public MoCBlockTallGrass(String name)
     {
-        super(par1, Material.vine);
+        super(Material.vine);
+        GameRegistry.registerBlock(this, name);
         float var3 = 0.4F;
         this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 0.8F, 0.5F + var3);
     }
 
-    public MoCBlockTallGrass(int par1, boolean lighted)
+    public MoCBlockTallGrass(String name, boolean lighted)
     {
-        this(par1);
+        this(name);
         if (lighted)
         {
-            this.setLightValue(0.8F);
+            this.setLightLevel(0.8F);
         }
     }
 
     /**
      * Returns the ID of the items to drop on destruction.
      */
-    public int idDropped(int par1, Random par2Random, int par3)
+    public Item getItemDropped(int par1, Random par2Random, int par3)
     {
-        return -1;
+        return null;
     }
 
     /**
@@ -72,13 +77,13 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     }
 
     @Override
-    public boolean isShearable(ItemStack item, World world, int x, int y, int z)
+    public boolean isShearable(ItemStack item, IBlockAccess world, int x, int y, int z)
     {
         return false;
     }
 
     @Override
-    public ArrayList<ItemStack> onSheared(ItemStack item, World world, int x,
+    public ArrayList<ItemStack> onSheared(ItemStack item,IBlockAccess world, int x,
             int y, int z, int fortune) {
         
         return null;
@@ -92,9 +97,9 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[MoCreatures.multiBlockNames.size()];
+        icons = new IIcon[MoCreatures.multiBlockNames.size()];
         
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
@@ -107,7 +112,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
      */
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIcon(int par1, int par2)
+    public IIcon getIcon(int par1, int par2)
     {
         if (par2 < 0 || par2 >= MoCreatures.multiBlockNames.size()) par2 = 0;
         return icons[par2];
@@ -115,7 +120,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(Item par1, CreativeTabs tab, List subItems) 
     {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) 
         {
@@ -124,7 +129,7 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
     }
 
     @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage(int i)
+    public IIcon getIconFromDamage(int i)
     {
     return icons[i]; 
     }

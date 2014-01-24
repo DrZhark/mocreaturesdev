@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -49,7 +50,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
         {
             Entity entity = damagesource.getEntity();
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0))
+            if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0))
             {
                 entityToAttack = entity;
             }
@@ -66,7 +67,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     {
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (isItemEdible(itemstack.getItem()))) //((itemstack.itemID == MoCreatures.rawTurkey.itemID)))
+        if ((itemstack != null) && (isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -92,7 +93,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     @Override
     protected Entity findPlayerToAttack()
     {
-        if ((rand.nextInt(80) == 0) && (worldObj.difficultySetting > 0))
+        if ((rand.nextInt(80) == 0) && (worldObj.difficultySetting.getDifficultyId() > 0))
         {
             EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
             return entityliving;
@@ -110,9 +111,9 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.fur.itemID;
+        return MoCreatures.fur;
     }
 
     @Override

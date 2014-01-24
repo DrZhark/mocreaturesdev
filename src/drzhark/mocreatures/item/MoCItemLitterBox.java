@@ -8,9 +8,9 @@ import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
 public class MoCItemLitterBox extends MoCItem {
 
-    public MoCItemLitterBox(int i)
+    public MoCItemLitterBox(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 16;
     }
 

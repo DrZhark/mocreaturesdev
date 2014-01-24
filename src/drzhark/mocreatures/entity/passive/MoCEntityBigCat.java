@@ -13,6 +13,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -377,7 +379,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
             Entity entity = damagesource.getEntity();
             if (entity != null && getIsTamed() && entity instanceof EntityPlayer) { return false; }
             if ((riddenByEntity == entity) || (ridingEntity == entity)) { return true; }
-            if ((entity != this) && (worldObj.difficultySetting > 0))
+            if ((entity != this) && (worldObj.difficultySetting != worldObj.difficultySetting.PEACEFUL))
             {
                 entityToAttack = entity;
             }
@@ -411,7 +413,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     {
         if (roper != null && roper instanceof EntityPlayer) { return getMastersEnemy((EntityPlayer) roper, 12D); }
 
-        if (worldObj.difficultySetting > 0 && MoCreatures.isHuntingEnabled())
+        if (worldObj.difficultySetting != worldObj.difficultySetting.PEACEFUL && MoCreatures.isHuntingEnabled())
         {
             EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, getAttackRange());
             if (!getIsTamed() && (entityplayer != null) && getIsAdult() && getIsHungry())
@@ -490,8 +492,8 @@ public class MoCEntityBigCat extends MoCEntityTameable {
             {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
-                    int j2 = worldObj.getBlockId(k1, l1, i2);
-                    if ((j2 != 0) && (Block.blocksList[j2].blockMaterial == Material.snow)) { return true; }
+                    Block block = worldObj.getBlock(k1, l1, i2);
+                    if ((block != Blocks.air) && (block.getMaterial() == Material.field_151597_y)) { return true; }
                 }
 
             }
@@ -562,9 +564,9 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.bigcatclaw.itemID;
+        return MoCreatures.bigcatclaw;
     }
 
     @Override
@@ -618,7 +620,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         if (super.interact(entityplayer)) { return false; }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && !getIsTamed() && getHasEaten() && (itemstack.itemID == MoCreatures.medallion.itemID))
+        if ((itemstack != null) && !getIsTamed() && getHasEaten() && (itemstack.getItem() == MoCreatures.medallion))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -630,12 +632,12 @@ public class MoCEntityBigCat extends MoCEntityTameable {
             }
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == MoCreatures.whip.itemID))
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip))
         {
             setSitting(!getIsSitting());
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.porkRaw.itemID || itemstack.itemID == Item.fishRaw.itemID))
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.fish))
         {
             this.setHealth(getMaxHealth());
             worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
@@ -706,7 +708,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         }
         if ((deathTime == 0) && getIsHungry() && !getIsSitting())
         {
-            EntityItem entityitem = getClosestItem(this, 12D, Item.porkRaw.itemID, Item.fishRaw.itemID);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.porkchop, Items.fish);
             if (entityitem != null)
             {
                 float f = entityitem.getDistanceToEntity(this);

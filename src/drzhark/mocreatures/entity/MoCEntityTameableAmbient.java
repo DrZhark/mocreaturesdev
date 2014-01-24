@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,7 +40,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         //before ownership check 
-        if ((itemstack != null) && getIsTamed() && ((itemstack.itemID == MoCreatures.scrollOfOwner.itemID)) 
+        if ((itemstack != null) && getIsTamed() && ((itemstack.getItem() == MoCreatures.scrollOfOwner)) 
                 && MoCreatures.proxy.enableResetOwnership && MoCTools.isThisPlayerAnOP(entityplayer))
         {
             if (--itemstack.stackSize == 0)
@@ -58,13 +59,13 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             return true;
         }
         //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.username.equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) 
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) 
         {
             return true; 
         }
 
         //changes name
-        if (itemstack != null && getIsTamed() && (itemstack.itemID == MoCreatures.medallion.itemID || itemstack.itemID == Item.book.itemID || itemstack.itemID == Item.nameTag.itemID))
+        if (itemstack != null && getIsTamed() && (itemstack.getItem() == MoCreatures.medallion|| itemstack.getItem() == Items.book|| itemstack.getItem() == Items.name_tag))
         {
             if (MoCreatures.isServer())
             {
@@ -75,7 +76,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         
         //sets it free, untamed
         if ((itemstack != null) && getIsTamed() 
-                && ((itemstack.itemID == MoCreatures.scrollFreedom.itemID)))
+                && ((itemstack.getItem() == MoCreatures.scrollFreedom)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -98,7 +99,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
 
         //removes owner, any other player can claim it by renaming it
         if ((itemstack != null) && getIsTamed() 
-                    && ((itemstack.itemID == MoCreatures.scrollOfSale.itemID)))
+                    && ((itemstack.getItem() == MoCreatures.scrollOfSale)))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -130,7 +131,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         }
         
         //stores in fishnet
-        if (itemstack != null && itemstack.itemID == MoCreatures.fishnet.itemID && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
+        if (itemstack != null && itemstack.getItem() == MoCreatures.fishnet && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
@@ -158,7 +159,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.shears.itemID))
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.shears))
         {
             if (MoCreatures.isServer())
             {
@@ -216,10 +217,10 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             if (petData != null)
             {
-                NBTTagList tag = petData.getPetData().getTagList("TamedList");
+                NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
                 for (int i = 0; i < tag.tagCount(); i++)
                 {
-                    NBTTagCompound nbt = (NBTTagCompound)tag.tagAt(i);
+                    NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);
                     if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                     {
                         // check if cloned and if so kill

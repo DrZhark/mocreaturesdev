@@ -1,8 +1,10 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,9 +15,9 @@ import drzhark.mocreatures.dimension.MoCDirectTeleporter;
 
 public class ItemStaffPortal extends MoCItem
 {
-    public ItemStaffPortal(int i)
+    public ItemStaffPortal(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
         setMaxDamage(3);
         this.setCreativeTab(CreativeTabs.tabTools);
@@ -83,9 +85,9 @@ public class ItemStaffPortal extends MoCItem
                     {
                         for (int i1 = 0; i1 < 60; i1++)
                         {
-                            int j1 = thePlayer.mcServer.worldServerForDimension(0).getBlockId(var2.posX, var2.posY + i1, var2.posZ);
-                            int j2 = thePlayer.mcServer.worldServerForDimension(0).getBlockId(var2.posX, var2.posY + i1 + 1, var2.posZ);
-                            if (j1 == 0 && j2 == 0)
+                            Block block = thePlayer.mcServer.worldServerForDimension(0).getBlock(var2.posX, var2.posY + i1, var2.posZ);
+                            Block block1 = thePlayer.mcServer.worldServerForDimension(0).getBlock(var2.posX, var2.posY + i1 + 1, var2.posZ);
+                            if (block == Blocks.air && block1 == Blocks.air)
                             {
                                 thePlayer.playerNetServerHandler.setPlayerLocation((double)var2.posX, (double)var2.posY+i1+1, (double)var2.posZ, 0.0F, 0.0F);
                                 if (MoCreatures.proxy.debug) {System.out.println("MoC Staff teleporter found location at spawn");}

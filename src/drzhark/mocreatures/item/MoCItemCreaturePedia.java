@@ -17,9 +17,9 @@ import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 
 public class MoCItemCreaturePedia extends MoCItem {
 
-    public MoCItemCreaturePedia(int i)
+    public MoCItemCreaturePedia(String name)
     {
-        super(i);
+        super(name);
         maxStackSize = 1;
     }
 

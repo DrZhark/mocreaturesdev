@@ -113,7 +113,7 @@ public class MoCModelFishBowl extends ModelBase {
             GL11.glBlendFunc(770, 1);
 
         }
-        //super.doRenderLiving(entityliving, d, d1, d2, f, f1);
+        //super.doRender(entityliving, d, d1, d2, f, f1);
         GL11.glDisable(3042/*GL_BLEND*/);
         GL11.glPopMatrix();
 

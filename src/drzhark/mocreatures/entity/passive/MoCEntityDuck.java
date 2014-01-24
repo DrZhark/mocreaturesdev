@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCreatures;
@@ -94,8 +95,8 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.feather.itemID;
+        return Items.feather;
     }
 }

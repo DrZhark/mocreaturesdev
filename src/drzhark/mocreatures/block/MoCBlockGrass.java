@@ -5,10 +5,10 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,11 +17,11 @@ import drzhark.mocreatures.MoCreatures;
 public class MoCBlockGrass extends MoCBlock
 {
     @SideOnly(Side.CLIENT)
-    private Icon[][] icons;
+    private IIcon[][] icons;
 
-    public MoCBlockGrass(int par1)
+    public MoCBlockGrass(String name)
     {
-        super(par1, Material.grass);
+        super(name, Material.grass);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
@@ -33,9 +33,9 @@ public class MoCBlockGrass extends MoCBlock
             return;
         }
 
-        if (par1World.getBlockLightValue(par2, par3 + 1, par4) < 4 && Block.lightOpacity[par1World.getBlockId(par2, par3 + 1, par4)] > 2)
+        if (par1World.getBlockLightValue(par2, par3 + 1, par4) < 4 && par1World.getBlock(par2, par3 + 1, par4).getLightOpacity() > 2)
         {
-            par1World.setBlock(par2, par3, par4, MoCreatures.mocDirt.blockID, this.getDamageValue(par1World, par2, par3, par4), 3);
+            par1World.setBlock(par2, par3, par4, MoCreatures.mocDirt, this.getDamageValue(par1World, par2, par3, par4), 3);
         }
         else if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9)
         {
@@ -44,11 +44,11 @@ public class MoCBlockGrass extends MoCBlock
                 int j = (par2 + par5Random.nextInt(3)) - 1;
                 int k = (par3 + par5Random.nextInt(5)) - 3;
                 int l = (par4 + par5Random.nextInt(3)) - 1;
-                int i1 = par1World.getBlockId(j, k + 1, l);
+                Block block = par1World.getBlock(j, k + 1, l);
 
-                if (par1World.getBlockId(j, k, l) == MoCreatures.mocDirt.blockID && par1World.getBlockLightValue(j, k + 1, l) >= 4 && Block.lightOpacity[i1] <= 2)
+                if (par1World.getBlock(j, k, l) == MoCreatures.mocDirt && par1World.getBlockLightValue(j, k + 1, l) >= 4 && block.getLightOpacity() <= 2)
                 {
-                    par1World.setBlock(j, k, l, MoCreatures.mocGrass.blockID, this.getDamageValue(par1World, j, k, l), 3);
+                    par1World.setBlock(j, k, l, MoCreatures.mocGrass, this.getDamageValue(par1World, j, k, l), 3);
                 }
             }
         }
@@ -70,9 +70,9 @@ public class MoCBlockGrass extends MoCBlock
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-        icons = new Icon[MoCreatures.multiBlockNames.size()][3];
+        icons = new IIcon[MoCreatures.multiBlockNames.size()][3];
         
         for (int x = 0; x < MoCreatures.multiBlockNames.size(); x++)
         {
@@ -87,7 +87,7 @@ public class MoCBlockGrass extends MoCBlock
      */
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIcon(int par1Side, int Metadata)
+    public IIcon getIcon(int par1Side, int Metadata)
     {
         if (par1Side < 0 || par1Side > 2) par1Side = 2;
         if (Metadata < 0 || Metadata >= MoCreatures.multiBlockNames.size()) Metadata = 0;

@@ -1,14 +1,16 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntitySilverSkeleton extends MoCEntityMob
 {
@@ -67,13 +69,13 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         if (rand.nextInt(10) == 0)
         {
-            return MoCreatures.swordsilver.itemID;
+            return MoCreatures.swordsilver;
         }
-        return Item.bone.itemID;
+        return Items.bone;
 
     }
 
@@ -103,11 +105,11 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
                 if (leftArmW)
                 {
                     attackCounterLeft = 1;
-                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
                 }else
                 {
                     attackCounterRight = 1;
-                    MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 2);
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 2), this.worldObj.provider.dimensionId);
                 }
             }
         }
@@ -155,7 +157,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
     }
    
     @Override
-    protected void playStepSound(int par1, int par2, int par3, int par4)
+    protected void func_145780_a(int par1, int par2, int par3, Block block)
     {
         this.playSound("mob.skeleton.step", 0.15F, 1.0F);
     }

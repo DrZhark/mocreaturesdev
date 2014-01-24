@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.aquatic;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -64,7 +65,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic{
         int i = rand.nextInt(100);
         if (i < 70)
         {
-            entityDropItem(new ItemStack(Item.fishRaw.itemID, 1, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
         }
         else
         {

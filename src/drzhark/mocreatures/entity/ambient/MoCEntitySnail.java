@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.ambient;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -133,9 +134,9 @@ public class MoCEntitySnail extends MoCEntityAmbient
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return Item.slimeBall.itemID;
+        return Items.slime_ball;
     }
 
     @Override

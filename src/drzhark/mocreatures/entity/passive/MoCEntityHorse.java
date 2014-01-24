@@ -4,8 +4,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
-import net.minecraft.block.BlockJukeBox;
-import net.minecraft.block.StepSound;
+import net.minecraft.block.BlockJukebox;
+import net.minecraft.block.Block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -15,12 +15,14 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.tileentity.TileEntityRecordPlayer;
+import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +30,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.FakePlayerFactory;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -36,7 +39,10 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.packet.MoCPacketHeart;
+import drzhark.mocreatures.network.packet.MoCPacketShuffle;
+import drzhark.mocreatures.network.packet.MoCPacketVanish;
 
 public class MoCEntityHorse extends MoCEntityTameable {
     private int gestationtime;
@@ -306,19 +312,19 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             if (i == 1)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorIron, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Items.iron_horse_armor, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 2)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorGold, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Items.golden_horse_armor, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
             if (i == 3)
             {
-                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.horseArmorDiamond, 1));
+                EntityItem entityitem = new EntityItem(worldObj, this.posX, this.posY, this.posZ, new ItemStack(Items.diamond_horse_armor, 1));
                 entityitem.delayBeforeCanPickup = 10;
                 worldObj.spawnEntityInWorld(entityitem);
             }
@@ -339,7 +345,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     {
         if (!isBagger() || !getChestedHorse() || !MoCreatures.isServer()) { return; }
 
-        EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Block.chest, 1));
+        EntityItem entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Blocks.chest, 1));
         float f3 = 0.05F;
         entityitem.motionX = (float) worldObj.rand.nextGaussian() * f3;
         entityitem.motionY = ((float) worldObj.rand.nextGaussian() * f3) + 0.2F;
@@ -375,11 +381,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }
 
-            int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023221D - prevRotationPitch), MathHelper.floor_double(posZ));
-            if (j > 0)
+            Block block = worldObj.getBlock(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023221D - prevRotationPitch), MathHelper.floor_double(posZ));
+            if (block != Blocks.air)
             {
-                StepSound stepsound = Block.blocksList[j].stepSound;
-                worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
+                SoundType stepsound = block.stepSound;
+                worldObj.playSoundAtEntity(this, stepsound.func_150498_e(), stepsound.func_150497_c() * 0.5F, stepsound.func_150494_d() * 0.75F);
             }
         }
     }
@@ -554,30 +560,30 @@ public class MoCEntityHorse extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
         boolean flag = (rand.nextInt(4) == 0);
 
         if (flag && (this.getType() == 36 || (this.getType() >= 50 && this.getType() < 60))) // unicorn
-        { return MoCreatures.unicorn.itemID; }
+        { return MoCreatures.unicorn; }
         if (this.getType() == 39) // pegasus
-        { return Item.feather.itemID; }
+        { return Items.feather; }
         if (this.getType() == 40) // dark pegasus
-        { return Item.feather.itemID; }
+        { return Items.feather; }
         if (this.getType() == 38 && flag && worldObj.provider.isHellWorld) // nightmare
-        { return MoCreatures.heartfire.itemID; }
+        { return MoCreatures.heartfire; }
         if (this.getType() == 32 && flag) // bat horse
-        { return MoCreatures.heartdarkness.itemID; }
+        { return MoCreatures.heartdarkness; }
         if (this.getType() == 26)// skely
-        { return Item.bone.itemID; }
+        { return Items.bone; }
         if ((this.getType() == 23 || this.getType() == 24 || this.getType() == 25))
         {
-            if (flag) { return MoCreatures.heartundead.itemID; }
-            return Item.rottenFlesh.itemID;
+            if (flag) { return MoCreatures.heartundead; }
+            return Items.rotten_flesh;
         }
-        if (this.getType() == 21 || this.getType() == 22) { return Item.ghastTear.itemID; }
+        if (this.getType() == 21 || this.getType() == 22) { return Items.ghast_tear; }
 
-        return Item.leather.itemID;
+        return Items.leather;
     }
 
     public boolean getEating()
@@ -1274,7 +1280,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && !getIsRideable() && itemstack.itemID == Item.saddle.itemID)
+        if ((itemstack != null) && !getIsRideable() && itemstack.getItem() == Items.saddle)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1284,7 +1290,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
         
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorIron.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == Items.iron_horse_armor && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1300,7 +1306,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorGold.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == Items.golden_horse_armor && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1315,7 +1321,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == Item.horseArmorDiamond.itemID && isArmored())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == Items.diamond_horse_armor && isArmored())
         {
             if (getArmorType() == 0)
             {
@@ -1330,7 +1336,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.horsearmorcrystal.itemID && isMagicHorse())
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.horsearmorcrystal && isMagicHorse())
         {
             if (getArmorType() == 0)
             {
@@ -1346,15 +1352,15 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // transform to undead, or heal undead horse
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.vialundead.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialundead)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
 
             if (this.isUndead() || isGhost())
@@ -1389,15 +1395,15 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // to transform to nightmares: only pure breeds
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.vialnightmare.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialnightmare)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
 
             if (this.isNightmare())
@@ -1419,15 +1425,15 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // transform to dark pegasus
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.vialdarkness.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialdarkness)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
 
             if (this.getType() == 32)
@@ -1454,15 +1460,15 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.viallight.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.viallight)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
 
             if (this.isMagicHorse())
@@ -1499,28 +1505,28 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
         if ((itemstack != null) && this.isAmuletHorse() && this.getIsTamed())
         {
-            if ((this.getType() == 26 || this.getType() == 27 || this.getType() == 28) && itemstack.itemID == MoCreatures.amuletbone.itemID)
+            if ((this.getType() == 26 || this.getType() == 27 || this.getType() == 28) && itemstack.getItem() == MoCreatures.amuletbone)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 vanishHorse();
                 return true;
             }
 
-            if ((this.getType() > 47 && this.getType() < 60) && itemstack.itemID == MoCreatures.amuletfairy.itemID)
+            if ((this.getType() > 47 && this.getType() < 60) && itemstack.getItem() == MoCreatures.amuletfairy)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 vanishHorse();
                 return true;
             }
 
-            if ((this.getType() == 39 || this.getType() == 40) && (itemstack.itemID == MoCreatures.amuletpegasus.itemID))
+            if ((this.getType() == 39 || this.getType() == 40) && (itemstack.getItem() == MoCreatures.amuletpegasus))
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 vanishHorse();
                 return true;
             }
 
-            if ((this.getType() == 21 || this.getType() == 22) && (itemstack.itemID == MoCreatures.amuletghost.itemID))
+            if ((this.getType() == 21 || this.getType() == 22) && (itemstack.getItem() == MoCreatures.amuletghost))
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 vanishHorse();
@@ -1529,10 +1535,10 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
         }
 
-        if ((itemstack != null) && (itemstack.itemID == Item.dyePowder.itemID) && this.getType() == 50)
+        if ((itemstack != null) && (itemstack.getItem() == Items.dye) && this.getType() == 50)
         {
 
-            int colorInt = BlockColored.getBlockFromDye(itemstack.getItemDamage());
+            int colorInt = BlockColored.func_150031_c(itemstack.getItemDamage());
             switch (colorInt)
             {
             case 1: //orange
@@ -1592,7 +1598,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // zebra easter egg
-        if ((itemstack != null) && (this.getType() == 60) && ((itemstack.itemID == Item.record11.itemID) || (itemstack.itemID == Item.record13.itemID) || (itemstack.itemID == Item.recordCat.itemID) || (itemstack.itemID == Item.recordChirp.itemID) || (itemstack.itemID == Item.recordFar.itemID) || (itemstack.itemID == Item.recordMall.itemID) || (itemstack.itemID == Item.recordMellohi.itemID) || (itemstack.itemID == Item.recordStal.itemID) || (itemstack.itemID == Item.recordStrad.itemID) || (itemstack.itemID == Item.recordWard.itemID)))
+        if ((itemstack != null) && (this.getType() == 60) && ((itemstack.getItem() == Items.record_11) || (itemstack.getItem() == Items.record_13) || (itemstack.getItem() == Items.record_cat) || (itemstack.getItem() == Items.record_chirp) || (itemstack.getItem() == Items.record_far) || (itemstack.getItem() == Items.record_mall) || (itemstack.getItem() == Items.record_mellohi) || (itemstack.getItem() == Items.record_stal) || (itemstack.getItem() == Items.record_strad) || (itemstack.getItem() == Items.record_ward)))
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
@@ -1604,7 +1610,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             eatingHorse();
             return true;
         }
-        if ((itemstack != null) && (itemstack.itemID == Item.wheat.itemID) && !isMagicHorse() && !isUndead())
+        if ((itemstack != null) && (itemstack.getItem() == Items.wheat) && !isMagicHorse() && !isUndead())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1630,7 +1636,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.itemID == MoCreatures.sugarlump.itemID) && !isMagicHorse() && !isUndead())
+        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.sugarlump) && !isMagicHorse() && !isUndead())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1656,7 +1662,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.itemID == Item.bread.itemID) && !isMagicHorse() && !isUndead())
+        if ((itemstack != null) && (itemstack.getItem() == Items.bread) && !isMagicHorse() && !isUndead())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1682,7 +1688,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && ((itemstack.itemID == Item.appleRed.itemID) || (itemstack.itemID == Item.appleGold.itemID)) && !isMagicHorse() && !isUndead())
+        if ((itemstack != null) && ((itemstack.getItem() == Items.apple) || (itemstack.getItem() == Items.golden_apple)) && !isMagicHorse() && !isUndead())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1703,7 +1709,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Block.chest.blockID) && (isBagger()))
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Item.getItemFromBlock(Blocks.chest)) && (isBagger()))
         {
             if (getChestedHorse()) { return false; }
             if (--itemstack.stackSize == 0)
@@ -1716,7 +1722,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.itemID == MoCreatures.haystack.itemID))
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.haystack))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1732,7 +1738,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
             return true;
         }
-        if ((itemstack != null) && (itemstack.itemID == MoCreatures.key.itemID) && getChestedHorse())
+        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.key) && getChestedHorse())
         {
             // if first time opening horse chest, we must initialize it
             if (localhorsechest == null)
@@ -1747,18 +1753,18 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
 
         }
-        if ((itemstack != null) && ((itemstack.itemID == Block.pumpkin.blockID) || (itemstack.itemID == Item.bowlSoup.itemID) || (itemstack.itemID == Item.cake.itemID)))
+        if ((itemstack != null) && ((itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) || (itemstack.getItem() == Items.mushroom_stew) || (itemstack.getItem() == Items.cake)))
         {
             if (!getIsAdult() || isMagicHorse() || isUndead()) { return false; }
-            if (itemstack.itemID == Item.bowlSoup.itemID)
+            if (itemstack.getItem() == Items.mushroom_stew)
             {
                 if (--itemstack.stackSize == 0)
                 {
-                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.bowlEmpty));
+                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.bowl));
                 }
                 else
                 {
-                    entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.bowlEmpty));
+                    entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.bowl));
                 }
             }
             else if (--itemstack.stackSize == 0)
@@ -1772,7 +1778,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // TODO test nightmare whiping!
-        if ((itemstack != null) && (itemstack.itemID == MoCreatures.whip.itemID) && getIsTamed() && (riddenByEntity == null))
+        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.whip) && getIsTamed() && (riddenByEntity == null))
         {
             setEating(!getEating());// eatinghaystack = !eatinghaystack;
             return true;
@@ -1985,23 +1991,23 @@ public class MoCEntityHorse extends MoCEntityTameable {
         if (!MoCreatures.isServer()) { return false; }
 
         boolean flag = false;
-        TileEntityRecordPlayer jukebox = MoCTools.nearJukeBoxRecord(this, 6D);
-        if (jukebox != null && jukebox.func_96097_a() != null)
+        TileEntityJukebox jukebox = MoCTools.nearJukeBoxRecord(this, 6D);
+        if (jukebox != null && jukebox.func_145856_a() != null)
         {
-            int i = jukebox.func_96097_a().itemID;
+            Item record = jukebox.func_145856_a().getItem();
 
-            int j = MoCreatures.recordshuffle.itemID;
-            if (i == j)
+            Item shuffleRecord = MoCreatures.recordshuffle;
+            if (record == shuffleRecord)
             {
                 flag = true;
                 if (shuffleCounter > 1000)
                 {
                     shuffleCounter = 0;
-                    MoCServerPacketHandler.sendStopShuffle(this.entityId, this.worldObj.provider.dimensionId);
-                    BlockJukeBox blockjukebox = (BlockJukeBox) Block.blocksList[worldObj.getBlockId(jukebox.xCoord, jukebox.yCoord, jukebox.zCoord)];// Block.blocksList[j2].blockID;
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), false), this.worldObj.provider.dimensionId);
+                    BlockJukebox blockjukebox = (BlockJukebox) worldObj.getBlock(jukebox.field_145851_c, jukebox.field_145848_d, jukebox.field_145849_e);
                     if (blockjukebox != null)
                     {
-                        blockjukebox.ejectRecord(worldObj, jukebox.xCoord, jukebox.yCoord, jukebox.zCoord);
+                        blockjukebox.func_149925_e(worldObj, jukebox.field_145851_c, jukebox.field_145848_d, jukebox.field_145849_e);
                     }
                     flag = false;
                 }
@@ -2016,13 +2022,12 @@ public class MoCEntityHorse extends MoCEntityTameable {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        int id = worldObj.getBlockId(i - 1, j, k - 1);
-        Block block = Block.blocksList[id];
+        Block block = worldObj.getBlock(i - 1, j, k - 1);
         int metadata = worldObj.getBlockMetadata(i - 1, j, k - 1);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(worldObj, "[MoCreatures]"));
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
         if (!event.isCanceled())
         {
-            worldObj.setBlock(i - 1, j, k - 1, Block.fire.blockID, 0, 3);//MC1.5
+            worldObj.setBlock(i - 1, j, k - 1, Blocks.fire, 0, 3);//MC1.5
             EntityPlayer entityplayer = (EntityPlayer) riddenByEntity;
             if ((entityplayer != null) && (entityplayer.isBurning()))
             {
@@ -2144,7 +2149,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if (this.getType() == 60 && getIsTamed() && rand.nextInt(50) == 0 && nearMusicBox())
             {
                 shuffle();
-                MoCServerPacketHandler.sendShufflePacket(this.entityId, this.worldObj.provider.dimensionId);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), true), this.worldObj.provider.dimensionId);
             }
 
             if ((rand.nextInt(300) == 0) && (deathTime == 0))
@@ -2268,7 +2273,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
                 if (this.gestationtime % 3 == 0)
                 {
-                    MoCServerPacketHandler.sendHeartPacket(this.entityId, this.worldObj.provider.dimensionId);
+                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketHeart(this.getEntityId()), this.worldObj.provider.dimensionId);
                 }
 
                 if (gestationtime <= 50)
@@ -2375,7 +2380,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if ((MoCreatures.isServer() && !nearMusicBox()))
             {
                 shuffleCounter = 0;
-                MoCServerPacketHandler.sendStopShuffle(this.entityId, this.worldObj.provider.dimensionId);
+                MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), false), this.worldObj.provider.dimensionId);
             }
         }
 
@@ -2691,7 +2696,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, tType);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), tType), this.worldObj.provider.dimensionId);
         }
 
         transformType = tType;
@@ -2729,7 +2734,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            MoCServerPacketHandler.sendVanishPacket(this.entityId, worldObj.provider.dimensionId);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketVanish(this.getEntityId()), worldObj.provider.dimensionId);
             setVanishC((byte) 1);
         }
         MoCTools.playCustomSound(this, "vanish", worldObj);
@@ -2802,16 +2807,16 @@ public class MoCEntityHorse extends MoCEntityTameable {
         setArmorType((byte) nbttagcompound.getInteger("ArmorType"));
         if (getChestedHorse())
         {
-            NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+            NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);
             localhorsechest = new MoCAnimalChest("HorseChest", getInventorySize());
 
             for (int i = 0; i < nbttaglist.tagCount(); i++)
             {
-                NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-                int j = nbttagcompound1.getByte("Slot") & 0xff;
-                if ((j >= 0) && j < localhorsechest.getSizeInventory())
+                ItemStack itemstack = localhorsechest.getStackInSlot(i);
+
+                if (itemstack != null)
                 {
-                    localhorsechest.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                    localhorsechest.setInventorySlotContents(i, itemstack.copy());
                 }
             }
         }

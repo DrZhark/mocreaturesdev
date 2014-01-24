@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -402,7 +403,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
 
             if (riddenByEntity != null && riddenByEntity == entity)
             {
-                if ((entity != this) && (worldObj.difficultySetting > 0))
+                if ((entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0))
                 {
                     entityToAttack = entity;
                 }
@@ -421,7 +422,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     {
         if (getHasCaughtPrey()) { return null; }
 
-        if (worldObj.difficultySetting > 0)
+        if (worldObj.difficultySetting.getDifficultyId() > 0)
         {
             double attackD = 12D;
              
@@ -517,9 +518,9 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        return MoCreatures.crochide.itemID;
+        return MoCreatures.crochide;
     }
 
     public boolean isSpinning()

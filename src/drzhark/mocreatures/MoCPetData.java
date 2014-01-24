@@ -23,15 +23,15 @@ public class MoCPetData {
         ownerData = new NBTTagCompound();
         tamedList = new NBTTagList();
         ownerData.setTag("TamedList", tamedList);
-        ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.username;
-        ownerData.setName("PetData");
+        ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getCommandSenderName();
+        //ownerData.setName("PetData");
     }
 
-    public MoCPetData(NBTTagCompound nbt)
+    public MoCPetData(NBTTagCompound nbt, String owner)
     {
         ownerData = nbt;
-        tamedList = nbt.getTagList("TamedList");
-        ownerName = nbt.getName();
+        tamedList = nbt.getTagList("TamedList", 10);
+        ownerName = owner;
         this.loadPetDataMap(nbt.getCompoundTag("PetIdData"));
     }
 
@@ -48,7 +48,7 @@ public class MoCPetData {
             petData.setInteger("ChunkZ", coords.posZ);
             petData.setInteger("Dimension", ((Entity)pet).worldObj.provider.dimensionId);
             tamedList.appendTag(petData);
-            ownerData.setCompoundTag("PetIdData", savePetDataMap());
+            ownerData.setTag("PetIdData", savePetDataMap());
             return id;
         }
         else
@@ -61,7 +61,7 @@ public class MoCPetData {
     {
         for (int i = 0; i < this.tamedList.tagCount(); i++)
         {
-            NBTTagCompound nbt = (NBTTagCompound)this.tamedList.tagAt(i);
+            NBTTagCompound nbt = (NBTTagCompound)this.tamedList.getCompoundTagAt(i);
             if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == id)
             {
                 this.tamedList.removeTag(i);
@@ -69,7 +69,7 @@ public class MoCPetData {
                 this.IDMap.clear(id); // clear bit so it can be reused again
                 if (this.usedPetIds.size() == 0)
                     this.IDMap.clear(); // fixes bug with ID 0 not able to be used again
-                ownerData.setCompoundTag("PetIdData", savePetDataMap());
+                ownerData.setTag("PetIdData", savePetDataMap());
                 return true;
             }
         }

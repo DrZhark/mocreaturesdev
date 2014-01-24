@@ -6,6 +6,7 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +21,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
-import drzhark.mocreatures.network.MoCServerPacketHandler;
+import drzhark.mocreatures.network.packet.MoCPacketAnimation;
 
 public class MoCEntityPetScorpion extends MoCEntityTameable {
     public static final String scorpionNames[] = { "Dirt", "Cave", "Nether", "Frost", "Undead" };
@@ -135,7 +136,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 0);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
         }
         isPoisoning = flag;
     }
@@ -236,7 +237,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
             Entity entity = damagesource.getEntity();
             if ((entity != null) && (entity instanceof EntityPlayer) && getIsTamed()) { return false; }
 
-            if ((entity != null) && (entity != this) && (worldObj.difficultySetting > 0) && getIsAdult())
+            if ((entity != null) && (entity != this) && (worldObj.difficultySetting.getDifficultyId() > 0) && getIsAdult())
             {
                 entityToAttack = entity;
             }
@@ -251,7 +252,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     @Override
     protected Entity findPlayerToAttack()
     {
-        if (worldObj.difficultySetting > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
+        if (worldObj.difficultySetting.getDifficultyId() > 0 && (!worldObj.isDaytime()) && getIsAdult())// only attacks player at night
         {
             if (!getIsTamed())
             {
@@ -340,7 +341,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 1);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
         }
     }
 
@@ -394,38 +395,38 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCServerPacketHandler.sendAnimationPacket(this.entityId, this.worldObj.provider.dimensionId, 3);
+            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 3), this.worldObj.provider.dimensionId);
         }
 
         return "mocreatures:scorpiongrunt";
     }
 
     @Override
-    protected int getDropItemId()
+    protected Item func_146068_u()
     {
-        if (!getIsAdult()) { return Item.silk.itemID; }
+        if (!getIsAdult()) { return Items.string; }
 
         boolean flag = (rand.nextInt(2) == 0);
 
         switch (getType())
         {
         case 1:
-            if (flag) { return MoCreatures.stingDirt.itemID; }
-            return MoCreatures.chitinDirt.itemID;
+            if (flag) { return MoCreatures.stingDirt; }
+            return MoCreatures.chitinDirt;
         case 2:
-            if (flag) { return MoCreatures.stingCave.itemID; }
-            return MoCreatures.chitinCave.itemID;
+            if (flag) { return MoCreatures.stingCave; }
+            return MoCreatures.chitinCave;
         case 3:
-            if (flag) { return MoCreatures.stingNether.itemID; }
-            return MoCreatures.chitinNether.itemID;
+            if (flag) { return MoCreatures.stingNether; }
+            return MoCreatures.chitinNether;
         case 4:
-            if (flag) { return MoCreatures.stingFrost.itemID; }
-            return MoCreatures.chitinFrost.itemID;
+            if (flag) { return MoCreatures.stingFrost; }
+            return MoCreatures.chitinFrost;
         case 5:
-            return Item.rottenFlesh.itemID;
+            return Items.rotten_flesh;
 
         default:
-            return Item.silk.itemID;
+            return Items.string;
         }
     }
 
@@ -435,7 +436,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
         if (super.interact(entityplayer)) { return false; }
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && getIsAdult() && !getIsRideable() && (itemstack.itemID == Item.saddle.itemID || itemstack.itemID == MoCreatures.horsesaddle.itemID))
+        if ((itemstack != null) && getIsAdult() && !getIsRideable() && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -445,29 +446,29 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.vialundead.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialundead)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
             setType(5);
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.itemID == MoCreatures.vialdarkness.itemID)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialdarkness)
         {
             if (--itemstack.stackSize == 0)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.glassBottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             }
             else
             {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
             }
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer())
@@ -598,7 +599,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     @Override
     protected boolean isMyHealFood(ItemStack itemstack)
     {
-        return (itemstack.itemID == MoCreatures.ratRaw.itemID || itemstack.itemID == MoCreatures.ratCooked.itemID);
+        return (itemstack.getItem() == MoCreatures.ratRaw || itemstack.getItem() == MoCreatures.ratCooked);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class MoCAnimalChest extends InventoryBasic {
 
         for (var2 = 0; var2 < par1NBTTagList.tagCount(); ++var2)
         {
-            NBTTagCompound var3 = (NBTTagCompound) par1NBTTagList.tagAt(var2);
+            NBTTagCompound var3 = (NBTTagCompound) par1NBTTagList.getCompoundTagAt(var2);
             int var4 = var3.getByte("Slot") & 255;
 
             if (var4 >= 0 && var4 < this.getSizeInventory())
@@ -35,7 +35,7 @@ public class MoCAnimalChest extends InventoryBasic {
 
     public NBTTagList saveInventoryToNBT()
     {
-        NBTTagList var1 = new NBTTagList("HorseItems");
+        NBTTagList var1 = new NBTTagList();
 
         for (int var2 = 0; var2 < this.getSizeInventory(); ++var2)
         {
