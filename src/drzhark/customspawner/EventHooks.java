@@ -17,9 +17,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
-import net.minecraft.world.biome.SpawnListEntry;
-import net.minecraftforge.event.Event.Result;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
@@ -32,7 +32,7 @@ import drzhark.customspawner.utils.CMSUtils;
 
 public class EventHooks {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void peformCustomWorldGenSpawning(PopulateChunkEvent.Populate event)
     {
         int par1 = event.chunkX * 16;
@@ -54,7 +54,7 @@ public class EventHooks {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onLivingPackSize(LivingPackSizeEvent event)
     {
         EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
@@ -65,7 +65,7 @@ public class EventHooks {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
     {
         EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
@@ -86,7 +86,7 @@ public class EventHooks {
     }
 
     // used for Despawner
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onLivingDespawn(LivingSpawnEvent.AllowDespawn event)
     {
         if (CustomSpawner.forceDespawns)
@@ -169,7 +169,7 @@ public class EventHooks {
     }
 
     // this triggers before serverStarting
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event)
     {
         CMSUtils.addWorldEnvironment(event.world.provider.getClass());
@@ -179,7 +179,7 @@ public class EventHooks {
         }
     }
 
-   @ForgeSubscribe
+   @SubscribeEvent
     public void structureMapGen(InitMapGenEvent event)
     {
         String structureClass = event.originalGen.getClass().toString();

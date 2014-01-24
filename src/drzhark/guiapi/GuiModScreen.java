@@ -1,8 +1,10 @@
 package drzhark.guiapi;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.renderer.lwjgl.RenderScale;
@@ -46,7 +48,7 @@ public class GuiModScreen extends GuiScreen {
      */
     public static void clicksound() {
         Minecraft m = ModSettings.getMcinst();
-        m.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+        m.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
     }
 
     /**
@@ -107,7 +109,7 @@ public class GuiModScreen extends GuiScreen {
     protected GuiModScreen(GuiScreen screen) {
         parentScreen = screen;
         GuiModScreen.currentScreen = this;
-        allowUserInput = false;
+        field_146291_p = false;
     }
 
     /**
@@ -122,7 +124,7 @@ public class GuiModScreen extends GuiScreen {
         mainwidget = widget;
         parentScreen = screen;
         GuiModScreen.currentScreen = this;
-        allowUserInput = false;
+        field_146291_p = false;
     }
 
     @Override
@@ -133,7 +135,8 @@ public class GuiModScreen extends GuiScreen {
             break;
         }
         case 1: {
-            drawBackground(0);
+            //drawBackground(0);
+            drawDefaultBackground();
             break;
         }
         default: {

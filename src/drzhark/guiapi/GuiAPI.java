@@ -7,27 +7,26 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSmallButton;
-import net.minecraft.client.settings.EnumOptions;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.TickType;
+import net.minecraft.client.settings.GameSettings;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-//@Mod(name = "DrZhark's GuiAPI", modid = "DrZhark's GuiAPI", version = "1.0", acceptedMinecraftVersions = "1.6")
 @SideOnly(Side.CLIENT)
-public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
+public class GuiAPI implements IFMLLoadingPlugin {
 
     Object cacheCheck = null;
     Field controlListField;
 
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event) {
         try {
             Field[] fields = GuiScreen.class.getDeclaredFields();
@@ -48,7 +47,7 @@ public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
                     "Unable to get Field reference for GuiScreen.controlList!",
                     e);
         }
-        TickRegistry.registerTickHandler(this, Side.CLIENT);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     public List getControlList(GuiOptions gui) {
@@ -73,25 +72,25 @@ public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
         // I hacked this out so it just sticks it between touchscreen mode and difficulty. I'm so sorry.
         
         // First get a list of buttons
-        ArrayList<GuiSmallButton> buttonsPreSorted = new ArrayList<GuiSmallButton>();
+        ArrayList<GuiOptionButton> buttonsPreSorted = new ArrayList<GuiOptionButton>();
         for (Object guiButton : controlList) {
-            if (guiButton instanceof GuiSmallButton)
-                buttonsPreSorted.add((GuiSmallButton) guiButton);
+            if (guiButton instanceof GuiOptionButton)
+                buttonsPreSorted.add((GuiOptionButton) guiButton);
         }
         
         
         
         int xPos = -1; // difficulty
         int yPos = -1; // touchscreen mode
-        for (GuiSmallButton guiButton : buttonsPreSorted) {
-            if(guiButton.returnEnumOptions() == EnumOptions.DIFFICULTY)
+        for (GuiOptionButton guiButton : buttonsPreSorted) {
+            if(guiButton.func_146136_c() == GameSettings.Options.DIFFICULTY)
             {
-                xPos = guiButton.xPosition;
+                xPos = guiButton.field_146128_h;
             }
             
-            if(guiButton.returnEnumOptions() == EnumOptions.TOUCHSCREEN)
+            if(guiButton.func_146136_c() == GameSettings.Options.TOUCHSCREEN)
             {
-                yPos = guiButton.yPosition;
+                yPos = guiButton.field_146129_i;
             }
         }
 
@@ -101,11 +100,6 @@ public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
 
             // set the cache!
             cacheCheck = controlList.get(0);
-    }
-
-    @Override
-    public String[] getLibraryRequestClass() {
-        return null;
     }
 
     @Override
@@ -127,9 +121,9 @@ public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
     public void injectData(Map<String, Object> data) {
     }
 
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) {
-        if (!type.contains(TickType.RENDER)) {
+    @SubscribeEvent
+    public void clientTick(ClientTickEvent event) {
+        if (!(event.type == event.type.RENDER)) {
             return;
         }
         if (Minecraft.getMinecraft() == null) {
@@ -144,17 +138,9 @@ public class GuiAPI implements IFMLLoadingPlugin, ITickHandler {
     }
 
     @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-        
-    }
-
-    @Override
-    public EnumSet<TickType> ticks() {
-        return EnumSet.of(TickType.RENDER);
-    }
-
-    @Override
-    public String getLabel() {
-        return "GuiAPI main menu checker";
+    public String getAccessTransformerClass()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

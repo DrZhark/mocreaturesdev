@@ -3,24 +3,26 @@ package drzhark.customspawner.handlers;
 import java.util.EnumSet;
 
 import net.minecraft.world.WorldServer;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.customspawner.utils.CMSUtils;
 
-public class SpawnTickHandler implements IScheduledTickHandler
+public class SpawnTickHandler
 {
-    @Override
+    /*@Override
     public String getLabel()
     {
         return "CustomMobSpawner";
-    }
+    }*/
     
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) 
+    @SubscribeEvent
+    public void worldTick(WorldTickEvent event) 
     {
-        WorldServer worldObj = (WorldServer) tickData[0];
+        WorldServer worldObj = (WorldServer) event.world;
         for (EntitySpawnType entitySpawnType : CMSUtils.getEnvironment(worldObj).entitySpawnTypes.values())
         {
             if (entitySpawnType.name().equals("UNDEFINED"))
@@ -36,22 +38,5 @@ public class SpawnTickHandler implements IScheduledTickHandler
                 }
             }
         }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData) 
-    {
-    }
-
-    @Override
-    public EnumSet<TickType> ticks() 
-    {
-        return EnumSet.of(TickType.WORLD);
-    }
-
-    @Override
-    public int nextTickSpacing() {
-        // TODO Auto-generated method stub
-        return 0;
     }
 }

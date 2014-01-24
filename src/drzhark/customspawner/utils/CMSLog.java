@@ -4,7 +4,7 @@ package drzhark.customspawner.utils;
 import java.io.File;
 import java.io.IOException;
 
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;

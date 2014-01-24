@@ -22,7 +22,7 @@ import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.BiomeDictionary;
@@ -152,11 +152,11 @@ public class CMSUtils {
             {
                 if (entitySpawnType.name().equalsIgnoreCase("undefined")) continue;
                 if (environment.debug) environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
-                for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+                for (int j = 0; j < BiomeGenBase.getBiomeGenArray().length; j++)
                 {
-                    if (BiomeGenBase.biomeList[j] != null)
+                    if (BiomeGenBase.getBiomeGenArray()[j] != null)
                     {
-                        BiomeGenBase biome = BiomeGenBase.biomeList[j];
+                        BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[j];
                         if (environment.debug) environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
                         if (entitySpawnType.getBiomeSpawnList(biome.biomeID) == null)
                         {
@@ -282,11 +282,11 @@ public class CMSUtils {
     {
         // SAFEST POINT TO COPY VANILLA SPAWN LISTS //
         List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-        for (int j = 0; j < BiomeGenBase.biomeList.length; j++)
+        for (int j = 0; j < BiomeGenBase.getBiomeGenArray().length; j++)
         {
-            if (BiomeGenBase.biomeList[j] != null)
+            if (BiomeGenBase.getBiomeGenArray()[j] != null)
             {
-                biomeList.add(BiomeGenBase.biomeList[j]);
+                biomeList.add(BiomeGenBase.getBiomeGenArray()[j]);
             }
         }
 
@@ -303,13 +303,13 @@ public class CMSUtils {
 
     public static void registerAllBiomes()
     {
-        for (int i = 0; i < BiomeGenBase.biomeList.length; i++)
+        for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++)
         {
-            if (BiomeGenBase.biomeList[i] != null)
+            if (BiomeGenBase.getBiomeGenArray()[i] != null)
             {
-                if(!BiomeDictionary.isBiomeRegistered(BiomeGenBase.biomeList[i]))
+                if(!BiomeDictionary.isBiomeRegistered(BiomeGenBase.getBiomeGenArray()[i]))
                 {
-                    BiomeDictionary.makeBestGuess(BiomeGenBase.biomeList[i]);
+                    BiomeDictionary.makeBestGuess(BiomeGenBase.getBiomeGenArray()[i]);
                 }
             }
         }

@@ -22,7 +22,7 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -316,26 +316,26 @@ public class EnvironmentSettings {
             if (((EntityAnimal.class.isAssignableFrom(clazz) && !entityliving.isCreatureType(EnumCreatureType.ambient, true)) || entityliving.isCreatureType(EnumCreatureType.creature, false))) //&& !(MoCEntityAmbient.class.isAssignableFrom(clazz)))
             {
                 creatureType = EnumCreatureType.creature;
-                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.entityId, creatureType);
+                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
             }
             else if (((IMob.class.isAssignableFrom(clazz) || IRangedAttackMob.class.isAssignableFrom(clazz)) && (clazz != EntityMob.class)) || entityliving.isCreatureType(EnumCreatureType.monster, false))
             {
                 creatureType = EnumCreatureType.monster;
-                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.entityId, creatureType);
+                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
             }
             else if (EntityAmbientCreature.class.isAssignableFrom(clazz)|| entityliving.isCreatureType(EnumCreatureType.ambient, true)) //|| MoCEntityAmbient.class.isAssignableFrom(clazz))
             {
                 creatureType = EnumCreatureType.ambient;
-                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.entityId, creatureType);
+                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
             }
             else if (EntityWaterMob.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.waterCreature, true))
             {
                 creatureType = EnumCreatureType.waterCreature;
-                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.entityId, creatureType);
+                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
             }
             else if (clazz != EntityLiving.class && clazz != EntityMob.class)//&& clazz != MoCEntityFishBowl.class && clazz != MoCEntityLitterBox.class && clazz != MoCEntityEgg.class && clazz != MoCEntityKittyBed.class)
             {
-                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.entityId, creatureType);
+                entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
                 entityData.setCanSpawn(false); // dont allow undefined types to spawn
             }
             else if (entityData == null)
@@ -348,7 +348,7 @@ public class EnvironmentSettings {
             entityData.setType(creatureType);
             entityData.setLivingSpawnType(creatureType); // set default type
             entityData.setEntityName(entityName);
-            entityData.setEntityID(entityliving.entityId);
+            entityData.setEntityID(entityliving.getEntityId());
             try
             {
                 entityData.setMaxInChunk(entityliving.getMaxSpawnedInChunk()); // pixelmon crashes here
@@ -377,7 +377,7 @@ public class EnvironmentSettings {
                 if (!modData.addCreature(entityData))
                 {
                     entityData = modData.getCreature(entityData.getLivingSpawnType(), entityName);
-                    entityData.setEntityID(entityliving.entityId);
+                    entityData.setEntityID(entityliving.getEntityId());
                     entityData.setEntityMod(modData);
                 }
                 undefined = false;
@@ -397,7 +397,7 @@ public class EnvironmentSettings {
                         if (!modData.addCreature(entityData))
                         {
                             entityData = modData.getCreature(entityData.getLivingSpawnType(), entityName);
-                            entityData.setEntityID(entityliving.entityId);
+                            entityData.setEntityID(entityliving.getEntityId());
                             entityData.setEntityMod(modData);
                         }
                         undefined = false;
@@ -429,7 +429,7 @@ public class EnvironmentSettings {
                     if (!modData.addCreature(entityData))
                     {
                         entityData = modData.getCreature(entityData.getLivingSpawnType(), entityName);
-                        entityData.setEntityID(entityliving.entityId);
+                        entityData.setEntityID(entityliving.getEntityId());
                         entityData.setEntityMod(modData);
                     }
                 }
@@ -440,7 +440,7 @@ public class EnvironmentSettings {
                 }
             }
             classToEntityMapping.put(clazz, entityData); // store for structure use
-            entityMap.put(entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName(), entityData); // used for fast lookups
+            entityMap.put(entityData.getEntityMod().getModTag() + "|" + entityData.getCommandSenderName(), entityData); // used for fast lookups
             return entityData;
         }
         return null;
@@ -448,7 +448,7 @@ public class EnvironmentSettings {
 
     public void processEntityConfig(EntityData entityData)
     {
-        String entityName = entityData.getEntityName();
+        String entityName = entityData.getCommandSenderName();
         CMSConfigCategory entityCategory = null;
         // make sure the latest values of configs is loaded into memory before processing it
         entityData.getEntityConfig().load();
@@ -564,9 +564,9 @@ public class EnvironmentSettings {
 
     public void initializeBiomes()
     {
-        for (int i = 0; i < BiomeGenBase.biomeList.length; i++)
+        for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++)
         {
-            BiomeGenBase biome = BiomeGenBase.biomeList[i];
+            BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[i];
             if (biome == null) continue;
             String biomeName = biome.biomeName;
             String biomeClass = biome.getClass().getName();
@@ -711,9 +711,9 @@ public class EnvironmentSettings {
         CMSEntityBiomeGroupsConfig.load();
         for (EntityData entityData : entityMap.values())
         {
-            if (debug) envLog.logger.info("generating biome spawn list for entity " + entityData.getEntityName());
+            if (debug) envLog.logger.info("generating biome spawn list for entity " + entityData.getCommandSenderName());
             entityData.getEntityConfig().load();
-            CMSConfigCategory entityCategory = entityData.getEntityConfig().getCategory(entityData.getEntityName().toLowerCase());
+            CMSConfigCategory entityCategory = entityData.getEntityConfig().getCategory(entityData.getCommandSenderName().toLowerCase());
          // Add spawnable biomes for each entity
             if (entityCategory.containsKey("biomegroups"))// && entityBiomeCategory.get(entityName).valueList != null)
             {
@@ -733,7 +733,7 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = CMSUtils.getBiomeModData(biomeModMap, biomeParts.get(0));
                             if (biomeModData != null)
                             {
-                                if (debug) envLog.logger.info("adding spawn biome " + biomeProps.valueList.get(j) + " for entity " + entityData.getEntityName()); 
+                                if (debug) envLog.logger.info("adding spawn biome " + biomeProps.valueList.get(j) + " for entity " + entityData.getCommandSenderName()); 
                                 spawnBiomes.add(biomeModData.getBiome(biomeProps.valueList.get(j)));
                                 entityData.addSpawnBiome(biomeModData.getBiome(biomeProps.valueList.get(j)));
                             }
@@ -770,7 +770,7 @@ public class EnvironmentSettings {
             }
             else // populate empty list with vanilla entries
             {
-                if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getEntityName() + ", generating defaults...");
+                if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getCommandSenderName() + ", generating defaults...");
                 ArrayList<String> biomes = new ArrayList<String>();
                 ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
                 if (entryBiomes != null)
@@ -782,7 +782,7 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = modEntry.getValue();
                             if (biomeModData.hasBiome(entryBiomes.get(i)))
                             {
-                                if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());
+                                if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getCommandSenderName() + " in environment " + name());
                                 biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
                                 entityData.addSpawnBiome(entryBiomes.get(i));
                             }
@@ -791,16 +791,16 @@ public class EnvironmentSettings {
                 }
                 else
                 {
-                    if (debug) envLog.logger.info("No default biomes found for entity " + entityData.getEntityName());
+                    if (debug) envLog.logger.info("No default biomes found for entity " + entityData.getCommandSenderName());
                 }
                 CMSConfigCategory entityBiomeGroupCat = CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS);
-                if (!entityBiomeGroupCat.containsKey(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT"))
+                if (!entityBiomeGroupCat.containsKey(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT"))
                 {
-                    CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
-                    CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", prop);
-                    entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getEntityName().toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
+                    CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
+                    CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", prop);
+                    entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getCommandSenderName().toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
                     entityData.setBiomeGroups(prop.valueList);
-                    biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes));
+                    biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", biomes));
                 }
             }
             // entity config comments
@@ -835,7 +835,7 @@ public class EnvironmentSettings {
                     {
                         BiomeGenBase[] biomesToSpawn = new BiomeGenBase[entityData.getSpawnBiomes().size()];
                         biomesToSpawn = entityData.getSpawnBiomes().toArray(biomesToSpawn);
-                        if (debug) envLog.logger.info(entityData.getEntityName()  +" canSpawn = " + entityData.getCanSpawn());
+                        if (debug) envLog.logger.info(entityData.getCommandSenderName()  +" canSpawn = " + entityData.getCanSpawn());
                         if (entityData.getCanSpawn())
                         {
                             CustomSpawner.instance().AddCustomSpawn(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getLivingSpawnType(), biomesToSpawn);

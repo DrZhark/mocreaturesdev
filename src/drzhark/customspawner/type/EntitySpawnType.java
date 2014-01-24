@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import drzhark.customspawner.environment.EnvironmentSettings;
 
 public class EntitySpawnType {

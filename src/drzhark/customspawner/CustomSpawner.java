@@ -1,7 +1,7 @@
 package drzhark.customspawner;
 
 
-import static net.minecraftforge.common.ForgeDirection.UP;
+import static net.minecraftforge.common.util.ForgeDirection.UP;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,13 +15,14 @@ import java.util.TreeMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStep;
+import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.WeightedRandom;
@@ -34,12 +35,12 @@ import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.Event.Result;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.event.ForgeEventFactory;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -51,7 +52,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.customspawner.command.CommandCMS;
 import drzhark.customspawner.configuration.CMSConfiguration;
@@ -113,7 +114,7 @@ public final class CustomSpawner {
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-        TickRegistry.registerTickHandler(new SpawnTickHandler(), Side.SERVER);
+        FMLCommonHandler.instance().bus().register(new SpawnTickHandler());
     }
 
     @EventHandler
@@ -148,7 +149,7 @@ public final class CustomSpawner {
         biomeList = new ArrayList<BiomeGenBase>();
         try
         {
-            for (BiomeGenBase biomegenbase : BiomeGenBase.biomeList)
+            for (BiomeGenBase biomegenbase : BiomeGenBase.getBiomeGenArray())
             {
                 if (biomegenbase == null)
                 {
@@ -286,11 +287,11 @@ public final class CustomSpawner {
                 if (eligibleChunksForSpawning.get(chunkcoordintpair) != null && !((Boolean) eligibleChunksForSpawning.get(chunkcoordintpair)).booleanValue()) // blood - added null check to avoid crashing during SSP spawning
                 {
                     ChunkPosition chunkpos = getRandomSpawningPointInChunk(world, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
-                    int posX = chunkpos.x;
-                    int posY = chunkpos.y;
-                    int posZ = chunkpos.z;
+                    int posX = chunkpos.field_151329_a;
+                    int posY = chunkpos.field_151327_b;
+                    int posZ = chunkpos.field_151328_c;
 
-                    if (!world.isBlockNormalCube(posX, posY, posZ) && world.getBlockMaterial(posX, posY, posZ) == entitySpawnType.getLivingMaterial())
+                    if (!world.getBlock(posX, posY, posZ).isNormalCube() && world.getBlock(posX, posY, posZ).getMaterial() == entitySpawnType.getLivingMaterial())
                     {
                         int spawnedMob = 0;
                         int spawnCount = 0;
@@ -364,7 +365,7 @@ public final class CustomSpawner {
                                                         world.spawnEntityInWorld(entityliving);
                                                         creatureSpecificInit(entityliving, world, spawnX, spawnY, spawnZ);
                                                         // changed check from maxSpawnedInChunk to maxGroupCount.
-                                                        CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world), entitySpawnType.name(), world.getBiomeGenForCoords((chunkcoordintpair.chunkXPos * 16) + 16, (chunkcoordintpair.chunkZPos * 16) + 16).biomeName, entityData.getEntityName(), MathHelper.floor_double(spawnX), MathHelper.floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft, spawnlistentry);
+                                                        CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world), entitySpawnType.name(), world.getBiomeGenForCoords((chunkcoordintpair.chunkXPos * 16) + 16, (chunkcoordintpair.chunkZPos * 16) + 16).biomeName, entityData.getCommandSenderName(), MathHelper.floor_double(spawnX), MathHelper.floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft, spawnlistentry);
 
                                                         if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving))
                                                         {
@@ -440,12 +441,12 @@ public final class CustomSpawner {
         }
         if (blockLightLevel < minLightLevel && minLightLevel != -1)
         {
-            if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " under minimum threshold of " + minLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel + " under minimum threshold of " + minLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
             return false;
         }
         else if (blockLightLevel > maxLightLevel && maxLightLevel != -1)
         {
-            if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getEntityName() + blockLightLevel + " over maximum threshold of " + maxLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
+            if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel + " over maximum threshold of " + maxLightLevel + " in dimension " + worldObj.provider.dimensionId + " at coords " + x + ", " + y + ", " + z);
             return false;
         }
         return true;
@@ -636,27 +637,27 @@ public final class CustomSpawner {
         }
         if (entitySpawnType.getLivingMaterial() == Material.water)
         {
-            return par1World.getBlockMaterial(x, y, z).isLiquid() && par1World.getBlockMaterial(x, y - 1, z).isLiquid() && !par1World.isBlockNormalCube(x, y + 1, z);
+            return par1World.getBlock(x, y, z).getMaterial().isLiquid() && par1World.getBlock(x, y - 1, z).getMaterial().isLiquid() && !par1World.getBlock(x, y + 1, z).isNormalCube();
         }
-        else if (!par1World.doesBlockHaveSolidTopSurface(x, y - 1, z))
+        else if (!World.doesBlockHaveSolidTopSurface(par1World, x, y - 1, z))
         {
             return false;
         }
         else
         {
-            int l = par1World.getBlockId(x, y - 1, z);
+            Block block = par1World.getBlock(x, y - 1, z);
             boolean spawnBlock;
             if (entitySpawnType.getEnumCreatureType() != null)
-                spawnBlock = Block.blocksList[l].canCreatureSpawn(entitySpawnType.getEnumCreatureType(), par1World, x, y, z);
-            else spawnBlock = (Block.blocksList[l] != null && canCreatureSpawn(Block.blocksList[l], par1World, x, y, z));
-            return spawnBlock && l != Block.bedrock.blockID && !par1World.isBlockNormalCube(x, y, z) && !par1World.getBlockMaterial(x, y, z).isLiquid() && !par1World.isBlockNormalCube(x, y + 1, z);
+                spawnBlock = block.canCreatureSpawn(entitySpawnType.getEnumCreatureType(), par1World, x, y, z);
+            else spawnBlock = (block != null && canCreatureSpawn(block, par1World, x, y, z));
+            return spawnBlock && block != Blocks.bedrock && !par1World.getBlock(x, y, z).isNormalCube() && !par1World.getBlock(x, y, z).getMaterial().isLiquid() && !par1World.getBlock(x, y + 1, z).isNormalCube();
         }
     }
 
     public static boolean canCreatureSpawn(Block block, World world, int x, int y, int z)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        if (block instanceof BlockStep)
+        if (block instanceof BlockStoneSlab)
         {
             return (((meta & 8) == 8) || block.isOpaqueCube());
         }
@@ -664,7 +665,7 @@ public final class CustomSpawner {
         {
             return ((meta & 4) != 0);
         }
-        return block.isBlockSolidOnSide(world, x, y, z, UP);
+        return block.isSideSolid(world, x, y, z, UP);
     }
 
     public final int countEntities(Class class1, World worldObj)
@@ -718,9 +719,9 @@ public final class CustomSpawner {
     /**
      * determines if a skeleton spawns on a spider, and if a sheep is a different color
      */
-    private static EntityLivingData creatureSpecificInit(EntityLiving par0EntityLiving, World par1World, float par2, float par3, float par4)
+    private static IEntityLivingData creatureSpecificInit(EntityLiving par0EntityLiving, World par1World, float par2, float par3, float par4)
     {
-        EntityLivingData entitylivingdata = null;
+        IEntityLivingData entitylivingdata = null;
         if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, par2, par3, par4))
         {
             entitylivingdata = par0EntityLiving.onSpawnWithEgg(entitylivingdata);
@@ -779,7 +780,7 @@ public final class CustomSpawner {
                                 {
                                     world.spawnEntityInWorld(entityliving);
                                     if (CMSUtils.getEnvironment(world).debug)
-                                        CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getEntityName() + " at " + f + ", " + f1 + ", " + f2 + " with CREATURE:" + spawnlistentry.itemWeight + ":" + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":" + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName + "]");
+                                        CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getCommandSenderName() + " at " + f + ", " + f1 + ", " + f2 + " with CREATURE:" + spawnlistentry.itemWeight + ":" + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":" + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName + "]");
                                     creatureSpecificInit(entityliving, world, f, f1, f2);
                                     flag = true;
                                 }

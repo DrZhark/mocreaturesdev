@@ -8,7 +8,7 @@ import java.util.Map;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.customspawner.configuration.CMSConfiguration;
@@ -242,7 +242,7 @@ public class EntityData {
         this.vanillaControl = flag;
     }
 
-    public String getEntityName()
+    public String getCommandSenderName()
     {
         return this.entityName;
     }

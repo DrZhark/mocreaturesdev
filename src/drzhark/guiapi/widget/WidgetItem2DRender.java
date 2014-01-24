@@ -73,7 +73,7 @@ public class WidgetItem2DRender extends Widget {
      * @param renderID
      */
     public WidgetItem2DRender(int renderID) {
-        this(new ItemStack(renderID, 0, 0));
+        this(new ItemStack(Item.getItemById(renderID), 0, 0));
     }
 
     /**
@@ -84,7 +84,7 @@ public class WidgetItem2DRender extends Widget {
     public WidgetItem2DRender(ItemStack renderStack) {
         setMinSize(16, 16);
         setTheme("/progressbar");
-        setRenderStack(renderStack);
+        //setRenderStack(renderStack);
     }
 
     /**
@@ -93,7 +93,7 @@ public class WidgetItem2DRender extends Widget {
      * @return The current ID to render.
      */
     public int getRenderID() {
-        return renderStack == null ? 0 : renderStack.itemID;
+        return renderStack == null ? 0 : Item.getIdFromItem(renderStack.getItem());
     }
 
     /**
@@ -290,7 +290,7 @@ public class WidgetItem2DRender extends Widget {
      * @param renderID
      *            The ID you want this widget to render.
      */
-    public void setRenderID(int renderID) {
+   /* public void setRenderID(int renderID) {
         if ((renderID >= Item.itemsList.length) || (renderID < 0)) {
             throw new IndexOutOfBoundsException(
                     String.format(
@@ -298,10 +298,10 @@ public class WidgetItem2DRender extends Widget {
                             0, Item.itemsList.length - 1));
         }
         if (renderStack == null) {
-            renderStack = new ItemStack(renderID, 0, 0);
+            renderStack = new ItemStack(Item.getItemById(renderID), 0, 0);
         }
         renderStack.itemID = renderID;
-    }
+    }*/
 
     /**
      * This sets the ItemStack to render. This checks bounds.
@@ -309,7 +309,7 @@ public class WidgetItem2DRender extends Widget {
      * @param stack
      *            The ItemStack you want this widget to render. Can't be null.
      */
-    public void setRenderStack(ItemStack stack) {
+   /* public void setRenderStack(ItemStack stack) {
         if (stack == null) {
             throw new IllegalArgumentException("stack cannot be null.");
         }
@@ -320,7 +320,7 @@ public class WidgetItem2DRender extends Widget {
                             0, Item.itemsList.length - 1));
         }
         renderStack = stack;
-    }
+    }*/
 
     /**
      * This sets what kind of scaling to use for this widget. Possible types
