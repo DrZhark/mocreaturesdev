@@ -2025,7 +2025,11 @@ public class MoCEntityHorse extends MoCEntityTameable {
         int k = MathHelper.floor_double(posZ);
         Block block = worldObj.getBlock(i - 1, j, k - 1);
         int metadata = worldObj.getBlockMetadata(i - 1, j, k - 1);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
+        BlockEvent.BreakEvent event = null;
+        if (!this.worldObj.isClient)
+        {
+            event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
+        }
         if (event != null && !event.isCanceled())
         {
             worldObj.setBlock(i - 1, j, k - 1, Blocks.fire, 0, 3);//MC1.5

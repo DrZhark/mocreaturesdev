@@ -187,8 +187,12 @@ public class MoCEntityEnt extends MoCEntityAnimal{
             int yCoord = MathHelper.floor_double(this.posY - 1);
             int zCoord = MathHelper.floor_double(this.posZ);
             Block block = Blocks.grass;
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-            if (!event.isCanceled())
+            BlockEvent.BreakEvent event = null;
+            if (!this.worldObj.isClient)
+            {
+                event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
+            }
+            if (event != null && !event.isCanceled())
             {
                 this.worldObj.setBlock(xCoord, yCoord, zCoord, block, 0, 3);
             }
@@ -218,8 +222,12 @@ public class MoCEntityEnt extends MoCEntityAnimal{
                     int xCoord = MathHelper.floor_double(this.posX);
                     int yCoord = MathHelper.floor_double(this.posY);
                     int zCoord = MathHelper.floor_double(this.posZ);
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, fertileB, metaD, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                    if (event.isCanceled())
+                    BlockEvent.BreakEvent event = null;
+                    if (!this.worldObj.isClient)
+                    {
+                        event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, fertileB, metaD, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
+                    }
+                    if (event != null && event.isCanceled())
                     {
                         canPlant = false;
                         break;

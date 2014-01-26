@@ -1009,8 +1009,12 @@ public class MoCTools {
             if (mobGriefing && (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) && block != Blocks.air)
             {
                 int metadata = entity.worldObj.getBlockMetadata(j3, l3, j4);
-                BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(j3, l3, j4, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                if (!event.isCanceled())
+                BlockEvent.BreakEvent event = null;
+                if (!entity.worldObj.isClient)
+                {
+                    event = new BlockEvent.BreakEvent(j3, l3, j4, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
+                }
+                if (event != null && !event.isCanceled())
                 {
                     block.dropBlockAsItemWithChance(entity.worldObj, j3, l3, j4, entity.worldObj.getBlockMetadata(j3, l3, j4), 0.3F, 1);
                     entity.worldObj.setBlock(j3, l3, j4, Blocks.air, 0, 3);
@@ -1034,8 +1038,12 @@ public class MoCTools {
                 if ((block == Blocks.air) && (entity.worldObj.rand.nextInt(8) == 0))
                 {
                     int metadata = entity.worldObj.getBlockMetadata(k3, i4, k4);
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(k3, i4, k4, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                    if (!event.isCanceled())
+                    BlockEvent.BreakEvent event = null;
+                    if (!entity.worldObj.isClient)
+                    {
+                        event = new BlockEvent.BreakEvent(k3, i4, k4, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
+                    }
+                    if (event != null && !event.isCanceled())
                     {
                         entity.worldObj.setBlock(k3, i4, k4, Blocks.fire, 0, 3);
                     }
@@ -1173,8 +1181,12 @@ public class MoCTools {
                 {
                     block1 = entity.worldObj.getBlock(x, y, z);
                     int metadata = entity.worldObj.getBlockMetadata(x, y, z);
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                    if (!event.isCanceled())
+                    BlockEvent.BreakEvent event = null;
+                    if (!entity.worldObj.isClient)
+                    {
+                        event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
+                    }
+                    if (event != null && !event.isCanceled())
                     {
                         entity.worldObj.setBlock(x, y, z, Blocks.air, 0, 3);
                     }
@@ -1204,8 +1216,12 @@ public class MoCTools {
                 {
                     Block block2 = entity.worldObj.getBlock(x, y, z);
                     int metadata = entity.worldObj.getBlockMetadata(x, y, z);
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block2, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                    if (!event.isCanceled())
+                    BlockEvent.BreakEvent event = null;
+                    if (!entity.worldObj.isClient)
+                    {
+                        event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block2, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
+                    }
+                    if (event != null && !event.isCanceled())
                     {
                         entity.worldObj.setBlock(x, y, z, Blocks.air, 0, 3);
                     }
@@ -1369,8 +1385,12 @@ public class MoCTools {
                 if (block.getBlockHardness(entity.worldObj, x, y + i, z) <= strengthF)
                 {
                     int metadata = entity.worldObj.getBlockMetadata(x, y + i, z);
-                    BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y + i, z, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-                    if (!event.isCanceled())
+                    BlockEvent.BreakEvent event = null;
+                    if (!entity.worldObj.isClient)
+                    {
+                        event = new BlockEvent.BreakEvent(x, y + i, z, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
+                    }
+                    if (event != null && !event.isCanceled())
                     {
                         block.dropBlockAsItemWithChance(entity.worldObj, x, y + i, z, entity.worldObj.getBlockMetadata(x, y + i, z), 0.20F * strengthF, 1);
                         entity.worldObj.setBlock(x, y + i, z, Blocks.air, 0, 3);//MC 1.5
