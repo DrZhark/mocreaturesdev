@@ -26,10 +26,10 @@ public class BiomeGenWyvernLair extends BiomeGenBase
         spawnableCreatureList.clear();
         spawnableMonsterList.clear();
         spawnableWaterCreatureList.clear();
-        spawnableCreatureList.add(new SpawnListEntry(MoCEntityBunny.class, 8, 2, 3));
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntityBunny.class, 6, 2, 3));
         //spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
-        spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 8, 1, 2));
-        spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3));
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 6, 1, 2));
+        spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 10, 1, 4));
         topBlock = MoCreatures.mocGrass;
         fillerBlock = MoCreatures.mocDirt;
         this.minHeight = 0.3F;

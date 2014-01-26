@@ -46,7 +46,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D); // setMaxHealth
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D); // setMaxHealth
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     public double getYOffset()
     {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isClient) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
             return (yOffset - 1.15F);
@@ -190,7 +190,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         if ((itemstack != null) && MoCreatures.isServer() && (itemstack.getItem() == Items.milk_bucket))
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.bucket, 1));
-            worldObj.playSoundAtEntity(this, "pouringmilk", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:pouringmilk", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHasMilk(true);
             setHasFood(false);
             return true;
@@ -201,7 +201,7 @@ public class MoCEntityKittyBed extends EntityLiving {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "pouringfood", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:pouringfood", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHasMilk(false);
             setHasFood(true);
             return true;
@@ -240,7 +240,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     {
         if ((ridingEntity != null) || !onGround || !MoCreatures.proxy.staticBed)
         {
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 super.moveEntity(d, d1, d2);
             }

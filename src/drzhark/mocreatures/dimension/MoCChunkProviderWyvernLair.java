@@ -44,7 +44,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     double[] noiseData3;
     double[] noiseData4;
     double[] noiseData5;
-    int[][] field_73203_h = new int[32][32];
+    //int[][] field_73203_h = new int[32][32];
     byte[] metadat = new byte[32768];
 
     public MoCChunkProviderWyvernLair(World par1World, long par2)

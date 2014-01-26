@@ -37,7 +37,7 @@ public class MoCEntityLitterBox extends EntityLiving {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D); // setMaxHealth
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D); // setMaxHealth
     }
 
     @Override
@@ -60,14 +60,14 @@ public class MoCEntityLitterBox extends EntityLiving {
 
     public void setPickedUp(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(15, Byte.valueOf(input));
     }
 
     public void setUsedLitter(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(16, Byte.valueOf(input));
     }
@@ -134,7 +134,7 @@ public class MoCEntityLitterBox extends EntityLiving {
     public double getYOffset()
     {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isClient) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
             return (yOffset - 1.15F);
@@ -199,7 +199,7 @@ public class MoCEntityLitterBox extends EntityLiving {
     {
         if ((ridingEntity != null) || !onGround || !MoCreatures.proxy.staticLitter)
         {
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 super.moveEntity(d, d1, d2);
             }

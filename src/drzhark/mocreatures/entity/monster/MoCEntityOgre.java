@@ -36,7 +36,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() > 4 ? 50.0D : 35.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getType() > 4 ? 50.0D : 35.0D);
     }
 
     @Override

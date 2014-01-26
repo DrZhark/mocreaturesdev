@@ -29,7 +29,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public void onLivingUpdate()
     {
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if (rand.nextInt(40) == 0)
             {

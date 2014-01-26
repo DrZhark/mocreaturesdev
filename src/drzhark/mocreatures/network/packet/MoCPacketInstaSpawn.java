@@ -1,5 +1,7 @@
 package drzhark.mocreatures.network.packet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.network.AbstractPacket;
@@ -36,6 +38,7 @@ public class MoCPacketInstaSpawn extends AbstractPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void handleClientSide(EntityPlayer player)
     {
         // TODO Auto-generated method stub

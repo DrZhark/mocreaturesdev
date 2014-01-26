@@ -38,7 +38,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public void setHasEaten(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }

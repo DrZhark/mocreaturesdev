@@ -1,5 +1,7 @@
 package drzhark.mocreatures.network.packet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
@@ -25,6 +27,7 @@ public class MoCPacketEntityJump extends AbstractPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void handleClientSide(EntityPlayer player)
     {
         // TODO Auto-generated method stub

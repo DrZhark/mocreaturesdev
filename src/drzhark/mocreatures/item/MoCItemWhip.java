@@ -47,7 +47,7 @@ public class MoCItemWhip extends MoCItem {
         if ((l != 0) && (block == Blocks.air) && (block != Blocks.air) && (block != Blocks.standing_sign))
         {
             whipFX(world, i, j, k);
-            world.playSoundAtEntity(entityplayer, "whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
+            world.playSoundAtEntity(entityplayer, "mocreatures:whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             itemstack.damageItem(1, entityplayer);
             List list = world.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.boundingBox.expand(12D, 12D, 12D));
             for (int l1 = 0; l1 < list.size(); l1++)

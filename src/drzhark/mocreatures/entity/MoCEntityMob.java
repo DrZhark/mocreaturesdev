@@ -49,9 +49,9 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(getAttackStrenght());
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(getAttackStrenght());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
     @Override

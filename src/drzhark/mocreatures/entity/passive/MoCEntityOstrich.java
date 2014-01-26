@@ -54,7 +54,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
 
     public void setHiding(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
@@ -781,7 +781,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                 {
                     helmetType = 8;
                 }*/
-                else if (itemstack.getItem() == MoCreatures.scorpHelmet)
+                else if (itemstack.getItem() == MoCreatures.scorpHelmetDirt)
                 {
                     helmetType = 9;
                 }
@@ -814,7 +814,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             setHiding(false);
-            if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == entityplayer))
+            if (!this.worldObj.isClient && (this.riddenByEntity == null || this.riddenByEntity == entityplayer))
             {
                 entityplayer.mountEntity(this);
             }
@@ -1052,7 +1052,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                 entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetCroc, 1));
                 break;
             case 9:
-                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmet, 1));
+                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmetDirt, 1));
                 break;
             case 10:
                 entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmetFrost, 1));

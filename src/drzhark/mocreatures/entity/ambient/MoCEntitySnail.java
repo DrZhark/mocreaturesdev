@@ -29,8 +29,8 @@ public class MoCEntitySnail extends MoCEntityAmbient
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+      getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     {
         super.onLivingUpdate();
 
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             EntityLivingBase entityliving = getBoogey(3D);
             if ((entityliving != null) && entityliving.height > 0.5F && entityliving.width > 0.5F && canEntityBeSeen(entityliving))

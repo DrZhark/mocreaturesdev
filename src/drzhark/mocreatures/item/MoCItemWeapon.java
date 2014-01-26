@@ -26,7 +26,6 @@ public class MoCItemWeapon extends MoCItem {
         this.toolMaterial = par2ToolMaterial;
         this.maxStackSize = 1;
         this.setMaxDamage(par2ToolMaterial.getMaxUses());
-        this.setCreativeTab(CreativeTabs.tabCombat);
         this.weaponDamage = 4 + par2ToolMaterial.getDamageVsEntity();
     }
 

@@ -39,7 +39,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
     @Override

@@ -18,6 +18,6 @@ public class MoCCreativeTabs extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
     {
-        return MoCreatures.amuletfairy;
+        return MoCreatures.amuletfairyfull;
     }
 }

@@ -27,6 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -100,7 +101,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
     }
 
     @Override
@@ -1746,7 +1747,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 localhorsechest = new MoCAnimalChest("HorseChest", getInventorySize());// , new
             }
             // only open this chest on server side
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 entityplayer.displayGUIChest(localhorsechest);
             }
@@ -2024,8 +2025,8 @@ public class MoCEntityHorse extends MoCEntityTameable {
         int k = MathHelper.floor_double(posZ);
         Block block = worldObj.getBlock(i - 1, j, k - 1);
         int metadata = worldObj.getBlockMetadata(i - 1, j, k - 1);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
-        if (!event.isCanceled())
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
+        if (event != null && !event.isCanceled())
         {
             worldObj.setBlock(i - 1, j, k - 1, Blocks.fire, 0, 3);//MC1.5
             EntityPlayer entityplayer = (EntityPlayer) riddenByEntity;

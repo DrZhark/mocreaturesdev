@@ -57,7 +57,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
     }
 
     @Override
@@ -556,7 +556,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             this.setHealth(getMaxHealth());
             changeKittyState(9);
             return true;
@@ -584,7 +584,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             this.setHealth(getMaxHealth());
             changeKittyState(7);
             return true;
@@ -725,7 +725,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                 {
                     entityitem.setDead();
-                    worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     setHungry(false);
                     setKittyState(2);
                 }
@@ -832,7 +832,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 {
                     break;
                 }
-                worldObj.playSoundAtEntity(this, "kittypoo", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:kittypoo", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                 MoCEntityLitterBox entitylitterbox1 = (MoCEntityLitterBox) ridingEntity;
                 if (entitylitterbox1 != null)
                 {

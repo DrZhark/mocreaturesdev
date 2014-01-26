@@ -1,6 +1,7 @@
 package drzhark.mocreatures.block;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,7 +17,7 @@ public class MoCBlockFarm extends BlockContainer
         super(Material.wood);
         setTickRandomly(true);
         this.setBlockName(name);
-        this.setCreativeTab(CreativeTabs.tabBlock);
+        this.setCreativeTab(MoCreatures.tabMoC);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
 

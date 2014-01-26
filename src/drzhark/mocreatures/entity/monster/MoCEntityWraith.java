@@ -22,8 +22,8 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(worldObj.difficultySetting.getDifficultyId() == 1 ? 2.0D : 3.0D); // setAttackStrength
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(worldObj.difficultySetting.getDifficultyId() == 1 ? 2.0D : 3.0D); // setAttackStrength
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
     }
 
     public boolean d2()
@@ -58,7 +58,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     @Override
     public void onLivingUpdate()
     {
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if (worldObj.isDaytime())
             {

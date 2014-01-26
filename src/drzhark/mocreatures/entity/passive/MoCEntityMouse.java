@@ -31,7 +31,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
     }
 
     public void selectType()
@@ -217,7 +217,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if(!worldObj.isRemote)
+        if(!worldObj.isClient)
         {
             if(rand.nextInt(15) == 0)
             {

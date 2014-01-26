@@ -28,7 +28,7 @@ public class MoCEntityDeer extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class MoCEntityDeer extends MoCEntityTameable {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if ((getType() == 3) && !getIsAdult() && (rand.nextInt(250) == 0))
             {

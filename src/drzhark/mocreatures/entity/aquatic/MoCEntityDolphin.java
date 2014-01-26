@@ -32,7 +32,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(30.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
     }
 
     @Override
@@ -341,7 +341,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 }
             }
 
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
 
             return true;
         }
@@ -356,7 +356,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 this.setHealth(getMaxHealth());
             }
             setHasEaten(true);
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             return true;
         }
         if (riddenByEntity == null)
@@ -364,7 +364,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             entityplayer.posY = posY;
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 entityplayer.mountEntity(this);
             }

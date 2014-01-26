@@ -29,7 +29,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() == 2 ? 10.0D : 20.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getType() == 2 ? 10.0D : 20.0D);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             entityplayer.posY = posY;
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 entityplayer.mountEntity(this);
             }
@@ -103,7 +103,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if (!getIsAdult() && (rand.nextInt(50) == 0))
             {

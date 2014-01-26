@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
+import org.apachev1.log4j.FileAppender;
+import org.apachev1.log4j.Logger;
+import org.apachev1.log4j.SimpleLayout;
 
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.environment.EnvironmentSettings;

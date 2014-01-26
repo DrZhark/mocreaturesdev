@@ -26,7 +26,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(8.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0D);
     }
 
     @Override

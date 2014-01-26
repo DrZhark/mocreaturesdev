@@ -47,7 +47,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(8.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0D);
     }
 
     @Override
@@ -346,7 +346,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     {
         super.onLivingUpdate();
         // fixes glide issue in SMP
-        if (worldObj.isRemote)
+        if (worldObj.isClient)
         {
             if (ridingEntity != null)
             {

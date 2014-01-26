@@ -19,7 +19,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(2.0D);
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(2.0D);
     }
 
     @Override

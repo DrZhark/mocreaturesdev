@@ -62,7 +62,7 @@ public class MoCEntityEgg extends EntityLiving {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D); // setMaxHealth
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D); // setMaxHealth
     }
 
     @Override
@@ -121,7 +121,7 @@ public class MoCEntityEgg extends EntityLiving {
         if ((lCounter > 10) && entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.mocegg, 1, i)))
         {
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 entityplayer.onItemPickup(this, 1);
 

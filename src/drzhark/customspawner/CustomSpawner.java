@@ -64,7 +64,7 @@ import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.0.0.dev.R2")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.2.0.dev.R1")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")

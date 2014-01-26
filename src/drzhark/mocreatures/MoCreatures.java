@@ -162,7 +162,7 @@ import drzhark.mocreatures.network.packet.MoCPacketTwoBytes;
 import drzhark.mocreatures.network.packet.MoCPacketVanish;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "7.0.0.dev.R1")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.0.dev.R1")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -269,7 +269,7 @@ public class MoCreatures {
     public static Item essenceundead;
     public static Item essencelight;
 
-    public static Item plateFur;
+    public static Item chestFur;
     public static Item helmetFur;
     public static Item legsFur;
     public static Item bootsFur;
@@ -288,7 +288,7 @@ public class MoCreatures {
     public static Item animalHide;
     public static Item rawTurkey;
     public static Item cookedTurkey;
-    public static Item plateHide;
+    public static Item chestHide;
     public static Item helmetHide;
     public static Item legsHide;
     public static Item bootsHide;
@@ -301,15 +301,15 @@ public class MoCreatures {
     public static Item chitinNether;
     public static Item chitin;
 
-    public static Item scorpSword;
+    public static Item scorpSwordDirt;
     public static Item scorpSwordFrost;
     public static Item scorpSwordCave;
     public static Item scorpSwordNether;
 
-    public static Item scorpPlate;
-    public static Item scorpHelmet;
-    public static Item scorpLegs;
-    public static Item scorpBoots;
+    public static Item scorpPlateDirt;
+    public static Item scorpHelmetDirt;
+    public static Item scorpLegsDirt;
+    public static Item scorpBootsDirt;
     public static Item scorpPlateFrost;
     public static Item scorpHelmetFrost;
     public static Item scorpLegsFrost;
@@ -323,7 +323,7 @@ public class MoCreatures {
     public static Item scorpLegsCave;
     public static Item scorpBootsCave;
 
-    public static Item scorpSting;
+    public static Item scorpStingDirt;
     public static Item scorpStingFrost;
     public static Item scorpStingCave;
     public static Item scorpStingNether;
@@ -360,7 +360,6 @@ public class MoCreatures {
         proxy.ConfigInit(event);
         proxy.initTextures();
         this.InitItems();
-        this.AddNames();
         this.AddRecipes();
         proxy.registerRenderers();
         proxy.registerRenderInformation();
@@ -608,7 +607,6 @@ public class MoCreatures {
      */
     protected void registerEntity(Class<? extends Entity> entityClass, String entityName)
     {
-        LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", entityName);
         if (proxy.debug) 
         {
             MoCLog.logger.info("registerEntity " + entityClass + " with Mod ID " + MoCEntityID);
@@ -619,7 +617,6 @@ public class MoCreatures {
 
     private void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor)
     {
-        LanguageRegistry.instance().addStringLocalization("entity.MoCreatures." + entityName + ".name", entityName);
         if (proxy.debug) 
         {
           MoCLog.logger.info("registerEntity " + entityClass + " with Mod ID " + MoCEntityID);
@@ -658,7 +655,7 @@ public class MoCreatures {
         builderHammer = new ItemBuilderHammer("builderhammer");
 
         hideCroc = new MoCItem("reptilehide");
-        plateCroc = new MoCItemArmor("reptileplat", scorpARMOR, 4, 1);
+        plateCroc = new MoCItemArmor("reptileplate", scorpARMOR, 4, 1);
         helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, 0);
         legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, 2);
         bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, 3);
@@ -701,7 +698,7 @@ public class MoCreatures {
         essenceundead = new MoCItem("essenceundead");
         essencelight = new MoCItem("essencelight");
 
-        plateFur = new MoCItemArmor("furplate", furARMOR, 4, 1);
+        chestFur = new MoCItemArmor("furchest", furARMOR, 4, 1);
         helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, 0);
         legsFur = new MoCItemArmor("furlegs", furARMOR, 4, 2);
         bootsFur = new MoCItemArmor("furboots", furARMOR, 4, 3);
@@ -714,12 +711,12 @@ public class MoCreatures {
         unicornhorn = new MoCItem("unicornhorn");
 
         fishnet = new MoCItemPetAmulet("fishnet");
-        horsearmorcrystal = new MoCItem("armorcrystal");
+        horsearmorcrystal = new MoCItem("horsearmorcrystal");
 
         rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
         cookedTurkey = new MoCItemFood("turkeycooked", 8, 0.6F, false);
         animalHide = new MoCItem("hide");
-        plateHide = new MoCItemArmor("hideplate", hideARMOR, 4, 1);
+        chestHide = new MoCItemArmor("hidechest", hideARMOR, 4, 1);
         helmetHide = new MoCItemArmor("hidehelmet", hideARMOR, 4, 0);
         legsHide = new MoCItemArmor("hidelegs", hideARMOR, 4, 2);
         bootsHide = new MoCItemArmor("hideboots", hideARMOR, 4, 3);
@@ -735,12 +732,12 @@ public class MoCreatures {
         scorpSwordCave = new MoCItemWeapon("scorpswordcave", ToolMaterial.IRON, 4, false);
         scorpSwordFrost = new MoCItemWeapon("scorpswordfrost", ToolMaterial.IRON, 2, false);
         scorpSwordNether = new MoCItemWeapon("scorpswordnether", ToolMaterial.IRON, 3, false);
-        scorpSword = new MoCItemWeapon("scorpsword", ToolMaterial.IRON, 1, false);
+        scorpSwordDirt = new MoCItemWeapon("scorpsworddirt", ToolMaterial.IRON, 1, false);
 
-        scorpPlate = new MoCItemArmor("scorpplate", scorpARMOR, 4, 1);
-        scorpHelmet = new MoCItemArmor("scorphelmet", scorpARMOR, 4, 0);
-        scorpLegs = new MoCItemArmor("scorplegs", scorpARMOR, 4, 2);
-        scorpBoots = new MoCItemArmor("scorpboots", scorpARMOR, 4, 3);
+        scorpPlateDirt = new MoCItemArmor("scorpplatedirt", scorpARMOR, 4, 1);
+        scorpHelmetDirt = new MoCItemArmor("scorphelmetdirt", scorpARMOR, 4, 0);
+        scorpLegsDirt = new MoCItemArmor("scorplegsdirt", scorpARMOR, 4, 2);
+        scorpBootsDirt = new MoCItemArmor("scorpbootsdirt", scorpARMOR, 4, 3);
 
         scorpPlateFrost = new MoCItemArmor("scorpplatefrost", scorpARMOR, 4, 1);
         scorpHelmetFrost = new MoCItemArmor("scorphelmetfrost", scorpARMOR, 4, 0);
@@ -760,7 +757,7 @@ public class MoCreatures {
         scorpStingCave = new MoCItemWeapon("scorpstingcave", ToolMaterial.GOLD, 4, true);
         scorpStingFrost = new MoCItemWeapon("scorpstingfrost", ToolMaterial.GOLD, 2, true);
         scorpStingNether = new MoCItemWeapon("scorpstingnether", ToolMaterial.GOLD, 3, true);
-        scorpSting = new MoCItemWeapon("scorpsting", ToolMaterial.GOLD, 1, true);
+        scorpStingDirt = new MoCItemWeapon("scorpstingdirt", ToolMaterial.GOLD, 1, true);
 
         scrollFreedom = new MoCItem("scrolloffreedom");
         scrollOfSale = new MoCItem("scrollofsale");
@@ -804,60 +801,6 @@ public class MoCreatures {
         proxy.mocSettingsConfig.save();
     }
 
-    private void AddNames()
-    {
-        for (int i = 0; i < 91; i++)
-        {
-            String s;
-            if (i > 0 && i < 10)
-            {
-                s = MoCEntityFishy.fishNames[i - 1];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Fish Egg"));
-            }
-            else if (i == 11)
-            {
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Shark Egg"));
-            }
-            else if (i > 20 && i < 29)
-            {
-                s = MoCEntitySnake.snakeNames[i - 21];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Snake Egg"));
-            }
-            else if (i == 30 || i == 31)
-            {
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Ostrich Egg"));
-            }
-            else if (i == 33)
-            {
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), "Komodo Dragon Egg");
-            }
-            else if (i > 40 && i < 46)
-            {
-                s = MoCEntityPetScorpion.scorpionNames[i - 41];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Scorpion Egg"));
-            }
-            else if (i > 49 && i < 62)
-            {
-                s = MoCEntityWyvern.wyvernNames[i - 50];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Wyvern Egg"));
-            }
-            else if (i > 69 && i < (70 + MoCEntityMediumFish.fishNames.length))
-            {
-                s = MoCEntityMediumFish.fishNames[i - 70];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Egg"));
-            }
-            else if (i > 79 && i < (80 + MoCEntitySmallFish.fishNames.length))
-            {
-                s = MoCEntitySmallFish.fishNames[i - 80];
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Egg"));
-            }
-            else if (i == 90)
-            {
-                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Piranha Egg"));
-            }
-        }
-    }
-
     private void AddRecipes()
     {
         GameRegistry.addSmelting(MoCreatures.crabraw, new ItemStack(MoCreatures.crabcooked, 1), 0F);
@@ -889,7 +832,7 @@ public class MoCreatures {
 
         GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordCave, 1), new Object[] { Items.diamond_sword, scorpStingCave, scorpStingCave, scorpStingCave });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scorpSword, 1), new Object[] { Items.diamond_sword, scorpSting, scorpSting, scorpSting });
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordDirt, 1), new Object[] { Items.diamond_sword, scorpStingDirt, scorpStingDirt, scorpStingDirt });
 
         GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] { new ItemStack(turtleraw, 1), new ItemStack(Items.bowl, 1) });
 
@@ -944,15 +887,15 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(scorpBootsCave, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinCave });
 
-        GameRegistry.addRecipe(new ItemStack(scorpPlate, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitin });
+        GameRegistry.addRecipe(new ItemStack(scorpPlateDirt, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(scorpHelmet, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitin });
+        GameRegistry.addRecipe(new ItemStack(scorpHelmetDirt, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(scorpLegs, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitin });
+        GameRegistry.addRecipe(new ItemStack(scorpLegsDirt, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(scorpBoots, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitin });
+        GameRegistry.addRecipe(new ItemStack(scorpBootsDirt, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(plateHide, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), animalHide });
+        GameRegistry.addRecipe(new ItemStack(chestHide, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), animalHide });
 
         GameRegistry.addRecipe(new ItemStack(helmetHide, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), animalHide });
 
@@ -978,7 +921,7 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(essencedarkness, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.ender_pearl, Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(plateFur, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), fur });
+        GameRegistry.addRecipe(new ItemStack(chestFur, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), fur });
 
         GameRegistry.addRecipe(new ItemStack(helmetFur, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), fur });
 

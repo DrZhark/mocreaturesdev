@@ -19,7 +19,6 @@ public class ItemStaffTeleport extends MoCItem
         super(name);
         maxStackSize = 1;
         setMaxDamage(128);
-        this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     private int portalPosX;

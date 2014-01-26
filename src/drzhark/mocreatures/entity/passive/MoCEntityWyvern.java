@@ -55,7 +55,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(getType() >= 5 ? 80.0D : 40.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getType() >= 5 ? 80.0D : 40.0D);
     }
 
     @Override

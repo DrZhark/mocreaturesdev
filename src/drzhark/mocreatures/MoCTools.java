@@ -1138,7 +1138,7 @@ public class MoCTools {
         }
 
         //full scorpion armor set, regeneration effect
-        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBoots && mystack[1] != null && mystack[1].getItem() == MoCreatures.scorpLegs && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlate && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmet)
+        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsDirt && mystack[1] != null && mystack[1].getItem() == MoCreatures.scorpLegsDirt && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateDirt && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetDirt)
         {
             player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 70, 0));
             return;

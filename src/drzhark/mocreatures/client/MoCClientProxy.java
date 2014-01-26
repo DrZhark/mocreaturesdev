@@ -699,31 +699,31 @@ public class MoCClientProxy extends MoCProxy {
         //******************** Creatures ********************//
         creatureOptions = new WidgetClassicTwocolumn(new Widget[0]);
         // create buttons
-        if (!MoCreatures.isCustomSpawnerLoaded)
-            creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
+       // if (!MoCreatures.isCustomSpawnerLoaded)
+        creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
         creatureOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showCreatureSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Mobs ********************//
         mobOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        if (!MoCreatures.isCustomSpawnerLoaded)
-            mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
+        //if (!MoCreatures.isCustomSpawnerLoaded)
+        mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
         mobOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showMobSettings", new Class[0]), true));
         //**********************************************************//
 
 
         //******************** Water Mobs ********************//
         waterOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        if (!MoCreatures.isCustomSpawnerLoaded)
-            waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
+        //if (!MoCreatures.isCustomSpawnerLoaded)
+        waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
         waterOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showWaterSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Ambient ********************//
         ambientOptions = new WidgetClassicTwocolumn(new Widget[0]);
-        if (!MoCreatures.isCustomSpawnerLoaded)
-            ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
+        //if (!MoCreatures.isCustomSpawnerLoaded)
+        ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Reset All ********************//

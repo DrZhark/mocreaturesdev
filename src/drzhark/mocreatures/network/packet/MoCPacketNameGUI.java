@@ -2,6 +2,9 @@ package drzhark.mocreatures.network.packet;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
@@ -79,6 +82,7 @@ public class MoCPacketNameGUI extends AbstractPacket {
      *
      * @param player the player reference
      */
+    @SideOnly(Side.CLIENT)
     public void handleClientSide(EntityPlayer player)
     {
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
@@ -99,7 +103,6 @@ public class MoCPacketNameGUI extends AbstractPacket {
      */
     public void handleServerSide(EntityPlayer player)
     {
-        System.out.println("handleServerSide MoCPacketNameGUI name = " + name);
         Entity pet = null;
         List<Entity> entList = player.worldObj.loadedEntityList;
         String ownerName = "";

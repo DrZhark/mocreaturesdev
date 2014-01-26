@@ -57,7 +57,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
     }
 
     /**
@@ -640,7 +640,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.fish))
         {
             this.setHealth(getMaxHealth());
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHungry(false);
         }
         return false;
@@ -676,7 +676,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         super.onLivingUpdate();
 
-        if ((rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
+        if ((rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isClient)
         {
             //health++;
             this.setHealth(getHealth() + 1);
@@ -724,7 +724,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                     {
                         setEaten(true);
                     }
-                    worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     setHungry(false);
                 }
             }

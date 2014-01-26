@@ -8,31 +8,16 @@ import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 
 public class MoCItemKittyBed extends MoCItem {
 
-    public int itemcolor;
-
     public MoCItemKittyBed(String name)
     {
         super(name);
         maxStackSize = 8;
-        setHasSubtypes(true);
-    }
-
-    public MoCItemKittyBed(String name, int j)
-    {
-        this(name);
-        itemcolor = j;
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
-        return (new StringBuilder()).append(super.getUnlocalizedName()).append(".").append(itemstack.getItemDamage()).toString();
+        //setHasSubtypes(true);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-
         if (MoCreatures.isServer())
         {
             itemstack.stackSize--;

@@ -20,7 +20,6 @@ public class ItemStaffPortal extends MoCItem
         super(name);
         maxStackSize = 1;
         setMaxDamage(3);
-        this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     private int portalPosX;

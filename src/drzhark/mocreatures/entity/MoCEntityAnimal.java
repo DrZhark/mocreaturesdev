@@ -63,8 +63,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(getMoveSpeed());
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
     @Override
@@ -779,7 +779,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     jumpPending = false;
                 }
 
-                if (!worldObj.isRemote)
+                if (!worldObj.isClient)
                 {
                     super.moveEntityWithHeading(par1, par2);
                     //moveEntity(motionX, motionY, motionZ);
@@ -807,7 +807,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 }
             }
             double d = posY;
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 moveFlying(f, f1, 0.02F);
                 //moveEntity(motionX, motionY, motionZ);
@@ -848,7 +848,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 setRotation(rotationYaw, rotationPitch);
                 if (MoCreatures.isServer() && !getIsTamed())
                 {
-                    worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     riddenByEntity.motionY += 0.3D;
                     riddenByEntity.motionZ -= 0.3D;
                     riddenByEntity.mountEntity(null);
@@ -906,14 +906,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     motionZ += rand.nextDouble() / 10D;
                 }
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (!worldObj.isRemote)
+                if (!worldObj.isClient)
                 {
                     moveEntity(motionX, motionY, motionZ);
                 }
 
                 if (MoCreatures.isServer() && rand.nextInt(50) == 0)
                 {
-                    worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     riddenByEntity.motionY += 0.9D;
                     riddenByEntity.motionZ -= 0.3D;
                     riddenByEntity.mountEntity(null);
@@ -994,7 +994,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 setRotation(rotationYaw, rotationPitch);
             }
             // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 //needs to be left in so flying mounts can be controlled
                 //moveEntity(motionX, motionY, motionZ);

@@ -18,6 +18,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
@@ -51,7 +52,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(50.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50.0D);
     }
 
     @Override
@@ -239,7 +240,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         {
             Block block = worldObj.getBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
             int metadata = worldObj.getBlockMetadata(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
-            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
             if (!event.isCanceled())
             {
                 worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], Blocks.air, 0, 3);

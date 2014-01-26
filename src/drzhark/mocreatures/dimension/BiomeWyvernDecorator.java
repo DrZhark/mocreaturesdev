@@ -45,8 +45,8 @@ public class BiomeWyvernDecorator extends BiomeDecorator
 
     /**
      * The method that does the work of actually decorating chunks
-     */
-    protected void func_150513_a(BiomeGenBase p_150513_1_)
+    */
+    protected void func_150513_a(BiomeGenBase biomegenbase)
     {
         MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(currentWorld, randomGenerator, chunk_X, chunk_Z));
         this.generateOres();
@@ -93,8 +93,8 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
-            WorldGenAbstractTree worldgenabstracttree = p_150513_1_.func_150567_a(this.randomGenerator);
+            i1 = this.currentWorld.getHeightValue(k, l);
+            WorldGenAbstractTree worldgenabstracttree = biomegenbase.func_150567_a(this.randomGenerator);
             worldgenabstracttree.setScale(1.0D, 1.0D, 1.0D);
 
             if (worldgenabstracttree.generate(this.currentWorld, this.randomGenerator, k, i1, l))
@@ -116,8 +116,10 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
-            String s = p_150513_1_.func_150572_a(this.randomGenerator, k, i1, l);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) + 32);
+            String s = biomegenbase.func_150572_a(this.randomGenerator, k, i1, l);
             BlockFlower blockflower = BlockFlower.func_149857_e(s);
 
             if (blockflower.getMaterial() != Material.air)
@@ -132,9 +134,12 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
-            WorldGenerator worldgenerator = p_150513_1_.getRandomWorldGenForGrass(this.randomGenerator);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.currentWorld.getHeightValue(k, l);
+            WorldGenerator worldgenerator = biomegenbase.getRandomWorldGenForGrass(this.randomGenerator);
             worldgenerator.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            
         }
 
         doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, DEAD_BUSH);
@@ -142,7 +147,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2);
             (new WorldGenDeadBush(Blocks.deadbush)).generate(this.currentWorld, this.randomGenerator, k, i1, l);
         }
 
@@ -151,8 +158,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-
-            for (i1 = this.randomGenerator.nextInt(128); i1 > 0 && this.currentWorld.isAirBlock(k, i1 - 1, l); --i1)
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            for (i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2); i1 > 0 && this.currentWorld.isAirBlock(k, i1 - 1, l); --i1)
             {
                 ;
             }
@@ -175,7 +183,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
             {
                 k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
                 l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                i1 = this.randomGenerator.nextInt(128);
+                if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+                
+                i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2);
                 this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
             }
         }
@@ -184,7 +194,8 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = this.randomGenerator.nextInt(128);
+            
+            l = this.randomGenerator.nextInt(1 + this.currentWorld.getHeightValue(j, k) * 2);
             this.mushroomBrownGen.generate(this.currentWorld, this.randomGenerator, j, l, k);
         }
 
@@ -192,7 +203,7 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = this.randomGenerator.nextInt(128);
+            l = this.randomGenerator.nextInt(1 + this.currentWorld.getHeightValue(j, k) * 2);
             this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, j, l, k);
         }
 
@@ -201,7 +212,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2);
             this.reedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
         }
 
@@ -209,7 +222,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2);
             this.reedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
         }
 
@@ -218,7 +233,7 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = this.randomGenerator.nextInt(128);
+            l = this.randomGenerator.nextInt(1 + this.currentWorld.getHeightValue(j, k) * 2);
             (new WorldGenPumpkin()).generate(this.currentWorld, this.randomGenerator, j, l, k);
         }
 
@@ -227,7 +242,9 @@ public class BiomeWyvernDecorator extends BiomeDecorator
         {
             k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.randomGenerator.nextInt(128);
+            if (this.currentWorld.getHeightValue(k, l) == 0) continue;
+            
+            i1 = this.randomGenerator.nextInt(this.currentWorld.getHeightValue(k, l) * 2);
             this.cactusGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
         }
 
@@ -237,7 +254,7 @@ public class BiomeWyvernDecorator extends BiomeDecorator
             for (j = 0; j < 50; ++j)
             {
                 k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(120) + 8);
+                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(248) + 8);
                 i1 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
                 (new WorldGenLiquids(Blocks.flowing_water)).generate(this.currentWorld, this.randomGenerator, k, l, i1);
             }
@@ -245,7 +262,7 @@ public class BiomeWyvernDecorator extends BiomeDecorator
             for (j = 0; j < 20; ++j)
             {
                 k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(this.randomGenerator.nextInt(112) + 8) + 8);
+                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(this.randomGenerator.nextInt(240) + 8) + 8);
                 i1 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
                 (new WorldGenLiquids(Blocks.flowing_lava)).generate(this.currentWorld, this.randomGenerator, k, l, i1);
             }

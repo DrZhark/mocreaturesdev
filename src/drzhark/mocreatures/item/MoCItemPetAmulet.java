@@ -78,7 +78,6 @@ public class MoCItemPetAmulet extends MoCItem
             //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
             if (MoCreatures.isServer())
             {
-                System.out.println("spawnClass = " + spawnClass);
                 initAndReadNBT(itemstack);
                 if (spawnClass.isEmpty() || creatureType == 0)
                 {

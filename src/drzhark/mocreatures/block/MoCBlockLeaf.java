@@ -32,7 +32,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     {
         super(Material.leaves, true);
         setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabBlock);
+        this.setCreativeTab(MoCreatures.tabMoC);
         this.setBlockName(name);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
@@ -56,7 +56,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     @Override
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.isRemote)
+        if(world.isClient)
         {
             return;
         }
@@ -192,7 +192,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     @Override
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() == Items.shears)
+        if (!world.isClient && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() == Items.shears)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(MoCreatures.mocLeaf, 1, l & 3));

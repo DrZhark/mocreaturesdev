@@ -30,7 +30,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic{
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(8.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0D);
     }
 
     @Override

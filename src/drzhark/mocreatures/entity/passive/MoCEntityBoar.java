@@ -40,7 +40,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     protected void applyEntityAttributes()
     {
       super.applyEntityAttributes();
-      getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+      getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
     }
 
     @Override

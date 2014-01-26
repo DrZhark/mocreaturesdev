@@ -20,6 +20,7 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Packet pipeline class. Directs all registered packet data to be handled by the packets themselves.
@@ -78,6 +79,7 @@ public class MoCPacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abs
 
     // In line decoding and handling of the packet
     @Override
+    @SideOnly(Side.CLIENT)
     protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
         ByteBuf payload = msg.payload();
         byte discriminator = payload.readByte();
@@ -156,7 +158,6 @@ public class MoCPacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abs
      * @param player  The player to send it to
      */
     public void sendTo(AbstractPacket message, EntityPlayerMP player) {
-        System.out.println("Sending packet " + message + " to player " + player);
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
         this.channels.get(Side.SERVER).writeAndFlush(message);

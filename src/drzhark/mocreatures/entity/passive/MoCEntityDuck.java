@@ -27,7 +27,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
     }
 
     @Override

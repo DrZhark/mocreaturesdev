@@ -33,7 +33,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(25.0D);
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if (!getIsAdult() && (rand.nextInt(50) == 0))
             {
@@ -170,7 +170,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     public void setDead()
     {
-        if (!worldObj.isRemote && getIsTamed() && (getHealth() > 0))
+        if (!worldObj.isClient && getIsTamed() && (getHealth() > 0))
         {
             return;
         }

@@ -2,6 +2,7 @@ package drzhark.mocreatures.block;
 
 import static net.minecraftforge.common.util.ForgeDirection.UP;
 import cpw.mods.fml.common.registry.GameRegistry;
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockGrass;
@@ -19,6 +20,7 @@ public class MoCBlock extends Block
     {
         super(material);
         this.setBlockName(name);
+        this.setCreativeTab(MoCreatures.tabMoC);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
 

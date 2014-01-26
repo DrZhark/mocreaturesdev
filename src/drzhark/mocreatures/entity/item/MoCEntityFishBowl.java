@@ -45,7 +45,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(5.0D); // setMaxHealth
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(5.0D); // setMaxHealth
     }
 
     @Override
@@ -69,14 +69,14 @@ public class MoCEntityFishBowl extends EntityLiving {
 
     public void setPickedUp(boolean flag)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(15, Byte.valueOf(input));
     }
 
     public void setType(int i)
     {
-        if (worldObj.isRemote) { return; }
+        if (worldObj.isClient) { return; }
         dataWatcher.updateObject(16, Integer.valueOf(i));
     }
 
@@ -148,7 +148,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     public double getYOffset()
     {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isClient) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
             return (yOffset - 1.0F);
@@ -207,7 +207,7 @@ public class MoCEntityFishBowl extends EntityLiving {
 
             entityplayer.inventory.addItemStackToInventory(mystack);
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 entityplayer.onItemPickup(this, 1);
             }
@@ -252,7 +252,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         if ((ridingEntity != null) || !onGround)
         {
-            if (!worldObj.isRemote)
+            if (!worldObj.isClient)
             {
                 super.moveEntity(d, d1, d2);
             }

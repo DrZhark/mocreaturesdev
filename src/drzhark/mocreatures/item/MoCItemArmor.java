@@ -18,6 +18,8 @@ public class MoCItemArmor extends ItemArmor
     public MoCItemArmor(String name, ArmorMaterial enumarmormaterial, int j, int k)
     {
         super(enumarmormaterial, j, k);
+        this.setCreativeTab(MoCreatures.tabMoC);
+        this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
     }
 
@@ -34,7 +36,7 @@ public class MoCItemArmor extends ItemArmor
             tempArmorTexture = "croc_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetFur) || (itemstack.getItem() == MoCreatures.plateFur) || (itemstack.getItem() == MoCreatures.bootsFur))
+        if ((itemstack.getItem() == MoCreatures.helmetFur) || (itemstack.getItem() == MoCreatures.chestFur) || (itemstack.getItem() == MoCreatures.bootsFur))
         {
             tempArmorTexture = "fur_1.png";
         }
@@ -43,7 +45,7 @@ public class MoCItemArmor extends ItemArmor
             tempArmorTexture = "fur_2.png";;
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetHide) || (itemstack.getItem() == MoCreatures.plateHide) || (itemstack.getItem() == MoCreatures.bootsHide))
+        if ((itemstack.getItem() == MoCreatures.helmetHide) || (itemstack.getItem() == MoCreatures.chestHide) || (itemstack.getItem() == MoCreatures.bootsHide))
         {
             tempArmorTexture = "hide_1.png";
         }
@@ -52,11 +54,11 @@ public class MoCItemArmor extends ItemArmor
             tempArmorTexture = "hide_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.scorpHelmet) || (itemstack.getItem() == MoCreatures.scorpPlate) || (itemstack.getItem() == MoCreatures.scorpBoots))
+        if ((itemstack.getItem() == MoCreatures.scorpHelmetDirt) || (itemstack.getItem() == MoCreatures.scorpPlateDirt) || (itemstack.getItem() == MoCreatures.scorpBootsDirt))
         {
             tempArmorTexture = "scorpd_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.scorpLegs)
+        if (itemstack.getItem() == MoCreatures.scorpLegsDirt)
         {
             tempArmorTexture = "scorpd_2.png";
         }

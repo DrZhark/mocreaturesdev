@@ -20,8 +20,6 @@ public class ItemBuilderHammer extends MoCItem
         super(name);
         maxStackSize = 1;
         setMaxDamage(2048);
-        this.setCreativeTab(CreativeTabs.tabTools);
-
     }
 
     /**

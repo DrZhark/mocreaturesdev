@@ -2,6 +2,9 @@ package drzhark.mocreatures.network.packet;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.network.AbstractPacket;
@@ -34,6 +37,7 @@ public class MoCPacketExplode extends AbstractPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void handleClientSide(EntityPlayer player)
     {
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;

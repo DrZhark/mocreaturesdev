@@ -164,7 +164,7 @@ public class MoCRenderKitty extends RenderBiped {
     {
         GL11.glRotatef(90F, 0.0F, 0.0F, -1F);
 
-        if (!entityliving.worldObj.isRemote && (entityliving.ridingEntity != null))
+        if (!entityliving.worldObj.isClient && (entityliving.ridingEntity != null))
         {
             GL11.glTranslatef(-1.5F, 0.2F, -0.2F);
         }

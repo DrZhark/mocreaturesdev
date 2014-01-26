@@ -34,7 +34,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
     }
 
     @Override
@@ -360,7 +360,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             entity.onKillEntity(this);
         }
 
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -378,7 +378,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isRemote)
+        if (!worldObj.isClient)
         {
             if (((IsNight() && getIsHumanForm()) || (!IsNight() && !getIsHumanForm())) && (rand.nextInt(250) == 0))
             {
@@ -411,7 +411,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 }
                 if (tcounter == 10)
                 {
-                    worldObj.playSoundAtEntity(this, "weretransform", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
+                    worldObj.playSoundAtEntity(this, "mocreatures:weretransform", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
                 }
                 if (tcounter > 30)
                 {

@@ -12,7 +12,7 @@ public class MoCItem extends Item
     public MoCItem(String name)
     {
         GameRegistry.registerItem(this, name);
-        //this.setCreativeTab(MoCreatures.tabMoC);
+        this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
     }
 

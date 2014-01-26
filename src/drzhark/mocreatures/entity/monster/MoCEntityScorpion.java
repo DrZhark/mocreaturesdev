@@ -55,7 +55,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
     }
 
     @Override
@@ -224,7 +224,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
         if (MoCreatures.isServer() && (armCounter == 10 || armCounter == 40))
         {
-            worldObj.playSoundAtEntity(this, "scorpionclaw", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:scorpionclaw", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
         }
 
         if (armCounter != 0 && armCounter++ > 24)
@@ -237,7 +237,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             poisontimer++;
             if (poisontimer == 1)
             {
-                worldObj.playSoundAtEntity(this, "scorpionsting", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:scorpionsting", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             }
             if (poisontimer > 50)
             {
@@ -430,7 +430,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         switch (getType())
         {
         case 1:
-            if (flag) { return MoCreatures.scorpSting; }
+            if (flag) { return MoCreatures.scorpStingDirt; }
             return MoCreatures.chitin;
         case 2:
             if (flag) { return MoCreatures.scorpStingCave; }
