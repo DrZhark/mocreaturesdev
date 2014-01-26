@@ -18,6 +18,7 @@ public class MoCBlock extends Block
     public MoCBlock(String name, Material material)
     {
         super(material);
+        this.setBlockName(name);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
 

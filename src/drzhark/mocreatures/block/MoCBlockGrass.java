@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -55,10 +56,10 @@ public class MoCBlockGrass extends MoCBlock
     }
 
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) 
     {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
-            subItems.add(new ItemStack(this, 1, ix));
+            subItems.add(new ItemStack(item, 1, ix));
         }
     }
 

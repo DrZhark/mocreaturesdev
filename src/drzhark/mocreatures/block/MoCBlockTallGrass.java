@@ -29,9 +29,10 @@ public class MoCBlockTallGrass extends BlockBush implements IShearable
     public MoCBlockTallGrass(String name)
     {
         super(Material.vine);
-        GameRegistry.registerBlock(this, name);
         float var3 = 0.4F;
         this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 0.8F, 0.5F + var3);
+        this.setBlockName(name);
+        GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
 
     public MoCBlockTallGrass(String name, boolean lighted)
@@ -126,11 +127,5 @@ public class MoCBlockTallGrass extends BlockBush implements IShearable
         {
             subItems.add(new ItemStack(this, 1, ix));
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int i)
-    {
-    return icons[i]; 
     }
 }

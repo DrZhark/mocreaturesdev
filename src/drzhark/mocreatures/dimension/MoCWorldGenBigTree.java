@@ -168,7 +168,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
         System.arraycopy(var2, 0, this.leafNodes, 0, var4);
     }
 
-    void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, Block par6)
+    void func_150529_a(int par1, int par2, int par3, float par4, byte par5, Block par6)
     {
         int var7 = (int)((double)par4 + 0.618D);
         byte var8 = otherCoordPairs[par5];
@@ -258,14 +258,14 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
         for (int var5 = par2 + this.leafDistanceLimit; var4 < var5; ++var4)
         {
             float var6 = this.leafSize(var4 - par2);
-            this.genTreeLayer(par1, var4, par3, var6, (byte)1, MoCreatures.mocLeaf);
+            this.func_150529_a(par1, var4, par3, var6, (byte)1, MoCreatures.mocLeaf);
         }
     }
 
     /**
      * Places a line of the specified block ID into the world from the first coordinate triplet to the second.
      */
-    void placeBlockLine(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, Block par3)
+    void func_150530_a(int[] par1ArrayOfInteger, int[] par2ArrayOfInteger, Block par3)
     {
         int[] var4 = new int[] {0, 0, 0};
         byte var5 = 0;
@@ -364,19 +364,19 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
         int var4 = this.basePos[2];
         int[] var5 = new int[] {var1, var2, var4};
         int[] var6 = new int[] {var1, var3, var4};
-        this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
+        this.func_150530_a(var5, var6, MoCreatures.mocLog);
 
         if (this.trunkSize == 2)
         {
             ++var5[0];
             ++var6[0];
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
+            this.func_150530_a(var5, var6, MoCreatures.mocLog);
             ++var5[2];
             ++var6[2];
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
+            this.func_150530_a(var5, var6, MoCreatures.mocLog);
             var5[0] += -1;
             var6[0] += -1;
-            this.placeBlockLine(var5, var6, MoCreatures.mocLog);//BlockLogID//Block.wood);
+            this.func_150530_a(var5, var6, MoCreatures.mocLog);
         }
     }
 
@@ -397,7 +397,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
 
             if (this.leafNodeNeedsBase(var6))
             {
-                this.placeBlockLine(var3, var5, MoCreatures.mocLog);//BlockLogID//Block.wood);
+                this.func_150530_a(var3, var5, MoCreatures.mocLog);
             }
         }
     }
@@ -452,9 +452,8 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
                 var13[var5] = par1ArrayOfInteger[var5] + var14;
                 var13[var6] = MathHelper.floor_double((double)par1ArrayOfInteger[var6] + (double)var14 * var9);
                 var13[var7] = MathHelper.floor_double((double)par1ArrayOfInteger[var7] + (double)var14 * var11);
-                Block block = this.worldObj.getBlock(var13[0], var13[1], var13[2]);
 
-                if (block != Blocks.air && block != MoCreatures.mocLeaf)//BlockLeafID)//Block.leaves)
+                if (!this.isReplaceable(this.worldObj, var13[0], var13[1], var13[2]))
                 {
                     break;
                 }

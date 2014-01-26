@@ -60,44 +60,9 @@ public class MoCBlockLog extends MoCBlock
     }
 
     /**
-     * Called whenever the block is removed.
-     */
-    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
-    {
-        byte byte0 = 4;
-        int i = byte0 + 1;
-
-        if (par1World.checkChunksExist(par2 - i, par3 - i, par4 - i, par2 + i, par3 + i, par4 + i))
-        {
-            for (int j = -byte0; j <= byte0; j++)
-            {
-                for (int k = -byte0; k <= byte0; k++)
-                {
-                    for (int l = -byte0; l <= byte0; l++)
-                    {
-                        Block block = par1World.getBlock(par2 + j, par3 + k, par4 + l);
-
-                        if (block != MoCreatures.mocLeaf)
-                        {
-                            continue;
-                        }
-
-                        int j1 = par1World.getBlockMetadata(par2 + j, par3 + k, par4 + l);
-
-                        if ((j1 & 8) == 0)
-                        {
-                            par1World.setBlockMetadataWithNotify(par2 + j, par3 + k, par4 + l, j1 | 8, 3);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * ejects contained items into the world, and notifies neighbours of an update, as appropriate
      */
-    public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+    public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6)
     {
         byte var7 = 4;
         int var8 = var7 + 1;
@@ -143,10 +108,10 @@ public class MoCBlockLog extends MoCBlock
     }
 
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(int par1, CreativeTabs tab, List subItems) 
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
     {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
-            subItems.add(new ItemStack(this, 1, ix));
+            subItems.add(new ItemStack(item, 1, ix));
         }
     }
 

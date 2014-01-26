@@ -61,10 +61,4 @@ public class MoCBlockDirt extends MoCBlock
             subItems.add(new ItemStack(this, 1, ix));
         }
     }
-
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int i)
-    {
-    return icons[i]; 
-    }
 }

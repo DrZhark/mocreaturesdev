@@ -31,32 +31,10 @@ public class MoCBlockLeaf extends BlockLeavesBase
     public MoCBlockLeaf(String name)
     {
         super(Material.leaves, true);
-        GameRegistry.registerBlock(this, name);
         setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
-    }
-    public void onBlockRemoval(World world, int i, int j, int k)
-    {
-        int l = 1;
-        int i1 = l + 1;
-        if(world.checkChunksExist(i - i1, j - i1, k - i1, i + i1, j + i1, k + i1))
-        {
-            for(int j1 = -l; j1 <= l; j1++)
-            {
-                for(int k1 = -l; k1 <= l; k1++)
-                {
-                    for(int l1 = -l; l1 <= l; l1++)
-                    {
-                        Block block = world.getBlock(i + j1, j + k1, k + l1);
-                        if(block == Blocks.sapling)              ///////Leaf/////////////
-                        {
-                            int j2 = world.getBlockMetadata(i + j1, j + k1, k + l1);
-                            world.setBlockMetadataWithNotify(i + j1, j + k1, k + l1, j2 | 8,3);
-                        }
-                    }
-                }
-            }
-        }
+        this.setBlockName(name);
+        GameRegistry.registerBlock(this, MultiItemBlock.class, name);
     }
 
     @Override
@@ -174,7 +152,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     /**
      * ejects contained items into the world, and notifies neighbours of an update, as appropriate
      */
-    public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+    public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6)
     {
         byte b0 = 1;
         int j1 = b0 + 1;

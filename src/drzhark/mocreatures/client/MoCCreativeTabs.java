@@ -2,7 +2,9 @@ package drzhark.mocreatures.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 
 public class MoCCreativeTabs extends CreativeTabs {
@@ -16,8 +18,6 @@ public class MoCCreativeTabs extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return MoCreatures.amuletfairy;
     }
-
 }

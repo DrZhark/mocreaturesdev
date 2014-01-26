@@ -176,42 +176,6 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
          return "/mocreatures.twinsuns.png";
      }
 
-     public boolean renderStars()
-     {
-     return true;
-     }
-     
-     public boolean renderClouds()
-     {
-     return true;
-     }
-
-     //not active?
-     public boolean renderVoidFog()
-     {
-         return false;
-     }
-
-     public boolean renderEndSky()
-     {
-     return false;
-     }
-
-     public float setSunSize()
-     {
-     return 10.0F;
-     }
-
-     public float setMoonSize()
-     {
-     return 0.5F;
-     }
-     
-     public float getStarBrightness(World world, float f)
-     {
-         return 1.0F;
-     }
-
     @Override
     public String getSaveFolder()
     {

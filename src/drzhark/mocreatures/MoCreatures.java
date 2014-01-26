@@ -170,7 +170,7 @@ public class MoCreatures {
 
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")
     public static MoCProxy proxy;
-    //public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
     public static GameProfile MOCFAKEPLAYER = new GameProfile("", "[MoCreatures]");
@@ -359,8 +359,12 @@ public class MoCreatures {
     {
         MinecraftForge.EVENT_BUS.register(new MoCEventHooks());
         proxy.ConfigInit(event);
-        //proxy.initSounds();
         proxy.initTextures();
+        this.InitItems();
+        this.AddNames();
+        this.AddRecipes();
+        proxy.registerRenderers();
+        proxy.registerRenderInformation();
         if (!isServer())
         {
             FMLCommonHandler.instance().bus().register(new MoCClientTickHandler());
@@ -374,11 +378,6 @@ public class MoCreatures {
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-        this.InitItems();
-        this.AddNames();
-        this.AddRecipes();
-        proxy.registerRenderers();
-        proxy.registerRenderInformation();
         packetPipeline.initalise();
         packetPipeline.registerPacket(MoCPacketNameGUI.class);
         packetPipeline.registerPacket(MoCPacketAnimation.class);
@@ -802,52 +801,14 @@ public class MoCreatures {
 
         //new blocks
         mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundTypeStone);
-        //GameRegistry.registerBlock(mocStone, MultiItemBlock.class, "MoC_Stone");
-
         mocGrass = new MoCBlockGrass("MoCGrass").setHardness(0.5F).setStepSound(Block.soundTypeGrass);
-        //GameRegistry.registerBlock(mocGrass, MultiItemBlock.class, "MoC_Grass");
-        
         mocDirt = new MoCBlockDirt("MoCDirt").setHardness(0.6F).setStepSound(Block.soundTypeGravel);
-        //GameRegistry.registerBlock(mocDirt, MultiItemBlock.class, "MoC_Dirt");
-        
         //non terrain generator blocks
-       
         mocLeaf = new MoCBlockLeaf("MoCLeaves").setHardness(0.2F).setLightOpacity(1).setStepSound(Block.soundTypeGrass);
-        //GameRegistry.registerBlock(mocLeaf, MultiItemBlock.class, "MoC_Leaf");
-        
         mocLog = new MoCBlockLog("MoCLog").setHardness(2.0F).setStepSound(Block.soundTypeWood);
-        //GameRegistry.registerBlock(mocLog, MultiItemBlock.class, "MoC_Log");
-        
-        mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F).setStepSound(Block.soundTypeGrass);
-        //GameRegistry.registerBlock(mocTallGrass, MultiItemBlock.class, "MoC_TallGrass");
-        
-        mocPlank = new MoCBlockPlanks("MoCWoodPlanks").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood);
-        //GameRegistry.registerBlock(mocPlank, MultiItemBlock.class, "MoC_Planks");
+        mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F).setStepSound(Block.soundTypeGrass);     
+        mocPlank = new MoCBlockPlanks("MoCWoodPlank").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood);
 
-        for (int i = 0; i < multiBlockNames.size(); i++) 
-        {
-            ItemStack stoneStack = new ItemStack(mocStone, 1, i);
-            LanguageRegistry.addName(stoneStack, multiBlockNames.get(i) + " Stone");
-            
-            ItemStack grassStack = new ItemStack(mocGrass, 1, i);
-            LanguageRegistry.addName(grassStack, multiBlockNames.get(i) + " Grass");
-            
-            ItemStack dirtStack = new ItemStack(mocDirt, 1, i);
-            LanguageRegistry.addName(dirtStack, multiBlockNames.get(i) + " Dirt");
-            
-            ItemStack leafStack = new ItemStack(mocLeaf, 1, i);
-            LanguageRegistry.addName(leafStack, multiBlockNames.get(i) + " Leaves");
-            
-            ItemStack logStack = new ItemStack(mocLog, 1, i);
-            LanguageRegistry.addName(logStack, multiBlockNames.get(i) + " Log");
-        
-            ItemStack tallgrassStack = new ItemStack(mocTallGrass, 1, i);
-            LanguageRegistry.addName(tallgrassStack, multiBlockNames.get(i) + " Tall Grass");
-            
-            ItemStack planksStack = new ItemStack(mocPlank, 1, i);
-            LanguageRegistry.addName(planksStack, multiBlockNames.get(i) + " Wood Plank");
-        }
-        
       //wyvern lair block harvest settings
         mocDirt.setHarvestLevel("shovel", 0, 0); 
         mocGrass.setHarvestLevel("shovel", 0, 0); 

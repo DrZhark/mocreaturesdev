@@ -6,6 +6,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockSand;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
@@ -123,7 +124,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
 
                             for (int var50 = 0; var50 < 8; ++var50)
                             {
-                                Block block = Blocks.air;
+                                Block block = null;
 
                                 if (var46 > 0.0D)
                                 {
@@ -178,7 +179,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
                     int var12 = (var6 * 16 + var5) * 128 + var11;
                     Block var13 = par3ArrayOfByte[var12];
 
-                    if (var13 != Blocks.air)
+                    if (var13 == null || var13.getMaterial() == Material.air)
                     {
                         var8 = -1;
                     }
@@ -397,25 +398,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    public void populate_old(IChunkProvider par1IChunkProvider, int par2, int par3)
-    {
-        BlockFalling.field_149832_M = true;
-
-        MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(par1IChunkProvider, worldObj, worldObj.rand, par2, par3, false));
-
-        int var4 = par2 * 16;
-        int var5 = par3 * 16;
-        BiomeGenBase var6 = this.worldObj.getBiomeGenForCoords(var4 + 16, var5 + 16);
-        var6.decorate(this.worldObj, this.worldObj.rand, var4, var5);
-
-        MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(par1IChunkProvider, worldObj, worldObj.rand, par2, par3, false));
-
-        BlockFalling.field_149832_M = false;
-    }
-
-    /**
-     * Populates chunk with ores etc etc
-     */
     public void populate(IChunkProvider par1IChunkProvider, int par2, int par3)
     {
         BlockFalling.field_149832_M = true;
@@ -465,8 +447,8 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
         BlockFalling.field_149832_M = false;
     }
 
-    private boolean towerDone;
-    private boolean portalDone;
+    private boolean towerDone = false;
+    private boolean portalDone = false;
     
     public void generateTower(World par1World, Random par2Random, int par3, int par4)
     {

@@ -17,6 +17,9 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 public class BiomeGenWyvernLair extends BiomeGenBase
 {
 
+    private MoCWorldGenBigTree wyvernGenBigTree;
+    private WorldGenShrub worldGenShrub;
+
     public BiomeGenWyvernLair(int par1)
     {
         super(par1);
@@ -32,11 +35,9 @@ public class BiomeGenWyvernLair extends BiomeGenBase
         this.minHeight = 0.3F;
         this.maxHeight = 1.5F;
         this.biomeName = "WyvernBiome";
-        this.theBiomeDecorator.generateLakes = true;
-        this.theBiomeDecorator.grassPerChunk = 1;
-        this.theBiomeDecorator.flowersPerChunk = -999;
-        this.theBiomeDecorator.mushroomsPerChunk = 20;
-        this.theBiomeDecorator.treesPerChunk = 4;
+        this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog, 0, MoCreatures.mocLeaf, 0, 2, 30, 10);
+        this.worldGenShrub = new WorldGenShrub(3, 0);
+        this.theBiomeDecorator = new BiomeWyvernDecorator();
     }
 
     /**
@@ -45,8 +46,14 @@ public class BiomeGenWyvernLair extends BiomeGenBase
     @Override
     public WorldGenAbstractTree func_150567_a(Random par1Random)
     {
-        return (WorldGenAbstractTree) (par1Random.nextInt(10) == 0 ? new MoCWorldGenBigTree(false, MoCreatures.mocLog, 0, MoCreatures.mocLeaf, 0, 2, 30, 10) : new WorldGenShrub(3, 0) );
-        
+        if (par1Random.nextInt(10) == 0)
+        {
+            return this.wyvernGenBigTree;
+        }
+        else
+        {
+            return this.worldGenShrub;
+        }
     }
 
     /**
