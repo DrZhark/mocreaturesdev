@@ -52,38 +52,38 @@ public class MoCItemArmor extends ItemArmor
             tempArmorTexture = "hide_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetScorpDirt) || (itemstack.getItem() == MoCreatures.plateScorpDirt) || (itemstack.getItem() == MoCreatures.bootsScorpDirt))
+        if ((itemstack.getItem() == MoCreatures.scorpHelmet) || (itemstack.getItem() == MoCreatures.scorpPlate) || (itemstack.getItem() == MoCreatures.scorpBoots))
         {
             tempArmorTexture = "scorpd_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsScorpDirt)
+        if (itemstack.getItem() == MoCreatures.scorpLegs)
         {
             tempArmorTexture = "scorpd_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetScorpFrost) || (itemstack.getItem() == MoCreatures.plateScorpFrost) || (itemstack.getItem() == MoCreatures.bootsScorpFrost))
+        if ((itemstack.getItem() == MoCreatures.scorpHelmetFrost) || (itemstack.getItem() == MoCreatures.scorpPlateFrost) || (itemstack.getItem() == MoCreatures.scorpBootsFrost))
         {
             tempArmorTexture = "scorpf_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsScorpFrost)
+        if (itemstack.getItem() == MoCreatures.scorpLegsFrost)
         {
             tempArmorTexture = "scorpf_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetScorpCave) || (itemstack.getItem() == MoCreatures.plateScorpCave) || (itemstack.getItem() == MoCreatures.bootsScorpCave))
+        if ((itemstack.getItem() == MoCreatures.scorpHelmetCave) || (itemstack.getItem() == MoCreatures.scorpPlateCave) || (itemstack.getItem() == MoCreatures.scorpBootsCave))
         {
             tempArmorTexture = "scorpc_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsScorpCave)
+        if (itemstack.getItem() == MoCreatures.scorpLegsCave)
         {
             tempArmorTexture = "scorpc_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetScorpNether) || (itemstack.getItem() == MoCreatures.plateScorpNether) || (itemstack.getItem() == MoCreatures.bootsScorpNether))
+        if ((itemstack.getItem() == MoCreatures.scorpHelmetNether) || (itemstack.getItem() == MoCreatures.scorpPlateNether) || (itemstack.getItem() == MoCreatures.scorpBootsNether))
         {
             tempArmorTexture = "scorpn_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsScorpNether)
+        if (itemstack.getItem() == MoCreatures.scorpLegsNether)
         {
             tempArmorTexture = "scorpn_2.png";
         }

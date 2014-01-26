@@ -520,7 +520,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     @Override
     protected Item func_146068_u()
     {
-        return MoCreatures.crochide;
+        return MoCreatures.hideCroc;
     }
 
     public boolean isSpinning()

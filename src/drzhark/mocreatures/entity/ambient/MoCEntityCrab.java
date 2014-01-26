@@ -90,7 +90,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
     @Override
     protected Item func_146068_u()
     {
-        return MoCreatures.crabmeat;
+        return MoCreatures.crabraw;
     }
 
     @Override

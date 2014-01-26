@@ -429,7 +429,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.viallight) && getIsTamed() && getEdad() > 90 && getType() < 5)
+        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90 && getType() < 5)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -453,7 +453,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.vialundead) && getIsTamed())
+        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essenceundead) && getIsTamed())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -471,7 +471,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.viallight) && getIsTamed())
+        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -489,7 +489,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.vialdarkness) && getIsTamed())
+        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essencedarkness) && getIsTamed())
         {
             if (--itemstack.stackSize == 0)
             {
@@ -819,7 +819,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         String s = MoCTools.BiomeName(worldObj, i, j, k);
         if (rand.nextInt(l) == 0)
         {
-            entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, getType() + 49), 0.0F);
+            entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 49), 0.0F);
         }
     }
 

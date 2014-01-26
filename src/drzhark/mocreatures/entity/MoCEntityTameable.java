@@ -119,7 +119,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         }
         
         //stores in petAmulet
-        if (itemstack != null && itemstack.getItem() == MoCreatures.superAmulet && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
+        if (itemstack != null && itemstack.getItem() == MoCreatures.petamulet && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())

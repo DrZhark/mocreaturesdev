@@ -55,7 +55,6 @@ public class MoCGUIEntityNamer extends GuiScreen {
     public void updateName()
     {
         NamedEntity.setName(NameToSet);
-        System.out.println("name = " + NameToSet);
         MoCreatures.packetPipeline.sendToServer(new MoCPacketNameGUI(((EntityLiving) NamedEntity).getEntityId(), NameToSet));
         mc.displayGuiScreen(null);
     }

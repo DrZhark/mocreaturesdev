@@ -430,16 +430,16 @@ public class MoCEntityScorpion extends MoCEntityMob {
         switch (getType())
         {
         case 1:
-            if (flag) { return MoCreatures.stingDirt; }
-            return MoCreatures.chitinDirt;
+            if (flag) { return MoCreatures.scorpSting; }
+            return MoCreatures.chitin;
         case 2:
-            if (flag) { return MoCreatures.stingCave; }
+            if (flag) { return MoCreatures.scorpStingCave; }
             return MoCreatures.chitinCave;
         case 3:
-            if (flag) { return MoCreatures.stingNether; }
+            if (flag) { return MoCreatures.scorpStingNether; }
             return MoCreatures.chitinNether;
         case 4:
-            if (flag) { return MoCreatures.stingFrost; }
+            if (flag) { return MoCreatures.scorpStingFrost; }
             return MoCreatures.chitinFrost;
         default:
             return Items.string;

@@ -73,7 +73,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
     {
         if (rand.nextInt(10) == 0)
         {
-            return MoCreatures.swordsilver;
+            return MoCreatures.silversword;
         }
         return Items.bone;
 

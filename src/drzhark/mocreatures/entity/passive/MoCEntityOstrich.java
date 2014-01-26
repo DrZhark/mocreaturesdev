@@ -613,7 +613,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.vialdarkness)
+        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.essencedarkness)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -635,7 +635,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.vialundead)
+        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.essenceundead)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -657,7 +657,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.viallight)
+        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.essencelight)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -679,7 +679,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.vialnightmare)
+        if ((itemstack != null) && this.getIsTamed() && getType()> 1 && itemstack.getItem() == MoCreatures.essencefire)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -781,19 +781,19 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                 {
                     helmetType = 8;
                 }*/
-                else if (itemstack.getItem() == MoCreatures.helmetScorpDirt)
+                else if (itemstack.getItem() == MoCreatures.scorpHelmet)
                 {
                     helmetType = 9;
                 }
-                else if (itemstack.getItem() == MoCreatures.helmetScorpFrost)
+                else if (itemstack.getItem() == MoCreatures.scorpHelmetFrost)
                 {
                     helmetType = 10;
                 }
-                else if (itemstack.getItem() == MoCreatures.helmetScorpCave)
+                else if (itemstack.getItem() == MoCreatures.scorpHelmetCave)
                 {
                     helmetType = 11;
                 }
-                else if (itemstack.getItem() == MoCreatures.helmetScorpNether)
+                else if (itemstack.getItem() == MoCreatures.scorpHelmetNether)
                 {
                     helmetType = 12;
                 }
@@ -877,7 +877,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     {
         boolean flag = (rand.nextInt(3) == 0);
         if (flag && (this.getType() == 8)) // unicorn
-        { return MoCreatures.unicorn; }
+        { return MoCreatures.unicornhorn; }
         if (this.getType() == 5 && flag) 
         { return MoCreatures.heartfire; }
         if (this.getType() == 6 && flag) // bat horse
@@ -887,7 +887,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             if (flag) { return MoCreatures.heartundead; }
             return Items.rotten_flesh;
         }
-         return MoCreatures.ostrichmeat;
+         return MoCreatures.ostrichraw;
     }
 
     @Override
@@ -1052,16 +1052,16 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                 entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetCroc, 1));
                 break;
             case 9:
-                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetScorpDirt, 1));
+                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmet, 1));
                 break;
             case 10:
-                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetScorpFrost, 1));
+                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmetFrost, 1));
                 break;
             case 11:
-                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetScorpCave, 1));
+                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmetCave, 1));
                 break;
             case 12:
-                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.helmetScorpNether, 1));
+                entityitem = new EntityItem(worldObj, posX, posY, posZ, new ItemStack(MoCreatures.scorpHelmetNether, 1));
                 break;
             }
 

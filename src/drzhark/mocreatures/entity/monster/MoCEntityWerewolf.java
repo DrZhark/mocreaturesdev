@@ -203,7 +203,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 {
                     i = 10;
                 }
-                if (itemstack.getItem() == MoCreatures.swordsilver)
+                if (itemstack.getItem() == MoCreatures.silversword)
                 {
                     i = 10;
                 }

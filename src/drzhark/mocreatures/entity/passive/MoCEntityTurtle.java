@@ -429,7 +429,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
         if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")) { return MoCreatures.sai; }
 
         if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo") || getName().equals("michaelangelo")) { return MoCreatures.nunchaku; }
-        return MoCreatures.turtlemeat;
+        return MoCreatures.turtleraw;
     }
 
     /**

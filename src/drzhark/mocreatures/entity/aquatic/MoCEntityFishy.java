@@ -112,7 +112,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
             int j = rand.nextInt(2);
             for (int k = 0; k < j; k++)
             {
-                entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, getType()), 0.0F);
+                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType()), 0.0F);
             }
 
         }

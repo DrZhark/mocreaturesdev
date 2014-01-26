@@ -347,7 +347,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
 
         if (flag && (this.getType() == 36 || (this.getType() >=50 && this.getType() < 60))) //unicorn
         {
-            return MoCreatures.unicorn;
+            return MoCreatures.unicornhorn;
         }
         if (this.getType() == 39) //pegasus
         {

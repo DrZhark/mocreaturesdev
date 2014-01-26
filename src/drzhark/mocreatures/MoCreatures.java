@@ -179,7 +179,6 @@ public class MoCreatures {
      * ITEMS
      */
     static int MoCEggID;// = 7772;
-    static int MoCItemID;// = 8772;
     static int MoCEntityID = 7256; // used internally, does not need to be configured by users
     public static int WyvernLairDimensionID; //17;
 
@@ -197,7 +196,7 @@ public class MoCreatures {
     public static Item staffTeleport;
     public static Item builderHammer;
 
-    static ArmorMaterial crocARMOR = EnumHelper.addArmorMaterial("crocARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
+    static ArmorMaterial scorpARMOR = EnumHelper.addArmorMaterial("crocARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
     static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
     static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
     static ArmorMaterial scorpdARMOR = EnumHelper.addArmorMaterial("scorpdARMOR", 15, new int[] { 2, 6, 5, 2 }, 12);
@@ -212,7 +211,7 @@ public class MoCreatures {
     public static Item sharkteeth;
     public static Item haystack;
     public static Item sugarlump;
-    public static Item fishyegg;
+    public static Item mocegg;
     public static Item bigcatclaw;
     public static Item whip;
     //public static Item horsearmorgold;
@@ -225,7 +224,7 @@ public class MoCreatures {
     //public static Item rope;
     public static Item petfood;
     public static Item staffdiamond;
-    public static Item crochide;
+    public static Item hideCroc;
     public static Item plateCroc;
     public static Item helmetCroc;
     public static Item legsCroc;
@@ -245,7 +244,7 @@ public class MoCreatures {
 
     public static Item fur;
     public static Item omelet;
-    public static Item turtlemeat;
+    public static Item turtleraw;
     public static Item turtlesoup;
 
     public static Item nunchaku;
@@ -253,11 +252,11 @@ public class MoCreatures {
     public static Item bo;
     public static Item katana;
     public static Item sharksword;
-    public static Item swordsilver;
+    public static Item silversword;
 
     public static Item key;
-    public static Item vialdarkness;
-    public static Item vialnightmare;
+    public static Item essencedarkness;
+    public static Item essencefire;
     public static Item amuletbone;
     public static Item amuletbonefull;
     public static Item amuletghost;
@@ -267,8 +266,8 @@ public class MoCreatures {
     public static Item amuletpegasus;
     public static Item amuletpegasusfull;
 
-    public static Item vialundead;
-    public static Item viallight;
+    public static Item essenceundead;
+    public static Item essencelight;
 
     public static Item plateFur;
     public static Item helmetFur;
@@ -278,9 +277,9 @@ public class MoCreatures {
     public static Item heartdarkness;
     public static Item heartfire;
     public static Item heartundead;
-    public static Item ostrichmeat;
+    public static Item ostrichraw;
     public static Item ostrichcooked;
-    public static Item unicorn;
+    public static Item unicornhorn;
     public static Item staff;
     public static Item staffender;
     public static Item horsearmorcrystal;
@@ -300,52 +299,52 @@ public class MoCreatures {
     public static Item chitinCave;
     public static Item chitinFrost;
     public static Item chitinNether;
-    public static Item chitinDirt;
+    public static Item chitin;
 
-    public static Item swordDirt;
-    public static Item swordFrost;
-    public static Item swordCave;
-    public static Item swordNether;
+    public static Item scorpSword;
+    public static Item scorpSwordFrost;
+    public static Item scorpSwordCave;
+    public static Item scorpSwordNether;
 
-    public static Item plateScorpDirt;
-    public static Item helmetScorpDirt;
-    public static Item legsScorpDirt;
-    public static Item bootsScorpDirt;
-    public static Item plateScorpFrost;
-    public static Item helmetScorpFrost;
-    public static Item legsScorpFrost;
-    public static Item bootsScorpFrost;
-    public static Item plateScorpNether;
-    public static Item helmetScorpNether;
-    public static Item legsScorpNether;
-    public static Item bootsScorpNether;
-    public static Item helmetScorpCave;
-    public static Item plateScorpCave;
-    public static Item legsScorpCave;
-    public static Item bootsScorpCave;
+    public static Item scorpPlate;
+    public static Item scorpHelmet;
+    public static Item scorpLegs;
+    public static Item scorpBoots;
+    public static Item scorpPlateFrost;
+    public static Item scorpHelmetFrost;
+    public static Item scorpLegsFrost;
+    public static Item scorpBootsFrost;
+    public static Item scorpPlateNether;
+    public static Item scorpHelmetNether;
+    public static Item scorpLegsNether;
+    public static Item scorpBootsNether;
+    public static Item scorpHelmetCave;
+    public static Item scorpPlateCave;
+    public static Item scorpLegsCave;
+    public static Item scorpBootsCave;
 
-    public static Item stingDirt;
-    public static Item stingFrost;
-    public static Item stingCave;
-    public static Item stingNether;
+    public static Item scorpSting;
+    public static Item scorpStingFrost;
+    public static Item scorpStingCave;
+    public static Item scorpStingNether;
 
-    public static Item woodTusks;
-    public static Item ironTusks;
-    public static Item diamondTusks;
-    public static Item chestSet;
-    public static Item garment;
-    public static Item harness;
-    public static Item howdah;
-    public static Item platform;
+    public static Item tusksWood;
+    public static Item tusksIron;
+    public static Item tusksDiamond;
+    public static Item elephantChest;
+    public static Item elephantGarment;
+    public static Item elephantHarness;
+    public static Item elephantHowdah;
+    public static Item mammothPlatform;
     
     public static Item scrollFreedom;
     public static Item scrollOfSale;
     public static Item scrollOfOwner;
-    public static Item crabmeat;
-    public static Item crabmeatcooked;
+    public static Item crabraw;
+    public static Item crabcooked;
 
     public static Item fishnet;
-    public static Item superAmulet;
+    public static Item petamulet;
 
     public static MoCPlayerTracker tracker;
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
@@ -643,34 +642,26 @@ public class MoCreatures {
         recordshuffle = new MoCItemRecord("recordshuffle");
         horsesaddle = new MoCItemHorseSaddle("horsesaddle");
 
-        //horsearmormetal = (new MoCItem(MoCItemID++)).setUnlocalizedName("armormetal");
         sharkteeth = new MoCItem("sharkteeth");
         haystack = new MoCItemHayStack("haystack");
         sugarlump = new MoCItemSugarLump("sugarlump");
-        fishyegg = new MoCItemEgg("moc_egg");
+        mocegg = new MoCItemEgg("mocegg");
         bigcatclaw = new MoCItem("bigcatclaw");
         whip = new MoCItemWhip("whip");
 
-        //horsearmorgold = (new MoCItem(MoCItemID++)).setUnlocalizedName("armorgold");
-        //horsearmordiamond = (new MoCItem(MoCItemID++)).setUnlocalizedName("armordiamond");
-        staffTeleport = new ItemStaffTeleport("staffteleport");
-        LanguageRegistry.addName(staffTeleport, "Teleport Staff");
-
         medallion = new MoCItem("medallion");
-        kittybed = new MoCItemKittyBed("catbed");
-        litterbox = new MoCItemLitterBox("catlitter");
+        kittybed = new MoCItemKittyBed("kittybed");
+        litterbox = new MoCItemLitterBox("kittylitter");
         woolball = new MoCItem("woolball");
 
-        //rope = (new MoCItem(MoCItemID++)).setUnlocalizedName("rope");
         petfood = new MoCItem("petfood");
         builderHammer = new ItemBuilderHammer("builderhammer");
-        LanguageRegistry.addName(builderHammer, "Builder Hammer");
 
-        crochide = new MoCItem("reptilehide");
-        plateCroc = new MoCItemArmor("reptileplat", crocARMOR, 4, 1);
-        helmetCroc = new MoCItemArmor("reptilehelmet", crocARMOR, 4, 0);
-        legsCroc = new MoCItemArmor("reptilelegs", crocARMOR, 4, 2);
-        bootsCroc = new MoCItemArmor("reptileboots", crocARMOR, 4, 3);
+        hideCroc = new MoCItem("reptilehide");
+        plateCroc = new MoCItemArmor("reptileplat", scorpARMOR, 4, 1);
+        helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, 0);
+        legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, 2);
+        bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, 3);
         fishbowl_e = new MoCItemFishBowl("bowlempty", 0);
         fishbowl_w = new MoCItemFishBowl("bowlwater", 11);
         fishbowl_1 = new MoCItemFishBowl("bowlfish1", 1);
@@ -686,18 +677,18 @@ public class MoCreatures {
 
         fur = new MoCItem("fur");
         omelet = new MoCItemFood("omelet", 4, 0.6F, false);
-        turtlemeat = new MoCItemFood("turtlemeat", 2, 0.3F, false);
+        turtleraw = new MoCItemFood("turtleraw", 2, 0.3F, false);
         turtlesoup = new MoCItemTurtleSoup("turtlesoup", 6, 0.6F, false);
 
         nunchaku = new MoCItemWeapon("nunchaku", ToolMaterial.IRON);
         sai = new MoCItemWeapon("sai", ToolMaterial.IRON);
         bo = new MoCItemWeapon("bo", ToolMaterial.IRON);
         katana = new MoCItemWeapon("katana", ToolMaterial.IRON);
-        sharksword = new MoCItemWeapon("swordshark", ToolMaterial.IRON);
+        sharksword = new MoCItemWeapon("sharksword", ToolMaterial.IRON);
 
         key = new MoCItem("key");
-        vialdarkness = new MoCItem("essencedarkness");
-        vialnightmare = new MoCItem("essencefire");
+        essencedarkness = new MoCItem("essencedarkness");
+        essencefire = new MoCItem("essencefire");
         amuletbone = new MoCItemHorseAmulet("amuletbone");
         amuletbonefull = new MoCItemHorseAmulet("amuletbonefull");
         amuletghost = new MoCItemHorseAmulet("amuletghost");
@@ -707,8 +698,8 @@ public class MoCreatures {
         amuletpegasus = new MoCItemHorseAmulet("amuletpegasus");
         amuletpegasusfull = new MoCItemHorseAmulet("amuletpegasusfull");
 
-        vialundead = new MoCItem("essenceundead");
-        viallight = new MoCItem("essencelight");
+        essenceundead = new MoCItem("essenceundead");
+        essencelight = new MoCItem("essencelight");
 
         plateFur = new MoCItemArmor("furplate", furARMOR, 4, 1);
         helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, 0);
@@ -718,14 +709,12 @@ public class MoCreatures {
         heartdarkness = new MoCItem("heartdarkness");
         heartfire = new MoCItem("heartfire");
         heartundead = new MoCItem("heartundead");
-        ostrichmeat = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        ostrichraw = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
         ostrichcooked = new MoCItemFood("ostrichcooked", 6, 0.6F, false);
-        unicorn = new MoCItem("unicorn");
+        unicornhorn = new MoCItem("unicornhorn");
 
         fishnet = new MoCItemPetAmulet("fishnet");
-        MoCItemID++;
         horsearmorcrystal = new MoCItem("armorcrystal");
-        MoCItemID++;
 
         rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
         cookedTurkey = new MoCItemFood("turkeycooked", 8, 0.6F, false);
@@ -741,63 +730,61 @@ public class MoCreatures {
         chitinCave = new MoCItem("chitinblack");
         chitinFrost = new MoCItem("chitinfrost");
         chitinNether = new MoCItem("chitinnether");
-        chitinDirt = new MoCItem("chitin");
+        chitin = new MoCItem("chitin");
 
-        swordCave = new MoCItemWeapon("swordscorpioncave", ToolMaterial.IRON, 4, false);
-        swordFrost = new MoCItemWeapon("swordscorpionfrost", ToolMaterial.IRON, 2, false);
-        swordNether = new MoCItemWeapon("swordscorpionnether", ToolMaterial.IRON, 3, false);
-        swordDirt = new MoCItemWeapon("swordscorpion", ToolMaterial.IRON, 1, false);
+        scorpSwordCave = new MoCItemWeapon("scorpswordcave", ToolMaterial.IRON, 4, false);
+        scorpSwordFrost = new MoCItemWeapon("scorpswordfrost", ToolMaterial.IRON, 2, false);
+        scorpSwordNether = new MoCItemWeapon("scorpswordnether", ToolMaterial.IRON, 3, false);
+        scorpSword = new MoCItemWeapon("scorpsword", ToolMaterial.IRON, 1, false);
 
-        plateScorpDirt = new MoCItemArmor("scorpplatedirt", crocARMOR, 4, 1);
-        helmetScorpDirt = new MoCItemArmor("scorphelmetdirt", crocARMOR, 4, 0);
-        legsScorpDirt = new MoCItemArmor("scorplegsdirt", crocARMOR, 4, 2);
-        bootsScorpDirt = new MoCItemArmor("scorpbootsdirt", crocARMOR, 4, 3);
+        scorpPlate = new MoCItemArmor("scorpplate", scorpARMOR, 4, 1);
+        scorpHelmet = new MoCItemArmor("scorphelmet", scorpARMOR, 4, 0);
+        scorpLegs = new MoCItemArmor("scorplegs", scorpARMOR, 4, 2);
+        scorpBoots = new MoCItemArmor("scorpboots", scorpARMOR, 4, 3);
 
-        plateScorpFrost = new MoCItemArmor("scorpplatefrost", crocARMOR, 4, 1);
-        helmetScorpFrost = new MoCItemArmor("scorphelmetfrost", crocARMOR, 4, 0);
-        legsScorpFrost = new MoCItemArmor("scorplegsfrost", crocARMOR, 4, 2);
-        bootsScorpFrost = new MoCItemArmor("scorpbootsfrost", crocARMOR, 4, 3);
+        scorpPlateFrost = new MoCItemArmor("scorpplatefrost", scorpARMOR, 4, 1);
+        scorpHelmetFrost = new MoCItemArmor("scorphelmetfrost", scorpARMOR, 4, 0);
+        scorpLegsFrost = new MoCItemArmor("scorplegsfrost", scorpARMOR, 4, 2);
+        scorpBootsFrost = new MoCItemArmor("scorpbootsfrost", scorpARMOR, 4, 3);
 
-        plateScorpCave = new MoCItemArmor("scorpplatecave", crocARMOR, 4, 1);
-        helmetScorpCave = new MoCItemArmor("scorphelmetcave", crocARMOR, 4, 0);
-        legsScorpCave = new MoCItemArmor("scorplegscave", crocARMOR, 4, 2);
-        bootsScorpCave = new MoCItemArmor("scorpbootscave", crocARMOR, 4, 3);
+        scorpPlateCave = new MoCItemArmor("scorpplatecave", scorpARMOR, 4, 1);
+        scorpHelmetCave = new MoCItemArmor("scorphelmetcave", scorpARMOR, 4, 0);
+        scorpLegsCave = new MoCItemArmor("scorplegscave", scorpARMOR, 4, 2);
+        scorpBootsCave = new MoCItemArmor("scorpbootscave", scorpARMOR, 4, 3);
 
-        plateScorpNether = new MoCItemArmor("scorpplatenether", crocARMOR, 4, 1);
-        helmetScorpNether = new MoCItemArmor("scorphelmetnether", crocARMOR, 4, 0);
-        legsScorpNether = new MoCItemArmor("scorplegsnether", crocARMOR, 4, 2);
-        bootsScorpNether = new MoCItemArmor("scorpbootsnether", crocARMOR, 4, 3);
+        scorpPlateNether = new MoCItemArmor("scorpplatenether", scorpARMOR, 4, 1);
+        scorpHelmetNether = new MoCItemArmor("scorphelmetnether", scorpARMOR, 4, 0);
+        scorpLegsNether = new MoCItemArmor("scorplegsnether", scorpARMOR, 4, 2);
+        scorpBootsNether = new MoCItemArmor("scorpbootsnether", scorpARMOR, 4, 3);
 
-        stingCave = new MoCItemWeapon("stingcave", ToolMaterial.GOLD, 4, true);
-        stingFrost = new MoCItemWeapon("stingfrost", ToolMaterial.GOLD, 2, true);
-        stingNether = new MoCItemWeapon("stingnether", ToolMaterial.GOLD, 3, true);
-        stingDirt = new MoCItemWeapon("stingdirt", ToolMaterial.GOLD, 1, true);
+        scorpStingCave = new MoCItemWeapon("scorpstingcave", ToolMaterial.GOLD, 4, true);
+        scorpStingFrost = new MoCItemWeapon("scorpstingfrost", ToolMaterial.GOLD, 2, true);
+        scorpStingNether = new MoCItemWeapon("scorpstingnether", ToolMaterial.GOLD, 3, true);
+        scorpSting = new MoCItemWeapon("scorpsting", ToolMaterial.GOLD, 1, true);
 
         scrollFreedom = new MoCItem("scrolloffreedom");
         scrollOfSale = new MoCItem("scrollofsale");
-        
-        woodTusks = new MoCItemWeapon("tuskswood", ToolMaterial.WOOD);
-        ironTusks = new MoCItemWeapon("tusksiron", ToolMaterial.IRON);
-        diamondTusks = new MoCItemWeapon("tusksdiamond", ToolMaterial.EMERALD);
-        harness = new MoCItem("elephantharness");
-        chestSet = new MoCItem("elephantchest");
-        garment = new MoCItem("elephantgarment");
-        howdah = new MoCItem("elephanthowdah");
-        platform = new MoCItem("elephantplatform");
-        
-        crabmeat = new MoCItemFood("crabmeat", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
-        crabmeatcooked = new MoCItemFood("crabmeatcooked", 6, 0.6F, false);
-        swordsilver = new MoCItemWeapon("swordsilver", this.SILVER);
-        
+
+        tusksWood = new MoCItemWeapon("tuskswood", ToolMaterial.WOOD);
+        tusksIron = new MoCItemWeapon("tusksiron", ToolMaterial.IRON);
+        tusksDiamond = new MoCItemWeapon("tusksdiamond", ToolMaterial.EMERALD);
+        elephantHarness = new MoCItem("elephantharness");
+        elephantChest = new MoCItem("elephantchest");
+        elephantGarment = new MoCItem("elephantgarment");
+        elephantHowdah = new MoCItem("elephanthowdah");
+        mammothPlatform = new MoCItem("mammothplatform");
+
+        crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        crabcooked = new MoCItemFood("crabcooked", 6, 0.6F, false);
+        silversword = new MoCItemWeapon("silversword", this.SILVER);
+
         multiBlockNames.add ("WyvernLair");
         multiBlockNames.add("OgreLair");
-        
+
         staffPortal = new ItemStaffPortal("staffportal");
-        LanguageRegistry.addName(staffPortal, "Wyvern Portal Staff");
-        
+        staffTeleport = new ItemStaffTeleport("staffteleport");
         scrollOfOwner = new MoCItem("scrollofowner");
-        
-        superAmulet = new MoCItemPetAmulet("superamulet", 1);
+        petamulet = new MoCItemPetAmulet("petamulet", 1);
 
         //new blocks
         mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundTypeStone);
@@ -809,218 +796,79 @@ public class MoCreatures {
         mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F).setStepSound(Block.soundTypeGrass);     
         mocPlank = new MoCBlockPlanks("MoCWoodPlank").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood);
 
-      //wyvern lair block harvest settings
+        //wyvern lair block harvest settings
         mocDirt.setHarvestLevel("shovel", 0, 0); 
         mocGrass.setHarvestLevel("shovel", 0, 0); 
         mocStone.setHarvestLevel("pickaxe", 1, 0);
-        
-        LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
+
         proxy.mocSettingsConfig.save();
     }
 
     private void AddNames()
     {
-        LanguageRegistry.addName(horsesaddle, "Crafted Saddle");
-        LanguageRegistry.addName(sharkteeth, "Shark Teeth");
-        LanguageRegistry.addName(haystack, "Hay Stack");
-        LanguageRegistry.addName(sugarlump, "Sugar Lump");
-        LanguageRegistry.addName(bigcatclaw, "BigCat Claw");
-        LanguageRegistry.addName(whip, "Whip");
-        LanguageRegistry.addName(medallion, "Medallion");
-        LanguageRegistry.addName(kittybed, "Kitty Bed");
-        LanguageRegistry.addName(litterbox, "Litter Box");
-        LanguageRegistry.addName(woolball, "Wool Ball");
-        LanguageRegistry.addName(petfood, "Pet Food");
-        //LanguageRegistry.addName(rope, "Rope");
-        LanguageRegistry.addName(crochide, "Reptile Hide");
-        LanguageRegistry.addName(plateCroc, "Reptile Plate");
-        LanguageRegistry.addName(helmetCroc, "Reptile Helmet");
-        LanguageRegistry.addName(bootsCroc, "Reptile Boots");
-        LanguageRegistry.addName(legsCroc, "Reptile Legs");
-        LanguageRegistry.addName(fishbowl_e, "Empty FishBowl");
-        LanguageRegistry.addName(fishbowl_w, "Full FishBowl");
-        LanguageRegistry.addName(fishbowl_1, "FishBowl");
-        LanguageRegistry.addName(fishbowl_2, "FishBowl");
-        LanguageRegistry.addName(fishbowl_3, "FishBowl");
-        LanguageRegistry.addName(fishbowl_4, "FishBowl");
-        LanguageRegistry.addName(fishbowl_5, "FishBowl");
-        LanguageRegistry.addName(fishbowl_6, "FishBowl");
-        LanguageRegistry.addName(fishbowl_7, "FishBowl");
-        LanguageRegistry.addName(fishbowl_8, "FishBowl");
-        LanguageRegistry.addName(fishbowl_9, "FishBowl");
-        LanguageRegistry.addName(fishbowl_10, "FishBowl");
-
-        LanguageRegistry.addName(fur, "Fur");
-        LanguageRegistry.addName(omelet, "Omelet");
-        LanguageRegistry.addName(turtlemeat, "Turtle Meat");
-        LanguageRegistry.addName(turtlesoup, "Turtle Soup");
-
-        LanguageRegistry.addName(nunchaku, "Nunchaku");
-        LanguageRegistry.addName(sai, "Sai");
-        LanguageRegistry.addName(bo, "Bo");
-        LanguageRegistry.addName(katana, "Katana");
-        LanguageRegistry.addName(sharksword, "Shark Sword");
-
-        LanguageRegistry.addName(key, "Key");
-        LanguageRegistry.addName(vialdarkness, "Essence of Darkness");
-        LanguageRegistry.addName(vialnightmare, "Essence of Fire");
-        LanguageRegistry.addName(vialundead, "Essence of Undead");
-        LanguageRegistry.addName(viallight, "Essence of Light");
-        LanguageRegistry.addName(amuletbone, "Bone Amulet");
-        LanguageRegistry.addName(amuletbonefull, "Bone Amulet");
-        LanguageRegistry.addName(amuletghost, "Ghost Amulet");
-        LanguageRegistry.addName(amuletghostfull, "Ghost Amulet");
-        LanguageRegistry.addName(amuletfairy, "Fairy Amulet");
-        LanguageRegistry.addName(amuletfairyfull, "Fairy Amulet");
-        LanguageRegistry.addName(amuletpegasus, "Sky Amulet");
-        LanguageRegistry.addName(amuletpegasusfull, "Sky Amulet");
-        LanguageRegistry.addName(recordshuffle, "Zebra Record");
-        LanguageRegistry.addName(sharksword, "Shark Sword");
-
-        LanguageRegistry.addName(plateFur, "Fur Plate");
-        LanguageRegistry.addName(helmetFur, "Fur Helmet");
-        LanguageRegistry.addName(bootsFur, "Fur Boots");
-        LanguageRegistry.addName(legsFur, "Fur Legs");
-
-        LanguageRegistry.addName(heartdarkness, "Heart of Darkness");
-        LanguageRegistry.addName(heartfire, "Heart of Fire");
-        LanguageRegistry.addName(heartundead, "Heart of Undead");
-        LanguageRegistry.addName(ostrichmeat, "Ostrich meat");
-        LanguageRegistry.addName(ostrichcooked, "Ostrich cooked");
-        LanguageRegistry.addName(crabmeat, "Crab meat");
-        LanguageRegistry.addName(crabmeatcooked, "Crab cooked");
-        LanguageRegistry.addName(unicorn, "Unicorn Horn");
-
-        //LanguageRegistry.addName(horsearmormetal, "Iron Mount Armor");
-        // LanguageRegistry.addName(horsearmorgold, "Gold Mount Armor");
-        //LanguageRegistry.addName(horsearmordiamond, "Diamond Mount Armor");
-        LanguageRegistry.addName(horsearmorcrystal, "Crystal Mount Armor");
-
-        LanguageRegistry.addName(animalHide, "Hide");
-        LanguageRegistry.addName(rawTurkey, "Raw Turkey");
-        LanguageRegistry.addName(cookedTurkey, "Cooked Turkey");
-        LanguageRegistry.addName(plateHide, "Hide Plate");
-        LanguageRegistry.addName(helmetHide, "Hide Helmet");
-        LanguageRegistry.addName(bootsHide, "Hide Boots");
-        LanguageRegistry.addName(legsHide, "Hide Legs");
-        LanguageRegistry.addName(ratRaw, "Raw Rat");
-        LanguageRegistry.addName(ratCooked, "Cooked Rat");
-        LanguageRegistry.addName(ratBurger, "Rat Burger");
-
-        LanguageRegistry.addName(chitinCave, "Black Chitin");
-        LanguageRegistry.addName(chitinFrost, "Frost Chitin");
-        LanguageRegistry.addName(chitinNether, "Nether Chitin");
-        LanguageRegistry.addName(chitinDirt, "Chitin");
-        LanguageRegistry.addName(swordDirt, "Scorpion Sword");
-        LanguageRegistry.addName(swordFrost, "Frost Scorpion Sword");
-        LanguageRegistry.addName(swordCave, "Cave Scorpion Sword");
-        LanguageRegistry.addName(swordNether, "Nether Scorpion Sword");
-        LanguageRegistry.addName(swordsilver, "Silver Skeleton Sword");
-
-        LanguageRegistry.addName(plateScorpDirt, "Scorpion Plate");
-        LanguageRegistry.addName(helmetScorpDirt, "Scorpion Helmet");
-        LanguageRegistry.addName(legsScorpDirt, "Scorpion Legs");
-        LanguageRegistry.addName(bootsScorpDirt, "Scorpion Boots");
-
-        LanguageRegistry.addName(plateScorpFrost, "Frost Scorpion Plate");
-        LanguageRegistry.addName(helmetScorpFrost, "Frost Scorpion Helmet");
-        LanguageRegistry.addName(legsScorpFrost, "Frost Scorpion Legs");
-        LanguageRegistry.addName(bootsScorpFrost, "Frost Scorpion Boots");
-
-        LanguageRegistry.addName(plateScorpCave, "Cave Scorpion Plate");
-        LanguageRegistry.addName(helmetScorpCave, "Cave Scorpion Helmet");
-        LanguageRegistry.addName(legsScorpCave, "Cave Scorpion Legs");
-        LanguageRegistry.addName(bootsScorpCave, "Cave Scorpion Boots");
-
-        LanguageRegistry.addName(plateScorpNether, "Nether Scorpion Plate");
-        LanguageRegistry.addName(helmetScorpNether, "Nether Scorpion Helmet");
-        LanguageRegistry.addName(legsScorpNether, "Nether Scorpion Legs");
-        LanguageRegistry.addName(bootsScorpNether, "Nether Scorpion Boots");
-
-        LanguageRegistry.addName(stingCave, "Cave Scorpion Sting");
-        LanguageRegistry.addName(stingFrost, "Frost Scorpion Sting");
-        LanguageRegistry.addName(stingNether, "Nether Scorpion Sting");
-        LanguageRegistry.addName(stingDirt, "Scorpion Sting");
-        LanguageRegistry.addName(fishyegg, "Spoiled Egg");
-        
-        LanguageRegistry.addName(scrollFreedom, "Scroll of Freedom");
-        LanguageRegistry.addName(scrollOfSale, "Scroll of Sale");
-        LanguageRegistry.addName(scrollOfOwner, "Scroll of Reset Owner");
-
-        LanguageRegistry.addName(woodTusks, "Wood Tusks");
-        LanguageRegistry.addName(ironTusks, "Iron Tusks");
-        LanguageRegistry.addName(diamondTusks, "Diamond Tusks");
-        LanguageRegistry.addName(harness, "Elephant Harness");
-        LanguageRegistry.addName(chestSet, "Chest Set");
-        LanguageRegistry.addName(howdah, "Elephant Howdah");
-        LanguageRegistry.addName(garment, "Elephant Garment");
-        LanguageRegistry.addName(platform, "Mammoth Platform");
-        LanguageRegistry.addName(fishnet, "Fish Net");
-        LanguageRegistry.addName(superAmulet, "Pet Amulet");
-
         for (int i = 0; i < 91; i++)
         {
             String s;
             if (i > 0 && i < 10)
             {
                 s = MoCEntityFishy.fishNames[i - 1];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Fish Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Fish Egg"));
             }
             else if (i == 11)
             {
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), ("Shark Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Shark Egg"));
             }
             else if (i > 20 && i < 29)
             {
                 s = MoCEntitySnake.snakeNames[i - 21];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Snake Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Snake Egg"));
             }
             else if (i == 30 || i == 31)
             {
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), ("Ostrich Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Ostrich Egg"));
             }
             else if (i == 33)
             {
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), "Komodo Dragon Egg");
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), "Komodo Dragon Egg");
             }
             else if (i > 40 && i < 46)
             {
                 s = MoCEntityPetScorpion.scorpionNames[i - 41];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Scorpion Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Scorpion Egg"));
             }
             else if (i > 49 && i < 62)
             {
                 s = MoCEntityWyvern.wyvernNames[i - 50];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Wyvern Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Wyvern Egg"));
             }
             else if (i > 69 && i < (70 + MoCEntityMediumFish.fishNames.length))
             {
                 s = MoCEntityMediumFish.fishNames[i - 70];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Egg"));
             }
             else if (i > 79 && i < (80 + MoCEntitySmallFish.fishNames.length))
             {
                 s = MoCEntitySmallFish.fishNames[i - 80];
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), (s + " Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), (s + " Egg"));
             }
             else if (i == 90)
             {
-                LanguageRegistry.addName(new ItemStack(fishyegg, 1, i), ("Piranha Egg"));
+                LanguageRegistry.addName(new ItemStack(mocegg, 1, i), ("Piranha Egg"));
             }
         }
     }
 
     private void AddRecipes()
     {
-        GameRegistry.addSmelting(MoCreatures.crabmeat, new ItemStack(MoCreatures.crabmeatcooked, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.crabraw, new ItemStack(MoCreatures.crabcooked, 1), 0F);
         
         GameRegistry.addSmelting(MoCreatures.ratRaw, new ItemStack(MoCreatures.ratCooked, 1), 0F);
 
-        GameRegistry.addSmelting(MoCreatures.ostrichmeat, new ItemStack(MoCreatures.ostrichcooked, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.ostrichraw, new ItemStack(MoCreatures.ostrichcooked, 1), 0F);
 
         GameRegistry.addSmelting(MoCreatures.rawTurkey, new ItemStack(MoCreatures.cookedTurkey, 1), 0F);
 
-        GameRegistry.addSmelting(MoCreatures.fishyegg, new ItemStack(MoCreatures.omelet, 1), 0F);
+        GameRegistry.addSmelting(MoCreatures.mocegg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
         GameRegistry.addSmelting(Items.egg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
@@ -1035,35 +883,35 @@ public class MoCreatures {
 
         GameRegistry.addShapelessRecipe(new ItemStack(Blocks.wool, 1), new Object[] { fur });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordNether, 1), new Object[] { Items.diamond_sword, stingNether, stingNether, stingNether });
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordNether, 1), new Object[] { Items.diamond_sword, scorpStingNether, scorpStingNether, scorpStingNether });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordFrost, 1), new Object[] { Items.diamond_sword, stingFrost, stingFrost, stingFrost });
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordFrost, 1), new Object[] { Items.diamond_sword, scorpStingFrost, scorpStingFrost, scorpStingFrost });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordCave, 1), new Object[] { Items.diamond_sword, stingCave, stingCave, stingCave });
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordCave, 1), new Object[] { Items.diamond_sword, scorpStingCave, scorpStingCave, scorpStingCave });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(swordDirt, 1), new Object[] { Items.diamond_sword, stingDirt, stingDirt, stingDirt });
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSword, 1), new Object[] { Items.diamond_sword, scorpSting, scorpSting, scorpSting });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] { new ItemStack(turtlemeat, 1), new ItemStack(Items.bowl, 1) });
+        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] { new ItemStack(turtleraw, 1), new ItemStack(Items.bowl, 1) });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(viallight, 1), new Object[] { vialundead, vialnightmare, vialdarkness });
+        GameRegistry.addShapelessRecipe(new ItemStack(essencelight, 1), new Object[] { essenceundead, essencefire, essencedarkness });
 
         GameRegistry.addRecipe(new ItemStack(fishnet, 1), new Object[] { " # ", "S#S", "#S#", Character.valueOf('#'), Items.string, Character.valueOf('S'), sharkteeth });
         
-        GameRegistry.addRecipe(new ItemStack(woodTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Blocks.planks, Character.valueOf('R'), Items.lead  });
+        GameRegistry.addRecipe(new ItemStack(tusksWood, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Blocks.planks, Character.valueOf('R'), Items.lead  });
         
-        GameRegistry.addRecipe(new ItemStack(ironTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.iron_ingot, Character.valueOf('R'), Items.lead });
+        GameRegistry.addRecipe(new ItemStack(tusksIron, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.iron_ingot, Character.valueOf('R'), Items.lead });
         
-        GameRegistry.addRecipe(new ItemStack(diamondTusks, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.diamond, Character.valueOf('R'), Items.lead });
+        GameRegistry.addRecipe(new ItemStack(tusksDiamond, 1), new Object[] { "X  ", "XR ", "XXX", Character.valueOf('X'), Items.diamond, Character.valueOf('R'), Items.lead });
         
-        GameRegistry.addRecipe(new ItemStack(platform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.lead ,  Character.valueOf('P'), Blocks.planks});
+        GameRegistry.addRecipe(new ItemStack(mammothPlatform, 1), new Object[] { "WRW", "PPP", "WRW",  Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.lead ,  Character.valueOf('P'), Blocks.planks});
         
-        GameRegistry.addRecipe(new ItemStack(chestSet, 1), new Object[] { " W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('C'), Blocks.chest });
+        GameRegistry.addRecipe(new ItemStack(elephantChest, 1), new Object[] { " W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('C'), Blocks.chest });
         
-        GameRegistry.addRecipe(new ItemStack(harness, 1), new Object[] { "HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('I'), Items.iron_ingot });
+        GameRegistry.addRecipe(new ItemStack(elephantHarness, 1), new Object[] { "HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0), Character.valueOf('I'), Items.iron_ingot });
         
-        GameRegistry.addRecipe(new ItemStack(howdah, 1), new Object[] { "SRS", "RYR", "SRS", Character.valueOf('S'), Items.stick, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4) });
+        GameRegistry.addRecipe(new ItemStack(elephantHowdah, 1), new Object[] { "SRS", "RYR", "SRS", Character.valueOf('S'), Items.stick, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4) });
 
-        GameRegistry.addRecipe(new ItemStack(garment, 1), new Object[] { "pyg", "RMR", "BYB", Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4), 
+        GameRegistry.addRecipe(new ItemStack(elephantGarment, 1), new Object[] { "pyg", "RMR", "BYB", Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4), 
         Character.valueOf('B'), new ItemStack(Blocks.wool, 1, 11), Character.valueOf('M'), medallion,
         Character.valueOf('p'), new ItemStack(Items.dye, 1, 9), Character.valueOf('y'), new ItemStack(Items.dye, 1, 11),
         Character.valueOf('g'), new ItemStack(Items.dye, 1, 10)
@@ -1072,37 +920,37 @@ public class MoCreatures {
         //Items.dye.itemID
         GameRegistry.addRecipe(new ItemStack(ratBurger, 1), new Object[] { "SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.bread, Character.valueOf('S'), Items.pumpkin_seeds, Character.valueOf('G'), Items.wheat_seeds });
 
-        GameRegistry.addRecipe(new ItemStack(plateScorpFrost, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinFrost });
+        GameRegistry.addRecipe(new ItemStack(scorpPlateFrost, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinFrost });
 
-        GameRegistry.addRecipe(new ItemStack(helmetScorpFrost, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinFrost });
+        GameRegistry.addRecipe(new ItemStack(scorpHelmetFrost, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinFrost });
 
-        GameRegistry.addRecipe(new ItemStack(legsScorpFrost, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinFrost });
+        GameRegistry.addRecipe(new ItemStack(scorpLegsFrost, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinFrost });
 
-        GameRegistry.addRecipe(new ItemStack(bootsScorpFrost, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinFrost });
+        GameRegistry.addRecipe(new ItemStack(scorpBootsFrost, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinFrost });
 
-        GameRegistry.addRecipe(new ItemStack(plateScorpNether, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinNether });
+        GameRegistry.addRecipe(new ItemStack(scorpPlateNether, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinNether });
 
-        GameRegistry.addRecipe(new ItemStack(helmetScorpNether, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinNether });
+        GameRegistry.addRecipe(new ItemStack(scorpHelmetNether, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinNether });
 
-        GameRegistry.addRecipe(new ItemStack(legsScorpNether, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinNether });
+        GameRegistry.addRecipe(new ItemStack(scorpLegsNether, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinNether });
 
-        GameRegistry.addRecipe(new ItemStack(bootsScorpNether, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinNether });
+        GameRegistry.addRecipe(new ItemStack(scorpBootsNether, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinNether });
 
-        GameRegistry.addRecipe(new ItemStack(plateScorpCave, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinCave });
+        GameRegistry.addRecipe(new ItemStack(scorpPlateCave, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinCave });
 
-        GameRegistry.addRecipe(new ItemStack(helmetScorpCave, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinCave });
+        GameRegistry.addRecipe(new ItemStack(scorpHelmetCave, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinCave });
 
-        GameRegistry.addRecipe(new ItemStack(legsScorpCave, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinCave });
+        GameRegistry.addRecipe(new ItemStack(scorpLegsCave, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinCave });
 
-        GameRegistry.addRecipe(new ItemStack(bootsScorpCave, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinCave });
+        GameRegistry.addRecipe(new ItemStack(scorpBootsCave, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinCave });
 
-        GameRegistry.addRecipe(new ItemStack(plateScorpDirt, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitinDirt });
+        GameRegistry.addRecipe(new ItemStack(scorpPlate, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(helmetScorpDirt, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitinDirt });
+        GameRegistry.addRecipe(new ItemStack(scorpHelmet, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(legsScorpDirt, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitinDirt });
+        GameRegistry.addRecipe(new ItemStack(scorpLegs, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), chitin });
 
-        GameRegistry.addRecipe(new ItemStack(bootsScorpDirt, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitinDirt });
+        GameRegistry.addRecipe(new ItemStack(scorpBoots, 1), new Object[] { "X X", "X X", Character.valueOf('X'), chitin });
 
         GameRegistry.addRecipe(new ItemStack(plateHide, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), animalHide });
 
@@ -1120,15 +968,15 @@ public class MoCreatures {
 
         //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 11) });
 
-        GameRegistry.addRecipe(new ItemStack(viallight, 1), new Object[] { "X", "Y", "Z", Character.valueOf('X'), vialundead, Character.valueOf('Y'), vialnightmare, Character.valueOf('Z'), vialdarkness });
+        GameRegistry.addRecipe(new ItemStack(essencelight, 1), new Object[] { "X", "Y", "Z", Character.valueOf('X'), essenceundead, Character.valueOf('Y'), essencefire, Character.valueOf('Z'), essencedarkness });
 
-        GameRegistry.addRecipe(new ItemStack(vialundead, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.rotten_flesh, Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Items.glass_bottle });
+        GameRegistry.addRecipe(new ItemStack(essenceundead, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.rotten_flesh, Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.blaze_powder, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
+        GameRegistry.addRecipe(new ItemStack(essencefire, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.blaze_powder, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialnightmare, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Blocks.fire, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
+        GameRegistry.addRecipe(new ItemStack(essencefire, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Blocks.fire, Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle });
 
-        GameRegistry.addRecipe(new ItemStack(vialdarkness, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.ender_pearl, Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.glass_bottle });
+        GameRegistry.addRecipe(new ItemStack(essencedarkness, 1), new Object[] { " X ", " Y ", " Z ", Character.valueOf('X'), Items.ender_pearl, Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.glass_bottle });
 
         GameRegistry.addRecipe(new ItemStack(plateFur, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), fur });
 
@@ -1140,15 +988,15 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] { "  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'), Items.iron_ingot, });
 
-        GameRegistry.addRecipe(new ItemStack(superAmulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond });
+        GameRegistry.addRecipe(new ItemStack(petamulet, 1), new Object[] { "X X", " Z ", "X X", Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond });
 
         GameRegistry.addRecipe(new ItemStack(amuletbone, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.ender_pearl });
 
         GameRegistry.addRecipe(new ItemStack(amuletghost, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.ghast_tear });
 
-        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), unicorn });
+        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), unicornhorn });
 
-        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), viallight });
+        GameRegistry.addRecipe(new ItemStack(amuletfairy, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), essencelight });
 
         GameRegistry.addRecipe(new ItemStack(amuletpegasus, 1), new Object[] { "#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond });
 
@@ -1188,13 +1036,13 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots, 1), new Object[] { "X X", "X X", Character.valueOf('X'), sharkteeth });
 
-        GameRegistry.addRecipe(new ItemStack(plateCroc, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), crochide });
+        GameRegistry.addRecipe(new ItemStack(plateCroc, 1), new Object[] { "X X", "XXX", "XXX", Character.valueOf('X'), hideCroc });
 
-        GameRegistry.addRecipe(new ItemStack(helmetCroc, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), crochide });
+        GameRegistry.addRecipe(new ItemStack(helmetCroc, 1), new Object[] { "XXX", "X X", Character.valueOf('X'), hideCroc });
 
-        GameRegistry.addRecipe(new ItemStack(legsCroc, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), crochide });
+        GameRegistry.addRecipe(new ItemStack(legsCroc, 1), new Object[] { "XXX", "X X", "X X", Character.valueOf('X'), hideCroc });
 
-        GameRegistry.addRecipe(new ItemStack(bootsCroc, 1), new Object[] { "X X", "X X", Character.valueOf('X'), crochide });
+        GameRegistry.addRecipe(new ItemStack(bootsCroc, 1), new Object[] { "X X", "X X", Character.valueOf('X'), hideCroc });
 
         for (int i = 0; i < 16; i++)
         {
@@ -1211,9 +1059,9 @@ public class MoCreatures {
             GameRegistry.addShapelessRecipe(new ItemStack(mocPlank, 4, i), new Object[] { new ItemStack(mocLog, 1, i)});
         }
         
-        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), unicorn, Character.valueOf('R'), Items.blaze_rod });
+        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), unicornhorn, Character.valueOf('R'), Items.blaze_rod });
         
-        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), viallight, Character.valueOf('R'), Items.blaze_rod });
+        GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), essencelight, Character.valueOf('R'), Items.blaze_rod });
         
     }
 

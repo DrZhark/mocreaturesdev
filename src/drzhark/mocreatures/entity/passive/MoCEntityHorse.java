@@ -565,7 +565,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         boolean flag = (rand.nextInt(4) == 0);
 
         if (flag && (this.getType() == 36 || (this.getType() >= 50 && this.getType() < 60))) // unicorn
-        { return MoCreatures.unicorn; }
+        { return MoCreatures.unicornhorn; }
         if (this.getType() == 39) // pegasus
         { return Items.feather; }
         if (this.getType() == 40) // dark pegasus
@@ -1352,7 +1352,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // transform to undead, or heal undead horse
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialundead)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essenceundead)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1395,7 +1395,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // to transform to nightmares: only pure breeds
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialnightmare)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essencefire)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1425,7 +1425,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
 
         // transform to dark pegasus
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.vialdarkness)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essencedarkness)
         {
             if (--itemstack.stackSize == 0)
             {
@@ -1460,7 +1460,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.viallight)
+        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essencelight)
         {
             if (--itemstack.stackSize == 0)
             {

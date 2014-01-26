@@ -191,13 +191,13 @@ public class MoCEntityKomodo extends MoCEntityTameable
             int j = rand.nextInt(2)+1;
             for (int k = 0; k < j; k++)
             {
-                entityDropItem(new ItemStack(MoCreatures.fishyegg, 1, 33), 0.0F);
+                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, 33), 0.0F);
             }
         }
        else
        {
        
-        entityDropItem(new ItemStack(MoCreatures.crochide, 1, 0), 0.0F);
+        entityDropItem(new ItemStack(MoCreatures.hideCroc, 1, 0), 0.0F);
        }
     }
 

@@ -72,7 +72,7 @@ public class MoCItemPetAmulet extends MoCItem
             ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
             if (this.amuletType == 1)
             {
-                emptyAmulet = new ItemStack(MoCreatures.superAmulet, 1, 0);
+                emptyAmulet = new ItemStack(MoCreatures.petamulet, 1, 0);
             }
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
             //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
