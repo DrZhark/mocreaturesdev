@@ -22,7 +22,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 public class MoCRenderKitty extends RenderBiped {
 
     public MoCModelKitty pussy1;
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
 
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityKitty)par1Entity).getTexture();
@@ -67,7 +66,7 @@ public class MoCRenderKitty extends RenderBiped {
                 byte byte0 = -48;
                 if (flag2 && ((MoCEntityKitty) entityliving).getIsEmo())
                 {
-                    textureManager.bindTexture(((MoCEntityKitty) entityliving).getEmoteIcon());
+                    this.bindTexture(((MoCEntityKitty) entityliving).getEmoteIcon());
 
                     int i = -83;
                     if (!flag)

@@ -19,7 +19,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 public class MoCRenderWerewolf extends RenderLiving {
 
     private final MoCModelWere tempWerewolf;
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
 
     public MoCRenderWerewolf(MoCModelWereHuman modelwerehuman, ModelBase modelbase, float f)
     {
@@ -38,13 +37,13 @@ public class MoCRenderWerewolf extends RenderLiving {
 
     }
 
-    protected int setWoolColorAndRender(MoCEntityWerewolf entitywerewolf, int i)
+    protected int shouldRenderPass(MoCEntityWerewolf entitywerewolf, int i)
     {
         int myType = entitywerewolf.getType();
 
         if (!entitywerewolf.getIsHumanForm())
         {
-            textureManager.bindTexture(MoCreatures.proxy.getTexture("wereblank.png"));
+            this.bindTexture(MoCreatures.proxy.getTexture("wereblank.png"));
         }
         else
         {
@@ -52,19 +51,19 @@ public class MoCRenderWerewolf extends RenderLiving {
             {
 
             case 1:
-                textureManager.bindTexture(MoCreatures.proxy.getTexture("weredude.png"));
+                this.bindTexture(MoCreatures.proxy.getTexture("weredude.png"));
                 break;
             case 2:
-                textureManager.bindTexture(MoCreatures.proxy.getTexture("werehuman.png"));
+                this.bindTexture(MoCreatures.proxy.getTexture("werehuman.png"));
                 break;
             case 3:
-                textureManager.bindTexture(MoCreatures.proxy.getTexture("wereoldie.png"));
+                this.bindTexture(MoCreatures.proxy.getTexture("wereoldie.png"));
                 break;
             case 4:
-                textureManager.bindTexture(MoCreatures.proxy.getTexture("werewoman.png"));
+                this.bindTexture(MoCreatures.proxy.getTexture("werewoman.png"));
                 break;
             default:
-                textureManager.bindTexture(MoCreatures.proxy.getTexture("wereoldie.png"));
+                this.bindTexture(MoCreatures.proxy.getTexture("wereoldie.png"));
             }
 
         }
@@ -74,7 +73,7 @@ public class MoCRenderWerewolf extends RenderLiving {
     @Override
     protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
     {
-        return setWoolColorAndRender((MoCEntityWerewolf) entityliving, i);
+        return shouldRenderPass((MoCEntityWerewolf) entityliving, i);
     }
 
     protected ResourceLocation getEntityTexture(Entity par1Entity) {

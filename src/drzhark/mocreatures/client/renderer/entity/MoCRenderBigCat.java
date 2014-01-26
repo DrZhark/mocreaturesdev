@@ -30,7 +30,7 @@ public class MoCRenderBigCat extends RenderLiving {
         bigcat1 = modelbigcat2;
     }
 
-    protected int setWoolColorAndRender(MoCEntityBigCat entitybigcat, int i)
+    protected int shouldRenderPass(MoCEntityBigCat entitybigcat, int i)
     {
         if (entitybigcat.getType() == 2 && entitybigcat.getIsAdult())
         {
@@ -46,7 +46,7 @@ public class MoCRenderBigCat extends RenderLiving {
     @Override
     protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
     {
-        return setWoolColorAndRender((MoCEntityBigCat) entityliving, i);
+        return shouldRenderPass((MoCEntityBigCat) entityliving, i);
     }
 
     protected ResourceLocation getEntityTexture(Entity par1Entity) {

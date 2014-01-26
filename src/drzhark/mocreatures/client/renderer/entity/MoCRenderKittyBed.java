@@ -22,8 +22,8 @@ public class MoCRenderKittyBed extends RenderLiving {
 
     public MoCModelKittyBed kittybed;
     private int mycolor;
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
     public static float fleeceColorTable[][] = { { 1.0F, 1.0F, 1.0F }, { 0.95F, 0.7F, 0.2F }, { 0.9F, 0.5F, 0.85F }, { 0.6F, 0.7F, 0.95F }, { 0.9F, 0.9F, 0.2F }, { 0.5F, 0.8F, 0.1F }, { 0.95F, 0.7F, 0.8F }, { 0.3F, 0.3F, 0.3F }, { 0.6F, 0.6F, 0.6F }, { 0.3F, 0.6F, 0.7F }, { 0.7F, 0.4F, 0.9F }, { 0.2F, 0.4F, 0.8F }, { 0.5F, 0.4F, 0.3F }, { 0.4F, 0.5F, 0.2F }, { 0.8F, 0.3F, 0.3F }, { 0.1F, 0.1F, 0.1F } };
+
     public MoCRenderKittyBed(MoCModelKittyBed modelkittybed, MoCModelKittyBed2 modelkittybed2, float f)
     {
         super(modelkittybed, f);
@@ -42,10 +42,9 @@ public class MoCRenderKittyBed extends RenderLiving {
         kittybed.milklevel = entitykittybed.milklevel;
     }
 
-    protected int setWoolColorAndRender(EntityLivingBase entityliving, int i, float f)
+    protected int shouldRenderPass(MoCEntityKittyBed entityliving, int i)
     {
-        //loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png");
-        textureManager.bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
+        this.bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
         float f1 = 0.35F;
         int j = MoCTools.colorize(mycolor);
         GL11.glColor3f(f1 * fleeceColorTable[j][0], f1 * fleeceColorTable[j][1], f1 * fleeceColorTable[j][2]);
@@ -55,7 +54,7 @@ public class MoCRenderKittyBed extends RenderLiving {
     @Override
     protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f)
     {
-        return setWoolColorAndRender(entityliving, i, f);
+        return shouldRenderPass((MoCEntityKittyBed)entityliving, i);
     }
 
     protected ResourceLocation getEntityTexture(Entity par1Entity) {

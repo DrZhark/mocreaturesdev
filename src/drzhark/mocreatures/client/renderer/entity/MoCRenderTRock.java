@@ -17,7 +17,6 @@ import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 @SideOnly(Side.CLIENT)
 public class MoCRenderTRock extends Render {
 
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
     private final RenderBlocks blockRenderer = new RenderBlocks();
     private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
 

@@ -18,7 +18,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 public class MoCRenderGolem extends MoCRenderMoC {
 
     private final ModelBase MoCModelG = new MoCModelGolem();
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
 
     public MoCRenderGolem(ModelBase modelbase, float f)
     {
@@ -33,7 +32,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
         boolean depth = true;
 
         ResourceLocation effectTexture = par1Entity.getEffectTexture();
-        if (effectTexture != null)//(!effectTexture.isEmpty())//(par1Entity.getPowered())
+        if (effectTexture != null)
         {
             if (depth)
             {
@@ -47,9 +46,7 @@ public class MoCRenderGolem extends MoCRenderMoC {
             if (par2 == 1)
             {
                 float var4 = (float) par1Entity.ticksExisted + par3;
-                //this.loadTexture("/armor/golemeffect.png");
-                //this.loadTexture(effectTexture);
-                textureManager.bindTexture(effectTexture);
+                this.bindTexture(effectTexture);
                 GL11.glMatrixMode(GL11.GL_TEXTURE);
                 GL11.glLoadIdentity();
                 float var5 = var4 * 0.01F;

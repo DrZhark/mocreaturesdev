@@ -19,8 +19,6 @@ import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 @SideOnly(Side.CLIENT)
 public class MoCRenderFirefly extends MoCRenderInsect {
 
-    private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
-
     public MoCRenderFirefly(ModelBase modelbase)
     {
         super(modelbase);
@@ -68,8 +66,7 @@ public class MoCRenderFirefly extends MoCRenderInsect {
         }
         else
         {
-            //this.loadTexture(MoCreatures.proxy.MODEL_TEXTURE + "fireflyglow.png");
-            textureManager.bindTexture(MoCreatures.proxy.getTexture("fireflyglow.png"));
+            this.bindTexture(MoCreatures.proxy.getTexture("fireflyglow.png"));
             float var4 = 1.0F;
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_ALPHA_TEST);
