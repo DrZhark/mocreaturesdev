@@ -1089,13 +1089,13 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     @Override
     protected double myFallSpeed()
     {
-        return 0.9D;
+        return 0.99D;
     }
 
     @Override
     protected double flyerThrust()
     {
-        return 0.9D;
+        return 0.6D;
     }
 
     @Override

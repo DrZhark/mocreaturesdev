@@ -956,12 +956,16 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     motionY += flyerThrust();//0.3D;
                     jumpPending = false;
                     
-                    if (selfPropelledFlyer() && isOnAir())
+                    if (selfPropelledFlyer() && isOnAir() && MoCreatures.isServer())
                     {
-                        double velX = 0.25F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                        double velZ = 0.25F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
+                        float velX = (float) (0.5F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
+                        float velZ = (float) (0.5F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
                         this.motionX -= velX;
                         this.motionZ -= velZ;
+                        if (MoCreatures.isServer())
+                        {
+                            moveEntity(motionX, 0D, motionZ);
+                        }
                     }
                 }
                 else if (jumpPending && !getIsJumping())
@@ -1043,7 +1047,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
             if (isFlyer() && (riddenByEntity != null) && getIsTamed())
             {
-                motionY += 0.15D;
+                motionY += (0.21D - (myFallSpeed()/10D));//0.15D;
                 motionY *= myFallSpeed();//0.6D;
             }
             else if (!isFlyingAlone())
