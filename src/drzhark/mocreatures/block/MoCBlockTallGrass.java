@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -128,5 +129,11 @@ public class MoCBlockTallGrass extends BlockBush implements IShearable
         {
             subItems.add(new ItemStack(this, 1, ix));
         }
+    }
+    
+    @Override
+    protected boolean func_149854_a(Block block)
+    {
+        return block == Blocks.grass || block == Blocks.dirt || block == Blocks.farmland || block instanceof MoCBlockDirt || block instanceof MoCBlockGrass;
     }
 }
