@@ -1,6 +1,7 @@
 package drzhark.mocreatures.item;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
@@ -17,6 +18,8 @@ public class MoCItemArmor extends ItemArmor
     public MoCItemArmor(int i, EnumArmorMaterial enumarmormaterial, int j, int k)
     {
         super(i, enumarmormaterial, j, k);
+        this.setCreativeTab(CreativeTabs.tabCombat);
+        this.setCreativeTab(MoCreatures.tabMoC);
     }
 
     @Override

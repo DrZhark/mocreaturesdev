@@ -1,9 +1,11 @@
 package drzhark.mocreatures.block;
 
 import static net.minecraftforge.common.ForgeDirection.UP;
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,6 +16,8 @@ public class MoCBlock extends Block
     public MoCBlock(int par1, Material material)
     {
         super(par1, material);
+        this.setCreativeTab(MoCreatures.tabMoC);
+        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     @Override

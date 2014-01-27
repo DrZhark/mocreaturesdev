@@ -20,7 +20,6 @@ public class MoCBlockRock extends MoCBlock
     {
         super(par1, Material.rock);
         setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     @Override

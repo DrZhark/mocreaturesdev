@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -15,6 +16,7 @@ public class MoCItemEgg extends MoCItem {
         super(i);
         maxStackSize = 16;
         setHasSubtypes(true);
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     public MoCItemEgg(int i, int j)

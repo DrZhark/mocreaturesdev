@@ -292,7 +292,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                 || (entity.width >= this.width || entity.height >= this.height)
-                || (entity instanceof MoCEntityEgg));
+                || (entity instanceof MoCEntityEgg)
+                || ((entity instanceof MoCEntityAnimal || entity instanceof MoCEntityAmbient || entity instanceof MoCEntityAquatic) && !MoCreatures.isHuntingEnabled()));
     }
 
     /**
@@ -847,7 +848,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 setRotation(rotationYaw, rotationPitch);
                 if (MoCreatures.isServer() && !getIsTamed())
                 {
-                    worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     riddenByEntity.motionY += 0.3D;
                     riddenByEntity.motionZ -= 0.3D;
                     riddenByEntity.mountEntity(null);
@@ -912,7 +913,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
                 if (MoCreatures.isServer() && rand.nextInt(50) == 0)
                 {
-                    worldObj.playSoundAtEntity(this, getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     riddenByEntity.motionY += 0.9D;
                     riddenByEntity.motionZ -= 0.3D;
                     riddenByEntity.mountEntity(null);

@@ -2,6 +2,7 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,6 +38,7 @@ public class MoCItemHorseAmulet extends MoCItem {
         maxStackSize = 1;
         setHasSubtypes(true);
         ageCounter = 0;
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     @Override

@@ -22,6 +22,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAmbient;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -321,7 +324,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) || ((entity1.width > 0.5D) && (entity1.height > 0.5D)))
+            if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) || ((entity1.width > 0.5D) && (entity1.height > 0.5D)) || ((entity instanceof MoCEntityAnimal || entity instanceof MoCEntityAmbient || entity instanceof MoCEntityAquatic) && !MoCreatures.isHuntingEnabled()))
             {
                 continue;
             }
@@ -554,7 +557,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             this.setHealth(getMaxHealth());
             changeKittyState(9);
             return true;
@@ -582,7 +585,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             this.setHealth(getMaxHealth());
             changeKittyState(7);
             return true;
@@ -723,7 +726,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                 {
                     entityitem.setDead();
-                    worldObj.playSoundAtEntity(this, "kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     setHungry(false);
                     setKittyState(2);
                 }
@@ -830,7 +833,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
                 {
                     break;
                 }
-                worldObj.playSoundAtEntity(this, "kittypoo", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:kittypoo", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                 MoCEntityLitterBox entitylitterbox1 = (MoCEntityLitterBox) ridingEntity;
                 if (entitylitterbox1 != null)
                 {

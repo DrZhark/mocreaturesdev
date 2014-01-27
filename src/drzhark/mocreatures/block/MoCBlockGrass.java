@@ -23,7 +23,6 @@ public class MoCBlockGrass extends MoCBlock
     {
         super(par1, Material.grass);
         setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)

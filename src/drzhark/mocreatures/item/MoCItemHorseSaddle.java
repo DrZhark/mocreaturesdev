@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ public class MoCItemHorseSaddle extends MoCItem {
     {
         super(i);
         maxStackSize = 32;
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     @Override

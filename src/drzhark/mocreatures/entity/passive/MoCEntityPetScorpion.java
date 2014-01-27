@@ -194,7 +194,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
 
         if (MoCreatures.isServer() && (armCounter == 10 || armCounter == 40))
         {
-            worldObj.playSoundAtEntity(this, "scorpionclaw", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:scorpionclaw", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
         }
 
         if (armCounter != 0 && armCounter++ > 24)
@@ -207,7 +207,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
             poisontimer++;
             if (poisontimer == 1)
             {
-                worldObj.playSoundAtEntity(this, "scorpionsting", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:scorpionsting", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             }
             if (poisontimer > 50)
             {

@@ -23,7 +23,6 @@ public class MoCBlockLog extends MoCBlock
     public MoCBlockLog(int par1)
     {
         super(par1, Material.wood);
-        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     /**

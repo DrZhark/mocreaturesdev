@@ -2,6 +2,7 @@ package drzhark.mocreatures.item;
 
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +22,7 @@ public class MoCItemCreaturePedia extends MoCItem {
     {
         super(i);
         maxStackSize = 1;
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     /**

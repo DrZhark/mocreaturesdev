@@ -144,7 +144,7 @@ public class CommandCMS extends CommandBase {
         CMSConfiguration config = environment.CMSEnvironmentConfig;
         boolean saved = false;
         boolean doNotShowHelp = false;
-        //System.out.println("par1 = " + par1 + ", par2 = " + par2 + ", par3 = " + par3);
+
         if (par1.equalsIgnoreCase("addbg") && !par2.equals("") && !par3.equals(""))
         { 
             EntityData entityData = environment.entityMap.get(par2);
@@ -407,7 +407,7 @@ public class CommandCMS extends CommandBase {
             }
         }
         // START ENTITY FREQUENCY/BIOME SECTION
-        else if (par2ArrayOfStr.length >=2 && (par1.equalsIgnoreCase("frequency") || par1.equalsIgnoreCase("min") || par1.equalsIgnoreCase("max") || par1.equalsIgnoreCase("maxchunk") || par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg")))
+        else if (par2ArrayOfStr.length >=2 && (par1.equalsIgnoreCase("frequency") || par1.equalsIgnoreCase("min") || par1.equalsIgnoreCase("max") || par1.equalsIgnoreCase("maxchunk") || par1.equalsIgnoreCase("canspawn") || par1.equalsIgnoreCase("biomegroup") || par1.equalsIgnoreCase("bg")))
         {
             if (environment.entityMap.get(par2) == null)
                 return;
@@ -508,24 +508,24 @@ public class CommandCMS extends CommandBase {
                         else if (par1.equalsIgnoreCase("canspawn"))
                         {
                             if (par3.equals(""))
-                          {
+                            {
                                 par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
-                            return;
-                          }
+                                return;
+                            }
                             else {
-                            try
-                            {
-                              entityData.setCanSpawn(Boolean.parseBoolean(par3));
-                              CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"canspawn");
-                              prop.value = par3;
-                              saved = true;
-                              par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                try
+                                {
+                                  entityData.setCanSpawn(Boolean.parseBoolean(par3));
+                                  CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"canSpawn");
+                                  prop.set(par3);
+                                  saved = true;
+                                  par1ICommandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                }
+                                catch (NumberFormatException ex)
+                                {
+                                  sendCommandHelp(par1ICommandSender);
+                                }
                             }
-                            catch (NumberFormatException ex)
-                            {
-                              sendCommandHelp(par1ICommandSender);
-                            }
-                          }
                         }
                         if (saved == true)
                         {

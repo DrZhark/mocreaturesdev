@@ -63,7 +63,7 @@ import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.0.0.dev.R2")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.0.0")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")
@@ -586,14 +586,17 @@ public final class CustomSpawner {
         for (int i = 0; i < biomeList.size(); i++)
         {
             ArrayList<SpawnListEntry> spawnList = entityData.getLivingSpawnType().getBiomeSpawnList(biomeList.get(i).biomeID);
-            for (SpawnListEntry spawnEntry : spawnList)
+            if (spawnList != null)
             {
-                if (spawnEntry.entityClass == entityData.getEntityClass())
+                for (SpawnListEntry spawnEntry : spawnList)
                 {
-                    if (debug) globalLog.logger.info("updateSpawnListEntry " + entityData.getEntityClass() + " to " + entityData.getFrequency() + ":" + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).biomeName);
-                    spawnEntry.itemWeight = entityData.getFrequency();
-                    spawnEntry.minGroupCount = entityData.getMinSpawn();
-                    spawnEntry.maxGroupCount = entityData.getMaxSpawn();
+                    if (spawnEntry.entityClass == entityData.getEntityClass())
+                    {
+                        if (debug) globalLog.logger.info("updateSpawnListEntry " + entityData.getEntityClass() + " to " + entityData.getFrequency() + ":" + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).biomeName);
+                        spawnEntry.itemWeight = entityData.getFrequency();
+                        spawnEntry.minGroupCount = entityData.getMinSpawn();
+                        spawnEntry.maxGroupCount = entityData.getMaxSpawn();
+                    }
                 }
             }
         }

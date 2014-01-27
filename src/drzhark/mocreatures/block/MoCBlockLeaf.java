@@ -29,6 +29,7 @@ public class MoCBlockLeaf extends BlockLeavesBase
     {
         super(i, Material.leaves, true);
         setTickRandomly(true);
+        this.setCreativeTab(MoCreatures.tabMoC);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
     public void onBlockRemoval(World world, int i, int j, int k)

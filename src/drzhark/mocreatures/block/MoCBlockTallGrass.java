@@ -27,6 +27,8 @@ public class MoCBlockTallGrass extends BlockFlower implements IShearable
         super(par1, Material.vine);
         float var3 = 0.4F;
         this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 0.8F, 0.5F + var3);
+        this.setCreativeTab(MoCreatures.tabMoC);
+        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     public MoCBlockTallGrass(int par1, boolean lighted)

@@ -189,7 +189,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         if ((itemstack != null) && MoCreatures.isServer() && (itemstack.itemID == Item.bucketMilk.itemID))
         {
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.bucketEmpty, 1));
-            worldObj.playSoundAtEntity(this, "pouringmilk", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:pouringmilk", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHasMilk(true);
             setHasFood(false);
             return true;
@@ -200,7 +200,7 @@ public class MoCEntityKittyBed extends EntityLiving {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            worldObj.playSoundAtEntity(this, "pouringfood", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:pouringfood", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHasMilk(false);
             setHasFood(true);
             return true;

@@ -699,7 +699,9 @@ public class MoCClientProxy extends MoCProxy {
         creatureOptions = new WidgetClassicTwocolumn(new Widget[0]);
         // create buttons
         if (!MoCreatures.isCustomSpawnerLoaded)
+        {
             creatureOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showCreatureSpawnSettings", new Class[0]), true));
+        }
         creatureOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showCreatureSettings", new Class[0]), true));
         //**********************************************************//
 
@@ -707,7 +709,9 @@ public class MoCClientProxy extends MoCProxy {
         //******************** Mobs ********************//
         mobOptions = new WidgetClassicTwocolumn(new Widget[0]);
         if (!MoCreatures.isCustomSpawnerLoaded)
+        {
             mobOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showMobSpawnSettings", new Class[0]), true));
+        }
         mobOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showMobSettings", new Class[0]), true));
         //**********************************************************//
 
@@ -715,14 +719,18 @@ public class MoCClientProxy extends MoCProxy {
         //******************** Water Mobs ********************//
         waterOptions = new WidgetClassicTwocolumn(new Widget[0]);
         if (!MoCreatures.isCustomSpawnerLoaded)
+        {
             waterOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showWaterSpawnSettings", new Class[0]), true));
+        }
         waterOptions.add(GuiApiHelper.makeButton("General Settings", new ModAction(this, "showWaterSettings", new Class[0]), true));
         //**********************************************************//
 
         //******************** Ambient ********************//
         ambientOptions = new WidgetClassicTwocolumn(new Widget[0]);
         if (!MoCreatures.isCustomSpawnerLoaded)
+        {
             ambientOptions.add(GuiApiHelper.makeButton("Spawn Settings", new ModAction(this, "showAmbientSpawnSettings", new Class[0]), true));
+        }
         //**********************************************************//
 
         //******************** Reset All ********************//
@@ -1040,9 +1048,9 @@ public class MoCClientProxy extends MoCProxy {
             if (entityData.getEntityWindow() == null)
             {
                 WidgetSinglecolumn widgetEntitySettingColumn = new WidgetSinglecolumn(new Widget[0]);
-                MoCSettingMulti settingType = new MoCSettingMulti(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().name().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
-                guiapiSettings.append(settingType);
-                widgetEntitySettingColumn.add(new WidgetMulti(settingType, "Type"));
+                //MoCSettingMulti settingType = new MoCSettingMulti(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().name().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
+                //guiapiSettings.append(settingType);
+                //widgetEntitySettingColumn.add(new WidgetMulti(settingType, "Type"));
                 MoCSettingInt settingFrequency = new MoCSettingInt(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " frequency", entityData.getFrequency(), 0, 1, 20);
                 guiapiSettings.append(settingFrequency);
                 widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, "Frequency"));

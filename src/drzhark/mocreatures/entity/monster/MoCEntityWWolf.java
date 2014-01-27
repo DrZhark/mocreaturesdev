@@ -16,6 +16,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityAmbient;
+import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
@@ -168,7 +171,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         {
             Entity entity1 = (Entity) list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity) || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityBigCat) || (entity1 instanceof MoCEntityBear) || (entity1 instanceof EntityCow) || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy
-                    .attackWolves)) || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)))
+                    .attackWolves)) || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) || ((entity instanceof MoCEntityAnimal || entity instanceof MoCEntityAmbient || entity instanceof MoCEntityAquatic) && !MoCreatures.isHuntingEnabled()))
             {
                 continue;
             }

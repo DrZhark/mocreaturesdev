@@ -20,7 +20,6 @@ public class ItemOgreHammer extends MoCItem
         maxStackSize = 1;
         setMaxDamage(2048);
         this.setCreativeTab(CreativeTabs.tabTools);
-
     }
 
     /**

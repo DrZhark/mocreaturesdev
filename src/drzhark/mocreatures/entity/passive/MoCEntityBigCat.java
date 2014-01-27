@@ -521,6 +521,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                     || (getIsTamed() && (entity1 instanceof IMoCEntity) && ((IMoCEntity)entity1).getIsTamed() ) 
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
+                    || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled())
                     )
             {
                 continue;
@@ -638,7 +639,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         if ((itemstack != null) && getIsTamed() && (itemstack.itemID == Item.porkRaw.itemID || itemstack.itemID == Item.fishRaw.itemID))
         {
             this.setHealth(getMaxHealth());
-            worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+            worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             setHungry(false);
         }
         return false;
@@ -722,7 +723,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                     {
                         setEaten(true);
                     }
-                    worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     setHungry(false);
                 }
             }

@@ -56,6 +56,7 @@ import drzhark.mocreatures.block.MoCBlockRock;
 import drzhark.mocreatures.block.MoCBlockTallGrass;
 import drzhark.mocreatures.block.MultiItemBlock;
 import drzhark.mocreatures.client.MoCClientTickHandler;
+import drzhark.mocreatures.client.MoCCreativeTabs;
 import drzhark.mocreatures.client.handlers.MoCKeyHandler;
 import drzhark.mocreatures.client.network.MoCClientPacketHandler;
 import drzhark.mocreatures.command.CommandMoCPets;
@@ -147,7 +148,7 @@ import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCServerPacketHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0.dev.R2")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.1.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { "MoCreatures" }, packetHandler = MoCServerPacketHandler.class))
 public class MoCreatures {
@@ -157,7 +158,7 @@ public class MoCreatures {
 
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")
     public static MoCProxy proxy;
-    public static final CreativeTabs tabMoC = new CreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
 
@@ -826,7 +827,7 @@ public class MoCreatures {
         MinecraftForge.setBlockHarvestLevel(mocGrass, 0, "shovel", 0); 
         MinecraftForge.setBlockHarvestLevel(mocStone, 0, "pickaxe", 1);
         
-        LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures Misc");
+        LanguageRegistry.instance().addStringLocalization("itemGroup.MoCreaturesTab", "en_US", "MoCreatures");
         proxy.mocSettingsConfig.save();
     }
 

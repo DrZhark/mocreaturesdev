@@ -335,7 +335,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
             if (hissCounter % 25 == 0)
             {
                 setfMouth(0.3F);
-                worldObj.playSoundAtEntity(this, "snakeupset", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:snakeupset", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             }
             if (hissCounter % 35 == 0)
             {
@@ -369,7 +369,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
             if (getfRattle() == 1.0F)
             {
                 // TODO synchronize
-                worldObj.playSoundAtEntity(this, "snakerattle", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:snakerattle", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
             }
             if (getfRattle() > 8.0F)
             {
@@ -470,7 +470,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
 
             if (bodyswing < 0F)
             {
-                worldObj.playSoundAtEntity(this, "snakesnap", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:snakesnap", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                 bodyswing = 2.5F;
                 setfMouth(0.0F);
                 setBiting(false);
@@ -662,11 +662,11 @@ public class MoCEntitySnake extends MoCEntityTameable {
     {
         if (isInsideOfMaterial(Material.water))
         {
-            worldObj.playSoundAtEntity(this, "snakeswimm", 1.0F, 1.0F);
+            worldObj.playSoundAtEntity(this, "mocreatures:snakeswim", 1.0F, 1.0F);
         }
         else
         {
-            worldObj.playSoundAtEntity(this, "snakeslither", 1.0F, 1.0F);
+            worldObj.playSoundAtEntity(this, "mocreatures:snakeslither", 1.0F, 1.0F);
         }
     }
 

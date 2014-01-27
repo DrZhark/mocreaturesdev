@@ -373,7 +373,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
             }
             if (MoCreatures.isServer() && rand.nextInt(50) == 0)
             {
-                worldObj.playSoundAtEntity(this, getUpsetSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                worldObj.playSoundAtEntity(this, "mocreatures:" + getUpsetSound(), 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                 riddenByEntity.motionY += 0.9D;
                 riddenByEntity.motionZ -= 0.3D;
                 riddenByEntity.mountEntity(null);

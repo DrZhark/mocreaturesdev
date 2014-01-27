@@ -3,6 +3,7 @@ package drzhark.mocreatures.item;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -43,6 +44,7 @@ public class MoCItemPetAmulet extends MoCItem
         super(i);
         maxStackSize = 1;
         setHasSubtypes(true);
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     public MoCItemPetAmulet(int i, int type) 

@@ -1,5 +1,6 @@
 package drzhark.mocreatures.block;
 
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,6 +15,7 @@ public class MoCBlockFarm extends BlockContainer
     {
         super(par1, Material.wood);
         setTickRandomly(true);
+        this.setCreativeTab(MoCreatures.tabMoC);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 

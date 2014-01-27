@@ -20,7 +20,6 @@ public class MoCBlockDirt extends MoCBlock
     {
         super(par1, Material.ground);
         setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     @Override

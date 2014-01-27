@@ -164,7 +164,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         }
         else
         {
-            worldObj.playSoundAtEntity(this, "rabbitlift", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
+            worldObj.playSoundAtEntity(this, "mocreatures:rabbitlift", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
             if (MoCreatures.isServer())
             {
                 this.mountEntity(null);
@@ -274,7 +274,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         {
             pickedUp = false;
             //System.out.println("pickedOff");
-            worldObj.playSoundAtEntity(this, "rabbitland", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
+            worldObj.playSoundAtEntity(this, "mocreatures:rabbitland", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(12D, 12D, 12D));
             for (int k = 0; k < list.size(); k++)
             {

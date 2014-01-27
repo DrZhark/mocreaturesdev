@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -12,6 +13,7 @@ public class MoCItemLitterBox extends MoCItem {
     {
         super(i);
         maxStackSize = 16;
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     @Override

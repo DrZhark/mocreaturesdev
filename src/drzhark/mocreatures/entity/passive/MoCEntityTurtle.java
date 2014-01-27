@@ -199,7 +199,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
 
                     if (!getIsHiding())
                     {
-                        worldObj.playSoundAtEntity(this, "turtlehissing", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                        worldObj.playSoundAtEntity(this, "mocreatures:turtlehissing", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                         setIsHiding(true);
                     }
 
@@ -222,7 +222,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
                             if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                             {
                                 entityitem.setDead();
-                                worldObj.playSoundAtEntity(this, "turtleeating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                                worldObj.playSoundAtEntity(this, "mocreatures:turtleeating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
 
                                 EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                                 if (entityplayer != null && (MoCreatures.isServer()))

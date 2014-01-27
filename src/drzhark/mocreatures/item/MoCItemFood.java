@@ -1,9 +1,11 @@
 package drzhark.mocreatures.item;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemFood;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCItemFood extends ItemFood
 {
@@ -12,6 +14,8 @@ public class MoCItemFood extends ItemFood
     {
         super(i, j, 0.6F, false);
         maxStackSize = 32;
+        this.setCreativeTab(CreativeTabs.tabFood);
+        this.setCreativeTab(MoCreatures.tabMoC);
     }
 
     public MoCItemFood(int i, int j, float f, boolean flag)

@@ -19,7 +19,6 @@ public class MoCBlockPlanks extends MoCBlock
     public MoCBlockPlanks(int ID)
     {
         super(ID, Material.wood);
-        this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
     @Override

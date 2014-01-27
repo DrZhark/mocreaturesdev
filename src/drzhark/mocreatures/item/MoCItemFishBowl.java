@@ -3,6 +3,7 @@ package drzhark.mocreatures.item;
 import java.util.List;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +28,7 @@ public class MoCItemFishBowl extends MoCItem {
         maxStackSize = 16;
         setHasSubtypes(true);
         ageCounter = 0;
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     public MoCItemFishBowl(int i, int j)

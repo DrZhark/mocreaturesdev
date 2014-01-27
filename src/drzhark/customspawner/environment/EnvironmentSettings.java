@@ -287,7 +287,7 @@ public class EnvironmentSettings {
             if (debug) envLog.logger.info("Attempting to register Entity from class " + clazz + "...");
             entityliving = (EntityLiving) clazz.getConstructor(new Class[] { World.class }).newInstance(new Object[] { DimensionManager.getWorld(0) });
         }
-        catch (Exception exception)
+        catch (Throwable throwable)
         {
             if (debug) envLog.logger.info(clazz + " is not a valid Entity for registration, Skipping...");
             return null;

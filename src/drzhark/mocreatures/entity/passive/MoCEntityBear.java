@@ -363,7 +363,7 @@ public class MoCEntityBear extends MoCEntityTameable {
                 if ((f < 2.0F) && (entityitem != null) && (deathTime == 0))
                 {
                     entityitem.setDead();
-                    worldObj.playSoundAtEntity(this, "eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
+                    worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
                     this.setHealth(getMaxHealth());
                 }
 

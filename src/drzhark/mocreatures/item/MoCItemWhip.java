@@ -3,6 +3,7 @@ package drzhark.mocreatures.item;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,7 @@ public class MoCItemWhip extends MoCItem {
         super(i);
         maxStackSize = 1;
         setMaxDamage(24);
+        this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class MoCItemWhip extends MoCItem {
         if ((l != 0) && (k1 == 0) && (j1 != 0) && (j1 != Block.signPost.blockID))
         {
             whipFX(world, i, j, k);
-            world.playSoundAtEntity(entityplayer, "whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
+            world.playSoundAtEntity(entityplayer, "mocreatures:whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             itemstack.damageItem(1, entityplayer);
             List list = world.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.boundingBox.expand(12D, 12D, 12D));
             for (int l1 = 0; l1 < list.size(); l1++)
