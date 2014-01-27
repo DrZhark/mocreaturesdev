@@ -151,7 +151,7 @@ public class MoCEntityData {
         }
     }
 
-    public String getCommandSenderName()
+    public String getEntityName()
     {
         return this.entityName;
     }

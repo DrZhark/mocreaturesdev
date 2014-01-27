@@ -242,7 +242,7 @@ public class EntityData {
         this.vanillaControl = flag;
     }
 
-    public String getCommandSenderName()
+    public String getEntityName()
     {
         return this.entityName;
     }

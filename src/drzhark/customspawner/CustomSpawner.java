@@ -365,7 +365,7 @@ public final class CustomSpawner {
                                                         world.spawnEntityInWorld(entityliving);
                                                         creatureSpecificInit(entityliving, world, spawnX, spawnY, spawnZ);
                                                         // changed check from maxSpawnedInChunk to maxGroupCount.
-                                                        CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world), entitySpawnType.name(), world.getBiomeGenForCoords((chunkcoordintpair.chunkXPos * 16) + 16, (chunkcoordintpair.chunkZPos * 16) + 16).biomeName, entityData.getCommandSenderName(), MathHelper.floor_double(spawnX), MathHelper.floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft, spawnlistentry);
+                                                        CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world), entitySpawnType.name(), world.getBiomeGenForCoords((chunkcoordintpair.chunkXPos * 16) + 16, (chunkcoordintpair.chunkZPos * 16) + 16).biomeName, entityData.getEntityName(), MathHelper.floor_double(spawnX), MathHelper.floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft, spawnlistentry);
 
                                                         if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving))
                                                         {
@@ -587,14 +587,17 @@ public final class CustomSpawner {
         for (int i = 0; i < biomeList.size(); i++)
         {
             ArrayList<SpawnListEntry> spawnList = entityData.getLivingSpawnType().getBiomeSpawnList(biomeList.get(i).biomeID);
-            for (SpawnListEntry spawnEntry : spawnList)
+            if (spawnList != null)
             {
-                if (spawnEntry.entityClass == entityData.getEntityClass())
+                for (SpawnListEntry spawnEntry : spawnList)
                 {
-                    if (debug) globalLog.logger.info("updateSpawnListEntry " + entityData.getEntityClass() + " to " + entityData.getFrequency() + ":" + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).biomeName);
-                    spawnEntry.itemWeight = entityData.getFrequency();
-                    spawnEntry.minGroupCount = entityData.getMinSpawn();
-                    spawnEntry.maxGroupCount = entityData.getMaxSpawn();
+                    if (spawnEntry.entityClass == entityData.getEntityClass())
+                    {
+                        if (debug) globalLog.logger.info("updateSpawnListEntry " + entityData.getEntityClass() + " to " + entityData.getFrequency() + ":" + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).biomeName);
+                        spawnEntry.itemWeight = entityData.getFrequency();
+                        spawnEntry.minGroupCount = entityData.getMinSpawn();
+                        spawnEntry.maxGroupCount = entityData.getMaxSpawn();
+                    }
                 }
             }
         }

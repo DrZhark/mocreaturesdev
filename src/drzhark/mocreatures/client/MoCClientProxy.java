@@ -1041,25 +1041,25 @@ public class MoCClientProxy extends MoCProxy {
             if (entityData.getEntityWindow() == null)
             {
                 WidgetSinglecolumn widgetEntitySettingColumn = new WidgetSinglecolumn(new Widget[0]);
-                MoCSettingMulti settingType = new MoCSettingMulti(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().name().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
+                MoCSettingMulti settingType = new MoCSettingMulti(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " type", entityData.getType() != null ? entityTypes.indexOf(entityData.getType().name().toUpperCase()) : 0, "UNDEFINED", "CREATURE", "MONSTER", "WATERCREATURE", "AMBIENT");
                 guiapiSettings.append(settingType);
                 widgetEntitySettingColumn.add(new WidgetMulti(settingType, "Type"));
-                MoCSettingInt settingFrequency = new MoCSettingInt(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " frequency", entityData.getFrequency(), 0, 1, 20);
+                MoCSettingInt settingFrequency = new MoCSettingInt(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " frequency", entityData.getFrequency(), 0, 1, 20);
                 guiapiSettings.append(settingFrequency);
                 widgetEntitySettingColumn.add(new WidgetInt(settingFrequency, "Frequency"));
-                MoCSettingInt settingMinGroup = new MoCSettingInt(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " minspawn", entityData.getMinSpawn(), 1, 1, 20);
+                MoCSettingInt settingMinGroup = new MoCSettingInt(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " minspawn", entityData.getMinSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMinGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingMinGroup, "MinSpawn"));
-                MoCSettingInt settingMaxGroup = new MoCSettingInt(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " maxspawn", entityData.getMaxSpawn(), 1, 1, 20);
+                MoCSettingInt settingMaxGroup = new MoCSettingInt(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " maxspawn", entityData.getMaxSpawn(), 1, 1, 20);
                 guiapiSettings.append(settingMaxGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingMaxGroup, "MaxSpawn"));
-                MoCSettingInt settingChunkGroup = new MoCSettingInt(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " chunkspawn", entityData.getMaxInChunk(), 1, 1, 20);
+                MoCSettingInt settingChunkGroup = new MoCSettingInt(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " chunkspawn", entityData.getMaxInChunk(), 1, 1, 20);
                 guiapiSettings.append(settingChunkGroup);
                 widgetEntitySettingColumn.add(new WidgetInt(settingChunkGroup, "MaxChunk"));
-                MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(mocEntityConfig, entityData.getCommandSenderName(), entityData.getCommandSenderName() + " canspawn", entityData.getCanSpawn());
+                MoCSettingBoolean settingCanSpawn = new MoCSettingBoolean(mocEntityConfig, entityData.getEntityName(), entityData.getEntityName() + " canspawn", entityData.getCanSpawn());
                 guiapiSettings.append(settingCanSpawn);
                 widgetEntitySettingColumn.add(new WidgetBoolean(settingCanSpawn, "CanSpawn"));
-                entityData.setEntityWindow(new WidgetSimplewindow(widgetEntitySettingColumn, entityData.getCommandSenderName()));
+                entityData.setEntityWindow(new WidgetSimplewindow(widgetEntitySettingColumn, entityData.getEntityName()));
             }
             this.currentSelectedEntity = entityData;
             GuiModScreen.show(entityData.getEntityWindow());
@@ -1073,7 +1073,7 @@ public class MoCClientProxy extends MoCProxy {
         ArrayList<String> moCreaturesList = new ArrayList<String>();
         for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
         {
-            moCreaturesList.add(entityEntry.getValue().getCommandSenderName());
+            moCreaturesList.add(entityEntry.getValue().getEntityName());
         }
         Collections.sort(moCreaturesList);
         entityList = guiapiSettings.addSetting(widgetInstaSpawnerColumn, "Creature Type:", "SpawnEntityList", moCreaturesList, mocSettingsConfig, "");
@@ -1095,7 +1095,7 @@ public class MoCClientProxy extends MoCProxy {
         String entityName = aList.get(selected);
         for (Map.Entry<String, MoCEntityData> entityEntry : MoCreatures.mocEntityMap.entrySet())
         {
-            if (entityEntry.getValue().getCommandSenderName().equalsIgnoreCase(entityName))
+            if (entityEntry.getValue().getEntityName().equalsIgnoreCase(entityName))
             {
                 try {
                     MoCreatures.packetPipeline.sendToServer(new MoCPacketInstaSpawn(entityEntry.getValue().getEntityID(), numberToSpawn));

@@ -55,11 +55,11 @@ public class EntityModData {
             if (this.livingSpawnMap.get(entityData.getLivingSpawnType()) == null)
             {
                 this.livingSpawnMap.put(entityData.getLivingSpawnType(), new HashMap<String, EntityData>());
-                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getCommandSenderName(), entityData);
+                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
             }
-            else if(!this.livingSpawnMap.get(entityData.getLivingSpawnType()).containsKey(entityData.getCommandSenderName()))
+            else if(!this.livingSpawnMap.get(entityData.getLivingSpawnType()).containsKey(entityData.getEntityName()))
             {
-                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getCommandSenderName(), entityData);
+                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
             }
             else result = false;
         }
@@ -82,7 +82,7 @@ public class EntityModData {
         if (entityData != null)
         {
             if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Adding " + entityData.getEntityClass() + " to " + entityData.getLivingSpawnType().name() + " spawnList for mod " + this.modClassID);
-            this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getCommandSenderName(), entityData);
+            this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
         }
     }
 
@@ -91,7 +91,7 @@ public class EntityModData {
         if (entityData != null)
         {
             if (CustomSpawner.debug) CustomSpawner.globalLog.logger.info("Removing " + entityData.getEntityClass() + " from " + entityData.getLivingSpawnType().name() + " spawnList for mod " + this.modClassID);
-            return (this.livingSpawnMap.get(entityData.getLivingSpawnType()).remove(entityData.getCommandSenderName()));
+            return (this.livingSpawnMap.get(entityData.getLivingSpawnType()).remove(entityData.getEntityName()));
         }
         return null;
     }

@@ -208,7 +208,7 @@ public class MoCProxy implements IGuiHandler {
         {
             for (MoCEntityData entityData : MoCreatures.mocEntityMap.values())
             {
-                MoCConfigCategory cat = mocEntityConfig.getCategory(entityData.getCommandSenderName().toLowerCase());
+                MoCConfigCategory cat = mocEntityConfig.getCategory(entityData.getEntityName().toLowerCase());
                 if (!cat.containsKey("frequency"))
                 {
                     cat.put("frequency", new MoCProperty("frequency", Integer.toString(entityData.getFrequency()), MoCProperty.Type.INTEGER));

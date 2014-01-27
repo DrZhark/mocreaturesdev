@@ -574,7 +574,7 @@ public class MoCreatures {
 
         for (MoCEntityData entityData : mocEntityMap.values())
         {
-            if (entityData.getCommandSenderName().equals("Wyvern")) continue;
+            if (entityData.getEntityName().equals("Wyvern")) continue;
             SpawnListEntry spawnEntry = entityData.getSpawnListEntry();
             for (BiomeDictionary.Type type : entityData.getBiomeTypes())
             {

@@ -144,7 +144,7 @@ public class CommandCMS extends CommandBase {
         CMSConfiguration config = environment.CMSEnvironmentConfig;
         boolean saved = false;
         boolean doNotShowHelp = false;
-        //System.out.println("par1 = " + par1 + ", par2 = " + par2 + ", par3 = " + par3);
+
         if (par1.equalsIgnoreCase("addbg") && !par2.equals("") && !par3.equals(""))
         { 
             EntityData entityData = environment.entityMap.get(par2);
@@ -253,7 +253,7 @@ public class CommandCMS extends CommandBase {
                         }
                     }
                     if (count != 0)
-                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getCommandSenderName(), count);
+                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName(), count);
                 }
                 title = "Showing total entities in chunk " + EnumChatFormatting.AQUA + playerChunkCoordX + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.AQUA + playerChunkCoordZ + EnumChatFormatting.WHITE + " ";
             }
@@ -271,7 +271,7 @@ public class CommandCMS extends CommandBase {
                     }
                     if (count != 0)
                     {
-                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getCommandSenderName(), count);
+                        countMap.put(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName(), count);
                     }
                 }
                 title = "Showing total entities in dimension " + world.provider.dimensionId;
@@ -312,7 +312,7 @@ public class CommandCMS extends CommandBase {
                 for (Map.Entry<String, EntityData> entityEntry : environment.entityMap.entrySet())
                 {
                     EntityData entityData = entityEntry.getValue();
-                    entityTypes.add(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getCommandSenderName());
+                    entityTypes.add(EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE + "|" + EnumChatFormatting.GREEN + entityData.getEntityName());
                 }
                 Collections.sort(entityTypes);
                 for (int i = 0; i < entityTypes.size(); i++)
@@ -352,7 +352,7 @@ public class CommandCMS extends CommandBase {
                         }
                     }
                 }
-                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + "."));
+                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "Killed " + EnumChatFormatting.AQUA + count + " " + EnumChatFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + EnumChatFormatting.WHITE  + "|" + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + "."));
                 return;
             }
             else if (par2.equalsIgnoreCase("force")) // kill everything
@@ -407,7 +407,7 @@ public class CommandCMS extends CommandBase {
             }
         }
         // START ENTITY FREQUENCY/BIOME SECTION
-        else if (par2ArrayOfStr.length >=2 && (par1.equalsIgnoreCase("frequency") || par1.equalsIgnoreCase("min") || par1.equalsIgnoreCase("max") || par1.equalsIgnoreCase("maxchunk") || par3.equalsIgnoreCase("biomegroup") || par3.equalsIgnoreCase("bg")))
+        else if (par2ArrayOfStr.length >=2 && (par1.equalsIgnoreCase("frequency") || par1.equalsIgnoreCase("min") || par1.equalsIgnoreCase("max") || par1.equalsIgnoreCase("maxchunk") || par1.equalsIgnoreCase("canspawn") || par1.equalsIgnoreCase("biomegroup") || par1.equalsIgnoreCase("bg")))
         {
             if (environment.entityMap.get(par2) == null)
                 return;
@@ -421,17 +421,17 @@ public class CommandCMS extends CommandBase {
                         {
                             if (par3.equals(""))
                             {
-                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency is " + EnumChatFormatting.AQUA + entityData.getFrequency() + EnumChatFormatting.WHITE + "."));
                                 return;
                             }
                             else {
                                 try 
                                 {
                                     entityData.setFrequency(Integer.parseInt(par3));
-                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getCommandSenderName().toLowerCase(),"frequency");
+                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName().toLowerCase(),"frequency");
                                     prop.value = par3;
                                     saved = true;
-                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " frequency to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                                 }
                                 catch(NumberFormatException ex)
                                 {
@@ -443,17 +443,17 @@ public class CommandCMS extends CommandBase {
                         {
                             if (par3.equals(""))
                             {
-                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMinSpawn() + EnumChatFormatting.WHITE + "."));
                                 doNotShowHelp = true;
                             }
                             else {
                                 try 
                                 {
                                     entityData.setMinSpawn(Integer.parseInt(par3));
-                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getCommandSenderName(),"min");
+                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"min");
                                     prop.value = par3;
                                     saved = true;
-                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " minGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                                 }
                                 catch(NumberFormatException ex)
                                 {
@@ -465,17 +465,17 @@ public class CommandCMS extends CommandBase {
                         {
                             if (par3.equals(""))
                             {
-                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn is " + EnumChatFormatting.AQUA + entityData.getMaxSpawn() + EnumChatFormatting.WHITE + "."));
                                 return;
                             }
                             else {
                                 try 
                                 {
                                     entityData.setMaxSpawn(Integer.parseInt(par3));
-                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getCommandSenderName(),"max");
+                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"max");
                                     prop.value = par3;
                                     saved = true;
-                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxGroupSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                                 }
                                 catch(NumberFormatException ex)
                                 {
@@ -487,17 +487,17 @@ public class CommandCMS extends CommandBase {
                         {
                             if (par3.equals(""))
                             {
-                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
                                 return;
                             }
                             else {
                                 try 
                                 {
                                     entityData.setMaxSpawn(Integer.parseInt(par3));
-                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getCommandSenderName(),"maxchunk");
+                                    CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"maxchunk");
                                     prop.value = par3;
                                     saved = true;
-                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                    par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                                 }
                                 catch(NumberFormatException ex)
                                 {
@@ -509,17 +509,17 @@ public class CommandCMS extends CommandBase {
                         {
                             if (par3.equals(""))
                             {
-                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
+                                par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " maxInChunk is " + EnumChatFormatting.AQUA + entityData.getMaxInChunk() + EnumChatFormatting.WHITE + "."));
                                 return;
                             }
                             else {
                                 try
                                 {
                                   entityData.setCanSpawn(Boolean.parseBoolean(par3));
-                                  CMSProperty prop = entityData.getEntityConfig().get(entityData.getCommandSenderName(),"canspawn");
-                                  prop.value = par3;
+                                  CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(),"canSpawn");
+                                  prop.set(par3);
                                   saved = true;
-                                  par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getCommandSenderName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
+                                  par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                                 }
                                 catch (NumberFormatException ex)
                                 {

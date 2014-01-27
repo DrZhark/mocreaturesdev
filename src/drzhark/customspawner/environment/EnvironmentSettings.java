@@ -440,7 +440,7 @@ public class EnvironmentSettings {
                 }
             }
             classToEntityMapping.put(clazz, entityData); // store for structure use
-            entityMap.put(entityData.getEntityMod().getModTag() + "|" + entityData.getCommandSenderName(), entityData); // used for fast lookups
+            entityMap.put(entityData.getEntityMod().getModTag() + "|" + entityData.getEntityName(), entityData); // used for fast lookups
             return entityData;
         }
         return null;
@@ -448,7 +448,7 @@ public class EnvironmentSettings {
 
     public void processEntityConfig(EntityData entityData)
     {
-        String entityName = entityData.getCommandSenderName();
+        String entityName = entityData.getEntityName();
         CMSConfigCategory entityCategory = null;
         // make sure the latest values of configs is loaded into memory before processing it
         entityData.getEntityConfig().load();
@@ -711,9 +711,9 @@ public class EnvironmentSettings {
         CMSEntityBiomeGroupsConfig.load();
         for (EntityData entityData : entityMap.values())
         {
-            if (debug) envLog.logger.info("generating biome spawn list for entity " + entityData.getCommandSenderName());
+            if (debug) envLog.logger.info("generating biome spawn list for entity " + entityData.getEntityName());
             entityData.getEntityConfig().load();
-            CMSConfigCategory entityCategory = entityData.getEntityConfig().getCategory(entityData.getCommandSenderName().toLowerCase());
+            CMSConfigCategory entityCategory = entityData.getEntityConfig().getCategory(entityData.getEntityName().toLowerCase());
          // Add spawnable biomes for each entity
             if (entityCategory.containsKey("biomegroups"))// && entityBiomeCategory.get(entityName).valueList != null)
             {
@@ -733,7 +733,7 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = CMSUtils.getBiomeModData(biomeModMap, biomeParts.get(0));
                             if (biomeModData != null)
                             {
-                                if (debug) envLog.logger.info("adding spawn biome " + biomeProps.valueList.get(j) + " for entity " + entityData.getCommandSenderName()); 
+                                if (debug) envLog.logger.info("adding spawn biome " + biomeProps.valueList.get(j) + " for entity " + entityData.getEntityName()); 
                                 spawnBiomes.add(biomeModData.getBiome(biomeProps.valueList.get(j)));
                                 entityData.addSpawnBiome(biomeModData.getBiome(biomeProps.valueList.get(j)));
                             }
@@ -770,7 +770,7 @@ public class EnvironmentSettings {
             }
             else // populate empty list with vanilla entries
             {
-                if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getCommandSenderName() + ", generating defaults...");
+                if (debug) envLog.logger.info("Could not find existing biomegroups for entity " + entityData.getEntityName() + ", generating defaults...");
                 ArrayList<String> biomes = new ArrayList<String>();
                 ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
                 if (entryBiomes != null)
@@ -782,7 +782,7 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = modEntry.getValue();
                             if (biomeModData.hasBiome(entryBiomes.get(i)))
                             {
-                                if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getCommandSenderName() + " in environment " + name());
+                                if (debug) envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());
                                 biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
                                 entityData.addSpawnBiome(entryBiomes.get(i));
                             }
@@ -791,16 +791,16 @@ public class EnvironmentSettings {
                 }
                 else
                 {
-                    if (debug) envLog.logger.info("No default biomes found for entity " + entityData.getCommandSenderName());
+                    if (debug) envLog.logger.info("No default biomes found for entity " + entityData.getEntityName());
                 }
                 CMSConfigCategory entityBiomeGroupCat = CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS);
-                if (!entityBiomeGroupCat.containsKey(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT"))
+                if (!entityBiomeGroupCat.containsKey(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT"))
                 {
-                    CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
-                    CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", prop);
-                    entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getCommandSenderName().toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
+                    CMSProperty prop = new CMSProperty(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes, CMSProperty.Type.STRING);
+                    CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", prop);
+                    entityCategory.put("biomegroups", new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getEntityName().toUpperCase() + "_DEFAULT")), CMSProperty.Type.STRING));
                     entityData.setBiomeGroups(prop.valueList);
-                    biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityData.getCommandSenderName().toUpperCase() + "_DEFAULT", biomes));
+                    biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", new BiomeGroupData(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", biomes));
                 }
             }
             // entity config comments
@@ -835,7 +835,7 @@ public class EnvironmentSettings {
                     {
                         BiomeGenBase[] biomesToSpawn = new BiomeGenBase[entityData.getSpawnBiomes().size()];
                         biomesToSpawn = entityData.getSpawnBiomes().toArray(biomesToSpawn);
-                        if (debug) envLog.logger.info(entityData.getCommandSenderName()  +" canSpawn = " + entityData.getCanSpawn());
+                        if (debug) envLog.logger.info(entityData.getEntityName()  +" canSpawn = " + entityData.getCanSpawn());
                         if (entityData.getCanSpawn())
                         {
                             CustomSpawner.instance().AddCustomSpawn(entityData.getEntityClass(), entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(), entityData.getLivingSpawnType(), biomesToSpawn);

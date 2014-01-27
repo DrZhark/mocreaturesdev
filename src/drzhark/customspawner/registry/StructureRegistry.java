@@ -93,12 +93,12 @@ public class StructureRegistry {
                     else
                     {
                         String tag = entityData.getEntityMod().getModTag();
-                        String entityName = (tag + "|" + entityData.getCommandSenderName());
+                        String entityName = (tag + "|" + entityData.getEntityName());
                         CMSConfigCategory entityCategory = new CMSConfigCategory(entityName, spawnEntryCat);
                         entityCategory.put("frequency", new CMSProperty("frequency", Integer.toString(spawnlistentry.itemWeight), CMSProperty.Type.INTEGER));
                         entityCategory.put("minSpawn", new CMSProperty("minSpawn", Integer.toString(spawnlistentry.minGroupCount), CMSProperty.Type.INTEGER));
                         entityCategory.put("maxSpawn", new CMSProperty("maxSpawn", Integer.toString(spawnlistentry.maxGroupCount), CMSProperty.Type.INTEGER));
-                        if (environment.debug) environment.envLog.logger.info("Adding default spawnentry " + entityData.getCommandSenderName() + " to STRUCTURE " + structCategoryName + " with frequency " + spawnlistentry.itemWeight + ", minSpawn " + spawnlistentry.minGroupCount + ", maxSpawn " + spawnlistentry.maxGroupCount);
+                        if (environment.debug) environment.envLog.logger.info("Adding default spawnentry " + entityData.getEntityName() + " to STRUCTURE " + structCategoryName + " with frequency " + spawnlistentry.itemWeight + ", minSpawn " + spawnlistentry.minGroupCount + ", maxSpawn " + spawnlistentry.maxGroupCount);
                         spawnListProp.valueList.add(entityName);
                     }
                 }
@@ -183,7 +183,7 @@ public class StructureRegistry {
                             SpawnListEntry spawnListEntry = new SpawnListEntry(entityData.getEntityClass(), frequency, minSpawn, maxSpawn);
                             if (CMSUtils.getSpawnListEntry(entityData.getEntityClass(), spawnList) == null) // dont add dupes
                             {
-                                if (environment.debug) environment.envLog.logger.info("Adding spawnentry " + entityData.getCommandSenderName() + " to STRUCTURE " + structCategoryName + " with frequency " + frequency + ", minSpawn " + minSpawn + ", maxSpawn " + maxSpawn);
+                                if (environment.debug) environment.envLog.logger.info("Adding spawnentry " + entityData.getEntityName() + " to STRUCTURE " + structCategoryName + " with frequency " + frequency + ", minSpawn " + minSpawn + ", maxSpawn " + maxSpawn);
                                 spawnList.add(new SpawnListEntry(entityData.getEntityClass(), frequency, minSpawn, maxSpawn));
                             }
                             else // update values
