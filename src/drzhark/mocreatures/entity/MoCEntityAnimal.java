@@ -294,7 +294,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                 || (entity.width >= this.width || entity.height >= this.height)
-                || (entity instanceof MoCEntityEgg));
+                || (entity instanceof MoCEntityEgg)
+                || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled()));
     }
 
     /**

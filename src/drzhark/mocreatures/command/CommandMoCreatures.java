@@ -45,6 +45,7 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc attackdolphins <boolean>");
         commands.add("/moc attackhorses <boolean>");
         commands.add("/moc attackwolves <boolean>");
+        commands.add("/moc canspawn <boolean>");
         commands.add("/moc caveogrechance <float>");
         commands.add("/moc caveogrestrength <float>");
         commands.add("/moc debug <boolean>");
@@ -75,6 +76,7 @@ public class CommandMoCreatures extends CommandBase {
         tabCompletionStrings.add("attackdolphins");
         tabCompletionStrings.add("attackhorses");
         tabCompletionStrings.add("attackwolves");
+        tabCompletionStrings.add("canspawn");
         tabCompletionStrings.add("caveogrechance");
         tabCompletionStrings.add("caveogrestrength");
         tabCompletionStrings.add("debug");
@@ -318,7 +320,7 @@ public class CommandMoCreatures extends CommandBase {
             par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "Could not find player " + EnumChatFormatting.GREEN + playername + EnumChatFormatting.RED + ". Please verify the player is online and/or name was entered correctly."));
         }
         // START ENTITY FREQUENCY/BIOME SECTION
-        else if (charArray.length >= 2 && (command.equalsIgnoreCase("frequency") || command.equalsIgnoreCase("minspawn") || command.equalsIgnoreCase("maxspawn") || command.equalsIgnoreCase("maxchunk")))
+        else if (charArray.length >= 2 && (command.equalsIgnoreCase("frequency") || command.equalsIgnoreCase("minspawn") || command.equalsIgnoreCase("maxspawn") || command.equalsIgnoreCase("maxchunk") || command.equalsIgnoreCase("canspawn")))
         {
             MoCEntityData entityData = MoCreatures.mocEntityMap.get(par2);//modEntry.getValue().getCreature(name);
 
@@ -419,8 +421,8 @@ public class CommandMoCreatures extends CommandBase {
                     try
                     {
                       entityData.setCanSpawn(Boolean.parseBoolean(par3));
-                      MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxchunk");
-                      prop.value = par3;
+                      MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "canspawn");
+                      prop.set(par3);
                       saved = true;
                       par1ICommandSender.addChatMessage(new ChatComponentTranslation("Set " + EnumChatFormatting.GREEN + entityData.getEntityName() + EnumChatFormatting.WHITE + " canSpawn to " + EnumChatFormatting.AQUA + par3 + EnumChatFormatting.WHITE + "."));
                     }

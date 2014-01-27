@@ -227,7 +227,8 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 || (entity instanceof MoCEntityKittyBed) || (entity instanceof MoCEntityLitterBox) 
                 || (this.getIsTamed() && (entity instanceof MoCEntityAnimal && ((MoCEntityAnimal) entity).getIsTamed())) 
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves)) 
-                || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)));
+                || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
+                || ((entity instanceof MoCEntityAnimal || entity instanceof MoCEntityAmbient || entity instanceof MoCEntityAquatic) && !MoCreatures.isHuntingEnabled()));
     }
 
     @Override

@@ -24,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -323,7 +324,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         for (int i = 0; i < list.size(); i++)
         {
             Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) || ((entity1.width > 0.5D) && (entity1.height > 0.5D)))
+            if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox) || ((entity1.width > 0.5D) && (entity1.height > 0.5D)) || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled()))
             {
                 continue;
             }

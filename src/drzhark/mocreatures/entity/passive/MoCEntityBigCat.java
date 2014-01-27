@@ -523,6 +523,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                     || (getIsTamed() && (entity1 instanceof IMoCEntity) && ((IMoCEntity)entity1).getIsTamed() ) 
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses)) 
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
+                    || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled()) // don't attack if hunting is disabled
                     )
             {
                 continue;
