@@ -79,7 +79,6 @@ public class MoCPacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abs
 
     // In line decoding and handling of the packet
     @Override
-    @SideOnly(Side.CLIENT)
     protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
         ByteBuf payload = msg.payload();
         byte discriminator = payload.readByte();
@@ -94,7 +93,7 @@ public class MoCPacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abs
         EntityPlayer player;
         switch (FMLCommonHandler.instance().getEffectiveSide()) {
             case CLIENT:
-                player = Minecraft.getMinecraft().thePlayer;
+                player = this.getClientPlayer();
                 pkt.handleClientSide(player);
                 break;
 
@@ -135,6 +134,11 @@ public class MoCPacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abs
                 return com;
             }
         });
+    }
+
+    @SideOnly(Side.CLIENT)
+    private EntityPlayer getClientPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
     }
 
     /**

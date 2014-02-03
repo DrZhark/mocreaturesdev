@@ -60,6 +60,7 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.packet.MoCPacketAttachedEntity;
 import drzhark.mocreatures.network.packet.MoCPacketNameGUI;
@@ -251,7 +252,12 @@ public class MoCTools {
         try
         {
             MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
-            Class myClass = entityData.getEntityClass();
+            Class myClass = null;
+            if (entityData == null && eName.contains("PetScorpion")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityPetScorpion.class;
+            }
+            else myClass = entityData.getEntityClass();
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] { World.class }).newInstance(new Object[] { worldObj });
         }catch (Exception e) 
         { 

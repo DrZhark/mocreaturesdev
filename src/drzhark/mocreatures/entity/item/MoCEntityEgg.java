@@ -371,7 +371,7 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                     }
                     
-                    if (getEggType() > 49 && getEggType() < 55) //wyverns for now it uses 50 - 54
+                    if (getEggType() > 49 && getEggType() < 62) //wyverns for now it uses 50 - 61
                     {
                         MoCEntityWyvern entityspawn = new MoCEntityWyvern(worldObj);
                         int typeInt = getEggType() - 49;

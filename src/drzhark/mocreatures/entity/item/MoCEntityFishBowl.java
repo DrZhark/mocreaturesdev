@@ -112,7 +112,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     @Override
     public boolean canEntityBeSeen(Entity entity)
     {
-        return worldObj.clip(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
+        return worldObj.rayTraceBlocks(Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ), Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
     }
 
     @Override
