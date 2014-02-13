@@ -651,8 +651,8 @@ public final class CustomSpawner {
             Block block = par1World.getBlock(x, y - 1, z);
             boolean spawnBlock;
             if (entitySpawnType.getEnumCreatureType() != null)
-                spawnBlock = block.canCreatureSpawn(entitySpawnType.getEnumCreatureType(), par1World, x, y, z);
-            else spawnBlock = (block != null && canCreatureSpawn(block, par1World, x, y, z));
+                spawnBlock = block != null && block.canCreatureSpawn(entitySpawnType.getEnumCreatureType(), par1World, x, y - 1, z);
+            else spawnBlock = (block != null && canCreatureSpawn(block, par1World, x, y - 1, z));
             return spawnBlock && block != Blocks.bedrock && !par1World.getBlock(x, y, z).isNormalCube() && !par1World.getBlock(x, y, z).getMaterial().isLiquid() && !par1World.getBlock(x, y + 1, z).isNormalCube();
         }
     }
