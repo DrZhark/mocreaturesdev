@@ -170,7 +170,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     public double getYOffset()
     {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isClient) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
             return (yOffset - 1.15F);
@@ -240,7 +240,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     {
         if ((ridingEntity != null) || !onGround || !MoCreatures.proxy.staticBed)
         {
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 super.moveEntity(d, d1, d2);
             }

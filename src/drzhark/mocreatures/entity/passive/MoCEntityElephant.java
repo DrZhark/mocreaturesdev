@@ -1099,7 +1099,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
     }
     
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
       return MoCreatures.animalHide;
     }
@@ -1107,7 +1107,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.getName()) > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
+        return (MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
     
     @Override
@@ -1242,7 +1242,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
             if (!block.isAir(worldObj, MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023221D - prevRotationPitch), MathHelper.floor_double(posZ)))
             {
                 Block.SoundType stepsound = block.stepSound;
-                worldObj.playSoundAtEntity(this, stepsound.func_150498_e(), stepsound.func_150497_c() * 0.5F, stepsound.func_150494_d() * 0.75F);
+                worldObj.playSoundAtEntity(this, stepsound.getStepResourcePath(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
             }
         }
     }

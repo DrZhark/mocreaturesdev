@@ -69,14 +69,14 @@ public class MoCEntityFishBowl extends EntityLiving {
 
     public void setPickedUp(boolean flag)
     {
-        if (worldObj.isClient) { return; }
+        if (worldObj.isRemote) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(15, Byte.valueOf(input));
     }
 
     public void setType(int i)
     {
-        if (worldObj.isClient) { return; }
+        if (worldObj.isRemote) { return; }
         dataWatcher.updateObject(16, Integer.valueOf(i));
     }
 
@@ -148,7 +148,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     public double getYOffset()
     {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isClient) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) || ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
             return (yOffset - 1.0F);
@@ -207,7 +207,7 @@ public class MoCEntityFishBowl extends EntityLiving {
 
             entityplayer.inventory.addItemStackToInventory(mystack);
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 entityplayer.onItemPickup(this, 1);
             }
@@ -252,7 +252,7 @@ public class MoCEntityFishBowl extends EntityLiving {
     {
         if ((ridingEntity != null) || !onGround)
         {
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 super.moveEntity(d, d1, d2);
             }

@@ -98,7 +98,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
 
     public void setHiding(boolean flag)
     {
-        if (worldObj.isClient) { return; }
+        if (worldObj.isRemote) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(24, Byte.valueOf(input));
     }
@@ -814,7 +814,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             setHiding(false);
-            if (!this.worldObj.isClient && (this.riddenByEntity == null || this.riddenByEntity == entityplayer))
+            if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == entityplayer))
             {
                 entityplayer.mountEntity(this);
             }
@@ -873,7 +873,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         boolean flag = (rand.nextInt(3) == 0);
         if (flag && (this.getType() == 8)) // unicorn

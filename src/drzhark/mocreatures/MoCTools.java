@@ -616,7 +616,7 @@ public class MoCTools {
         Block block = entity.worldObj.getBlock(i, j, k);
         if (block != Blocks.air && block.getMaterial() == material)
         {
-            float f = BlockLiquid.func_149801_b(entity.worldObj.getBlockMetadata(i, j, k)) - 0.1111111F;
+            float f = BlockLiquid.getLiquidHeightPercent(entity.worldObj.getBlockMetadata(i, j, k)) - 0.1111111F;
             float f1 = (float) (j + 1) - f;
             return d < (double) f1;
         }
@@ -976,9 +976,9 @@ public class MoCTools {
         for (int l2 = arraylist.size() - 1; l2 >= 0; l2--)
         {
             ChunkPosition chunkposition = (ChunkPosition) arraylist.get(l2);
-            int j3 = chunkposition.field_151329_a;
-            int l3 = chunkposition.field_151327_b;
-            int j4 = chunkposition.field_151328_c;
+            int j3 = chunkposition.chunkPosX;
+            int l3 = chunkposition.chunkPosY;
+            int j4 = chunkposition.chunkPosZ;
             Block block = entity.worldObj.getBlock(j3, l3, j4);
             for (int j5 = 0; j5 < 5; j5++)
             {
@@ -1016,7 +1016,7 @@ public class MoCTools {
             {
                 int metadata = entity.worldObj.getBlockMetadata(j3, l3, j4);
                 BlockEvent.BreakEvent event = null;
-                if (!entity.worldObj.isClient)
+                if (!entity.worldObj.isRemote)
                 {
                     event = new BlockEvent.BreakEvent(j3, l3, j4, entity.worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(entity.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
                 }
@@ -1037,15 +1037,15 @@ public class MoCTools {
             for (int i3 = arraylist.size() - 1; i3 >= 0; i3--)
             {
                 ChunkPosition chunkposition1 = (ChunkPosition) arraylist.get(i3);
-                int k3 = chunkposition1.field_151329_a;
-                int i4 = chunkposition1.field_151327_b;
-                int k4 = chunkposition1.field_151328_c;
+                int k3 = chunkposition1.chunkPosX;
+                int i4 = chunkposition1.chunkPosY;
+                int k4 = chunkposition1.chunkPosZ;
                 Block block = entity.worldObj.getBlock(k3, i4, k4);
                 if ((block == Blocks.air) && (entity.worldObj.rand.nextInt(8) == 0))
                 {
                     int metadata = entity.worldObj.getBlockMetadata(k3, i4, k4);
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isClient)
+                    if (!entity.worldObj.isRemote)
                     {
                         event = new BlockEvent.BreakEvent(k3, i4, k4, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }
@@ -1188,7 +1188,7 @@ public class MoCTools {
                     block1 = entity.worldObj.getBlock(x, y, z);
                     int metadata = entity.worldObj.getBlockMetadata(x, y, z);
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isClient)
+                    if (!entity.worldObj.isRemote)
                     {
                         event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }
@@ -1223,7 +1223,7 @@ public class MoCTools {
                     Block block2 = entity.worldObj.getBlock(x, y, z);
                     int metadata = entity.worldObj.getBlockMetadata(x, y, z);
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isClient)
+                    if (!entity.worldObj.isRemote)
                     {
                         event = new BlockEvent.BreakEvent(x, y, z, entity.worldObj, block2, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }
@@ -1392,7 +1392,7 @@ public class MoCTools {
                 {
                     int metadata = entity.worldObj.getBlockMetadata(x, y + i, z);
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isClient)
+                    if (!entity.worldObj.isRemote)
                     {
                         event = new BlockEvent.BreakEvent(x, y + i, z, entity.worldObj, block, metadata, FakePlayerFactory.get((WorldServer)entity.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }

@@ -109,7 +109,7 @@ public class GuiModScreen extends GuiScreen {
     protected GuiModScreen(GuiScreen screen) {
         parentScreen = screen;
         GuiModScreen.currentScreen = this;
-        field_146291_p = false;
+        allowUserInput = false;
     }
 
     /**
@@ -124,7 +124,7 @@ public class GuiModScreen extends GuiScreen {
         mainwidget = widget;
         parentScreen = screen;
         GuiModScreen.currentScreen = this;
-        field_146291_p = false;
+        allowUserInput = false;
     }
 
     @Override

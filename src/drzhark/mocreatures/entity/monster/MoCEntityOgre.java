@@ -154,7 +154,7 @@ public class MoCEntityOgre extends MoCEntityMob{
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         if (getType() < 3)
         {

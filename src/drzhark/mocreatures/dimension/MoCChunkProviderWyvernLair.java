@@ -400,8 +400,8 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
      */
     public void populate(IChunkProvider par1IChunkProvider, int par2, int par3)
     {
-        BlockFalling.field_149832_M = true;
-        
+        BlockFalling.fallInstantly = true;
+
         MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(par1IChunkProvider, worldObj, worldObj.rand, par2, par3, false));
         
         int var4 = par2 * 16;
@@ -444,7 +444,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider
         }
 
         MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(par1IChunkProvider, worldObj, worldObj.rand, par2, par3, false));
-        BlockFalling.field_149832_M = false;
+        BlockFalling.fallInstantly = false;
     }
 
     private boolean towerDone = false;

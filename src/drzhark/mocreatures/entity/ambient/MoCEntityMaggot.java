@@ -34,7 +34,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.slime_ball;
     }

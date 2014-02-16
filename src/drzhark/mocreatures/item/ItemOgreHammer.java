@@ -86,7 +86,7 @@ public class ItemOgreHammer extends MoCItem
                     {
                         Block block = Block.getBlockById(blockInfo[0]);
                         entityplayer.worldObj.setBlock(MathHelper.floor_double(newPosX),  MathHelper.floor_double(newPosY),  MathHelper.floor_double(newPosZ), block, blockInfo[1], 3);
-                        entityplayer.worldObj.playSoundEffect((double)((float)newPosX + 0.5F), (double)((float)newPosY + 0.5F), (double)((float)newPosZ + 0.5F), block.stepSound.func_150496_b(), (block.stepSound.func_150497_c() + 1.0F) / 2.0F, block.stepSound.func_150494_d() * 0.8F);
+                        entityplayer.worldObj.playSoundEffect((double)((float)newPosX + 0.5F), (double)((float)newPosY + 0.5F), (double)((float)newPosZ + 0.5F), block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
                     }
                     MoCreatures.proxy.hammerFX(entityplayer);
                     entityplayer.setItemInUse(par1ItemStack, 200);

@@ -89,7 +89,7 @@ public class MoCEntityDeer extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.fur;
     }
@@ -117,7 +117,7 @@ public class MoCEntityDeer extends MoCEntityTameable {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if ((getType() == 3) && !getIsAdult() && (rand.nextInt(250) == 0))
             {

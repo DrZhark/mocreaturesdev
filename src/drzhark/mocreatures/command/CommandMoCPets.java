@@ -149,7 +149,7 @@ public class CommandMoCPets extends CommandBase {
                         // check if in same dimension
                         if (entity.dimension == player.dimension)
                             entity.setPosition(player.posX, player.posY, player.posZ);
-                        else if (!player.worldObj.isClient)// transfer entity to player dimension
+                        else if (!player.worldObj.isRemote)// transfer entity to player dimension
                         {
                             Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
                             if (newEntity != null)

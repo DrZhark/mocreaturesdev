@@ -188,7 +188,7 @@ public class MoCEntityEnt extends MoCEntityAnimal{
             int zCoord = MathHelper.floor_double(this.posZ);
             Block block = Blocks.grass;
             BlockEvent.BreakEvent event = null;
-            if (!this.worldObj.isClient)
+            if (!this.worldObj.isRemote)
             {
                 event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, block, 0, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
             }
@@ -223,7 +223,7 @@ public class MoCEntityEnt extends MoCEntityAnimal{
                     int yCoord = MathHelper.floor_double(this.posY);
                     int zCoord = MathHelper.floor_double(this.posZ);
                     BlockEvent.BreakEvent event = null;
-                    if (!this.worldObj.isClient)
+                    if (!this.worldObj.isRemote)
                     {
                         event = new BlockEvent.BreakEvent(xCoord, yCoord, zCoord, this.worldObj, fertileB, metaD, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }

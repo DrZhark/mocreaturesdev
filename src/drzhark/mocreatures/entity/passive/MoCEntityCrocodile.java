@@ -291,7 +291,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
 
                 //the following if to be removed from SMP
 
-                if (!worldObj.isClient && riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
+                if (!worldObj.isRemote && riddenByEntity != null && riddenByEntity instanceof EntityPlayer)
                 {
                     //TODO 4FIX
                     //MoCreatures.mc.gameSettings.thirdPersonView = 1; 
@@ -518,7 +518,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.hideCroc;
     }

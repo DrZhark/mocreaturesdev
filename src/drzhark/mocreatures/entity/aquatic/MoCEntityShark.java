@@ -148,7 +148,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (!getIsAdult() && (rand.nextInt(50) == 0))
             {
@@ -170,7 +170,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     public void setDead()
     {
-        if (!worldObj.isClient && getIsTamed() && (getHealth() > 0))
+        if (!worldObj.isRemote && getIsTamed() && (getHealth() > 0))
         {
             return;
         }

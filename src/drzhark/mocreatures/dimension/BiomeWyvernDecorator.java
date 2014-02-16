@@ -124,8 +124,8 @@ public class BiomeWyvernDecorator extends BiomeDecorator
 
             if (blockflower.getMaterial() != Material.air)
             {
-                this.field_150514_p.func_150550_a(blockflower, BlockFlower.func_149856_f(s));
-                this.field_150514_p.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+                this.yellowFlowerGen.func_150550_a(blockflower, BlockFlower.func_149856_f(s));
+                this.yellowFlowerGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
             }
         }
 

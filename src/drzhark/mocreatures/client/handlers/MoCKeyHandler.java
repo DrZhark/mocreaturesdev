@@ -41,11 +41,16 @@ public class MoCKeyHandler {
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event)
     {
+        Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying
+        EntityPlayer ep = MoCClientProxy.mc.thePlayer;
+        if (ep == null || ep.ridingEntity == null) return;
+        if (FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().getChatOpen()) return; // if chatting return
         boolean kbJump = Keyboard.isKeyDown(MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode());
         boolean kbDive = Keyboard.isKeyDown(diveBinding.getKeyCode());
         boolean kbGui = Keyboard.isKeyDown(guiBinding.getKeyCode());
+        boolean isJumpKeyDown = Keyboard.isKeyDown(MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode());
         //boolean kbDismount = kb.keyDescription.equals("MoCreatures Dismount");
-        boolean chatting = FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().func_146241_e();
+
         if ((kbGui) && (!MoCreatures.isServer()))
         {
             this.localScreen = MoCClientProxy.instance.MoCScreen;
@@ -59,17 +64,12 @@ public class MoCKeyHandler {
             }
         }
 
-       // ++keyCount;
         /**
          * this avoids double jumping
          */
-        if (/*keyCount < 4 ||*/chatting) { return; }
-
-        EntityPlayer ep = MoCClientProxy.mc.thePlayer;
-
         if (kbJump && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
         {
-           // keyCount = 0;
+            // keyCount = 0;
             // jump code needs to be executed client/server simultaneously to take
             ((IMoCEntity) ep.ridingEntity).makeEntityJump();
             MoCreatures.packetPipeline.sendToServer(new MoCPacketEntityJump());

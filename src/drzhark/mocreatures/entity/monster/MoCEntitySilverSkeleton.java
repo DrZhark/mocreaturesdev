@@ -69,7 +69,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         if (rand.nextInt(10) == 0)
         {

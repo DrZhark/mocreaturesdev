@@ -48,7 +48,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.redstone;
     }
@@ -56,7 +56,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public void onLivingUpdate()
     {
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (rand.nextInt(40) == 0)
             {

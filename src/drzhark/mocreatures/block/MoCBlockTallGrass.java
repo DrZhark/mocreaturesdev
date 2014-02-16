@@ -132,7 +132,7 @@ public class MoCBlockTallGrass extends BlockBush implements IShearable
     }
     
     @Override
-    protected boolean func_149854_a(Block block)
+    protected boolean canPlaceBlockOn(Block block)
     {
         return block == Blocks.grass || block == Blocks.dirt || block == Blocks.farmland || block instanceof MoCBlockDirt || block instanceof MoCBlockGrass;
     }

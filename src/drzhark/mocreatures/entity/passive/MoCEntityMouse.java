@@ -129,7 +129,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
         return ( 
-                (MoCreatures.proxy.getFrequency(this.getName()) > 0) &&
+                (MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) &&
                 worldObj.checkNoEntityCollision(boundingBox) 
                 && (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0) 
                 && !worldObj.isAnyLiquid(boundingBox) 
@@ -147,7 +147,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.wheat_seeds;
     }
@@ -217,7 +217,7 @@ public class MoCEntityMouse extends MoCEntityAnimal
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if(!worldObj.isClient)
+        if(!worldObj.isRemote)
         {
             if(rand.nextInt(15) == 0)
             {

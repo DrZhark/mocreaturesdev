@@ -145,6 +145,18 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
         return super.interact(entityplayer);
     }
+
+    // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
+    @Override
+    public void setDead()
+    {
+        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
+        {
+            return;
+        }
+        super.setDead();
+    }
+
     /**
      * Play the taming effect, will either be hearts or smoke depending on status
      */

@@ -280,7 +280,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.fish;
     }
@@ -364,7 +364,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             entityplayer.posY = posY;
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 entityplayer.mountEntity(this);
             }

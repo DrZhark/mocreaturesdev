@@ -36,6 +36,7 @@ public class MoCEntityData {
         this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
         this.spawnListEntry = spawnListEntry;
+        MoCreatures.entityMap.put(spawnListEntry.entityClass, this);
     }
 
     public MoCEntityData(String name, int id, int maxchunk, EnumCreatureType type, SpawnListEntry spawnListEntry, List<Type> biomeTypes)
@@ -49,6 +50,7 @@ public class MoCEntityData {
         this.maxGroup = spawnListEntry.maxGroupCount;
         this.maxSpawnInChunk = maxchunk;
         this.spawnListEntry = spawnListEntry;
+        MoCreatures.entityMap.put(spawnListEntry.entityClass, this);
     }
 
     public Class<? extends EntityLiving> getEntityClass()

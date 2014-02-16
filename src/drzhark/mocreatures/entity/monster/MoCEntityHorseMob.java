@@ -341,7 +341,7 @@ public class MoCEntityHorseMob extends MoCEntityMob
     }
     
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         boolean flag = (rand.nextInt(5)==0);
 

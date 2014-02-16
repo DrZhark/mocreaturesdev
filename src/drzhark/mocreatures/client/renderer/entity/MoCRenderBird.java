@@ -51,7 +51,7 @@ public class MoCRenderBird extends MoCRenderMoC {
     @Override
     protected void preRenderCallback(EntityLivingBase entityliving, float f)
     {
-        if (!entityliving.worldObj.isClient && (entityliving.ridingEntity != null))
+        if (!entityliving.worldObj.isRemote && (entityliving.ridingEntity != null))
         {
 
             GL11.glTranslatef(0.0F, 1.3F, 0.0F);

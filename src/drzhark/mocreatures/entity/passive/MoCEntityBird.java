@@ -248,7 +248,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.feather;
     }
@@ -346,7 +346,7 @@ public class MoCEntityBird extends MoCEntityTameable {
     {
         super.onLivingUpdate();
         // fixes glide issue in SMP
-        if (worldObj.isClient)
+        if (worldObj.isRemote)
         {
             if (ridingEntity != null)
             {

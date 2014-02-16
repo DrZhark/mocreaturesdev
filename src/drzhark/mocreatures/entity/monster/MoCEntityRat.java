@@ -154,7 +154,7 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.ratRaw;
     }

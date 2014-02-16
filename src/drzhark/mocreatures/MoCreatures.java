@@ -348,6 +348,7 @@ public class MoCreatures {
 
     public static MoCPlayerTracker tracker;
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
+    public static Map<Class<? extends EntityLiving>, MoCEntityData> entityMap = new HashMap<Class<? extends EntityLiving>, MoCEntityData>();
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
     public static List<String> defaultBiomeSupport = new ArrayList<String>();
     public static final String CATEGORY_ITEM_IDS = "item-ids";
@@ -371,7 +372,7 @@ public class MoCreatures {
         FMLCommonHandler.instance().bus().register(new MoCPlayerTracker());
     }
 
-    //how to check for client: if(FMLCommonHandler.instance().getSide().isClient())
+    //how to check for client: if(FMLCommonHandler.instance().getSide().isRemote())
 
     @EventHandler
     public void load(FMLInitializationEvent event)
@@ -548,7 +549,6 @@ public class MoCreatures {
         mocEntityMap.put("Turtle", new MoCEntityData("Turtle", 3, EnumCreatureType.creature, new SpawnListEntry(MoCEntityTurtle.class, 6, 1, 2), new ArrayList(Arrays.asList(Type.JUNGLE, Type.SWAMP))));
         mocEntityMap.put("WildHorse", new MoCEntityData("WildHorse", 4, EnumCreatureType.creature, new SpawnListEntry(MoCEntityHorse.class, 8, 1, 4), new ArrayList(Arrays.asList(Type.FOREST, Type.HILLS, Type.MOUNTAIN, Type.PLAINS))));
         mocEntityMap.put("Wyvern", new MoCEntityData("Wyvern", 3, EnumCreatureType.creature, new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3), new ArrayList()));
-        //mocEntityMap.put(new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3), new ArrayList(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.MOUNTAIN, Type.SWAMP)));
         // water creatures
         mocEntityMap.put("Dolphin", new MoCEntityData("Dolphin", 3, EnumCreatureType.waterCreature, new SpawnListEntry(MoCEntityDolphin.class, 6, 1, 1), new ArrayList(Arrays.asList(Type.BEACH, Type.WATER))));
         mocEntityMap.put("Fishy", new MoCEntityData("Fishy", 6, EnumCreatureType.waterCreature, new SpawnListEntry(MoCEntityFishy.class, 12, 1, 6), new ArrayList(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER))));

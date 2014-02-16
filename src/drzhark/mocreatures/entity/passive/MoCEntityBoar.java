@@ -142,7 +142,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
 
         if (rand.nextInt(2) == 0) { return Items.porkchop; }

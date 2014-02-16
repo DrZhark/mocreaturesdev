@@ -83,14 +83,14 @@ public class GuiAPI implements IFMLLoadingPlugin {
         int xPos = -1; // difficulty
         int yPos = -1; // touchscreen mode
         for (GuiOptionButton guiButton : buttonsPreSorted) {
-            if(guiButton.func_146136_c() == GameSettings.Options.DIFFICULTY)
+            if(guiButton.returnEnumOptions() == GameSettings.Options.DIFFICULTY)
             {
-                xPos = guiButton.field_146128_h;
+                xPos = guiButton.xPosition;
             }
             
-            if(guiButton.func_146136_c() == GameSettings.Options.TOUCHSCREEN)
+            if(guiButton.returnEnumOptions() == GameSettings.Options.TOUCHSCREEN)
             {
-                yPos = guiButton.field_146129_i;
+                yPos = guiButton.yPosition;
             }
         }
 

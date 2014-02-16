@@ -241,7 +241,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         int i = rand.nextInt(12);
         if (getIsHumanForm())
@@ -360,14 +360,14 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             entity.onKillEntity(this);
         }
 
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             for (int i = 0; i < 2; i++)
             {
-                Item item = func_146068_u();
+                Item item = getDropItem();
                 if (item != null)
                 {
-                    func_145779_a(item, 1);
+                    dropItem(item, 1);
                 }
             }
 
@@ -378,7 +378,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (((IsNight() && getIsHumanForm()) || (!IsNight() && !getIsHumanForm())) && (rand.nextInt(250) == 0))
             {

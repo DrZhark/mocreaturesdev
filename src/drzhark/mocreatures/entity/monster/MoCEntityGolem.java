@@ -241,7 +241,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             Block block = worldObj.getBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
             int metadata = worldObj.getBlockMetadata(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
             BlockEvent.BreakEvent event = null;
-            if (!this.worldObj.isClient)
+            if (!this.worldObj.isRemote)
             {
                 event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, metadata, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
             }

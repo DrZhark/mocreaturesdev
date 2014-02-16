@@ -28,7 +28,7 @@ public class MoCItemCreaturePedia extends MoCItem {
      */
     public void itemInteractionForEntity2(ItemStack par1ItemStack, EntityLiving entityliving)
     {
-        if (entityliving.worldObj.isClient) { return; }
+        if (entityliving.worldObj.isRemote) { return; }
 
         if (entityliving instanceof MoCEntityHorse)
         {
@@ -58,7 +58,7 @@ public class MoCItemCreaturePedia extends MoCItem {
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             double dist = 5D;
             double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));

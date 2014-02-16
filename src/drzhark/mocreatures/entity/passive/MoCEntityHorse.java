@@ -386,7 +386,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if (block != Blocks.air)
             {
                 SoundType stepsound = block.stepSound;
-                worldObj.playSoundAtEntity(this, stepsound.func_150498_e(), stepsound.func_150497_c() * 0.5F, stepsound.func_150494_d() * 0.75F);
+                worldObj.playSoundAtEntity(this, stepsound.getStepResourcePath(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
             }
         }
     }
@@ -561,7 +561,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         boolean flag = (rand.nextInt(4) == 0);
 
@@ -1747,7 +1747,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 localhorsechest = new MoCAnimalChest("HorseChest", getInventorySize());// , new
             }
             // only open this chest on server side
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 entityplayer.displayGUIChest(localhorsechest);
             }
@@ -2005,10 +2005,10 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 {
                     shuffleCounter = 0;
                     MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), false), this.worldObj.provider.dimensionId);
-                    BlockJukebox blockjukebox = (BlockJukebox) worldObj.getBlock(jukebox.field_145851_c, jukebox.field_145848_d, jukebox.field_145849_e);
+                    BlockJukebox blockjukebox = (BlockJukebox) worldObj.getBlock(jukebox.xCoord, jukebox.yCoord, jukebox.zCoord);
                     if (blockjukebox != null)
                     {
-                        blockjukebox.func_149925_e(worldObj, jukebox.field_145851_c, jukebox.field_145848_d, jukebox.field_145849_e);
+                        blockjukebox.func_149925_e(worldObj, jukebox.xCoord, jukebox.yCoord, jukebox.zCoord);
                     }
                     flag = false;
                 }
@@ -2026,7 +2026,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         Block block = worldObj.getBlock(i - 1, j, k - 1);
         int metadata = worldObj.getBlockMetadata(i - 1, j, k - 1);
         BlockEvent.BreakEvent event = null;
-        if (!this.worldObj.isClient)
+        if (!this.worldObj.isRemote)
         {
             event = new BlockEvent.BreakEvent(i - 1, j, k - 1, worldObj, block, metadata, FakePlayerFactory.get(DimensionManager.getWorld(this.worldObj.provider.dimensionId), MoCreatures.MOCFAKEPLAYER));
         }

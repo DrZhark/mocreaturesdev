@@ -53,7 +53,7 @@ public class MoCEntityHellRat extends MoCEntityRat {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         boolean flag = (rand.nextInt(3) == 0);
         if (flag) { return Item.getItemFromBlock(Blocks.fire); }

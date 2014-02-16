@@ -186,7 +186,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         boolean flag = rand.nextInt(2) == 0;
         if (flag) return Items.slime_ball;

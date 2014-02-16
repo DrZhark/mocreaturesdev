@@ -402,7 +402,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         if (!getIsAdult()) { return Items.string; }
 

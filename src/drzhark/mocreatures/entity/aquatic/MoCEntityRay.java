@@ -90,7 +90,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             entityplayer.rotationYaw = rotationYaw;
             entityplayer.rotationPitch = rotationPitch;
             entityplayer.posY = posY;
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 entityplayer.mountEntity(this);
             }
@@ -103,7 +103,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (!getIsAdult() && (rand.nextInt(50) == 0))
             {

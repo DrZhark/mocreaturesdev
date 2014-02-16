@@ -287,9 +287,9 @@ public final class CustomSpawner {
                 if (eligibleChunksForSpawning.get(chunkcoordintpair) != null && !((Boolean) eligibleChunksForSpawning.get(chunkcoordintpair)).booleanValue()) // blood - added null check to avoid crashing during SSP spawning
                 {
                     ChunkPosition chunkpos = getRandomSpawningPointInChunk(world, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
-                    int posX = chunkpos.field_151329_a;
-                    int posY = chunkpos.field_151327_b;
-                    int posZ = chunkpos.field_151328_c;
+                    int posX = chunkpos.chunkPosX;
+                    int posY = chunkpos.chunkPosY;
+                    int posZ = chunkpos.chunkPosZ;
 
                     if (!world.getBlock(posX, posY, posZ).isNormalCube() && world.getBlock(posX, posY, posZ).getMaterial() == entitySpawnType.getLivingMaterial())
                     {

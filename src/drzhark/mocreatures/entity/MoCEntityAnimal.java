@@ -679,7 +679,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCreatures.proxy.getFrequency(this.getName()) <= 0)
+        if (MoCreatures.entityMap.get(this.getClass()).getFrequency() <= 0)
             return false;
         if (worldObj.provider.dimensionId != 0)
         {
@@ -780,7 +780,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     jumpPending = false;
                 }
 
-                if (!worldObj.isClient)
+                if (!worldObj.isRemote)
                 {
                     super.moveEntityWithHeading(par1, par2);
                     //moveEntity(motionX, motionY, motionZ);
@@ -808,7 +808,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 }
             }
             double d = posY;
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 moveFlying(f, f1, 0.02F);
                 //moveEntity(motionX, motionY, motionZ);
@@ -907,7 +907,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     motionZ += rand.nextDouble() / 10D;
                 }
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (!worldObj.isClient)
+                if (!worldObj.isRemote)
                 {
                     moveEntity(motionX, motionY, motionZ);
                 }
@@ -999,7 +999,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 setRotation(rotationYaw, rotationPitch);
             }
             // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 //needs to be left in so flying mounts can be controlled
                 //moveEntity(motionX, motionY, motionZ);

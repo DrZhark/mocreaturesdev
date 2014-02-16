@@ -76,7 +76,7 @@ public class MoCItemFishBowl extends MoCItem {
         }
         else
         {
-            if ((!worldObj.isClient) && (fishBowlType == 11))// && movingObjectPos.entityHit instanceof MoCEntityFishy)
+            if ((!worldObj.isRemote) && (fishBowlType == 11))// && movingObjectPos.entityHit instanceof MoCEntityFishy)
             {
 
                 EntityLiving target = getClosestFish(worldObj, entityplayer, 2D);
@@ -101,7 +101,7 @@ public class MoCItemFishBowl extends MoCItem {
                 int var14 = movingObjectPos.blockY;
                 int var15 = movingObjectPos.blockZ;
 
-                if (!worldObj.isClient && fishBowlType == 0 && worldObj.getBlock(var13, var14, var15).getMaterial() == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
+                if (!worldObj.isRemote && fishBowlType == 0 && worldObj.getBlock(var13, var14, var15).getMaterial() == Material.water && worldObj.getBlockMetadata(var13, var14, var15) == 0)
                 {
 
                     if (--itemstack.stackSize == 0)

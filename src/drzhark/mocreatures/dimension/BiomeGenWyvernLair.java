@@ -32,8 +32,8 @@ public class BiomeGenWyvernLair extends BiomeGenBase
         spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 10, 1, 4));
         topBlock = MoCreatures.mocGrass;
         fillerBlock = MoCreatures.mocDirt;
-        this.minHeight = 0.3F;
-        this.maxHeight = 1.5F;
+        this.rootHeight = 0.3F;
+        this.heightVariation = 1.5F;
         this.biomeName = "WyvernBiome";
         this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog, 0, MoCreatures.mocLeaf, 0, 2, 30, 10);
         this.worldGenShrub = new WorldGenShrub(3, 0);

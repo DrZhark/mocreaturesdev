@@ -92,7 +92,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     {
         super.onLivingUpdate();
 
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             EntityLivingBase entityliving = getBoogey(3D);
             if ((entityliving != null) && entityliving.height > 0.5F && entityliving.width > 0.5F && canEntityBeSeen(entityliving))
@@ -134,7 +134,7 @@ public class MoCEntitySnail extends MoCEntityAmbient
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.slime_ball;
     }

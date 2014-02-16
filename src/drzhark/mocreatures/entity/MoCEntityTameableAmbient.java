@@ -172,6 +172,18 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
        
         return super.interact(entityplayer);
     }
+
+    // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
+    @Override
+    public void setDead()
+    {
+        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
+        {
+            return;
+        }
+        super.setDead();
+    }
+
     /**
      * Play the taming effect, will either be hearts or smoke depending on status
      */
@@ -192,8 +204,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             this.worldObj.spawnParticle(s, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
         }
     }
-    
-    
+
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {

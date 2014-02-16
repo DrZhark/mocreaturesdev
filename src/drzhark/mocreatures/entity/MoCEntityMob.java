@@ -43,6 +43,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     {
         super(world);
         setTamed(false);
+        riderIsDisconnecting = false;
         texture = "blank.jpg";
     }
 
@@ -172,7 +173,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public boolean getCanSpawnHere()
     {
-        return (MoCreatures.proxy.getFrequency(this.getName()) > 0 && super.getCanSpawnHere());
+        return (MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0 && super.getCanSpawnHere());
     }
 
     public boolean getCanSpawnHereMob()

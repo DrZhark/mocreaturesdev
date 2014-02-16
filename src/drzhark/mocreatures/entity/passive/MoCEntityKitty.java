@@ -353,7 +353,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return null;
     }

@@ -121,7 +121,7 @@ public class MoCEntityEgg extends EntityLiving {
         if ((lCounter > 10) && entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.mocegg, 1, i)))
         {
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((rand.nextFloat() - rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 entityplayer.onItemPickup(this, 1);
 

@@ -270,7 +270,7 @@ public class MoCEntityKomodo extends MoCEntityTameable
         {
             return (-55);
         }
-        return (int) ((120/getEdad()) * (-50));
+        return (int) ((60/getEdad()) * (-50));
     }
 
     @Override

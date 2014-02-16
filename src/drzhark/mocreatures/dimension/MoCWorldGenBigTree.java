@@ -202,7 +202,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
                     }
                     else
                     {
-                        this.func_150516_a(this.worldObj, var11[0], var11[1], var11[2], par6, MetadataLeaf);
+                        this.setBlockAndNotifyAdequately(this.worldObj, var11[0], var11[1], var11[2], par6, MetadataLeaf);
                         ++var13;
                     }
                 }
@@ -323,7 +323,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree
                     }
                 }
 
-                this.func_150516_a(this.worldObj, var14[0], var14[1], var14[2], par3, MetadataLog);//var17);
+                this.setBlockAndNotifyAdequately(this.worldObj, var14[0], var14[1], var14[2], par3, MetadataLog);//var17);
             }
         }
     }

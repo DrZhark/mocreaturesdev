@@ -493,7 +493,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
                 for (int i2 = i1; i2 < j1; i2++)
                 {
                     Block block = worldObj.getBlock(k1, l1, i2);
-                    if ((block != Blocks.air) && (block.getMaterial() == Material.field_151597_y)) { return true; }
+                    if ((block != Blocks.air) && (block.getMaterial() == Material.snow)) { return true; }
                 }
 
             }
@@ -565,7 +565,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.bigcatclaw;
     }
@@ -677,7 +677,7 @@ public class MoCEntityBigCat extends MoCEntityTameable {
 
         super.onLivingUpdate();
 
-        if ((rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isClient)
+        if ((rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (deathTime == 0) && !worldObj.isRemote)
         {
             //health++;
             this.setHealth(getHealth() + 1);

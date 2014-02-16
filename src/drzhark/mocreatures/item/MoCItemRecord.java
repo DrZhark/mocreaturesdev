@@ -24,7 +24,7 @@ public class MoCItemRecord extends ItemRecord
      */
     public String getRecordTitle()
     {
-        return "MoC - " + this.field_150929_a;
+        return "MoC - " + this.recordName;
     }
 
     @SideOnly(Side.CLIENT)

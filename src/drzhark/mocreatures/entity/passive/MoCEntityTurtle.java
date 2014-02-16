@@ -182,7 +182,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     {
         super.onLivingUpdate();
 
-        if (worldObj.isClient)
+        if (worldObj.isRemote)
         {
             if (ridingEntity != null)
             {
@@ -190,7 +190,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
             }
         }
 
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (!getIsUpsideDown() && !getIsTamed())
             {
@@ -420,7 +420,7 @@ public class MoCEntityTurtle extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         if (getName().equals("Donatello") || getName().equals("donatello")) { return MoCreatures.bo; }
 

@@ -95,7 +95,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.feather;
     }

@@ -415,7 +415,7 @@ public class MoCEntityBear extends MoCEntityTameable {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.animalHide;
     }

@@ -79,7 +79,7 @@ public class MoCItemPetAmulet extends MoCItem
             if (MoCreatures.isServer())
             {
                 initAndReadNBT(itemstack);
-                if (spawnClass.isEmpty() || creatureType == 0)
+                if (spawnClass.isEmpty())// || creatureType == 0)
                 {
                     return itemstack;
                 }

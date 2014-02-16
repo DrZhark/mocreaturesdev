@@ -94,7 +94,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public void setHasEaten(boolean flag)
     {
-        if (worldObj.isClient) { return; }
+        if (worldObj.isRemote) { return; }
         byte input = (byte) (flag ? 1 : 0);
         dataWatcher.updateObject(22, Byte.valueOf(input));
     }

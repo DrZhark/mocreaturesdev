@@ -421,7 +421,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         if (!getIsAdult()) { return Items.string; }
 
@@ -450,13 +450,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
     protected void dropFewItems(boolean flag, int x)
     {
         if (!flag) return;
-        Item item = this.func_146068_u();
+        Item item = this.getDropItem();
 
         if (item != null)
         {
             if (rand.nextInt(3) == 0)
             {
-                this.func_145779_a(item, 1);
+                this.dropItem(item, 1);
             }
         }
 
@@ -465,7 +465,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean getCanSpawnHere()
     {
-        return (isValidLightLevel() && MoCreatures.proxy.getFrequency(this.getName()) > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
+        return (isValidLightLevel() && MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && getCanSpawnHereLiving() && getCanSpawnHereCreature();
     }
 
     @Override

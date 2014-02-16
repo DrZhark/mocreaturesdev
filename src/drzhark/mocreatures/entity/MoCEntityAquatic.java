@@ -40,7 +40,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     private int mountCount;
     public EntityLiving roper;
     public boolean fishHooked;
-    private boolean riderIsDisconnecting;
+    protected boolean riderIsDisconnecting;
     protected float moveSpeed;
     protected String texture;
 
@@ -50,6 +50,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         outOfWater = 0;
         setTamed(false);
         setTemper(50);
+        riderIsDisconnecting = false;
         texture = "blank.jpg";
     }
 
@@ -894,7 +895,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     @Override
     public boolean getCanSpawnHere()
     {
-        return MoCreatures.proxy.getFrequency(this.getName()) > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
+        return MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
     }
 
     @Override
@@ -954,17 +955,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     @Override
     public void setArmorType(byte i) {}
-
- // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
-    @Override
-    public void setDead()
-    {
-        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
-        {
-            return;
-        }
-        super.setDead();
-    }
 
     @Override
     public void dismountEntity() 

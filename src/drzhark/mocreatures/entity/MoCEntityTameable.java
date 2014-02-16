@@ -177,12 +177,16 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         // Server check required to prevent tamed entities from being duplicated on client-side
         if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting)
         {
+            if (!this.getName().equals(""))
+                System.out.println("IGNORE SETDEAD for Entity " + this + " with name " + this.getName());
             return;
         }
         if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
         {
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());
         }
+        if (!this.getName().equals(""))
+            System.out.println("Server = " + MoCreatures.isServer() + ", Entity " + this + " with name " + this.getName() + " setDead!!!!");
         super.setDead();
     }
 

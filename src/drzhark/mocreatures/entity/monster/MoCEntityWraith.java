@@ -38,7 +38,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     }
 
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return Items.gunpowder;
     }
@@ -58,7 +58,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     @Override
     public void onLivingUpdate()
     {
-        if (!worldObj.isClient)
+        if (!worldObj.isRemote)
         {
             if (worldObj.isDaytime())
             {

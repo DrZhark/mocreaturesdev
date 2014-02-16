@@ -40,7 +40,7 @@ import drzhark.mocreatures.network.packet.MoCPacketHealth;
 public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEntity
 {
     protected float moveSpeed;
-    private boolean riderIsDisconnecting;
+    protected boolean riderIsDisconnecting;
     protected String texture;
 
     public MoCEntityAmbient(World world)
@@ -48,6 +48,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
         super(world);
         setTamed(false);
         setAdult(true);
+        riderIsDisconnecting = false;
         texture = "blank.png";
     }
 
@@ -443,7 +444,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
             }
             if (entityplayer.isSneaking())
             {
-                if (!worldObj.isClient)
+                if (!worldObj.isRemote)
                 {
                     entityplayer.mountEntity(null);
                 }
@@ -506,7 +507,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
     @Override
     public boolean getCanSpawnHere()
     {
-        if (MoCreatures.proxy.getFrequency(this.getName()) <= 0)
+        if (MoCreatures.entityMap.get(this.getClass()).getFrequency() <= 0)
             return false;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -578,7 +579,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                 motionX += riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 motionZ += riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
                 
-                if (!worldObj.isClient)
+                if (!worldObj.isRemote)
                 {
                     moveEntity(motionX, motionY, motionZ);
                 }
@@ -600,7 +601,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                 }
             }
             double d = posY;
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 moveFlying(f, f1, 0.02F);
                 moveEntity(motionX, motionY, motionZ);
@@ -685,7 +686,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                     motionZ += rand.nextDouble() / 10D;
                 }
                 // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (!worldObj.isClient)
+                if (!worldObj.isRemote)
                 {
                     moveEntity(motionX, motionY, motionZ);
                 }
@@ -718,7 +719,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
                 setRotation(rotationYaw, rotationPitch);
             }
             // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-            if (!worldObj.isClient)
+            if (!worldObj.isRemote)
             {
                 //needs to be left in so flying mounts can be controlled
                 moveEntity(motionX, motionY, motionZ);

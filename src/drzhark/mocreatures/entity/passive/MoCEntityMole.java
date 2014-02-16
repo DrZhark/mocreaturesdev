@@ -239,7 +239,7 @@ public class MoCEntityMole extends MoCEntityTameable {
     }
     
     @Override
-    protected Item func_146068_u()
+    protected Item getDropItem()
     {
         return MoCreatures.fur;
     }
