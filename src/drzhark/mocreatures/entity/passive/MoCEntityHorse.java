@@ -35,15 +35,17 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
-import drzhark.mocreatures.network.packet.MoCPacketHeart;
-import drzhark.mocreatures.network.packet.MoCPacketShuffle;
-import drzhark.mocreatures.network.packet.MoCPacketVanish;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
+import drzhark.mocreatures.network.message.MoCMessageShuffle;
+import drzhark.mocreatures.network.message.MoCMessageVanish;
 
 public class MoCEntityHorse extends MoCEntityTameable {
     private int gestationtime;
@@ -563,7 +565,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     @Override
     protected Item getDropItem()
     {
-        boolean flag = (rand.nextInt(4) == 0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
 
         if (flag && (this.getType() == 36 || (this.getType() >= 50 && this.getType() < 60))) // unicorn
         { return MoCreatures.unicornhorn; }
@@ -1695,9 +1697,10 @@ public class MoCEntityHorse extends MoCEntityTameable {
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
+
             if (MoCreatures.isServer())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
 
             this.setHealth(getMaxHealth());
@@ -2004,7 +2007,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 if (shuffleCounter > 1000)
                 {
                     shuffleCounter = 0;
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), false), this.worldObj.provider.dimensionId);
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageShuffle(this.getEntityId(), false), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                     BlockJukebox blockjukebox = (BlockJukebox) worldObj.getBlock(jukebox.xCoord, jukebox.yCoord, jukebox.zCoord);
                     if (blockjukebox != null)
                     {
@@ -2063,9 +2066,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 entityhorse1.setOwner(this.getOwnerName());
                 entityhorse1.setTamed(true);
                 EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
-                if (entityplayer != null && (MoCreatures.isServer()))
+                if (entityplayer != null)
                 {
-                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityhorse1);
+                    MoCTools.tameWithName((EntityPlayer) entityplayer, entityhorse1);
                 }
 
                 entityhorse1.setAdult(false);
@@ -2154,7 +2157,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if (this.getType() == 60 && getIsTamed() && rand.nextInt(50) == 0 && nearMusicBox())
             {
                 shuffle();
-                MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), true), this.worldObj.provider.dimensionId);
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageShuffle(this.getEntityId(), true), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             }
 
             if ((rand.nextInt(300) == 0) && (deathTime == 0))
@@ -2278,7 +2281,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
 
                 if (this.gestationtime % 3 == 0)
                 {
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketHeart(this.getEntityId()), this.worldObj.provider.dimensionId);
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                 }
 
                 if (gestationtime <= 50)
@@ -2320,9 +2323,9 @@ public class MoCEntityHorse extends MoCEntityTameable {
                 baby.setBred(true);
                 baby.setAdult(false);
                 EntityPlayer entityplayer = worldObj.getPlayerEntityByName(this.getOwnerName());
-                if (entityplayer != null && (MoCreatures.isServer()))
+                if (entityplayer != null)
                 {
-                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, baby);
+                    MoCTools.tameWithName(entityplayer, baby);
                 }
                 baby.setType(l);
                 break;
@@ -2385,7 +2388,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
             if ((MoCreatures.isServer() && !nearMusicBox()))
             {
                 shuffleCounter = 0;
-                MoCreatures.packetPipeline.sendToDimension(new MoCPacketShuffle(this.getEntityId(), false), this.worldObj.provider.dimensionId);
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageShuffle(this.getEntityId(), false), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             }
         }
 
@@ -2701,7 +2704,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), tType), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
 
         transformType = tType;
@@ -2739,7 +2742,7 @@ public class MoCEntityHorse extends MoCEntityTameable {
         }
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketVanish(this.getEntityId()), worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageVanish(this.getEntityId()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             setVanishC((byte) 1);
         }
         MoCTools.playCustomSound(this, "vanish", worldObj);

@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,13 +22,15 @@ import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
 
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public int gestationtime;
     private boolean hasEaten;
 
-    public static final String fishNames[] = { "Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy" };
+    public static final String fishNames[] = { "Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy", "Red" };
 
     public MoCEntityFishy(World world)
     {
@@ -207,6 +211,10 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 {
                     gestationtime++;
                 }
+                if (this.gestationtime % 3 == 0)
+                {
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
+                }
                 if (gestationtime <= 50)
                 {
                     continue;
@@ -224,9 +232,9 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                     entityfishy.gestationtime = 0;
 
                     EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
-                    if (entityplayer != null && (MoCreatures.isServer()))
+                    if (entityplayer != null)
                     {
-                        MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityfishy1);
+                        MoCTools.tameWithName(entityplayer, entityfishy1);
                     }
 
                     entityfishy1.setEdad(20);

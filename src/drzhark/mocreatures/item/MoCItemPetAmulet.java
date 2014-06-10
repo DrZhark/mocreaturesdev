@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCPetData;
@@ -21,7 +22,8 @@ import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.network.packet.MoCPacketAppear;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCItemPetAmulet extends MoCItem
@@ -74,7 +76,7 @@ public class MoCItemPetAmulet extends MoCItem
             {
                 emptyAmulet = new ItemStack(MoCreatures.petamulet, 1, 0);
             }
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+
             //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
             if (MoCreatures.isServer())
             {
@@ -151,11 +153,17 @@ public class MoCItemPetAmulet extends MoCItem
                             }
                         }
 
-                        entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature);
-                        MoCreatures.packetPipeline.sendToDimension(new MoCPacketAppear(((EntityLiving)storedCreature).getEntityId()), worldObj.provider.dimensionId);
-                        if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
+                        if (entityplayer.worldObj.spawnEntityInWorld((EntityLiving)storedCreature))
                         {
-                             MoCTools.tameWithName(entityplayer, storedCreature);
+                            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving)storedCreature).getEntityId()), new TargetPoint(entityplayer.worldObj.provider.dimensionId, entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
+                            if ((MoCreatures.proxy.enableOwnership && ownerName.isEmpty()) || name.isEmpty()) 
+                            {
+                                 MoCTools.tameWithName(entityplayer, storedCreature);
+                            }
+                            if (!((EntityLiving)storedCreature).isDead)
+                            {
+                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+                            }
                         }
                     }
                 }catch (Exception ex) 

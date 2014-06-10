@@ -59,12 +59,9 @@ public class MoCEntityTurkey extends MoCEntityTameable {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (!getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.melon_seeds))
+        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.melon_seeds))
         {
-            if (MoCreatures.isServer())
-            {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-            }
+            MoCTools.tameWithName(entityplayer, this);
         }
 
         return true;

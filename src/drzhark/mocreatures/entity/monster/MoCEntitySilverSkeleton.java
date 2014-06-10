@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.monster;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -10,7 +11,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntitySilverSkeleton extends MoCEntityMob
 {
@@ -105,11 +107,11 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob
                 if (leftArmW)
                 {
                     attackCounterLeft = 1;
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                 }else
                 {
                     attackCounterRight = 1;
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 2), this.worldObj.provider.dimensionId);
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                 }
             }
         }

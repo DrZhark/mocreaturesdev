@@ -76,7 +76,7 @@ public class MoCEntityRaccoon extends MoCEntityTameable{
 
             if (MoCreatures.isServer())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
             this.setHealth(getMaxHealth());
 

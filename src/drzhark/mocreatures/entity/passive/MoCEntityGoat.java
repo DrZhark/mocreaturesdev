@@ -609,13 +609,12 @@ public class MoCEntityGoat extends MoCEntityTameable {
             }
         }
 
-        if (!getIsTamed() && (itemstack != null) && isItemEdible(itemstack.getItem()))
+        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && isItemEdible(itemstack.getItem()))
         {
-            if (MoCreatures.isServer())
+            if (MoCTools.tameWithName(entityplayer, this))
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                return true;
             }
-            return true;
         }
 
         return false;

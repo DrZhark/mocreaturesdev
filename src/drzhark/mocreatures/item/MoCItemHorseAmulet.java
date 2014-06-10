@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCPetData;
@@ -15,7 +16,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.packet.MoCPacketAppear;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAppear;
 
 public class MoCItemHorseAmulet extends MoCItem {
 
@@ -66,23 +68,6 @@ public class MoCItemHorseAmulet extends MoCItem {
                 ownerName = "";
                 rideable = false;
                 adult = true;
-            }
-            //gives an empty amulet
-            if (creatureType == 26 || creatureType == 27 || creatureType == 28)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletbone, 1, 0));
-            }
-            else if (creatureType == 21 || creatureType == 22)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletghost, 1, 0));
-            }
-            else if ((creatureType > 47 && creatureType < 60))
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletfairy, 1, 0));
-            }
-            else if (creatureType == 39 || creatureType == 40)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletpegasus, 1, 0));
             }
         }
 
@@ -156,9 +141,31 @@ public class MoCItemHorseAmulet extends MoCItem {
                         }
                     }
 
-                    entityplayer.worldObj.spawnEntityInWorld(storedCreature);
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAppear(storedCreature.getEntityId()), worldObj.provider.dimensionId);
-                    MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
+                    if (entityplayer.worldObj.spawnEntityInWorld(storedCreature))
+                    {
+                        MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(storedCreature.getEntityId()), new TargetPoint(entityplayer.worldObj.provider.dimensionId, entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
+                        MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
+                        if (!storedCreature.isDead)
+                        {
+                            //gives an empty amulet
+                            if (creatureType == 26 || creatureType == 27 || creatureType == 28)
+                            {
+                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletbone, 1, 0));
+                            }
+                            else if (creatureType == 21 || creatureType == 22)
+                            {
+                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletghost, 1, 0));
+                            }
+                            else if ((creatureType > 47 && creatureType < 60))
+                            {
+                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletfairy, 1, 0));
+                            }
+                            else if (creatureType == 39 || creatureType == 40)
+                            {
+                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletpegasus, 1, 0));
+                            }
+                        }
+                    }
                 }catch (Exception ex) 
                 {
                     System.out.println("Error spawning creature from amulet " + ex);

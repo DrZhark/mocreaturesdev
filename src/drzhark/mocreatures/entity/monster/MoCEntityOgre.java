@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.monster;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,8 +15,9 @@ import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
-import drzhark.mocreatures.network.packet.MoCPacketExplode;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageExplode;
 
 public class MoCEntityOgre extends MoCEntityMob{
 
@@ -162,11 +164,11 @@ public class MoCEntityOgre extends MoCEntityMob{
         }
         else if (getType() < 5)
         {
-             boolean flag = (rand.nextInt(4)==0);
+            boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
              if (!flag) 
-                 {
+             {
                     return Item.getItemFromBlock(Blocks.fire);
-                }
+             }
              return MoCreatures.heartfire;
         }
         return Items.diamond;
@@ -227,7 +229,7 @@ public class MoCEntityOgre extends MoCEntityMob{
             {
                 pendingSmashAttack = false;
                 DestroyingOgre();
-                MoCreatures.packetPipeline.sendToDimension(new MoCPacketExplode(this.getEntityId()), this.worldObj.provider.dimensionId);
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageExplode(this.getEntityId()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             }
 
             if (getType() > 2)
@@ -271,12 +273,12 @@ public class MoCEntityOgre extends MoCEntityMob{
             if (leftArmW)
             {
                 attackCounterLeft = 1;
-                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             }
             else
             {
                 attackCounterRight = 1;
-                MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 2), this.worldObj.provider.dimensionId);
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             }
         }
     }

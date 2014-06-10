@@ -343,7 +343,11 @@ public class MoCEntityHorseMob extends MoCEntityMob
     @Override
     protected Item getDropItem()
     {
-        boolean flag = (rand.nextInt(5)==0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
+        if (this.getType() == 32 && MoCreatures.proxy.rareItemDropChance < 25)
+        {
+            flag = (rand.nextInt(100) < 25);
+        }
 
         if (flag && (this.getType() == 36 || (this.getType() >=50 && this.getType() < 60))) //unicorn
         {

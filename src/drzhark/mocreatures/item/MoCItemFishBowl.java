@@ -82,14 +82,20 @@ public class MoCItemFishBowl extends MoCItem {
                 EntityLiving target = getClosestFish(worldObj, entityplayer, 2D);
                 if (target != null)
                 {
-                    target.setDead();
                     if (--itemstack.stackSize == 0)
                     {
-                        return ((MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType())));
+                    	ItemStack fishbowl = ((MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType())));
+                    	((MoCEntityFishy) target).setTamed(false);
+                    	((MoCEntityFishy) target).setOwner("");
+                    	target.setDead();
+                        return fishbowl;
                     }
                     else
                     {
                         entityplayer.inventory.addItemStackToInventory(MoCEntityFishBowl.toItemStack(((MoCEntityFishy) target).getType()));
+                    	((MoCEntityFishy) target).setTamed(false);
+                    	((MoCEntityFishy) target).setOwner("");
+                        target.setDead();
                         return itemstack;
                     }
                 }
@@ -106,10 +112,12 @@ public class MoCItemFishBowl extends MoCItem {
 
                     if (--itemstack.stackSize == 0)
                     {
+                    	System.out.println("test1");
                         return new ItemStack(MoCreatures.fishbowl_w, 1, 11);
                     }
                     else
                     {
+                    	System.out.println("test2");
                         entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.fishbowl_w, 1, 11));
 
                         return itemstack;
@@ -125,11 +133,7 @@ public class MoCItemFishBowl extends MoCItem {
                     entityfish.setTypeInt(fishBowlType);
                     entityfish.selectType();
                     worldObj.spawnEntityInWorld(entityfish);
-
-                    if (MoCreatures.isServer())
-                    {
-                        MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityfish);
-                    }
+                    MoCTools.tameWithName((EntityPlayer) entityplayer, entityfish);
 
                     if (--itemstack.stackSize == 0)
                     {

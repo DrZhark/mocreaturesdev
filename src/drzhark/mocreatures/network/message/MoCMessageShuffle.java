@@ -1,53 +1,54 @@
-package drzhark.mocreatures.network.packet;
+package drzhark.mocreatures.network.message;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class MoCPacketShuffle extends AbstractPacket {
+public class MoCMessageShuffle implements IMessage, IMessageHandler<MoCMessageShuffle, IMessage> {
 
     private int entityId;
     private boolean flag;
 
-    public MoCPacketShuffle() {}
+    public MoCMessageShuffle() {}
 
-    public MoCPacketShuffle(int entityId, boolean flag)
+    public MoCMessageShuffle(int entityId, boolean flag)
     {
         this.entityId = entityId;
         this.flag = flag;
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void toBytes(ByteBuf buffer)
     {
         buffer.writeInt(this.entityId);
         buffer.writeBoolean(flag);
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void fromBytes(ByteBuf buffer)
     {
         this.entityId = buffer.readInt();
         this.flag = buffer.readBoolean();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void handleClientSide(EntityPlayer player)
+    public IMessage onMessage(MoCMessageShuffle message, MessageContext ctx)
     {
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
         for (Entity ent : entList)
         {
-            if (ent.getEntityId() == this.entityId && ent instanceof MoCEntityHorse)
+            if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse)
             {
                 if (flag)
                 {
@@ -60,13 +61,12 @@ public class MoCPacketShuffle extends AbstractPacket {
                 break;
             }
         }
+        return null;
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public String toString()
     {
-        // TODO Auto-generated method stub
-        
+        return String.format("MoCMessageShuffle - entityId:%s, flag:%s", this.entityId, this.flag);
     }
-
 }

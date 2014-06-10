@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -34,7 +36,8 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.packet.MoCPacketHealth;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHealth;
 
 
 public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEntity
@@ -1073,7 +1076,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal  implements IMoCEnti
 
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(),  this.getHealth()), worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(),  this.getHealth()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         return super.attackEntityFrom(damagesource, i);
     }

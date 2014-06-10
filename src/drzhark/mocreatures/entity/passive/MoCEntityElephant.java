@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,7 +29,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityElephant extends MoCEntityTameable {
 
@@ -356,7 +359,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
         sitCounter = 1;
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         setPathToEntity(null);
     }
@@ -388,8 +391,7 @@ public class MoCEntityElephant extends MoCEntityTameable {
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && temper >= 10)
             {
-                setTamed(true);
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
             return true;
         }

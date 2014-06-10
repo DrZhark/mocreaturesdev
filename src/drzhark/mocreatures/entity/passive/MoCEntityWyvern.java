@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,7 +25,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityWyvern extends MoCEntityTameable {
 
@@ -619,7 +621,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     @Override
     public void updateRiderPosition()
     {
-        
         double dist = getSizeFactor() * (0.3D);
         double newPosX = posX - (dist * Math.cos((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
         double newPosZ = posZ - (dist * Math.sin((MoCTools.realAngle(renderYawOffset - 90F)) / 57.29578F));
@@ -778,7 +779,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
              if (MoCreatures.isServer())
              {
                  mouthCounter = 1;
-                 MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
              }
             
         }
@@ -799,7 +800,8 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     @Override
     public void makeEntityDive()
     {
-        MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 2), this.worldObj.provider.dimensionId);
+        if (MoCreatures.isServer())
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         super.makeEntityDive();
     }
 
@@ -811,10 +813,10 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        int l = 10;
+        int l = MoCreatures.proxy.wyvernEggDropChance;
         if (getType() == 5) //mother wyverns drop eggs more frequently
         {
-            l = 3;
+            l = MoCreatures.proxy.motherWyvernEggDropChance;
         }
         String s = MoCTools.BiomeName(worldObj, i, j, k);
         if (rand.nextInt(l) == 0)

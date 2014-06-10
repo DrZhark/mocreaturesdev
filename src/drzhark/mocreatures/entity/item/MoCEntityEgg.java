@@ -185,10 +185,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer() && this instanceof IMoCTameable)
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
-                            }
+                            MoCTools.tameWithName(entityplayer, (IMoCTameable) entityspawn);
                         }
                     }
 
@@ -202,10 +199,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                         }
                     }
 
@@ -219,10 +213,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                         }
                     }
                     
@@ -237,10 +228,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                         }
                     }
                     
@@ -255,10 +243,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, (IMoCTameable) entityspawn);
                         }
                     }
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
@@ -294,10 +279,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                         }
                     }
 
@@ -327,10 +309,7 @@ public class MoCEntityEgg extends EntityLiving {
                             EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                             if (entityplayer != null)
                             {
-                                if (MoCreatures.isServer())
-                                {
-                                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                                }
+                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                             }
                         }
                     }
@@ -345,14 +324,11 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                         }
                     }
                     
-                    if (getEggType() > 40 && getEggType() < 50) //scorpions for now it uses 41 - 45
+                    if (getEggType() > 40 && getEggType() < 46) //scorpions for now it uses 41 - 45
                     {
                         MoCEntityPetScorpion entityspawn = new MoCEntityPetScorpion(worldObj);
                         int typeInt = getEggType() - 40;
@@ -364,10 +340,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                         }
                     }
                     
@@ -384,10 +357,7 @@ public class MoCEntityEgg extends EntityLiving {
                         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
                         if (entityplayer != null)
                         {
-                            if (MoCreatures.isServer())
-                            {
-                                MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
-                            }
+                            MoCTools.tameWithName((EntityPlayerMP) entityplayer, entityspawn);
                         }
                     }
                     worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
@@ -402,7 +372,7 @@ public class MoCEntityEgg extends EntityLiving {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature will be lost if you leave area"));
+            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature located @ " + this.posX + ", " + this.posY + ", " + this.posZ + " will be lost if you leave area"));
         }
     }
     public int getSize()

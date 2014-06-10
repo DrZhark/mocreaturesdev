@@ -934,7 +934,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     }
                     if (rand.nextInt(chance * 8) == 0)
                     {
-                        MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, (MoCEntityTameable)this);
+                        MoCTools.tameWithName((EntityPlayer) riddenByEntity, (MoCEntityTameable)this);
                     }
                 }
             }

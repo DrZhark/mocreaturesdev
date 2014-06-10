@@ -64,7 +64,7 @@ import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.2.0.dev.R1")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.2.0.dev.R3")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")
@@ -743,7 +743,16 @@ public final class CustomSpawner {
             {
                 //this is where it has to be changed to include the custom list
                 //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
-                SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.getRandomItem(world.rand, customSpawnList);
+                SpawnListEntry spawnlistentry = null;
+                try
+                {
+                    spawnlistentry = (SpawnListEntry)WeightedRandom.getRandomItem(world.rand, customSpawnList);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    // If we world.rand returns an invalid value, just continue to avoid crash
+                    continue;
+                }
                 if (spawnlistentry != null)
                 {
                     int i1 = spawnlistentry.minGroupCount + par6Random.nextInt(1 + spawnlistentry.maxGroupCount - spawnlistentry.minGroupCount);

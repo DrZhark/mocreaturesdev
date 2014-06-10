@@ -25,7 +25,6 @@ public class MoCEntityBunny extends MoCEntityTameable {
     public boolean pickedUp;
     public int bunnyReproduceTickerA;
     public int bunnyReproduceTickerB;
-    public int bunnyLimit = 12;
 
     // TODO check that bunnyLimit??
 
@@ -157,10 +156,9 @@ public class MoCEntityBunny extends MoCEntityTameable {
             }
             pickedUp = true;
 
-            if (!getIsTamed() && MoCreatures.isServer())
+            if (MoCreatures.isServer() && !getIsTamed())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
-
+                MoCTools.tameWithName(entityplayer, this);
             }
         }
         else
@@ -202,7 +200,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         if (MoCreatures.isServer())
         {
 
-            if (!getIsTamed() || !getIsAdult() || (ridingEntity != null) || (worldObj.countEntities(this.getClass()) > bunnyLimit)) { return; }
+            if (!getIsTamed() || !getIsAdult() || (ridingEntity != null) || (worldObj.countEntities(this.getClass()) > MoCreatures.proxy.bunnyBreedThreshold)) { return; }
             if (bunnyReproduceTickerA < 1023)
             {
                 bunnyReproduceTickerA++;
@@ -214,7 +212,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
             else
             {
                 int k = worldObj.countEntities(this.getClass());
-                if (k > bunnyLimit)
+                if (k > MoCreatures.proxy.bunnyBreedThreshold)
                 {
                     proceed();
                     return;

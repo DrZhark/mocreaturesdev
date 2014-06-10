@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.aquatic;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +13,8 @@ import net.minecraft.world.biome.BiomeGenOcean;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityRay extends MoCEntityTameableAquatic {
 
@@ -118,7 +120,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             {
                 if (MoCTools.findNearPlayerAndPoison(this, true))
                 {
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                     poisoncounter = 0;
                 }
             }

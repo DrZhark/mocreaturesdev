@@ -16,7 +16,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.network.packet.MoCPacketNameGUI;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageUpdatePetName;
 
 @SideOnly(Side.CLIENT)
 public class MoCGUIEntityNamer extends GuiScreen {
@@ -49,7 +50,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     public void updateName()
     {
         NamedEntity.setName(NameToSet);
-        MoCreatures.packetPipeline.sendToServer(new MoCPacketNameGUI(((EntityLiving) NamedEntity).getEntityId(), NameToSet));
+        MoCMessageHandler.INSTANCE.sendToServer(new MoCMessageUpdatePetName(((EntityLiving) NamedEntity).getEntityId(), NameToSet));
         mc.displayGuiScreen(null);
     }
 

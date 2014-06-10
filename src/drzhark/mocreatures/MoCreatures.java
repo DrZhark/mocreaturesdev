@@ -61,6 +61,7 @@ import drzhark.mocreatures.client.MoCClientTickHandler;
 import drzhark.mocreatures.client.MoCCreativeTabs;
 import drzhark.mocreatures.client.handlers.MoCKeyHandler;
 import drzhark.mocreatures.command.CommandMoCPets;
+import drzhark.mocreatures.command.CommandMoCSpawn;
 import drzhark.mocreatures.command.CommandMoCTP;
 import drzhark.mocreatures.command.CommandMoCreatures;
 import drzhark.mocreatures.configuration.MoCProperty;
@@ -146,23 +147,10 @@ import drzhark.mocreatures.item.MoCItemSugarLump;
 import drzhark.mocreatures.item.MoCItemTurtleSoup;
 import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
-import drzhark.mocreatures.network.MoCPacketPipeline;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
-import drzhark.mocreatures.network.packet.MoCPacketAppear;
-import drzhark.mocreatures.network.packet.MoCPacketAttachedEntity;
-import drzhark.mocreatures.network.packet.MoCPacketEntityDive;
-import drzhark.mocreatures.network.packet.MoCPacketEntityJump;
-import drzhark.mocreatures.network.packet.MoCPacketExplode;
-import drzhark.mocreatures.network.packet.MoCPacketHealth;
-import drzhark.mocreatures.network.packet.MoCPacketHeart;
-import drzhark.mocreatures.network.packet.MoCPacketInstaSpawn;
-import drzhark.mocreatures.network.packet.MoCPacketNameGUI;
-import drzhark.mocreatures.network.packet.MoCPacketShuffle;
-import drzhark.mocreatures.network.packet.MoCPacketTwoBytes;
-import drzhark.mocreatures.network.packet.MoCPacketVanish;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.0.dev.R1")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.0.dev.R3")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -352,11 +340,11 @@ public class MoCreatures {
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
     public static List<String> defaultBiomeSupport = new ArrayList<String>();
     public static final String CATEGORY_ITEM_IDS = "item-ids";
-    public static final MoCPacketPipeline packetPipeline = new MoCPacketPipeline();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        MoCMessageHandler.init();
         MinecraftForge.EVENT_BUS.register(new MoCEventHooks());
         proxy.ConfigInit(event);
         proxy.initTextures();
@@ -377,27 +365,12 @@ public class MoCreatures {
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-        packetPipeline.initalise();
-        packetPipeline.registerPacket(MoCPacketNameGUI.class);
-        packetPipeline.registerPacket(MoCPacketAnimation.class);
-        packetPipeline.registerPacket(MoCPacketAppear.class);
-        packetPipeline.registerPacket(MoCPacketAttachedEntity.class);
-        packetPipeline.registerPacket(MoCPacketEntityDive.class);
-        packetPipeline.registerPacket(MoCPacketEntityJump.class);
-        packetPipeline.registerPacket(MoCPacketExplode.class);
-        packetPipeline.registerPacket(MoCPacketHealth.class);
-        packetPipeline.registerPacket(MoCPacketHeart.class);
-        packetPipeline.registerPacket(MoCPacketInstaSpawn.class);
-        packetPipeline.registerPacket(MoCPacketShuffle.class);
-        packetPipeline.registerPacket(MoCPacketTwoBytes.class);
-        packetPipeline.registerPacket(MoCPacketVanish.class);
         DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, true);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        packetPipeline.postInitialise();
         isCustomSpawnerLoaded = Loader.isModLoaded("CustomSpawner");
         //ForgeChunkManager.setForcedChunkLoadingCallback(instance, new MoCloadCallback());
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
@@ -419,6 +392,7 @@ public class MoCreatures {
         event.registerServerCommand(new CommandMoCreatures());
         event.registerServerCommand(new CommandMoCTP());
         event.registerServerCommand(new CommandMoCPets());
+        event.registerServerCommand(new CommandMoCSpawn());
     }
 
     @EventHandler
@@ -1005,7 +979,6 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), unicornhorn, Character.valueOf('R'), Items.blaze_rod });
         
         GameRegistry.addRecipe(new ItemStack(staffPortal, 1), new Object[] { "  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), essencelight, Character.valueOf('R'), Items.blaze_rod });
-        
     }
 
     public static void burnPlayer(EntityPlayer player)

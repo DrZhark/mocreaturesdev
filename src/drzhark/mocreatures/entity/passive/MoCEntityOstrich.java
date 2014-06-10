@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -24,7 +26,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityOstrich extends MoCEntityTameable {
 
@@ -424,7 +427,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), tType), this.worldObj.provider.dimensionId);;
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         transformType = tType;
         if (this.riddenByEntity == null && transformType != 0)
@@ -500,33 +503,39 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             //egg laying
             if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0 && !getIsTamed())// &&
             {
-
-                //so it doesn't cause a ostrich overpopulation
-                if (worldObj.countEntities(MoCEntityOstrich.class) < 20 && worldObj.countEntities(MoCEntityEgg.class) < 10)
+                EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 12D);
+                if (entityplayer1 != null)
                 {
-                
-                    int OstrichEggType = 30;
-                    MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
-
-                    if (!this.getIsTamed())
+                    double distP = MoCTools.getSqDistanceTo(entityplayer1, posX, posY, posZ);
+                    if (distP < 10D)
                     {
-                        MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
-                        entityegg.setPosition(this.posX, this.posY, this.posZ);
-                        worldObj.spawnEntityInWorld(entityegg);
-                        setEggWatching(true);
-                        if (entityOstrich != null)
+                        //so it doesn't cause a ostrich overpopulation
+                        if (worldObj.countEntities(MoCEntityOstrich.class) < MoCreatures.proxy.ostrichEggThreshold)
                         {
-                            entityOstrich.setEggWatching(true);
+                            int OstrichEggType = 30;
+                            MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
+        
+                            if (!this.getIsTamed())
+                            {
+                                MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
+                                entityegg.setPosition(this.posX, this.posY, this.posZ);
+                                worldObj.spawnEntityInWorld(entityegg);
+                                setEggWatching(true);
+                                if (entityOstrich != null)
+                                {
+                                    entityOstrich.setEggWatching(true);
+                                }
+                                openMouth();
+                            }
+        
+                            //TODO change sound
+                            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+                            //finds a male and makes it eggWatch as well
+                            //MoCEntityOstrich entityOstrich = (MoCEntityOstrich) getClosestSpecificEntity(this, MoCEntityOstrich.class, 12D);
                         }
-                        openMouth();
+                        this.eggCounter = this.rand.nextInt(1000) + 1000;
                     }
-
-                    //TODO change sound
-                    this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
-                    //finds a male and makes it eggWatch as well
-                    //MoCEntityOstrich entityOstrich = (MoCEntityOstrich) getClosestSpecificEntity(this, MoCEntityOstrich.class, 12D);
                 }
-                this.eggCounter = this.rand.nextInt(1000) + 1000;
             }
 
             //egg protection
@@ -875,7 +884,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     @Override
     protected Item getDropItem()
     {
-        boolean flag = (rand.nextInt(3) == 0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
         if (flag && (this.getType() == 8)) // unicorn
         { return MoCreatures.unicornhorn; }
         if (this.getType() == 5 && flag) 

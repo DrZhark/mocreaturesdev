@@ -55,7 +55,7 @@ public class MoCEntityHellRat extends MoCEntityRat {
     @Override
     protected Item getDropItem()
     {
-        boolean flag = (rand.nextInt(3) == 0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
         if (flag) { return Item.getItemFromBlock(Blocks.fire); }
         return Items.redstone;
     }

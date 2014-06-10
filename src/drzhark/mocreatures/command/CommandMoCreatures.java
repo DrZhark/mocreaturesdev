@@ -33,6 +33,9 @@ import drzhark.mocreatures.configuration.MoCConfigCategory;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.configuration.MoCProperty;
 import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 
 public class CommandMoCreatures extends CommandBase {
 
@@ -68,6 +71,9 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc minspawn <entity> <int>");
         commands.add("/moc ogreattackrange <int>");
         commands.add("/moc ogrestrength <float>");
+        commands.add("/moc rareitemdropchance <int>");
+        commands.add("/moc spawnhorse <int>");
+        commands.add("/moc spawnwyvern <int>");
         commands.add("/moc tamedcount <playername>");
         commands.add("/moc tp <petid> <playername>");
         commands.add("/moc <command> value");
@@ -99,6 +105,9 @@ public class CommandMoCreatures extends CommandBase {
         tabCompletionStrings.add("minspawn");
         tabCompletionStrings.add("ogreattackrange");
         tabCompletionStrings.add("ogreattackstrength");
+        tabCompletionStrings.add("rareitemdropchance");
+        tabCompletionStrings.add("spawnhorse");
+        tabCompletionStrings.add("spawnwyvern");
         tabCompletionStrings.add("tamedcount");
         tabCompletionStrings.add("tp");
         tabCompletionStrings.add("zebrachance");
@@ -149,7 +158,7 @@ public class CommandMoCreatures extends CommandBase {
         {
             par3 = charArray[2];
         }
-        //System.out.println("par1 = " + command + ", par2 = " + par2 + ", par3 = " + par3);
+
         MoCConfiguration config = MoCreatures.proxy.mocSettingsConfig;
         boolean saved = false;
 

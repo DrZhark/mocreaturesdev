@@ -3,6 +3,8 @@ package drzhark.mocreatures.entity;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -27,7 +29,8 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.network.packet.MoCPacketHealth;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHealth;
 
 public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
@@ -248,7 +251,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
         if (MoCreatures.isServer() && getIsTamed() && rand.nextInt(200) == 0)
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(), this.getHealth()), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
@@ -259,7 +262,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     {
         if (MoCreatures.isServer() && getIsTamed())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketHealth(this.getEntityId(), this.getHealth()), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         return super.attackEntityFrom(damagesource, i);
     }

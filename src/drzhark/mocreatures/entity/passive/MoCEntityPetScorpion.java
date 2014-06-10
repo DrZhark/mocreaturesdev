@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -21,7 +22,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityPetScorpion extends MoCEntityTameable {
     public static final String scorpionNames[] = { "Dirt", "Cave", "Nether", "Frost", "Undead" };
@@ -136,7 +138,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         isPoisoning = flag;
     }
@@ -341,7 +343,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -395,7 +397,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 3), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
 
         return "mocreatures:scorpiongrunt";
@@ -406,7 +408,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
     {
         if (!getIsAdult()) { return Items.string; }
 
-        boolean flag = (rand.nextInt(2) == 0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
 
         switch (getType())
         {
@@ -494,7 +496,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameable {
 
             if (MoCreatures.isServer() && !getIsTamed())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
         }
         else if (this.ridingEntity != null && getIsPicked())

@@ -311,11 +311,11 @@ public class MoCEntityBird extends MoCEntityTameable {
             }
             if (MoCreatures.isServer())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
             return true;
         }
-        
+
         if (!getIsTamed()) { return false; }
         
         rotationYaw = entityplayer.rotationYaw;

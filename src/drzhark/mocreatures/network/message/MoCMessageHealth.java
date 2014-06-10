@@ -1,65 +1,65 @@
-package drzhark.mocreatures.network.packet;
+package drzhark.mocreatures.network.message;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class MoCPacketHealth extends AbstractPacket {
+public class MoCMessageHealth implements IMessage, IMessageHandler<MoCMessageHealth, IMessage> {
 
     private int entityId;
     private float health;
 
-    public MoCPacketHealth() {}
+    public MoCMessageHealth() {}
 
-    public MoCPacketHealth(int entityId, float health)
+    public MoCMessageHealth(int entityId, float health)
     {
         this.entityId = entityId;
         this.health = health;
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void toBytes(ByteBuf buffer)
     {
         buffer.writeInt(this.entityId);
         buffer.writeFloat(health);
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void fromBytes(ByteBuf buffer)
     {
         this.entityId = buffer.readInt();
         this.health = buffer.readFloat();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void handleClientSide(EntityPlayer player)
+    public IMessage onMessage(MoCMessageHealth message, MessageContext ctx)
     {
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
         for (Entity ent : entList)
         {
-            if (ent.getEntityId() == this.entityId && ent instanceof EntityLiving)
+            if (ent.getEntityId() == message.entityId && ent instanceof EntityLiving)
             {
-                ((EntityLiving) ent).setHealth(this.health);
+                ((EntityLiving) ent).setHealth(message.health);
                 break;
             }
         }
+        return null;
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public String toString()
     {
-        // TODO Auto-generated method stub
-        
+        return String.format("MoCMessageHealth - entityId:%s, health:%s", this.entityId, this.health);
     }
-
 }

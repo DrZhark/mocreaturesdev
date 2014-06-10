@@ -40,6 +40,7 @@ import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
@@ -52,7 +53,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
+import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -62,8 +65,9 @@ import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.packet.MoCPacketAttachedEntity;
-import drzhark.mocreatures.network.packet.MoCPacketNameGUI;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAttachedEntity;
+import drzhark.mocreatures.network.message.MoCMessageNameGUI;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCTools {
@@ -1118,7 +1122,7 @@ public class MoCTools {
     {
         if (entityMoCreature.updateMount() && ((Entity) entityMoCreature).ridingEntity != null)
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAttachedEntity(((Entity)entityMoCreature).getEntityId(), ((Entity) entityMoCreature).ridingEntity.getEntityId()), ((Entity) entityMoCreature).worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAttachedEntity(((Entity)entityMoCreature).getEntityId(), ((Entity) entityMoCreature).ridingEntity.getEntityId()), new TargetPoint(((Entity) entityMoCreature).ridingEntity.worldObj.provider.dimensionId, ((Entity) entityMoCreature).ridingEntity.posX, ((Entity) entityMoCreature).ridingEntity.posY, ((Entity) entityMoCreature).ridingEntity.posZ, 64));
         }
     }
 
@@ -1319,9 +1323,19 @@ public class MoCTools {
      */
     public static boolean tameWithName(EntityPlayer ep, IMoCTameable storedCreature) 
     {
-        int max = 0;
-        if (MoCreatures.proxy.enableOwnership && MoCreatures.isServer()) 
+        if (ep == null)
         {
+            return false;
+        }
+
+        if (MoCreatures.proxy.enableOwnership) 
+        {
+            if (storedCreature == null)
+            {
+                ep.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "ERROR:" + EnumChatFormatting.WHITE + "The stored creature is NULL and could not be created. Report to admin."));
+                return false;
+            }
+            int max = 0;
             max = MoCreatures.proxy.maxTamed;
             int count = MoCTools.numberTamedByPlayer(ep);
             if (isThisPlayerAnOP(ep)) 
@@ -1333,14 +1347,11 @@ public class MoCTools {
                 String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
                 ep.addChatMessage(new ChatComponentTranslation(message));
                 return false;
-            } 
+            }
         }
 
         storedCreature.setOwner(ep.getCommandSenderName()); // ALWAYS SET OWNER. Required for our new pet save system.
-        if (MoCreatures.isServer()) 
-        {
-            MoCreatures.packetPipeline.sendTo(new MoCPacketNameGUI(((Entity) storedCreature).getEntityId()), (EntityPlayerMP)ep);
-        }
+        MoCMessageHandler.INSTANCE.sendTo(new MoCMessageNameGUI(((Entity) storedCreature).getEntityId()), (EntityPlayerMP)ep);
         storedCreature.setTamed(true);
         return true;
     }

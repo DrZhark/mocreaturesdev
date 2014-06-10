@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,8 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameable;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 
 /**
@@ -579,7 +581,7 @@ public class MoCEntitySnake extends MoCEntityTameable {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         this.isBiting = flag;
     }

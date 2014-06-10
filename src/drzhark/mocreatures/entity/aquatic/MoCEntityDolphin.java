@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.aquatic;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,8 +16,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
 
 public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
@@ -446,23 +451,36 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 {
                     gestationtime++;
                 }
+                if (this.gestationtime % 3 == 0)
+                {
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
+                }
                 if (gestationtime <= 50)
                 {
                     continue;
                 }
-                MoCEntityDolphin entitydolphin1 = new MoCEntityDolphin(worldObj);
-                entitydolphin1.setPosition(posX, posY, posZ);
-                worldObj.spawnEntityInWorld(entitydolphin1);
-                worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
-                setHasEaten(false);
-                entitydolphin.setHasEaten(false);
-                gestationtime = 0;
-                entitydolphin.gestationtime = 0;
-                int l = Genetics(this, entitydolphin);
-                entitydolphin1.setEdad(35);
-                entitydolphin1.setAdult(false);
-                entitydolphin1.setTypeInt(l);
-                break;
+                MoCEntityDolphin babydolphin = new MoCEntityDolphin(worldObj);
+                babydolphin.setPosition(posX, posY, posZ);
+                if (worldObj.spawnEntityInWorld(babydolphin))
+                {
+                	worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
+                    setHasEaten(false);
+                    entitydolphin.setHasEaten(false);
+                    gestationtime = 0;
+                    entitydolphin.gestationtime = 0;
+                    int l = Genetics(this, entitydolphin);
+                    babydolphin.setEdad(35);
+                    babydolphin.setAdult(false);
+                    babydolphin.setOwner(this.getOwnerName());
+                    babydolphin.setTamed(true);
+                    EntityPlayer entityplayer = worldObj.getPlayerEntityByName(this.getOwnerName());
+                    if (entityplayer != null)
+                    {
+                        MoCTools.tameWithName(entityplayer, babydolphin);
+                    }
+                    babydolphin.setTypeInt(l);
+                    break;
+                }
             }
         }
     }

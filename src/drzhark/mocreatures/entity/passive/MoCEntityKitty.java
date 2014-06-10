@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.passive;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -28,7 +30,8 @@ import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityTameable;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityKitty extends MoCEntityTameable {
 
@@ -538,18 +541,21 @@ public class MoCEntityKitty extends MoCEntityTameable {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((getKittyState() == 2) && (itemstack != null) && (itemstack.getItem() == MoCreatures.medallion))
         {
-            if (--itemstack.stackSize == 0)
+            if (MoCreatures.isServer())
+            {
+                MoCTools.tameWithName(entityplayer, this);
+            }
+            if (getIsTamed() && --itemstack.stackSize == 0)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            changeKittyState(3);
-            this.setHealth(getMaxHealth());
-
-            if (MoCreatures.isServer())
+            if (getIsTamed())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                changeKittyState(3);
+                this.setHealth(getMaxHealth());
+                return true;
             }
-            return true;
+            return false;
         }
         if ((getKittyState() == 7) && (itemstack != null) && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.fish) || (itemstack.getItem() == Items.cooked_fished)))
         {
@@ -1410,7 +1416,7 @@ public class MoCEntityKitty extends MoCEntityTameable {
         //to synchronize, uses the packet handler to invoke the same method in the clients
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
 
         if (!getIsSwinging())

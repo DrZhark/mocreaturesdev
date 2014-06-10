@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
@@ -66,13 +69,13 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
 
         //changes name
-        if (itemstack != null && getIsTamed() && (itemstack.getItem() == MoCreatures.medallion|| itemstack.getItem() == Items.book|| itemstack.getItem() == Items.name_tag))
+        if (MoCreatures.isServer() && itemstack != null && getIsTamed() && (itemstack.getItem() == MoCreatures.medallion|| itemstack.getItem() == Items.book|| itemstack.getItem() == Items.name_tag))
         {
-            if (MoCreatures.isServer())
+            if (MoCTools.tameWithName(entityplayer, this))
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                return true;
             }
-            return true;
+            return false;
         }
         
         //sets it free, untamed
@@ -233,5 +236,31 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
      */
     public boolean shouldDismountInWater(Entity rider){
         return !this.getIsTamed();
+    }
+
+    public boolean isBreedingItem(ItemStack par1ItemStack)
+    {
+        return false;
+    }
+
+    // Override to fix heart animation on clients
+    @SideOnly(Side.CLIENT)
+    public void handleHealthUpdate(byte par1)
+    {
+        if (par1 == 2)
+        {
+            this.limbSwingAmount = 1.5F;
+            this.hurtResistantTime = this.maxHurtResistantTime;
+            this.hurtTime = (this.maxHurtTime = 10);
+            this.attackedAtYaw = 0.0F;
+            playSound(getHurtSound(), getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+            attackEntityFrom(DamageSource.generic, 0.0F);
+        }
+        else if (par1 == 3)
+        {
+            playSound(getDeathSound(), getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+            setHealth(0.0F);
+            onDeath(DamageSource.generic);
+        }
     }
 }

@@ -623,15 +623,17 @@ public class MoCEntityBigCat extends MoCEntityTameable {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null) && !getIsTamed() && getHasEaten() && (itemstack.getItem() == MoCreatures.medallion))
         {
-            if (--itemstack.stackSize == 0)
-            {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
-            }
             if (MoCreatures.isServer())
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                MoCTools.tameWithName(entityplayer, this);
             }
-            return true;
+            if (getIsTamed() && --itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                return true;
+            }
+
+            return false;
         }
         if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip))
         {

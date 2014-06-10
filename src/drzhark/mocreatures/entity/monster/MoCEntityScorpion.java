@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.monster;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -22,7 +23,8 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityScorpion extends MoCEntityMob {
     private boolean isPoisoning;
@@ -126,7 +128,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (flag && MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         isPoisoning = flag;
     }
@@ -195,9 +197,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
      */
     private boolean wantsToHide()
     {
-        return (worldObj.isDaytime()
-
-        && worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), (int) this.boundingBox.minY, MathHelper.floor_double(this.posZ)));
+        return (worldObj.isDaytime()); //&& worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), (int) this.boundingBox.minY, MathHelper.floor_double(this.posZ)));
     }
 
     @Override
@@ -362,7 +362,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -415,7 +415,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (MoCreatures.isServer())
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 3), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
         return "mocreatures:scorpiongrunt";
     }
@@ -425,7 +425,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     {
         if (!getIsAdult()) { return Items.string; }
 
-        boolean flag = (rand.nextInt(2) == 0);
+        boolean flag = (rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
 
         switch (getType())
         {

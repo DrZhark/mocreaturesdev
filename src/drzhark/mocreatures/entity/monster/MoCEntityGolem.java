@@ -26,13 +26,15 @@ import net.minecraftforge.event.world.BlockEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.network.packet.MoCPacketAnimation;
-import drzhark.mocreatures.network.packet.MoCPacketTwoBytes;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageTwoBytes;
 
 public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpawnData {
 
@@ -160,8 +162,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
                 if (dCounter == 120)
                 {
                     MoCTools.playCustomSound(this, "golemdying", worldObj, 3F);
-                    MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 1), this.worldObj.provider.dimensionId);
-
+                    MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
                 }
 
                 if (dCounter > 140)
@@ -339,7 +340,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         if ((f > 5.0F) && entity != null && tcounter == 0 && canShoot()) //attackTime <= 0 &&
         {
             tcounter = 1;
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketAnimation(this.getEntityId(), 0), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
             return;
         }
 
@@ -679,7 +680,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         golemCubes[slot] = value;
         if (MoCreatures.isServer() && MoCreatures.proxy.worldInitDone) // Fixes CMS initialization during world load
         {
-            MoCreatures.packetPipeline.sendToDimension(new MoCPacketTwoBytes(this.getEntityId(), slot, value), this.worldObj.provider.dimensionId);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageTwoBytes(this.getEntityId(), slot, value), new TargetPoint(this.worldObj.provider.dimensionId, this.posX, this.posY, this.posZ, 64));
         }
     }
 

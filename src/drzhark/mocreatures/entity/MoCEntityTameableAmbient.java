@@ -65,13 +65,13 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         }
 
         //changes name
-        if (itemstack != null && getIsTamed() && (itemstack.getItem() == MoCreatures.medallion|| itemstack.getItem() == Items.book|| itemstack.getItem() == Items.name_tag))
+        if (MoCreatures.isServer() && itemstack != null && getIsTamed() && (itemstack.getItem() == MoCreatures.medallion|| itemstack.getItem() == Items.book|| itemstack.getItem() == Items.name_tag))
         {
-            if (MoCreatures.isServer())
+            if (MoCTools.tameWithName(entityplayer, this))
             {
-                MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                return true;
             }
-            return true;
+            return false;
         }
         
         //sets it free, untamed

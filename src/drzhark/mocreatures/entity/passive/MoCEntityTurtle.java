@@ -226,9 +226,9 @@ public class MoCEntityTurtle extends MoCEntityTameable {
                                 worldObj.playSoundAtEntity(this, "mocreatures:turtleeating", 1.0F, 1.0F + ((rand.nextFloat() - rand.nextFloat()) * 0.2F));
 
                                 EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
-                                if (entityplayer != null && (MoCreatures.isServer()))
+                                if (entityplayer != null)
                                 {
-                                    MoCTools.tameWithName((EntityPlayerMP) entityplayer, this);
+                                    MoCTools.tameWithName(entityplayer, this);
                                 }
                             }
                         }

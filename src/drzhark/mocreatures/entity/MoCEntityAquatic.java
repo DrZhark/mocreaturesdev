@@ -393,7 +393,7 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                 }
                 if (rand.nextInt(chance * 8) == 0)
                 {
-                    MoCTools.tameWithName((EntityPlayerMP) riddenByEntity, (IMoCTameable) this);
+                    MoCTools.tameWithName((EntityPlayer) riddenByEntity, (IMoCTameable) this);
                 }
 
             }

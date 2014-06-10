@@ -1,65 +1,65 @@
-package drzhark.mocreatures.network.packet;
+package drzhark.mocreatures.network.message;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class MoCPacketAnimation extends AbstractPacket {
+public class MoCMessageAnimation implements IMessage, IMessageHandler<MoCMessageAnimation, IMessage> {
 
     private int entityId;
     private int animationType;
 
-    public MoCPacketAnimation() {}
+    public MoCMessageAnimation() {}
 
-    public MoCPacketAnimation(int entityId, int animationType)
+    public MoCMessageAnimation(int entityId, int animationType)
     {
         this.entityId = entityId;
         this.animationType = animationType;
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void toBytes(ByteBuf buffer)
     {
         buffer.writeInt(this.entityId);
         buffer.writeInt(this.animationType);
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    public void fromBytes(ByteBuf buffer)
     {
         this.entityId = buffer.readInt();
         this.animationType = buffer.readInt();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void handleClientSide(EntityPlayer player)
+    public IMessage onMessage(MoCMessageAnimation message, MessageContext ctx)
     {
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
         for (Entity ent : entList)
         {
-            if (ent.getEntityId() == this.entityId && ent instanceof IMoCEntity)
+            if (ent.getEntityId() == message.entityId && ent instanceof IMoCEntity)
             {
-                ((IMoCEntity) ent).performAnimation(this.animationType);
+                ((IMoCEntity) ent).performAnimation(message.animationType);
                 break;
             }
         }
+        return null;
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
+    public String toString()
     {
-        // TODO Auto-generated method stub
-        
+        return String.format("MoCMessageAnimation - entityId:%s, animationType:%s", this.entityId, this.animationType);
     }
-
 }

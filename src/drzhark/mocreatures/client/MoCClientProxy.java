@@ -206,7 +206,8 @@ import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
-import drzhark.mocreatures.network.packet.MoCPacketInstaSpawn;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageInstaSpawn;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCClientProxy extends MoCProxy {
@@ -553,6 +554,16 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean spawnpiranhaW;
     public static MoCSettingInt pegasusChanceS;
     public static WidgetInt pegasusChanceW;
+    public static MoCSettingInt rareItemDropChanceS;
+    public static WidgetInt rareItemDropChanceW;
+    public static MoCSettingInt wyvernEggDropChanceS;
+    public static WidgetInt wyvernEggDropChanceW;
+    public static MoCSettingInt motherWyvernEggDropChanceS;
+    public static WidgetInt motherWyvernEggDropChanceW;
+    public static MoCSettingInt ostrichEggThresholdS;
+    public static WidgetInt ostrichEggThresholdW;
+    public static MoCSettingInt bunnyBreedThresholdS;
+    public static WidgetInt bunnyBreedThresholdW;
     public static MoCSettingBoolean easybreedingB;
     public static WidgetBoolean easybreedingW;
     public static MoCSettingInt ogreAttackRangeS;
@@ -767,6 +778,21 @@ public class MoCClientProxy extends MoCProxy {
             guiapiSettings.append(pegasusChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", zebraChance, 1, 1, 10));
             pegasusChanceW = new WidgetInt(pegasusChanceS, "Zebra chance");
             widgetCreatureSettingsColumns.add(pegasusChanceW);
+            guiapiSettings.append(rareItemDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "RareItemDropChance", rareItemDropChance, 1, 1, 25));
+            rareItemDropChanceW = new WidgetInt(rareItemDropChanceS, "Rare Item Drop Chance");
+            widgetCreatureSettingsColumns.add(rareItemDropChanceW);
+            guiapiSettings.append(wyvernEggDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "WyvernEggDropChance", wyvernEggDropChance, 1, 1, 10));
+            wyvernEggDropChanceW = new WidgetInt(wyvernEggDropChanceS, "Wyvern Egg Drop Chance");
+            widgetCreatureSettingsColumns.add(wyvernEggDropChanceW);
+            guiapiSettings.append(motherWyvernEggDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "MotherWyvernEggDropChance", motherWyvernEggDropChance, 1, 1, 33));
+            motherWyvernEggDropChanceW = new WidgetInt(motherWyvernEggDropChanceS, "M. Wyvern Egg Drop Chance");
+            widgetCreatureSettingsColumns.add(motherWyvernEggDropChanceW);
+            guiapiSettings.append(ostrichEggThresholdS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "OstrichEggThreshold", ostrichEggThreshold, 1, 1, 100));
+            ostrichEggThresholdW = new WidgetInt(ostrichEggThresholdS, "Ostrich Egg Threshold");
+            widgetCreatureSettingsColumns.add(ostrichEggThresholdW);
+            guiapiSettings.append(bunnyBreedThresholdS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "BunnyBreedThreshold", bunnyBreedThreshold, 1, 1, 100));
+            bunnyBreedThresholdW = new WidgetInt(bunnyBreedThresholdS, "Bunny Breed Threshold");
+            widgetCreatureSettingsColumns.add(bunnyBreedThresholdW);
             guiapiSettings.append(attackhorses = new MoCSettingBoolean(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", attackHorses));
             attackhorsesW = new WidgetBoolean(attackhorses, "Target horses?", "Yes", "No");
             widgetCreatureSettingsColumns.add(attackhorsesW);
@@ -1106,7 +1132,7 @@ public class MoCClientProxy extends MoCProxy {
             if (entityEntry.getValue().getEntityName().equalsIgnoreCase(entityName))
             {
                 try {
-                    MoCreatures.packetPipeline.sendToServer(new MoCPacketInstaSpawn(entityEntry.getValue().getEntityID(), numberToSpawn));
+                    MoCMessageHandler.INSTANCE.sendToServer(new MoCMessageInstaSpawn(entityEntry.getValue().getEntityID(), numberToSpawn));
                 }
                 catch (Exception ex)
                 {

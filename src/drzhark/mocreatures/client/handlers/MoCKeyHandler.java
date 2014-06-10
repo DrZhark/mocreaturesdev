@@ -15,8 +15,9 @@ import drzhark.guiapi.ModSettingScreen;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.network.packet.MoCPacketEntityDive;
-import drzhark.mocreatures.network.packet.MoCPacketEntityJump;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageEntityDive;
+import drzhark.mocreatures.network.message.MoCMessageEntityJump;
 
 public class MoCKeyHandler {
     int keyCount;
@@ -72,7 +73,7 @@ public class MoCKeyHandler {
             // keyCount = 0;
             // jump code needs to be executed client/server simultaneously to take
             ((IMoCEntity) ep.ridingEntity).makeEntityJump();
-            MoCreatures.packetPipeline.sendToServer(new MoCPacketEntityJump());
+            MoCMessageHandler.INSTANCE.sendToServer(new MoCMessageEntityJump());
         }
 
         if (kbDive && ep != null && ep.ridingEntity != null && ep.ridingEntity instanceof IMoCEntity)
@@ -80,7 +81,7 @@ public class MoCKeyHandler {
           //  keyCount = 0;
             // jump code needs to be executed client/server simultaneously to take
             ((IMoCEntity) ep.ridingEntity).makeEntityDive();
-            MoCreatures.packetPipeline.sendToServer(new MoCPacketEntityDive());
+            MoCMessageHandler.INSTANCE.sendToServer(new MoCMessageEntityDive());
         }
     }
 }
