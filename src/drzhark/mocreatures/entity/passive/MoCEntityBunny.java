@@ -47,6 +47,24 @@ public class MoCEntityBunny extends MoCEntityTameable {
     }
 
     @Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // hasEaten - 0 false 1 true
+    }
+
+    public boolean getHasEaten()
+    {
+        return (dataWatcher.getWatchableObjectByte(22) == 1);
+    }
+
+    public void setHasEaten(boolean flag)
+    {
+        byte input = (byte) (flag ? 1 : 0);
+        dataWatcher.updateObject(22, Byte.valueOf(input));
+    }
+
+    @Override
     public float getMoveSpeed()
     {
         return 1.5F;
@@ -146,6 +164,18 @@ public class MoCEntityBunny extends MoCEntityTameable {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
+        if ((itemstack != null) && (itemstack.getItem() == Items.carrot) && !getHasEaten())
+        {
+            if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+
+            setHasEaten(true);
+            MoCTools.playCustomSound(this, "eating", worldObj);
+            return true;
+        }
+
         rotationYaw = entityplayer.rotationYaw;
         if (this.ridingEntity == null)
         {
@@ -200,7 +230,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
         if (MoCreatures.isServer())
         {
 
-            if (!getIsTamed() || !getIsAdult() || (ridingEntity != null) || (worldObj.countEntities(this.getClass()) > MoCreatures.proxy.bunnyBreedThreshold)) { return; }
+            if (!getIsTamed() || !getIsAdult() || !getHasEaten() || (ridingEntity != null)) { return; }
             if (bunnyReproduceTickerA < 1023)
             {
                 bunnyReproduceTickerA++;
@@ -211,12 +241,12 @@ public class MoCEntityBunny extends MoCEntityTameable {
             }
             else
             {
-                int k = worldObj.countEntities(this.getClass());
+                /*int k = worldObj.countEntities(this.getClass());
                 if (k > MoCreatures.proxy.bunnyBreedThreshold)
                 {
                     proceed();
                     return;
-                }
+                }*/
 
                 List list1 = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(4.0D, 4.0D, 4.0D));
                 boolean flag = false;
@@ -228,7 +258,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
                         continue;
                     }
                     MoCEntityBunny entitybunny = (MoCEntityBunny) entity1;
-                    if ((entitybunny.ridingEntity != null) || (entitybunny.bunnyReproduceTickerA < 1023) || !entitybunny.getIsAdult())
+                    if ((entitybunny.ridingEntity != null) || (entitybunny.bunnyReproduceTickerA < 1023) || !entitybunny.getIsAdult() || !entitybunny.getHasEaten())
                     {
                         continue;
                     }
@@ -254,6 +284,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
 
     public void proceed()
     {
+        setHasEaten(false);
         bunnyReproduceTickerB = 0;
         bunnyReproduceTickerA = rand.nextInt(64);
     }

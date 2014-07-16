@@ -303,8 +303,6 @@ public class MoCProxy implements IGuiHandler {
         fireOgreChance = (short) mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "FireOgreChance", 25, "The chance percentage of spawning Fire ogres in the Overworld").getInt();
         caveOgreChance = (short) mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "CaveOgreChance", 75, "The chance percentage of spawning Cave ogres at depth of 50 in the Overworld").getInt();
         golemDestroyBlocks = mocSettingsConfig.get(CATEGORY_MOC_MONSTER_GENERAL_SETTINGS, "golemDestroyBlocks", true, "Allows Big Golems to break blocks.").getBoolean(true);
-        ostrichEggThreshold = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "OstrichEggThreshold", 100, "A value of 100 means Ostriches will stop laying eggs when there are more than 100 ostriches in world.").getInt();
-        bunnyBreedThreshold = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "BunnyBreedThreshold", 100, "A value of 100 means Bunnies will stop breeding when there are more than 100 bunnies in world.").getInt();
         WyvernDimension = mocSettingsConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairDimensionID", -17).getInt();
         WyvernBiomeID = mocSettingsConfig.get(CATEGORY_MOC_ID_SETTINGS, "WyvernLairBiomeID", 207).getInt();
         mocSettingsConfig.save();

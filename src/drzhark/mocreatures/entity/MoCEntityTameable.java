@@ -143,7 +143,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         }
         
       //heals
-        if ((itemstack != null) && getIsTamed() && isMyHealFood(itemstack))
+        if ((itemstack != null) && getIsTamed() && (this.getHealth() != this.getMaxHealth()) && isMyHealFood(itemstack))
         {
             if (--itemstack.stackSize == 0)
             {
@@ -221,7 +221,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         super.writeEntityToNBT(nbttagcompound);
         if (getOwnerPetId() != -1)
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
-        if (this instanceof IMoCTameable && getIsTamed())
+        if (this instanceof IMoCTameable && getIsTamed() && MoCreatures.instance.mapData != null)
         {
             MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)this, nbttagcompound);
         }

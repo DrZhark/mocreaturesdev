@@ -1523,10 +1523,16 @@ public class MoCTools {
 
             try
             {
-               // String className = ((EntityLiving)entity).getCommandSenderName();
-               // className.replaceAll("MoCreatures.", "");
-               // className.replaceAll(".name", "");
-                nbtt.setString("SpawnClass", ((EntityLiving)entity).getCommandSenderName());
+                String petClass = entity.getClass().getSimpleName().replace("MoCEntity", "");
+                if (petClass.equalsIgnoreCase("Horse"))
+                {
+                    petClass = "WildHorse";
+                }
+                else if (petClass.equalsIgnoreCase("Komodo"))
+                {
+                    petClass = "KomodoDragon";
+                }
+                nbtt.setString("SpawnClass", petClass);
                 nbtt.setFloat("Health", ((EntityLiving)entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());

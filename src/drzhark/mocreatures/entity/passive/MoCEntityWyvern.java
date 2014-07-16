@@ -347,7 +347,7 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             return true;
         }
 
-        if ((itemstack != null) && !getIsRideable() && getEdad() > 90 && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle) )
+        if ((itemstack != null) && !getIsRideable() && getEdad() > 90 && this.getIsTamed() && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle) )
         {
             if (--itemstack.stackSize == 0)
             {
@@ -808,8 +808,6 @@ public class MoCEntityWyvern extends MoCEntityTameable {
     @Override
     protected void dropFewItems(boolean flag, int x)
     {
-         if (!flag) return;
-
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);

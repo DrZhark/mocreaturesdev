@@ -26,6 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
@@ -150,7 +151,7 @@ import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.0.dev.R3")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.1")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -392,7 +393,13 @@ public class MoCreatures {
         event.registerServerCommand(new CommandMoCreatures());
         event.registerServerCommand(new CommandMoCTP());
         event.registerServerCommand(new CommandMoCPets());
-        event.registerServerCommand(new CommandMoCSpawn());
+        if (isServer())
+        {
+            if (MinecraftServer.getServer().isDedicatedServer())
+            {
+                event.registerServerCommand(new CommandMoCSpawn());
+            }
+        }
     }
 
     @EventHandler

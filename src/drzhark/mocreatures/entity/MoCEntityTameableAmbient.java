@@ -211,7 +211,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         super.writeEntityToNBT(nbttagcompound);
         if (getOwnerPetId() != -1)
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
-        if (this instanceof IMoCTameable && getIsTamed())
+        if (this instanceof IMoCTameable && getIsTamed() && MoCreatures.instance.mapData != null)
         {
             MoCreatures.instance.mapData.updateOwnerPet((IMoCTameable)this, nbttagcompound);
         }

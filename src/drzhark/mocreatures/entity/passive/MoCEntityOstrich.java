@@ -501,7 +501,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
 
             //egg laying
-            if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0 && !getIsTamed())// &&
+            if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0)// &&
             {
                 EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 12D);
                 if (entityplayer1 != null)
@@ -514,12 +514,12 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                         {
                             int OstrichEggType = 30;
                             MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
-        
-                            if (!this.getIsTamed())
-                            {
                                 MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
                                 entityegg.setPosition(this.posX, this.posY, this.posZ);
                                 worldObj.spawnEntityInWorld(entityegg);
+                            
+                            if (!this.getIsTamed())
+                            {
                                 setEggWatching(true);
                                 if (entityOstrich != null)
                                 {

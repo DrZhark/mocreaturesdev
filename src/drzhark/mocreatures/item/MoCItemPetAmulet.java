@@ -91,6 +91,7 @@ public class MoCItemPetAmulet extends MoCItem
                     {
                         spawnClass = "WildHorse";
                     }
+
                     EntityLiving tempLiving = MoCTools.spawnListByNameClass(spawnClass, worldObj);
                     if (tempLiving != null && tempLiving instanceof IMoCEntity)
                     {

@@ -85,10 +85,12 @@ public class CommandMoCSpawn extends CommandBase {
             if (entityType.equalsIgnoreCase("horse"))
             {
                 specialEntity = new MoCEntityHorse(player.worldObj);
+                specialEntity.setAdult(true);
             }
             else if (entityType.equalsIgnoreCase("wyvern"))
             {
                 specialEntity = new MoCEntityWyvern(player.worldObj);
+                specialEntity.setAdult(false);
             }
             else
             {
@@ -100,9 +102,9 @@ public class CommandMoCSpawn extends CommandBase {
             double newPosX = player.posX - (dist * Math.cos((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
             double newPosZ = player.posZ - (dist * Math.sin((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
             specialEntity.setPosition(newPosX, newPosY, newPosZ);
-            specialEntity.setAdult(true);
             specialEntity.setTamed(true);
-            specialEntity.setOwner("Rename_Me");
+            specialEntity.setOwner("NoOwner");
+            specialEntity.setName("Rename_Me");
             specialEntity.setType(type);
 
             if ((entityType.equalsIgnoreCase("horse") && (type < 1 || type > 67)) || (entityType.equalsIgnoreCase("wyvern") && (type < 1 || type > 12)))

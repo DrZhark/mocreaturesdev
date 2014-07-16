@@ -227,33 +227,63 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         //looks for a random rock around it
         int[] myRockCoords = new int[] { -9999, -1, -1 };
         myRockCoords = MoCTools.getRandomBlockCoords(this, 24D);
-        //System.out.println("Rock X = " + myRockCoords[0] + " Y = " + myRockCoords[1] + " Z = " + myRockCoords[2]);
         if (myRockCoords[0] == -9999) { return; }
 
-        //initializes a Trock there, that will try to follow the golem
-        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, myRockCoords[0], myRockCoords[1], myRockCoords[2]);//, false, true);
-        trock.setType(Block.getIdFromBlock(worldObj.getBlock(MathHelper.floor_double(myRockCoords[0]), MathHelper.floor_double(myRockCoords[1]), MathHelper.floor_double(myRockCoords[2]))));
-        trock.setMetadata(worldObj.getBlockMetadata(MathHelper.floor_double(myRockCoords[0]), MathHelper.floor_double(myRockCoords[1]), MathHelper.floor_double(myRockCoords[2])));
-        trock.setBehavior(type);//so the rock: 2 follows the EntityGolem  or 3 - gets around the golem
+        boolean canDestroyBlocks = MoCTools.mobGriefing(worldObj) && MoCreatures.proxy.golemDestroyBlocks;
         
-        //destroys the block that was already there
-        if (MoCTools.mobGriefing(worldObj) && MoCreatures.proxy.golemDestroyBlocks) 
-        {
             Block block = worldObj.getBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
-            int metadata = worldObj.getBlockMetadata(myRockCoords[0], myRockCoords[1], myRockCoords[2]);
+        
+        int tRockID = Block.getIdFromBlock(worldObj.getBlock(MathHelper.floor_double(myRockCoords[0]), MathHelper.floor_double(myRockCoords[1]), MathHelper.floor_double(myRockCoords[2])));
+        if (tRockID == 0) {return;} //air blocks
+        
+        int tRockMetadata = worldObj.getBlockMetadata(MathHelper.floor_double(myRockCoords[0]), MathHelper.floor_double(myRockCoords[1]), MathHelper.floor_double(myRockCoords[2]));
+        
             BlockEvent.BreakEvent event = null;
             if (!this.worldObj.isRemote)
             {
-                event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, metadata, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
+            event = new BlockEvent.BreakEvent(myRockCoords[0], myRockCoords[1], myRockCoords[2], worldObj, block, tRockMetadata, FakePlayerFactory.get((WorldServer)this.worldObj, MoCreatures.MOCFAKEPLAYER));
             }
-            if (event != null && !event.isCanceled())
+        if (canDestroyBlocks && event != null && !event.isCanceled())
             {
+                //destroys the original rock
                 worldObj.setBlock(myRockCoords[0], myRockCoords[1], myRockCoords[2], Blocks.air, 0, 3);
             }
+        
+        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, myRockCoords[0], myRockCoords[1]+1, myRockCoords[2]);//, false, true);
+        
+        if (!canDestroyBlocks) //make cheap rocks
+        {
+            tRockID = returnRandomCheapBlock();
+            tRockMetadata = 0;
         }
 
+        trock.setType(tRockID);
+        trock.setMetadata(tRockMetadata);
+        trock.setBehavior(type);//so the rock: 2 follows the EntityGolem  or 3 - gets around the golem
+        
         //spawns the new TRock
         this.worldObj.spawnEntityInWorld(trock);
+    }
+
+    /**
+     * returns a random block when the golem is unable to break blocks
+     * @return
+     */
+    private int returnRandomCheapBlock()
+    {
+        int i = rand.nextInt(4);
+        switch (i)
+        {
+        case 0:
+            return 3; //dirt
+        case 1:
+            return 4; //cobblestone
+        case 2:
+            return 5; //wood
+        case 3:
+            return 79; //ice
+        }
+        return 3;
     }
 
     /**
@@ -901,6 +931,8 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     {
         switch (blockType)
         {
+        case 0:
+            return 0;
         case 1:
             return 0;
         case 18:
@@ -1048,9 +1080,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     @Override
     public float getMoveSpeed()
     {
-        //System.out.println("movespeed = 0.5 * " + countLegBlocks() / 6 + "% =" + 0.5F * (countLegBlocks() / 6F));
         return 0.4F * (countLegBlocks() / 6F);
-        //return 0.2F;
     }
 
     private int countLegBlocks()

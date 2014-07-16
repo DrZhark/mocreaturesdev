@@ -159,7 +159,7 @@ public class MoCEntityEgg extends EntityLiving {
                 }
             }
 
-            if (isInWater() && (getEggType() < 21 || getEggType() > 69)&& (rand.nextInt(20) == 0))
+            if (isInWater() && (getEggType() < 12 || getEggType() > 69)&& (rand.nextInt(20) == 0))
             {
                 tCounter++;
                 if (tCounter % 5 == 0)
@@ -285,13 +285,6 @@ public class MoCEntityEgg extends EntityLiving {
 
                     if (getEggType() == 30 || getEggType() == 31 || getEggType() == 32) // Ostriches. 30 = wild egg, 31 = stolen egg
                     {
-                        if ((worldObj.countEntities(MoCEntityOstrich.class) > 20))
-                        {
-                            tCounter = 0;
-                            lCounter = 500;
-                            return;
-                        }
-
                         MoCEntityOstrich entityspawn = new MoCEntityOstrich(worldObj);
                         int typeInt = 1;
                         if (worldObj.provider.isHellWorld || getEggType() == 32)
@@ -372,7 +365,7 @@ public class MoCEntityEgg extends EntityLiving {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null)
         {
-            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature located @ " + this.posX + ", " + this.posY + ", " + this.posZ + " will be lost if you leave area"));
+            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature located @ " + (int)this.posX + ", " + (int)this.posY + ", " + (int)this.posZ + " will be lost if you leave area"));
         }
     }
     public int getSize()

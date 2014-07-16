@@ -560,10 +560,6 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetInt wyvernEggDropChanceW;
     public static MoCSettingInt motherWyvernEggDropChanceS;
     public static WidgetInt motherWyvernEggDropChanceW;
-    public static MoCSettingInt ostrichEggThresholdS;
-    public static WidgetInt ostrichEggThresholdW;
-    public static MoCSettingInt bunnyBreedThresholdS;
-    public static WidgetInt bunnyBreedThresholdW;
     public static MoCSettingBoolean easybreedingB;
     public static WidgetBoolean easybreedingW;
     public static MoCSettingInt ogreAttackRangeS;
@@ -787,12 +783,6 @@ public class MoCClientProxy extends MoCProxy {
             guiapiSettings.append(motherWyvernEggDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "MotherWyvernEggDropChance", motherWyvernEggDropChance, 1, 1, 33));
             motherWyvernEggDropChanceW = new WidgetInt(motherWyvernEggDropChanceS, "M. Wyvern Egg Drop Chance");
             widgetCreatureSettingsColumns.add(motherWyvernEggDropChanceW);
-            guiapiSettings.append(ostrichEggThresholdS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "OstrichEggThreshold", ostrichEggThreshold, 1, 1, 100));
-            ostrichEggThresholdW = new WidgetInt(ostrichEggThresholdS, "Ostrich Egg Threshold");
-            widgetCreatureSettingsColumns.add(ostrichEggThresholdW);
-            guiapiSettings.append(bunnyBreedThresholdS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "BunnyBreedThreshold", bunnyBreedThreshold, 1, 1, 100));
-            bunnyBreedThresholdW = new WidgetInt(bunnyBreedThresholdS, "Bunny Breed Threshold");
-            widgetCreatureSettingsColumns.add(bunnyBreedThresholdW);
             guiapiSettings.append(attackhorses = new MoCSettingBoolean(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackHorses", attackHorses));
             attackhorsesW = new WidgetBoolean(attackhorses, "Target horses?", "Yes", "No");
             widgetCreatureSettingsColumns.add(attackhorsesW);

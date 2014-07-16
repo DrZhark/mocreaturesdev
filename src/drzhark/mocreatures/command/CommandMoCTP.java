@@ -60,6 +60,11 @@ public class CommandMoCTP extends CommandBase {
     public void processCommand(ICommandSender par1ICommandSender, String[] charArray)
     {
         int petId = 0;
+        if (charArray == null || charArray.length == 0)
+        {
+            par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "Error" + EnumChatFormatting.WHITE + ": You must enter a valid entity ID."));
+            return;
+        }
         try 
         {
             petId = Integer.parseInt(charArray[0]);
