@@ -77,7 +77,7 @@ public class GuiWidgetScreen extends Widget {
             GuiWidgetScreen.instance.minecraftInstance = ModSettings
                     .getMcinst();
             GuiWidgetScreen.instance.screenSize = new ScaledResolution(
-                    GuiWidgetScreen.instance.minecraftInstance.gameSettings,
+                    GuiWidgetScreen.instance.minecraftInstance,
                     GuiWidgetScreen.instance.minecraftInstance.displayWidth,
                     GuiWidgetScreen.instance.minecraftInstance.displayHeight);
         } catch (Throwable e) {
@@ -124,7 +124,7 @@ public class GuiWidgetScreen extends Widget {
 
     @Override
     public void layout() {
-        screenSize = new ScaledResolution(minecraftInstance.gameSettings,
+        screenSize = new ScaledResolution(minecraftInstance,
                 minecraftInstance.displayWidth, minecraftInstance.displayHeight);
         if (currentWidget != null) {
             GuiWidgetScreen.screenwidth = screenSize.getScaledWidth();

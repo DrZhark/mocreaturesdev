@@ -218,8 +218,8 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public float getSizeFactor() 
-    {   
+    public float getSizeFactor()
+    {
         float f = (float)getEdad() * 0.01F;
         if (f > 1.5F) f = 1.5F;
         return f;

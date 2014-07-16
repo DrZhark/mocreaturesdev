@@ -74,7 +74,7 @@ public class CommandMoCTP extends CommandBase {
             petId = -1;
         }
         String playername = par1ICommandSender.getCommandSenderName();
-        EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerForUsername(playername);
+        EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().func_152612_a(playername);
         // search for tamed entity in mocreatures.dat
         MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
         if (player != null & ownerPetData != null)

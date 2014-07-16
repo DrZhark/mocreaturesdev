@@ -81,7 +81,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface
         var5 *= var4 * 0.0F + 0.15F;
         var6 *= var4 * 0.0F + 0.15F;
         var7 *= var4 * 0.0F + 0.15F;
-        return this.worldObj.getWorldVec3Pool().getVecFromPool((double)var5, (double)var6, (double)var7);
+        return Vec3.createVectorHelper((double)var5, (double)var6, (double)var7);
     }
 
     @SideOnly(Side.CLIENT)

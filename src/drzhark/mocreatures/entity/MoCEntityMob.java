@@ -630,7 +630,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             int var4 = MathHelper.floor_double(this.boundingBox.minY + (double) var1.nextInt(6) - 3.0D);
             int var5 = MathHelper.floor_double(this.posZ + (double) var1.nextInt(20) - 10.0D);
 
-            if (!this.worldObj.canBlockSeeTheSky(var3, var4, var5) && this.getBlockPathWeight(var3, var4, var5) < 0.0F) { return this.worldObj.getWorldVec3Pool().getVecFromPool((double) var3, (double) var4, (double) var5); }
+            if (!this.worldObj.canBlockSeeTheSky(var3, var4, var5) && this.getBlockPathWeight(var3, var4, var5) < 0.0F) { return Vec3.createVectorHelper((double) var3, (double) var4, (double) var5); }
         }
 
         return null;

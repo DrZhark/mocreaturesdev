@@ -1640,20 +1640,7 @@ public class MoCTools {
             return false;
         }
 
-        Set opSet = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getOps();
-
-        if (opSet != null)
-        {
-            for(Iterator i = opSet.iterator(); i.hasNext();)
-            {  
-                String opnames = (String)i.next();  
-                if (opnames.equalsIgnoreCase(player.getCommandSenderName()))
-                {  
-                    return true;
-                }  
-            }  
-        }
-        return false;
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().func_152596_g(player.getGameProfile());
     }
 
     public static void spawnMaggots(World worldObj, Entity entity)

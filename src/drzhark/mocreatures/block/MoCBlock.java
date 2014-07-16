@@ -47,14 +47,14 @@ public class MoCBlock extends Block
 
         switch (plantType)
         {
-            case Desert: return this == Blocks.sand;
+            case Desert: return this == (Block)Blocks.sand;
             case Nether: return this == Blocks.soul_sand;
             case Crop:   return this == Blocks.farmland;
             case Cave:   return isSideSolid(world, x, y, z, UP);
             case Plains: return this ==(Block)Blocks.grass || this == Blocks.dirt;
             case Water:  return world.getBlock(x, y, z).getMaterial() == Material.water && world.getBlockMetadata(x, y, z) == 0;
             case Beach:
-                boolean isBeach = (this == (Block)Blocks.grass || this == Blocks.dirt || this == Blocks.sand);
+                boolean isBeach = (this == (Block)Blocks.grass || this == Blocks.dirt || this == (Block)Blocks.sand);
                 boolean hasWater = (world.getBlock(x - 1, y, z    ).getMaterial() == Material.water ||
                                     world.getBlock(x + 1, y, z    ).getMaterial() == Material.water ||
                                     world.getBlock(x,     y, z - 1).getMaterial() == Material.water ||

@@ -285,6 +285,13 @@ public class MoCEntityEgg extends EntityLiving {
 
                     if (getEggType() == 30 || getEggType() == 31 || getEggType() == 32) // Ostriches. 30 = wild egg, 31 = stolen egg
                     {
+                        if ((worldObj.countEntities(MoCEntityOstrich.class) > 20))
+                        {
+                            tCounter = 0;
+                            lCounter = 500;
+                            return;
+                        }
+
                         MoCEntityOstrich entityspawn = new MoCEntityOstrich(worldObj);
                         int typeInt = 1;
                         if (worldObj.provider.isHellWorld || getEggType() == 32)

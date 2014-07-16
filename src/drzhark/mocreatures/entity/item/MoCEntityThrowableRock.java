@@ -127,7 +127,7 @@ public class MoCEntityThrowableRock extends Entity {
         Entity master = getMaster();
         if (MoCreatures.isServer() && this.fuse-- <= 0)
         {
-            this.transformToItem();
+            transformToItem();
         }
 
         //held Trocks don't need to adjust its position

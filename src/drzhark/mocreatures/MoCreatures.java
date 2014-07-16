@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
@@ -151,7 +152,7 @@ import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.2.1")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.3.0")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -162,7 +163,7 @@ public class MoCreatures {
     public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
-    public static GameProfile MOCFAKEPLAYER = new GameProfile("", "[MoCreatures]");
+    public static GameProfile MOCFAKEPLAYER = new GameProfile(UUID.fromString("6E379B45-1111-2222-3333-2FE1A88BCD66"), "[MoCreatures]");
 
     /**
      * ITEMS
@@ -397,9 +398,9 @@ public class MoCreatures {
         {
             if (MinecraftServer.getServer().isDedicatedServer())
             {
-                event.registerServerCommand(new CommandMoCSpawn());
-            }
+            event.registerServerCommand(new CommandMoCSpawn());
         }
+    }
     }
 
     @EventHandler

@@ -80,7 +80,7 @@ public class CommandMoCSpawn extends CommandBase {
             }
 
             String playername = par1ICommandSender.getCommandSenderName();
-            EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerForUsername(playername);
+            EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().func_152612_a(playername);
             MoCEntityTameable specialEntity = null;
             if (entityType.equalsIgnoreCase("horse"))
             {
