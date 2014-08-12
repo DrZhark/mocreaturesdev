@@ -88,9 +88,9 @@ public class CommandMoCTP extends CommandBase {
                     WorldServer world = DimensionManager.getWorld(nbt.getInteger("Dimension"));
                     if (!teleportLoadedPet(world, player, petId, petName, par1ICommandSender))
                     {
-                        double posX = nbt.getTagList("Pos", 10).func_150309_d(0);
-                        double posY = nbt.getTagList("Pos", 10).func_150309_d(1);
-                        double posZ = nbt.getTagList("Pos", 10).func_150309_d(2);
+                        double posX = nbt.getTagList("Pos", 6).func_150309_d(0);
+                        double posY = nbt.getTagList("Pos", 6).func_150309_d(1);
+                        double posZ = nbt.getTagList("Pos", 6).func_150309_d(2);
                         int x = MathHelper.floor_double( posX );
                         int y = MathHelper.floor_double( posY );
                         int z = MathHelper.floor_double( posZ );

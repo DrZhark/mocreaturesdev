@@ -514,10 +514,10 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                         {
                             int OstrichEggType = 30;
                             MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
-                                MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
-                                entityegg.setPosition(this.posX, this.posY, this.posZ);
-                                worldObj.spawnEntityInWorld(entityegg);
-                            
+                            MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
+                            entityegg.setPosition(this.posX, this.posY, this.posZ);
+                            worldObj.spawnEntityInWorld(entityegg);
+
                             if (!this.getIsTamed())
                             {
                                 setEggWatching(true);

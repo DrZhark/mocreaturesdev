@@ -165,6 +165,12 @@ public class MoCItemPetAmulet extends MoCItem
                             {
                                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
                             }
+                            MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                            if (petData != null)
+                            {
+                                petData.setInAmulet(storedCreature.getOwnerPetId(), false);
+                            }
+                            MoCreatures.instance.mapData.forceSave();
                         }
                     }
                 }catch (Exception ex) 

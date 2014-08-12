@@ -165,6 +165,12 @@ public class MoCItemHorseAmulet extends MoCItem {
                                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletpegasus, 1, 0));
                             }
                         }
+                        MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                        if (petData != null)
+                        {
+                            petData.setInAmulet(storedCreature.getOwnerPetId(), false);
+                        }
+                        MoCreatures.instance.mapData.forceSave();
                     }
                 }catch (Exception ex) 
                 {

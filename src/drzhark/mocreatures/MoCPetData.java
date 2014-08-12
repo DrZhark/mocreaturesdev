@@ -12,16 +12,14 @@ import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCPetData {
 
-    private NBTTagCompound ownerData;
-    private NBTTagList tamedList;
+    private NBTTagCompound ownerData = new NBTTagCompound();
+    private NBTTagList tamedList = new NBTTagList();
     private BitSet IDMap = new BitSet(Long.SIZE << 4);
     private final String ownerName;
     private ArrayList<Integer> usedPetIds = new ArrayList();
 
     public MoCPetData(IMoCTameable pet)
     {
-        ownerData = new NBTTagCompound();
-        tamedList = new NBTTagList();
         ownerData.setTag("TamedList", tamedList);
         ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getCommandSenderName();
         //ownerData.setName("PetData");
@@ -76,7 +74,23 @@ public class MoCPetData {
         return false;
     }
 
-    public NBTTagCompound getPetData()
+    public NBTTagCompound getPetData(int id)
+    {
+        if (tamedList != null)
+        {
+            for (int i = 0; i < this.tamedList.tagCount(); i++)
+            {
+                NBTTagCompound nbt = (NBTTagCompound)this.tamedList.getCompoundTagAt(i);
+                if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == id)
+                {
+                    return nbt;
+                }
+            }
+        }
+        return null;
+    }
+
+    public NBTTagCompound getOwnerRootNBT()
     {
         return ownerData;
     }
@@ -93,6 +107,25 @@ public class MoCPetData {
             return ownerData.getString("Owner");
         }
         else return null;
+    }
+
+    public boolean getInAmulet(int petId)
+    {
+        NBTTagCompound petData = getPetData(petId);
+        if (petData != null)
+        {
+            return petData.getBoolean("InAmulet");
+        }
+        return false;
+    }
+
+    public void setInAmulet(int petId, boolean flag)
+    {
+        NBTTagCompound petData = getPetData(petId);
+        if (petData != null)
+        {
+            petData.setBoolean("InAmulet", flag);
+        }
     }
 
     /**

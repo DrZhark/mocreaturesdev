@@ -124,6 +124,11 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
+                MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+                if (petData != null)
+                {
+                    petData.setInAmulet(this.getOwnerPetId(), true);
+                }
                 this.dropMyStuff();
                 MoCTools.dropAmulet(this, 2);
                 this.isDead = true;
@@ -238,12 +243,14 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             if (petData != null)
             {
-                NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
+                NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
                 for (int i = 0; i < tag.tagCount(); i++)
                 {
                     NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);
                     if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                     {
+                        // update amulet flag
+                        nbt.setBoolean("InAmulet", false);
                         // check if cloned and if so kill
                         if (nbt.hasKey("Cloned"))
                         {

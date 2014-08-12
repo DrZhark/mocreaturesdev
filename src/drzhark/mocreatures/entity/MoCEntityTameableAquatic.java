@@ -137,6 +137,11 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         //stores in fishnet
         if (itemstack != null && itemstack.getItem() == MoCreatures.fishnet && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) 
         {
+            MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+            if (petData != null)
+            {
+                petData.setInAmulet(this.getOwnerPetId(), true);
+            }
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
@@ -204,12 +209,14 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             if (petData != null)
             {
-                NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
+                NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
                 for (int i = 0; i < tag.tagCount(); i++)
                 {
                     NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);
                     if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                     {
+                        // update amulet flag
+                        nbt.setBoolean("InAmulet", false);
                         // check if cloned and if so kill
                         if (nbt.hasKey("Cloned"))
                         {

@@ -1337,16 +1337,20 @@ public class MoCTools {
             }
             int max = 0;
             max = MoCreatures.proxy.maxTamed;
-            int count = MoCTools.numberTamedByPlayer(ep);
-            if (isThisPlayerAnOP(ep)) 
+            // only check count for new pets as owners may be changing the name
+            if (!MoCreatures.instance.mapData.isExistingPet(ep.getCommandSenderName(), storedCreature))
             {
-                max = MoCreatures.proxy.maxOPTamed;
-            }
-            if (count >= max) 
-            {
-                String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
-                ep.addChatMessage(new ChatComponentTranslation(message));
-                return false;
+                int count = MoCTools.numberTamedByPlayer(ep);
+                if (isThisPlayerAnOP(ep)) 
+                {
+                    max = MoCreatures.proxy.maxOPTamed;
+                }
+                if (count >= max) 
+                {
+                    String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
+                    ep.addChatMessage(new ChatComponentTranslation(message));
+                    return false;
+                }
             }
         }
 
