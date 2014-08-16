@@ -218,10 +218,10 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         /**
          * slow falling
          */
-        if (!getIsFlying() && isOnAir() && (motionY < 0.0D))
+        /*if (!getIsFlying() && isOnAir() && (motionY < 0.0D))
         {
             motionY *= 0.6D;
-        }
+        }*/
 
         if (mouthCounter > 0 && ++mouthCounter > 30)
         {

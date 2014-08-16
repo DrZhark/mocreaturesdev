@@ -385,7 +385,7 @@ public class MoCEntityBird extends MoCEntityTameable {
         if (MoCreatures.isServer())
         {
             EntityLivingBase entityliving = getBoogey(5D);
-            if ((entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
+            if (rand.nextInt(10) == 0 && (entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
             {
                 fleeing = true;
             }
@@ -395,10 +395,7 @@ public class MoCEntityBird extends MoCEntityTameable {
             }
             if (fleeing)
             {
-                if (FlyToNextTree())
-                {
-                    fleeing = false;
-                }
+                FlyToNextTree();
                 int ai[] = ReturnNearestMaterialCoord(this, Material.leaves, Double.valueOf(16D));
                 if (ai[0] == -1)
                 {
@@ -406,29 +403,27 @@ public class MoCEntityBird extends MoCEntityTameable {
                     {
                         WingFlap();
                     }
-
-                    fleeing = false;
                 }
-                if (rand.nextInt(50) == 0)
-                {
-                    fleeing = false;
-                }
+                fleeing = false;
             }
             if (!fleeing)
             {
-                EntityItem entityitem = getClosestItem(this, 12D, Items.wheat_seeds, null);
-                if (entityitem != null)
+                if (rand.nextInt(50) == 0)
                 {
-                    FlyToNextEntity(entityitem);
-                    EntityItem entityitem1 = getClosestItem(this, 1.0D, Items.wheat_seeds, null);
-                    if ((rand.nextInt(50) == 0) && (entityitem1 != null))
+                    EntityItem entityitem = getClosestItem(this, 12D, Items.wheat_seeds, null);
+                    if (entityitem != null)
                     {
-                        entityitem1.setDead();
-                        setPreTamed(true);                        
+                        FlyToNextEntity(entityitem);
+                        EntityItem entityitem1 = getClosestItem(this, 1.0D, Items.wheat_seeds, null);
+                        if ((rand.nextInt(50) == 0) && (entityitem1 != null))
+                        {
+                            entityitem1.setDead();
+                            setPreTamed(true);                        
+                        }
                     }
                 }
             }
-            if (isInsideOfMaterial(Material.water))
+            if (rand.nextInt(20) == 0 && isInsideOfMaterial(Material.water))
             {
                 WingFlap();
             }
