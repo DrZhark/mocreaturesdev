@@ -16,9 +16,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityFox extends MoCEntityTameable {
+public class MoCEntityFox extends MoCEntityTameableAnimal {
     protected double attackRange;
     protected int force;
 

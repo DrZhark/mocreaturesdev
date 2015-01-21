@@ -18,9 +18,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityTurtle extends MoCEntityTameable {
+public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     private boolean isSwinging;
     private boolean twistright;
     private int flopcounter;

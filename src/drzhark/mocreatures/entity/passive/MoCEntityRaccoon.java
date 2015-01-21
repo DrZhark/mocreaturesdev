@@ -11,9 +11,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityRaccoon extends MoCEntityTameable{
+public class MoCEntityRaccoon extends MoCEntityTameableAnimal{
 
     public MoCEntityRaccoon(World world)
     {

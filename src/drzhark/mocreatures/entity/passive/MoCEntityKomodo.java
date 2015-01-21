@@ -15,11 +15,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
-public class MoCEntityKomodo extends MoCEntityTameable
+public class MoCEntityKomodo extends MoCEntityTameableAnimal
 {
     public int sitCounter;
     public int tailCounter;

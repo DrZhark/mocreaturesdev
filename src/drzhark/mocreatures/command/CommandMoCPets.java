@@ -95,16 +95,21 @@ public class CommandMoCPets extends CommandBase {
         MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
         if (ownerPetData != null)
         {
+            MoCreatures.instance.mapData.forceSave(); // force save so we get correct information
             for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++)
             {
                 NBTTagCompound nbt = (NBTTagCompound)ownerPetData.getTamedList().getCompoundTagAt(i);
                 if (nbt.hasKey("PetId") && !foundIds.contains(nbt.getInteger("PetId")))
                 {
                     unloadedCount++;
-                    double posX = nbt.getTagList("Pos", 10).func_150309_d(0);
-                    double posY = nbt.getTagList("Pos", 10).func_150309_d(1);
-                    double posZ = nbt.getTagList("Pos", 10).func_150309_d(2);
-                    tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("EntityName") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
+                    double posX = nbt.getTagList("Pos", 6).func_150309_d(0);
+                    double posY = nbt.getTagList("Pos", 6).func_150309_d(1);
+                    double posZ = nbt.getTagList("Pos", 6).func_150309_d(2);
+                    if (nbt.getBoolean("InAmulet"))
+                    {
+                        tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet in " + EnumChatFormatting.DARK_PURPLE + "AMULET" + EnumChatFormatting.WHITE + " with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + (nbt.getString("id")).replace("MoCreatures.", "") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.WHITE + ".");
+                    }
+                    else tamedlist.add(EnumChatFormatting.WHITE + "Found unloaded pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + (nbt.getString("id")).replace("MoCreatures.", "") + EnumChatFormatting.DARK_AQUA + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Name") + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getString("Owner") + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("PetId") + EnumChatFormatting.DARK_AQUA + ", Dimension" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + nbt.getInteger("Dimension") + EnumChatFormatting.DARK_AQUA + ", Pos" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.LIGHT_PURPLE + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ));
                 }
             }
         }

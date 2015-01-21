@@ -79,7 +79,7 @@ public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMes
         if (petData != null && pet != null && ((IMoCTameable)pet).getOwnerPetId() != -1)
         {
             int id = ((IMoCTameable)pet).getOwnerPetId();
-            NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
+            NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
             for (int i = 0; i < tag.tagCount(); i++)
             {
                 NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);

@@ -23,7 +23,7 @@ import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -81,7 +81,7 @@ public class CommandMoCSpawn extends CommandBase {
 
             String playername = par1ICommandSender.getCommandSenderName();
             EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().func_152612_a(playername);
-            MoCEntityTameable specialEntity = null;
+            MoCEntityTameableAnimal specialEntity = null;
             if (entityType.equalsIgnoreCase("horse"))
             {
                 specialEntity = new MoCEntityHorse(player.worldObj);

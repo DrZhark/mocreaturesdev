@@ -29,11 +29,11 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
-public class MoCEntityBigCat extends MoCEntityTameable {
+public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     public MoCEntityBigCat(World world)
     {

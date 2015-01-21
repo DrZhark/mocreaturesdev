@@ -152,7 +152,7 @@ import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.utils.MoCLog;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.3.0")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.3.1")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -398,9 +398,9 @@ public class MoCreatures {
         {
             if (MinecraftServer.getServer().isDedicatedServer())
             {
-            event.registerServerCommand(new CommandMoCSpawn());
+                event.registerServerCommand(new CommandMoCSpawn());
+            }
         }
-    }
     }
 
     @EventHandler

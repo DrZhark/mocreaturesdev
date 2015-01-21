@@ -13,9 +13,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityCrocodile extends MoCEntityTameable {
+public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     // TODO
     // fix floating so it moves faster if it's deep and caughts prey underneath
 
@@ -484,8 +484,7 @@ public class MoCEntityCrocodile extends MoCEntityTameable {
     @Override
     public void floating()
     {
-        if ((entityToAttack != null && ((entityToAttack.posY < (posY - 0.5D)) && getDistanceToEntity(entityToAttack) < 10F))) // ||
-                                                                                                                                // caughtPrey)
+        if ((entityToAttack != null && ((entityToAttack.posY < (posY - 0.5D)) && getDistanceToEntity(entityToAttack) < 10F))) // || caughtPrey)
         {
             if (motionY < -0.1)
             {

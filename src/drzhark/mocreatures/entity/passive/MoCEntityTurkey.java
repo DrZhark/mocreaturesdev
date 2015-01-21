@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityTurkey extends MoCEntityTameable {
+public class MoCEntityTurkey extends MoCEntityTameableAnimal {
 
     public MoCEntityTurkey(World world)
     {

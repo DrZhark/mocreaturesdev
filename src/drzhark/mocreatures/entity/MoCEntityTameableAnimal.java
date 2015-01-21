@@ -15,9 +15,9 @@ import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 
-public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
+public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTameable
 {
-    public MoCEntityTameable(World world)
+    public MoCEntityTameableAnimal(World world)
     {
         super(world);
     }
@@ -124,6 +124,11 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             if (MoCreatures.isServer())
             {
+                MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+                if (petData != null)
+                {
+                    petData.setInAmulet(this.getOwnerPetId(), true);
+                }
                 this.dropMyStuff();
                 MoCTools.dropAmulet(this, 2);
                 this.isDead = true;
@@ -160,7 +165,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         return super.interact(entityplayer);
     }
 
-    @Override
+    /*@Override
     public void onDeath(DamageSource damagesource)
     {
         if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
@@ -168,7 +173,7 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
         }
         super.onDeath(damagesource);
-    }
+    }*/
 
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
@@ -179,10 +184,10 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
         {
             return;
         }
-        if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
+        /*if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
         {
             MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());
-        }
+        }*/
         super.setDead();
     }
 
@@ -238,12 +243,14 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
             if (petData != null)
             {
-                NBTTagList tag = petData.getPetData().getTagList("TamedList", 10);
+                NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
                 for (int i = 0; i < tag.tagCount(); i++)
                 {
                     NBTTagCompound nbt = (NBTTagCompound)tag.getCompoundTagAt(i);
                     if (nbt.getInteger("PetId") == nbttagcompound.getInteger("PetId"))
                     {
+                        // update amulet flag
+                        nbt.setBoolean("InAmulet", false);
                         // check if cloned and if so kill
                         if (nbt.hasKey("Cloned"))
                         {
@@ -286,5 +293,15 @@ public class MoCEntityTameable extends MoCEntityAnimal implements IMoCTameable
             setHealth(0.0F);
             onDeath(DamageSource.generic);
         }
+    }
+
+    @Override
+    public float getPetHealth() {
+        return this.getHealth();
+    }
+
+    @Override
+    public boolean isRiderDisconnecting() {
+        return this.riderIsDisconnecting;
     }
 }

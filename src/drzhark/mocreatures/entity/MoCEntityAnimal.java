@@ -925,7 +925,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 {
                     setIsJumping(false);
                 }
-                if (MoCreatures.isServer() && this instanceof MoCEntityTameable)
+                if (MoCreatures.isServer() && this instanceof MoCEntityTameableAnimal)
                 {
                     int chance = (getMaxTemper() - getTemper());
                     if (chance <= 0)
@@ -934,7 +934,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     }
                     if (rand.nextInt(chance * 8) == 0)
                     {
-                        MoCTools.tameWithName((EntityPlayer) riddenByEntity, (MoCEntityTameable)this);
+                        MoCTools.tameWithName((EntityPlayer) riddenByEntity, (MoCEntityTameableAnimal)this);
                     }
                 }
             }
@@ -1584,7 +1584,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     {
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))&& !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) { return false; }
+        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((EntityPlayer) entity)) { return false; }
 
         /*if (MoCreatures.isServer() && getIsTamed())
         {

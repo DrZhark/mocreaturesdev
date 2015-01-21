@@ -1,6 +1,7 @@
 package drzhark.mocreatures;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.monster.IMob;
@@ -10,6 +11,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -18,9 +20,12 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import drzhark.customspawner.utils.CMSUtils;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.utils.MoCLog;
 
 public class MoCEventHooks {
@@ -55,6 +60,27 @@ public class MoCEventHooks {
         GameRules gameRule = event.world.getGameRules();
         if (gameRule != null && !MoCreatures.isCustomSpawnerLoaded) {
             gameRule.setOrCreateGameRule("doMobSpawning", "true");
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDeathEvent(LivingDeathEvent event) 
+    {
+        if (MoCreatures.isServer())
+        {
+            if (IMoCTameable.class.isAssignableFrom(event.entityLiving.getClass())) 
+            {
+                IMoCTameable mocEntity = (IMoCTameable)event.entityLiving;
+                if (mocEntity.getIsTamed() && mocEntity.getPetHealth() > 0 && !mocEntity.isRiderDisconnecting())
+                {
+                    return;
+                }
+
+                if (mocEntity.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
+                {
+                    MoCreatures.instance.mapData.removeOwnerPet(mocEntity, mocEntity.getOwnerPetId());
+                }
+            }
         }
     }
 

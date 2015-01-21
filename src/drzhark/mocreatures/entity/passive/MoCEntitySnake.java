@@ -20,7 +20,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
@@ -35,7 +35,7 @@ import drzhark.mocreatures.network.message.MoCMessageAnimation;
  * 
  */
 
-public class MoCEntitySnake extends MoCEntityTameable {
+public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     private float fTongue;
     private float fMouth;

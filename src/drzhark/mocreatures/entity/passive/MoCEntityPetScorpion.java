@@ -19,13 +19,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
-public class MoCEntityPetScorpion extends MoCEntityTameable {
+public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     public static final String scorpionNames[] = { "Dirt", "Cave", "Nether", "Frost", "Undead" };
     private boolean isPoisoning;
     private int poisontimer;

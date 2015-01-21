@@ -59,7 +59,7 @@ import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
@@ -1337,16 +1337,20 @@ public class MoCTools {
             }
             int max = 0;
             max = MoCreatures.proxy.maxTamed;
-            int count = MoCTools.numberTamedByPlayer(ep);
-            if (isThisPlayerAnOP(ep)) 
+            // only check count for new pets as owners may be changing the name
+            if (!MoCreatures.instance.mapData.isExistingPet(ep.getCommandSenderName(), storedCreature))
             {
-                max = MoCreatures.proxy.maxOPTamed;
-            }
-            if (count >= max) 
-            {
-                String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
-                ep.addChatMessage(new ChatComponentTranslation(message));
-                return false;
+                int count = MoCTools.numberTamedByPlayer(ep);
+                if (isThisPlayerAnOP(ep)) 
+                {
+                    max = MoCreatures.proxy.maxOPTamed;
+                }
+                if (count >= max) 
+                {
+                    String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
+                    ep.addChatMessage(new ChatComponentTranslation(message));
+                    return false;
+                }
             }
         }
 
@@ -1456,7 +1460,7 @@ public class MoCTools {
      * Drops an amulet with the stored information of the entity passed
      * @param entity
      */
-    public static void dropHorseAmulet(MoCEntityTameable entity)
+    public static void dropHorseAmulet(MoCEntityTameableAnimal entity)
     {
         if (MoCreatures.isServer())
         {
@@ -1489,7 +1493,8 @@ public class MoCTools {
             }
             
             EntityPlayer epOwner = entity.worldObj.getPlayerEntityByName(entity.getOwnerName());
-            if (epOwner != null)
+
+            if (epOwner != null && epOwner.inventory.getFirstEmptyStack() != -1) // don't attempt to set if player inventory is full
             {
                 epOwner.inventory.addItemStackToInventory(stack);
             }

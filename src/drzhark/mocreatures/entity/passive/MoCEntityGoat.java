@@ -16,9 +16,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityGoat extends MoCEntityTameable {
+public class MoCEntityGoat extends MoCEntityTameableAnimal {
     private boolean hungry;
     private boolean swingLeg;
     private boolean swingEar;

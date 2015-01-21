@@ -227,12 +227,6 @@ public class MoCClientProxy extends MoCProxy {
     }
 
     @Override
-    public void initSounds()
-    {
-        MinecraftForge.EVENT_BUS.register(new MoCSounds());
-    }
-
-    @Override
     public void initTextures()
     {
         mocTextures.loadTextures();
@@ -554,6 +548,8 @@ public class MoCClientProxy extends MoCProxy {
     public static WidgetBoolean spawnpiranhaW;
     public static MoCSettingInt pegasusChanceS;
     public static WidgetInt pegasusChanceW;
+    public static MoCSettingInt ostrichEggDropChanceS;
+    public static WidgetInt ostrichEggDropChanceW;
     public static MoCSettingInt rareItemDropChanceS;
     public static WidgetInt rareItemDropChanceW;
     public static MoCSettingInt wyvernEggDropChanceS;
@@ -774,6 +770,9 @@ public class MoCClientProxy extends MoCProxy {
             guiapiSettings.append(pegasusChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", zebraChance, 1, 1, 10));
             pegasusChanceW = new WidgetInt(pegasusChanceS, "Zebra chance");
             widgetCreatureSettingsColumns.add(pegasusChanceW);
+            guiapiSettings.append(ostrichEggDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "OstrichEggDropChance", ostrichEggDropChance, 1, 1, 3));
+            ostrichEggDropChanceW = new WidgetInt(ostrichEggDropChanceS, "Ostrich Egg Drop Chance");
+            widgetCreatureSettingsColumns.add(ostrichEggDropChanceW);
             guiapiSettings.append(rareItemDropChanceS = new MoCSettingInt(mocSettingsConfig, CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "RareItemDropChance", rareItemDropChance, 1, 1, 25));
             rareItemDropChanceW = new WidgetInt(rareItemDropChanceS, "Rare Item Drop Chance");
             widgetCreatureSettingsColumns.add(rareItemDropChanceW);

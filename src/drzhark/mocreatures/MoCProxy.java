@@ -66,11 +66,10 @@ public class MoCProxy implements IGuiHandler {
     public int maxTamed;
     public int maxOPTamed;
     public int zebraChance;
+    public int ostrichEggDropChance;
     public int rareItemDropChance;
     public int wyvernEggDropChance;
     public int motherWyvernEggDropChance;
-    public int ostrichEggThreshold;
-    public int bunnyBreedThreshold;
     public int particleFX;
     // defaults
     public int frequency = 6;
@@ -179,8 +178,6 @@ public class MoCProxy implements IGuiHandler {
         return 0;
     }
 
-    public void initSounds() {}
-
     public void initTextures() {}
 
     public ResourceLocation getTexture(String texture) 
@@ -283,6 +280,7 @@ public class MoCProxy implements IGuiHandler {
         easyBreeding = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", false, "Makes horse breeding simpler.").getBoolean(true);
         elephantBulldozer = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ElephantBulldozer", true).getBoolean(true);
         zebraChance = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", 10, "The percent for spawning a zebra.").getInt();
+        ostrichEggDropChance = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "OstrichEggDropChance", 3, "A value of 3 means ostriches have a 3% chance to drop an egg.").getInt();
         staticBed = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticBed", true).getBoolean(true);
         staticLitter = mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "StaticLitter", true).getBoolean(true);
         particleFX = mocSettingsConfig.get(CATEGORY_MOC_GENERAL_SETTINGS, "particleFX", 3).getInt();

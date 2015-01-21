@@ -22,13 +22,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
-public class MoCEntityWyvern extends MoCEntityTameable {
+public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     public MoCAnimalChest localchest;
     public ItemStack localstack;
@@ -297,6 +297,10 @@ public class MoCEntityWyvern extends MoCEntityTameable {
             }
         }
 
+        if (motionY > 0.5) // prevent large boundingbox checks
+        {
+            motionY = 0.5;
+        }
         super.onLivingUpdate();
     }
 
@@ -811,13 +815,13 @@ public class MoCEntityWyvern extends MoCEntityTameable {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        int l = MoCreatures.proxy.wyvernEggDropChance;
+        int chance = MoCreatures.proxy.wyvernEggDropChance;
         if (getType() == 5) //mother wyverns drop eggs more frequently
         {
-            l = MoCreatures.proxy.motherWyvernEggDropChance;
+            chance = MoCreatures.proxy.motherWyvernEggDropChance;
         }
         String s = MoCTools.BiomeName(worldObj, i, j, k);
-        if (rand.nextInt(l) == 0)
+        if (rand.nextInt(100) < chance)
         {
             entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 49), 0.0F);
         }

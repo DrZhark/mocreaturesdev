@@ -4,39 +4,43 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IMoCTameable {
 
-    public void playTameEffect(boolean par1);
+    boolean isRiderDisconnecting();
 
-    public String getOwnerName();
+    void playTameEffect(boolean par1);
 
-    public String getName();
+    String getOwnerName();
 
-    public void setName(String name);
+    String getName();
 
-    public void setTamed(boolean par1);
+    void setName(String name);
 
-    public void setDead();
+    void setTamed(boolean par1);
 
-    public int getType();
+    void setDead();
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound);
+    int getType();
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound);
+    void writeEntityToNBT(NBTTagCompound nbttagcompound);
 
-    public int getEdad();
+    void readEntityFromNBT(NBTTagCompound nbttagcompound);
 
-    public int getOwnerPetId();
+    int getEdad();
 
-    public boolean getIsAdult();
+    int getOwnerPetId();
 
-    public void setType(int creatureType);
+    boolean getIsAdult();
 
-    public void setOwner(String username);
+    void setType(int creatureType);
 
-    public void setEdad(int edad);
+    void setOwner(String username);
+
+    void setEdad(int edad);
 
     public void setAdult(boolean adult);
 
     public void setOwnerPetId(int petId);
 
     public boolean getIsTamed();
+
+    public float getPetHealth();
 }

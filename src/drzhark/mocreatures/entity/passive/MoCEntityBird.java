@@ -17,9 +17,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityBird extends MoCEntityTameable {
+public class MoCEntityBird extends MoCEntityTameableAnimal {
     private boolean fleeing;
     public float wingb;
     public float wingc;
@@ -385,7 +385,7 @@ public class MoCEntityBird extends MoCEntityTameable {
         if (MoCreatures.isServer())
         {
             EntityLivingBase entityliving = getBoogey(5D);
-            if ((entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
+            if (rand.nextInt(10) == 0 && (entityliving != null) && !getIsTamed() && !getPreTamed() && canEntityBeSeen(entityliving))
             {
                 fleeing = true;
             }
@@ -424,11 +424,11 @@ public class MoCEntityBird extends MoCEntityTameable {
                     if ((rand.nextInt(50) == 0) && (entityitem1 != null))
                     {
                         entityitem1.setDead();
-                        setPreTamed(true);                        
+                        setPreTamed(true);
                     }
                 }
             }
-            if (isInsideOfMaterial(Material.water))
+            if (rand.nextInt(10) == 0 && isInsideOfMaterial(Material.water))
             {
                 WingFlap();
             }

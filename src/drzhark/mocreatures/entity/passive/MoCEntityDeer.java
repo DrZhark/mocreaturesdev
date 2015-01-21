@@ -8,9 +8,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityDeer extends MoCEntityTameable {
+public class MoCEntityDeer extends MoCEntityTameableAnimal {
 
     private float myMoveSpeed;
 

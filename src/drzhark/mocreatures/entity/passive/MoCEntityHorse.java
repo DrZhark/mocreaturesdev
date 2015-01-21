@@ -39,7 +39,7 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -47,7 +47,7 @@ import drzhark.mocreatures.network.message.MoCMessageHeart;
 import drzhark.mocreatures.network.message.MoCMessageShuffle;
 import drzhark.mocreatures.network.message.MoCMessageVanish;
 
-public class MoCEntityHorse extends MoCEntityTameable {
+public class MoCEntityHorse extends MoCEntityTameableAnimal {
     private int gestationtime;
     private int countEating;
     private int textCounter;

@@ -19,9 +19,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityBunny extends MoCEntityTameable {
+public class MoCEntityBunny extends MoCEntityTameableAnimal {
     public boolean pickedUp;
     public int bunnyReproduceTickerA;
     public int bunnyReproduceTickerB;
@@ -164,7 +164,7 @@ public class MoCEntityBunny extends MoCEntityTameable {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && (itemstack.getItem() == Items.carrot) && !getHasEaten())
+        if ((itemstack != null) && (itemstack.getItem() == Items.golden_carrot) && !getHasEaten())
         {
             if (--itemstack.stackSize == 0)
             {

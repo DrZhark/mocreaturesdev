@@ -18,9 +18,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 
-public class MoCEntityBear extends MoCEntityTameable {
+public class MoCEntityBear extends MoCEntityTameableAnimal {
 
     public int mouthCounter;
     private int attackCounter;

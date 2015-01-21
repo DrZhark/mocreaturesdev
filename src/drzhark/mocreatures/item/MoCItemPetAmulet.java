@@ -18,7 +18,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
@@ -125,9 +125,9 @@ public class MoCItemPetAmulet extends MoCItem
                             if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0) || !MoCreatures.proxy.enableOwnership)
                             {
                                 NBTTagCompound petNBT = new NBTTagCompound();
-                                if (tempLiving instanceof MoCEntityTameable)
+                                if (tempLiving instanceof MoCEntityTameableAnimal)
                                 {
-                                    ((MoCEntityTameable)storedCreature).writeEntityToNBT(petNBT);
+                                    ((MoCEntityTameableAnimal)storedCreature).writeEntityToNBT(petNBT);
                                 }
                                 else if (tempLiving instanceof MoCEntityTameableAquatic)
                                 {
@@ -161,9 +161,12 @@ public class MoCItemPetAmulet extends MoCItem
                             {
                                  MoCTools.tameWithName(entityplayer, storedCreature);
                             }
-                            if (!((EntityLiving)storedCreature).isDead)
+
+                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+                            MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                            if (petData != null)
                             {
-                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+                                petData.setInAmulet(storedCreature.getOwnerPetId(), false);
                             }
                         }
                     }

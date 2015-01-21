@@ -23,13 +23,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
-public class MoCEntityOstrich extends MoCEntityTameable {
+public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     private int eggCounter;
     private int hidingCounter;
@@ -39,6 +39,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
     public int jumpCounter;
     public int transformCounter;
     public int transformType;
+    public boolean canLayEggs;
 
     public MoCAnimalChest localchest;
     public ItemStack localstack;
@@ -52,6 +53,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
         roper = null;
         this.eggCounter = this.rand.nextInt(1000) + 1000;
         this.stepHeight = 1.0F;
+        this.canLayEggs = false;
     }
 
     protected void applyEntityAttributes()
@@ -501,7 +503,7 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
 
             //egg laying
-            if ((getType() == 2) && !getEggWatching() && --this.eggCounter <= 0)// &&
+            if (this.canLayEggs && (getType() == 2) && !getEggWatching() && --this.eggCounter <= 0 && this.rand.nextInt(5) == 0)// &&
             {
                 EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, 12D);
                 if (entityplayer1 != null)
@@ -509,21 +511,20 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                     double distP = MoCTools.getSqDistanceTo(entityplayer1, posX, posY, posZ);
                     if (distP < 10D)
                     {
-                        //so it doesn't cause a ostrich overpopulation
-                        if (worldObj.countEntities(MoCEntityOstrich.class) < MoCreatures.proxy.ostrichEggThreshold)
+                        int OstrichEggType = 30;
+                        MoCEntityOstrich maleOstrich = getClosestMaleOstrich(this, 8D);
+                        if (maleOstrich != null && this.rand.nextInt(100) < MoCreatures.proxy.ostrichEggDropChance)
                         {
-                            int OstrichEggType = 30;
-                            MoCEntityOstrich entityOstrich = getClosestMaleOstrich(this, 8D);
-                                MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
-                                entityegg.setPosition(this.posX, this.posY, this.posZ);
-                                worldObj.spawnEntityInWorld(entityegg);
-                            
+                            MoCEntityEgg entityegg = new MoCEntityEgg(worldObj, OstrichEggType);
+                            entityegg.setPosition(this.posX, this.posY, this.posZ);
+                            worldObj.spawnEntityInWorld(entityegg);
+    
                             if (!this.getIsTamed())
                             {
                                 setEggWatching(true);
-                                if (entityOstrich != null)
+                                if (maleOstrich != null)
                                 {
-                                    entityOstrich.setEggWatching(true);
+                                    maleOstrich.setEggWatching(true);
                                 }
                                 openMouth();
                             }
@@ -532,8 +533,9 @@ public class MoCEntityOstrich extends MoCEntityTameable {
                             this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
                             //finds a male and makes it eggWatch as well
                             //MoCEntityOstrich entityOstrich = (MoCEntityOstrich) getClosestSpecificEntity(this, MoCEntityOstrich.class, 12D);
+                            this.eggCounter = this.rand.nextInt(2000) + 2000;
+                            this.canLayEggs = false;
                         }
-                        this.eggCounter = this.rand.nextInt(1000) + 1000;
                     }
                 }
             }
@@ -612,6 +614,19 @@ public class MoCEntityOstrich extends MoCEntityTameable {
             }
             worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F) + 1.0F);
             setRideable(true);
+            return true;
+        }
+
+        if (!getIsTamed() && itemstack != null && getType() == 2 && itemstack.getItem() == Items.melon_seeds)
+        {
+            if (--itemstack.stackSize == 0)
+            {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+
+            openMouth();
+            MoCTools.playCustomSound(this, "eating", worldObj);
+            this.canLayEggs = true;
             return true;
         }
 

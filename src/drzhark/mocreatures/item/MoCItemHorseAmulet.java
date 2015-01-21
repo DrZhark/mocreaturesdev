@@ -14,7 +14,7 @@ import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
@@ -45,7 +45,7 @@ public class MoCItemHorseAmulet extends MoCItem {
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer)
     {
         if (++ageCounter < 2) { return itemstack; }
-        
+
         int i = itemstack.getItemDamage();
 
         if (MoCreatures.isServer())
@@ -83,7 +83,7 @@ public class MoCItemHorseAmulet extends MoCItem {
             {
                 try
                 {
-                    MoCEntityTameable storedCreature = new MoCEntityHorse(worldObj); 
+                    MoCEntityTameableAnimal storedCreature = new MoCEntityHorse(worldObj); 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(creatureType);
                     storedCreature.setTamed(true);
@@ -145,25 +145,27 @@ public class MoCItemHorseAmulet extends MoCItem {
                     {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(storedCreature.getEntityId()), new TargetPoint(entityplayer.worldObj.provider.dimensionId, entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
                         MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
-                        if (!storedCreature.isDead)
+                        //gives an empty amulet
+                        if (creatureType == 26 || creatureType == 27 || creatureType == 28)
                         {
-                            //gives an empty amulet
-                            if (creatureType == 26 || creatureType == 27 || creatureType == 28)
-                            {
-                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletbone, 1, 0));
-                            }
-                            else if (creatureType == 21 || creatureType == 22)
-                            {
-                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletghost, 1, 0));
-                            }
-                            else if ((creatureType > 47 && creatureType < 60))
-                            {
-                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletfairy, 1, 0));
-                            }
-                            else if (creatureType == 39 || creatureType == 40)
-                            {
-                                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletpegasus, 1, 0));
-                            }
+                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletbone, 1, 0));
+                        }
+                        else if (creatureType == 21 || creatureType == 22)
+                        {
+                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletghost, 1, 0));
+                        }
+                        else if ((creatureType > 47 && creatureType < 60))
+                        {
+                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletfairy, 1, 0));
+                        }
+                        else if (creatureType == 39 || creatureType == 40)
+                        {
+                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletpegasus, 1, 0));
+                        }
+                        MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                        if (petData != null)
+                        {
+                            petData.setInAmulet(storedCreature.getOwnerPetId(), false);
                         }
                     }
                 }catch (Exception ex) 
