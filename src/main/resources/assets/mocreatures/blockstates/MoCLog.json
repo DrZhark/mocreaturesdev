@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "variant=wyvern_lair": {
+            "model": "mocreatures:wyvern_log"
+        },
+        "variant=ogre_lair": {
+            "model": "mocreatures:ogre_log"
+        }
+    }
+}

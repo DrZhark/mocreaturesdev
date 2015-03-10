@@ -1,0 +1,426 @@
+package drzhark.mocreatures.entity.passive;
+
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+
+public class MoCEntityTurtle extends MoCEntityTameableAnimal {
+
+    private boolean isSwinging;
+    private boolean twistright;
+    private int flopcounter;
+
+    public MoCEntityTurtle(World world) {
+        super(world);
+        setSize(0.6F, 0.4F);
+        setAdult(false);
+        setEdad(110);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
+        //this.tasks.addTask(2, new EntityAIPanic(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIWander(this, 0.8D));
+        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+        this.tasks.addTask(7, new EntityAILookIdle(this));
+    }
+
+    @Override
+    protected boolean usesNewAI() {
+        return true;
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.15D);
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isUpsideDown - 0 false 1 true
+        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isHiding - 0 false 1 true
+    }
+
+    @Override
+    public ResourceLocation getTexture() {
+        String tempText = "turtle.png";
+
+        if (getName().equals("Donatello") || getName().equals("donatello")) {
+            tempText = "turtled.png";
+        }
+
+        if (getName().equals("Leonardo") || getName().equals("leonardo")) {
+            tempText = "turtlel.png";
+        }
+
+        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")) {
+            tempText = "turtler.png";
+        }
+
+        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo")
+                || getName().equals("michaelangelo")) {
+            tempText = "turtlem.png";
+        }
+
+        return MoCreatures.proxy.getTexture(tempText);
+    }
+
+    @Override
+    public float getMoveSpeed() {
+        return 0.3F;
+    }
+
+    public boolean getIsHiding() {
+        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    }
+
+    public boolean getIsUpsideDown() {
+        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    }
+
+    public void setIsHiding(boolean flag) {
+        byte input = (byte) (flag ? 1 : 0);
+        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    }
+
+    public void setIsUpsideDown(boolean flag) {
+        byte input = (byte) (flag ? 1 : 0);
+        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    }
+
+    @Override
+    public double getYOffset() {
+        // If we are in SMP, do not alter offset on any client other than the player being mounted on
+        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+            return (2.5F - (1F + (getEdad() * 0.01F)));
+        }
+        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+            return (super.getYOffset() + 0.3F);
+        }
+        return super.getYOffset();
+    }
+
+    @Override
+    public boolean interact(EntityPlayer entityplayer) {
+        if (super.interact(entityplayer)) {
+            return false;
+        }
+        if (getIsTamed()) {
+            if (getIsUpsideDown()) {
+                flipflop(false);
+                return true;
+            }
+
+            if (this.ridingEntity == null) {
+                this.rotationYaw = entityplayer.rotationYaw;
+                // TODO change sound
+                this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                if (MoCreatures.isServer()) {
+                    mountEntity(entityplayer);
+                }
+            } else {
+                if (MoCreatures.isServer()) {
+                    this.mountEntity(null);
+                }
+                this.motionX = entityplayer.motionX * 5D;
+                this.motionY = (entityplayer.motionY / 2D) + 0.2D;
+                this.motionZ = entityplayer.motionZ * 5D;
+            }
+            return true;
+        }
+        flipflop(!getIsUpsideDown());
+
+        return true;
+    }
+
+    @Override
+    protected void jump() {
+        if (isInsideOfMaterial(Material.water)) {
+            this.motionY = 0.3D;
+            if (isSprinting()) {
+                float f = this.rotationYaw * 0.01745329F;
+                this.motionX -= MathHelper.sin(f) * 0.2F;
+                this.motionZ += MathHelper.cos(f) * 0.2F;
+            }
+            this.isAirBorne = true;
+        }
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return true;
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (this.worldObj.isRemote) {
+            if (this.ridingEntity != null) {
+                updateEntityActionState();
+            }
+        }
+
+        if (!this.worldObj.isRemote) {
+            if (!getIsUpsideDown() && !getIsTamed()) {
+                EntityLivingBase entityliving = getBoogey(4D);
+                if ((entityliving != null) && canEntityBeSeen(entityliving)) {
+
+                    if (!getIsHiding()) {
+                        this.worldObj.playSoundAtEntity(this, "mocreatures:turtlehissing", 1.0F,
+                                1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                        setIsHiding(true);
+                    }
+
+                    this.getNavigator().clearPathEntity();
+                } else {
+
+                    setIsHiding(false);
+                    if (!hasPath() && this.rand.nextInt(50) == 0) {
+                        EntityItem entityitem = getClosestItem(this, 10D, Items.melon, Items.reeds);
+                        if (entityitem != null) {
+                            float f = entityitem.getDistanceToEntity(this);
+                            if (f > 2.0F) {
+                                getMyOwnPath(entityitem, f);
+                            }
+                            if ((f < 2.0F) && (entityitem != null) && (this.deathTime == 0)) {
+                                entityitem.setDead();
+                                this.worldObj.playSoundAtEntity(this, "mocreatures:turtleeating", 1.0F,
+                                        1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+
+                                EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 24D);
+                                if (entityplayer != null) {
+                                    MoCTools.tameWithName(entityplayer, this);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean swimmerEntity() {
+        return true;
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        Entity entity = damagesource.getEntity();
+        if (this.ridingEntity != null) {
+            return false;
+        }
+        if (entity == null) {
+            return super.attackEntityFrom(damagesource, i);
+        }
+        if (getIsHiding()) {
+            if (this.rand.nextInt(10) == 0) {
+                flipflop(true);
+            }
+            return false;
+        } else {
+            boolean flag = super.attackEntityFrom(damagesource, i);
+            if (this.rand.nextInt(3) == 0) {
+                flipflop(true);
+            }
+            return flag;
+        }
+    }
+
+    public void flipflop(boolean flip) {
+        setIsUpsideDown(flip);
+        setIsHiding(false);
+        this.getNavigator().clearPathEntity();
+    }
+
+    @Override
+    public boolean entitiesToIgnore(Entity entity) {
+        return (entity instanceof MoCEntityTurtle) || ((entity.height <= this.height) && (entity.width <= this.width))
+                || super.entitiesToIgnore(entity);
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
+        if ((this.ridingEntity != null) && (this.ridingEntity instanceof EntityPlayer)) {
+            EntityPlayer entityplayer = (EntityPlayer) this.ridingEntity;
+            if (entityplayer != null) {
+                this.rotationYaw = entityplayer.rotationYaw;
+            }
+        }
+        if (getIsTamed() && getEdad() < 300 && this.rand.nextInt(800) == 0) {
+            setEdad(getEdad() + 1);
+        }
+        if (getIsUpsideDown() && (this.ridingEntity == null) && this.rand.nextInt(20) == 0) {
+            setSwinging(true);
+            this.flopcounter++;
+        }
+        if (getIsHiding() || getIsUpsideDown()) {
+            this.getNavigator().clearPathEntity();
+        }
+        if (getIsSwinging()) {
+            this.swingProgress += 0.2F;
+
+            boolean flag = (this.flopcounter > (this.rand.nextInt(3) + 8));
+
+            if (this.swingProgress > 2.0F && (!flag || this.rand.nextInt(20) == 0)) {
+                setSwinging(false);
+                this.swingProgress = 0.0F;
+                if (this.rand.nextInt(2) == 0) {
+                    this.twistright = !this.twistright;
+                }
+
+            } else if (this.swingProgress > 9.0F && flag) {
+                setSwinging(false);
+                this.swingProgress = 0.0F;
+                // TODO
+                this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                setIsUpsideDown(false);
+                this.flopcounter = 0;
+            }
+        }
+    }
+
+    public boolean getIsSwinging() {
+        return this.isSwinging;
+    }
+
+    public void setSwinging(boolean flag) {
+        this.isSwinging = flag;
+    }
+
+    /*@Override
+    protected boolean isMovementCeased() {
+        return (getIsUpsideDown() || getIsHiding());
+    }*/
+
+    @Override
+    public boolean renderName() {
+        return getRenderName() && (this.ridingEntity == null);
+    }
+
+    public int getFlipDirection() {
+        if (this.twistright) {
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
+        super.readEntityFromNBT(nbttagcompound);
+        setIsUpsideDown(nbttagcompound.getBoolean("UpsideDown"));
+        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
+        super.writeEntityToNBT(nbttagcompound);
+        nbttagcompound.setBoolean("UpsideDown", getIsUpsideDown());
+        nbttagcompound.setBoolean("DisplayName", getRenderName());
+    }
+
+    @Override
+    protected String getHurtSound() {
+        return "mocreatures:turtlehurt";
+    }
+
+    @Override
+    protected String getLivingSound() {
+        return "mocreatures:turtlegrunt";
+    }
+
+    @Override
+    protected String getDeathSound() {
+        return "mocreatures:turtledying";
+    }
+
+    @Override
+    protected Item getDropItem() {
+        if (getName().equals("Donatello") || getName().equals("donatello")) {
+            return MoCreatures.bo;
+        }
+
+        if (getName().equals("Leonardo") || getName().equals("leonardo")) {
+            return MoCreatures.katana;
+        }
+
+        if (getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")) {
+            return MoCreatures.sai;
+        }
+
+        if (getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo")
+                || getName().equals("michaelangelo")) {
+            return MoCreatures.nunchaku;
+        }
+        return MoCreatures.turtleraw;
+    }
+
+    /**
+     * Used to avoid rendering the top shell cube
+     *
+     * @return
+     */
+    public boolean isTMNT() {
+        if (getName().equals("Donatello") || getName().equals("donatello") || getName().equals("Leonardo") || getName().equals("leonardo")
+                || getName().equals("Rafael") || getName().equals("rafael") || getName().equals("raphael") || getName().equals("Raphael")
+                || getName().equals("Michelangelo") || getName().equals("michelangelo") || getName().equals("Michaelangelo")
+                || getName().equals("michaelangelo")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateMount() {
+        return getIsTamed();
+    }
+
+    @Override
+    public boolean forceUpdates() {
+        return getIsTamed();
+    }
+
+    @Override
+    public boolean isMyHealFood(ItemStack par1ItemStack) {
+        return par1ItemStack != null && (par1ItemStack.getItem() == Items.reeds || par1ItemStack.getItem() == Items.melon);
+    }
+
+    @Override
+    public int getMaxSpawnedInChunk() {
+        return 2;
+    }
+
+    @Override
+    public int nameYOffset() {
+        return -30;
+    }
+
+}

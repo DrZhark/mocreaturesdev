@@ -1,0 +1,6 @@
+{
+    "parent": "block/tallgrass",
+    "textures": {
+        "cross": "mocreatures:blocks/tallGrass_OgreLair"
+    }
+}
