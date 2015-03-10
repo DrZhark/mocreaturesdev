@@ -204,18 +204,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public void onLivingUpdate() {
-
-        if (MoCreatures.isServer() && !getIsAdult() && (this.rand.nextInt(200) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100) {
-                setAdult(true);
-            }
-        }
-        super.onLivingUpdate();
-    }
-
-    @Override
     public void onUpdate() {
         super.onUpdate();
 

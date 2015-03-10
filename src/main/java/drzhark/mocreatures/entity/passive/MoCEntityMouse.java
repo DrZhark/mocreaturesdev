@@ -202,18 +202,11 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!this.worldObj.isRemote) {
-            /*            if (this.rand.nextInt(15) == 0) {
-                            EntityLivingBase entityliving = getBoogey(6D);
-                            if (entityliving != null) {
-                                //MoCTools.runLikeHell(this, entityliving);
-
-                            }
-                        }*/
-            if (!this.onGround && (this.ridingEntity != null)) {
-                this.rotationYaw = this.ridingEntity.rotationYaw;
-            }
+        //if (!MoCreatures.isServer()) {
+        if (!this.onGround && (this.ridingEntity != null)) {
+            this.rotationYaw = this.ridingEntity.rotationYaw;
         }
+        //}
     }
 
     private void reproduce() {

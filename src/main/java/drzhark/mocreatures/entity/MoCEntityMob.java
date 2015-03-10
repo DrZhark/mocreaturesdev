@@ -654,4 +654,9 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public boolean canAttackTarget(EntityLivingBase entity) {
         return false;
     }
+
+    @Override
+    public boolean getIsSitting() {
+        return false;
+    }
 }

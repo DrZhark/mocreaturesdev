@@ -1,20 +1,23 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.pathfinding.PathNavigateGround;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -25,7 +28,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
-    public int sitCounter;
+    private int sitCounter;
     public int tailCounter;
     public int tongueCounter;
     public int mouthCounter;
@@ -57,7 +60,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
     }
 
     @Override
@@ -139,12 +142,6 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
                 sit();
             }
         }
-        if ((MoCreatures.isServer()) && !getIsAdult() && (this.rand.nextInt(500) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 120) {
-                setAdult(true);
-            }
-        }
     }
 
     private void openmouth() {
@@ -190,11 +187,6 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
             return getEdad() * 0.01F;
         }
         return 1.2F;
-    }
-
-    @Override
-    public boolean isNotScared() {
-        return true;
     }
 
     @Override
@@ -245,6 +237,12 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         }
         return (60 / getEdad()) * (-50);
     }
+
+    //TODO
+    /*@Override
+    public boolean swimmerEntity() {
+        return true;
+    }*/
 
     @Override
     public boolean canBreatheUnderwater() {
@@ -359,5 +357,19 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     @Override
     public int getMaxEdad() {
         return 120;
+    }
+
+    @Override
+    public boolean getIsSitting() {
+        return this.sitCounter != 0;
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return getEdad() > 70;
+    }
+
+    public boolean isHunter() {
+        return true;
     }
 }

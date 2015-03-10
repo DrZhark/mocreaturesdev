@@ -273,11 +273,6 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     }
 
     @Override
-    public boolean getIsSitting() {
-        return false;
-    }
-
-    @Override
     public boolean allowLeashing() {
         return this.getIsTamed();
     }

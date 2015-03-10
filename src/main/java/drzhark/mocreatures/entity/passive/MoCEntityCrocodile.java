@@ -184,13 +184,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             MoCTools.MoveToWater(this);
         }
 
-        if (MoCreatures.isServer() && getEdad() < 150 && (this.rand.nextInt(200) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 90) {
-                setAdult(true);
-            }
-        }
-
         if (this.waterbound) {
             if (!isInsideOfMaterial(Material.water)) {
                 MoCTools.MoveToWater(this);

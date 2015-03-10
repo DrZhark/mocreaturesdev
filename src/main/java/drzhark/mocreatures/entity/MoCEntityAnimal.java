@@ -312,7 +312,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                  this.worldObj.provider.getDimensionId(), this.getHealth());
              }
              */
-            if (!getIsAdult() && (this.rand.nextInt(500) == 0)) {
+            if (!getIsAdult() && (this.rand.nextInt(300) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= getMaxEdad()) {
                     setAdult(true);
@@ -1290,6 +1290,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return false;
     }
 
+    //TODO MOVE TO NEW AI
     private void followPlayer() {
         EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer1 == null) {
@@ -1398,8 +1399,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         if (isNotScared()) {
             Entity tempEntity = this.getAttackTarget();
             boolean flag = super.attackEntityFrom(damagesource, i);
-            // TODO
-            //fleeingTick = 0;
             setAttackTarget((EntityLivingBase) tempEntity);
             return flag;
         } else {
@@ -1505,12 +1504,17 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return flag;
     }
 
-    public boolean shouldHunt() {
+    public boolean isReadyToHunt() {
         return false;
     }
 
     @Override
     public boolean allowLeashing() {
+        return false;
+    }
+
+    @Override
+    public boolean getIsSitting() {
         return false;
     }
 }

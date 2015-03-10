@@ -233,11 +233,6 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     }
 
     @Override
-    public boolean getIsSitting() {
-        return false;
-    }
-
-    @Override
     public boolean allowLeashing() {
         return this.getIsTamed();
     }

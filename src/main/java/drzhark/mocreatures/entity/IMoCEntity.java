@@ -80,4 +80,6 @@ public interface IMoCEntity {
     public ResourceLocation getTexture();
 
     public boolean canAttackTarget(EntityLivingBase entity);
+
+    boolean getIsSitting();
 }

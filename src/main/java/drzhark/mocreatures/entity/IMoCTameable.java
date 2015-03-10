@@ -43,6 +43,4 @@ public interface IMoCTameable {
     boolean getIsTamed();
 
     float getPetHealth();
-
-    boolean getIsSitting();
 }

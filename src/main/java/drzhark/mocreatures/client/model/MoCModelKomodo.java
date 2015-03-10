@@ -216,7 +216,7 @@ public class MoCModelKomodo extends ModelBase {
         //byte harness = komodo.getHarness();
         //byte storage = komodo.getStorage();
         boolean mouth = (komodo.mouthCounter != 0);
-        boolean sitting = (komodo.sitCounter != 0);
+        boolean sitting = (komodo.getIsSitting());
         boolean swimming = (komodo.isSwimming());
         boolean moveTail = (komodo.tailCounter != 0);
         boolean tongue = (komodo.tongueCounter != 0);

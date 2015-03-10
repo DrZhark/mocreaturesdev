@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -42,7 +43,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        if (((IMoCTameable) this.thePet).getIsSitting()) {
+        if (((IMoCEntity) this.thePet).getIsSitting()) {
             return false;
         }
         String OwnerName = ((IMoCTameable) this.thePet).getOwnerName();
@@ -70,7 +71,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
     @Override
     public boolean continueExecuting() {
         return !this.petPathfinder.noPath() && this.thePet.getDistanceSqToEntity(this.theOwner) > this.maxDist * this.maxDist
-                && !((IMoCTameable) this.thePet).getIsSitting();
+                && !((IMoCEntity) this.thePet).getIsSitting();
     }
 
     /**
@@ -100,7 +101,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
     public void updateTask() {
         this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, this.thePet.getVerticalFaceSpeed());
 
-        if (!((IMoCTameable) this.thePet).getIsSitting()) {
+        if (!((IMoCEntity) this.thePet).getIsSitting()) {
             if (--this.delayCounter <= 0) {
                 this.delayCounter = 10;
 

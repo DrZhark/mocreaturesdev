@@ -36,7 +36,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         setEdad(110);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
-        //this.tasks.addTask(2, new EntityAIPanic(this, 1.0D));
         this.tasks.addTask(5, new EntityAIWander(this, 0.8D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
         this.tasks.addTask(7, new EntityAILookIdle(this));

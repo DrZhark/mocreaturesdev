@@ -1087,4 +1087,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public boolean allowLeashing() {
         return false;
     }
+
+    @Override
+    public boolean getIsSitting() {
+        return false;
+    }
+
 }

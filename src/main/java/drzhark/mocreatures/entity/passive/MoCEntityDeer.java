@@ -110,21 +110,6 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         }
     }
 
-    @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-        if (!this.worldObj.isRemote) {
-            if ((getType() == 3) && (this.rand.nextInt(250) == 0)) {
-                setEdad(getEdad() + 1);
-                if (getEdad() >= 130) {
-                    setAdult(true);
-                    int i = this.rand.nextInt(1);
-                    setType(i);
-                }
-            }
-        }
-    }
-
     public double getMyAISpeed() {
         if (getType() == 1) {
             return 1.1D;
@@ -137,5 +122,23 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     @Override
     public int getTalkInterval() {
         return 400;
+    }
+
+    @Override
+    public int getMaxEdad() {
+        return 130;
+    }
+
+    @Override
+    public void setAdult(boolean flag) {
+        if (MoCreatures.isServer()) {
+            setType(this.rand.nextInt(1));
+        }
+        super.setAdult(flag);
+    }
+
+    @Override
+    public boolean getIsAdult() {
+        return this.getType() != 3 && super.getIsAdult();
     }
 }

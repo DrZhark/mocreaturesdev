@@ -202,7 +202,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean shouldHunt() {
+    public boolean isReadyToHunt() {
         return this.getIsAdult() && this.getIsHungry(); //TODO sitting
     }
 
@@ -217,13 +217,6 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
-        if ((MoCreatures.isServer()) && !getIsAdult() && (this.rand.nextInt(250) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100) {
-                setAdult(true);
-            }
-        }
         if (!this.getIsHungry() && this.rand.nextInt(300) == 0) {
             setIsHungry(true);
         }

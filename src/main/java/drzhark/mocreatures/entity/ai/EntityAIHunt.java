@@ -28,6 +28,6 @@ public class EntityAIHunt extends EntityAINearestAttackableTargetMoC {
      */
     @Override
     public boolean shouldExecute() {
-        return ((MoCEntityAnimal) this.hunter).shouldHunt() && super.shouldExecute();
+        return ((MoCEntityAnimal) this.hunter).isReadyToHunt() && super.shouldExecute();
     }
 }

@@ -916,4 +916,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     public boolean allowLeashing() {
         return false;
     }
+
+    @Override
+    public boolean getIsSitting() {
+        return false;
+    }
+
 }
