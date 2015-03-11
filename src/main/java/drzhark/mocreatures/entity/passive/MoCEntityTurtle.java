@@ -281,9 +281,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
             setSwinging(true);
             this.flopcounter++;
         }
-        if (getIsHiding() || getIsUpsideDown()) {
-            this.getNavigator().clearPathEntity();
-        }
+
         if (getIsSwinging()) {
             this.swingProgress += 0.2F;
 
@@ -315,10 +313,10 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         this.isSwinging = flag;
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return (getIsUpsideDown() || getIsHiding());
-    }*/
+    }
 
     @Override
     public boolean renderName() {

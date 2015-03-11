@@ -524,10 +524,10 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
         }
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
-        return ((!isSwimming() && this.riddenByEntity == null) || this.riddenByEntity != null);
-    }*/
+    @Override
+    public boolean isMovementCeased() {
+        return ((!isSwimming() && this.riddenByEntity == null) || this.riddenByEntity != null || this.getIsSitting());
+    }
 
     @Override
     public void onLivingUpdate() {
@@ -543,6 +543,9 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
                 }
             }
 
+            if (isMovementCeased()) {
+                this.getNavigator().clearPathEntity();
+            }
             /*
              if (getIsTamed() && rand.nextInt(100) == 0) {
                  MoCServerPacketHandler.sendHealth(this.getEntityId(),
@@ -921,5 +924,4 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
     public boolean getIsSitting() {
         return false;
     }
-
 }

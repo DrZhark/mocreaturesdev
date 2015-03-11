@@ -31,10 +31,10 @@ public class MoCEntitySnail extends MoCEntityAmbient {
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return (getIsHiding());
-    }*/
+    }
 
     @Override
     public float getMoveSpeed() {

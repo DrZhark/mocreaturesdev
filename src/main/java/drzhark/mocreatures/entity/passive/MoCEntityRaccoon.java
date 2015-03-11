@@ -111,16 +111,6 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected Entity findPlayerToAttack() {
-        if ((this.rand.nextInt(80) == 0) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-            EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
-            return entityliving;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     protected String getDeathSound() {
         return "mocreatures:raccoondying";
     }
@@ -175,32 +165,6 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        return this.getIsAdult() && this.getIsHungry(); //TODO sitting
-    }
-
-    private boolean getIsHungry() {
-        return this.isHungry;
-    }
-
-    private void setIsHungry(boolean b) {
-        this.isHungry = b;
-    }
-
-    @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-
-        if ((MoCreatures.isServer()) && !getIsAdult() && (this.rand.nextInt(250) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100) {
-                setAdult(true);
-            }
-        }
-        if (!this.getIsHungry() && this.rand.nextInt(300) == 0) {
-            setIsHungry(true);
-        }
-        if (getIsHungry() && ++this.hungryCounter > 200) {
-            setIsHungry(false);
-        }
+        return this.getIsAdult() && !this.isMovementCeased();
     }
 }

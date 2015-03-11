@@ -180,6 +180,12 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public void onLivingUpdate() {
+        if (MoCreatures.isServer()) {
+            if (isMovementCeased()) {
+                this.getNavigator().clearPathEntity();
+            }
+        }
+
         if (isSwimming() && swimmerEntity()) {
             floating();
         }
@@ -1091,6 +1097,16 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean getIsSitting() {
         return false;
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return false;
+    }
+
+    @Override
+    public boolean isMovementCeased() {
+        return getIsSitting();
     }
 
 }

@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.IMoCEntity;
+
+import net.minecraft.entity.EntityLiving;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.command.IEntitySelector;
@@ -24,6 +27,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
      */
     protected Predicate targetEntitySelector;
     protected EntityLivingBase targetEntity;
+    private IMoCEntity theAttacker;
 
     public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class classTarget, boolean checkSight) {
         this(creature, classTarget, checkSight, false);
@@ -36,6 +40,9 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
     public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class classTarget, int chance, boolean checkSight, boolean onlyNearby,
             final Predicate targetSelector) {
         super(creature, checkSight, onlyNearby);
+        if (creature instanceof IMoCEntity) {
+            this.theAttacker = (IMoCEntity) creature;
+        }
         this.targetClass = classTarget;
         this.targetChance = chance;
         this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTargetMoC.Sorter(creature);
@@ -84,6 +91,9 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
      */
     @Override
     public boolean shouldExecute() {
+        if (theAttacker != null && (theAttacker.isMovementCeased() || !theAttacker.isNotScared())) {
+            return false;
+        }
         if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
             return false;
         } else {

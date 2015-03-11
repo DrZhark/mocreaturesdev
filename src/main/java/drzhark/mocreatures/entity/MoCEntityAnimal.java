@@ -50,6 +50,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     private int petDataId = -1;
     public float moveSpeed;
     protected String texture;
+    private int huntingCounter;
 
     public MoCEntityAnimal(World world) {
         super(world);
@@ -306,6 +307,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 MoCTools.forceDataSync(this);
             }
 
+            if (isMovementCeased()) {
+                this.getNavigator().clearPathEntity();
+            }
             /*
              if (getIsTamed() && rand.nextInt(100) == 0) {
                  MoCServerPacketHandler.sendHealth(this.getEntityId(),
@@ -318,6 +322,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     setAdult(true);
                 }
             }
+
+            if (this.isReadyToHunt() && !this.getIsHunting() && this.rand.nextInt(500) == 0) {
+                setIsHunting(true);
+            }
+
+            if (getIsHunting() && ++this.huntingCounter > 50) {
+                setIsHunting(false);
+            }
         }
 
         //TODO
@@ -325,9 +337,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             floating();
         }*/
 
-        if (/*!isMovementCeased() && */this.getAttackTarget() == null) {
+        //TODO
+        /*if (!isMovementCeased() && this.getAttackTarget() == null) {
             followPlayer();
-        }
+        }*/
         this.resetInLove();
         super.onLivingUpdate();
     }
@@ -336,6 +349,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return 100;
     }
 
+    @Override
     public boolean isNotScared() {
         return false;
     }
@@ -1516,5 +1530,22 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean getIsSitting() {
         return false;
+    }
+
+    @Override
+    public boolean isMovementCeased() {
+        return getIsSitting() || this.riddenByEntity != null;
+    }
+
+    public boolean getIsHunting() {
+        return this.huntingCounter != 0;
+    }
+
+    public void setIsHunting(boolean flag) {
+        if (flag) {
+            this.huntingCounter = rand.nextInt(30) + 1;
+        } else {
+            this.huntingCounter = 0;
+        }
     }
 }

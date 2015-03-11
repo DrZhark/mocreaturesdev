@@ -97,17 +97,6 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-        if (!this.getIsHungry() && this.rand.nextInt(300) == 0) {
-            setIsHungry(true);
-        }
-        if (getIsHungry() && ++this.hungryCounter > 200) {
-            setIsHungry(false);
-        }
-    }
-
-    @Override
     protected Item getDropItem() {
 
         if (this.rand.nextInt(2) == 0) {
@@ -139,15 +128,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        return this.getIsAdult() && this.getIsHungry();
-    }
-
-    private boolean getIsHungry() {
-        return this.isHungry;
-    }
-
-    private void setIsHungry(boolean b) {
-        this.isHungry = b;
+        return this.getIsAdult() && !this.isMovementCeased();
     }
 
     @Override

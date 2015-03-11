@@ -20,8 +20,7 @@ public class EntityAIWanderMoC extends EntityAIWander {
      */
     @Override
     public boolean shouldExecute() {
-        if (this.theEntityCreature.riddenByEntity != null || theEntityCreature instanceof IMoCEntity
-                && ((IMoCEntity) theEntityCreature).getIsSitting()) {
+        if (theEntityCreature instanceof IMoCEntity && ((IMoCEntity) theEntityCreature).isMovementCeased()) {
             return false;
         }
         return super.shouldExecute();

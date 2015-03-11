@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.IMoCEntity;
+
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -18,7 +20,7 @@ public class EntityAIPanicMoC extends EntityAIPanic {
      */
     @Override
     public boolean shouldExecute() {
-        if (this.theEntityCreature instanceof MoCEntityAnimal && ((MoCEntityAnimal) this.theEntityCreature).isNotScared()) {
+        if (this.theEntityCreature instanceof IMoCEntity && ((IMoCEntity) this.theEntityCreature).isNotScared()) {
             return false;
         }
         return super.shouldExecute();

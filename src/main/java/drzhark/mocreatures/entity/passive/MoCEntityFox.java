@@ -203,26 +203,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        return this.getIsAdult() && this.getIsHungry(); //TODO sitting
-    }
-
-    private boolean getIsHungry() {
-        return this.isHungry;
-    }
-
-    private void setIsHungry(boolean b) {
-        this.isHungry = b;
-    }
-
-    @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-        if (!this.getIsHungry() && this.rand.nextInt(300) == 0) {
-            setIsHungry(true);
-        }
-        if (getIsHungry() && ++this.hungryCounter > 200) {
-            setIsHungry(false);
-        }
+        return this.getIsAdult() && !this.isMovementCeased();
     }
 
     @Override

@@ -266,11 +266,9 @@ public class MoCModelKomodo extends ModelBase {
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, boolean sitting, boolean movetail, boolean tongue,
             boolean mouth, boolean swimming) {
-        //super.setRotationAngles(f, f1, f2, f3, f4, f5);
         float TailXRot = MathHelper.cos(f * 0.4F) * 0.2F * f1;
-        float LLegXRot = MathHelper.cos(f * 0.6F) * 0.9F * f1;
-        float RLegXRot = MathHelper.cos((f * 0.6F) + 3.141593F) * 0.9F * f1;
-        //System.out.println("F3 = " + f3);
+        float LLegXRot = MathHelper.cos(f * 1.2F) * 1.2F * f1;
+        float RLegXRot = MathHelper.cos((f * 1.2F) + 3.141593F) * 1.2F * f1;
 
         if (f3 > 60F) {
             f3 = 60F;
@@ -303,7 +301,7 @@ public class MoCModelKomodo extends ModelBase {
             this.Tail1.rotateAngleX = (-5F / this.radianF) - TailXRot;
             this.LegFrontLeft1.rotateAngleZ = -30F / this.radianF;
             this.LegFrontLeft2.rotateAngleZ = 0F / this.radianF;
-            this.LegFrontLeft1.rotateAngleY = LLegXRot;
+            this.LegFrontLeft1.rotateAngleY = 0F;//LLegXRot;
 
             this.LegBackLeft1.rotateAngleZ = 0F / this.radianF;
             this.LegBackLeft2.rotateAngleZ = -65F / this.radianF;
@@ -311,7 +309,7 @@ public class MoCModelKomodo extends ModelBase {
 
             this.LegFrontRight1.rotateAngleZ = 30F / this.radianF;
             this.LegFrontRight2.rotateAngleZ = 0F / this.radianF;
-            this.LegFrontRight1.rotateAngleY = -RLegXRot;
+            this.LegFrontRight1.rotateAngleY = 0F;//-RLegXRot;
 
             this.LegBackRight1.rotateAngleZ = 0F / this.radianF;// + (LLegXRotD/radianF);;
             this.LegBackRight2.rotateAngleZ = 65F / this.radianF;

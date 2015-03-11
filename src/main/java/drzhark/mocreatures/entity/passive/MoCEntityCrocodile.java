@@ -103,10 +103,10 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
-        return getIsResting();
-    }*/
+    @Override
+    public boolean isMovementCeased() {
+        return getIsResting(); //TODO getIsSitting() instead?
+    }
 
     /*
     @Override

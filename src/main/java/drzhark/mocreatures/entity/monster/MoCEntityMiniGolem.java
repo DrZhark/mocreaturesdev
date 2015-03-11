@@ -108,10 +108,10 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         setHasRock(true);
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getHasRock() && this.getAttackTarget() != null;
-    }*/
+    }
 
     /**
      *

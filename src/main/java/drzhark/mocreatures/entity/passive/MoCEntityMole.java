@@ -164,10 +164,10 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getState() == 1 || getState() == 3;
-    }*/
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {

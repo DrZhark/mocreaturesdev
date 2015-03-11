@@ -118,11 +118,6 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean entitiesToInclude(Entity entity) {
-        return !(entity instanceof MoCEntityMouse) && super.entitiesToInclude(entity);
-    }
-
-    @Override
     public boolean getCanSpawnHere() {
         int i = MathHelper.floor_double(this.posX);
         int j = MathHelper.floor_double(getEntityBoundingBox().minY);
@@ -202,11 +197,9 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        //if (!MoCreatures.isServer()) {
         if (!this.onGround && (this.ridingEntity != null)) {
             this.rotationYaw = this.ridingEntity.rotationYaw;
         }
-        //}
     }
 
     private void reproduce() {
@@ -226,8 +219,8 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean swimmerEntity() {
         return true;
-    }
+    }*/
 }

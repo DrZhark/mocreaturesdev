@@ -302,36 +302,37 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         return ((!(entity instanceof MoCEntityGoat)) || ((((MoCEntityGoat) entity).getType() < 5)));
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getUpset() && !getCharging();
     }
 
-    @Override
-    protected void attackEntity(Entity entity, float f) {
-        if (attackTime <= 0 && (f < 3.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) && this.attacking > 70) {
-            attackTime = 30;
+    /*
+        @Override
+        protected void attackEntity(Entity entity, float f) {
+            if (attackTime <= 0 && (f < 3.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
+                    && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) && this.attacking > 70) {
+                attackTime = 30;
 
-            this.attacking = 30;
+                this.attacking = 30;
 
-            this.worldObj.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-            if (entity instanceof MoCEntityGoat) {
-                MoCTools.bigsmack(this, entity, 0.4F);
-                if (this.rand.nextInt(10) == 0) {
-                    calm();
-                    ((MoCEntityGoat) entity).calm();
-                }
+                this.worldObj.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                if (entity instanceof MoCEntityGoat) {
+                    MoCTools.bigsmack(this, entity, 0.4F);
+                    if (this.rand.nextInt(10) == 0) {
+                        calm();
+                        ((MoCEntityGoat) entity).calm();
+                    }
 
-            } else {
-                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 3);
-                MoCTools.bigsmack(this, entity, 0.8F);
-                if (this.rand.nextInt(3) == 0) {
-                    calm();
+                } else {
+                    entity.attackEntityFrom(DamageSource.causeMobDamage(this), 3);
+                    MoCTools.bigsmack(this, entity, 0.8F);
+                    if (this.rand.nextInt(3) == 0) {
+                        calm();
+                    }
                 }
             }
-        }
-    }*/
+        }*/
 
     @Override
     public boolean isNotScared() {

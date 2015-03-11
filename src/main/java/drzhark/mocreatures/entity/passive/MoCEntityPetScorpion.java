@@ -548,10 +548,10 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         return true;
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return (this.riddenByEntity != null);
-    }*/
+    }
 
     @Override
     public void dropMyStuff() {

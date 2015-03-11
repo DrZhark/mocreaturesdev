@@ -259,7 +259,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     @Override
     protected Entity findPlayerToAttack() {
         if ((this.worldObj.getDifficulty().getDifficultyId() > 0) && (getKittyState() != 8) && (getKittyState() != 10) && (getKittyState() != 15)
-                && (getKittyState() != 18) && (getKittyState() != 19) /*&& !isMovementCeased()*/&& getIsHungry()) {
+                && (getKittyState() != 18) && (getKittyState() != 19) && !isMovementCeased() && getIsHungry()) {
             EntityLivingBase entityliving = getClosestTarget(this, 10D);
             return entityliving;
         } else {

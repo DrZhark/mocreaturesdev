@@ -221,7 +221,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 }
             }
 
-            if (isFlyingAlone() && this.rand.nextInt(60) == 0) { //&& !isMovementCeased()) {
+            if (isFlyingAlone() && this.rand.nextInt(60) == 0 && !isMovementCeased()) {
                 wingFlap();
             }
 
@@ -490,10 +490,10 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         return 400;
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return (this.riddenByEntity != null) || getIsSitting();
-    }*/
+    }
 
     @Override
     public boolean isFlyer() {

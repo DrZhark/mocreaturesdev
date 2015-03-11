@@ -657,7 +657,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     @Override
     protected String getLivingSound() {
         openMouth();
-        if (this.rand.nextInt(10) == 0) { //&& !isMovementCeased()) {
+        if (this.rand.nextInt(10) == 0 && !isMovementCeased()) {
             stand();
         }
         if (this.isUndead()) {
@@ -1893,10 +1893,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 || this.getType() == 21 || this.getType() == 22;
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getIsSitting() || (this.riddenByEntity != null) || this.standCounter != 0 || this.shuffleCounter != 0 || this.getVanishC() != 0;
-    }*/
+    }
 
     /**
      * Is this a Nightmare horse?
@@ -2174,7 +2174,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 MoCTools.buckleMobs(this, 2D, this.worldObj);
             }
 
-            if (isFlyer() && this.rand.nextInt(100) == 0 && /*!isMovementCeased() &&*/!getIsSitting()) {
+            if (isFlyer() && this.rand.nextInt(100) == 0 && !isMovementCeased() && !getIsSitting()) {
                 wingFlap();
             }
 

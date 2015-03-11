@@ -659,4 +659,14 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public boolean getIsSitting() {
         return false;
     }
+
+    @Override
+    public boolean isNotScared() {
+        return true;
+    }
+
+    @Override
+    public boolean isMovementCeased() {
+        return false;
+    }
 }

@@ -568,10 +568,10 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     /**
      * Checks if bigcat is sitting.
      */
-    /* @Override
-     protected boolean isMovementCeased() {
-         return getIsSitting();
-     }*/
+    @Override
+    public boolean isMovementCeased() {
+        return getIsSitting();
+    }
 
     //drops medallion on death
     @Override

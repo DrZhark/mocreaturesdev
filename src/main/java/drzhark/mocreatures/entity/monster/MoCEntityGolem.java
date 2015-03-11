@@ -181,10 +181,10 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         this.setDead();
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getGolemState() == 4;
-    }*/
+    }
 
     protected void acquireRock(int type) {
         //finds a missing rock spot in its body

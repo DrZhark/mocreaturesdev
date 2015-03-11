@@ -81,5 +81,9 @@ public interface IMoCEntity {
 
     public boolean canAttackTarget(EntityLivingBase entity);
 
-    boolean getIsSitting();
+    boolean getIsSitting(); // is the entity sitting, for animations and AI
+
+    boolean isNotScared(); //relentless creature that attacks others used for AI
+
+    boolean isMovementCeased(); //to deactivate path / wander behavior AI
 }

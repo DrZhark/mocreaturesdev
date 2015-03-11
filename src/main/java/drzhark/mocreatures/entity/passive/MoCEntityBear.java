@@ -207,10 +207,10 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     /**
      * Checks if entity is sitting.
      */
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getBearState() == 2;
-    }*/
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
