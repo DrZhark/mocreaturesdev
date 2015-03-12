@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.world.EnumDifficulty;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -1107,6 +1109,11 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean isMovementCeased() {
         return getIsSitting();
+    }
+
+    @Override
+    public boolean shouldAttackPlayers() {
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
     }
 
 }

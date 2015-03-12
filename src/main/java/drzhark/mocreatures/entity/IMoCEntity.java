@@ -86,4 +86,6 @@ public interface IMoCEntity {
     boolean isNotScared(); //relentless creature that attacks others used for AI
 
     boolean isMovementCeased(); //to deactivate path / wander behavior AI
+
+    boolean shouldAttackPlayers();
 }

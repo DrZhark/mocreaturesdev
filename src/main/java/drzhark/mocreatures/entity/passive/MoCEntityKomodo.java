@@ -46,7 +46,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         if (this.rand.nextInt(6) == 0) {
             setEdad(30 + this.rand.nextInt(40));
         } else {
-            setEdad(90 + this.rand.nextInt(30));
+            setEdad(90 + this.rand.nextInt(20));
         }
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
@@ -67,6 +67,11 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.18D);
+    }
+
+    @Override
+    protected boolean usesNewAI() {
+        return true;
     }
 
     @Override
@@ -200,8 +205,17 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         if (super.interact(entityplayer)) {
             return false;
         }
-
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
+        if ((itemstack != null) && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
+                && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle)) {
+            if (--itemstack.stackSize == 0) {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
+            setRideable(true);
+            return true;
+        }
+
         if (getIsRideable() && getIsTamed() && getEdad() > 90 && (this.riddenByEntity == null)) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
@@ -228,9 +242,9 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     @Override
     public int nameYOffset() {
         if (getIsAdult()) {
-            return (-55);
+            return (-50);
         }
-        return (60 / getEdad()) * (-50);
+        return (-50 + (getEdad() / 2));
     }
 
     //TODO

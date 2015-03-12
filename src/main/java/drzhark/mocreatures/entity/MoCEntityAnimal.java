@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.world.EnumDifficulty;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -1547,5 +1549,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         } else {
             this.huntingCounter = 0;
         }
+    }
+
+    @Override
+    public boolean shouldAttackPlayers() {
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
     }
 }

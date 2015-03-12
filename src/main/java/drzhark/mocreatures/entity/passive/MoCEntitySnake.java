@@ -1,5 +1,17 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -51,16 +63,27 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     public MoCEntitySnake(World world) {
         super(world);
         setSize(1.4F, 0.5F);
-        //health = 10;
         this.bodyswing = 2F;
         this.movInt = this.rand.nextInt(10);
         setEdad(50 + this.rand.nextInt(50));
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
+        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
+        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -104,9 +127,14 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         }
     }
 
-    @Override
+    /*@Override
     public float getMoveSpeed() {
         return 0.6F;
+    }*/
+
+    @Override
+    protected boolean usesNewAI() {
+        return true;
     }
 
     @Override
@@ -196,7 +224,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     public boolean getNearPlayer() {
-        return this.isNearPlayer;
+        return (this.isNearPlayer || this.getAttackTarget() != null || this.getIsHunting());
     }
 
     public int getMovInt() {
@@ -216,15 +244,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     public void setNearPlayer(boolean flag) {
         this.isNearPlayer = flag;
     }
-
-    /*
-     * @Override public double getYOffset() { // If we are in SMP, do not alter
-     * offset on any client other than the player being mounted on if
-     * (((ridingEntity instanceof EntityPlayer) && !worldObj.isRemote) ||
-     * ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
-     * { return(super.getYOffset() - 1.5F); } else { return super.getYOffset();
-     * } }
-     */
 
     @Override
     public double getYOffset() {
@@ -268,10 +287,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        if (getEdad() < 100 && this.rand.nextInt(500) == 0) {
-            setEdad(getEdad() + 1);
-        }
 
         if (pickedUp()) {
             this.movInt = 0;
@@ -426,7 +441,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         /**
          * this stops chasing the target randomly
          */
-        if (getAttackTarget() != null && this.rand.nextInt(100) == 0) {
+        if (getAttackTarget() != null && this.rand.nextInt(200) == 0) {
             setAttackTarget(null);
         }
 
@@ -444,21 +459,15 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
                     setNearPlayer(false);
                 }
 
-                if (entityplayer1.riddenByEntity != null
+                /*if (entityplayer1.riddenByEntity != null
                         && (entityplayer1.riddenByEntity instanceof MoCEntityMouse || entityplayer1.riddenByEntity instanceof MoCEntityBird)) {
                     PathEntity pathentity = this.navigator.getPathToEntityLiving(entityplayer1);
                     this.navigator.setPath(pathentity, 16F);
                     setPissed(false);
                     this.hissCounter = 0;
-                }
+                }*/
             } else {
                 setNearPlayer(false);
-                // TODO
-                /*
-                if (distP < 3D && !getIsTamed()) {
-                    fleeingTick = 40;
-                }*/
-
             }
 
         } else {
@@ -497,6 +506,19 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             }
         }
     }*/
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        if ((getType() < 3 || getIsTamed()) && entityIn instanceof EntityPlayer) {
+            return false;
+        }
+
+        if (entityIn instanceof EntityPlayer && !shouldAttackPlayers()) {
+            return false;
+        }
+        setBiting(true);
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public void performAnimation(int i) {
@@ -547,24 +569,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected Entity findPlayerToAttack() {
-        if (this.worldObj.getDifficulty().getDifficultyId() > 0) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 4D);
-            if (!getIsTamed() && (entityplayer != null)) // && getIsAdult() )
-            {
-                if (isNotScared() && isPissed()) {
-                    return entityplayer;
-                }
-            }
-            if ((this.rand.nextInt(100) == 0)) {
-                EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
-                return entityliving;
-            }
-        }
-        return null;
-    }
-
-    @Override
     protected void dropFewItems(boolean flag, int x) {
         if (getEdad() > 60) {
             int j = this.rand.nextInt(3);
@@ -575,10 +579,9 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         }
     }
 
-    // ignores big entities, everything else is prey!
     @Override
-    public boolean entitiesToIgnore(Entity entity) {
-        return ((super.entitiesToIgnore(entity)) || (entity instanceof MoCEntitySnake) || (entity.height > 0.5D && entity.width > 0.5D));
+    public boolean canAttackTarget(EntityLivingBase entity) {
+        return !(entity instanceof MoCEntitySnake) && entity.height < 0.5D && entity.width < 0.5D;
     }
 
     @Override
@@ -697,5 +700,30 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     @Override
     public int getMaxSpawnedInChunk() {
         return 2;
+    }
+
+    @Override
+    public boolean isReadyToHunt() {
+        return this.getIsAdult() && !this.isMovementCeased();
+    }
+
+    @Override
+    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+        if (isVenomous()) {
+            if (entityIn instanceof EntityPlayer) {
+                MoCreatures.poisonPlayer((EntityPlayer) entityIn);
+            }
+            ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 150, 2));
+        }
+        super.func_174815_a(entityLivingBaseIn, entityIn);
+    }
+
+    private boolean isVenomous() {
+        return getType() == 3 || getType() == 4 || getType() == 5 || getType() == 6 || getType() == 7 || getType() == 9;
+    }
+
+    @Override
+    public boolean shouldAttackPlayers() {
+        return this.isPissed();// && super.shouldAttackPlayers();
     }
 }

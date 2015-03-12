@@ -36,7 +36,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.texture = "crocodile.png";
         setSize(2F, 0.6F);
         this.myMoveSpeed = 0.5F;
-        //health = 25;
         setEdad(50 + this.rand.nextInt(50));
         setTamed(false);
     }
@@ -458,7 +457,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
     @Override
     public int getTalkInterval() {
-        return 120;
+        return 250;
     }
 
     @Override

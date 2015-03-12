@@ -107,6 +107,9 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
                 return false;
             } else {
                 this.targetEntity = (EntityLivingBase) list.get(0);
+                if (this.targetEntity instanceof EntityPlayer && !theAttacker.shouldAttackPlayers()) {
+                    return false;
+                }
                 return true;
             }
         }
