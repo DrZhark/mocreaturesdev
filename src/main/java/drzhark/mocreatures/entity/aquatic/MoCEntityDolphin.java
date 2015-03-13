@@ -425,11 +425,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public void setDead() {
         if (MoCreatures.isServer() && getIsTamed() && (getHealth() > 0)) {
             return;
@@ -437,18 +432,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             super.setDead();
             return;
         }
-    }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("DisplayName", getRenderName());
     }
 
     @Override

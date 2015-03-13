@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity;
 
 import net.minecraft.world.EnumDifficulty;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -814,11 +813,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    public boolean getRenderName() {
-        return (getName() != null && !getName().equals(""));
+        return MoCreatures.proxy.getDisplayPetName()
+                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override
@@ -1114,6 +1110,11 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean shouldAttackPlayers() {
         return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+    }
+
+    @Override
+    protected boolean canTriggerWalking() {
+        return false;
     }
 
 }

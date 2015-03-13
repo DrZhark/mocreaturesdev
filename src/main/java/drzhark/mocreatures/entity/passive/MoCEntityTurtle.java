@@ -318,11 +318,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         return (getIsUpsideDown() || getIsHiding());
     }
 
-    @Override
-    public boolean renderName() {
-        return getRenderName() && (this.ridingEntity == null);
-    }
-
     public int getFlipDirection() {
         if (this.twistright) {
             return 1;
@@ -334,14 +329,12 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
         setIsUpsideDown(nbttagcompound.getBoolean("UpsideDown"));
-        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("UpsideDown", getIsUpsideDown());
-        nbttagcompound.setBoolean("DisplayName", getRenderName());
     }
 
     @Override

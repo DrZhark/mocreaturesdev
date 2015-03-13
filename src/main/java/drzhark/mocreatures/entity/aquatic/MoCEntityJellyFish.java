@@ -171,11 +171,6 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public int nameYOffset() {
         int yOff = (int) (getEdad() * -1 / 2.3);
         return yOff;

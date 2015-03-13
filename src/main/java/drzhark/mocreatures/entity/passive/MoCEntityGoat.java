@@ -556,11 +556,6 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName();
-    }
-
-    @Override
     protected String getHurtSound() {
         return "mocreatures:goathurt";
     }
@@ -586,17 +581,5 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     protected Item getDropItem() {
         return Items.leather;
-    }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("DisplayName", getRenderName());
     }
 }

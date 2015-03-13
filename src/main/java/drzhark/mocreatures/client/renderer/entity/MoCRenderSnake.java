@@ -67,15 +67,6 @@ public class MoCRenderSnake extends MoCRenderMoC {
     }
 
     protected void stretch(MoCEntitySnake entitysnake) {
-        /*
-         * float factor = 1.0F; int type = entitysnake.type; if (type == 1 ||
-         * type == 2)//small shy snakes { factor = 0.6F; }else if (type ==
-         * 5)//coral { factor = 0.4F; } if (type == 6)//cobra 1.1 { factor =
-         * 1.2F; } if (type == 7)//rattlesnake { factor = 0.9F; } if (type ==
-         * 8)//python { factor = 1.5F; } //float f = 1.0F*factor; float f =
-         * entitysnake.getEdad()*factor;
-         */
-
         float f = entitysnake.getSizeF();
         GL11.glScalef(f, f, f);
     }

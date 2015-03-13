@@ -141,11 +141,6 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName();
-    }
-
-    @Override
     public void setDead() {
         if (!this.worldObj.isRemote && getIsTamed() && (getHealth() > 0)) {
             return;

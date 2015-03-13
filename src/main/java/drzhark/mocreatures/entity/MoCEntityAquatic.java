@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity;
 
 import net.minecraft.world.EnumDifficulty;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
@@ -281,10 +280,6 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     public boolean getIsJumping() {
         return this.isEntityJumping;
-    }
-
-    public boolean getRenderName() {
-        return (getName() != null && !getName().equals(""));
     }
 
     /**
@@ -720,7 +715,8 @@ public abstract class MoCEntityAquatic extends EntityWaterMob implements IMoCEnt
 
     @Override
     public boolean renderName() {
-        return false;
+        return MoCreatures.proxy.getDisplayPetName()
+                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override

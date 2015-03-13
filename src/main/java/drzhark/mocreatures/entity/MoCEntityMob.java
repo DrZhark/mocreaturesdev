@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity;
 
 import net.minecraft.world.EnumDifficulty;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -102,10 +101,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public int getType() {
         return this.dataWatcher.getWatchableObjectInt(19);
-    }
-
-    public boolean getRenderName() {
-        return (getName() != null && !getName().equals(""));
     }
 
     @Override
@@ -514,7 +509,8 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
+        return MoCreatures.proxy.getDisplayPetName()
+                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override

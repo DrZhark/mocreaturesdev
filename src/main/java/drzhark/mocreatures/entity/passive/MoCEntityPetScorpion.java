@@ -533,11 +533,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null) && (this.ridingEntity == null);
-    }
-
-    @Override
     public boolean canBeCollidedWith() {
 
         return this.riddenByEntity == null;

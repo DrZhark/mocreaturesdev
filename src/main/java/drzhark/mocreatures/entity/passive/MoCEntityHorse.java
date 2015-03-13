@@ -562,12 +562,12 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean getRenderName() {
+    public boolean renderName() {
         if (isGhost() && getEdad() < 10) {
             return false;
         }
 
-        return (getName() != null && !getName().equals(""));
+        return super.renderName();
     }
 
     @Override
@@ -2427,11 +2427,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public boolean rideableEntity() {
         return true;
     }
@@ -2647,7 +2642,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         nbttagcompound.setBoolean("ChestedHorse", getChestedHorse());
         nbttagcompound.setBoolean("HasReproduced", getHasReproduced());
         nbttagcompound.setBoolean("Bred", getHasBred());
-        nbttagcompound.setBoolean("DisplayName", getRenderName());
         nbttagcompound.setInteger("ArmorType", getArmorType());
 
         if (getChestedHorse() && this.localhorsechest != null) {
@@ -2674,7 +2668,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         setBred(nbttagcompound.getBoolean("Bred"));
         setChestedHorse(nbttagcompound.getBoolean("ChestedHorse"));
         setReproduced(nbttagcompound.getBoolean("HasReproduced"));
-        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
         setArmorType((byte) nbttagcompound.getInteger("ArmorType"));
         if (getChestedHorse()) {
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);

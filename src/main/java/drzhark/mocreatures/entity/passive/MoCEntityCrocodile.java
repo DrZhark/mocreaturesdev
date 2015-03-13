@@ -1,5 +1,15 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -27,7 +37,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     public float biteProgress;
     public float spin;
     public int spinInt;
-    private float myMoveSpeed;
+    //private float myMoveSpeed;
     private boolean waterbound;
     private int hunting;
 
@@ -35,15 +45,28 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         super(world);
         this.texture = "crocodile.png";
         setSize(2F, 0.6F);
-        this.myMoveSpeed = 0.5F;
+        //this.myMoveSpeed = 0.5F;
         setEdad(50 + this.rand.nextInt(50));
         setTamed(false);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
+        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
+        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -52,6 +75,11 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isResting - 0 false 1 true
         this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // caughtPrey - 0 false 1 true
         this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isBiting - 0 false 1 true
+    }
+
+    @Override
+    protected boolean usesNewAI() {
+        return true;
     }
 
     public boolean getIsBiting() {
@@ -81,7 +109,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(24, Byte.valueOf(input));
     }
 
-    @Override
+    /*@Override
     protected void jump() {
 
         if (isInsideOfMaterial(Material.water)) {
@@ -100,7 +128,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         } else if (this.getAttackTarget() != null || getHasCaughtPrey()) {
             super.jump();
         }
-    }
+    }*/
 
     @Override
     public boolean isMovementCeased() {
@@ -115,15 +143,10 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
     }*/
 
-    @Override
+    /*@Override
     public boolean swimmerEntity() {
         return true;
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        return this.myMoveSpeed;
-    }
+    }*/
 
     @Override
     public void onLivingUpdate() {
@@ -132,11 +155,11 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             if (!isInsideOfMaterial(Material.water) && this.biteProgress < 0.3F && this.rand.nextInt(5) == 0) {
                 this.biteProgress += 0.005F;
             }
-            setAttackTarget(findPlayerToAttack());
+            /*setAttackTarget(findPlayerToAttack());
             if (this.getAttackTarget() != null) {
                 setIsResting(false);
                 getMyOwnPath(this.getAttackTarget(), 16F);
-            }
+            }*/
             if (MoCreatures.isServer() && this.getAttackTarget() != null || getHasCaughtPrey() || this.rand.nextInt(500) == 0)// isInsideOfMaterial(Material.water)
             {
                 setIsResting(false);
@@ -153,7 +176,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
         }
 
-        if (isInsideOfMaterial(Material.water)) {
+        /*if (isInsideOfMaterial(Material.water)) {
             this.myMoveSpeed = 0.8F;
         } else {
             this.myMoveSpeed = 0.4F;
@@ -173,13 +196,14 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
                 this.myMoveSpeed = 0.5F;
             }
 
-        }
+        }*/
 
-        if (this.rand.nextInt(80) == 0 && !getHasCaughtPrey() && !getIsResting()) {
+        if (this.rand.nextInt(500) == 0 && !getHasCaughtPrey() && !getIsResting()) {
             crocBite();
         }
 
-        if (MoCreatures.isServer() && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsResting() && !isInsideOfMaterial(Material.water)) {
+        //TODO replace with move to water AI
+        /*if (MoCreatures.isServer() && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsResting() && !isInsideOfMaterial(Material.water)) {
             MoCTools.MoveToWater(this);
         }
 
@@ -189,7 +213,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             } else {
                 this.waterbound = false;
             }
-        }
+        }*/
 
         if (getHasCaughtPrey()) {
             if (this.riddenByEntity != null) {
@@ -206,9 +230,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
                     if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
                         this.riddenByEntity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-                        if (!(this.riddenByEntity instanceof EntityPlayer)) {
-                            MoCTools.destroyDrops(this, 3D);
-                        }
                     }
                 }
             } else {
@@ -225,10 +246,8 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
                 }
                 if (this.spinInt > 80) {
                     this.spinInt = 0;
-                    this.riddenByEntity.attackEntityFrom(DamageSource.causeMobDamage(this), 4);
-                    if (!(this.riddenByEntity instanceof EntityPlayer)) {
-                        MoCTools.destroyDrops(this, 3D);
-                    }
+                    this.riddenByEntity.attackEntityFrom(DamageSource.causeMobDamage(this), 4); //TODO ADJUST
+
                 }
 
                 //the following if to be removed from SMP
@@ -338,7 +357,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
     }
 
-    @Override
+    /*@Override
     protected EntityLivingBase findPlayerToAttack() {
         if (getHasCaughtPrey()) {
             return null;
@@ -360,13 +379,11 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             return entityliving;
         }
         return null;
-    }
+    }*/
 
     @Override
-    public boolean entitiesToIgnore(Entity entity) {
-        return ((super.entitiesToIgnore(entity)) || (entity instanceof MoCEntityCrocodile) || (entity.height < this.height && entity.width < this.width)
-
-        );
+    public boolean canAttackTarget(EntityLivingBase entity) {
+        return !(entity instanceof MoCEntityCrocodile) && super.canAttackTarget(entity);
     }
 
     @Override
@@ -457,16 +474,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
     @Override
     public int getTalkInterval() {
-        return 250;
-    }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        super.writeEntityToNBT(nbttagcompound);
+        return 400;
     }
 }

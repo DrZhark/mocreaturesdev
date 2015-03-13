@@ -231,11 +231,6 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public int nameYOffset() {
         return -25;
     }

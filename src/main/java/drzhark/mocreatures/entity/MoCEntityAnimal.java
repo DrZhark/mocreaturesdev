@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity;
 
 import net.minecraft.world.EnumDifficulty;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -118,8 +117,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public void setDisplayName(boolean flag) {
     }
 
-    public boolean getRenderName() {
-        return (getName() != null && !getName().equals(""));
+    @Override
+    public boolean renderName() {
+        return MoCreatures.proxy.getDisplayPetName()
+                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override
@@ -1082,11 +1083,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public int nameYOffset() {
         return -80;
     }
@@ -1509,10 +1505,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         boolean flag =
                 entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
                         .getAttributeValue()));
-
-        if (!(entityIn instanceof EntityPlayer)) {
-            MoCTools.destroyDrops(this, 3D);
-        }
         if (flag) {
             this.func_174815_a(this, entityIn);
         }
@@ -1555,4 +1547,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public boolean shouldAttackPlayers() {
         return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
     }
+
+    @Override
+    public void onKillEntity(EntityLivingBase entityLivingIn) {
+        if (!(entityLivingIn instanceof EntityPlayer)) {
+            MoCTools.destroyDrops(this, 3D);
+        }
+    }
+
 }

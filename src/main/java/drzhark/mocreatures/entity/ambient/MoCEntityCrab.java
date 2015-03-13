@@ -121,10 +121,6 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         return true;
     }
 
-    @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
 
     @Override
     public int nameYOffset() {

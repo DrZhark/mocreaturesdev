@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.world.DifficultyInstance;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -212,5 +215,12 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
             return 0.9F;
         }
         return 0.9F * getEdad() * 0.01F;
+    }
+
+    @Override
+    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+
+        //checkSpawningBiome();
+        return super.onSpawnFirstTime(difficulty, livingdata);
     }
 }

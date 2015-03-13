@@ -798,11 +798,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null) && (this.ridingEntity == null);
-    }
-
-    @Override
     public boolean isMovementCeased() {
         return (this.riddenByEntity != null) || this.sitCounter != 0;
     }

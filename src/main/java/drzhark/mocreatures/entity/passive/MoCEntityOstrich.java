@@ -128,11 +128,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean renderName() {
-        return getRenderName() && (this.riddenByEntity == null);
-    }
-
-    @Override
     public boolean isMovementCeased() {
         return (getHiding() || this.riddenByEntity != null);
     }

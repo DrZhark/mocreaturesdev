@@ -1201,7 +1201,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     @Override
     public boolean renderName() {
-        return getRenderName() && (getKittyState() != 14) && (getKittyState() != 15) && (getKittyState() > 1);
+        return (getKittyState() != 14) && (getKittyState() != 15) && (getKittyState() > 1) && super.renderName();
     }
 
     @Override
@@ -1245,7 +1245,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         super.readEntityFromNBT(nbttagcompound);
         setSitting(nbttagcompound.getBoolean("Sitting"));
         setKittyState(nbttagcompound.getInteger("KittyState"));
-        setDisplayName(nbttagcompound.getBoolean("DisplayName"));
     }
 
     @Override
@@ -1253,7 +1252,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("Sitting", getIsSitting());
         nbttagcompound.setInteger("KittyState", getKittyState());
-        nbttagcompound.setBoolean("DisplayName", getRenderName());
     }
 
     @Override
