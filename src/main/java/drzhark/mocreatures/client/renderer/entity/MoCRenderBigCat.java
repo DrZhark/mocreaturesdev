@@ -146,20 +146,19 @@ public class MoCRenderBigCat extends RenderLiving {
         private final MoCRenderBigCat mocRenderer;
         private final MoCModelBigCat1 mocModel = new MoCModelBigCat1();
 
-        public LayerMoCBigCat(MoCRenderBigCat p_i46112_1_) {
-            this.mocRenderer = p_i46112_1_;
+        public LayerMoCBigCat(MoCRenderBigCat render) {
+            this.mocRenderer = render;
         }
 
-        public void doRenderLayer(MoCEntityBigCat p_177162_1_, float p_177162_2_, float p_177162_3_, float p_177162_4_, float p_177162_5_,
-                float p_177162_6_, float p_177162_7_, float p_177162_8_) {
-            if (p_177162_1_.getType() == 2 && p_177162_1_.getIsAdult()) {
+        public void doRenderLayer(MoCEntityBigCat entity, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
+            if (entity.getType() == 2 && entity.getIsAdult()) {
                 bindTexture(MoCreatures.proxy.getTexture("lionb.png"));
             } else {
                 bindTexture(MoCreatures.proxy.getTexture("lionc.png"));
             }
             this.mocModel.setModelAttributes(this.mocRenderer.getMainModel());
-            this.mocModel.setLivingAnimations(p_177162_1_, p_177162_2_, p_177162_3_, p_177162_4_);
-            this.mocModel.render(p_177162_1_, p_177162_2_, p_177162_3_, p_177162_5_, p_177162_6_, p_177162_7_, p_177162_8_);
+            this.mocModel.setLivingAnimations(entity, f, f1, f2);
+            this.mocModel.render(entity, f, f1, f3, f4, f5, f6);
         }
 
         @Override
@@ -168,10 +167,8 @@ public class MoCRenderBigCat extends RenderLiving {
         }
 
         @Override
-        public void doRenderLayer(EntityLivingBase p_177141_1_, float p_177141_2_, float p_177141_3_, float p_177141_4_, float p_177141_5_,
-                float p_177141_6_, float p_177141_7_, float p_177141_8_) {
-            this.doRenderLayer((MoCEntityBigCat) p_177141_1_, p_177141_2_, p_177141_3_, p_177141_4_, p_177141_5_, p_177141_6_, p_177141_7_,
-                    p_177141_8_);
+        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
+            this.doRenderLayer((MoCEntityBigCat) entity, f1, f2, f3, f4, f5, f6, f7);
         }
     }
 }

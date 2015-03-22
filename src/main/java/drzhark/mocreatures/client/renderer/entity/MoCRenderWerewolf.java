@@ -44,15 +44,14 @@ public class MoCRenderWerewolf extends RenderLiving {
         private final MoCRenderWerewolf mocRenderer;
         private final MoCModelWereHuman mocModel = new MoCModelWereHuman();
 
-        public LayerMoCWereHuman(MoCRenderWerewolf p_i46112_1_) {
-            this.mocRenderer = p_i46112_1_;
+        public LayerMoCWereHuman(MoCRenderWerewolf render) {
+            this.mocRenderer = render;
         }
 
-        public void doRenderLayer(MoCEntityWerewolf p_177162_1_, float p_177162_2_, float p_177162_3_, float p_177162_4_, float p_177162_5_,
-                float p_177162_6_, float p_177162_7_, float p_177162_8_) {
-            int myType = p_177162_1_.getType();
+        public void doRenderLayer(MoCEntityWerewolf entity, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
+            int myType = entity.getType();
 
-            if (!p_177162_1_.getIsHumanForm()) {
+            if (!entity.getIsHumanForm()) {
                 bindTexture(MoCreatures.proxy.getTexture("wereblank.png"));
             } else {
                 switch (myType) {
@@ -76,8 +75,8 @@ public class MoCRenderWerewolf extends RenderLiving {
             }
 
             this.mocModel.setModelAttributes(this.mocRenderer.getMainModel());
-            this.mocModel.setLivingAnimations(p_177162_1_, p_177162_2_, p_177162_3_, p_177162_4_);
-            this.mocModel.render(p_177162_1_, p_177162_2_, p_177162_3_, p_177162_5_, p_177162_6_, p_177162_7_, p_177162_8_);
+            this.mocModel.setLivingAnimations(entity, f, f1, f2);
+            this.mocModel.render(entity, f, f1, f3, f4, f5, f6);
         }
 
         @Override
@@ -86,10 +85,8 @@ public class MoCRenderWerewolf extends RenderLiving {
         }
 
         @Override
-        public void doRenderLayer(EntityLivingBase p_177141_1_, float p_177141_2_, float p_177141_3_, float p_177141_4_, float p_177141_5_,
-                float p_177141_6_, float p_177141_7_, float p_177141_8_) {
-            this.doRenderLayer((MoCEntityWerewolf) p_177141_1_, p_177141_2_, p_177141_3_, p_177141_4_, p_177141_5_, p_177141_6_, p_177141_7_,
-                    p_177141_8_);
+        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
+            this.doRenderLayer((MoCEntityWerewolf) entity, f1, f2, f3, f4, f5, f6, f7);
         }
     }
 }

@@ -7,6 +7,7 @@ import drzhark.mocreatures.client.model.MoCModelKittyBed;
 import drzhark.mocreatures.client.model.MoCModelKittyBed2;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -26,8 +27,7 @@ public class MoCRenderKittyBed extends RenderLiving {
     public MoCRenderKittyBed(MoCModelKittyBed modelkittybed, MoCModelKittyBed2 modelkittybed2, float f) {
         super(MoCClientProxy.mc.getRenderManager(), modelkittybed, f);
         this.kittybed = modelkittybed;
-        // TODO
-        //setRenderPassModel(modelkittybed2);
+        this.addLayer(new LayerMoCKittyBed(this));
     }
 
     @Override
@@ -40,22 +40,39 @@ public class MoCRenderKittyBed extends RenderLiving {
         this.kittybed.milklevel = entitykittybed.milklevel;
     }
 
-    protected int shouldRenderPass(MoCEntityKittyBed entityliving, int i) {
-        this.bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
-        float f1 = 0.35F;
-        int j = MoCTools.colorize(this.mycolor);
-        GL11.glColor3f(f1 * fleeceColorTable[j][0], f1 * fleeceColorTable[j][1], f1 * fleeceColorTable[j][2]);
-        return 1;
-    }
-
-    /*
-    @Override
-    protected int shouldRenderPass(EntityLivingBase entityliving, int i, float f) {
-        return shouldRenderPass((MoCEntityKittyBed) entityliving, i);
-    }*/
-
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityKittyBed) par1Entity).getTexture();
+    }
+
+    private class LayerMoCKittyBed implements LayerRenderer {
+
+        private final MoCRenderKittyBed mocRenderer;
+        private final MoCModelKittyBed2 mocModel = new MoCModelKittyBed2();
+
+        public LayerMoCKittyBed(MoCRenderKittyBed render) {
+            this.mocRenderer = render;
+        }
+
+        public void doRenderLayer(MoCEntityKittyBed entity, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
+
+            bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
+            float f8 = 0.35F;
+            int j = MoCTools.colorize(this.mocRenderer.mycolor);
+            GL11.glColor3f(f8 * fleeceColorTable[j][0], f8 * fleeceColorTable[j][1], f8 * fleeceColorTable[j][2]);
+            this.mocModel.setModelAttributes(this.mocRenderer.getMainModel());
+            this.mocModel.setLivingAnimations(entity, f, f1, f2);
+            this.mocModel.render(entity, f, f1, f3, f4, f5, f6);
+        }
+
+        @Override
+        public boolean shouldCombineTextures() {
+            return true;
+        }
+
+        @Override
+        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
+            this.doRenderLayer((MoCEntityKittyBed) entity, f1, f2, f3, f4, f5, f6, f7);
+        }
     }
 }
