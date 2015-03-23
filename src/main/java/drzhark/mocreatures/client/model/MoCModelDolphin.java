@@ -11,27 +11,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MoCModelDolphin extends ModelBase {
 
     public ModelRenderer UHead;
-
     public ModelRenderer DHead;
-
     public ModelRenderer RTail;
-
     public ModelRenderer LTail;
-
     public ModelRenderer PTail;
-
     public ModelRenderer Body;
-
     public ModelRenderer UpperFin;
-
     public ModelRenderer RTailFin;
-
     public ModelRenderer LTailFin;
-
     public ModelRenderer LowerFin;
-
     public ModelRenderer RightFin;
-
     public ModelRenderer LeftFin;
 
     public MoCModelDolphin() {
@@ -86,7 +75,7 @@ public class MoCModelDolphin extends ModelBase {
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
-        this.RTailFin.rotateAngleX = MathHelper.cos(f * 0.6662F) * f1;
-        this.LTailFin.rotateAngleX = MathHelper.cos(f * 0.6662F) * f1;
+        this.RTailFin.rotateAngleX = MathHelper.cos(f * 0.4F) *  f1;
+        this.LTailFin.rotateAngleX = MathHelper.cos(f * 0.4F) * f1;
     }
 }

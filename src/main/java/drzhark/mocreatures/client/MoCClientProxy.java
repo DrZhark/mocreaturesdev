@@ -92,7 +92,6 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderBunny;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderButterfly;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderCricket;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderCrocodile;
-import drzhark.mocreatures.client.renderer.entity.MoCRenderDeer;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderDolphin;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderEgg;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderFirefly;
@@ -246,7 +245,7 @@ public class MoCClientProxy extends MoCProxy {
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityDuck.class, new MoCRenderMoC(new MoCModelDuck(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityBigCat.class, new MoCRenderBigCat(new MoCModelBigCat2(), new MoCModelBigCat1(),
                 0.7F));
-        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDeer.class, new MoCRenderDeer(new MoCModelDeer(), 0.5F));
+        RenderingRegistry.registerEntityRenderingHandler(MoCEntityDeer.class, new MoCRenderMoC(new MoCModelDeer(), 0.5F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityWWolf.class, new MoCRenderWWolf(new MoCModelWolf(), 0.7F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityFlameWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));

@@ -183,8 +183,8 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     }
 
     @Override
-    public int rollRotationOffset() {
-        return 0;
+    public float rollRotationOffset() {
+        return 0F;
     }
 
     /**

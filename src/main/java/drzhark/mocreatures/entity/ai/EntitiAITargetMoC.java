@@ -168,8 +168,10 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
      */
     protected boolean isSuitableTarget(EntityLivingBase target, boolean includeInvincibles) {
         if (!isSuitableTarget(this.taskOwner, target, includeInvincibles, this.shouldCheckSight)) {
+            //System.out.println("not suitable target");
             return false;
         } else if (!this.taskOwner.isWithinHomeDistanceFromPosition(new BlockPos(target))) {
+            //System.out.println("attacker away from homeposition");
             return false;
         } else {
             if (this.nearbyOnly) {
@@ -198,6 +200,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
         PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(p_75295_1_);
 
         if (pathentity == null) {
+            System.out.println("couldn't find path");
             return false;
         } else {
             PathPoint pathpoint = pathentity.getFinalPathPoint();

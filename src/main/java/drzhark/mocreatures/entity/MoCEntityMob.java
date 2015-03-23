@@ -619,18 +619,18 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public int pitchRotationOffset() {
-        return 0;
+    public float pitchRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int rollRotationOffset() {
-        return 0;
+    public float rollRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int yawRotationOffset() {
-        return 0;
+    public float yawRotationOffset() {
+        return 0F;
     }
 
     @Override

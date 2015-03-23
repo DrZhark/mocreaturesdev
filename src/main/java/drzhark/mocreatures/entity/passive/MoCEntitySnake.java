@@ -1,8 +1,9 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.world.DifficultyInstance;
-
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
@@ -69,11 +70,12 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         this.bodyswing = 2F;
         this.movInt = this.rand.nextInt(10);
         setEdad(50 + this.rand.nextInt(50));
-        this.tasks.addTask(1, new EntityAISwimming(this));
+        //this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 30));
+        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
@@ -147,8 +149,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     // snakes can't jump
-            protected
-            void jump() {
+    protected void jump() {
+        if (this.isInWater())
+        {
+            super.jump();
+        }
     }
 
     @Override
@@ -232,7 +237,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public boolean swimmerEntity() {
-        return true;
+        return false;
     }
 
     @Override
@@ -694,4 +699,33 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     public int getTalkInterval() {
         return 400;
     }
+    
+    
+    @Override
+    public boolean isAmphibian()
+    {
+        return true;
+    }
+
+    /*@Override
+    public float getAIMoveSpeed()
+    {
+        if (isInWater())
+        {
+            return 0.08F;
+        }
+        return 0.12F;
+    }*/
+    
+   /* @Override
+    protected double minDivingDepth()
+    {
+        return ((double)getEdad() + 8D)/340D;
+    }
+    
+    @Override
+    protected double maxDivingDepth()
+    {
+        return 1D * (this.getEdad()/100D);
+    }*/
 }

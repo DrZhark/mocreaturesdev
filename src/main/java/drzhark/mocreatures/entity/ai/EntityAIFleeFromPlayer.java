@@ -41,7 +41,7 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
                 return false;
             }
         }*/
-        if (!EntityAITools.IsNearPlayer(this.theEntityCreature, this.distance)) {
+        if (!this.IsNearPlayer(this.distance)) {
             return false;
         } else {
             Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.theEntityCreature, 5, 4);

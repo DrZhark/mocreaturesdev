@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity.aquatic;
 
+import com.google.common.base.Predicate;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
@@ -33,12 +37,26 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.3D));
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate()
+        {
+            public boolean apply(Entity entity)
+            {
+                return (entity.height > 0.3F || entity.width > 0.3F);
+            }
+            public boolean apply(Object p_apply_1_)
+            {
+                return this.apply((Entity)p_apply_1_);
+            }
+        }, 2.0F, 0.6D, 1.5D));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
     }
 
     @Override
@@ -97,7 +115,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     protected void dropFewItems(boolean flag, int x) {
         int i = this.rand.nextInt(100);
-        if (i < 70)// TODO change! 70
+        if (i < 70)
         {
             entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
         } else {
@@ -109,27 +127,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         }
     }
 
-    // TODO move this
-    public EntityLivingBase FindTarget(Entity entity, double d) {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLivingBase) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg)
-                    || (entity1 instanceof MoCEntityEgg) || (entity1 instanceof EntityPlayer)
-                    || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
-                    || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))) {
-                continue;
-            }
-            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-        return entityliving;
-    }
+    
 
     @Override
     public void onLivingUpdate() {
@@ -141,19 +139,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         }
 
         if (MoCreatures.isServer()) {
-            if (!getIsAdult() && (this.rand.nextInt(100) == 0)) {
-                setEdad(getEdad() + 2);
-                if (getEdad() >= 100) {
-                    setAdult(true);
-                }
-            }
-
-            if (this.rand.nextInt(5) == 0 && !getIsTamed()) {
-                EntityLivingBase entityliving = getBoogey(8D);
-                if (entityliving != null && entityliving.isInsideOfMaterial(Material.water)) {
-                    MoCTools.runLikeHell(this, entityliving);
-                }
-            }
+           
 
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());
@@ -236,11 +222,11 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public int rollRotationOffset() {
+    public float rollRotationOffset() {
         if (!this.isInsideOfMaterial(Material.water)) {
-            return -90;
+            return -90F;
         }
-        return 0;
+        return 0F;
     }
 
     @Override
@@ -262,5 +248,38 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     protected boolean isFisheable() {
         return !getIsTamed();
+    }
+    
+    @Override
+    protected boolean usesNewAI() {
+        return true;
+    }
+    
+    @Override
+    public float getAIMoveSpeed()
+    {
+        return 0.10F;
+    }
+    
+    @Override
+    public boolean isMovementCeased() {
+        return !isInWater();
+    }
+ 
+    @Override
+    protected double minDivingDepth()
+    {
+        return 0.2D;
+    }
+    
+    @Override
+    protected double maxDivingDepth()
+    {
+        return 2.0D;
+    }
+    
+    @Override
+    public float getSizeFactor() {
+        return getEdad() * 0.01F;
     }
 }

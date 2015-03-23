@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.MoCTools;
@@ -48,11 +49,12 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         } else {
             setEdad(90 + this.rand.nextInt(20));
         }
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
-        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
+        //this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.1D));
+        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.1D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWanderMoC2(this, 0.9D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
@@ -359,5 +361,11 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     @Override
     public boolean isReadyToHunt() {
         return this.isNotScared() && !this.isMovementCeased();
+    }
+    
+    @Override
+    public boolean isAmphibian()
+    {
+        return true;
     }
 }

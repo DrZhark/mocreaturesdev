@@ -1,8 +1,14 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+
+import net.minecraft.block.material.Material;
+import com.google.common.base.Predicate;
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,9 +21,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class MoCEntityDeer extends MoCEntityTameableAnimal {
 
+    private int readyToJumpTimer;
+    
     public MoCEntityDeer(World world) {
         super(world);
         setEdad(75);
@@ -25,8 +34,20 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         setAdult(true);
         setTamed(false);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIFleeFromPlayer(this, this.getMyAISpeed() * 1.2D, 10D));
+        //this.tasks.addTask(1, new EntityAIFleeFromPlayer(this, this.getMyAISpeed() * 1.2D, 10D));
+        this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate()
+        {
+            public boolean apply(Entity entity)
+            {
+                return !(entity instanceof MoCEntityDeer) && (entity.height > 0.8F || entity.width > 0.8F) ;
+            }
+            public boolean apply(Object p_apply_1_)
+            {
+                return this.apply((Entity)p_apply_1_);
+            }
+        }, 6.0F, this.getMyAISpeed(), this.getMyAISpeed() * 1.2D));
         this.tasks.addTask(2, new EntityAIPanic(this, this.getMyAISpeed() * 1.2D));
+        //this.tasks.addTask(3, new EntityAIFollowHerd(this, getMyAISpeed(), 6D, 20D, 5));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, getMyAISpeed()));
         this.tasks.addTask(5, new EntityAIWander(this, getMyAISpeed()));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
@@ -111,12 +132,12 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     }
 
     public double getMyAISpeed() {
-        if (getType() == 1) {
+        /*if (getType() == 1) {
             return 1.1D;
         } else if (getType() == 2) {
             return 1.3D;
-        }
-        return 1.2D;
+        }*/
+        return 1.1D;
     }
 
     @Override
@@ -140,5 +161,51 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     @Override
     public boolean getIsAdult() {
         return this.getType() != 3 && super.getIsAdult();
+    }
+    
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
+        if (MoCreatures.isServer()) {
+
+            if (this.onGround && --this.readyToJumpTimer <= 0)
+            {
+                if (getMyMovementSpeed() > 0.17F)
+                {
+                    float velX = (float) (0.5F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
+                    float velZ = (float) (0.5F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
+                    this.motionX -= velX;
+                    this.motionZ -= velZ;
+                    this.motionY = 0.5D;
+                    this.readyToJumpTimer = rand.nextInt(10) + 20;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public float pitchRotationOffset() {
+        if (!this.onGround && getMyMovementSpeed() > 0.08F)
+        {
+            if (this.motionY > 0.5D) return 25F;
+            if (this.motionY < -0.5D) return -25F;
+            return (float) (this.motionY *70D);
+        }
+        return 0F;
+    }
+    
+    
+    @Override
+    public float getSizeFactor() {
+        if (getType() == 1)
+        {
+            return 1.6F;
+        }
+        if (getType() == 2)
+        {
+            return 1.3F;
+        }
+        return getEdad() * 0.01F;
     }
 }

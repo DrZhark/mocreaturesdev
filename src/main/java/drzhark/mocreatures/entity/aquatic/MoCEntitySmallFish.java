@@ -1,10 +1,14 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
+
+import com.google.common.base.Predicate;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,14 +26,28 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     public MoCEntitySmallFish(World world) {
         super(world);
         setSize(0.3F, 0.3F);
-        setEdad(30 + this.rand.nextInt(70));
-
+        setEdad(70 + this.rand.nextInt(30));
+        this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
+        this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate()
+        {
+            public boolean apply(Entity entity)
+            {
+                return (entity.height > 0.3F || entity.width > 0.3F);
+            }
+            public boolean apply(Object p_apply_1_)
+            {
+                return this.apply((Entity)p_apply_1_);
+            }
+        }, 2.0F, 0.6D, 1.5D));
+        //this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 10));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
     }
 
     @Override
@@ -85,23 +103,19 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if ((MoCreatures.isServer()) && !getIsAdult() && (this.rand.nextInt(500) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100) {
-                setAdult(true);
-            }
-
-            if (!isNotScared() && this.rand.nextInt(5) == 0 && !getIsTamed()) {
+        if ((MoCreatures.isServer())) {
+            
+            /*if (!isNotScared() && this.rand.nextInt(5) == 0 && !getIsTamed()) {
                 EntityLivingBase entityliving = getBoogey(8D);
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water)) {
                     MoCTools.runLikeHell(this, entityliving);
                 }
-            }
+            }*/
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());
             }
         }
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInWater()) {
             this.prevRenderYawOffset = this.renderYawOffset = this.rotationYaw = this.prevRotationYaw;
             this.rotationPitch = this.prevRotationPitch;
         }
@@ -114,7 +128,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedYOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInWater()) {
             return -0.1F;
         }
         return 0.3F;
@@ -127,32 +141,19 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public int yawRotationOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
-            return 90;
+    public float yawRotationOffset() {
+        if (!this.isInWater()) {
+            return 90F;
         }
-
-        if (this.rand.nextInt(3) == 0) {
-            if (++this.latMovCounter > 40) {
-                this.latMovCounter = 0;
-            }
-        }
-
-        int latOffset = 0;
-        if (this.latMovCounter < 21) {
-            latOffset = this.latMovCounter;
-        } else {
-            latOffset = -this.latMovCounter + 40;
-        }
-        return 80 + latOffset;
+        return 90F + super.yawRotationOffset();
     }
 
     @Override
-    public int rollRotationOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
-            return -90;
+    public float rollRotationOffset() {
+        if (!this.isInWater()) {
+            return -90F;
         }
-        return 0;
+        return 0F;
     }
 
     @Override
@@ -162,14 +163,41 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedXOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInWater()) {
             return -0.6F;
         }
         return 0F;
     }
 
     @Override
-    public float getMoveSpeed() {
-        return 0.3F;
+    protected boolean usesNewAI() {
+        return true;
+    }
+    
+    @Override
+    public float getAIMoveSpeed()
+    {
+        return 0.10F;
+    }
+    
+    @Override
+    public boolean isMovementCeased() {
+        return !isInWater();
+    }
+ 
+    @Override
+    protected double minDivingDepth()
+    {
+        return 0.2D;
+    }
+    
+    @Override
+    protected double maxDivingDepth()
+    {
+        return 2.0D;
+    }
+    
+    public int getMaxEdad() {
+        return 120;
     }
 }

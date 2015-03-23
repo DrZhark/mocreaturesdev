@@ -1033,18 +1033,18 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     @Override
-    public int pitchRotationOffset() {
-        return 0;
+    public float pitchRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int rollRotationOffset() {
-        return 0;
+    public float rollRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int yawRotationOffset() {
-        return 0;
+    public float yawRotationOffset() {
+        return 0F;
     }
 
     @Override
@@ -1117,4 +1117,24 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         return false;
     }
 
+    /**
+     * The distance the entity will float under the surface. 0F = surface 1.0F = 1 block under
+     * @return
+     */
+    @Override
+    public double getDivingDepth()
+    {
+        return 0.5D;
+    }
+    
+    @Override
+    public boolean isDiving() {
+        return false;
+    }
+    
+    @Override
+    public void forceEntityJump()
+    {
+        this.jump();
+    }
 }

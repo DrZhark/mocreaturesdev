@@ -33,7 +33,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         this.setMutexBits(3);
 
         if (!(thePetIn.getNavigator() instanceof PathNavigateGround)) {
-            System.out.println("exiting due to first illegal argument");
+            //System.out.println("exiting due to first illegal argument");
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }
@@ -46,18 +46,24 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         if (((IMoCEntity) this.thePet).getIsSitting()) {
             return false;
         }
+        if (!(thePet.getNavigator() instanceof PathNavigateGround)) {
+            return false;
+        }
         String OwnerName = ((IMoCTameable) this.thePet).getOwnerName();
         if (OwnerName == null || OwnerName.equals("")) {
             return false;
         }
 
+        
         EntityPlayer entityplayer = EntityAITools.getIMoCTameableOwner((IMoCTameable) this.thePet);
 
         if (entityplayer == null) {
             return false;
         }
 
-        else if (this.thePet.getDistanceSqToEntity(entityplayer) < this.minDist * this.minDist) {
+        else if (this.thePet.getDistanceSqToEntity(entityplayer) < this.minDist * this.minDist ||
+        this.thePet.getDistanceSqToEntity(entityplayer) > this.maxDist * this.maxDist)
+        {
             return false;
         } else {
             this.theOwner = entityplayer;

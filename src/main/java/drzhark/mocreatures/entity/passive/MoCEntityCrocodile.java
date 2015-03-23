@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
@@ -31,7 +32,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     // fix floating so it moves faster if it's deep and caughts prey underneath
 
     // for later?
-    // birds to clean their mouths?
     // implement taming? (pick up small crocs to insta tame them)
 
     public float biteProgress;
@@ -44,15 +44,15 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     public MoCEntityCrocodile(World world) {
         super(world);
         this.texture = "crocodile.png";
-        setSize(2F, 0.6F);
-        //this.myMoveSpeed = 0.5F;
+        setSize(1.4F, 0.6F); //it was 2.0, 0.6F
         setEdad(50 + this.rand.nextInt(50));
         setTamed(false);
-        this.tasks.addTask(1, new EntityAISwimming(this));
+        //this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWanderMoC2(this, 0.9D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
@@ -475,5 +475,11 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     @Override
     public int getTalkInterval() {
         return 400;
+    }
+    
+    @Override
+    public boolean isAmphibian()
+    {
+        return true;
     }
 }

@@ -526,6 +526,42 @@ public class MoCTools {
         return 0F;
     }
 
+    public static double waterSurfaceAtGivenPosition(double posX, double posY, double posZ, World worldIn) {
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(posY);
+        int k = MathHelper.floor_double(posZ);
+        Block block = worldIn.getBlockState(new BlockPos(i, j, k)).getBlock();
+        if (block != Blocks.air && block.getMaterial() == Material.water) {
+            for (int x = 1; x < 64; x++) {
+                block = worldIn.getBlockState(new BlockPos(i, j + x, k)).getBlock();
+                if (block == Blocks.air || block.getMaterial() != Material.water) {
+                    return j+x;
+                }
+            }
+        }
+        return 0F;
+    }
+    
+    public static double waterSurfaceAtGivenEntity(Entity entity) {
+        return waterSurfaceAtGivenPosition(entity.posX, entity.posY, entity.posZ, entity.worldObj);
+    }
+    
+    public static float distanceToSurface(double posX, double posY, double posZ, World worldIn) {
+        int i = MathHelper.floor_double(posX);
+        int j = MathHelper.floor_double(posY);
+        int k = MathHelper.floor_double(posZ);
+        Block block = worldIn.getBlockState(new BlockPos(i, j, k)).getBlock();
+        if (block != Blocks.air && block.getMaterial() == Material.water) {
+            for (int x = 1; x < 64; x++) {
+                block = worldIn.getBlockState(new BlockPos(i, j + x, k)).getBlock();
+                if (block == Blocks.air || block.getMaterial() != Material.water) {
+                    return x;
+                }
+            }
+        }
+        return 0F;
+    }
+
     public static int distanceToFloor(Entity entity) {
         int i = MathHelper.floor_double(entity.posX);
         int j = MathHelper.floor_double(entity.posY);

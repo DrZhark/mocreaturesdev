@@ -85,20 +85,20 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public int pitchRotationOffset() {
+    public float pitchRotationOffset() {
 
         int i = getState();
         switch (i) {
             case 0:
-                return 0;
+                return 0F;
             case 1:
-                return -45;
+                return -45F;
             case 2:
-                return 0;
+                return 0F;
             case 3:
-                return 60;
+                return 60F;
             default:
-                return 0;
+                return 0F;
         }
     }
 

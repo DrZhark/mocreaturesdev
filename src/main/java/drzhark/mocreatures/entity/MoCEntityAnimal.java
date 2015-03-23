@@ -1,5 +1,10 @@
 package drzhark.mocreatures.entity;
 
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.EnumDifficulty;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -52,6 +57,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public float moveSpeed;
     protected String texture;
     private int huntingCounter;
+    protected PathNavigate navigatorWater;
+    private double divingDepth;
+    private boolean randomAttributesUpdated; //used to update divingDepth on world load 
+    //protected EntityMoveHelper moverHelperWater;
+    
 
     public MoCEntityAnimal(World world) {
         super(world);
@@ -59,6 +69,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         setAdult(true);
         this.riderIsDisconnecting = false;
         this.texture = "blank.jpg";
+        this.navigatorWater = new PathNavigateSwimmer(this, world);
+        this.moveHelper = new EntityAIMoverHelperMoC(this);
+        //this.moverHelperWater = new EntityAIMoverHelperMoC(this);
     }
 
     @Override
@@ -333,12 +346,20 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (getIsHunting() && ++this.huntingCounter > 50) {
                 setIsHunting(false);
             }
+            
+            this.getNavigator().onUpdateNavigation();
         }
 
         //TODO
-        /*if (isSwimming() && swimmerEntity()) {
+        if (this.isInWater() && this.isAmphibian()) {
             floating();
-        }*/
+            if (rand.nextInt(500) == 0 || !randomAttributesUpdated)
+                {
+                this.setNewDivingDepth();
+                randomAttributesUpdated = true;
+                }
+            
+        }
 
         //TODO
         /*if (!isMovementCeased() && this.getAttackTarget() == null) {
@@ -366,19 +387,24 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     public void floating() {
-        if (this.motionY < 0) {
+        if (!this.getNavigator().noPath())
+        {
+            return;
+        }
+        /*if (this.motionY < 0) {
+            System.out.println("motion Y = " + this.motionY);
             this.motionY = 0;
         }
         this.motionY += 0.001D;// 0.001
 
         int distY = (int) MoCTools.distanceToSurface(this);
         if (distY > 1) {
-            this.motionY += (distY * 0.07);
-        }
+            this.motionY += (distY * 0.05);
+        }*/
 
-        if (hasPath() && this.isCollidedHorizontally) {
+        /*if (!this.getNavigator().noPath() && this.isCollidedHorizontally) {
             jump();
-        }
+        }*/
     }
 
     /**
@@ -418,15 +444,15 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean isInWater() {
-        if (swimmerEntity()) {
-            return false;
-        }
+        /*if (isAmphibian()) {
+            return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, 0.0D, 0.0D), Material.water, this);
+        }*/
         return super.isInWater();
     }
 
     @Override
     public boolean canBreatheUnderwater() {
-        return swimmerEntity();
+        return isAmphibian();
     }
 
     public EntityItem getClosestItem(Entity entity, double d, Item item, Item item1) {
@@ -689,19 +715,48 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public void moveEntityWithHeading(float f, float f1) {
-        //If the entity is not ridden by entityplayer, then execute the normal Entityliving code
+    public void moveEntityWithHeading(float strafe, float forward) {
+        
+        if (this.isAmphibian() && isInWater())
+        {
+            if (this.isServerWorld())
+            {
+                if (this.isInWater())
+                {
+                    this.moveFlying(strafe, forward, 0.1F);
+                    this.moveEntity(this.motionX, this.motionY, this.motionZ);
+                    this.motionX *= 0.8999999761581421D;
+                    this.motionY *= 0.8999999761581421D;
+                    this.motionZ *= 0.8999999761581421D;
+
+                    if (this.getAttackTarget() == null) // && !this.func_175472_n() //is not elder
+                    {
+                        this.motionY -= 0.005D;
+                    }
+                }
+                else
+                {
+                    super.moveEntityWithHeading(strafe, forward);
+                }
+            }
+            else
+            {
+                super.moveEntityWithHeading(strafe, forward);
+            }
+        }
         if (usesNewAI()) {
-            super.moveEntityWithHeading(f, f1);
+            super.moveEntityWithHeading(strafe, forward);
             return;
         }
+        //the above code is needed as is
+        
         if (usesNewAI() || (!isFlyer() && (!rideableEntity() || this.riddenByEntity == null)))// || (this.ridingEntity != null && !(this.ridingEntity instanceof EntityPlayer)))
         {
-            super.moveEntityWithHeading(f, f1);
+            super.moveEntityWithHeading(strafe, forward);
             return;
         }
-        float par1 = f;
-        float par2 = f1;
+        float par1 = strafe;
+        float par2 = forward;
 
         if (handleWaterMovement()) {
             if (this.riddenByEntity != null) {
@@ -743,7 +798,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
             double d = this.posY;
             if (!this.worldObj.isRemote) {
-                moveFlying(f, f1, 0.02F);
+                moveFlying(strafe, forward, 0.02F);
                 //moveEntity(motionX, motionY, motionZ);
                 super.moveEntityWithHeading(par1, par2);
             }
@@ -787,7 +842,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
             double d1 = this.posY;
 
-            moveFlying(f, f1, 0.02F);
+            moveFlying(strafe, forward, 0.02F);
             moveEntity(this.motionX, this.motionY, this.motionZ);
 
             this.motionX *= 0.5D;
@@ -812,7 +867,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
 
             float f3 = 0.162771F / (f2 * f2 * f2);
-            moveFlying(f, f1, this.onGround ? 0.1F * f3 : 0.02F);
+            moveFlying(strafe, forward, this.onGround ? 0.1F * f3 : 0.02F);
 
             if (isOnLadder()) {
                 this.fallDistance = 0.0F;
@@ -1448,18 +1503,18 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public int pitchRotationOffset() {
-        return 0;
+    public float pitchRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int rollRotationOffset() {
-        return 0;
+    public float rollRotationOffset() {
+        return 0F;
     }
 
     @Override
-    public int yawRotationOffset() {
-        return 0;
+    public float yawRotationOffset() {
+        return 0F;
     }
 
     @Override
@@ -1554,5 +1609,97 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             MoCTools.destroyDrops(this, 3D);
         }
     }
-
+    
+    @Override
+    public PathNavigate getNavigator()
+    {
+        if (this.isInWater() && this.isAmphibian())
+        {
+            return this.navigatorWater;
+        }
+        return this.navigator;
+    }
+    
+    /*protected final void updateEntityActionState()
+    {
+        this.worldObj.theProfiler.startSection("navigation");
+        this.navigator.onUpdateNavigation();
+        this.worldObj.theProfiler.endSection();
+       
+    }*/
+    
+    public boolean isAmphibian()
+    {
+        return false;
+    }
+    
+    /*@Override
+    public EntityMoveHelper getMoveHelper()
+    {
+        if (isAmphibian() && isInWater())
+        {
+            return this.moverHelperWater;
+        }
+        return this.moveHelper;
+    }*/
+    
+    @Override
+    public boolean isDiving() {
+        return false;
+    }
+    
+    /**
+     * The distance the entity will float under the surface. 0F = surface 1.0F = 1 block under
+     * @return
+     */
+    @Override
+    public double getDivingDepth()
+    {
+        return (float) this.divingDepth;
+    }
+    
+    /**
+     * Sets diving depth. if setDepth given = 0.0D, will then choose a random value within proper range
+     * @param setDepth
+     */
+    protected void setNewDivingDepth(double setDepth)
+    {
+        if (setDepth!=0.0D)
+        {
+            if (setDepth > maxDivingDepth()) setDepth = maxDivingDepth();
+            if (setDepth < minDivingDepth()) setDepth = minDivingDepth();
+            this.divingDepth = setDepth;
+        }else
+        {
+            
+            this.divingDepth = (float) ((this.rand.nextDouble() * (maxDivingDepth() - minDivingDepth())) + minDivingDepth());
+        }
+        
+    }
+    
+    protected void setNewDivingDepth()
+    {
+        setNewDivingDepth(0.0D);
+    }
+    
+    protected double minDivingDepth()
+    {
+        return 0.2D;
+    }
+    
+    protected double maxDivingDepth()
+    {
+        return 1.0D;
+    }
+    
+    @Override
+    public void forceEntityJump()
+    {
+        this.jump();
+    }
+    
+    protected float getMyMovementSpeed()
+    {
+        return MathHelper.sqrt_double((this.motionX * this.motionX) + (this.motionZ * this.motionZ));
+    }
 }

@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity.aquatic;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -23,38 +27,26 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     public MoCEntityShark(World world) {
         super(world);
         this.texture = "shark.png";
-        setSize(1.5F, 0.8F);
-        setEdad(100 + this.rand.nextInt(100));
+        setSize(1.7F, 0.8F);
+        setEdad(60 + this.rand.nextInt(100));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
     }
-
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (entity.isInsideOfMaterial(Material.water) && (f < 3.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) && (getEdad() >= 100)) {
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).ridingEntity != null) {
-                Entity playerMount = ((EntityPlayer) entity).ridingEntity;
-                if (playerMount instanceof EntityBoat) {
-                    return;
-                }
-            }
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 5);
-            if (!(entity instanceof EntityPlayer)) {
-                MoCTools.destroyDrops(this, 3D);
-            }
-        }
-    }*/
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -90,23 +82,17 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         }
     }
 
-    protected Entity findPlayerToAttack() {
+    /*protected Entity findPlayerToAttack() {
         if ((this.worldObj.getDifficulty().getDifficultyId() > 0) && (getEdad() >= 100)) {
             EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16D);
             if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) {
                 return entityplayer;
             }
-            if (this.rand.nextInt(30) == 0) {
-                EntityLivingBase entityliving = FindTarget(this, 16D);
-                if ((entityliving != null) && entityliving.isInWater()) {
-                    return entityliving;
-                }
-            }
         }
         return null;
-    }
+    }*/
 
-    public EntityLivingBase FindTarget(Entity entity, double d) {
+   /* public EntityLivingBase FindTarget(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
@@ -125,7 +111,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
             }
         }
         return entityliving;
-    }
+    }*/
 
     @Override
     public void onLivingUpdate() {
@@ -149,18 +135,46 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
             return;
         }
     }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        super.writeEntityToNBT(nbttagcompound);
-    }
-
+    
     public boolean isMyHealFood(Item item1) {
         return false;
+    }
+    
+    @Override
+    protected boolean usesNewAI() {
+        return true;
+    }
+    
+    @Override
+    public float getAIMoveSpeed()
+    {
+        return 0.12F;
+    }
+    
+    @Override
+    public boolean isMovementCeased() {
+        return !isInWater();
+    }
+ 
+    @Override
+    protected double minDivingDepth()
+    {
+        return 1D;
+    }
+    
+    @Override
+    protected double maxDivingDepth()
+    {
+        return 6.0D;
+    }
+    
+    @Override
+    public int getMaxEdad() {
+        return 200;
+    }
+    
+    @Override
+    public boolean isNotScared() {
+        return true;
     }
 }

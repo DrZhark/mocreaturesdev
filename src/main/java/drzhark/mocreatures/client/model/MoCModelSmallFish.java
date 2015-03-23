@@ -92,10 +92,8 @@ public class MoCModelSmallFish extends ModelBase {
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         float tailMov = MathHelper.cos(f * 0.8F) * f1 * 0.6F;
         float finMov = MathHelper.cos(f2 * 0.4F) * 0.2F;
-        //float mouthMov = MathHelper.cos(f2 * 0.3F) * 0.2F;
-
+        
         this.Tail.rotateAngleY = tailMov;
-        //setRotation(MidBodyFin, 0F, 0.7853982F, 0F);
         this.MidBodyFin.rotateAngleY = 0.7853982F + finMov;
         this.LowerFinB.rotateAngleZ = finMov;
 

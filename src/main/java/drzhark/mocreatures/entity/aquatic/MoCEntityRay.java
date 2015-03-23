@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.aquatic;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -26,7 +27,8 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     public MoCEntityRay(World world) {
         super(world);
         setSize(1.8F, 0.5F);
-        setEdad(50 + (this.rand.nextInt(50)));
+        setEdad(50 + (this.rand.nextInt(40)));
+        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
     @Override
@@ -41,14 +43,12 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
 
         if (getType() == 0) {
             int i = this.rand.nextInt(100);
-            if (i <= 35) {
+            if (i <= 70) {
                 setType(1);
                 setEdad(80 + (this.rand.nextInt(100)));
             } else {
-                setType(1);
-                setEdad(70);
+                setType(2);
             }
-            getMaxHealth();
         }
     }
 
@@ -65,11 +65,6 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
         }
     }
 
-    @Override
-    public float getMoveSpeed() {
-        return 0.3F;
-    }
-
     public boolean isPoisoning() {
         return this.tailCounter != 0;
     }
@@ -84,7 +79,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
             entityplayer.posY = this.posY;
-            if (!this.worldObj.isRemote) {
+            if (MoCreatures.isServer()) {
                 entityplayer.mountEntity(this);
             }
             return true;
@@ -95,14 +90,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!this.worldObj.isRemote) {
-            if (!getIsAdult() && (this.rand.nextInt(50) == 0)) {
-                setEdad(getEdad() + 1);
-                if ((getType() == 1 && getEdad() >= 180) || (getType() > 1 && getEdad() >= 90)) {
-                    setAdult(true);
-                }
-            }
-
+        if (MoCreatures.isServer()) {
             if (!getIsTamed() && getType() > 1 && ++this.poisoncounter > 250 && (this.worldObj.getDifficulty().getDifficultyId() > 0)
                     && this.rand.nextInt(30) == 0) {
                 if (MoCTools.findNearPlayerAndPoison(this, true)) {
@@ -149,23 +137,22 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        //String s = MoCTools.BiomeName(worldObj, pos);
         BiomeGenBase biome = MoCTools.Biomekind(this.worldObj, pos);
         if (!(biome instanceof BiomeGenOcean)) {
-            setType(2);
+            setType(2); 
         }
         return true;
     }
 
     @Override
     public float getAdjustedYOffset() {
-        if (!isSwimming()) {
+        if (!this.isInWater()) {
             return 0.09F;
         } else if (getType() == 1) {
             return 0.15F;
         }
 
-        return 0.25F;
+        return 0.15F;
     }
 
     @Override
@@ -190,5 +177,42 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             f = 1.5F;
         }
         return f;
+    }
+    
+    @Override
+    protected boolean usesNewAI() {
+        return true;
+    }
+    
+    @Override
+    public float getAIMoveSpeed()
+    {
+        return 0.06F;
+    }
+    
+    @Override
+    public boolean isMovementCeased() {
+        return !isInWater();
+    }
+ 
+    @Override
+    protected double minDivingDepth()
+    {
+        return 3D;
+    }
+    
+    @Override
+    protected double maxDivingDepth()
+    {
+        return 6.0D;
+    }
+    
+    @Override
+    public int getMaxEdad() {
+        if (getType() == 1)
+        {
+            return 180;
+        }
+        return 90;
     }
 }

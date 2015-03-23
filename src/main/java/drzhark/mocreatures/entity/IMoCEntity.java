@@ -63,15 +63,15 @@ public interface IMoCEntity {
 
     public void dismountEntity();
 
-    public int rollRotationOffset();
+    public float rollRotationOffset();
 
-    public int pitchRotationOffset();
+    public float pitchRotationOffset();
 
     public void setEdad(int i);
 
     public int getEdad();
 
-    public int yawRotationOffset();
+    public float yawRotationOffset();
 
     public float getAdjustedZOffset();
 
@@ -88,4 +88,10 @@ public interface IMoCEntity {
     boolean isMovementCeased(); //to deactivate path / wander behavior AI
 
     boolean shouldAttackPlayers();
+
+    public double getDivingDepth();
+
+    public boolean isDiving();
+
+    public void forceEntityJump();
 }

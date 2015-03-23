@@ -117,30 +117,14 @@ public class MoCRenderMoC extends RenderLiving {
     @Override
     protected void preRenderCallback(EntityLivingBase entityliving, float f) {
         IMoCEntity mocreature = (IMoCEntity) entityliving;
-        /*
-         * if (mocreature.getSizeFactor() != 1.0F) { stretch(mocreature); }
-         */
-        stretch(mocreature);
-        adjustOffsets(mocreature.getAdjustedXOffset(), mocreature.getAdjustedYOffset(), mocreature.getAdjustedZOffset());
-
+        //adjustOffsets is not working!!!
+        //adjustOffsets(mocreature.getAdjustedXOffset(), mocreature.getAdjustedYOffset(), mocreature.getAdjustedZOffset());
         adjustPitch(mocreature);
         adjustRoll(mocreature);
         adjustYaw(mocreature);
-
+        stretch(mocreature);
         super.preRenderCallback(entityliving, f);
 
-    }
-
-    /**
-     * Changes the YOffset of the creature, i.e. sitting animals
-     *
-     * @param mocreature
-     */
-    protected void adjustYOffset(IMoCEntity mocreature) {
-        float f = mocreature.getAdjustedYOffset();
-        if (f != 0) {
-            GL11.glTranslatef(0.0F, f, 0.0F);
-        }
     }
 
     /**
@@ -149,10 +133,10 @@ public class MoCRenderMoC extends RenderLiving {
      * @param mocreature
      */
     protected void adjustPitch(IMoCEntity mocreature) {
-        int i = mocreature.pitchRotationOffset();
+        float f = mocreature.pitchRotationOffset();
 
-        if (i != 0) {
-            GL11.glRotatef(i, -1F, 0.0F, 0.0F);
+        if (f != 0) {
+            GL11.glRotatef(f, -1F, 0.0F, 0.0F);
         }
     }
 
@@ -162,26 +146,21 @@ public class MoCRenderMoC extends RenderLiving {
      * @param mocreature
      */
     protected void adjustRoll(IMoCEntity mocreature) {
-        int i = mocreature.rollRotationOffset();
+        float f = mocreature.rollRotationOffset();
 
-        if (i != 0) {
-            GL11.glRotatef(i, 0F, 0F, -1F);
+        if (f != 0) {
+            GL11.glRotatef(f, 0F, 0F, -1F);
         }
     }
 
     protected void adjustYaw(IMoCEntity mocreature) {
-        int i = mocreature.yawRotationOffset();
-        if (i != 0) {
-            GL11.glRotatef(i, 0.0F, -1.0F, 0.0F);
+        float f = mocreature.yawRotationOffset();
+        if (f != 0) {
+            GL11.glRotatef(f, 0.0F, -1.0F, 0.0F);
         }
     }
 
-    /*
-     * protected void adjustZOffset(MoCIMoCreature mocreature) { float f =
-     * mocreature.getAdjustedZOffset(); if (f != 0) { GL11.glTranslatef(0.0F,
-     * 0.0F, f); } }
-     */
-
+    
     /**
      * translates the model
      *

@@ -140,7 +140,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
         }
     }
 
-    @Override
+    //@Override
     public void floating() {
         float distY = MoCTools.distanceToSurface(this);
 
@@ -163,11 +163,11 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public int pitchRotationOffset() {
+    public float pitchRotationOffset() {
         if (!this.isInsideOfMaterial(Material.water)) {
-            return 90;
+            return 90F;
         }
-        return 0;
+        return 0F;
     }
 
     @Override

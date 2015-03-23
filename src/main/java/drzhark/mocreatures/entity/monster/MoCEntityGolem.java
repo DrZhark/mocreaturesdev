@@ -761,7 +761,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     }
 
     @Override
-    public int rollRotationOffset() {
+    public float rollRotationOffset() {
         int leftLeg = 0;
         int rightLeg = 0;
         if (this.golemCubes[15] != 30) {
@@ -782,7 +782,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         if (this.golemCubes[20] != 30) {
             rightLeg++;
         }
-        return (leftLeg - rightLeg) * 10;
+        return (float)(leftLeg - rightLeg) * 10F;
     }
 
     /**
