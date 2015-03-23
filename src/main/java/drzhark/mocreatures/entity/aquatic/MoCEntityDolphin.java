@@ -1,23 +1,19 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import net.minecraft.util.MathHelper;
-
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -37,7 +33,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         setType(1); //TODO REMOVE testing
         this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
-        
+
     }
 
     @Override
@@ -348,7 +344,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         super.onLivingUpdate();
 
         if (MoCreatures.isServer()) {
-            
+
             //TODO
             /*if (!getIsHungry() && (this.rand.nextInt(100) == 0)) {
                 setIsHungry(true);
@@ -449,42 +445,39 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     public int getMaxSpawnedInChunk() {
         return 1;
     }
-    
+
     @Override
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.15F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 0.4D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 4.0D;
     }
-    
+
+    @Override
     public int getMaxEdad() {
         return 160;
     }
-    
+
     @Override
-    public void updateRiderPosition() 
-    {
+    public void updateRiderPosition() {
         double dist = (0.8D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
@@ -492,8 +485,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public double getMountedYOffset() 
-    {
-        return this.getEdad()*0.01F * (this.height * 0.5D);
+    public double getMountedYOffset() {
+        return this.getEdad() * 0.01F * (this.height * 0.5D);
     }
 }

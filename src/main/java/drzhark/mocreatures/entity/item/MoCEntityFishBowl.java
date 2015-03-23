@@ -20,13 +20,11 @@ public class MoCEntityFishBowl extends EntityLiving {
     public MoCEntityFishBowl(World world) {
         super(world);
         setSize(1.0F, 1.0F);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
     }
 
     public MoCEntityFishBowl(World world, double d, double d1, double d2) {
         super(world);
         setSize(1.0F, 1.0F);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "fishbowl.png";
     }
 
     public MoCEntityFishBowl(World world, int i) {

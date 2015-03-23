@@ -1,14 +1,13 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import net.minecraft.entity.Entity;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -22,20 +21,20 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     private int latMovCounter;
     private EntityAIWanderMoC2 wander;
-    
+
     public MoCEntityMediumFish(World world) {
         super(world);
         setSize(0.6F, 0.3F);
         setEdad(30 + this.rand.nextInt(70));
-        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate()
-        {
-            public boolean apply(Entity entity)
-            {
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+
+            public boolean apply(Entity entity) {
                 return (entity.height > 0.6F && entity.width > 0.3F);
             }
-            public boolean apply(Object p_apply_1_)
-            {
-                return this.apply((Entity)p_apply_1_);
+
+            @Override
+            public boolean apply(Object p_apply_1_) {
+                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 50));
@@ -155,35 +154,33 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     protected boolean canBeTrappedInNet() {
         return true;
     }
-    
+
     @Override
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.15F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 0.5D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 4.0D;
     }
-    
+
+    @Override
     public int getMaxEdad() {
         return 120;
     }

@@ -1,4 +1,5 @@
 package drzhark.mocreatures.entity.ai;
+
 import drzhark.mocreatures.entity.IMoCEntity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -24,7 +25,7 @@ public class EntityAIFollowHerd extends EntityAIBase {
         this.maxRange = maxRangeIn; //20D;
         this.executionChance = chance;
     }
-    
+
     public EntityAIFollowHerd(EntityLiving animal, double speed) {
         this(animal, speed, 4D, 20D, 120);
     }
@@ -34,59 +35,55 @@ public class EntityAIFollowHerd extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        
-         
-            if (this.theAnimal.getRNG().nextInt(this.executionChance) != 0)
-            {
-                return false;
-            }
-        
-        
-            List list =  this.theAnimal.worldObj.getEntitiesWithinAABB(this.theAnimal.getClass(), this.theAnimal.getEntityBoundingBox().expand(maxRange, 4.0D, maxRange));
-            EntityLiving entityliving = null;
-            double d0 = Double.MAX_VALUE;
-            Iterator iterator = list.iterator();
 
-            while (iterator.hasNext()) {
-                EntityLiving entityliving1 = (EntityLiving) iterator.next();
-                double d1 = this.theAnimal.getDistanceSqToEntity(entityliving1);
-                if (d1 >= minRange && theAnimal != entityliving1) {
-                        d0 = d1;
-                        entityliving = entityliving1;
-                    }
-                
-            }
-
-            if (entityliving == null) {
-                //System.out.println("didn't find any herd");
-                return false;
-                
-                
-            } else if (d0 < maxRange) {
-                //System.out.println("herd is too close: " + d0);
-                
-                return false;
-            } else {
-                this.herdAnimal = entityliving;
-                //System.out.println("found herd " + entityliving);
-                return true;
-            }
+        if (this.theAnimal.getRNG().nextInt(this.executionChance) != 0) {
+            return false;
         }
-    
+
+        List list =
+                this.theAnimal.worldObj.getEntitiesWithinAABB(this.theAnimal.getClass(),
+                        this.theAnimal.getEntityBoundingBox().expand(this.maxRange, 4.0D, this.maxRange));
+        EntityLiving entityliving = null;
+        double d0 = Double.MAX_VALUE;
+        Iterator iterator = list.iterator();
+
+        while (iterator.hasNext()) {
+            EntityLiving entityliving1 = (EntityLiving) iterator.next();
+            double d1 = this.theAnimal.getDistanceSqToEntity(entityliving1);
+            if (d1 >= this.minRange && this.theAnimal != entityliving1) {
+                d0 = d1;
+                entityliving = entityliving1;
+            }
+
+        }
+
+        if (entityliving == null) {
+            //System.out.println("didn't find any herd");
+            return false;
+
+        } else if (d0 < this.maxRange) {
+            //System.out.println("herd is too close: " + d0);
+
+            return false;
+        } else {
+            this.herdAnimal = entityliving;
+            //System.out.println("found herd " + entityliving);
+            return true;
+        }
+    }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
     public boolean continueExecuting() {
-        if (this.theAnimal instanceof IMoCEntity && ((IMoCEntity) this.theAnimal).isMovementCeased()) 
-        { //System.out.println("returning, movement ceased");
+        if (this.theAnimal instanceof IMoCEntity && ((IMoCEntity) this.theAnimal).isMovementCeased()) { //System.out.println("returning, movement ceased");
             return false;
         } else if (!this.herdAnimal.isEntityAlive()) {
             return false;
         } else {
             double d0 = this.theAnimal.getDistanceSqToEntity(this.herdAnimal);
-            return d0 >= minRange && d0 <= maxRange;
+            return d0 >= this.minRange && d0 <= this.maxRange;
         }
     }
 
@@ -117,12 +114,11 @@ public class EntityAIFollowHerd extends EntityAIBase {
             this.theAnimal.getNavigator().tryMoveToEntityLiving(this.herdAnimal, this.moveSpeed);
         }
     }
-    
+
     /**
      * Changes task random possibility for execution
      */
-    public void setExecutionChance(int newchance)
-    {
+    public void setExecutionChance(int newchance) {
         this.executionChance = newchance;
     }
 }

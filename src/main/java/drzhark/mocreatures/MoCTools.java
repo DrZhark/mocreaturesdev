@@ -535,17 +535,17 @@ public class MoCTools {
             for (int x = 1; x < 64; x++) {
                 block = worldIn.getBlockState(new BlockPos(i, j + x, k)).getBlock();
                 if (block == Blocks.air || block.getMaterial() != Material.water) {
-                    return j+x;
+                    return j + x;
                 }
             }
         }
         return 0F;
     }
-    
+
     public static double waterSurfaceAtGivenEntity(Entity entity) {
         return waterSurfaceAtGivenPosition(entity.posX, entity.posY, entity.posZ, entity.worldObj);
     }
-    
+
     public static float distanceToSurface(double posX, double posY, double posZ, World worldIn) {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);

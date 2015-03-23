@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
-
 import com.google.common.base.Predicate;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -28,15 +26,15 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         setSize(0.3F, 0.3F);
         setEdad(70 + this.rand.nextInt(30));
         this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
-        this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate()
-        {
-            public boolean apply(Entity entity)
-            {
+        this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+
+            public boolean apply(Entity entity) {
                 return (entity.height > 0.3F || entity.width > 0.3F);
             }
-            public boolean apply(Object p_apply_1_)
-            {
-                return this.apply((Entity)p_apply_1_);
+
+            @Override
+            public boolean apply(Object p_apply_1_) {
+                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         //this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 10));
@@ -104,7 +102,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         super.onLivingUpdate();
 
         if ((MoCreatures.isServer())) {
-            
+
             /*if (!isNotScared() && this.rand.nextInt(5) == 0 && !getIsTamed()) {
                 EntityLivingBase entityliving = getBoogey(8D);
                 if (entityliving != null && entityliving.isInsideOfMaterial(Material.water)) {
@@ -173,30 +171,28 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.10F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 0.2D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 2.0D;
     }
-    
+
+    @Override
     public int getMaxEdad() {
         return 120;
     }

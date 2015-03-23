@@ -1,22 +1,17 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
-import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -38,15 +33,15 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.3D));
-        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate()
-        {
-            public boolean apply(Entity entity)
-            {
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+
+            public boolean apply(Entity entity) {
                 return (entity.height > 0.3F || entity.width > 0.3F);
             }
-            public boolean apply(Object p_apply_1_)
-            {
-                return this.apply((Entity)p_apply_1_);
+
+            @Override
+            public boolean apply(Object p_apply_1_) {
+                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
@@ -115,8 +110,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     protected void dropFewItems(boolean flag, int x) {
         int i = this.rand.nextInt(100);
-        if (i < 70)
-        {
+        if (i < 70) {
             entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
         } else {
             int j = this.rand.nextInt(2);
@@ -126,8 +120,6 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
         }
     }
-
-    
 
     @Override
     public void onLivingUpdate() {
@@ -139,7 +131,6 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         }
 
         if (MoCreatures.isServer()) {
-           
 
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());
@@ -249,35 +240,32 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     protected boolean isFisheable() {
         return !getIsTamed();
     }
-    
+
     @Override
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.10F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 0.2D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 2.0D;
     }
-    
+
     @Override
     public float getSizeFactor() {
         return getEdad() * 0.01F;

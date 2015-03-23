@@ -46,7 +46,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         if (((IMoCEntity) this.thePet).getIsSitting()) {
             return false;
         }
-        if (!(thePet.getNavigator() instanceof PathNavigateGround)) {
+        if (!(this.thePet.getNavigator() instanceof PathNavigateGround)) {
             return false;
         }
         String OwnerName = ((IMoCTameable) this.thePet).getOwnerName();
@@ -54,16 +54,14 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
             return false;
         }
 
-        
         EntityPlayer entityplayer = EntityAITools.getIMoCTameableOwner((IMoCTameable) this.thePet);
 
         if (entityplayer == null) {
             return false;
         }
 
-        else if (this.thePet.getDistanceSqToEntity(entityplayer) < this.minDist * this.minDist ||
-        this.thePet.getDistanceSqToEntity(entityplayer) > this.maxDist * this.maxDist)
-        {
+        else if (this.thePet.getDistanceSqToEntity(entityplayer) < this.minDist * this.minDist
+                || this.thePet.getDistanceSqToEntity(entityplayer) > this.maxDist * this.maxDist) {
             return false;
         } else {
             this.theOwner = entityplayer;

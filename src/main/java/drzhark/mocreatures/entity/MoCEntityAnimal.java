@@ -1,13 +1,8 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.world.EnumDifficulty;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -34,12 +29,15 @@ import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -59,9 +57,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     private int huntingCounter;
     protected PathNavigate navigatorWater;
     private double divingDepth;
-    private boolean randomAttributesUpdated; //used to update divingDepth on world load 
+    private boolean randomAttributesUpdated; //used to update divingDepth on world load
+
     //protected EntityMoveHelper moverHelperWater;
-    
 
     public MoCEntityAnimal(World world) {
         super(world);
@@ -346,19 +344,18 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (getIsHunting() && ++this.huntingCounter > 50) {
                 setIsHunting(false);
             }
-            
+
             this.getNavigator().onUpdateNavigation();
         }
 
         //TODO
         if (this.isInWater() && this.isAmphibian()) {
             floating();
-            if (rand.nextInt(500) == 0 || !randomAttributesUpdated)
-                {
+            if (this.rand.nextInt(500) == 0 || !this.randomAttributesUpdated) {
                 this.setNewDivingDepth();
-                randomAttributesUpdated = true;
-                }
-            
+                this.randomAttributesUpdated = true;
+            }
+
         }
 
         //TODO
@@ -387,8 +384,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     public void floating() {
-        if (!this.getNavigator().noPath())
-        {
+        if (!this.getNavigator().noPath()) {
             return;
         }
         /*if (this.motionY < 0) {
@@ -716,13 +712,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
-        
-        if (this.isAmphibian() && isInWater())
-        {
-            if (this.isServerWorld())
-            {
-                if (this.isInWater())
-                {
+
+        if (this.isAmphibian() && isInWater()) {
+            if (this.isServerWorld()) {
+                if (this.isInWater()) {
                     this.moveFlying(strafe, forward, 0.1F);
                     this.moveEntity(this.motionX, this.motionY, this.motionZ);
                     this.motionX *= 0.8999999761581421D;
@@ -733,14 +726,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     {
                         this.motionY -= 0.005D;
                     }
-                }
-                else
-                {
+                } else {
                     super.moveEntityWithHeading(strafe, forward);
                 }
-            }
-            else
-            {
+            } else {
                 super.moveEntityWithHeading(strafe, forward);
             }
         }
@@ -749,7 +738,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             return;
         }
         //the above code is needed as is
-        
+
         if (usesNewAI() || (!isFlyer() && (!rideableEntity() || this.riddenByEntity == null)))// || (this.ridingEntity != null && !(this.ridingEntity instanceof EntityPlayer)))
         {
             super.moveEntityWithHeading(strafe, forward);
@@ -1592,7 +1581,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     public void setIsHunting(boolean flag) {
         if (flag) {
-            this.huntingCounter = rand.nextInt(30) + 1;
+            this.huntingCounter = this.rand.nextInt(30) + 1;
         } else {
             this.huntingCounter = 0;
         }
@@ -1609,30 +1598,27 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             MoCTools.destroyDrops(this, 3D);
         }
     }
-    
+
     @Override
-    public PathNavigate getNavigator()
-    {
-        if (this.isInWater() && this.isAmphibian())
-        {
+    public PathNavigate getNavigator() {
+        if (this.isInWater() && this.isAmphibian()) {
             return this.navigatorWater;
         }
         return this.navigator;
     }
-    
+
     /*protected final void updateEntityActionState()
     {
         this.worldObj.theProfiler.startSection("navigation");
         this.navigator.onUpdateNavigation();
         this.worldObj.theProfiler.endSection();
-       
+
     }*/
-    
-    public boolean isAmphibian()
-    {
+
+    public boolean isAmphibian() {
         return false;
     }
-    
+
     /*@Override
     public EntityMoveHelper getMoveHelper()
     {
@@ -1642,64 +1628,59 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         }
         return this.moveHelper;
     }*/
-    
+
     @Override
     public boolean isDiving() {
         return false;
     }
-    
+
     /**
      * The distance the entity will float under the surface. 0F = surface 1.0F = 1 block under
      * @return
      */
     @Override
-    public double getDivingDepth()
-    {
+    public double getDivingDepth() {
         return (float) this.divingDepth;
     }
-    
+
     /**
      * Sets diving depth. if setDepth given = 0.0D, will then choose a random value within proper range
      * @param setDepth
      */
-    protected void setNewDivingDepth(double setDepth)
-    {
-        if (setDepth!=0.0D)
-        {
-            if (setDepth > maxDivingDepth()) setDepth = maxDivingDepth();
-            if (setDepth < minDivingDepth()) setDepth = minDivingDepth();
+    protected void setNewDivingDepth(double setDepth) {
+        if (setDepth != 0.0D) {
+            if (setDepth > maxDivingDepth()) {
+                setDepth = maxDivingDepth();
+            }
+            if (setDepth < minDivingDepth()) {
+                setDepth = minDivingDepth();
+            }
             this.divingDepth = setDepth;
-        }else
-        {
-            
+        } else {
+
             this.divingDepth = (float) ((this.rand.nextDouble() * (maxDivingDepth() - minDivingDepth())) + minDivingDepth());
         }
-        
+
     }
-    
-    protected void setNewDivingDepth()
-    {
+
+    protected void setNewDivingDepth() {
         setNewDivingDepth(0.0D);
     }
-    
-    protected double minDivingDepth()
-    {
+
+    protected double minDivingDepth() {
         return 0.2D;
     }
-    
-    protected double maxDivingDepth()
-    {
+
+    protected double maxDivingDepth() {
         return 1.0D;
     }
-    
+
     @Override
-    public void forceEntityJump()
-    {
+    public void forceEntityJump() {
         this.jump();
     }
-    
-    protected float getMyMovementSpeed()
-    {
+
+    protected float getMyMovementSpeed() {
         return MathHelper.sqrt_double((this.motionX * this.motionX) + (this.motionZ * this.motionZ));
     }
 }

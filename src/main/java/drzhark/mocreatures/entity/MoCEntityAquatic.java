@@ -52,7 +52,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     protected PathNavigate navigatorWater;
     private boolean updateDivingDepth = false;
     private double divingDepth;
-    
+
     public MoCEntityAquatic(World world) {
         super(world);
         this.outOfWater = 0;
@@ -308,8 +308,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox(), Material.water, this);
     }*/
 
-    
-
     protected boolean MoveToNextEntity(Entity entity) {
         if (entity != null) {
             int i = MathHelper.floor_double(entity.posX);
@@ -354,16 +352,16 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
-    public boolean isInWater()
-    {
+    public boolean isInWater() {
         return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.2D, 0.0D), Material.water, this);
     }
-    
+
     @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
 
+    @Override
     public boolean isDiving() {
         return this.diving;
     }
@@ -378,7 +376,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             return;
         }
         if (true) return;
-           
+
         float distY = MoCTools.distanceToSurface(this) - (float)this.getDivingDepth();
 
         if (this.riddenByEntity != null) {
@@ -466,41 +464,39 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                     this.mountCount = 0;
                 }
             }
-            
+
             if (!getIsAdult() && (this.rand.nextInt(300) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= getMaxEdad()) {
                     setAdult(true);
                 }
             }
-            
+
             this.getNavigator().onUpdateNavigation();
-            
-                //updates diving depth after finishing movement
-                if (!this.getNavigator().noPath())// && !updateDivingDepth)
-                {
-                    if (!updateDivingDepth)
-                    {
-                        float targetDepth = (MoCTools.distanceToSurface(this.moveHelper.getX(), this.moveHelper.getY(), this.moveHelper.getZ(), this.worldObj));
-                        setNewDivingDepth(targetDepth);
-                        updateDivingDepth = true;    
-                    }
-                }else
-                {
-                    updateDivingDepth = false;
+
+            //updates diving depth after finishing movement
+            if (!this.getNavigator().noPath())// && !updateDivingDepth)
+            {
+                if (!this.updateDivingDepth) {
+                    float targetDepth =
+                            (MoCTools.distanceToSurface(this.moveHelper.getX(), this.moveHelper.getY(), this.moveHelper.getZ(), this.worldObj));
+                    setNewDivingDepth(targetDepth);
+                    this.updateDivingDepth = true;
                 }
-            
-            
+            } else {
+                this.updateDivingDepth = false;
+            }
+
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
             }
-            
+
             /*if (this.isInWater() && this.isCollidedHorizontally && rand.nextInt(10) == 0)
             {
                 System.out.println(this + " is collided horizontally, jumping");
                 this.motionY += 0.05D;
             }*/
-            
+
             /*
              if (getIsTamed() && rand.nextInt(100) == 0) {
                  MoCServerPacketHandler.sendHealth(this.getEntityId(),
@@ -852,6 +848,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         return ((entity.getClass() != this.getClass()) && (entity instanceof EntityLivingBase) && ((entity.width >= 0.5D) || (entity.height >= 0.5D)));
     }
 
+    @Override
     public boolean isNotScared() {
         return false;
     }
@@ -880,45 +877,36 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     public boolean shouldAttackPlayers() {
         return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
     }
-    
+
     /**
      * Moves the entity based on the specified heading.  Args: strafe, forward
      */
-    public void moveEntityWithHeading(float strafe, float forward)
-    {
-        if (this.isServerWorld())
-        {
-            if (this.isInWater())
-            {
+    @Override
+    public void moveEntityWithHeading(float strafe, float forward) {
+        if (this.isServerWorld()) {
+            if (this.isInWater()) {
                 this.moveFlying(strafe, forward, 0.1F);
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 this.motionX *= 0.8999999761581421D;
                 this.motionY *= 0.8999999761581421D;
                 this.motionZ *= 0.8999999761581421D;
 
-                if (this.getAttackTarget() == null) 
-                {
+                if (this.getAttackTarget() == null) {
                     this.motionY -= 0.005D;
                 }
-            }
-            else
-            {
+            } else {
                 super.moveEntityWithHeading(strafe, forward);
             }
-        }
-        else
-        {
+        } else {
             super.moveEntityWithHeading(strafe, forward);
         }
-        
+
         //TODO update for all entities not just dolphin
-        if (this instanceof MoCEntityDolphin)
-        {
+        if (this instanceof MoCEntityDolphin) {
             this.moveEntityWithHeadingOld(strafe, forward);
         }
     }
-    
-    
+
     public void moveEntityWithHeadingOld(float f, float f1) {
         if (this.riddenByEntity == null) {
             super.moveEntityWithHeading(f, f1);
@@ -1010,135 +998,119 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
         this.limbSwing += this.limbSwingAmount;
     }
-    
-    
+
     /**
      * Whether or not the current entity is in lava
      */
-    public boolean handleLavaMovement()
-    {
+    @Override
+    public boolean handleLavaMovement() {
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this);
     }
 
     /**
      * Get number of ticks, at least during which the living entity will be silent.
      */
-    public int getTalkInterval()
-    {
+    @Override
+    public int getTalkInterval() {
         return 300;
     }
 
-    
     /**
      * Get the experience points the entity currently has.
      */
-    protected int getExperiencePoints(EntityPlayer player)
-    {
+    @Override
+    protected int getExperiencePoints(EntityPlayer player) {
         return 1 + this.worldObj.rand.nextInt(3);
     }
 
     /**
      * Gets called every tick from main Entity class
      */
-    public void onEntityUpdate()
-    {
+    @Override
+    public void onEntityUpdate() {
         int i = this.getAir();
         super.onEntityUpdate();
 
-        if (this.isEntityAlive() && !this.isInWater())
-        {
+        if (this.isEntityAlive() && !this.isInWater()) {
             --i;
             this.setAir(i);
 
-            if (this.getAir() == -20)
-            {
+            if (this.getAir() == -20) {
                 this.setAir(0);
                 this.attackEntityFrom(DamageSource.drown, 2.0F);
             }
-        }
-        else
-        {
+        } else {
             this.setAir(300);
         }
     }
 
     @Override
-    public boolean isPushedByWater()
-    {
+    public boolean isPushedByWater() {
         return false;
     }
-    
+
     protected boolean usesNewAI() {
         return false;
     }
-    
-    
+
     @Override
-    public PathNavigate getNavigator()
-    {
-        if (this.isInWater())
-        {
+    public PathNavigate getNavigator() {
+        if (this.isInWater()) {
             return this.navigatorWater;
         }
         return this.navigator;
     }
-    
+
     /**
      * The distance the entity will float under the surface. 0F = surface 1.0F = 1 block under
      * @return
      */
     @Override
-    public double getDivingDepth()
-    {
+    public double getDivingDepth() {
         return (float) this.divingDepth;
     }
-    
+
     /**
      * Sets diving depth. if setDepth given = 0.0D, will then choose a random value within proper range
      * @param setDepth
      */
-    protected void setNewDivingDepth(double setDepth)
-    {
-        if (setDepth!=0.0D)
-        {
-            if (setDepth > maxDivingDepth()) setDepth = maxDivingDepth();
-            if (setDepth < minDivingDepth()) setDepth = minDivingDepth();
+    protected void setNewDivingDepth(double setDepth) {
+        if (setDepth != 0.0D) {
+            if (setDepth > maxDivingDepth()) {
+                setDepth = maxDivingDepth();
+            }
+            if (setDepth < minDivingDepth()) {
+                setDepth = minDivingDepth();
+            }
             this.divingDepth = setDepth;
-        }else
-        {
+        } else {
             this.divingDepth = (float) (this.rand.nextDouble() * (maxDivingDepth() - minDivingDepth()) + minDivingDepth());
         }
-        
+
     }
-    
-    
-    protected void setNewDivingDepth()
-    {
+
+    protected void setNewDivingDepth() {
         setNewDivingDepth(0.0D);
     }
-    
-    protected double minDivingDepth()
-    {
+
+    protected double minDivingDepth() {
         return 0.20D;
     }
-    
-    protected double maxDivingDepth()
-    {
+
+    protected double maxDivingDepth() {
         return 3.0D;
     }
-    
+
     @Override
-    public void forceEntityJump()
-    {
+    public void forceEntityJump() {
         this.jump();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public float yawRotationOffset() {
         double d4 = 0F;
-        if ((this.motionX != 0D) || (this.motionZ != 0D))
-        {
+        if ((this.motionX != 0D) || (this.motionZ != 0D)) {
             d4 = Math.sin(this.ticksExisted * 0.5D) * 8D;
         }
         return (float) (d4);//latOffset;
@@ -1147,10 +1119,10 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     public int getMaxEdad() {
         return 100;
     }
-    
+
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
-        if (!entityIn.isInWater()){
+        if (!entityIn.isInWater()) {
             return false;
         }
         boolean flag =

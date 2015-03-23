@@ -1,9 +1,9 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
@@ -139,7 +139,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
         BiomeGenBase biome = MoCTools.Biomekind(this.worldObj, pos);
         if (!(biome instanceof BiomeGenOcean)) {
-            setType(2); 
+            setType(2);
         }
         return true;
     }
@@ -178,39 +178,35 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
         }
         return f;
     }
-    
+
     @Override
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.06F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 3D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 6.0D;
     }
-    
+
     @Override
     public int getMaxEdad() {
-        if (getType() == 1)
-        {
+        if (getType() == 1) {
             return 180;
         }
         return 90;

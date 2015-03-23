@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.world.EnumDifficulty;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -36,6 +35,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -1122,19 +1122,17 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
      * @return
      */
     @Override
-    public double getDivingDepth()
-    {
+    public double getDivingDepth() {
         return 0.5D;
     }
-    
+
     @Override
     public boolean isDiving() {
         return false;
     }
-    
+
     @Override
-    public void forceEntityJump()
-    {
+    public void forceEntityJump() {
         this.jump();
     }
 }

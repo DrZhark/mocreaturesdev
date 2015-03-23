@@ -1,10 +1,8 @@
 package drzhark.mocreatures.entity.ai;
 
-import drzhark.mocreatures.entity.IMoCEntity;
-
-import net.minecraft.entity.EntityLiving;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import drzhark.mocreatures.entity.IMoCEntity;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -91,7 +89,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
      */
     @Override
     public boolean shouldExecute() {
-        if (theAttacker != null && (theAttacker.isMovementCeased() || !theAttacker.isNotScared())) {
+        if (this.theAttacker != null && (this.theAttacker.isMovementCeased() || !this.theAttacker.isNotScared())) {
             return false;
         }
         if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
@@ -107,7 +105,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
                 return false;
             } else {
                 this.targetEntity = (EntityLivingBase) list.get(0);
-                if (this.targetEntity instanceof EntityPlayer && !theAttacker.shouldAttackPlayers()) {
+                if (this.targetEntity instanceof EntityPlayer && !this.theAttacker.shouldAttackPlayers()) {
                     return false;
                 }
                 return true;

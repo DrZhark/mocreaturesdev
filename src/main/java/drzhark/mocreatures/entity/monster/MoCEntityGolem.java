@@ -782,7 +782,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         if (this.golemCubes[20] != 30) {
             rightLeg++;
         }
-        return (float)(leftLeg - rightLeg) * 10F;
+        return (leftLeg - rightLeg) * 10F;
     }
 
     /**

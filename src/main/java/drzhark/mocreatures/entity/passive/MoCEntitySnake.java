@@ -1,24 +1,13 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.block.Block;
@@ -26,9 +15,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -149,9 +143,9 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     // snakes can't jump
-    protected void jump() {
-        if (this.isInWater())
-        {
+            protected
+            void jump() {
+        if (this.isInWater()) {
             super.jump();
         }
     }
@@ -699,11 +693,9 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     public int getTalkInterval() {
         return 400;
     }
-    
-    
+
     @Override
-    public boolean isAmphibian()
-    {
+    public boolean isAmphibian() {
         return true;
     }
 
@@ -716,16 +708,16 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         }
         return 0.12F;
     }*/
-    
-   /* @Override
-    protected double minDivingDepth()
-    {
-        return ((double)getEdad() + 8D)/340D;
-    }
-    
-    @Override
-    protected double maxDivingDepth()
-    {
-        return 1D * (this.getEdad()/100D);
-    }*/
+
+    /* @Override
+     protected double minDivingDepth()
+     {
+         return ((double)getEdad() + 8D)/340D;
+     }
+
+     @Override
+     protected double maxDivingDepth()
+     {
+         return 1D * (this.getEdad()/100D);
+     }*/
 }

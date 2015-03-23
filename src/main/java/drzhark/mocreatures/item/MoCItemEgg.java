@@ -2,23 +2,22 @@ package drzhark.mocreatures.item;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class MoCItemEgg extends MoCItem {
 
-    int eggType;
-
     public MoCItemEgg(String name) {
         super(name);
         this.maxStackSize = 16;
         setHasSubtypes(true);
-    }
-
-    public MoCItemEgg(String name, int j) {
-        this(name);
-        this.eggType = j;
+        for (int i = 0; i < 91; i++) {
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, i, new ModelResourceLocation("mocreatures:mocegg", "inventory"));
+        }
     }
 
     @Override
@@ -41,6 +40,6 @@ public class MoCItemEgg extends MoCItem {
 
     @Override
     public String getUnlocalizedName(ItemStack itemstack) {
-        return (new StringBuilder()).append(super.getUnlocalizedName()).append(".").append(itemstack.getItemDamage()).toString();
+        return (new StringBuilder()).append(getUnlocalizedName()).append(".").append(itemstack.getItemDamage()).toString();
     }
 }

@@ -95,9 +95,7 @@ public class MoCModelTurtle extends ModelBase {
             this.Leg3.rotateAngleX = 0F + f26;
             this.Leg4.rotateAngleX = 0F - f26;
             this.Tail.rotateAngleY = 0F - f26;
-            
-            
-            
+
         } else if (this.turtleHat) {
             this.Leg1.rotateAngleX = 0F;
             this.Leg2.rotateAngleX = 0F;
@@ -105,21 +103,21 @@ public class MoCModelTurtle extends ModelBase {
             this.Leg4.rotateAngleX = 0F;
             this.Tail.rotateAngleY = 0F;
         } else if (this.isSwimming) {
-                float swimmLegs =  MathHelper.cos(f * 0.5F) * 6.0F * f1;
-                this.Leg1.rotateAngleX = -1.2F;
-                this.Leg1.rotateAngleY = -1.2F + swimmLegs;
-                this.Leg2.rotateAngleX = -1.2F;
-                this.Leg2.rotateAngleY = 1.2F - swimmLegs;
-                this.Leg3.rotateAngleX = 1.2F;
-                this.Leg4.rotateAngleX = 1.2F;//swimmLegs;
-                this.Tail.rotateAngleY = 0F;
+            float swimmLegs = MathHelper.cos(f * 0.5F) * 6.0F * f1;
+            this.Leg1.rotateAngleX = -1.2F;
+            this.Leg1.rotateAngleY = -1.2F + swimmLegs;
+            this.Leg2.rotateAngleX = -1.2F;
+            this.Leg2.rotateAngleY = 1.2F - swimmLegs;
+            this.Leg3.rotateAngleX = 1.2F;
+            this.Leg4.rotateAngleX = 1.2F;//swimmLegs;
+            this.Tail.rotateAngleY = 0F;
         } else {
             this.Leg1.rotateAngleX = MathHelper.cos(f * 2.0F) * 2.0F * f1;
             this.Leg2.rotateAngleX = MathHelper.cos((f * 2.0F) + 3.141593F) * 2.0F * f1;
             this.Leg3.rotateAngleX = MathHelper.cos((f * 2.0F) + 3.141593F) * 2.0F * f1;
             this.Leg4.rotateAngleX = MathHelper.cos(f * 2.0F) * 2.0F * f1;
             this.Tail.rotateAngleY = MathHelper.cos(f * 0.6662F) * 0.7F * f1;
-            
+
             this.Leg1.rotateAngleY = 0F;
             this.Leg2.rotateAngleY = 0F;
         }

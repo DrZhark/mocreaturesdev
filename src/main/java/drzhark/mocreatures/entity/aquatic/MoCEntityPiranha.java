@@ -1,18 +1,12 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
-
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -33,7 +27,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         //this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 1));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
-        
+
     }
 
     @Override
@@ -54,15 +48,15 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         return MoCreatures.proxy.getTexture("smallfish_piranha.png");
     }
 
-   /* protected Entity findPlayerToAttack() {
-        if ((this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 12D);
-            if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) {
-                return entityplayer;
-            }
-        }
-        return null;
-    }*/
+    /* protected Entity findPlayerToAttack() {
+         if ((this.worldObj.getDifficulty().getDifficultyId() > 0)) {
+             EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 12D);
+             if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) {
+                 return entityplayer;
+             }
+         }
+         return null;
+     }*/
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -87,8 +81,6 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
     public boolean isNotScared() {
         return true;
     }
-
-    
 
     @Override
     protected void dropFewItems(boolean flag, int x) {

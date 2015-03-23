@@ -8,18 +8,18 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MoCItem extends Item {
 
+    public MoCItem() {
+    }
+
     public MoCItem(String name) {
+        this(name, 0);
+    }
+
+    public MoCItem(String name, int meta) {
         GameRegistry.registerItem(this, name);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+                .register(this, meta, new ModelResourceLocation("mocreatures:" + name, "inventory"));
     }
-
-    // TODO
-    /*@SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister par1IconRegister) {
-        this.itemIcon = par1IconRegister.registerIcon("mocreatures" + this.getUnlocalizedName().replaceFirst("item.", ":"));
-    }*/
 }

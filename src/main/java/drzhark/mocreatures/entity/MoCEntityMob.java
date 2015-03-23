@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.world.EnumDifficulty;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -27,6 +26,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -671,5 +671,19 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public boolean shouldAttackPlayers() {
         return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+    }
+
+    @Override
+    public double getDivingDepth() {
+        return 0;
+    }
+
+    @Override
+    public boolean isDiving() {
+        return false;
+    }
+
+    @Override
+    public void forceEntityJump() {
     }
 }

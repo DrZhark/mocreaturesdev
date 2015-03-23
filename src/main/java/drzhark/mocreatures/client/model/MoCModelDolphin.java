@@ -75,7 +75,7 @@ public class MoCModelDolphin extends ModelBase {
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
-        this.RTailFin.rotateAngleX = MathHelper.cos(f * 0.4F) *  f1;
+        this.RTailFin.rotateAngleX = MathHelper.cos(f * 0.4F) * f1;
         this.LTailFin.rotateAngleX = MathHelper.cos(f * 0.4F) * f1;
     }
 }

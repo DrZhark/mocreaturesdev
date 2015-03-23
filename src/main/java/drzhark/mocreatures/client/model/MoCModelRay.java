@@ -18,23 +18,23 @@ public class MoCModelRay extends ModelBase {
         this.Body = new ModelRenderer(this, 26, 0);
         this.Body.addBox(-4F, -1F, 0F, 8, 2, 11);
         this.Body.setRotationPoint(0F, 22F, -5F);
-        
+
         this.Right = new ModelRenderer(this, 10, 26);
         this.Right.addBox(-0.5F, -1F, -4F, 1, 2, 4);
         this.Right.setRotationPoint(-3F, 22F, -4.8F);
-        
+
         this.Left = new ModelRenderer(this, 0, 26);
         this.Left.addBox(-0.5F, -1F, -4F, 1, 2, 4);
         this.Left.setRotationPoint(3F, 22F, -4.8F);
-        
+
         this.BodyU = new ModelRenderer(this, 0, 11);
         this.BodyU.addBox(-3F, -1F, 0F, 6, 1, 8);
         this.BodyU.setRotationPoint(0F, 21F, -4F);
-        
+
         this.Tail = new ModelRenderer(this, 30, 15);
         this.Tail.addBox(-0.5F, -0.5F, 1F, 1, 1, 16);
         this.Tail.setRotationPoint(0F, 22F, 8F);
-        
+
         this.BodyTail = new ModelRenderer(this, 0, 20);
         this.BodyTail.addBox(-1.8F, -0.5F, -3.2F, 5, 1, 5);
         this.BodyTail.setRotationPoint(0F, 22F, 7F);
@@ -43,31 +43,31 @@ public class MoCModelRay extends ModelBase {
         this.RWingA = new ModelRenderer(this, 0, 0);
         this.RWingA.addBox(-3F, -0.5F, -5F, 3, 1, 10);
         this.RWingA.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingB = new ModelRenderer(this, 2, 2);
         this.RWingB.addBox(-6F, -0.5F, -4F, 3, 1, 8);
         this.RWingB.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingC = new ModelRenderer(this, 5, 4);
         this.RWingC.addBox(-8F, -0.5F, -3F, 2, 1, 6);
         this.RWingC.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingD = new ModelRenderer(this, 6, 5);
         this.RWingD.addBox(-10F, -0.5F, -2.5F, 2, 1, 5);
         this.RWingD.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingE = new ModelRenderer(this, 7, 6);
         this.RWingE.addBox(-12F, -0.5F, -2F, 2, 1, 4);
         this.RWingE.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingF = new ModelRenderer(this, 8, 7);
         this.RWingF.addBox(-14F, -0.5F, -1.5F, 2, 1, 3);
         this.RWingF.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.RWingG = new ModelRenderer(this, 9, 8);
         this.RWingG.addBox(-16F, -0.5F, -1F, 2, 1, 2);
         this.RWingG.setRotationPoint(-4F, 22F, 1F);
-        
+
         this.LWingA = new ModelRenderer(this, 0, 0);
         this.LWingA.addBox(0F, -0.5F, -5F, 3, 1, 10);
         this.LWingA.setRotationPoint(4F, 22F, 1F);
@@ -77,32 +77,32 @@ public class MoCModelRay extends ModelBase {
         this.LWingB.addBox(3F, -0.5F, -4F, 3, 1, 8);
         this.LWingB.setRotationPoint(4F, 22F, 1F);
         this.LWingB.mirror = true;
-        
+
         this.LWingC = new ModelRenderer(this, 5, 4);
         this.LWingC.addBox(6F, -0.5F, -3F, 2, 1, 6);
         this.LWingC.setRotationPoint(4F, 22F, 1F);
         this.LWingC.mirror = true;
-        
+
         this.LWingD = new ModelRenderer(this, 6, 5);
         this.LWingD.addBox(8F, -0.5F, -2.5F, 2, 1, 5);
         this.LWingD.setRotationPoint(4F, 22F, 1F);
         this.LWingD.mirror = true;
-        
+
         this.LWingE = new ModelRenderer(this, 7, 6);
         this.LWingE.addBox(10F, -0.5F, -2F, 2, 1, 4);
         this.LWingE.setRotationPoint(4F, 22F, 1F);
         this.LWingE.mirror = true;
-        
+
         this.LWingF = new ModelRenderer(this, 8, 7);
         this.LWingF.addBox(12F, -0.5F, -1.5F, 2, 1, 3);
         this.LWingF.setRotationPoint(4F, 22F, 1F);
         this.LWingF.mirror = true;
-        
+
         this.LWingG = new ModelRenderer(this, 9, 8);
         this.LWingG.addBox(14F, -0.5F, -1F, 2, 1, 2);
         this.LWingG.setRotationPoint(4F, 22F, 1F);
         this.LWingG.mirror = true;
-        
+
         this.LEye = new ModelRenderer(this, 0, 0);
         this.LEye.addBox(-3F, -2F, 1F, 1, 1, 2);
         this.LEye.setRotationPoint(0F, 21F, -4F);

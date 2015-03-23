@@ -1,19 +1,15 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +32,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         super(world);
         setSize(0.6F, 0.4F);
         setAdult(false);
-        setEdad(60 + rand.nextInt(50));
+        setEdad(60 + this.rand.nextInt(50));
         this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 2F, 10F));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 50));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
@@ -115,12 +111,12 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
         if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
-            return (double)(300D - (double)this.getEdad())/500D;
+            return (300D - this.getEdad()) / 500D;
         }
         if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.3F);
         }
-        
+
         return super.getYOffset();
     }
 
@@ -128,11 +124,11 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public boolean interact(EntityPlayer entityplayer) {
         //this.setNewDivingDepth();
         //System.out.println("new diving depth = " + this.getDivingDepth() + ", min depth = " + this.minDivingDepth()+ ", edad = " + this.getEdad());
-        
+
         if (super.interact(entityplayer)) {
             return false;
         }
-        
+
         if (getIsTamed()) {
             if (getIsUpsideDown()) {
                 flipflop(false);
@@ -278,8 +274,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         if (getIsTamed() && getEdad() < 300 && this.rand.nextInt(900) == 0) {
             setEdad(getEdad() + 1);
         }
-        if (getIsUpsideDown() && isInWater())
-        {
+        if (getIsUpsideDown() && isInWater()) {
             setIsUpsideDown(false);
         }
         if (getIsUpsideDown() && (this.ridingEntity == null) && this.rand.nextInt(20) == 0) {
@@ -412,43 +407,37 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public int nameYOffset() {
-        return -10 - (getEdad()/5);
+        return -10 - (getEdad() / 5);
     }
-    
+
     @Override
-    public boolean isPushedByWater()
-    {
-        return true;
-    }
-    
-    @Override
-    public boolean isAmphibian()
-    {
+    public boolean isPushedByWater() {
         return true;
     }
 
     @Override
-    public float getAIMoveSpeed()
-    {
-        if (isInWater())
-        {
+    public boolean isAmphibian() {
+        return true;
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        if (isInWater()) {
             return 0.08F;
         }
         return 0.12F;
     }
-    
+
     @Override
-    protected double minDivingDepth()
-    {
-        return ((double)getEdad() + 8D)/340D;
+    protected double minDivingDepth() {
+        return (getEdad() + 8D) / 340D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
-        return 1D * (this.getEdad()/100D);
+    protected double maxDivingDepth() {
+        return 1D * (this.getEdad() / 100D);
     }
-    
+
     @Override
     public int getMaxEdad() {
         return 120;

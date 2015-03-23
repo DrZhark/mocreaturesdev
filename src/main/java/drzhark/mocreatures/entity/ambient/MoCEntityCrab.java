@@ -121,7 +121,6 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         return true;
     }
 
-
     @Override
     public int nameYOffset() {
         return -20;

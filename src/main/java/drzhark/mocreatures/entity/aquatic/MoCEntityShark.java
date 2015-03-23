@@ -1,26 +1,18 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class MoCEntityShark extends MoCEntityTameableAquatic {
 
@@ -92,26 +84,26 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         return null;
     }*/
 
-   /* public EntityLivingBase FindTarget(Entity entity, double d) {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLivingBase) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg)
-                    || (entity1 instanceof EntityPlayer) || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
-                    || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
-                    || ((entity1 instanceof MoCEntityDolphin) && (getIsTamed() || !(MoCreatures.proxy.attackDolphins)))) {
-                continue;
-            }
-            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-        return entityliving;
-    }*/
+    /* public EntityLivingBase FindTarget(Entity entity, double d) {
+         double d1 = -1D;
+         EntityLivingBase entityliving = null;
+         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+         for (int i = 0; i < list.size(); i++) {
+             Entity entity1 = (Entity) list.get(i);
+             if (!(entity1 instanceof EntityLivingBase) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg)
+                     || (entity1 instanceof EntityPlayer) || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
+                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
+                     || ((entity1 instanceof MoCEntityDolphin) && (getIsTamed() || !(MoCreatures.proxy.attackDolphins)))) {
+                 continue;
+             }
+             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+             if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
+                 d1 = d2;
+                 entityliving = (EntityLivingBase) entity1;
+             }
+         }
+         return entityliving;
+     }*/
 
     @Override
     public void onLivingUpdate() {
@@ -135,44 +127,41 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
             return;
         }
     }
-    
+
     public boolean isMyHealFood(Item item1) {
         return false;
     }
-    
+
     @Override
     protected boolean usesNewAI() {
         return true;
     }
-    
+
     @Override
-    public float getAIMoveSpeed()
-    {
+    public float getAIMoveSpeed() {
         return 0.12F;
     }
-    
+
     @Override
     public boolean isMovementCeased() {
         return !isInWater();
     }
- 
+
     @Override
-    protected double minDivingDepth()
-    {
+    protected double minDivingDepth() {
         return 1D;
     }
-    
+
     @Override
-    protected double maxDivingDepth()
-    {
+    protected double maxDivingDepth() {
         return 6.0D;
     }
-    
+
     @Override
     public int getMaxEdad() {
         return 200;
     }
-    
+
     @Override
     public boolean isNotScared() {
         return true;

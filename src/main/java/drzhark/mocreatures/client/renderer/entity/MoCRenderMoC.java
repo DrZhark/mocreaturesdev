@@ -160,7 +160,6 @@ public class MoCRenderMoC extends RenderLiving {
         }
     }
 
-    
     /**
      * translates the model
      *

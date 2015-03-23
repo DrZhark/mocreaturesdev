@@ -38,7 +38,6 @@ public class MoCEntityEgg extends EntityLiving {
         setSize(0.25F, 0.25F);
         this.tCounter = 0;
         this.lCounter = 0;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
     }
 
     public MoCEntityEgg(World world, double d, double d1, double d2) {
@@ -47,7 +46,6 @@ public class MoCEntityEgg extends EntityLiving {
         setSize(0.25F, 0.25F);
         this.tCounter = 0;
         this.lCounter = 0;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "egg.png";
     }
 
     public ResourceLocation getTexture() {
