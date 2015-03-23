@@ -48,57 +48,42 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             this.theCreature.renderYawOffset = this.theCreature.rotationYaw;
             float f1 = (float) (this.speed * this.theCreature.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
             this.theCreature.setAIMoveSpeed(this.theCreature.getAIMoveSpeed() + (f1 - this.theCreature.getAIMoveSpeed()) * 0.125F);
-            double d4 = Math.sin((this.theCreature.ticksExisted + this.theCreature.getEntityId()) * 0.75D) * 0.01D;
-            double d5 = Math.cos(this.theCreature.rotationYaw * (float) Math.PI / 180.0F);
-            double d6 = Math.sin(this.theCreature.rotationYaw * (float) Math.PI / 180.0F);
+            double d4 = Math.sin((double) (this.theCreature.ticksExisted + this.theCreature.getEntityId()) * 0.75D) * 0.01D;
+            double d5 = Math.cos((double) (this.theCreature.rotationYaw * (float) Math.PI / 180.0F));
+            double d6 = Math.sin((double) (this.theCreature.rotationYaw * (float) Math.PI / 180.0F));
             this.theCreature.motionX += d4 * d5;
             this.theCreature.motionZ += d4 * d6;
             //d4 = Math.sin((double)(this.theCreature.ticksExisted + this.theCreature.getEntityId()) * 0.75D) * 0.05D;
             this.theCreature.motionY += d4 * (d6 + d5) * 0.25D;
-            this.theCreature.motionY += this.theCreature.getAIMoveSpeed() * d1 * 1.5D;
+            this.theCreature.motionY += (double) this.theCreature.getAIMoveSpeed() * d1 * 1.5D;
         } else {
             //this.theCreature.setAIMoveSpeed(0.0F);
         }
     }
 
     /**
-     * Makes creatures in the water float
+     * Makes creatures in the water float to the right depth
      */
     private void floating() {
-        //if (theCreature instanceof MoCEntityAnimal && ((MoCEntityAnimal)theCreature).isAmphibian())
-        //{
-
-        double distToSurface = (MoCTools.waterSurfaceAtGivenEntity(this.theCreature) - this.theCreature.posY);
-        if (distToSurface > ((IMoCEntity) this.theCreature).getDivingDepth()) {
-            if (this.theCreature.motionY < 0) {
-                this.theCreature.motionY = 0;
-            }
-            this.theCreature.motionY += 0.001D;// 0.001
-            this.theCreature.motionY += (distToSurface * 0.01);
-        }
-
-        if (!this.theCreature.getNavigator().noPath() && this.theCreature.isCollidedHorizontally) {
-            if (this.theCreature instanceof MoCEntityAquatic) {
-                this.theCreature.motionY = 0.05D;
-            } else {
-                ((IMoCEntity) this.theCreature).forceEntityJump();
-            }
-        }
-        //return;
-        //}
-
-        //double distY = (MoCTools.distanceToSurface(theCreature) - ((IMoCEntity)theCreature).getDivingDepth());
-
-        if (this.theCreature.riddenByEntity != null) {
-            EntityPlayer ep = (EntityPlayer) this.theCreature.riddenByEntity;
-            if (ep.isAirBorne) // TODO TEST
-            {
-                System.out.println("player is airborne");
-                this.theCreature.motionY += 0.09D;
-            } else {
-                this.theCreature.motionY = -0.008D;
-            }
+        if (theCreature.riddenByEntity != null) {
             return;
+        }
+
+        double distToSurface = (MoCTools.waterSurfaceAtGivenEntity(theCreature) - theCreature.posY);
+        if (distToSurface > ((IMoCEntity) theCreature).getDivingDepth()) {
+            if (theCreature.motionY < 0) {
+                theCreature.motionY = 0;
+            }
+            theCreature.motionY += 0.001D;// 0.001
+            theCreature.motionY += (distToSurface * 0.01);
+        }
+
+        if (!theCreature.getNavigator().noPath() && theCreature.isCollidedHorizontally) {
+            if (theCreature instanceof MoCEntityAquatic) {
+                theCreature.motionY = 0.05D;
+            } else {
+                ((IMoCEntity) theCreature).forceEntityJump();
+            }
         }
 
         if ((this.theCreature.getAttackTarget() != null && ((this.theCreature.getAttackTarget().posY < (this.posY - 0.5D)) && this.theCreature
@@ -108,29 +93,5 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             }
             return;
         }
-
-        /*if (distY < 1 || ((IMoCEntity)theCreature).isDiving())
-        {
-            if (theCreature.isInWater() && theCreature.motionY < -0.02)
-            {
-                theCreature.motionY = -0.02;
-            }
-        } else
-        {
-            if (theCreature.motionY < 0)
-            {
-                theCreature.motionY = 0;
-            }
-            theCreature.motionY += 0.001D;// 0.001
-
-            if (distY > 1)
-            {
-                theCreature.motionY += (distY * 0.01);
-                if (theCreature.motionY > 0.1D)
-                {
-                    theCreature.motionY = 0.1D;
-                }
-            }
-        }*/
     }
 }

@@ -29,8 +29,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         super(world);
         setSize(1.5F, 0.8F);
         setEdad(60 + this.rand.nextInt(100));
-        setTamed(true); //TODO REMOVE TESTING
-        setType(1); //TODO REMOVE testing
         this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
 
@@ -132,15 +130,15 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             case 1:
                 return 1.5D;
             case 2:
-                return 2.5D;
+                return 2.0D;
             case 3:
-                return 3.5D;
+                return 2.5D;
             case 4:
-                return 4.5D;
+                return 3.D;
             case 5:
-                return 5.5D;
+                return 3.5D;
             case 6:
-                return 6.5D;
+                return 4.D;
             default:
                 return 1.5D;
         }
