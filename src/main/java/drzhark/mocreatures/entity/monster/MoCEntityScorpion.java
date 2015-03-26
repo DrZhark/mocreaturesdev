@@ -1,5 +1,17 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.ai.EntityAILeapAtTarget;
+
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.ai.EntityAIFleeSun;
+import net.minecraft.entity.ai.EntityAIRestrictSun;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -47,12 +59,22 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 setHasBabies(false);
             }
         }
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIRestrictSun(this));
+        this.tasks.addTask(3, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(4, new EntityAIFleeSun(this, 1.0D));
+        this.tasks.addTask(6, new EntityAILeapAtTarget(this, 0.4F));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(18.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
@@ -149,6 +171,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     /**
      * finds shelter from sunlight
      */
+    //TODO
     protected void findSunLightShelter() {
         Vec3 var1 = this.findPossibleShelter();
         if (var1 == null) {
@@ -169,15 +192,16 @@ public class MoCEntityScorpion extends MoCEntityMob {
      *
      * @return
      */
+    //TODO
     private boolean wantsToHide() {
         return (this.worldObj.isDaytime()); //&& worldObj.canBlockSeeSky(MathHelper.floor_double(this.posX), (int) this.getEntityBoundingBox().minY, MathHelper.floor_double(this.posZ)));
     }
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer() && wantsToHide()) {
+        /*if (MoCreatures.isServer() && wantsToHide()) {
             findSunLightShelter();
-        }
+        }*/
 
         if (!this.onGround && (this.ridingEntity != null)) {
             this.rotationYaw = this.ridingEntity.rotationYaw;
@@ -212,6 +236,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             }
         }
 
+        //TODO MOVE TO EntityMob
         if (MoCreatures.isServer() && !getIsAdult() && (this.rand.nextInt(200) == 0)) {
             setEdad(getEdad() + 1);
             if (getEdad() >= 120) {
@@ -227,8 +252,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
 
-            if (entity != null && entity != this && entity instanceof EntityLivingBase && (this.worldObj.getDifficulty().getDifficultyId() > 0)
-                    && getIsAdult()) {
+            if (entity != null && entity != this && entity instanceof EntityLivingBase && this.shouldAttackPlayers() && getIsAdult()) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;
@@ -237,8 +261,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
     }
 
-    @Override
-    protected Entity findPlayerToAttack() {
+    //TODO
+    /*protected Entity findPlayerToAttack() {
         if (this.worldObj.getDifficulty().getDifficultyId() > 0 && (!this.worldObj.isDaytime()) && getIsAdult())// only attacks player at night
         {
             EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 12D);
@@ -255,7 +279,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     public boolean entitiesToIgnore(Entity entity) {
@@ -263,49 +287,36 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 .getIsTamed()));
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if ((f > 2.0F) && (f < 6F) && (this.rand.nextInt(50) == 0)) {
-            if (this.onGround) {
-                double d = entity.posX - this.posX;
-                double d1 = entity.posZ - this.posZ;
-                float f1 = MathHelper.sqrt_double((d * d) + (d1 * d1));
-                this.motionX = ((d / f1) * 0.5D * 0.8D) + (this.motionX * 0.2D);
-                this.motionZ = ((d1 / f1) * 0.5D * 0.8D) + (this.motionZ * 0.2D);
-                this.motionY = 0.4D;
-            }
-        } else if (attackTime <= 0 && (f < 3.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            boolean flag = (entity instanceof EntityPlayer);
-            if (!getIsPoisoning() && this.rand.nextInt(5) == 0 && entity instanceof EntityLivingBase) {
-                setPoisoning(true);
-                if (getType() <= 2)// regular scorpions
-                {
-                    if (flag) {
-                        MoCreatures.poisonPlayer((EntityPlayer) entity);
-                    }
-                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
-                } else if (getType() == 4)// blue scorpions
-                {
-                    if (flag) {
-                        MoCreatures.freezePlayer((EntityPlayer) entity);
-                    }
-                    ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
-
-                } else if (getType() == 3)// red scorpions
-                {
-                    if (flag && MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
-                        MoCreatures.burnPlayer((EntityPlayer) entity);
-                        ((EntityLivingBase) entity).setFire(15);
-                    }
+    @Override
+    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+        boolean flag = (entityIn instanceof EntityPlayer);
+        if (!getIsPoisoning() && this.rand.nextInt(5) == 0 && entityIn instanceof EntityLivingBase) {
+            setPoisoning(true);
+            if (getType() <= 2)// regular scorpions
+            {
+                if (flag) {
+                    MoCreatures.poisonPlayer((EntityPlayer) entityIn);
                 }
-            } else {
-                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 1);
-                swingArm();
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
+            } else if (getType() == 4)// blue scorpions
+            {
+                if (flag) {
+                    MoCreatures.freezePlayer((EntityPlayer) entityIn);
+                }
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
+
+            } else if (getType() == 3)// red scorpions
+            {
+                if (flag && MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
+                    MoCreatures.burnPlayer((EntityPlayer) entityIn);
+                    ((EntityLivingBase) entityIn).setFire(15);
+                }
             }
+        } else {
+            swingArm();
         }
-    }*/
+        super.func_174815_a(entityLivingBaseIn, entityIn);
+    }
 
     public void swingArm() {
         if (MoCreatures.isServer()) {

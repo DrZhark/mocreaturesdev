@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.entity.EntityCreature;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
@@ -57,7 +59,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     private int huntingCounter;
     protected PathNavigate navigatorWater;
     private double divingDepth;
-    private boolean randomAttributesUpdated; //used to update divingDepth on world load
+    private boolean randomAttributesUpdated; //used to update divingDepth on world load 
 
     //protected EntityMoveHelper moverHelperWater;
 
@@ -1435,10 +1437,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        Entity entity = damagesource.getEntity();
+        if ((this.riddenByEntity != null && entity == this.riddenByEntity) || (this.ridingEntity != null && entity == this.ridingEntity)) {
+            return false;
+        }
         if (usesNewAI()) {
             return super.attackEntityFrom(damagesource, i);
         }
-        Entity entity = damagesource.getEntity();
+
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null
                 && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName())
@@ -1612,7 +1618,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         this.worldObj.theProfiler.startSection("navigation");
         this.navigator.onUpdateNavigation();
         this.worldObj.theProfiler.endSection();
-
+       
     }*/
 
     public boolean isAmphibian() {

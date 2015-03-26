@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.item;
 
+import net.minecraft.block.state.IBlockState;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
@@ -17,8 +18,7 @@ import java.util.List;
 
 public class MoCEntityThrowableRock extends Entity {
 
-    /** How long the fuse is */
-    public int fuse;
+    public int rockTimer;
     private int masterID;
     public int acceleration = 100;
     private int blockMetadata;
@@ -37,19 +37,19 @@ public class MoCEntityThrowableRock extends Entity {
     {
         this(par1World);
         this.setPosition(par2, par4, par6);
-        this.fuse = 250;
+        this.rockTimer = 250;
         this.prevPosX = this.oPosX = par2;
         this.prevPosY = this.oPosY = par4;
         this.prevPosZ = this.oPosZ = par6;
         this.setMasterID(entitythrower.getEntityId());
     }
 
-    public void setMetadata(int i) {
-        this.dataWatcher.updateObject(20, Integer.valueOf(i));
+    public void setState(IBlockState state) {
+        this.dataWatcher.updateObject(23, Short.valueOf((short) (Block.getStateId(state) & 65535)));
     }
 
-    public int getMetadata() {
-        return this.dataWatcher.getWatchableObjectInt(20);
+    public IBlockState getState() {
+        return Block.getStateById(this.dataWatcher.getWatchableObjectShort(23) & 65535);
     }
 
     public void setMasterID(int i) {
@@ -68,36 +68,48 @@ public class MoCEntityThrowableRock extends Entity {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
-    public int getType() {
-        return this.dataWatcher.getWatchableObjectInt(19);
-    }
+    /*    public void setMetadata(int i) {
+            this.dataWatcher.updateObject(20, Integer.valueOf(i));
+        }
 
-    public void setType(int i) {
-        this.dataWatcher.updateObject(19, Integer.valueOf(i));
-    }
+        public int getMetadata() {
+            return this.dataWatcher.getWatchableObjectInt(20);
+        }
 
+        public int getType() {
+            return this.dataWatcher.getWatchableObjectInt(19);
+        }
+
+        public void setType(int i) {
+            this.dataWatcher.updateObject(19, Integer.valueOf(i));
+        }
+    */
     @Override
     protected void entityInit() {
-        this.dataWatcher.addObject(19, Integer.valueOf(0)); //blockID
-        this.dataWatcher.addObject(20, Integer.valueOf(0)); //metadata
+        //this.dataWatcher.addObject(19, Integer.valueOf(0)); //blockID
+        //this.dataWatcher.addObject(20, Integer.valueOf(0)); //metadata
         this.dataWatcher.addObject(21, Integer.valueOf(0)); //behaviorType
         this.dataWatcher.addObject(22, Integer.valueOf(0)); //masterID
+        this.dataWatcher.addObject(23, new Short((short) 0)); //tRock State
+
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        nbttagcompound.setInteger("TypeInt", getType());
-        nbttagcompound.setInteger("Metadata", getMetadata());
+        IBlockState iblockstate = this.getState();
         nbttagcompound.setInteger("Behavior", getBehavior());
         nbttagcompound.setInteger("MasterID", getMasterID());
+        nbttagcompound.setShort("BlockID", (short) Block.getIdFromBlock(iblockstate.getBlock()));
+        nbttagcompound.setShort("BlockMetadata", (short) iblockstate.getBlock().getMetaFromState(iblockstate));
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        setType(nbttagcompound.getInteger("TypeInt"));
-        setMetadata(nbttagcompound.getInteger("Metadata"));
         setBehavior(nbttagcompound.getInteger("Behavior"));
         setMasterID(nbttagcompound.getInteger("MasterID"));
+        IBlockState iblockstate;
+        iblockstate = Block.getBlockById(nbttagcompound.getShort("BlockID")).getStateFromMeta(nbttagcompound.getShort("BlockMetadata") & 65535);
+        this.setState(iblockstate);
     }
 
     @Override
@@ -111,10 +123,13 @@ public class MoCEntityThrowableRock extends Entity {
     @Override
     public void onEntityUpdate() {
         Entity master = getMaster();
-        if (MoCreatures.isServer() && this.fuse-- <= 0) {
+        if (this.rockTimer-- <= -50 && getBehavior() == 0) {
             transformToItem();
         }
 
+        if (getBehavior() == 0) {
+            //System.out.println("Zero Rock, Server? =" + MoCreatures.isServer() + " age " + rockTimer + " at " + this);
+        }
         //held Trocks don't need to adjust its position
         if (getBehavior() == 1) {
             return;
@@ -153,6 +168,8 @@ public class MoCEntityThrowableRock extends Entity {
 
         if (getBehavior() == 2) {
             if (master == null) {
+                setBehavior(0);
+                this.rockTimer = -50;
                 return;
             }
 
@@ -166,8 +183,9 @@ public class MoCEntityThrowableRock extends Entity {
             float tZ = (float) this.posZ - (float) master.posZ;
             float distXZToMaster = tX * tX + tZ * tZ;
 
-            if (distXZToMaster < 1.0F && master instanceof MoCEntityGolem) {
-                ((MoCEntityGolem) master).receiveRock(this.getType(), this.getMetadata());
+            if (distXZToMaster < 1.5F && master instanceof MoCEntityGolem) {
+                ((MoCEntityGolem) master).receiveRock(this.getState());
+                this.setBehavior(0);
                 this.setDead();
             }
 
@@ -246,10 +264,11 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     private void transformToItem() {
-        if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks)) // don't drop rocks if mobgriefing is set to false, prevents duping
+        if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks) && MoCreatures.isServer()) // don't drop rocks if mobgriefing is set to false, prevents duping
         {
             EntityItem entityitem =
-                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Block.getBlockById(getType()), 1, getMetadata()));
+                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(this.getState().getBlock(), 1, this.getState()
+                            .getBlock().getMetaFromState(this.getState())));
             entityitem.setPickupDelay(10);
             entityitem.setAgeToCreativeDespawnTime();
             this.worldObj.spawnEntityInWorld(entityitem);
@@ -258,8 +277,8 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     public Block getMyBlock() {
-        if (this.getType() != 0) {
-            return Block.getBlockById(this.getType());
+        if (this.getState() != null) {
+            return this.getState().getBlock();
         }
         return Blocks.stone;
     }

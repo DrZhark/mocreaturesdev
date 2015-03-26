@@ -1,5 +1,11 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -45,12 +51,21 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         super(world);
         this.texture = "golemt.png";
         setSize(1.5F, 4F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
     }
 
     @Override
@@ -148,12 +163,19 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
 
-        if (this.tcounter != 0) {
-            if (this.tcounter++ == 50) {
-                if (MoCreatures.isServer()) {
-                    shootBlock(this.getAttackTarget());
-                }
+        if (this.tcounter == 0 && this.getAttackTarget() != null && this.canShoot() && this.rand.nextInt(20) == 0) {
+            float distanceToTarget = this.getDistanceToEntity(this.getAttackTarget());
+            if (distanceToTarget > 6F) {
+                this.tcounter = 1;
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
+                        new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+            }
 
+        }
+        if (this.tcounter != 0) {
+            if (this.tcounter++ == 50 && this.getAttackTarget() != null && this.canShoot() && !this.getAttackTarget().isDead
+                    && this.canEntityBeSeen(this.getAttackTarget())) {
+                shootBlock(this.getAttackTarget());
             } else if (this.tcounter > 70) {
                 this.tcounter = 0;
             }
@@ -189,47 +211,37 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     protected void acquireRock(int type) {
         //finds a missing rock spot in its body
         //looks for a random rock around it
-        int[] myRockCoords = new int[] {-9999, -1, -1};
-        myRockCoords = MoCTools.getRandomBlockCoords(this, 24D);
-        if (myRockCoords[0] == -9999) {
+        BlockPos myTRockPos = MoCTools.getRandomBlockPos(this, 24D);
+        if (myTRockPos == null) {
             return;
         }
 
         boolean canDestroyBlocks = MoCTools.mobGriefing(this.worldObj) && MoCreatures.proxy.golemDestroyBlocks;
-
-        BlockPos pos =
-                new BlockPos(MathHelper.floor_double(myRockCoords[0]), MathHelper.floor_double(myRockCoords[1]),
-                        MathHelper.floor_double(myRockCoords[2]));
-        IBlockState blockstate = this.worldObj.getBlockState(pos);
-        Block block = blockstate.getBlock();
-
-        int tRockID = Block.getIdFromBlock(block);
-        if (tRockID == 0) {
+        IBlockState blockstate = this.worldObj.getBlockState(myTRockPos);
+        if (Block.getIdFromBlock(blockstate.getBlock()) == 0) {
             return;
         } //air blocks
-
-        int tRockMetadata = blockstate.getBlock().getMetaFromState(blockstate);
         BlockEvent.BreakEvent event = null;
         if (!this.worldObj.isRemote) {
             event =
-                    new BlockEvent.BreakEvent(this.worldObj, pos, blockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
+                    new BlockEvent.BreakEvent(this.worldObj, myTRockPos, blockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
                             MoCreatures.MOCFAKEPLAYER));
         }
         if (canDestroyBlocks && event != null && !event.isCanceled()) {
             //destroys the original rock
-            this.worldObj.setBlockToAir(pos);
+            this.worldObj.setBlockToAir(myTRockPos);
+        } else {
+            //couldn't destroy the original rock
+            canDestroyBlocks = false;
         }
-
-        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, myRockCoords[0], myRockCoords[1] + 1, myRockCoords[2]);//, false, true);
 
         if (!canDestroyBlocks) //make cheap rocks
         {
-            tRockID = returnRandomCheapBlock();
-            tRockMetadata = 0;
+            blockstate = Block.getStateById(returnRandomCheapBlock());
         }
 
-        trock.setType(tRockID);
-        trock.setMetadata(tRockMetadata);
+        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, myTRockPos.getX(), myTRockPos.getY() + 1, myTRockPos.getZ());//, false, true);
+        trock.setState(blockstate);
         trock.setBehavior(type);//so the rock: 2 follows the EntityGolem  or 3 - gets around the golem
 
         //spawns the new TRock
@@ -262,9 +274,9 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      * @param ID = block id
      * @param Metadata = block Metadata
      */
-    public void receiveRock(int ID, int Metadata) {
+    public void receiveRock(IBlockState state) {
         if (MoCreatures.isServer()) {
-            byte myBlock = translateOre(ID);
+            byte myBlock = translateOre(state.getBlock().getIdFromBlock(state.getBlock()));
             byte slot = (byte) getRandomCubeAdj();
             if ((slot != -1) && (slot < 23) && (myBlock != -1) && getGolemState() != 4) {
                 MoCTools.playCustomSound(this, "golemattach", this.worldObj, 3F);
@@ -278,65 +290,14 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
                 MoCTools.playCustomSound(this, "turtlehurt", this.worldObj, 2F);
                 if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks)) {
                     EntityItem entityitem =
-                            new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Block.getBlockById(ID), 1, Metadata));
+                            new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(state.getBlock(), 1, state.getBlock()
+                                    .getMetaFromState(state)));
                     entityitem.setPickupDelay(10);
                     entityitem.setAgeToCreativeDespawnTime(); // 4800
                 }
             }
         }
     }
-
-    /**
-     * Not used!
-     */
-    protected void attackWithTRock() {
-        //TODO add metadata!!
-        this.tcounter++;// += 1;
-        if (this.tcounter == 5) {
-            //creates a dummy Trock on top of it
-            MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 2.0D, this.posZ);//, true, false);
-            this.worldObj.spawnEntityInWorld(trock);
-            //removes a block from the environment and uses its type for the Trock
-            trock.setType(MoCTools.destroyRandomBlock(this, 5D));
-            trock.setBehavior(1);
-            this.tempRock = trock;
-        }
-
-        if ((this.tcounter >= 5) && (this.tcounter < 200)) {
-            //maintains position of Trock above head
-            this.tempRock.posX = this.posX;
-            this.tempRock.posY = (this.posY + 3.0D);
-            this.tempRock.posZ = this.posZ;
-        }
-
-        if (this.tcounter >= 200) {
-            //throws a newly spawned Trock and destroys the held Trock
-            if (this.getAttackTarget() != null) {
-                ThrowStone(this.getAttackTarget(), this.tempRock.getType(), 0);
-            }
-
-            this.tempRock.setDead();
-            this.tcounter = 0;
-        }
-    }
-
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-
-        if ((f > 5.0F) && entity != null && this.tcounter == 0 && canShoot()) //attackTime <= 0 &&
-        {
-            this.tcounter = 1;
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
-            return;
-        }
-
-        if (this.attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10);
-        }
-    }*/
 
     @Override
     public void performAnimation(int animationType) {
@@ -350,6 +311,10 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         }
     }
 
+    /**
+     * Shoots one block to the target
+     * @param entity
+     */
     private void shootBlock(Entity entity) {
         if (entity == null) {
             return;
@@ -383,7 +348,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
         MoCTools.playCustomSound(this, "golemshoot", this.worldObj, 3F);
-        ThrowStone(entity, generateBlock(this.golemCubes[x]), 0);
+        MoCTools.ThrowStone(this, entity, Block.getStateById(generateBlock(this.golemCubes[x])), 10D, 0.4D);
         saveGolemCube((byte) x, (byte) 30);
         this.tcounter = 0;
     }
@@ -396,12 +361,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
         return (x != 0) && getGolemState() != 4 && getGolemState() != 1;
-    }
-
-    @Override
-    protected Entity findPlayerToAttack() {
-        EntityPlayer var1 = this.worldObj.getClosestPlayerToEntity(this, 16.0D);
-        return var1 != null && this.canEntityBeSeen(var1) ? var1 : null;
     }
 
     @Override
@@ -461,7 +420,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         int i = getRandomUsedCube();
         if (i == 4) {
             return;
-            //do not destroy the valueable back cube
+            //do not destroy the valuable back cube
         }
 
         int x = i;
@@ -521,37 +480,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     @Override
     public float getSizeFactor() {
         return 1.8F;
-    }
-
-    /**
-     * Throws stone at entity
-     *
-     * @param targetEntity
-     * @param rocktype
-     * @param metadata
-     */
-    protected void ThrowStone(Entity targetEntity, int rocktype, int metadata) {
-        ThrowStone((int) targetEntity.posX, (int) targetEntity.posY, (int) targetEntity.posZ, rocktype, metadata);
-    }
-
-    /**
-     * Throws stone at X,Y,Z coordinates
-     *
-     * @param X
-     * @param Y
-     * @param Z
-     * @param rocktype
-     * @param metadata
-     */
-    protected void ThrowStone(int X, int Y, int Z, int rocktype, int metadata) {
-        MoCEntityThrowableRock etrock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 3.0D, this.posZ);//, false, false);
-        this.worldObj.spawnEntityInWorld(etrock);
-        etrock.setType(rocktype);
-        etrock.setMetadata(metadata);
-        etrock.setBehavior(0);
-        etrock.motionX = ((X - this.posX) / 20.0D);
-        etrock.motionY = ((Y - this.posY) / 20.0D + 0.5D);
-        etrock.motionZ = ((Z - this.posZ) / 20.0D);
     }
 
     /**
@@ -667,9 +595,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         for (int i = 0; i < 4; i++) {
             if (this.golemCubes[i] == 30) {
                 emptyChestBlocks.add(i);
-
             }
-
         }
         return emptyChestBlocks;
     }
@@ -961,11 +887,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         }
     }
 
-    @Override
-    public float getMoveSpeed() {
-        return 0.4F * (countLegBlocks() / 6F);
-    }
-
     private int countLegBlocks() {
         int x = 0;
         for (byte i = 15; i < 21; i++) {
@@ -974,6 +895,11 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
         return x;
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        return 0.15F * (countLegBlocks() / 6F);
     }
 
     /**

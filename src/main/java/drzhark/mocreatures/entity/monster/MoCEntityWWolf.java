@@ -1,5 +1,13 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.SharedMonsterAttributes;
+
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -31,11 +39,21 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public MoCEntityWWolf(World world) {
         super(world);
         setSize(0.9F, 1.3F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
-    protected double getAttackStrenght() {
-        return 3D;
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
@@ -63,19 +81,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
                 return MoCreatures.proxy.getTexture("wolfwild.png");
         }
     }
-
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            openMouth();
-            attackTime = 20;
-            this.attackEntityAsMob(entity);
-            if (!(entity instanceof EntityPlayer)) {
-                MoCTools.destroyDrops(this, 3D);
-            }
-        }
-    }*/
 
     private void openMouth() {
         this.mouthCounter = 1;
@@ -118,8 +123,8 @@ public class MoCEntityWWolf extends MoCEntityMob {
         return true;
     }
 
-    @Override
-    protected Entity findPlayerToAttack() {
+    //TODO
+    /*protected Entity findPlayerToAttack() {
         float f = getBrightness(1.0F);
         if (f < 0.5F) {
             double d = 16D;
@@ -131,7 +136,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         } else {
             return null;
         }
-    }
+    }*/
 
     @Override
     public boolean getCanSpawnHere() {

@@ -1777,8 +1777,8 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
         }
         if ((itemstack != null)
-                && ((itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) || (itemstack.getItem() == Items.mushroom_stew) || (itemstack
-                        .getItem() == Items.cake))) {
+                && ((itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) || (itemstack.getItem() == Items.mushroom_stew)
+                        || (itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.golden_carrot))) {
             if (!getIsAdult() || isMagicHorse() || isUndead()) {
                 return false;
             }

@@ -1,5 +1,7 @@
 package drzhark.mocreatures.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -52,80 +54,6 @@ public class MoCModelGolem extends ModelBase {
         this.chestb.addBox(-4F, -4F, -4F, 8, 8, 8);
         this.chestb.setRotationPoint(0F, -3F, -7F);
         setRotation(this.chestb, 0F, 0.7853982F, 0F);
-
-        /*
-         * chest = new ModelRenderer(this, 96, 96); chest.addBox(3F, -12F, -11F,
-         * 8, 8, 8); chest.setRotationPoint(0F, 6F, 3F); setRotation(chest, 0F,
-         * 0.7853982F, 0F); chestb = new ModelRenderer(this, 96, 112);
-         * chestb.addBox(3F, -12F, -11F, 8, 8, 8); chestb.setRotationPoint(0F,
-         * 6F, 3F); setRotation(chestb, 0F, 0.7853982F, 0F);
-         */
-
-        /*
-         * blocks[0] = new ModelRenderer(this, 0, 0); blocks[0].addBox(-4F, 3F,
-         * -4F, 8, 8, 8); blocks[0].setRotationPoint(0F, -3F, 0F);
-         * setRotationG(blocks[0], -97F, -40F, 0F); //lchest2 blocks[1] = new
-         * ModelRenderer(this, 0, 0); blocks[1].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[1].setRotationPoint(0F, -3F, 0F); setRotationG(blocks[1],
-         * -55F, -41F, 0F); //rchest1 blocks[2] = new ModelRenderer(this, 0, 0);
-         * blocks[2].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[2].setRotationPoint(0F, -3F, 0F); setRotationG(blocks[2],
-         * -97F, 40F, 0F); //rchest2 blocks[3] = new ModelRenderer(this, 0, 0);
-         * blocks[3].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[3].setRotationPoint(0F, -3F, 0F); setRotationG(blocks[3],
-         * -55F, 41F, 0F); //back blocks[4] = new ModelRenderer(this, 0, 0);
-         * blocks[4].addBox(-7F, -14F, -1F, 8, 8, 8);
-         * blocks[4].setRotationPoint(0F, 6F, 3F); setRotation(blocks[4], 0F,
-         * 0.7853982F, 0F); //lback1 blocks[5] = new ModelRenderer(this, 0, 0);
-         * blocks[5].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[5].setRotationPoint(0F, -3F, 0F); setRotation(blocks[5],
-         * 1.919862F, 0.6981317F, 0F); //lback2 blocks[6] = new
-         * ModelRenderer(this, 0, 0); blocks[6].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[6].setRotationPoint(0F, -3F, 0F); setRotation(blocks[6],
-         * 1.183003F, 0.6981317F, 0F); //rback1 blocks[7] = new
-         * ModelRenderer(this, 0, 0); blocks[7].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[7].setRotationPoint(0F, -3F, 0F); setRotation(blocks[7],
-         * 1.919862F, -0.6981317F, 0F); //rback2 blocks[8] = new
-         * ModelRenderer(this, 0, 0); blocks[8].addBox(-4F, 3F, -4F, 8, 8, 8);
-         * blocks[8].setRotationPoint(0F, -3F, 0F); setRotation(blocks[8],
-         * 1.183003F, -0.6981317F, 0F); //lshoulder blocks[9] = new
-         * ModelRenderer(this, 0, 0); blocks[9].addBox(0F, -2F, -4F, 8, 8, 8);
-         * blocks[9].setRotationPoint(8F, -3F, 0F); setRotation(blocks[9], 0F,
-         * 0F, -0.6981317F); //larm[12] blocks[10] = new ModelRenderer(this, 0,
-         * 0); blocks[10].addBox(2F, 4F, -4F, 8, 8, 8);
-         * blocks[10].setRotationPoint(8F, -3F, 0F); setRotation(blocks[10], 0F,
-         * 0F, -0.2094395F); //lhand blocks[11] = new ModelRenderer(this, 0, 0);
-         * blocks[11].addBox(4.5F, 11F, -4F, 8, 8, 8);
-         * blocks[11].setRotationPoint(8F, -3F, 0F); //rshoulder blocks[12] =
-         * new ModelRenderer(this, 0, 0); blocks[12].addBox(-8F, -2F, -4F, 8, 8,
-         * 8); blocks[12].setRotationPoint(-8F, -3F, 0F);
-         * setRotation(blocks[12], 0F, 0F, 0.6981317F); //rarm blocks[13] = new
-         * ModelRenderer(this, 0, 0); blocks[13].addBox(-10F, 4F, -4F, 8, 8, 8);
-         * blocks[13].setRotationPoint(-8F, -3F, 0F); setRotation(blocks[13],
-         * 0F, 0F, 0.2094395F); //rhand blocks[14] = new ModelRenderer(this, 0,
-         * 0); blocks[14].addBox(-12.5F, 11F, -4F, 8, 8, 8);
-         * blocks[14].setRotationPoint(-8F, -3F, 0F); //lthigh blocks[15] = new
-         * ModelRenderer(this, 0, 0); blocks[15].addBox(-3.5F, 0F, -4F, 8, 8,
-         * 8); blocks[15].setRotationPoint(5F, 4F, 0F); setRotation(blocks[15],
-         * -0.3490659F, 0F, 0F); //lknee blocks[16] = new ModelRenderer(this, 0,
-         * 0); blocks[16].addBox(-4F, 6F, -7F, 8, 8, 8);
-         * blocks[16].setRotationPoint(5F, 4F, 0F); //lfoot blocks[17] = new
-         * ModelRenderer(this, 0, 0); blocks[17].addBox(-3.5F, 12F, -5F, 8, 8,
-         * 8); blocks[17].setRotationPoint(5F, 4F, 0F); //rthigh blocks[18] =
-         * new ModelRenderer(this, 0, 0); blocks[18].addBox(-4.5F, 0F, -4F, 8,
-         * 8, 8); blocks[18].setRotationPoint(-5F, 4F, 0F);
-         * setRotation(blocks[18], -0.3490659F, 0F, 0F); //rknee blocks[19] =
-         * new ModelRenderer(this, 0, 0); blocks[19].addBox(-4F, 6F, -7F, 8, 8,
-         * 8); blocks[19].setRotationPoint(-5F, 4F, 0F); //rfoot blocks[20] =
-         * new ModelRenderer(this, 0, 0); blocks[20].addBox(-4.5F, 12F, -5F, 8,
-         * 8, 8); blocks[20].setRotationPoint(-5F, 4F, 0F); //groin blocks[21] =
-         * new ModelRenderer(this, 0, 0); blocks[21].addBox(0F, -4F, -8F, 8, 8,
-         * 8); blocks[21].setRotationPoint(0F, 6F, 3F); setRotation(blocks[21],
-         * 0F, 0.7853982F, 0F); //butt blocks[22] = new ModelRenderer(this, 0,
-         * 0); blocks[22].addBox(-4F, -4F, -4F, 8, 8, 8);
-         * blocks[22].setRotationPoint(0F, 6F, 3F); setRotation(blocks[22],
-         * -0.7435722F, 0F, 0F);
-         */
 
         for (byte i = 0; i < 28; i++) {
             int textX = (i / 8) * this.w;
@@ -278,9 +206,10 @@ public class MoCModelGolem extends ModelBase {
         for (int i = 0; i < 23; i++) {
             this.blocksText[i] = entityG.getBlockText(i);
         }
-
+        float yOffset = entityG.getAdjustedYOffset();
         setRotationAngles(f, f1, f2, f3, f4, f5, openChest, isSummoning, throwing);
-
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0F, yOffset, 0F);
         for (int i = 0; i < 23; i++) {
             //blocksText[i] = entityG.getBlockText(i);
             if (this.blocksText[i] != 30) {
@@ -295,7 +224,7 @@ public class MoCModelGolem extends ModelBase {
             this.head.render(f5);
             this.chest.render(f5);
         }
-        //setRotationAngles(f, f1, f2, f3, f4, f5, openChest, isSummoning, throwing);
+        GL11.glPopMatrix();
 
     }
 

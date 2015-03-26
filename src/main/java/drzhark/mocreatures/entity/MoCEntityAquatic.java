@@ -376,7 +376,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             return;
         }
         if (true) return;
-
+           
         float distY = MoCTools.distanceToSurface(this) - (float)this.getDivingDepth();
 
         if (this.riddenByEntity != null) {
@@ -720,25 +720,34 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         Entity entity = damagesource.getEntity();
+        if ((this.riddenByEntity != null && entity == this.riddenByEntity) || (this.ridingEntity != null && entity == this.ridingEntity)) {
+            return false;
+        }
+        if (usesNewAI()) {
+            return super.attackEntityFrom(damagesource, i);
+        }
+
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null
                 && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName())
-                && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) {
+                && !MoCTools.isThisPlayerAnOP((EntityPlayer) entity)) {
             return false;
         }
 
-        //to prevent tamed aquatics from getting block damage
-        if (getIsTamed() && damagesource.getDamageType().equalsIgnoreCase("inWall")) {
-            return false;
-        }
         /*
-         * if (MoCreatures.isServer() && getIsTamed()) {
-         * //MoCServerPacketHandler.sendHealth(this.getEntityId(),
-         * this.worldObj.provider.getDimensionId(), this.getHealth()); }
+         if (MoCreatures.isServer() && getIsTamed()) {
+             MoCServerPacketHandler.sendHealth(this.getEntityId(),
+             this.worldObj.provider.getDimensionId(), this.getHealth());
+         }
          */
-
-        return super.attackEntityFrom(damagesource, i);
-
+        if (isNotScared()) {
+            Entity tempEntity = this.getAttackTarget();
+            boolean flag = super.attackEntityFrom(damagesource, i);
+            setAttackTarget((EntityLivingBase) tempEntity);
+            return flag;
+        } else {
+            return super.attackEntityFrom(damagesource, i);
+        }
     }
 
     protected boolean canBeTrappedInNet() {
@@ -906,7 +915,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             super.moveEntityWithHeading(strafe, forward);
         }
 
-        }
+    }
 
     /**
      * Moves the entity based on the specified heading.  Args: strafe, forward
@@ -936,9 +945,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             {
                 //this.motionY = this.getHorseJumpStrength() * (double)this.jumpPower;
 
-                if (this.isPotionActive(Potion.jump)) {
+                /*if (this.isPotionActive(Potion.jump)) {
                     this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
-                }
+                }*/
 
                 //this.setHorseJumping(true);
                 this.isAirBorne = true;
@@ -975,7 +984,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
             if (f4 > 1.0F) {
                 f4 = 1.0F;
-    }
+            }
 
             this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
             this.limbSwing += this.limbSwingAmount;
@@ -984,7 +993,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             this.jumpMovementFactor = 0.02F;
             super.moveEntityWithHeading(strafe, forward);
         }
-        }
+    }
 
     /**
      ** Riding Code
@@ -1046,7 +1055,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
             if (this.jumpPending) {
                 if (this.isSwimming()) {
-                this.motionY += getCustomJump();
+                    this.motionY += getCustomJump();
                 }
                 this.jumpPending = false;
             }

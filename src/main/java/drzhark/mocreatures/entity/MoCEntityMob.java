@@ -228,8 +228,22 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
                     this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
         }
-        this.moveSpeed = getMoveSpeed();
+
+        if (MoCreatures.isServer() && this.isAfraidOfLight()) {
+            if (this.worldObj.isDaytime()) {
+                float var1 = this.getBrightness(1.0F);
+                if (var1 > 0.5F
+                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
+                                MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
+                    this.setFire(8);
+                }
+            }
+        }
         super.onLivingUpdate();
+    }
+
+    protected boolean isAfraidOfLight() {
+        return false;
     }
 
     @Override
@@ -277,21 +291,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         if (!isFlyer()) {
             super.fall(f, f1);
         }
-    }
-
-    protected Entity findPlayerToAttack() {
-        if (isFlyer()) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 20D);
-            if ((entityplayer != null) && canEntityBeSeen(entityplayer)) {
-                return entityplayer;
-            } else {
-                return null;
-            }
-        }
-        return null;
-        /*else {
-            return super.findPlayerToAttack();
-        }*/
     }
 
     @Override
@@ -685,5 +684,17 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public void forceEntityJump() {
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        boolean flag =
+                entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
+                        .getAttributeValue()));
+        if (flag) {
+            this.func_174815_a(this, entityIn);
+        }
+
+        return flag;
     }
 }

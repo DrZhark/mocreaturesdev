@@ -686,7 +686,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.isPissed();// && super.shouldAttackPlayers();
+        return this.isPissed() && super.shouldAttackPlayers();
     }
 
     @Override

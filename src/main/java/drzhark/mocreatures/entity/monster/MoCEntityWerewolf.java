@@ -2,12 +2,22 @@ package drzhark.mocreatures.entity.monster;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILeapAtTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -24,17 +34,26 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     public MoCEntityWerewolf(World world) {
         super(world);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "werehuman.png";
         setSize(0.9F, 1.6F);
         this.transforming = false;
         this.tcounter = 0;
         setHumanForm(true);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
     }
 
     @Override
@@ -121,33 +140,17 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         this.dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
         if (getIsHumanForm()) {
             setAttackTarget(null);
-            return;
+            return false;
         }
-        if ((f > 2.0F) && (f < 6F) && (this.rand.nextInt(15) == 0)) {
-            if (this.onGround) {
-                setHunched(true);
-                double d = entity.posX - this.posX;
-                double d1 = entity.posZ - this.posZ;
-                float f1 = MathHelper.sqrt_double((d * d) + (d1 * d1));
-                this.motionX = ((d / f1) * 0.5D * 0.80000001192092896D) + (this.motionX * 0.20000000298023221D);
-                this.motionZ = ((d1 / f1) * 0.5D * 0.80000001192092896D) + (this.motionZ * 0.20000000298023221D);
-                this.motionY = 0.40000000596046448D;
-            }
-        } else {
-            if (attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                    && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-                attackTime = 20;
-                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-                if (this.getType() == 4) {
-                    ((EntityLivingBase) entity).setFire(10);
-                }
-            }
+        if (this.getType() == 4 && entityIn instanceof EntityLivingBase) {
+            ((EntityLivingBase) entityIn).setFire(10);
         }
-    }*/
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -156,24 +159,24 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             EntityPlayer entityplayer = (EntityPlayer) entity;
             ItemStack itemstack = entityplayer.getCurrentEquippedItem();
             if (itemstack != null) {
-                i = 1;
-                if (itemstack.getItem() == Items.golden_hoe) {
-                    i = 6;
-                }
-                if (itemstack.getItem() == Items.golden_sword) {
-                    i = 7;
-                }
-                if (itemstack.getItem() == Items.golden_pickaxe) {
-                    i = 8;
-                }
-                if (itemstack.getItem() == Items.golden_axe) {
-                    i = 9;
-                }
-                if (itemstack.getItem() == Items.golden_sword) {
-                    i = 10;
-                }
+                i = 1F;
                 if (itemstack.getItem() == MoCreatures.silversword) {
-                    i = 10;
+                    i = 10F;
+                }
+                if (itemstack.getItem() instanceof ItemSword) {
+                    String swordMaterial = ((ItemSword) itemstack.getItem()).getToolMaterialName();
+                    String swordName = ((ItemSword) itemstack.getItem()).getUnlocalizedName();
+                    if (swordMaterial.toLowerCase().contains("silver") || swordName.toLowerCase().contains("silver")) {
+                        i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 3F;
+                    }
+                } else if (itemstack.getItem() instanceof ItemTool) {
+                    String toolMaterial = ((ItemSword) itemstack.getItem()).getToolMaterialName();
+                    String toolName = ((ItemSword) itemstack.getItem()).getUnlocalizedName();
+                    if (toolMaterial.toLowerCase().contains("silver") || toolName.toLowerCase().contains("silver")) {
+                        i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 2F;
+                    }
+                } else if (itemstack.getItem().getUnlocalizedName().toLowerCase().contains("silver")) {
+                    i = 6F;
                 }
             }
         }
@@ -181,16 +184,8 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    protected Entity findPlayerToAttack() {
-        if (getIsHumanForm()) {
-            return null;
-        }
-        EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16D);
-        if ((entityplayer != null) && canEntityBeSeen(entityplayer)) {
-            return entityplayer;
-        } else {
-            return null;
-        }
+    public boolean shouldAttackPlayers() {
+        return !getIsHumanForm() && super.shouldAttackPlayers();
     }
 
     @Override
@@ -261,14 +256,12 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     @Override
     protected String getHurtSound() {
         if (getIsHumanForm()) {
-            return "mocreatures:werehumanhurt";
+            if (!this.transforming)
+                return "mocreatures:werehumanhurt";
+            return null;
         } else {
             return "mocreatures:werewolfhurt";
         }
-    }
-
-    public boolean getIsUndead() {
-        return true;
     }
 
     @Override
@@ -282,15 +275,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     public boolean IsNight() {
         return !this.worldObj.isDaytime();
-    }
-
-    @Override
-    public void moveEntityWithHeading(float f, float f1) {
-        if (!getIsHumanForm() && this.onGround) {
-            this.motionX *= 1.2D;
-            this.motionZ *= 1.2D;
-        }
-        super.moveEntityWithHeading(f, f1);
     }
 
     @Override
@@ -324,22 +308,20 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             if (getIsHumanForm() && (this.getAttackTarget() != null)) {
                 setAttackTarget(null);
             }
-            if ((this.getAttackTarget() != null) && !getIsHumanForm() && ((getAttackTarget().posX - this.posX) > 3D)
-                    && ((getAttackTarget().posZ - this.posZ) > 3D)) {
-                setHunched(true);
+            if (this.getAttackTarget() != null && !getIsHumanForm()) {
+                boolean hunch = (this.getDistanceSqToEntity(this.getAttackTarget()) > 12D);
+                setHunched(hunch);
             }
-            if (getIsHunched() && (this.rand.nextInt(50) == 0)) {
-                setHunched(false);
-            }
+
             if (this.transforming && (this.rand.nextInt(3) == 0)) {
                 this.tcounter++;
                 if ((this.tcounter % 2) == 0) {
-                    this.posX += 0.29999999999999999D;
+                    this.posX += 0.3D;
                     this.posY += this.tcounter / 30;
                     attackEntityFrom(DamageSource.causeMobDamage(this), 1);
                 }
                 if ((this.tcounter % 2) != 0) {
-                    this.posX -= 0.29999999999999999D;
+                    this.posX -= 0.3D;
                 }
                 if (this.tcounter == 10) {
                     this.worldObj.playSoundAtEntity(this, "mocreatures:weretransform", 1.0F,
@@ -351,6 +333,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                     this.transforming = false;
                 }
             }
+            //so entity doesn't despawn that often
             if (this.rand.nextInt(300) == 0) {
                 this.entityAge -= 100 * this.worldObj.getDifficulty().getDifficultyId();
                 if (this.entityAge < 0) {
@@ -379,7 +362,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             d3 /= d6;
             d4 /= d6;
             d5 /= d6;
-            double d7 = 0.5D / ((d6 / f) + 0.10000000000000001D);
+            double d7 = 0.5D / ((d6 / f) + 0.1D);
             d7 *= (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat()) + 0.3F;
             d3 *= d7;
             d4 *= d7;
@@ -392,20 +375,14 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             setHumanForm(false);
             this.setHealth(40);
             this.transforming = false;
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
         } else {
             setHumanForm(true);
             this.setHealth(15);
             this.transforming = false;
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
         }
     }
-
-    /*
-    @Override
-    protected void updateEntityActionState() {
-        if (!this.transforming) {
-            super.updateEntityActionState();
-        }
-    }*/
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
@@ -420,10 +397,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public float getMoveSpeed() {
-        if (getIsHunched()) {
-            return 0.9F;
+    public float getAIMoveSpeed() {
+        if (getIsHumanForm()) {
+            return 0.1F;
         }
-        return 0.7F;
+        if (getIsHunched()) {
+            return 0.35F;
+        }
+        return 0.2F;
     }
 }

@@ -123,8 +123,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         MoCTools.DestroyBlast(this, this.posX, this.posY + 1.0D, this.posZ, getDestroyForce(), getOgreFire());
     }
 
-    @Override
-    protected Entity findPlayerToAttack() {
+    /*protected Entity findPlayerToAttack() {
         float f = getBrightness(1.0F);
         if (f < 0.5F) {
             EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, getAttackRange());
@@ -133,7 +132,7 @@ public class MoCEntityOgre extends MoCEntityMob {
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     protected String getDeathSound() {

@@ -3,10 +3,17 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
@@ -21,19 +28,28 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         super(world);
         this.texture = "minigolem.png";
         setSize(1.0F, 1.0F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // angry 0 = false, 1 = true
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasRock 0 = false, 1 = true
+        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasRock 0 = false, 1 = true        
     }
 
     public boolean getIsAngry() {
@@ -60,22 +76,10 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
 
         if (MoCreatures.isServer()) {
             if (this.getAttackTarget() == null) {
-                if (getIsAngry()) {
-                    setIsAngry(false);
-                }
-            } else {
-                if (!getIsAngry()) {
-                    setIsAngry(true);
-                }
-            }
+                setIsAngry(false);
 
-            if (this.worldObj.isDaytime()) {
-                float var1 = this.getBrightness(1.0F);
-                if (var1 > 0.5F
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
-                    this.setFire(8);
-                }
+            } else {
+                setIsAngry(true);
             }
 
             if (getIsAngry() && this.getAttackTarget() != null) {
@@ -84,6 +88,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
                 }
 
                 if (getHasRock()) {
+                    this.getNavigator().clearPathEntity();
                     attackWithTRock();
                 }
             }
@@ -91,18 +96,17 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     }
 
     protected void acquireTRock() {
-        int[] tRockInfo = MoCTools.destroyRandomBlockWithMetadata(this, 3D);
-        if (tRockInfo[0] == -1) {
+        IBlockState tRockState = MoCTools.destroyRandomBlockWithIBlockState(this, 3D);
+        if (tRockState == null) {
             this.tcounter = 1;
             setHasRock(false);
             return;
         }
-        //creates a dummy Trock on top of it
-        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 2.0D, this.posZ);//, true, false);
-        this.worldObj.spawnEntityInWorld(trock);
 
-        trock.setType(tRockInfo[0]);
-        trock.setMetadata(tRockInfo[1]);
+        //creates a dummy Trock on top of it
+        MoCEntityThrowableRock trock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 1.5D, this.posZ);
+        this.worldObj.spawnEntityInWorld(trock);
+        trock.setState(tRockState);
         trock.setBehavior(1);
         this.tempRock = trock;
         setHasRock(true);
@@ -129,8 +133,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         if (this.tcounter >= 50) {
             //throws a newly spawned Trock and destroys the held Trock
             if (this.getAttackTarget() != null && this.getDistanceToEntity(this.getAttackTarget()) < 48F) {
-                //System.out.println("distance = " + this.getDistanceToEntity(this.getAttackTarget()));
-                ThrowStone(this.getAttackTarget(), this.tempRock.getType(), this.tempRock.getMetadata());
+                MoCTools.ThrowStone(this, this.getAttackTarget(), this.tempRock.getState(), 10D, 0.25D);
             }
 
             this.tempRock.setDead();
@@ -139,58 +142,12 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         }
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (this.attackTime <= 0 && (f < 2.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-        }
-    }*/
-
-    @Override
-    protected Entity findPlayerToAttack() {
-        EntityPlayer var1 = this.worldObj.getClosestPlayerToEntity(this, 16.0D);
-        return var1 != null && this.canEntityBeSeen(var1) ? var1 : null;
-    }
-
     /**
      * Stretches the model to that size
      */
     @Override
     public float getSizeFactor() {
         return 1.0F;
-    }
-
-    /**
-     * Throws stone at entity
-     *
-     * @param targetEntity
-     * @param rocktype
-     * @param metadata
-     */
-    protected void ThrowStone(Entity targetEntity, int rocktype, int metadata) {
-        ThrowStone((int) targetEntity.posX, (int) targetEntity.posY, (int) targetEntity.posZ, rocktype, metadata);
-    }
-
-    /**
-     * Throws stone at X,Y,Z coordinates
-     *
-     * @param X
-     * @param Y
-     * @param Z
-     * @param rocktype
-     * @param metadata
-     */
-    protected void ThrowStone(int X, int Y, int Z, int rocktype, int metadata) {
-        MoCEntityThrowableRock etrock = new MoCEntityThrowableRock(this.worldObj, this, this.posX, this.posY + 3.0D, this.posZ);//, false, false);
-        this.worldObj.spawnEntityInWorld(etrock);
-        etrock.setType(rocktype);
-        etrock.setMetadata(metadata);
-        etrock.setBehavior(0);
-        etrock.motionX = ((X - this.posX) / 20.0D);
-        etrock.motionY = ((Y - this.posY) / 20.0D + 0.5D);
-        etrock.motionZ = ((Z - this.posZ) / 20.0D);
     }
 
     /**
@@ -214,5 +171,10 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     @Override
     protected String getLivingSound() {
         return null;
+    }
+
+    @Override
+    protected boolean isAfraidOfLight() {
+        return true;
     }
 }

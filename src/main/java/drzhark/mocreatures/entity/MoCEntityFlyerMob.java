@@ -35,7 +35,6 @@ public abstract class MoCEntityFlyerMob extends MoCEntityMob {
     public void fall(float f, float f1) {
     }
 
-    @Override
     protected Entity findPlayerToAttack() {
         EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 20D);
         if ((entityplayer != null) && canEntityBeSeen(entityplayer)) {

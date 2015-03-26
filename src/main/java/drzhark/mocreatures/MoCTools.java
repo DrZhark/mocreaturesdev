@@ -1,5 +1,7 @@
 package drzhark.mocreatures;
 
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -1122,38 +1124,42 @@ public class MoCTools {
         return 0;
     }
 
-    public static int[] destroyRandomBlockWithMetadata(Entity entity, double distance) {
+    public static IBlockState destroyRandomBlockWithIBlockState(Entity entity, double distance) {
         int l = (int) (distance * distance * distance);
-        int metaD = 0;
         for (int i = 0; i < l; i++) {
             int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
             int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
             int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
             BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            IBlockState blockstate = entity.worldObj.getBlockState(pos.up());
-            IBlockState blockstate1 = entity.worldObj.getBlockState(pos);
+            IBlockState stateAbove = entity.worldObj.getBlockState(pos.up());
+            IBlockState stateTarget = entity.worldObj.getBlockState(pos);
 
-            if (blockstate1.getBlock() != Blocks.air && blockstate1.getBlock() != Blocks.bedrock && blockstate.getBlock() == Blocks.air) // ignore bedrock
+            if (pos.getY() == (int) entity.posY - 1D && (pos.getX() == (int) Math.floor(entity.posX) && pos.getZ() == (int) Math.floor(entity.posZ))) {
+                continue;
+            }
+            if (stateTarget.getBlock() != Blocks.air && stateTarget.getBlock() != Blocks.water && stateTarget.getBlock() != Blocks.bedrock
+                    && stateAbove.getBlock() == Blocks.air) // ignore bedrock
             {
-                metaD = blockstate1.getBlock().getMetaFromState(blockstate1);
                 if (mobGriefing(entity.worldObj)) {
-                    IBlockState blockstate2 = entity.worldObj.getBlockState(pos);
                     BlockEvent.BreakEvent event = null;
                     if (!entity.worldObj.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, pos, blockstate1, FakePlayerFactory.get((WorldServer) entity.worldObj,
+                                new BlockEvent.BreakEvent(entity.worldObj, pos, stateTarget, FakePlayerFactory.get((WorldServer) entity.worldObj,
                                         MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
                         entity.worldObj.setBlockToAir(pos);
+
                     } else {
-                        blockstate1 = null;
+                        stateTarget = null;
                     }
                 }
-                return (new int[] {blockstate1 == null ? -1 : Block.getIdFromBlock(blockstate1.getBlock()), metaD});
+                if (stateTarget != null) {
+                    return stateTarget;
+                }
             }
         }
-        return (new int[] {-1, metaD});
+        return null;
     }
 
     /**
@@ -1200,6 +1206,42 @@ public class MoCTools {
             }
         }
         return (new int[] {tempX, tempY, tempZ});
+    }
+
+    public static BlockPos getRandomBlockPos(Entity entity, double distance) {
+        int tempX = -9999;
+        int tempY = -1;
+        int tempZ = -1;
+        int ii = (int) (distance * distance * (distance / 2));
+        for (int i = 0; i < ii; i++) {
+            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance / 2)) - (int) (distance / 4));
+            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
+            IBlockState blockstate1 = entity.worldObj.getBlockState(pos.up()); // +Y
+            IBlockState blockstate2 = entity.worldObj.getBlockState(pos);
+            IBlockState blockstate3 = entity.worldObj.getBlockState(pos.east()); // +X
+            IBlockState blockstate4 = entity.worldObj.getBlockState(pos.west()); // -X
+            IBlockState blockstate5 = entity.worldObj.getBlockState(pos.down()); // -Y
+            IBlockState blockstate6 = entity.worldObj.getBlockState(pos.south()); // -Z
+            IBlockState blockstate7 = entity.worldObj.getBlockState(pos.north()); // +Z
+
+            float tX = x - (float) entity.posX;
+            float tY = y - (float) entity.posY;
+            float tZ = z - (float) entity.posZ;
+            float spawnDist = tX * tX + tY * tY + tZ * tZ;
+
+            if (allowedBlock(Block.getIdFromBlock(blockstate1.getBlock()))
+                    && (blockstate2.getBlock() == Blocks.air || blockstate3.getBlock() == Blocks.air || blockstate4.getBlock() == Blocks.air
+                            || blockstate5.getBlock() == Blocks.air || blockstate6.getBlock() == Blocks.air || blockstate7.getBlock() == Blocks.air)
+                    & spawnDist > 100F) {
+                tempX = x;
+                tempY = y;
+                tempZ = z;
+                break;
+            }
+        }
+        return new BlockPos(MathHelper.floor_double(tempX), MathHelper.floor_double(tempY), MathHelper.floor_double(tempZ));
     }
 
     public static boolean allowedBlock(int ID) {
@@ -1605,5 +1647,47 @@ public class MoCTools {
             }
         }
         return false;
+    }
+
+    /**
+     * Throws stone at entity
+     *
+     * @param targetEntity
+     * @param rocktype
+     * @param metadata
+     */
+    public static void ThrowStone(Entity throwerEntity, Entity targetEntity, IBlockState state, double speedMod, double height) {
+        ThrowStone(throwerEntity, (int) targetEntity.posX, (int) targetEntity.posY, (int) targetEntity.posZ, state, speedMod, height);
+    }
+
+    /**
+     * Throws stone at X,Y,Z coordinates
+     *
+     * @param X
+     * @param Y
+     * @param Z
+     * @param rocktype
+     * @param metadata
+     */
+    public static void ThrowStone(Entity throwerEntity, int X, int Y, int Z, IBlockState state) {
+        ThrowStone(throwerEntity, X, Y, Z, state, 10D, 0.25D);
+        /*MoCEntityThrowableRock etrock = new MoCEntityThrowableRock(throwerEntity.worldObj, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
+        throwerEntity.worldObj.spawnEntityInWorld(etrock);
+        etrock.setState(state);
+        etrock.setBehavior(0);
+        etrock.motionX = ((X - throwerEntity.posX) / 10.0D);
+        etrock.motionY = ((Y - throwerEntity.posY) / 10.0D + 0.25D);
+        etrock.motionZ = ((Z - throwerEntity.posZ) / 10.0D);*/
+    }
+
+    public static void ThrowStone(Entity throwerEntity, int X, int Y, int Z, IBlockState state, double speedMod, double height) {
+        MoCEntityThrowableRock etrock =
+                new MoCEntityThrowableRock(throwerEntity.worldObj, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
+        throwerEntity.worldObj.spawnEntityInWorld(etrock);
+        etrock.setState(state);
+        etrock.setBehavior(0);
+        etrock.motionX = ((X - throwerEntity.posX) / speedMod);
+        etrock.motionY = ((Y - throwerEntity.posY) / speedMod + height);
+        etrock.motionZ = ((Z - throwerEntity.posZ) / speedMod);
     }
 }

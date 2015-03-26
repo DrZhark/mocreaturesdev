@@ -1,5 +1,12 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+
+import net.minecraft.entity.ai.EntityAISwimming;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import net.minecraft.entity.Entity;
@@ -23,12 +30,21 @@ public class MoCEntityRat extends MoCEntityMob {
     public MoCEntityRat(World world) {
         super(world);
         setSize(0.5F, 0.5F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
@@ -65,30 +81,13 @@ public class MoCEntityRat extends MoCEntityMob {
         }
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        float f1 = getBrightness(1.0F);
-        if ((f1 > 0.5F) && (this.rand.nextInt(100) == 0)) {
-            setAttackTarget(null);
-            return;
-        } else {
-            super.attackEntity(entity, f);
-            return;
-        }
-    }*/
-
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
-            if (entity instanceof EntityPlayer) {
-                setAttackTarget((EntityLivingBase) entity);
-            }
-            if ((entity instanceof EntityArrow) && (((EntityArrow) entity).shootingEntity != null)) {
-                entity = ((EntityArrow) entity).shootingEntity;
-            }
-            if (entity instanceof EntityLiving) {
-                //TODO 4FIX TEST
+        Entity entity = damagesource.getEntity();
+
+        if (entity != null && entity instanceof EntityLivingBase) {
+            setAttackTarget((EntityLivingBase) entity);
+            if (MoCreatures.isServer()) {
                 List list =
                         this.worldObj.getEntitiesWithinAABB(MoCEntityRat.class,
                                 AxisAlignedBB.fromBounds(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D)
@@ -100,15 +99,14 @@ public class MoCEntityRat extends MoCEntityMob {
                     }
                     Entity entity1 = (Entity) iterator.next();
                     MoCEntityRat entityrat = (MoCEntityRat) entity1;
-                    if ((entityrat != null) && (entityrat.getAttackTarget() == null) && entity instanceof EntityLivingBase) {
+                    if ((entityrat != null) && (entityrat.getAttackTarget() == null)) {
                         entityrat.setAttackTarget((EntityLivingBase) entity);
+                        System.out.println("Rat " + entityrat + " , will attack " + entity);
                     }
                 } while (true);
             }
-            return true;
-        } else {
-            return false;
         }
+        return super.attackEntityFrom(damagesource, i);
     }
 
     public boolean climbing() {
@@ -116,13 +114,13 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    protected Entity findPlayerToAttack() {
-        float f = getBrightness(1.0F);
-        if (f < 0.5F) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16D);
-            return entityplayer != null && this.canEntityBeSeen(entityplayer) ? entityplayer : null;
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if ((this.rand.nextInt(100) == 0) && (this.getBrightness(1.0F) > 0.5F)) {
+            setAttackTarget(null);
+            return;
         }
-        return null;
     }
 
     @Override
@@ -151,12 +149,7 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        super.writeEntityToNBT(nbttagcompound);
+    public boolean shouldAttackPlayers() {
+        return (this.getBrightness(1.0F) < 0.5F) && super.shouldAttackPlayers();
     }
 }

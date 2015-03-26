@@ -42,7 +42,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (this.rand.nextInt(4) == 0) {
             setAdult(false);
         }
-        setSize(0.4F, 0.3F);
+        setSize(0.5F, 0.5F);
 
         this.bunnyReproduceTickerA = this.rand.nextInt(64);
         this.bunnyReproduceTickerB = 0;
@@ -154,7 +154,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-
             setHasEaten(true);
             MoCTools.playCustomSound(this, "eating", this.worldObj);
             return true;
