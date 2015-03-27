@@ -229,7 +229,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                     this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
         }
 
-        if (MoCreatures.isServer() && this.isAfraidOfLight()) {
+        if (MoCreatures.isServer() && this.isHarmedByDaylight()) {
             if (this.worldObj.isDaytime()) {
                 float var1 = this.getBrightness(1.0F);
                 if (var1 > 0.5F
@@ -242,7 +242,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         super.onLivingUpdate();
     }
 
-    protected boolean isAfraidOfLight() {
+    protected boolean isHarmedByDaylight() {
         return false;
     }
 

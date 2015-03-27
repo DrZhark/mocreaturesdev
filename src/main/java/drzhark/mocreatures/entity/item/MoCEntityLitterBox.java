@@ -200,7 +200,7 @@ public class MoCEntityLitterBox extends EntityLiving {
                     ((EntityCreeper) entitymob).setCreeperState(-1);
                 }
                 if (entitymob instanceof MoCEntityOgre) {
-                    ((MoCEntityOgre) entitymob).pendingSmashAttack = false;
+                    ((MoCEntityOgre) entitymob).smashCounter = 0;
                 }
             }
 

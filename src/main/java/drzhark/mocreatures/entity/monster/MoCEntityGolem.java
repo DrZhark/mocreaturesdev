@@ -163,7 +163,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
         }
 
-        if (this.tcounter == 0 && this.getAttackTarget() != null && this.canShoot() && this.rand.nextInt(20) == 0) {
+        if (this.tcounter == 0 && this.getAttackTarget() != null && this.canShoot()) {
             float distanceToTarget = this.getDistanceToEntity(this.getAttackTarget());
             if (distanceToTarget > 6F) {
                 this.tcounter = 1;
@@ -173,10 +173,10 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
 
         }
         if (this.tcounter != 0) {
-            if (this.tcounter++ == 50 && this.getAttackTarget() != null && this.canShoot() && !this.getAttackTarget().isDead
+            if (this.tcounter++ == 70 && this.getAttackTarget() != null && this.canShoot() && !this.getAttackTarget().isDead
                     && this.canEntityBeSeen(this.getAttackTarget())) {
                 shootBlock(this.getAttackTarget());
-            } else if (this.tcounter > 70) {
+            } else if (this.tcounter > 90) {
                 this.tcounter = 0;
             }
 

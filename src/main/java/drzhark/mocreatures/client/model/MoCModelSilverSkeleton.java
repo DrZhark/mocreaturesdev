@@ -96,17 +96,6 @@ public class MoCModelSilverSkeleton extends ModelBase {
         this.RightKnee.addBox(-2F, 1F, -2F, 4, 4, 4);
         this.RightKnee.setRotationPoint(-2F, 10.5F, 0F);
 
-        /*
-         * RightLeg = new ModelRenderer(this, 0, 25); RightLeg.addBox(-1.5F, 0F,
-         * -1.5F, 3, 6, 3); RightLeg.setRotationPoint(-2F, 18F, 0F); RightFoot =
-         * new ModelRenderer(this, 0, 54); RightFoot.addBox(-2F, 0F, -2F, 4, 6,
-         * 4); RightFoot.setRotationPoint(-2F, 19F, 0F); LeftLeg = new
-         * ModelRenderer(this, 12, 25); LeftLeg.addBox(-1.5F, 0F, -1.5F, 3, 6,
-         * 3); LeftLeg.setRotationPoint(2F, 18F, 0F); LeftFoot = new
-         * ModelRenderer(this, 16, 54); LeftFoot.addBox(-2F, 0F, -2F, 4, 6, 4);
-         * LeftFoot.setRotationPoint(2F, 19F, 0F);
-         */
-
         this.RightLeg = new ModelRenderer(this, 0, 25);
         this.RightLeg.addBox(-1.5F, 0F, -1.5F, 3, 6, 3);
         this.RightLeg.setRotationPoint(0F, 6F, 0F);
@@ -140,14 +129,14 @@ public class MoCModelSilverSkeleton extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntitySilverSkeleton samurai = (MoCEntitySilverSkeleton) entity;
-        boolean sprinting = samurai.isSprinting();//getIsAngry();
+        boolean sprinting = samurai.isSprinting();
         int leftAttack = samurai.attackCounterLeft;
         int rightAttack = samurai.attackCounterRight;
         setRotationAngles(f, f1, f2, f3, f4, f5, leftAttack, rightAttack);
 
         if (sprinting && f1 > 0.3F) {
             GL11.glPushMatrix();
-            GL11.glRotatef((float) (f1 * -25D), -1F, 0.0F, 0.0F);
+            GL11.glRotatef((float) (f1 * -20D), -1F, 0.0F, 0.0F);
             renderParts(f5);
             GL11.glPopMatrix();
         } else {

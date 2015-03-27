@@ -1,5 +1,13 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.network.message.MoCMessageExplode;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -21,35 +29,39 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MoCEntityOgre extends MoCEntityMob {
 
-    public int frequencyA;
     public int attackCounterLeft;
     public int attackCounterRight;
     private int movingHead;
-    public boolean pendingSmashAttack;
+    public int smashCounter;
+    //public boolean pendingSmashAttack;
+    public int armToAnimate; // 1 = left, 2 = right, 3 = both
+    public int attackCounter;
 
     public MoCEntityOgre(World world) {
         super(world);
         setSize(1.9F, 3F);
         this.isImmuneToFire = false;
-        this.frequencyA = 30;
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getType() > 4 ? 50.0D : 35.0D);
-    }
-
-    @Override
-    protected double getAttackStrenght() {
-        return 3D;
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
     public void selectType() {
         if (this.worldObj.provider.doesWaterVaporize()) {
             setType(this.rand.nextInt(2) + 3);
-            this.setHealth(getMaxHealth());
             this.isImmuneToFire = true;
 
         } else {
@@ -66,10 +78,10 @@ public class MoCEntityOgre extends MoCEntityMob {
                 } else {
                     setType(this.rand.nextInt(2) + 1);
                 }
-
-                this.setHealth(getMaxHealth());
             }
         }
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getType() > 4 ? 50.0D : 35.0D);
+        this.setHealth(getMaxHealth());
     }
 
     @Override
@@ -89,15 +101,6 @@ public class MoCEntityOgre extends MoCEntityMob {
         }
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (attackTime <= 0 && (f < 2.5F) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-            attackTime = 20;
-            this.attackEntityAsMob(entity);
-        }
-    }*/
-
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
@@ -116,23 +119,10 @@ public class MoCEntityOgre extends MoCEntityMob {
         }
     }
 
-    public void DestroyingOgre() {
-        if (this.deathTime > 0) {
-            return;
-        }
-        MoCTools.DestroyBlast(this, this.posX, this.posY + 1.0D, this.posZ, getDestroyForce(), getOgreFire());
+    @Override
+    public boolean shouldAttackPlayers() {
+        return (this.getBrightness(1.0F) < 0.5F) && super.shouldAttackPlayers();
     }
-
-    /*protected Entity findPlayerToAttack() {
-        float f = getBrightness(1.0F);
-        if (f < 0.5F) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, getAttackRange());
-            if ((entityplayer != null) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-                return entityplayer;
-            }
-        }
-        return null;
-    }*/
 
     @Override
     protected String getDeathSound() {
@@ -163,7 +153,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         return "mocreatures:ogre";
     }
 
-    public boolean getOgreFire() {
+    public boolean isFireStarter() {
         if (getType() == 3 || getType() == 4) {
             this.isImmuneToFire = true;
             return true;
@@ -171,6 +161,10 @@ public class MoCEntityOgre extends MoCEntityMob {
         return false;
     }
 
+    /**
+     * Returns the strength of the blasting power
+     * @return
+     */
     public float getDestroyForce() {
         int t = getType();
         if (t < 3) //green
@@ -190,58 +184,75 @@ public class MoCEntityOgre extends MoCEntityMob {
     @Override
     public void onLivingUpdate() {
         if (MoCreatures.isServer()) {
-
-            if ((this.getAttackTarget() != null) && (this.rand.nextInt(this.frequencyA) == 0) /*&& attackTime == 0*/&& this.attackCounterLeft == 0
-                    && this.attackCounterRight == 0) {
-                startOgreAttack();
-            }
-
-            // TODO
-            /*if ((attackTime <= 0) && this.pendingSmashAttack) {
-                this.pendingSmashAttack = false;
-                DestroyingOgre();
+            if (this.smashCounter > 0 && ++this.smashCounter > 10) {
+                this.smashCounter = 0;
+                performDestroyBlastAttack();
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageExplode(this.getEntityId()),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
-            }*/
+            }
 
-            if (getType() > 2) {
-
-                if (this.worldObj.isDaytime()) {
-                    float f = getBrightness(1.0F);
-                    if ((f > 0.5F)
-                            && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                    MathHelper.floor_double(this.posZ))) && ((this.rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F))) {
-                        this.setHealth(getHealth() - 5);
-                    }
-                }
+            if ((this.getAttackTarget() != null) && (this.rand.nextInt(40) == 0) && this.smashCounter == 0 && this.attackCounter == 0) {
+                startDestroyBlast();
             }
         }
 
-        if (this.attackCounterLeft > 0 && ++this.attackCounterLeft > 30) {
-            this.attackCounterLeft = 0;
-        }
+        if (this.attackCounter > 0) {
+            if (armToAnimate == 3) {
+                this.attackCounter++;
+            } else {
+                this.attackCounter += 2;
+            }
 
-        if (this.attackCounterRight > 0 && ++this.attackCounterRight > 30) {
-            this.attackCounterRight = 0;
+            if (this.attackCounter > 10) {
+                this.attackCounter = 0;
+                this.armToAnimate = 0;
+            }
         }
         super.onLivingUpdate();
     }
 
     /**
+     * Starts counter to perform the DestroyBlast and synchronizes animations with clients
+     */
+    private void startDestroyBlast() {
+        this.smashCounter = 1;
+        MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
+                new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+    }
+
+    /**
+     * Performs the destroy Blast Attack
+     */
+    public void performDestroyBlastAttack() {
+        if (this.deathTime > 0) {
+            return;
+        }
+        MoCTools.DestroyBlast(this, this.posX, this.posY + 1.0D, this.posZ, getDestroyForce(), isFireStarter());
+    }
+
+    @Override
+    protected boolean isHarmedByDaylight() {
+        return this.getType() > 2;
+    }
+
+    /**
      * Starts attack counters and synchronizes animations with clients
      */
-    private void startOgreAttack() {
+    private void startArmSwingAttack() {
         if (MoCreatures.isServer()) {
-            //attackTime = 15;
-            this.pendingSmashAttack = true;
+            if (this.smashCounter != 0)
+                return;
+
             boolean leftArmW = (getType() == 2 || getType() == 4 || getType() == 6) && this.rand.nextInt(2) == 0;
 
             if (leftArmW) {
-                this.attackCounterLeft = 1;
+                this.attackCounter = 1;
+                this.armToAnimate = 1;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             } else {
-                this.attackCounterRight = 1;
+                this.attackCounter = 1;
+                this.armToAnimate = 2;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             }
@@ -250,14 +261,11 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     public void performAnimation(int animationType) {
-        if (animationType == 1) //left arm
-        {
-            this.attackCounterLeft = 1;
+        if (animationType != 0) {
+            this.attackCounter = 1;
+            this.armToAnimate = animationType;
         }
-        if (animationType == 2) //right arm
-        {
-            this.attackCounterRight = 1;
-        }
+
     }
 
     public int getMovingHead() {
@@ -266,7 +274,7 @@ public class MoCEntityOgre extends MoCEntityMob {
             return 1;
         }
 
-        if (this.rand.nextInt(100) == 0) {
+        if (this.rand.nextInt(60) == 0) {
             this.movingHead = this.rand.nextInt(2) + 2; //randomly changes the focus head, returns 2 or 3
         }
         return this.movingHead;
@@ -275,5 +283,11 @@ public class MoCEntityOgre extends MoCEntityMob {
     private boolean canCaveOgreSpawn() {
         return (!this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper
                 .floor_double(this.posZ)))) && (this.posY < 50D);
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        startArmSwingAttack();
+        return super.attackEntityAsMob(entityIn);
     }
 }

@@ -1,5 +1,15 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.DamageSource;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILeapAtTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -23,12 +33,21 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
         super(world);
         this.texture = "silverskeleton.png";
         setSize(0.9F, 1.4F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
     }
 
     @Override
@@ -38,16 +57,6 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
                 setSprinting(false);
             } else {
                 setSprinting(true);
-            }
-
-            if (this.worldObj.isDaytime()) {
-                float var1 = this.getBrightness(1.0F);
-
-                if (var1 > 0.5F
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
-                    this.setFire(8);
-                }
             }
         }
 
@@ -103,21 +112,18 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
         }
     }
 
-    /*protected void attackEntity(Entity par1Entity, float par2) {
-        if (this.attackTime <= 0 && par2 < 2.0F && par1Entity.getEntityBoundingBox().maxY > this.getEntityBoundingBox().minY
-                && par1Entity.getEntityBoundingBox().minY < this.getEntityBoundingBox().maxY) {
-            this.attackTime = 20;
-            startAttackAnimation();
-            this.attackEntityAsMob(par1Entity);
-        }
-    }*/
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        startAttackAnimation();
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
-    public float getMoveSpeed() {
-        return 1.2F;
-        /*
-         * if (isSprinting()) return 1.2F; return 0.8F;
-         */
+    public float getAIMoveSpeed() {
+        if (isSprinting()) {
+            return 0.35F;
+        }
+        return 0.2F;
     }
 
     @Override
@@ -146,5 +152,10 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
     @Override
     protected void playStepSound(BlockPos pos, Block block) {
         this.playSound("mob.skeleton.step", 0.15F, 1.0F);
+    }
+
+    @Override
+    protected boolean isHarmedByDaylight() {
+        return true;
     }
 }

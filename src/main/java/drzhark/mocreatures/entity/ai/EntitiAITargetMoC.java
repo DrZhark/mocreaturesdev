@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.ai;
 
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -140,6 +141,9 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
     }
 
     protected double getTargetDistance() {
+        if (this.taskOwner instanceof MoCEntityOgre) {
+            return ((MoCEntityOgre) this.taskOwner).getAttackRange();
+        }
         IAttributeInstance iattributeinstance = this.taskOwner.getEntityAttribute(SharedMonsterAttributes.followRange);
         return iattributeinstance == null ? 16.0D : iattributeinstance.getAttributeValue();
     }

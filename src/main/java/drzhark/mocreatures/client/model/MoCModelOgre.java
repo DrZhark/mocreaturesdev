@@ -111,6 +111,10 @@ public class MoCModelOgre extends ModelBase {
     ModelRenderer Head2DiamondHorn;
 
     private float radianF = 57.29578F;
+    private int type;
+    private int attackCounter;
+    private int headMoving;
+    private int armToAnimate;
 
     public MoCModelOgre() {
         this.textureWidth = 128;
@@ -586,12 +590,14 @@ public class MoCModelOgre extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         //super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityOgre entityogre = (MoCEntityOgre) entity;
-        int type = entityogre.getType();
-        int leftAttack = entityogre.attackCounterLeft;
-        int rightAttack = entityogre.attackCounterRight;
-        int headMoving = entityogre.getMovingHead();
+        this.type = entityogre.getType();
+        //int leftAttack = entityogre.attackCounterLeft;
+        //int rightAttack = entityogre.attackCounterRight;
+        this.attackCounter = entityogre.attackCounter;
+        this.headMoving = entityogre.getMovingHead();
+        this.armToAnimate = entityogre.armToAnimate;
 
-        setRotationAngles(f, f1, f2, f3, f4, f5, headMoving, type, leftAttack, rightAttack);
+        setRotationAngles(f, f1, f2, f3, f4, f5);
 
         if (type == 1 || type == 3 || type == 5) {
             this.Head.render(f5);
@@ -669,8 +675,7 @@ public class MoCModelOgre extends ModelBase {
         model.rotateAngleZ = z;
     }
 
-    public void
-            setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, int headMoving, int type, int leftAttack, int rightAttack) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         float hRotY = f3 / 57.29578F;
         float hRotX = f4 / 57.29578F;
 
@@ -711,16 +716,44 @@ public class MoCModelOgre extends ModelBase {
         this.LoinCloth.rotateAngleX = ClothRot;
         this.ButtCover.rotateAngleX = ClothRot;
 
-        if (leftAttack == 0) {
+        float armMov = -(MathHelper.cos((attackCounter) * 0.18F) * 3F);
+
+        //leftArm 
+        //attacking with left arm
+        if (this.armToAnimate == 1 || this.armToAnimate == 3) {
+            this.LftShoulder.rotateAngleX = +armMov;
+            this.LftHand.rotateAngleX = (-45F / this.radianF);
+        } else //normal left arm movement
+        {
+            this.LftShoulder.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
+            this.LftShoulder.rotateAngleX = RLegXRot;
+            this.LftHand.rotateAngleX = 0F;
+        }
+
+        //rightArm
+        //attacking with right arm
+        if (this.armToAnimate == 2 || this.armToAnimate == 3) {
+            this.RgtShoulder.rotateAngleX = +armMov;
+            this.RgtHand.rotateAngleX = (-45F / this.radianF);
+        } else //normal right arm movement
+        {
+            this.RgtShoulder.rotateAngleZ = -(MathHelper.cos(f2 * 0.09F) * 0.05F) + 0.05F;
+            this.RgtShoulder.rotateAngleX = LLegXRot;
+            this.RgtHand.rotateAngleX = 0F;
+        }
+
+        /*if (leftAttack == 0) {
             this.LftShoulder.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
             this.LftShoulder.rotateAngleX = RLegXRot;
             this.LftHand.rotateAngleX = 0F;
         } else {
-            float armMov = (MathHelper.cos((leftAttack) * 0.18F) * 2F);
+            float armMov = -(MathHelper.cos((leftAttack) * 0.18F) * 3F);
+            //float armMov = (MathHelper.cos((leftAttack) * 0.18F) * 2F);
             this.LftShoulder.rotateAngleX = +armMov;
             this.LftHand.rotateAngleX = (-45F / this.radianF);
         }
 
+        //rightArm
         if (rightAttack == 0) //not smashing, regular arm mov
         {
             this.RgtShoulder.rotateAngleZ = -(MathHelper.cos(f2 * 0.09F) * 0.05F) + 0.05F;
@@ -728,10 +761,11 @@ public class MoCModelOgre extends ModelBase {
             this.RgtHand.rotateAngleX = 0F;
         } else //smashing
         {
-            float armMov = (MathHelper.cos((rightAttack) * 0.18F) * 2F);
-            this.RgtShoulder.rotateAngleX = +armMov;//(MathHelper.cos((float)rightAttack * 2.5F) * 2.5F);
+            float armMov = -(MathHelper.cos((rightAttack) * 0.18F) * 3F);
+            //float armMov = (MathHelper.cos((rightAttack) * 0.18F) * 2F);
+            this.RgtShoulder.rotateAngleX = +armMov;
             this.RgtHand.rotateAngleX = (-45F / this.radianF);
-        }
+        }*/
 
         if (headMoving == 2) {
             this.Head2.rotateAngleX = hRotX;

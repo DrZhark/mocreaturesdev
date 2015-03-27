@@ -36,7 +36,7 @@ public class MoCMessageExplode implements IMessage, IMessageHandler<MoCMessageEx
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
         for (Entity ent : entList) {
             if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityOgre) {
-                ((MoCEntityOgre) ent).DestroyingOgre();
+                ((MoCEntityOgre) ent).performDestroyBlastAttack();
                 break;
             }
         }

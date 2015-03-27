@@ -820,7 +820,7 @@ public class MoCTools {
     }
 
     public static void DestroyBlast(Entity entity, double d, double d1, double d2, float f, boolean flag) {
-        entity.worldObj.playSoundEffect(d, d1, d2, "destroy", 4F,
+        entity.worldObj.playSoundEffect(d, d1, d2, "mocreatures:destroy", 4F,
                 (1.0F + ((entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat()) * 0.2F)) * 0.7F);
 
         boolean mobGriefing = mobGriefing(entity.worldObj);

@@ -174,7 +174,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     }
 
     @Override
-    protected boolean isAfraidOfLight() {
+    protected boolean isHarmedByDaylight() {
         return true;
     }
 }
