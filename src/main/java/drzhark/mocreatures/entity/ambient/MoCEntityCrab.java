@@ -1,5 +1,22 @@
 package drzhark.mocreatures.entity.ambient;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCTools;
+import com.google.common.base.Predicate;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.passive.MoCEntityDeer;
+import net.minecraft.entity.Entity;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -16,23 +33,33 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
+        this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+
+            public boolean apply(Entity entity) {
+                return !(entity instanceof MoCEntityCrab) && (entity.height > 0.3F || entity.width > 0.3F);
+            }
+
+            @Override
+            public boolean apply(Object p_apply_1_) {
+                return this.apply((Entity) p_apply_1_);
+            }
+        }, 6.0F, 0.6D, 1D));
+        this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        return 0.15F;
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
     }
 
     @Override
     public void selectType() {
         if (getType() == 0) {
-            setType(this.rand.nextInt(2) + 1);
+            setType(this.rand.nextInt(5) + 1);
         }
 
     }
@@ -44,35 +71,20 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
                 return MoCreatures.proxy.getTexture("craba.png");
             case 2:
                 return MoCreatures.proxy.getTexture("crabb.png");
+            case 3:
+                return MoCreatures.proxy.getTexture("crabc.png");
+            case 4:
+                return MoCreatures.proxy.getTexture("crabd.png");
+            case 5:
+                return MoCreatures.proxy.getTexture("crabe.png");
+
             default:
                 return MoCreatures.proxy.getTexture("craba.png");
         }
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
-
-        if (MoCreatures.isServer()) {
-            // TODO
-            /*if (fleeingTick == 3) {
-                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                        new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
-            }*/
-        }
-    }
-
-    @Override
     public void fall(float f, float f1) {
-    }
-
-    @Override
-    public void performAnimation(int animationType) {
-        if (animationType == 1) //fleeing animation finishes
-        {
-            // TODO
-            //this.fleeingTick = 0;
-        }
     }
 
     @Override
@@ -93,6 +105,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
     public void jump() {
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public float getSizeFactor() {
         return 0.7F * getEdad() * 0.01F;
@@ -103,10 +116,10 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         return true;
     }
 
-    /* TODO
+    @SideOnly(Side.CLIENT)
     public boolean isFleeing() {
-        return this.fleeingTick != 0;
-    }*/
+        return MoCTools.getMyMovementSpeed(this) > 0.09F;
+    }
 
     /**
      * Get this Entity's EnumCreatureAttribute
@@ -124,5 +137,10 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
     @Override
     public int nameYOffset() {
         return -20;
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return this.getIsTamed();
     }
 }

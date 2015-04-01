@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.ai;
 
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -37,7 +38,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
         if (this.entity instanceof IMoCEntity && ((IMoCEntity) this.entity).isMovementCeased()) {
             return false;
         }
-        if (this.entity.riddenByEntity != null) {
+        if (this.entity.riddenByEntity != null && !(this.entity instanceof MoCEntityAnt)) {
             return false;
         }
 

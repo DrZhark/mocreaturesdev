@@ -1,5 +1,7 @@
 package drzhark.mocreatures.client.model;
 
+import net.minecraft.util.MathHelper;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -47,7 +49,10 @@ public class MoCModelMaggot extends ModelBase {
         //float transparency = 0.9F;
         GL11.glBlendFunc(770, 771);
         //GL11.glColor4f(1.2F, 1.2F, 1.2F, transparency);
-        GL11.glScalef(1.0F, 1.0F, 1.0F + (f1 * 3F));
+        float f9 = -(MathHelper.cos(f * 3F)) * f1 * 2F;
+        //GL11.glScalef(1.0F, 1.0F, 1.0F + (f1 * 3F));
+        GL11.glScalef(1.0F, 1.0F, 1.0F + (f9));
+
         this.Head.render(f5);
         this.Body.render(f5);
         this.Tail.render(f5);

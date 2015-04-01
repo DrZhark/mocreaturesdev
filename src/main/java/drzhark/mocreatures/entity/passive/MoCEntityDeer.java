@@ -46,7 +46,6 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         this.tasks.addTask(4, new EntityAIFollowAdult(this, getMyAISpeed()));
         this.tasks.addTask(5, new EntityAIWander(this, getMyAISpeed()));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(7, new EntityAILookIdle(this));
     }
 
     @Override
@@ -165,7 +164,7 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         if (MoCreatures.isServer()) {
 
             if (this.onGround && --this.readyToJumpTimer <= 0) {
-                if (getMyMovementSpeed() > 0.17F) {
+                if (MoCTools.getMyMovementSpeed(this) > 0.17F) {
                     float velX = (float) (0.5F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
                     float velZ = (float) (0.5F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
                     this.motionX -= velX;
@@ -179,7 +178,7 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
 
     @Override
     public float pitchRotationOffset() {
-        if (!this.onGround && getMyMovementSpeed() > 0.08F) {
+        if (!this.onGround && MoCTools.getMyMovementSpeed(this) > 0.08F) {
             if (this.motionY > 0.5D) {
                 return 25F;
             }

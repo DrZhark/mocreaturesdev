@@ -388,7 +388,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
     private void eatingHorse() {
         openMouth();
-        MoCTools.playCustomSound(this, "eating", this.worldObj);
+        MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
     }
 
     @Override

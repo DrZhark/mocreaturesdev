@@ -539,7 +539,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             }
 
             openMouth();
-            MoCTools.playCustomSound(this, "eating", this.worldObj);
+            MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
             this.canLayEggs = true;
             return true;
         }
@@ -845,7 +845,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return isItemEdible(par1ItemStack.getItem());
+        return MoCTools.isItemEdible(par1ItemStack.getItem());
     }
 
     @Override

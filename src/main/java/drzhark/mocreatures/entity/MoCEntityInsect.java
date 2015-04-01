@@ -21,13 +21,12 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     public MoCEntityInsect(World world) {
         super(world);
         setSize(0.2F, 0.2F);
-        //health = 2;
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             }
 
-            if (!getIsFlying() && this.rand.nextInt(getFlyingFreq()) == 0) {
+            if (!getIsFlying() && this.isFlyer() && this.rand.nextInt(getFlyingFreq()) == 0) {
                 List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity1 = (Entity) list.get(i);

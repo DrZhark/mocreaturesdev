@@ -90,7 +90,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
             return false;
         }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
+        if ((itemstack != null) && (MoCTools.isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
         {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);

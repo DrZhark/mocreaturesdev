@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.ambient;
 
+import net.minecraft.entity.SharedMonsterAttributes;
+
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
@@ -12,26 +15,20 @@ public class MoCEntityCricket extends MoCEntityInsect
 
 {
 
-    public MoCEntityCricket(World world) {
-        super(world);
-        this.texture = "cricketa.png";
-    }
-
     private int jumpCounter;
     private int soundCounter;
 
-    /*@Override
-    protected void updateEntityActionState() {
-        //if (onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
-        if (this.jumpCounter == 0 && this.onGround
-                && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
-            this.motionY = 0.45D;
-            this.motionX *= 5D;
-            this.motionZ *= 5D;
-            this.jumpCounter = 1;
-        }
-        super.updateEntityActionState();
-    }*/
+    public MoCEntityCricket(World world) {
+        super(world);
+        this.texture = "cricketa.png";
+        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 1.2D));
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    }
 
     @Override
     public void selectType() {
@@ -57,7 +54,6 @@ public class MoCEntityCricket extends MoCEntityInsect
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
         if (MoCreatures.isServer()) {
             if (getIsFlying() && this.rand.nextInt(50) == 0) {
                 setIsFlying(false);
@@ -80,6 +76,21 @@ public class MoCEntityCricket extends MoCEntityInsect
             if (this.jumpCounter > 0 && ++this.jumpCounter > 30) {
                 this.jumpCounter = 0;
             }
+        }
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        if (MoCreatures.isServer()) {
+            if (onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
+                if (this.jumpCounter == 0 && this.onGround
+                        && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
+                    this.motionY = 0.45D;
+                    this.motionX *= 5D;
+                    this.motionZ *= 5D;
+                    this.jumpCounter = 1;
+                }
         }
     }
 

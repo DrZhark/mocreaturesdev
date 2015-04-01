@@ -257,8 +257,8 @@ public class MoCModelEnt extends ModelBase {
 
         float RArmXRot = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 2.0F * f1 * 0.5F;
         float LArmXRot = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
-        float RLegXRot = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        float LLegXRot = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.4F * f1;
+        float RLegXRot = MathHelper.cos(f * 0.6662F) * 1.0F * f1;
+        float LLegXRot = MathHelper.cos(f * 0.6662F + (float) Math.PI) * 1.0F * f1;
 
         this.LWrist.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
         this.LWrist.rotateAngleX = LArmXRot;

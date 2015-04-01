@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.ambient;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,8 +16,7 @@ public class MoCEntitySnail extends MoCEntityAmbient {
     public MoCEntitySnail(World world) {
         super(world);
         setSize(0.2F, 0.2F);
-        //health = 2;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "snaila.png";
+        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 0.8D));
     }
 
     @Override
@@ -27,18 +28,13 @@ public class MoCEntitySnail extends MoCEntityAmbient {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10D);
     }
 
     @Override
     public boolean isMovementCeased() {
         return (getIsHiding());
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        return 0.15F;
     }
 
     @Override

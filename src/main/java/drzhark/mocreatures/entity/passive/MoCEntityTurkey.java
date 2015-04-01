@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.util.ResourceLocation;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -35,6 +37,22 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    }
+
+    @Override
+    public void selectType() {
+        if (getType() == 0) {
+            setType(this.rand.nextInt(2) + 1);
+        }
+    }
+
+    @Override
+    public ResourceLocation getTexture() {
+        if (getType() == 1) {
+            return MoCreatures.proxy.getTexture("turkey.png");
+        } else {
+            return MoCreatures.proxy.getTexture("turkeyfemale.png");
+        }
     }
 
     @Override

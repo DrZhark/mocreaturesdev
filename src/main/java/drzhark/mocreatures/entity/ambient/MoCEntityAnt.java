@@ -1,7 +1,10 @@
 package drzhark.mocreatures.entity.ambient;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -12,12 +15,19 @@ public class MoCEntityAnt extends MoCEntityInsect {
     public MoCEntityAnt(World world) {
         super(world);
         this.texture = "ant.png";
+        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 1.2D));
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // foundFood 0 = false, 1 = true
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.28D);
     }
 
     public boolean getHasFood() {
@@ -35,7 +45,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
 
         if (MoCreatures.isServer()) {
             if (!getHasFood()) {
-                EntityItem entityitem = getClosestFood(this, 8D);
+                EntityItem entityitem = MoCTools.getClosestFood(this, 8D);
                 if (entityitem != null && entityitem.ridingEntity == null) {
                     float f = entityitem.getDistanceToEntity(this);
                     if (f > 1.0F) {
@@ -59,7 +69,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
 
         if (getHasFood()) {
             if (this.riddenByEntity == null) {
-                EntityItem entityitem = getClosestFood(this, 2D);
+                EntityItem entityitem = MoCTools.getClosestFood(this, 2D);
                 if (entityitem != null && entityitem.ridingEntity == null) {
                     entityitem.mountEntity(this);
                     return;
@@ -93,11 +103,19 @@ public class MoCEntityAnt extends MoCEntityInsect {
 
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && isItemEdible(par1ItemStack.getItem());
+        return par1ItemStack != null && MoCTools.isItemEdible(par1ItemStack.getItem());
     }
 
     @Override
-    protected int getFlyingFreq() {
-        return 5000;
+    public boolean isFlyer() {
+        return false;
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        if (getHasFood()) {
+            return 0.05F;
+        }
+        return 0.15F;
     }
 }

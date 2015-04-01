@@ -1,5 +1,27 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.block.state.IBlockState;
+
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+
+import java.util.List;
+
+import net.minecraft.pathfinding.PathEntity;
+import drzhark.mocreatures.MoCTools;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.block.Block;
@@ -25,6 +47,20 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         super(world);
         setSize(1.4F, 7F);
         this.stepHeight = 2F;
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
     }
 
     @Override
@@ -44,15 +80,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             default:
                 return MoCreatures.proxy.getTexture("ent_oak.png");
         }
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        return 0.5F;
-    }
-
-    public float calculateMaxHealth() {
-        return 40F;
     }
 
     @Override
@@ -116,29 +143,33 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
+        if (MoCreatures.isServer()) {
 
-        if (this.getAttackTarget() == null && this.rand.nextInt(300) == 0) {
-            plantOnFertileGround();
-        }
+            if (this.getAttackTarget() == null && this.rand.nextInt(500) == 0) {
+                plantOnFertileGround();
+            }
 
-        if (this.rand.nextInt(100) == 0 && MoCreatures.proxy.enableHunters) {
-            //attackCritter();
+            if (this.rand.nextInt(100) == 0) {
+                atractCritter();
+            }
         }
     }
 
-    /*private void attackCritter() {
+    /**
+     * Makes small creatures follow the Ent
+     */
+    private void atractCritter() {
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
-        int n = this.rand.nextInt(5) + 1;
+        int n = this.rand.nextInt(3) + 1;
         int j = 0;
         for (int k = 0; k < list.size(); k++) {
             Entity entity = (Entity) list.get(k);
             if (entity instanceof EntityAnimal && entity.width < 0.6F && entity.height < 0.6F) {
                 EntityAnimal entityanimal = (EntityAnimal) entity;
-                if (entityanimal.getEntityToAttack() == null && !MoCTools.isTamed(entityanimal)) {
-                    PathEntity pathentity = this.worldObj.getPathEntityToEntity(this, entityanimal, 16.0F, true, false, false, true);
-                    //entityanimal.setPathToEntity(pathentity);
+                if (entityanimal.getAttackTarget() == null && !MoCTools.isTamed(entityanimal)) {
+                    PathEntity pathentity = entityanimal.getNavigator().getPathToEntityLiving(this);
                     entityanimal.setAttackTarget(this);
-                    entityanimal.setPathToEntity(pathentity);
+                    entityanimal.getNavigator().setPath(pathentity, 1D);
                     j++;
                     //System.out.println("attracting " + entityanimal);
                     if (j > n) {
@@ -148,7 +179,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
 
             }
         }
-    }*/
+    }
 
     private boolean plantOnFertileGround() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
@@ -168,81 +199,98 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             }
             if (event != null && !event.isCanceled()) {
                 this.worldObj.setBlockState(pos.down(), block.getDefaultState(), 3);
+                return true;
             }
             return false;
         }
 
         if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.air) {
-            int metaD = 0;
-            Block fertileB = Block.getBlockById(getBlockToPlant());
+            IBlockState iblockstate = getBlockStateToPlant();
 
-            if (fertileB == Blocks.sapling) {
-                if (getType() == 2) {
-                    metaD = 2; //to place the right sapling
-                }
-            }
-            if (fertileB == Blocks.tallgrass) {
-                metaD = this.rand.nextInt(2) + 1; //to place grass or fern
-            }
-
-            boolean canPlant = true;
+            boolean cantPlant = false;
             // check perms first
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
-                    int xCoord = MathHelper.floor_double(this.posX);
+                    int xCoord = MathHelper.floor_double(this.posX + x);
                     int yCoord = MathHelper.floor_double(this.posY);
-                    int zCoord = MathHelper.floor_double(this.posZ);
+                    int zCoord = MathHelper.floor_double(this.posZ + z);
                     BlockPos pos1 = new BlockPos(xCoord, yCoord, zCoord);
                     BlockEvent.BreakEvent event = null;
                     if (!this.worldObj.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(this.worldObj, pos1, fertileB.getDefaultState(), FakePlayerFactory.get(
-                                        (WorldServer) this.worldObj, MoCreatures.MOCFAKEPLAYER));
+                                new BlockEvent.BreakEvent(this.worldObj, pos1, iblockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
+                                        MoCreatures.MOCFAKEPLAYER));
                     }
-                    if (event != null && event.isCanceled()) {
-                        canPlant = false;
-                        break;
+                    cantPlant = (event != null && event.isCanceled());
+                    Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
+                    if (!cantPlant && this.rand.nextInt(3) == 0 && blockToPlant == Blocks.air) {
+                        this.worldObj.setBlockState(pos1, iblockstate, 3);
                     }
                 }
             }
-            // plant if perm check passed
-            if (canPlant) {
-                for (int x = -1; x < 2; x++) {
-                    for (int z = -1; z < 2; z++) {
-                        this.worldObj.setBlockState(new BlockPos(MathHelper.floor_double(this.posX) + x, MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ) + z), fertileB.getDefaultState(), 3);
-                    }
-                }
-                return true;
-            }
-            return false;
+            return true;
         }
 
         return false;
     }
 
     /**
-     * Returns a random BlockID to plant on fertile ground
+     * Returns a random blockState
      *
-     * @return
+     * @return Any of the flowers, mushrooms, grass and saplings
      */
-    private int getBlockToPlant() {
-        switch (this.rand.nextInt(15)) {
+    private IBlockState getBlockStateToPlant() {
+        int blockID = 0;
+        int metaData = 0;
+        switch (this.rand.nextInt(20)) {
             case 0:
-                return 31; //shrub
             case 1:
-                return 37; //dandelion
             case 2:
-                return 38; //rose
             case 3:
-                return 39; //brown mushroom
             case 4:
-                return 40; //red mushroom
             case 5:
-                return 6; //sapling
+            case 6:
+            case 7:
+                blockID = 31;
+                metaData = rand.nextInt(2) + 1;
+                break;
+            case 8:
+            case 9:
+            case 10:
+                blockID = 175; //other flowers
+                metaData = rand.nextInt(6);
+                break;
+            case 11:
+            case 12:
+            case 13:
+                blockID = 37; //dandelion
+                break;
+            case 14:
+            case 15:
+            case 16:
+                blockID = 38; //flowers
+                metaData = rand.nextInt(9);
+                break;
+            case 17:
+                blockID = 39; //brown mushroom
+                break;
+            case 18:
+                blockID = 40; //red mushroom
+                break;
+            case 19:
+                blockID = 6; //sapling
+                if (getType() == 2) {
+                    metaData = 2; //to place the right sapling
+                }
+                break;
+
             default:
-                return 31;
+                blockID = 31;
         }
+        IBlockState iblockstate;
+        iblockstate = Block.getBlockById(blockID).getStateFromMeta(metaData);
+        return iblockstate;
+
     }
 
     @Override
@@ -262,7 +310,19 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     }*/
 
     @Override
+    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+        this.worldObj.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+        MoCTools.bigsmack(this, entityIn, 1F);
+        super.func_174815_a(entityLivingBaseIn, entityIn);
+    }
+
+    @Override
     public boolean isNotScared() {
         return true;
+    }
+
+    @Override
+    protected boolean canTriggerWalking() {
+        return false;
     }
 }

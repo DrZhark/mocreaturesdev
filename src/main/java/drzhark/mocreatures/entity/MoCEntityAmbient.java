@@ -63,8 +63,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getMaxHealth());
+        //this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
+        //this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getMaxHealth());
     }
 
     @Override
@@ -220,17 +220,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     /**
-     * List of edible foods
-     *
-     * @param item1
-     * @return
-     */
-    public boolean isItemEdible(Item item1) {
-        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
-                || item1 == Items.egg;
-    }
-
-    /**
      * Used to breed
      *
      * @param item1
@@ -300,29 +289,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1))) {
-                d1 = d2;
-                entityitem = entityitem1;
-            }
-        }
-
-        return entityitem;
-    }
-
-    public EntityItem getClosestFood(Entity entity, double d) {
-        double d1 = -1D;
-        EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
-        for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
-            if (!(entity1 instanceof EntityItem)) {
-                continue;
-            }
-            EntityItem entityitem1 = (EntityItem) entity1;
-            if (!isItemEdible(entityitem1.getEntityItem().getItem())) {
-                continue;
-            }
             double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
             if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1))) {
                 d1 = d2;

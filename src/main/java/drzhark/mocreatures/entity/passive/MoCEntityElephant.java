@@ -327,7 +327,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            MoCTools.playCustomSound(this, "eating", this.worldObj);
+            MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
             this.temper += 2;
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
@@ -340,7 +340,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            MoCTools.playCustomSound(this, "eating", this.worldObj);
+            MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
             this.temper += 1;
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {

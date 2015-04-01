@@ -406,17 +406,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     /**
-     * List of edible foods
-     *
-     * @param item1
-     * @return
-     */
-    public boolean isItemEdible(Item item1) {
-        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
-                || item1 == Items.egg;
-    }
-
-    /**
      * Used to breed
      *
      * @param item1
@@ -506,7 +495,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            if (!isItemEdible(entityitem1.getEntityItem().getItem())) {
+            if (!MoCTools.isItemEdible(entityitem1.getEntityItem().getItem())) {
                 continue;
             }
             double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
@@ -1686,7 +1675,4 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         this.jump();
     }
 
-    protected float getMyMovementSpeed() {
-        return MathHelper.sqrt_double((this.motionX * this.motionX) + (this.motionZ * this.motionZ));
-    }
 }

@@ -1,5 +1,16 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.entity.SharedMonsterAttributes;
+
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -18,6 +29,15 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     public MoCEntityMole(World world) {
         super(world);
         setSize(1F, 0.5F);
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
     }
 
     @Override
@@ -235,10 +255,5 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     @Override
     protected String getLivingSound() {
         return null;
-    }
-
-    @Override
-    public boolean swimmerEntity() {
-        return true;
     }
 }

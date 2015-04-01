@@ -80,6 +80,9 @@ public class MoCModelBear extends ModelBase {
     ModelRenderer CLegRR2;
     ModelRenderer CLegRR3;
 
+    private int bearstate;
+    private float attackSwing;
+
     public MoCModelBear() {
         this.textureWidth = 64;
         this.textureHeight = 128;
@@ -412,12 +415,12 @@ public class MoCModelBear extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         MoCEntityBear entitybear = (MoCEntityBear) entity;
-        int bearState = entitybear.getBearState();
+        this.bearstate = entitybear.getBearState();
         boolean openMouth = (entitybear.mouthCounter != 0);
-        float attackSwing = entitybear.getAttackSwing();
-        setRotationAngles(f, f1, f2, f3, f4, f5, bearState, attackSwing);
+        this.attackSwing = entitybear.getAttackSwing();
+        setRotationAngles(f, f1, f2, f3, f4, f5);
 
-        if (bearState == 0) {
+        if (bearstate == 0) {
             if (openMouth) {
                 this.MouthOpen.render(f5);
             } else {
@@ -444,7 +447,7 @@ public class MoCModelBear extends ModelBase {
             this.LegRL2.render(f5);
             this.LegRL3.render(f5);
             this.Tail.render(f5);
-        } else if (bearState == 1) {
+        } else if (bearstate == 1) {
             this.BHead.render(f5);
             this.BSnout.render(f5);
             if (openMouth) {
@@ -471,7 +474,7 @@ public class MoCModelBear extends ModelBase {
             this.BLegRR1.render(f5);
             this.BLegRR2.render(f5);
             this.BLegRR3.render(f5);
-        } else if (bearState == 2) {
+        } else if (bearstate == 2) {
             if (openMouth) {
                 this.CMouthOpen.render(f5);
             } else {
@@ -508,7 +511,7 @@ public class MoCModelBear extends ModelBase {
         model.rotateAngleZ = z;
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, int bearState, float AttackRotX) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         //float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         //float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
 
@@ -517,7 +520,7 @@ public class MoCModelBear extends ModelBase {
         float XAngle = (f4 / 57.29578F);
         float YAngle = f3 / 57.29578F;
 
-        if (bearState == 0) {
+        if (this.bearstate == 0) {
             this.Head.rotateAngleX = 0.1502636F + XAngle;
             this.Head.rotateAngleY = YAngle;
 
@@ -551,7 +554,7 @@ public class MoCModelBear extends ModelBase {
             this.LegRL1.rotateAngleX = -0.1745329F + RLegRotX;
             this.LegRL2.rotateAngleX = RLegRotX;
             this.LegRL3.rotateAngleX = RLegRotX;
-        } else if (bearState == 1) {
+        } else if (this.bearstate == 1) {
 
             this.BHead.rotateAngleX = -0.0242694F - XAngle;
             this.BHead.rotateAngleY = YAngle;
@@ -582,13 +585,13 @@ public class MoCModelBear extends ModelBase {
             this.BLegFL2.rotateAngleZ = -breathing;
             this.BLegFL3.rotateAngleZ = -breathing;
 
-            this.BLegFL1.rotateAngleX = 0.2617994F + AttackRotX;
-            this.BLegFL2.rotateAngleX = -0.5576792F + AttackRotX;
-            this.BLegFL3.rotateAngleX = 2.007645F + AttackRotX;
+            this.BLegFL1.rotateAngleX = 0.2617994F + attackSwing;
+            this.BLegFL2.rotateAngleX = -0.5576792F + attackSwing;
+            this.BLegFL3.rotateAngleX = 2.007645F + attackSwing;
 
-            this.BLegFR1.rotateAngleX = 0.2617994F + AttackRotX;
-            this.BLegFR2.rotateAngleX = -0.5576792F + AttackRotX;
-            this.BLegFR3.rotateAngleX = 2.007645F + AttackRotX;
+            this.BLegFR1.rotateAngleX = 0.2617994F + attackSwing;
+            this.BLegFR2.rotateAngleX = -0.5576792F + attackSwing;
+            this.BLegFR3.rotateAngleX = 2.007645F + attackSwing;
 
             this.BLegRR1.rotateAngleX = -0.1745329F + LLegRotX;
             this.BLegRR2.rotateAngleX = LLegRotX;
@@ -597,7 +600,7 @@ public class MoCModelBear extends ModelBase {
             this.BLegRL1.rotateAngleX = -0.5235988F + RLegRotX;
             this.BLegRL2.rotateAngleX = RLegRotX;
             this.BLegRL3.rotateAngleX = RLegRotX;
-        } else if (bearState == 2) {
+        } else if (this.bearstate == 2) {
             this.CHead.rotateAngleX = 0.1502636F + XAngle;
             this.CHead.rotateAngleY = YAngle;
 

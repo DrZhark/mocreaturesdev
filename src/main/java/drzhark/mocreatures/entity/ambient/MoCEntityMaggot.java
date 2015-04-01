@@ -1,5 +1,12 @@
 package drzhark.mocreatures.entity.ambient;
 
+import com.google.common.base.Predicate;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.Entity;
+
 import drzhark.mocreatures.entity.MoCEntityAmbient;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
@@ -11,19 +18,15 @@ public class MoCEntityMaggot extends MoCEntityAmbient {
     public MoCEntityMaggot(World world) {
         super(world);
         setSize(0.2F, 0.2F);
-        //health = 2;
         this.texture = "maggot.png";
+        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 0.8D));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(2.0D);
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        return 0.15F;
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.1D);
     }
 
     @Override

@@ -247,12 +247,6 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         return (-50 + (getEdad() / 2));
     }
 
-    //TODO
-    /*@Override
-    public boolean swimmerEntity() {
-        return true;
-    }*/
-
     @Override
     public boolean canBreatheUnderwater() {
         return true;

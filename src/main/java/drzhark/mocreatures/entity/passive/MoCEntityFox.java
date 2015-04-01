@@ -215,11 +215,4 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
         }
         return 0.9F * getEdad() * 0.01F;
     }
-
-    @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata) {
-
-        //checkSpawningBiome();
-        return super.onSpawnFirstTime(difficulty, livingdata);
-    }
 }

@@ -155,7 +155,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             setHasEaten(true);
-            MoCTools.playCustomSound(this, "eating", this.worldObj);
+            MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
             return true;
         }
 
@@ -266,31 +266,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         this.bunnyReproduceTickerB = 0;
         this.bunnyReproduceTickerA = this.rand.nextInt(64);
     }
-
-    //TODO
-    /*@Override
-    protected void updateEntityActionState() {
-        if (this.onGround && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
-            this.motionY = 0.45000000000000001D;
-        }
-        if (!this.pickedUp) {
-            super.updateEntityActionState();
-        } else if (this.onGround && this.ridingEntity == null) {
-            this.pickedUp = false;
-            //System.out.println("pickedOff");
-            this.worldObj.playSoundAtEntity(this, "mocreatures:rabbitland", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 12D, 12D));
-            for (int k = 0; k < list.size(); k++) {
-                Entity entity = (Entity) list.get(k);
-                if (entity instanceof EntityMob) {
-                    EntityMob entitymob = (EntityMob) entity;
-                    entitymob.setAttackTarget(this);
-
-                }
-            }
-
-        }
-    }*/
 
     @Override
     public boolean updateMount() {

@@ -68,26 +68,8 @@ public class MoCEntityThrowableRock extends Entity {
         return this.dataWatcher.getWatchableObjectInt(21);
     }
 
-    /*    public void setMetadata(int i) {
-            this.dataWatcher.updateObject(20, Integer.valueOf(i));
-        }
-
-        public int getMetadata() {
-            return this.dataWatcher.getWatchableObjectInt(20);
-        }
-
-        public int getType() {
-            return this.dataWatcher.getWatchableObjectInt(19);
-        }
-
-        public void setType(int i) {
-            this.dataWatcher.updateObject(19, Integer.valueOf(i));
-        }
-    */
     @Override
     protected void entityInit() {
-        //this.dataWatcher.addObject(19, Integer.valueOf(0)); //blockID
-        //this.dataWatcher.addObject(20, Integer.valueOf(0)); //metadata
         this.dataWatcher.addObject(21, Integer.valueOf(0)); //behaviorType
         this.dataWatcher.addObject(22, Integer.valueOf(0)); //masterID
         this.dataWatcher.addObject(23, new Short((short) 0)); //tRock State

@@ -1,7 +1,9 @@
 package drzhark.mocreatures;
 
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemSeeds;
 
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
@@ -1689,5 +1691,48 @@ public class MoCTools {
         etrock.motionX = ((X - throwerEntity.posX) / speedMod);
         etrock.motionY = ((Y - throwerEntity.posY) / speedMod + height);
         etrock.motionZ = ((Z - throwerEntity.posZ) / speedMod);
+    }
+
+    /**
+     * Calculates the moving speed of the entity
+     * @param entity
+     * @return
+     */
+    public static float getMyMovementSpeed(Entity entity) {
+        return MathHelper.sqrt_double((entity.motionX * entity.motionX) + (entity.motionZ * entity.motionZ));
+    }
+
+    public static EntityItem getClosestFood(Entity entity, double d) {
+        double d1 = -1D;
+        EntityItem entityitem = null;
+        List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        for (int k = 0; k < list.size(); k++) {
+            Entity entity1 = (Entity) list.get(k);
+            if (!(entity1 instanceof EntityItem)) {
+                continue;
+            }
+            EntityItem entityitem1 = (EntityItem) entity1;
+            if (!isItemEdible(entityitem1.getEntityItem().getItem())) {
+                continue;
+            }
+            double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1))) {
+                d1 = d2;
+                entityitem = entityitem1;
+            }
+        }
+
+        return entityitem;
+    }
+
+    /**
+     * List of edible foods
+     *
+     * @param item1
+     * @return
+     */
+    public static boolean isItemEdible(Item item1) {
+        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
+                || item1 == Items.egg;
     }
 }

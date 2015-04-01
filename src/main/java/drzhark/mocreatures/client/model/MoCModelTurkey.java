@@ -1,5 +1,8 @@
 package drzhark.mocreatures.client.model;
 
+import org.lwjgl.opengl.GL11;
+
+import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -23,6 +26,8 @@ public class MoCModelTurkey extends ModelBase {
     ModelRenderer RFoot;
     ModelRenderer LLeg;
     ModelRenderer LFoot;
+
+    private boolean male;
 
     public MoCModelTurkey() {
         this.textureWidth = 64;
@@ -92,20 +97,32 @@ public class MoCModelTurkey extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
+        this.male = ((MoCEntityTurkey) entity).getType() == 1;
         setRotationAngles(f, f1, f2, f3, f4, f5);
         this.Beak.render(f5);
         this.Head.render(f5);
         this.Neck.render(f5);
-        this.Chest.render(f5);
         this.RWing.render(f5);
         this.LWing.render(f5);
-        this.UBody.render(f5);
-        this.Body.render(f5);
         this.Tail.render(f5);
         this.RLeg.render(f5);
         this.RFoot.render(f5);
         this.LLeg.render(f5);
         this.LFoot.render(f5);
+        if (male) {
+            this.UBody.render(f5);
+            this.Body.render(f5);
+            this.Chest.render(f5);
+
+        } else {
+            GL11.glPushMatrix();
+            GL11.glScalef(0.8F, 0.8F, 1F);
+            this.Body.render(f5);
+            this.Chest.render(f5);
+
+            GL11.glPopMatrix();
+        }
+
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -133,7 +150,23 @@ public class MoCModelTurkey extends ModelBase {
         this.LWing.rotateAngleY = wingF;
         this.RWing.rotateAngleY = -wingF;
 
-        this.Tail.rotateAngleX = -0.2974289F + wingF;
-        //super.setRotationAngles(f, f1, f2, f3, f4, f5);
+        if (this.male) {
+            this.Tail.rotateAngleX = -0.2974289F + wingF;
+            this.Tail.rotationPointY = 14F;
+            this.Tail.rotationPointZ = 6F;
+            this.Chest.rotationPointY = 12.5F;
+            this.Body.rotationPointY = 16F;
+            this.LWing.rotationPointX = 4F;
+            this.RWing.rotationPointX = -4F;
+        } else {
+            this.Tail.rotateAngleX = wingF - (110 / 57.29578F);
+            this.Tail.rotationPointY = 17F;
+            this.Tail.rotationPointZ = 7F;
+            this.Chest.rotationPointY = 16F;
+            this.Body.rotationPointY = 20F;
+            this.LWing.rotationPointX = 3.2F;
+            this.RWing.rotationPointX = -3.2F;
+        }
+
     }
 }
