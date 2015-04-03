@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +35,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 2F, 10F));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 50));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(7, new EntityAILookIdle(this));
     }
 
     @Override

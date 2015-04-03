@@ -1,5 +1,12 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.MoCreatures;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.init.Items;
@@ -28,19 +35,6 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-
-            if (MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
-                ((EntityLivingBase) entity).setFire(this.burningTime);
-            }
-        }
-    }*/
-
     @Override
     protected Item getDropItem() {
         return Items.redstone;
@@ -49,9 +43,9 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public void onLivingUpdate() {
         if (!this.worldObj.isRemote) {
-            if (this.rand.nextInt(40) == 0) {
+            /*if (this.rand.nextInt(40) == 0) {
                 this.setFire(2);
-            }
+            }*/
             if (this.worldObj.isDaytime()) {
                 float f = getBrightness(1.0F);
                 if ((f > 0.5F)
@@ -67,5 +61,18 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public float getMoveSpeed() {
         return 1.1F;
+    }
+
+    @Override
+    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+        if (MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
+            entityLivingBaseIn.setFire(this.burningTime);
+        }
+        super.func_174815_a(entityLivingBaseIn, entityIn);
+    }
+
+    @Override
+    public boolean isBurning() {
+        return this.rand.nextInt(100) == 0;
     }
 }

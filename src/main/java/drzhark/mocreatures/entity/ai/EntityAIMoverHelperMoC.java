@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.monster.MoCEntityWraith;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
@@ -21,15 +23,28 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
 
     @Override
     public void onUpdateMoveHelper() {
-        if (!this.theCreature.isInWater()) {
+        boolean isFlyer = ((IMoCEntity) theCreature).isFlyer();
+        boolean isSwimmer = this.theCreature.isInWater(); //TODO && theCreature.isSwimmer()
+
+        if (!isFlyer && !isSwimmer) {
             super.onUpdateMoveHelper();
             return;
         }
 
         /*
+         * Flying specific movement code
+         */
+        if (isFlyer) {
+            this.flyingMovementUpdate();
+        }
+
+        /*
          * Water movement code
          */
-        this.floating();
+        if (isSwimmer) {
+            this.swimmerMovementUpdate();
+        }
+
         if (this.update && !this.theCreature.getNavigator().noPath()) {
             double d0 = this.posX - this.theCreature.posX;
             double d1 = this.posY - this.theCreature.posY;
@@ -56,15 +71,36 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             //d4 = Math.sin((double)(this.theCreature.ticksExisted + this.theCreature.getEntityId()) * 0.75D) * 0.05D;
             this.theCreature.motionY += d4 * (d6 + d5) * 0.25D;
             this.theCreature.motionY += (double) this.theCreature.getAIMoveSpeed() * d1 * 1.5D;
-        } else {
-            //this.theCreature.setAIMoveSpeed(0.0F);
+        }
+    }
+
+    /**
+     * Makes flying creatures reach the proper flying height
+     */
+    private void flyingMovementUpdate() {
+
+        //Flying alone
+        //if (this.theCreature.getNavigator().noPath())
+        if (((IMoCEntity) theCreature).getIsFlying()) {
+            int distY = MoCTools.distanceToFloor(this.theCreature);
+            if (distY <= ((IMoCEntity) theCreature).minFlyingHeight()
+                    && (this.theCreature.isCollidedHorizontally || this.theCreature.worldObj.rand.nextInt(100) == 0)) {
+                this.theCreature.motionY += 0.02D;
+            }
+            if (distY > ((IMoCEntity) theCreature).maxFlyingHeight() || this.theCreature.worldObj.rand.nextInt(150) == 0) {
+                this.theCreature.motionY -= 0.02D;
+            }
+        }
+
+        if (this.theCreature.motionY < 0) {
+            this.theCreature.motionY *= 0.5D;
         }
     }
 
     /**
      * Makes creatures in the water float to the right depth
      */
-    private void floating() {
+    private void swimmerMovementUpdate() {
         if (theCreature.riddenByEntity != null) {
             return;
         }

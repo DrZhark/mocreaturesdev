@@ -22,18 +22,10 @@ public class MoCEntityBee extends MoCEntityInsect
 {
 
     private int soundCount;
-    private boolean upset;
 
     public MoCEntityBee(World world) {
         super(world);
-        //health = 4;
         this.texture = "bee.png";
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
     }
 
     @Override
@@ -41,10 +33,12 @@ public class MoCEntityBee extends MoCEntityInsect
         super.onLivingUpdate();
 
         if (MoCreatures.isServer()) {
-            EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
-            if (ep != null && getIsFlying() && --this.soundCount == -1) {
-                MoCTools.playCustomSound(this, getMySound(), this.worldObj);
-                this.soundCount = 20;
+            if (getIsFlying() && --this.soundCount == -1) {
+                EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
+                if (ep != null) {
+                    MoCTools.playCustomSound(this, getMySound(), this.worldObj);
+                    this.soundCount = 20;
+                }
             }
 
             if (getIsFlying() && this.rand.nextInt(500) == 0) {
@@ -58,16 +52,6 @@ public class MoCEntityBee extends MoCEntityInsect
             return "beeupset";
         }
         return "bee";
-    }
-
-    @Override
-    protected float getFlyingSpeed() {
-        return 0.5F;
-    }
-
-    @Override
-    protected float getWalkingSpeed() {
-        return 0.2F;
     }
 
     @Override
@@ -112,20 +96,23 @@ public class MoCEntityBee extends MoCEntityInsect
         }
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-
-        if (this.attackTime <= 0 && (f < 2.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-        }
-    }*/
-
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
         return par1ItemStack != null
                 && (par1ItemStack.getItem() == Item.getItemFromBlock(Blocks.red_flower) || par1ItemStack.getItem() == Item
                         .getItemFromBlock(Blocks.yellow_flower));
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.15F;
+        }
+        return 0.12F;
+    }
+
+    @Override
+    public boolean isFlyer() {
+        return true;
     }
 }

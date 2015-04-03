@@ -63,27 +63,15 @@ public class MoCEntityButterfly extends MoCEntityInsect {
         }
     }
 
-    /**
-     * Used to flicker ghosts
-     *
-     * @return
-     */
     public float tFloat() {
+        if (!getIsFlying()) {
+            return 0F;
+        }
         if (++this.fCounter > 1000) {
             this.fCounter = 0;
         }
 
         return MathHelper.cos((this.fCounter * 0.1F)) * 0.2F;
-    }
-
-    @Override
-    protected float getFlyingSpeed() {
-        return 0.5F;
-    }
-
-    @Override
-    protected float getWalkingSpeed() {
-        return 0.15F;
     }
 
     @Override
@@ -104,5 +92,18 @@ public class MoCEntityButterfly extends MoCEntityInsect {
     @Override
     public boolean isAttractedToLight() {
         return getType() > 7;
+    }
+
+    @Override
+    public boolean isFlyer() {
+        return true;
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.13F;
+        }
+        return 0.10F;
     }
 }

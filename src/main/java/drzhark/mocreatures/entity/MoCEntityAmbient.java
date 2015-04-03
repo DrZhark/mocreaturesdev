@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity;
 
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
+import net.minecraft.pathfinding.PathNavigate;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -46,6 +50,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     protected float moveSpeed;
     protected boolean riderIsDisconnecting;
     protected String texture;
+    protected PathNavigate navigatorWater;
+    protected PathNavigate navigatorFlyer;
 
     public MoCEntityAmbient(World world) {
         super(world);
@@ -53,6 +59,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         setAdult(true);
         this.riderIsDisconnecting = false;
         this.texture = "blank.png";
+        this.navigatorWater = new PathNavigateSwimmer(this, world);
+        this.moveHelper = new EntityAIMoverHelperMoC(this);
+        this.navigatorFlyer = new PathNavigateFlyer(this, world);
     }
 
     @Override
@@ -63,8 +72,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        //this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
-        //this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(getMaxHealth());
     }
 
     @Override
@@ -185,13 +192,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
             }
+            this.getNavigator().onUpdateNavigation();
         }
-
-        if (isSwimming() && swimmerEntity()) {
-            floating();
-        }
-
-        this.moveSpeed = getMoveSpeed();
         super.onLivingUpdate();
     }
 
@@ -201,22 +203,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     public boolean isSwimming() {
         return ((isInsideOfMaterial(Material.water)));
-    }
-
-    public void floating() {
-        if (this.motionY < 0) {
-            this.motionY = 0;
-        }
-        this.motionY += 0.001D;// 0.001
-
-        int distY = (int) MoCTools.distanceToSurface(this);
-        if (distY > 1) {
-            this.motionY += (distY * 0.07);
-        }
-
-        if (hasPath() && this.isCollidedHorizontally) {
-            jump();
-        }
     }
 
     /**
@@ -482,8 +468,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         setOwner(nbttagcompound.getString("Owner"));
     }
 
-    @Override
-    public void moveEntityWithHeading(float f, float f1) {
+    public void moveEntityWithHeadingOld(float f, float f1) {
         //If the entity is not ridden by entityplayer, then execute the normal Entityliving code
         if (!isFlyer() && (!rideableEntity() || this.riddenByEntity == null)) {
             super.moveEntityWithHeading(f, f1);
@@ -626,13 +611,13 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
             }
             if (isFlyingAlone()) {
                 int distY = MoCTools.distanceToFloor(this);
-                if (distY <= flyingHeight()) {
+                if (distY <= maxFlyingHeight()) {
                     this.motionY *= f2;
                 }
-                if (distY <= flyingHeight() && (this.isCollidedHorizontally || this.rand.nextInt(100) == 0)) {
+                if (distY <= maxFlyingHeight() && (this.isCollidedHorizontally || this.rand.nextInt(100) == 0)) {
                     this.motionY += 0.1D;
                 }
-                if (distY > flyingHeight() || this.rand.nextInt(150) == 0) {
+                if (distY > maxFlyingHeight() || this.rand.nextInt(150) == 0) {
                     this.motionY -= 0.10D;
                 }
 
@@ -677,19 +662,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     /**
-     * Maximum flyer height when moving autonomously
-     *
-     * @return
-     */
-    public int flyingHeight() {
-        return 5;
-    }
-
-    /**
-     * Used for flyer mounts, to calculate fall speed
-     *
-     * @return
-     */
+    * Used for flyer mounts, to calculate fall speed
+    *
+    * @return
+    */
     protected double myFallSpeed() {
         return 0.6D;
     }
@@ -1100,5 +1076,54 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public void forceEntityJump() {
         this.jump();
+    }
+
+    @Override
+    protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos) {
+    }
+
+    @Override
+    public void fall(float f, float f1) {
+    }
+
+    @Override
+    public int minFlyingHeight() {
+        return 2;
+    }
+
+    /**
+     * Maximum flyer height when moving autonomously
+     *
+     * @return
+     */
+    public int maxFlyingHeight() {
+        return 4;
+    }
+
+    @Override
+    public void moveEntityWithHeading(float strafe, float forward) {
+        if (!getIsFlying()) {
+            super.moveEntityWithHeading(strafe, forward);
+            return;
+        }
+        this.moveEntityWithHeadingFlying(strafe, forward);
+    }
+
+    public void moveEntityWithHeadingFlying(float strafe, float forward) {
+        if (this.isServerWorld()) {
+
+            this.moveFlying(strafe, forward, 0.1F);
+            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.motionX *= 0.8999999761581421D;
+            this.motionY *= 0.8999999761581421D;
+            this.motionZ *= 0.8999999761581421D;
+        } else {
+            super.moveEntityWithHeading(strafe, forward);
+        }
+    }
+
+    @Override
+    public boolean getIsFlying() {
+        return false;
     }
 }

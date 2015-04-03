@@ -79,15 +79,6 @@ public class MoCModelBee extends ModelBase {
         this.MidLegs.setRotationPoint(0F, 22.5F, -1.2F);
         setRotation(this.MidLegs, 0.5948578F, 0F, 0F);
 
-        /*
-         * RightWing = new ModelRenderer(this, 8, 11); RightWing.addBox(-4F,
-         * -3F, 0F, 4, 6, 0); RightWing.setRotationPoint(-0.5F, 14F, -1F);
-         * setRotation(RightWing, 0F, 0F, 0.0872665F); LeftWing = new
-         * ModelRenderer(this, 8, 5); LeftWing.addBox(0F, -3F, 0F, 4, 6, 0);
-         * LeftWing.setRotationPoint(0.5F, 14F, -1F); setRotation(LeftWing, 0F,
-         * 0F, -0.0872665F);
-         */
-
         this.LeftWing = new ModelRenderer(this, 0, 17);
         this.LeftWing.addBox(-1F, 0F, 0.5F, 2, 0, 4);
         this.LeftWing.setRotationPoint(0F, 20.4F, -1F);
@@ -109,9 +100,7 @@ public class MoCModelBee extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityBee entitybee = (MoCEntityBee) entity;
-        boolean isFlying = (entitybee.getIsFlying() || entitybee.isOnAir());
-        //boolean onGround = entitybee.onGround;
-
+        boolean isFlying = (entitybee.getIsFlying() || entitybee.motionY < -0.1D);
         setRotationAngles(f, f1, f2, f3, f4, f5, !isFlying);
         this.Abdomen.render(f5);
         this.FrontLegs.render(f5);
@@ -123,9 +112,6 @@ public class MoCModelBee extends ModelBase {
         this.Head.render(f5);
         this.Mouth.render(f5);
         this.Tail.render(f5);
-        //FoldedWings.render(f5);
-        //LeftWing.render(f5);
-        //RightWing.render(f5);
         this.Thorax.render(f5);
 
         if (!isFlying) {

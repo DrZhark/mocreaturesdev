@@ -3,14 +3,21 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -37,14 +44,24 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
 
     public MoCEntityGoat(World world) {
         super(world);
-        setSize(1.4F, 0.9F);
+        setSize(0.8F, 1F);
         setEdad(70);
+        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
+        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(12.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -133,7 +150,6 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         setAttackTarget(null);
         setUpset(false);
         setCharging(false);
-        this.moveSpeed = 0.7F;
         this.attacking = 0;
         this.chargecount = 0;
     }
@@ -162,21 +178,18 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
+        if (!MoCreatures.isServer()) {
+            if (this.rand.nextInt(100) == 0) {
+                setSwingEar(true);
+            }
 
-        if (this.rand.nextInt(100) == 0) {
-            setSwingEar(true);
-        }
+            if (this.rand.nextInt(80) == 0) {
+                setSwingTail(true);
+            }
 
-        if (this.rand.nextInt(80) == 0) {
-            setSwingTail(true);
-        }
-
-        if (this.rand.nextInt(50) == 0) {
-            setEating(true);
-        }
-
-        if ((this.hungry) && (this.rand.nextInt(20) == 0)) {
-            this.hungry = false;
+            if (this.rand.nextInt(50) == 0) {
+                setEating(true);
+            }
         }
         if (getBleating()) {
             this.bleatcount++;
@@ -186,6 +199,11 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             }
 
         }
+
+        if ((this.hungry) && (this.rand.nextInt(20) == 0)) {
+            this.hungry = false;
+        }
+
         if (MoCreatures.isServer() && (getEdad() < 90 || getType() > 4 && getEdad() < 100) && this.rand.nextInt(500) == 0) {
             setEdad(getEdad() + 1);
             if (getType() == 1 && getEdad() > 70) {
@@ -201,7 +219,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
                 this.attacking = 75;
             }
 
-            if (this.rand.nextInt(500) == 0 || getAttackTarget() == null) {
+            if (this.rand.nextInt(200) == 0 || getAttackTarget() == null) {
                 calm();
             }
 
@@ -226,11 +244,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             this.chargecount++;
             if (this.chargecount > 120) {
                 this.chargecount = 0;
-                this.moveSpeed = 0.7F;
-            } else {
-                this.moveSpeed = 1.0F;
             }
-
             if (getAttackTarget() == null) {
                 calm();
             }
@@ -290,10 +304,10 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     public int getTalkInterval() {
         if (this.hungry) {
-            return 20;
+            return 80;
         }
 
-        return 120;
+        return 200;
     }
 
     @Override
@@ -306,32 +320,24 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         return getUpset() && !getCharging();
     }
 
-    /*
-        @Override
-        protected void attackEntity(Entity entity, float f) {
-            if (attackTime <= 0 && (f < 3.0D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                    && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY) && this.attacking > 70) {
-                attackTime = 30;
-
-                this.attacking = 30;
-
-                this.worldObj.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                if (entity instanceof MoCEntityGoat) {
-                    MoCTools.bigsmack(this, entity, 0.4F);
-                    if (this.rand.nextInt(10) == 0) {
-                        calm();
-                        ((MoCEntityGoat) entity).calm();
-                    }
-
-                } else {
-                    entity.attackEntityFrom(DamageSource.causeMobDamage(this), 3);
-                    MoCTools.bigsmack(this, entity, 0.8F);
-                    if (this.rand.nextInt(3) == 0) {
-                        calm();
-                    }
-                }
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        this.attacking = 30;
+        if (entityIn instanceof MoCEntityGoat) {
+            MoCTools.bigsmack(this, entityIn, 0.4F);
+            MoCTools.playCustomSound(this, "goatsmack", worldObj);
+            if (this.rand.nextInt(3) == 0) {
+                calm();
+                ((MoCEntityGoat) entityIn).calm();
             }
-        }*/
+            return false;
+        }
+        MoCTools.bigsmack(this, entityIn, 0.8F);
+        if (this.rand.nextInt(3) == 0) {
+            calm();
+        }
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public boolean isNotScared() {
@@ -580,5 +586,15 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     protected Item getDropItem() {
         return Items.leather;
+    }
+
+    @Override
+    public int getMaxEdad() {
+        return 50; //so the update is not handled on MoCEntityAnimal
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        return 0.15F;
     }
 }

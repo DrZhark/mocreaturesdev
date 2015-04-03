@@ -1,7 +1,10 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.entity.ai.EntityAIWander;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
@@ -17,16 +20,19 @@ import java.util.List;
 public class MoCEntityInsect extends MoCEntityAmbient {
 
     private int climbCounter;
+    protected EntityAIWanderMoC2 wander;
 
     public MoCEntityInsect(World world) {
         super(world);
         setSize(0.2F, 0.2F);
+        this.tasks.addTask(2, this.wander = new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
     @Override
     public boolean isFlyer() {
-        return getIsFlying();
+        return false;
     }
 
     @Override
@@ -58,19 +64,13 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (getIsFlying()) {
-            this.moveSpeed = getFlyingSpeed();
-        } else {
-            this.moveSpeed = getWalkingSpeed();
-        }
-
         if (MoCreatures.isServer()) {
-            if (isOnLadder() && !this.onGround) {
+            if (!getIsFlying() && isOnLadder() && !this.onGround) {
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             }
 
-            if (!getIsFlying() && this.isFlyer() && this.rand.nextInt(getFlyingFreq()) == 0) {
+            if (isFlyer() && !getIsFlying() && this.rand.nextInt(getFlyingFreq()) == 0) {
                 List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity1 = (Entity) list.get(i);
@@ -78,10 +78,15 @@ public class MoCEntityInsect extends MoCEntityAmbient {
                         continue;
                     }
                     if (((EntityLivingBase) entity1).width >= 0.4F && ((EntityLivingBase) entity1).height >= 0.4F && canEntityBeSeen(entity1)) {
-                        this.motionY += 0.3D;
                         setIsFlying(true);
+                        this.wander.makeUpdate();
                     }
                 }
+            }
+
+            if (isFlyer() && !getIsFlying() && this.rand.nextInt(200) == 0) {
+                setIsFlying(true);
+                this.wander.makeUpdate();
             }
 
             if (isAttractedToLight() && this.rand.nextInt(50) == 0) {
@@ -92,10 +97,9 @@ public class MoCEntityInsect extends MoCEntityAmbient {
             }
 
             //this makes the flying insect move all the time in the air
-            // TODO
-            /*if (getIsFlying() && !hasPath() && !isMovementCeased() && this.entityLivingToAttack == null) {
-                updateWanderPath();
-            }*/
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null) {
+                this.wander.makeUpdate();
+            }
 
         } else // client stuff
         {
@@ -130,23 +134,6 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     @Override
     public boolean getCanSpawnHere() {
         return super.getCanSpawnHereAnimal() && super.getCanSpawnHereCreature();
-    }
-
-    @Override
-    public float getMoveSpeed() {
-        if (getIsFlying()) {
-            return getFlyingSpeed();
-        } else {
-            return getWalkingSpeed();
-        }
-    }
-
-    protected float getFlyingSpeed() {
-        return 0.7F;
-    }
-
-    protected float getWalkingSpeed() {
-        return 0.2F;
     }
 
     @Override
@@ -192,5 +179,16 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     @Override
     public EnumCreatureAttribute getCreatureAttribute() {
         return EnumCreatureAttribute.ARTHROPOD;
+    }
+
+    @Override
+    public PathNavigate getNavigator() {
+        /*if (this.isInWater() && this.isAmphibian()) {
+            return this.navigatorWater;
+        }
+        */if (this.getIsFlying()) {
+            return this.navigatorFlyer;
+        }
+        return this.navigator;
     }
 }

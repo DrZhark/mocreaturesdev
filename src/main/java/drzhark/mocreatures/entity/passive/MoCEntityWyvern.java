@@ -271,7 +271,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public int flyingHeight() {
+    public int maxFlyingHeight() {
         return 18;
     }
 

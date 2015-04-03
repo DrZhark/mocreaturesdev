@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.ambient;
 
+import com.google.common.base.Predicate;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
@@ -16,6 +18,17 @@ public class MoCEntityRoach extends MoCEntityInsect
     public MoCEntityRoach(World world) {
         super(world);
         this.texture = "roach.png";
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+
+            public boolean apply(Entity entity) {
+                return !(entity instanceof MoCEntityCrab) && (entity.height > 0.3F || entity.width > 0.3F);
+            }
+
+            @Override
+            public boolean apply(Object p_apply_1_) {
+                return this.apply((Entity) p_apply_1_);
+            }
+        }, 6.0F, 0.8D, 1.3D));
     }
 
     @Override
@@ -28,12 +41,12 @@ public class MoCEntityRoach extends MoCEntityInsect
                 setIsFlying(false);
             }
 
-            if (!getIsFlying() && this.rand.nextInt(10) == 0) {
+            /*if (!getIsFlying() && this.rand.nextInt(10) == 0) {
                 EntityLivingBase entityliving = getBoogey(3D);
                 if (entityliving != null) {
                     MoCTools.runLikeHell(this, entityliving);
                 }
-            }
+            }*/
         }
     }
 
@@ -43,13 +56,8 @@ public class MoCEntityRoach extends MoCEntityInsect
     }
 
     @Override
-    protected float getFlyingSpeed() {
-        return 0.2F;
-    }
-
-    @Override
-    protected float getWalkingSpeed() {
-        return 0.8F;
+    public boolean isFlyer() {
+        return true;
     }
 
     @Override
@@ -58,12 +66,20 @@ public class MoCEntityRoach extends MoCEntityInsect
     }
 
     @Override
-    public boolean getIsFlying() {
-        return (this.dataWatcher.getWatchableObjectByte(22) == 1);
+    protected int getFlyingFreq() {
+        return 500;
     }
 
     @Override
-    protected int getFlyingFreq() {
-        return 300;
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.1F;
+        }
+        return 0.25F;
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return getIsFlying();
     }
 }

@@ -31,6 +31,9 @@ public class MoCModelSilverSkeleton extends ModelBase {
     ModelRenderer LeftLeg;
     ModelRenderer LeftFoot;
 
+    private int leftAttack;
+    private int rightAttack;
+
     public MoCModelSilverSkeleton() {
         this.textureWidth = 64;
         this.textureHeight = 64;
@@ -130,9 +133,9 @@ public class MoCModelSilverSkeleton extends ModelBase {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntitySilverSkeleton samurai = (MoCEntitySilverSkeleton) entity;
         boolean sprinting = samurai.isSprinting();
-        int leftAttack = samurai.attackCounterLeft;
-        int rightAttack = samurai.attackCounterRight;
-        setRotationAngles(f, f1, f2, f3, f4, f5, leftAttack, rightAttack);
+        this.leftAttack = samurai.attackCounterLeft;
+        this.rightAttack = samurai.attackCounterRight;
+        setRotationAngles(f, f1, f2, f3, f4, f5);
 
         if (sprinting && f1 > 0.3F) {
             GL11.glPushMatrix();
@@ -171,7 +174,7 @@ public class MoCModelSilverSkeleton extends ModelBase {
         model.rotateAngleZ = z;
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, int leftAttack, int rightAttack) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         float hRotY = f3 / 57.29578F;
         float hRotX = f4 / 57.29578F;
 

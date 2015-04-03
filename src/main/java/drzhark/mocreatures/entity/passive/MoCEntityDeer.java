@@ -6,12 +6,11 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -44,7 +43,7 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         this.tasks.addTask(2, new EntityAIPanic(this, this.getMyAISpeed() * 1.2D));
         //this.tasks.addTask(3, new EntityAIFollowHerd(this, getMyAISpeed(), 6D, 20D, 5));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, getMyAISpeed()));
-        this.tasks.addTask(5, new EntityAIWander(this, getMyAISpeed()));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, getMyAISpeed()));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
 

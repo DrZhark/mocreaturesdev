@@ -94,4 +94,12 @@ public interface IMoCEntity {
     public boolean isDiving();
 
     public void forceEntityJump();
+
+    public int maxFlyingHeight();
+
+    public int minFlyingHeight();
+
+    public boolean isFlyer();
+
+    public boolean getIsFlying();
 }

@@ -1,29 +1,24 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.world.EnumDifficulty;
-
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -36,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MoCEntityBear extends MoCEntityTameableAnimal {
 
@@ -55,12 +51,11 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         }
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
-        this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 0.8D, 2F, 10F));
+        this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }

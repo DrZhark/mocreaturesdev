@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity;
 
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
+import net.minecraft.pathfinding.PathNavigate;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
@@ -43,12 +47,17 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     private boolean riderIsDisconnecting;
     protected float moveSpeed;
     protected String texture;
+    protected PathNavigate navigatorWater;
+    protected PathNavigate navigatorFlyer;
 
     public MoCEntityMob(World world) {
         super(world);
         setTamed(false);
         this.riderIsDisconnecting = false;
         this.texture = "blank.jpg";
+        this.moveHelper = new EntityAIMoverHelperMoC(this);
+        this.navigatorWater = new PathNavigateSwimmer(this, world);
+        this.navigatorFlyer = new PathNavigateFlyer(this, world);
     }
 
     @Override
@@ -239,6 +248,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 }
             }
         }
+        this.getNavigator().onUpdateNavigation();
         super.onLivingUpdate();
     }
 
@@ -303,7 +313,54 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public void moveEntityWithHeading(float f, float f1) {
+    public void moveEntityWithHeading(float strafe, float forward) {
+        if (!isFlyer()) {
+            super.moveEntityWithHeading(strafe, forward);
+            return;
+        }
+        this.moveEntityWithHeadingFlyer(strafe, forward);
+    }
+
+    public void moveEntityWithHeadingFlyer(float strafe, float forward) {
+        if (this.isServerWorld()) {
+
+            this.moveFlying(strafe, forward, 0.1F);
+            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.motionX *= 0.8999999761581421D;
+            this.motionY *= 0.8999999761581421D;
+            this.motionZ *= 0.8999999761581421D;
+        } else {
+            super.moveEntityWithHeading(strafe, forward);
+        }
+    }
+
+    public void moveEntityWithHeadingAquatic(float strafe, float forward) {
+        if (this.isServerWorld()) {
+            if (this.isInWater()) {
+                if (this.riddenByEntity instanceof EntityLivingBase) {
+                    //this.moveEntityWithRider(strafe, forward);
+                    return;
+                }
+
+                this.moveFlying(strafe, forward, 0.1F);
+                this.moveEntity(this.motionX, this.motionY, this.motionZ);
+                this.motionX *= 0.8999999761581421D;
+                this.motionY *= 0.8999999761581421D;
+                this.motionZ *= 0.8999999761581421D;
+
+                if (this.getAttackTarget() == null) {
+                    this.motionY -= 0.005D;
+                }
+            } else {
+                super.moveEntityWithHeading(strafe, forward);
+            }
+        } else {
+            super.moveEntityWithHeading(strafe, forward);
+        }
+
+    }
+
+    public void moveEntityWithHeadingOld(float f, float f1) {
         if (!isFlyer()) {
             super.moveEntityWithHeading(f, f1);
             return;
@@ -696,5 +753,35 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         }
 
         return flag;
+    }
+
+    @Override
+    public int maxFlyingHeight() {
+        return 5;
+    }
+
+    @Override
+    public int minFlyingHeight() {
+        return 1;
+    }
+
+    @Override
+    public PathNavigate getNavigator() {
+        if (this.isInWater() && this.isAmphibian()) {
+            return this.navigatorWater;
+        }
+        if (this.isFlyer()) {
+            return this.navigatorFlyer;
+        }
+        return this.navigator;
+    }
+
+    public boolean isAmphibian() {
+        return false;
+    }
+
+    @Override
+    public boolean getIsFlying() {
+        return false;
     }
 }

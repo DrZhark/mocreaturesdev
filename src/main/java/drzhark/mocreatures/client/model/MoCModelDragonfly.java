@@ -102,7 +102,7 @@ public class MoCModelDragonfly extends ModelBase {
 
         MoCEntityDragonfly dragonfly = (MoCEntityDragonfly) entity;
         //boolean onGround = dragonfly.onGround;
-        boolean isFlying = (dragonfly.getIsFlying() || dragonfly.isOnAir());// dragonfly.getIsFlying();
+        boolean isFlying = (dragonfly.getIsFlying() || dragonfly.motionY < -0.1D);
         setRotationAngles(f, f1, f2, f3, f4, f5, isFlying);
         this.Head.render(f5);
         this.Abdomen.render(f5);

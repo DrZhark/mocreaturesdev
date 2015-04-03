@@ -1,15 +1,30 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.network.message.MoCMessageExplode;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.world.World;
 
 public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 {
+
+    public int attackCounter;
 
     public MoCEntityWraith(World world) {
         super(world);
@@ -17,7 +32,11 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.texture = "wraith.png";
         setSize(1.5F, 1.5F);
         this.isImmuneToFire = false;
-        //health = 10;
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 60));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
     @Override
@@ -26,6 +45,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
                 .setBaseValue(this.worldObj.getDifficulty().getDifficultyId() == 1 ? 2.0D : 3.0D); // setAttackStrength
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     public boolean d2() {
@@ -53,22 +73,6 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     }
 
     @Override
-    public void onLivingUpdate() {
-        if (!this.worldObj.isRemote) {
-            if (this.worldObj.isDaytime()) {
-                float f = getBrightness(1.0F);
-                if ((f > 0.5F)
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && ((this.rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F))) {
-                    //fire = 300;
-                    this.setFire(15);
-                }
-            }
-        }
-        super.onLivingUpdate();
-    }
-
-    @Override
     public boolean isFlyer() {
         return true;
     }
@@ -76,5 +80,64 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     @Override
     public float getMoveSpeed() {
         return 1.3F;
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return false;
+    }
+
+    @Override
+    protected void collideWithEntity(Entity par1Entity) {
+    }
+
+    @Override
+    public void fall(float f, float f1) {
+    }
+
+    protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos) {
+    }
+
+    public int maxFlyingHeight() {
+        return 10;
+    }
+
+    public int minFlyingHeight() {
+        return 3;
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        startArmSwingAttack();
+        return super.attackEntityAsMob(entityIn);
+    }
+
+    /**
+     * Starts attack counters and synchronizes animations with clients
+     */
+    private void startArmSwingAttack() {
+        if (MoCreatures.isServer()) {
+            this.attackCounter = 1;
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
+                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+        }
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        if (this.attackCounter > 0) {
+            this.attackCounter += 2;
+            if (this.attackCounter > 10)
+                this.attackCounter = 0;
+        }
+        super.onLivingUpdate();
+    }
+
+    @Override
+    public void performAnimation(int animationType) {
+        if (animationType == 1) {
+            this.attackCounter = 1;
+        }
+
     }
 }

@@ -3,7 +3,6 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
@@ -56,7 +55,6 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 

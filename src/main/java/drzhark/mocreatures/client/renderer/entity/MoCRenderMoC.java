@@ -52,7 +52,6 @@ public class MoCRenderMoC extends RenderLiving {
                 GL11.glScalef(-f3, -f3, f3);
                 GL11.glDisable(2896 /* GL_LIGHTING */);
                 Tessellator tessellator1 = Tessellator.getInstance();
-                //byte yOff = entityMoC.nameYOffset();//-80;
                 int yOff = entityMoC.nameYOffset();
                 if (flag1) {
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);

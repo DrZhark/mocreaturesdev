@@ -146,7 +146,7 @@ public class MoCModelRoach extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         MoCEntityRoach entityroach = (MoCEntityRoach) entity;
-        boolean isFlying = (entityroach.getIsFlying() || entityroach.isOnAir());
+        boolean isFlying = (entityroach.getIsFlying() || entityroach.motionY < -0.1D);
 
         setRotationAngles(f, f1, f2, f3, f4, f5, isFlying);
         this.Head.render(f5);

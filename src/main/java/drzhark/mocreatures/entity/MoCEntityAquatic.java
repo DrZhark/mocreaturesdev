@@ -1226,4 +1226,26 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         }
         return flag;
     }
+
+    @Override
+    public int maxFlyingHeight() {
+        return 1;
+    }
+
+    @Override
+    public int minFlyingHeight() {
+        return 1;
+    }
+
+    /**
+     * Boolean used for flying mounts
+     */
+    public boolean isFlyer() {
+        return false;
+    }
+
+    @Override
+    public boolean getIsFlying() {
+        return false;
+    }
 }

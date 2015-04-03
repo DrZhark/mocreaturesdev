@@ -1,36 +1,25 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.block.state.IBlockState;
-
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-
-import java.util.List;
-
-import net.minecraft.pathfinding.PathEntity;
 import drzhark.mocreatures.MoCTools;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -40,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
+
+import java.util.List;
 
 public class MoCEntityEnt extends MoCEntityAnimal {
 
@@ -51,7 +42,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
     }
 
     @Override
@@ -205,8 +195,11 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         }
 
         if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.air) {
-            IBlockState iblockstate = getBlockStateToPlant();
-
+            IBlockState iblockstate = getBlockStateToBePlanted();
+            int plantChance = 3;
+            if (iblockstate.getBlock() == Blocks.sapling) {
+                plantChance = 10;
+            }
             boolean cantPlant = false;
             // check perms first
             for (int x = -1; x < 2; x++) {
@@ -223,7 +216,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     }
                     cantPlant = (event != null && event.isCanceled());
                     Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
-                    if (!cantPlant && this.rand.nextInt(3) == 0 && blockToPlant == Blocks.air) {
+                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.air) {
                         this.worldObj.setBlockState(pos1, iblockstate, 3);
                     }
                 }
@@ -239,7 +232,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
      *
      * @return Any of the flowers, mushrooms, grass and saplings
      */
-    private IBlockState getBlockStateToPlant() {
+    private IBlockState getBlockStateToBePlanted() {
         int blockID = 0;
         int metaData = 0;
         switch (this.rand.nextInt(20)) {

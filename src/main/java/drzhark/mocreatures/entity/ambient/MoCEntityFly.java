@@ -26,11 +26,12 @@ public class MoCEntityFly extends MoCEntityInsect {
             if (getIsFlying() && this.rand.nextInt(200) == 0) {
                 setIsFlying(false);
             }
-
-            EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
-            if (ep != null && getIsFlying() && --this.soundCount == -1) {
-                MoCTools.playCustomSound(this, "fly", this.worldObj);
-                this.soundCount = 55;
+            if (getIsFlying() && --this.soundCount == -1) {
+                EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
+                if (ep != null) {
+                    MoCTools.playCustomSound(this, "fly", this.worldObj);
+                    this.soundCount = 55;
+                }
             }
 
             //TODO
@@ -53,17 +54,20 @@ public class MoCEntityFly extends MoCEntityInsect {
     }
 
     @Override
-    protected float getFlyingSpeed() {
-        return 0.7F;
-    }
-
-    @Override
-    protected float getWalkingSpeed() {
-        return 0.3F;
-    }
-
-    @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
         return par1ItemStack != null && par1ItemStack.getItem() == Items.rotten_flesh;
+    }
+
+    @Override
+    public boolean isFlyer() {
+        return true;
+    }
+
+    @Override
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.2F;
+        }
+        return 0.12F;
     }
 }

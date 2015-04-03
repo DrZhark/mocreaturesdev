@@ -1,21 +1,19 @@
 package drzhark.mocreatures.entity.monster;
 
-import net.minecraft.entity.SharedMonsterAttributes;
-
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
@@ -44,7 +42,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
         this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 

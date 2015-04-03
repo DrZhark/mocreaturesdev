@@ -106,10 +106,8 @@ public class MoCModelFirefly extends ModelBase {
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        //super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityFirefly entityfirefly = (MoCEntityFirefly) entity;
-        boolean isFlying = (entityfirefly.getIsFlying() || entityfirefly.isOnAir());
-        //boolean onGround = entityfirefly.onGround;
+        boolean isFlying = (entityfirefly.getIsFlying() || entityfirefly.motionY < -0.1D);
 
         setRotationAngles(f, f1, f2, f3, f4, f5, isFlying);
         this.Antenna.render(f5);
@@ -170,11 +168,6 @@ public class MoCModelFirefly extends ModelBase {
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, boolean isFlying) {
-        //super.setRotationAngles(f, f1, f2, f3, f4, f5);
-
-        //bipedRightArm.rotateAngleX = MathHelper.cos((f * 0.6662F) + 3.141593F) * 2.0F * f1 * 0.5F;
-        //bipedLeftArm.rotateAngleX = MathHelper.cos(f * 0.6662F) * 2.0F * f1 * 0.5F;
-
         float legMov = 0F;
         float legMovB = 0F;
 

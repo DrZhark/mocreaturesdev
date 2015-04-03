@@ -97,11 +97,6 @@ public class MoCEntityAnt extends MoCEntityInsect {
     }
 
     @Override
-    protected float getWalkingSpeed() {
-        return 0.8F;
-    }
-
-    @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
         return par1ItemStack != null && MoCTools.isItemEdible(par1ItemStack.getItem());
     }

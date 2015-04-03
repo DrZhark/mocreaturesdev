@@ -5,13 +5,12 @@ import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,9 +41,8 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         this.tasks.addTask(2, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
         this.tasks.addTask(3, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(9, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
 

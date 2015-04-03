@@ -4,6 +4,9 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -14,6 +17,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -51,16 +58,24 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         setEdad(40);
         setKittyState(1);
         this.kittytimer = 0;
-        //health = 15;
         this.madtimer = this.rand.nextInt(5);
-
         this.foundTree = false;
+        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
+        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -157,31 +172,17 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         this.isSwinging = var1;
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-
-        if ((f > 2.0F) && (f < 6F) && (this.rand.nextInt(30) == 0) && this.onGround) {
-            double d = entity.posX - this.posX;
-            double d1 = entity.posZ - this.posZ;
-            float f1 = MathHelper.sqrt_double((d * d) + (d1 * d1));
-            this.motionX = ((d / f1) * 0.5D * 0.8D) + (this.motionX * 0.2D);
-            this.motionZ = ((d1 / f1) * 0.5D * 0.8D) + (this.motionZ * 0.2D);
-            this.motionY = 0.4D;
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        if ((getKittyState() != 18) && (getKittyState() != 10)) {
+            swingArm();
         }
-        if ((f < 2D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            if ((getKittyState() != 18) && (getKittyState() != 10)) {
-                swingArm();
-            }
-            if (((getKittyState() == 13) && (entity instanceof EntityPlayer)) || ((getKittyState() == 8) && (entity instanceof EntityItem))
-                    || ((getKittyState() == 18) && (entity instanceof MoCEntityKitty)) || (getKittyState() == 10)) {
-                return;
-            }
-
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 1);
+        if (((getKittyState() == 13) && (entityIn instanceof EntityPlayer)) || ((getKittyState() == 8) && (entityIn instanceof EntityItem))
+                || ((getKittyState() == 18) && (entityIn instanceof MoCEntityKitty)) || (getKittyState() == 10)) {
+            return false;
         }
-    }*/
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -592,11 +593,11 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    protected boolean isMovementCeased() {
+    @Override
+    public boolean isMovementCeased() {
         return getIsSitting() || (getKittyState() == 6) || ((getKittyState() == 16) && getOnTree()) || (getKittyState() == 12)
                 || (getKittyState() == 17) || (getKittyState() == 14) || (getKittyState() == 20) || (getKittyState() == 23);
-    }*/
+    }
 
     @Override
     public boolean isOnLadder() {
@@ -1278,5 +1279,12 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     @Override
     public boolean swimmerEntity() {
         return true;
+    }
+
+    @Override
+    public int nameYOffset() {
+        if (this.getIsSitting())
+            return -30;
+        return -40;
     }
 }

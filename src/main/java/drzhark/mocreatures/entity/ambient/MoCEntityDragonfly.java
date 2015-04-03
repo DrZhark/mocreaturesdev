@@ -58,12 +58,19 @@ public class MoCEntityDragonfly extends MoCEntityInsect {
     }
 
     @Override
-    protected float getFlyingSpeed() {
-        return 0.8F;
+    public boolean isFlyer() {
+        return true;
     }
 
     @Override
-    protected float getWalkingSpeed() {
-        return 0.2F;
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.25F;
+        }
+        return 0.12F;
+    }
+
+    public int maxFlyingHeight() {
+        return 4;
     }
 }

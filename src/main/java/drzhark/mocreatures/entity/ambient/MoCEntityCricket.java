@@ -1,11 +1,9 @@
 package drzhark.mocreatures.entity.ambient;
 
-import net.minecraft.entity.SharedMonsterAttributes;
-
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -21,13 +19,6 @@ public class MoCEntityCricket extends MoCEntityInsect
     public MoCEntityCricket(World world) {
         super(world);
         this.texture = "cricketa.png";
-        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 1.2D));
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
     @Override
@@ -95,12 +86,15 @@ public class MoCEntityCricket extends MoCEntityInsect
     }
 
     @Override
-    protected float getFlyingSpeed() {
-        return 0.4F;
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.12F;
+        }
+        return 0.15F;
     }
 
     @Override
-    protected float getWalkingSpeed() {
-        return 0.5F;
+    public boolean isFlyer() {
+        return true;
     }
 }

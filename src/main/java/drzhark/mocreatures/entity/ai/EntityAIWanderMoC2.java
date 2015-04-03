@@ -1,7 +1,11 @@
 package drzhark.mocreatures.entity.ai;
 
+import net.minecraft.util.MathHelper;
+
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
+import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -56,6 +60,15 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
 
         Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
 
+        if (vec3 != null && this.entity instanceof IMoCEntity && this.entity.getNavigator() instanceof PathNavigateFlyer) {
+            int distToFloor = MoCTools.distanceToFloor(this.entity);
+            int finalYHeight = distToFloor + MathHelper.floor_double(vec3.yCoord - this.entity.posY);
+            if (finalYHeight > ((IMoCEntity) this.entity).maxFlyingHeight()) {
+                //System.out.println("vector height bigger than max flying height");
+                return false;
+            }
+
+        }
         if (vec3 == null) {
             //System.out.println("exiting path finder null Vec3");
             return false;
@@ -82,7 +95,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
      */
     @Override
     public void startExecuting() {
-        //System.out.println("moving to " + this.xPosition + ", " + this.yPosition + ", " + this.zPosition);
+        //System.out.println(this.entity + "moving to " + this.xPosition + ", " + this.yPosition + ", " + this.zPosition);
         this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
     }
 
@@ -90,6 +103,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
      * Makes task to bypass chance
      */
     public void makeUpdate() {
+        //System.out.println(entity + " has forced update");
         this.mustUpdate = true;
     }
 

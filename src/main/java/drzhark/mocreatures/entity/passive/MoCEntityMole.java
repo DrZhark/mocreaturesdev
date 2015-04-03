@@ -29,8 +29,9 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     public MoCEntityMole(World world) {
         super(world);
         setSize(1F, 0.5F);
-        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
 
     @Override

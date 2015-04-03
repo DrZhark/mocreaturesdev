@@ -90,10 +90,8 @@ public class MoCModelFly extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityFly fly = (MoCEntityFly) entity;
-        boolean isFlying = (fly.getIsFlying() || fly.isOnAir());
-        //boolean onGround = fly.onGround;
+        boolean isFlying = (fly.getIsFlying() || fly.motionY < -0.1D);
         setRotationAngles(f, f1, f2, f3, f4, f5, !isFlying);
-
         this.FrontLegs.render(f5);
         this.RearLegs.render(f5);
         this.MidLegs.render(f5);
