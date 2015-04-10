@@ -341,7 +341,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             Entity entity = damagesource.getEntity();
 
             if (this.riddenByEntity != null && this.riddenByEntity == entity) {
-                if ((entity != this) && entity instanceof EntityLivingBase && this.worldObj.getDifficulty().getDifficultyId() > 0) {
+                if ((entity != this) && entity instanceof EntityLivingBase && super.shouldAttackPlayers()) {
                     setAttackTarget((EntityLivingBase) entity);
                 }
             }

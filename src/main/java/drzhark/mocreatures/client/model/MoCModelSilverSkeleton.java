@@ -33,6 +33,8 @@ public class MoCModelSilverSkeleton extends ModelBase {
 
     private int leftAttack;
     private int rightAttack;
+    private boolean riding;
+    private float radianF = 57.29578F;
 
     public MoCModelSilverSkeleton() {
         this.textureWidth = 64;
@@ -135,17 +137,25 @@ public class MoCModelSilverSkeleton extends ModelBase {
         boolean sprinting = samurai.isSprinting();
         this.leftAttack = samurai.attackCounterLeft;
         this.rightAttack = samurai.attackCounterRight;
+        this.riding = samurai.ridingEntity != null;
         setRotationAngles(f, f1, f2, f3, f4, f5);
-
+        GL11.glPushMatrix();
         if (sprinting && f1 > 0.3F) {
-            GL11.glPushMatrix();
+            //GL11.glPushMatrix();
             GL11.glRotatef((float) (f1 * -20D), -1F, 0.0F, 0.0F);
-            renderParts(f5);
-            GL11.glPopMatrix();
-        } else {
-            renderParts(f5);
+            //renderParts(f5);
+            //GL11.glPopMatrix();
         }
+        if (riding) {
 
+            GL11.glTranslatef(0.0F, 0.5F, 0.0F);
+            //renderParts(f5);
+            //GL11.glPopMatrix();
+        }
+        //renderParts(f5);
+
+        renderParts(f5);
+        GL11.glPopMatrix();
     }
 
     private void renderParts(float f5) {
@@ -188,30 +198,6 @@ public class MoCModelSilverSkeleton extends ModelBase {
         float RLegXRotB = RLegXRot;
         float LLegXRotB = LLegXRot;
 
-        this.RightThigh.rotateAngleX = RLegXRot;
-        this.LeftThigh.rotateAngleX = LLegXRot;
-        this.RightKnee.rotateAngleX = this.RightThigh.rotateAngleX;
-        this.LeftKnee.rotateAngleX = this.LeftThigh.rotateAngleX;
-
-        float RLegXRot2 = MathHelper.cos(((f + 0.1F) * 0.6662F) + 3.141593F) * 0.8F * f1;
-        float LLegXRot2 = MathHelper.cos((f + 0.1F) * 0.6662F) * 0.8F * f1;
-        if (f1 > 0.15F) {
-            if (RLegXRot > RLegXRot2) // - - >
-            {
-                RLegXRotB = RLegXRot + (25 / 57.29578F);
-
-            }
-
-            if (LLegXRot > LLegXRot2) // - - >
-            {
-                LLegXRotB = LLegXRot + (25 / 57.29578F);
-            }
-
-        }
-
-        this.RightLeg.rotateAngleX = (LLegXRotB);
-        this.LeftLeg.rotateAngleX = (RLegXRotB);
-
         if (leftAttack == 0) {
             this.LeftArm.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
             this.LeftArm.rotateAngleX = RLegXRot;
@@ -238,6 +224,49 @@ public class MoCModelSilverSkeleton extends ModelBase {
                 this.RightSwordA.rotateAngleX = this.RightSwordB.rotateAngleX = this.RightSwordC.rotateAngleX = this.RightArm.rotateAngleX;
         this.RightHand.rotateAngleZ =
                 this.RightSwordA.rotateAngleZ = this.RightSwordB.rotateAngleZ = this.RightSwordC.rotateAngleZ = this.RightArm.rotateAngleZ;
+
+        if (riding) {
+            this.RightLeg.rotateAngleX = 0F;
+
+            this.RightThigh.rotateAngleX = -60F / radianF;
+            this.RightThigh.rotateAngleY = 20F / radianF;
+            this.RightKnee.rotateAngleY = 20F / radianF;
+            this.RightKnee.rotateAngleX = -60F / radianF;
+            this.LeftLeg.rotateAngleX = 0F;
+            this.LeftThigh.rotateAngleY = -20F / radianF;
+            this.LeftKnee.rotateAngleY = -20F / radianF;
+            this.LeftThigh.rotateAngleX = -60F / radianF;
+            this.LeftKnee.rotateAngleX = -60F / radianF;
+        } else {
+            this.RightThigh.rotateAngleY = 0F;
+            this.RightKnee.rotateAngleY = 0F;
+            this.LeftThigh.rotateAngleY = 0F;
+            this.LeftKnee.rotateAngleY = 0F;
+            this.RightThigh.rotateAngleX = RLegXRot;
+            this.LeftThigh.rotateAngleX = LLegXRot;
+            this.RightKnee.rotateAngleX = this.RightThigh.rotateAngleX;
+            this.LeftKnee.rotateAngleX = this.LeftThigh.rotateAngleX;
+
+            float RLegXRot2 = MathHelper.cos(((f + 0.1F) * 0.6662F) + 3.141593F) * 0.8F * f1;
+            float LLegXRot2 = MathHelper.cos((f + 0.1F) * 0.6662F) * 0.8F * f1;
+
+            if (f1 > 0.15F) {
+                if (RLegXRot > RLegXRot2) // - - >
+                {
+                    RLegXRotB = RLegXRot + (25 / 57.29578F);
+
+                }
+
+                if (LLegXRot > LLegXRot2) // - - >
+                {
+                    LLegXRotB = LLegXRot + (25 / 57.29578F);
+                }
+
+            }
+
+            this.RightLeg.rotateAngleX = (LLegXRotB);
+            this.LeftLeg.rotateAngleX = (RLegXRotB);
+        }
     }
 
 }

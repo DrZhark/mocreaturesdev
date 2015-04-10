@@ -199,7 +199,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isNotScared() {
-        // TODO depending on size!
         if (getType() > 2 && getEdad() > 50) {
             return true;
         }
@@ -519,7 +518,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                 return true;
             }
-            if ((entity != this) && entity instanceof EntityLivingBase && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
+            if ((entity != this) && entity instanceof EntityLivingBase && (super.shouldAttackPlayers())) {
                 setPissed(true);
                 setAttackTarget((EntityLivingBase) entity);
             }

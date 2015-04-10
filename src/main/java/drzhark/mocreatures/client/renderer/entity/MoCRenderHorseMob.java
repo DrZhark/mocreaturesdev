@@ -25,17 +25,6 @@ public class MoCRenderHorseMob extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityHorseMob entityhorse = (MoCEntityHorseMob) entityliving;
-
-        if (entityhorse.isGhost()) {
-            adjustHeight(entityhorse, -0.3F + (entityhorse.tFloat() / 3F));
-        }
-        super.preRenderCallback(entityliving, f);
-
-    }
-
-    @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         return ((MoCEntityHorseMob) par1Entity).getTexture();
     }

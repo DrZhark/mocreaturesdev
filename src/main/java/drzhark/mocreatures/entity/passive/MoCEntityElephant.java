@@ -1,5 +1,15 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.inventory.InventoryLargeChest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -41,9 +51,12 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public MoCAnimalChest localelephantchest2;
     public MoCAnimalChest localelephantchest3;
     public MoCAnimalChest localelephantchest4;
+    public MoCAnimalChest emptyelephantchest;
     public ItemStack localstack;
     boolean hasPlatform;
     public int tailCounter;
+    public int trunkCounter;
+    public int earCounter;
     private byte tuskUses;
     private byte temper;
 
@@ -52,8 +65,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         setAdult(true);
         setTamed(false);
         setEdad(50);
-        setSize(1.1F, 3F);
-        //health = 40;
+        setSize(1.1F, 3F); //TODO 
         this.stepHeight = 1.0F;
 
         if (MoCreatures.isServer()) {
@@ -63,27 +75,32 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 setAdult(true);
             }
         }
+        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        //this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
+        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
     }
 
     @Override
     public void selectType() {
         checkSpawningBiome();
-
         if (getType() == 0) {
-            int i = this.rand.nextInt(100);
-            if (i <= 50) {
-                setType(1);
-            } else {
-                setType(2);
-            }
-            this.setHealth(getMaxHealth());
+            setType(this.rand.nextInt(2) + 1);
         }
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.setHealth(getMaxHealth());
     }
 
     @Override
@@ -162,18 +179,17 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (this.sitCounter != 0) {
             return 0D;
         }
-
         double tSpeed = 0.5D;
         if (getType() == 1) {
-            tSpeed = 0.6D;
+            tSpeed = 0.55D;
         } else if (getType() == 2) {
-            tSpeed = 0.7D;
+            tSpeed = 0.6D;
         } else if (getType() == 3) {
             tSpeed = 0.5D;
         } else if (getType() == 4) {
-            tSpeed = 0.5D;
+            tSpeed = 0.55D;
         } else if (getType() == 5) {
-            tSpeed = 0.7D;
+            tSpeed = 0.5D;
         }
 
         if (this.sprintCounter > 0 && this.sprintCounter < 150) {
@@ -188,24 +204,15 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void onLivingUpdate() {
-        if (this.tailCounter > 0 && ++this.tailCounter > 8) {
-            this.tailCounter = 0;
-        }
 
-        if (this.rand.nextInt(200) == 0) {
-            this.tailCounter = 1;
-        }
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
-            if (!getIsAdult() && (this.rand.nextInt(1000) == 0)) {
-                setEdad(getEdad() + 1);
-                if (getEdad() >= 100) {
-                    setAdult(true);
-                }
+            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
+                MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
             }
 
-            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null)) {
-                MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
+            if (this.sprintCounter > 0 && ++this.sprintCounter > 300) {
+                this.sprintCounter = 0;
             }
 
             if (getIsTamed() && (this.riddenByEntity == null) && getArmorType() >= 1 && this.rand.nextInt(20) == 0) {
@@ -251,6 +258,32 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 destroyPlatforms();
             }
 
+        } else //client only animation counters
+        {
+            if (this.tailCounter > 0 && ++this.tailCounter > 8) {
+                this.tailCounter = 0;
+            }
+
+            if (this.rand.nextInt(200) == 0) {
+                this.tailCounter = 1;
+            }
+
+            if (this.trunkCounter > 0 && ++this.trunkCounter > 38) {
+                this.trunkCounter = 0;
+            }
+
+            if (this.trunkCounter == 0 && this.rand.nextInt(200) == 0) {
+                this.trunkCounter = rand.nextInt(10) + 1;
+            }
+
+            if (this.earCounter > 0 && ++this.earCounter > 30) {
+                this.earCounter = 0;
+            }
+
+            if (this.rand.nextInt(200) == 0) {
+                this.earCounter = rand.nextInt(20) + 1;
+            }
+
         }
 
         if (this.sitCounter != 0) {
@@ -286,6 +319,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
     }
 
+    /**
+     * Destroys dummy entity platforms used for second rider
+     */
     private void destroyPlatforms() {
         int j = 0;
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
@@ -365,7 +401,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             MoCTools.playCustomSound(this, "roping", this.worldObj);
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
+            //entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
             setStorage((byte) 1);
             return true;
         }
@@ -467,75 +503,39 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.key) && getStorage() > 0) {
-            if (this.localelephantchest == null) {
-                this.localelephantchest = new MoCAnimalChest("ElephantChest", 18);
-            }
-
+        if (entityplayer.isSneaking()) {
+            initChest();
             if (getStorage() == 1) {
-                // only open this chest on server side
                 if (MoCreatures.isServer()) {
-                    entityplayer.displayGUIChest(this.localelephantchest);
+                    InventoryLargeChest singleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, emptyelephantchest);
+                    entityplayer.displayGUIChest(singleChest);
                 }
                 return true;
             }
-
-            // TODO - fix elephant chest
-            /*
             if (getStorage() == 2) {
-
-                if (this.localelephantchest2 == null) {
-                    this.localelephantchest2 = new MoCAnimalChest("ElephantChest", 18);
-                }
-                // only open this chest on server side
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 if (MoCreatures.isServer()) {
                     entityplayer.displayGUIChest(doubleChest);
                 }
                 return true;
             }
-
             if (getStorage() == 3) {
-                if (this.localelephantchest2 == null) {
-                    this.localelephantchest2 = new MoCAnimalChest("ElephantChest", 18);
-                }
-
-                if (this.localelephantchest3 == null) {
-                    this.localelephantchest3 = new MoCAnimalChest("ElephantChest", 9);
-                }
-                // only open this chest on server side
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 InventoryLargeChest tripleChest = new InventoryLargeChest("ElephantChest", doubleChest, this.localelephantchest3);
-
                 if (MoCreatures.isServer()) {
                     entityplayer.displayGUIChest(tripleChest);
                 }
                 return true;
             }
-
             if (getStorage() == 4) {
-                if (this.localelephantchest2 == null) {
-                    this.localelephantchest2 = new MoCAnimalChest("ElephantChest", 18);
-                }
-
-                if (this.localelephantchest3 == null) {
-                    this.localelephantchest3 = new MoCAnimalChest("ElephantChest", 9);
-                }
-
-                if (this.localelephantchest4 == null) {
-                    this.localelephantchest4 = new MoCAnimalChest("ElephantChest", 9);
-                }
-                // only open this chest on server side
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 InventoryLargeChest doubleChestb = new InventoryLargeChest("ElephantChest", this.localelephantchest3, this.localelephantchest4);
                 InventoryLargeChest fourChest = new InventoryLargeChest("ElephantChest", doubleChest, doubleChestb);
-
                 if (MoCreatures.isServer()) {
                     entityplayer.displayGUIChest(fourChest);
                 }
                 return true;
             }
-            */
 
         }
         if ((itemstack != null)
@@ -559,6 +559,28 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         return false;
     }
 
+    private void initChest() {
+        if (getStorage() > 0 && this.emptyelephantchest == null) {
+            this.emptyelephantchest = new MoCAnimalChest("ElephantChest", 0);
+        }
+
+        if (getStorage() > 0 && this.localelephantchest == null) {
+            this.localelephantchest = new MoCAnimalChest("ElephantChest", 18);
+        }
+
+        if (getStorage() > 1 && this.localelephantchest2 == null) {
+            this.localelephantchest2 = new MoCAnimalChest("ElephantChest", 18);
+        }
+
+        if (getStorage() > 2 && this.localelephantchest3 == null) {
+            this.localelephantchest3 = new MoCAnimalChest("ElephantChest", 9);
+        }
+
+        if (getStorage() > 3 && this.localelephantchest4 == null) {
+            this.localelephantchest4 = new MoCAnimalChest("ElephantChest", 9);
+        }
+    }
+
     /**
      * Used to mount a second player on the elephant
      */
@@ -567,7 +589,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         MoCEntityPlatform platform = new MoCEntityPlatform(this.worldObj, this.getEntityId(), yOff, 1.25D);
         platform.setPosition(this.posX, this.posY + yOff, this.posZ);
         this.worldObj.spawnEntityInWorld(platform);
-        //System.out.println("created platform " + platform.entityId);
         entity.mountEntity(platform);
     }
 
@@ -627,24 +648,20 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
             setType(3 + this.rand.nextInt(2));
-            this.setHealth(getMaxHealth());
             return true;
         }
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
             setType(1);
-            this.setHealth(getMaxHealth());
             return true;
         }
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.JUNGLE)) {
             setType(2);
-            this.setHealth(getMaxHealth());
             return true;
         }
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS) || BiomeDictionary.isBiomeOfType(currentbiome, Type.FOREST)) {
             setType(1 + this.rand.nextInt(2));
-            this.setHealth(getMaxHealth());
             return true;
         }
 
@@ -892,7 +909,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 break;
             case 2:
             case 5:
-                yOff = 0.0D;
+                yOff = -0.17D;
                 if (sit) {
                     yOff = -0.5D;
                 }
@@ -1027,8 +1044,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                 return true;
             }
-            this.worldObj.getDifficulty();
-            if (entity != this && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) {
+            if (entity != this && super.shouldAttackPlayers()) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;
@@ -1036,22 +1052,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         return false;
     }
 
-    /* @Override
-     protected void attackEntity(Entity entity, float f) {
-
-         if (this.attackTime <= 0 && (f < 2D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                 && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-             attackTime = 20;
-             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 4);
-
-         }
-     }*/
-
     @Override
     public void fall(float f, float f1) {
         int i = (int) Math.ceil(f - 3F);
         if ((i > 0)) {
-            i /= 3;
+            i /= 2;
             if (i > 0) {
                 attackEntityFrom(DamageSource.fall, i);
             }
@@ -1068,5 +1073,15 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 this.worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getFrequency() * 0.75F);
             }
         }
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return getIsAdult() || getEdad() > 80 || getIsTamed();
+    }
+
+    @Override
+    protected boolean usesNewAI() {
+        return true;
     }
 }

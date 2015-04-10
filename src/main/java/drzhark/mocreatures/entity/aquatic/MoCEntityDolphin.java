@@ -37,7 +37,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
@@ -188,7 +188,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                     return true;
                 }
-                if (entity != this) {
+                if (entity != this && this.getEdad() >= 100) {
                     setAttackTarget(entityliving);
                 }
                 return true;
@@ -203,18 +203,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     public boolean canBeCollidedWith() {
         return this.riddenByEntity == null;
     }
-
-    //TODO
-    /*protected Entity findPlayerToAttack() {
-        if ((this.worldObj.getDifficulty().getDifficultyId() > 0) && (getEdad() >= 100) && MoCreatures.proxy.attackDolphins
-                && (this.rand.nextInt(50) == 0)) {
-            EntityLivingBase entityliving = FindTarget(this, 12D);
-            if ((entityliving != null) && entityliving.isInWater()) {
-                return entityliving;
-            }
-        }
-        return null;
-    }*/
 
     //TODO
     /*public EntityLivingBase FindTarget(Entity entity, double d) {

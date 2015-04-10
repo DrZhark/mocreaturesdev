@@ -288,7 +288,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
                 return false;
             }
 
-            if ((entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
+            if ((entity != this) && (super.shouldAttackPlayers())) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;
@@ -350,7 +350,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        return this.isNotScared() && !this.isMovementCeased();
+        return this.isNotScared() && !this.isMovementCeased() && this.riddenByEntity == null;
     }
 
     @Override

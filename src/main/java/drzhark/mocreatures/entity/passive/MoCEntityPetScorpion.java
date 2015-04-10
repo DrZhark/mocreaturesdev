@@ -170,11 +170,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         if (!this.onGround && (this.ridingEntity != null)) {
             this.rotationYaw = this.ridingEntity.rotationYaw;
         }
-        // TODO
-        /*
-        if (getIsAdult() && fleeingTick > 0) {
-            fleeingTick = 0;
-        }*/
 
         if (this.mouthCounter != 0 && this.mouthCounter++ > 50) {
             this.mouthCounter = 0;
@@ -199,14 +194,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
                 setPoisoning(false);
             }
         }
-
-        if (MoCreatures.isServer() && !getIsAdult() && (this.rand.nextInt(200) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 120) {
-                setAdult(true);
-            }
-        }
-
         super.onLivingUpdate();
     }
 
@@ -218,7 +205,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
                 return false;
             }
 
-            if ((entity != null) && (entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0) && getIsAdult()) {
+            if ((entity != null) && (entity != this) && (super.shouldAttackPlayers()) && getIsAdult()) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;
@@ -564,5 +551,10 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     @Override
     public float getAdjustedYOffset() {
         return 0.2F;
+    }
+
+    @Override
+    public int getMaxEdad() {
+        return 120;
     }
 }

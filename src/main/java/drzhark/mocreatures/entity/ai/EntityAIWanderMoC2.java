@@ -1,14 +1,13 @@
 package drzhark.mocreatures.entity.ai;
 
-import net.minecraft.util.MathHelper;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
-import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class EntityAIWanderMoC2 extends EntityAIBase {
@@ -20,8 +19,6 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
     private double speed;
     private int executionChance;
     private boolean mustUpdate;
-
-    //private int moveExecutionCounter;
 
     public EntityAIWanderMoC2(EntityCreature creatureIn, double speedIn) {
         this(creatureIn, speedIn, 120);
@@ -42,7 +39,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
         if (this.entity instanceof IMoCEntity && ((IMoCEntity) this.entity).isMovementCeased()) {
             return false;
         }
-        if (this.entity.riddenByEntity != null && !(this.entity instanceof MoCEntityAnt)) {
+        if (this.entity.riddenByEntity != null && !(this.entity instanceof MoCEntityAnt || this.entity instanceof MoCEntityMob)) {
             return false;
         }
 
@@ -63,12 +60,13 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
         if (vec3 != null && this.entity instanceof IMoCEntity && this.entity.getNavigator() instanceof PathNavigateFlyer) {
             int distToFloor = MoCTools.distanceToFloor(this.entity);
             int finalYHeight = distToFloor + MathHelper.floor_double(vec3.yCoord - this.entity.posY);
-            if (finalYHeight > ((IMoCEntity) this.entity).maxFlyingHeight()) {
+            if ((finalYHeight > ((IMoCEntity) this.entity).maxFlyingHeight()) || (finalYHeight < ((IMoCEntity) this.entity).minFlyingHeight())) {
                 //System.out.println("vector height bigger than max flying height");
                 return false;
             }
 
         }
+
         if (vec3 == null) {
             //System.out.println("exiting path finder null Vec3");
             return false;

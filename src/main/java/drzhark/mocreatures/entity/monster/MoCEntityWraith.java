@@ -33,8 +33,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         setSize(1.5F, 1.5F);
         this.isImmuneToFire = false;
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 60));
+        this.tasks.addTask(3, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }

@@ -1,5 +1,12 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.inventory.InventoryLargeChest;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.pathfinding.PathNavigateGround;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -42,21 +49,32 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     public boolean canLayEggs;
 
     public MoCAnimalChest localchest;
+    public MoCAnimalChest emptychest;
     public ItemStack localstack;
 
     public MoCEntityOstrich(World world) {
         super(world);
         setSize(1.0F, 1.6F);
         setEdad(35);
+        setTamed(false);
         this.eggCounter = this.rand.nextInt(1000) + 1000;
         this.stepHeight = 1.0F;
         this.canLayEggs = false;
+        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
@@ -177,7 +195,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 return false;
             }
 
-            if ((entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0) && getType() > 2) {
+            if ((entity != this) && (super.shouldAttackPlayers()) && getType() > 2) {
                 setAttackTarget((EntityLivingBase) entity);
                 flapWings();
             }
@@ -193,30 +211,30 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         dropMyStuff();
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (this.attackTime <= 0 && f < 2.0F && entity.getEntityBoundingBox().maxY > this.getEntityBoundingBox().minY
-                && entity.getEntityBoundingBox().minY < this.getEntityBoundingBox().maxY) {
-            this.attackTime = 20;
-            openMouth();
-            flapWings();
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), 3);
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        if (entityIn instanceof EntityPlayer && !shouldAttackPlayers()) {
+            return false;
         }
-    }*/
+        openMouth();
+        flapWings();
+        return super.attackEntityAsMob(entityIn);
+    }
 
     public float calculateMaxHealth() {
         switch (getType()) {
             case 1:
                 return 10;
             case 2:
-                return 15;
+                return 20;
             case 3:
-                return 20;
+                return 25;
             case 4:
-                return 20;
+                return 25;
             case 5:
-                return 20;
-
+                return 35;
+            case 6:
+                return 35;
             default:
                 return 20;
         }
@@ -231,7 +249,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     public void selectType() {
         if (getType() == 0) {
             /**
-             * 1 = chick 2 = female 3 = male 4 = albino male 5 = demon ostrich
+             * 1 = chick /2 = female /3 = male /4 = albino male /5 = nether ostrich /6 = wyvern
              */
             int j = this.rand.nextInt(100);
             if (j <= (20)) {
@@ -244,6 +262,8 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 setType(4);
             }
         }
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.setHealth(getMaxHealth());
     }
 
     @Override
@@ -299,7 +319,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     public double getCustomSpeed() {
-        //TODO for newer
         double OstrichSpeed = 0.8D;
         if (getType() == 1) {
             OstrichSpeed = 0.8;
@@ -361,6 +380,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 if (this.transformType != 0) {
                     dropArmor();
                     setType(this.transformType);
+                    selectType();
                 }
             }
         }
@@ -398,7 +418,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
         if (MoCreatures.isServer()) {
             //ostrich buckle!
-            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null)) {
+            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobs(this, 2D, this.worldObj);
             }
             // TODO
@@ -419,7 +439,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
             }
 
-            //to add collision detection
             if (getType() == 1 && (this.rand.nextInt(200) == 0)) {
                 //when is chick and becomes adult, change over to different type
                 setEdad(getEdad() + 1);
@@ -628,20 +647,24 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
 
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
+            //entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
             setIsChested(true);
             this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.key) && getIsChested()) {
-            // if first time opening horse chest, we must initialize it
+        if (entityplayer.isSneaking() && getIsChested()) {
+            // if first time opening a chest, we must initialize it
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("OstrichChest", 9);
             }
-            // only open this chest on server side
+            if (this.emptychest == null) {
+                this.emptychest = new MoCAnimalChest("OstrichChest", 0);
+            }
             if (MoCreatures.isServer()) {
-                entityplayer.displayGUIChest(this.localchest);
+
+                InventoryLargeChest singleChest = new InventoryLargeChest("OstrichChest", this.localchest, this.emptychest);
+                entityplayer.displayGUIChest(singleChest);
             }
             return true;
         }
@@ -921,7 +944,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isFlyer() {
-        return (getType() == 5 || getType() == 6);
+        return this.riddenByEntity != null && (getType() == 5 || getType() == 6);
     }
 
     @Override
@@ -934,12 +957,12 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     protected double myFallSpeed() {
-        return 0.99D;
+        return 0.89D;
     }
 
     @Override
     protected double flyerThrust() {
-        return 0.6D;
+        return 0.8D;
     }
 
     @Override
@@ -955,7 +978,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     @Override
     public void makeEntityJump() {
         if (this.jumpCounter > 5) {
-            //return;
             this.jumpCounter = 1;
         }
         if (this.jumpCounter == 0) {
@@ -977,5 +999,15 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     @Override
     public int getMaxSpawnedInChunk() {
         return 1;
+    }
+
+    //TODO 
+    //improve fall flapping wing animation
+    //IMPROVE DIVE CODE
+    //ATTACK!
+    //EGG LYING
+
+    public int getMaxEdad() {
+        return 20;
     }
 }

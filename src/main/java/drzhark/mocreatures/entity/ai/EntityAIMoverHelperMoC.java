@@ -34,7 +34,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         /*
          * Flying specific movement code
          */
-        if (isFlyer) {
+        if (isFlyer && theCreature.riddenByEntity == null) { //TODO && getIsFlying()
             this.flyingMovementUpdate();
         }
 

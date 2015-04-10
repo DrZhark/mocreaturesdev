@@ -389,7 +389,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
 
-            if (entity != this && entity instanceof EntityLivingBase && this.worldObj.getDifficulty().getDifficultyId() > 0 && getType() > 4) {
+            if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && getType() > 4) {
                 setAttackTarget((EntityLivingBase) entity);
                 setUpset(true);
             }

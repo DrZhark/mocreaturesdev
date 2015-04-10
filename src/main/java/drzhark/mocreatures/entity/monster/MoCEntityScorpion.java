@@ -1,5 +1,14 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
+
+import java.util.List;
+
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import net.minecraft.item.ItemStack;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -60,9 +69,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, this.aiAvoidExplodingCreepers);
-        this.tasks.addTask(4, new EntityAIFleeSun(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIFleeSun(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
         this.tasks.addTask(6, new EntityAILeapAtTarget(this, 0.4F));
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
 
@@ -165,49 +174,12 @@ public class MoCEntityScorpion extends MoCEntityMob {
         return !this.onGround && isOnLadder();
     }
 
-    /**
-     * finds shelter from sunlight
-     */
-    //TODO
-    protected void findSunLightShelter() {
-        Vec3 var1 = this.findPossibleShelter();
-        if (var1 == null) {
-            this.hideCounter++;
-            if (this.hideCounter > 200) {
-                this.hideCounter = 0;
-            }
-            // TODO
-            //this.updateWanderPath();
-            return;// false;
-        } else {
-            this.getNavigator().tryMoveToXYZ(var1.xCoord, var1.yCoord, var1.zCoord, this.getMoveSpeed() / 2F);
-        }
-    }
-
-    /**
-     * Does it want to hide?
-     *
-     * @return
-     */
-    //TODO
-    private boolean wantsToHide() {
-        return (this.worldObj.isDaytime()); //&& worldObj.canBlockSeeSky(MathHelper.floor_double(this.posX), (int) this.getEntityBoundingBox().minY, MathHelper.floor_double(this.posZ)));
-    }
-
     @Override
     public void onLivingUpdate() {
-        /*if (MoCreatures.isServer() && wantsToHide()) {
-            findSunLightShelter();
-        }*/
 
         if (!this.onGround && (this.ridingEntity != null)) {
             this.rotationYaw = this.ridingEntity.rotationYaw;
         }
-        // TODO
-        /*
-        if (getIsAdult() && fleeingTick > 0) {
-            fleeingTick = 0;
-        }*/
 
         if (this.mouthCounter != 0 && this.mouthCounter++ > 50) {
             this.mouthCounter = 0;
@@ -221,6 +193,22 @@ public class MoCEntityScorpion extends MoCEntityMob {
             this.armCounter = 0;
         }
 
+        if (MoCreatures.isServer() && this.riddenByEntity == null && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            for (int i = 0; i < list.size(); i++) {
+                Entity entity = (Entity) list.get(i);
+                if (!(entity instanceof EntityMob)) {
+                    continue;
+                }
+                EntityMob entitymob = (EntityMob) entity;
+                if (entitymob.ridingEntity == null
+                        && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
+                    entitymob.mountEntity(this);
+                    break;
+                }
+            }
+        }
+
         if (getIsPoisoning()) {
             this.poisontimer++;
             if (this.poisontimer == 1) {
@@ -232,15 +220,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 setPoisoning(false);
             }
         }
-
-        //TODO MOVE TO EntityMob
-        if (MoCreatures.isServer() && !getIsAdult() && (this.rand.nextInt(200) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 120) {
-                setAdult(true);
-            }
-        }
-
         super.onLivingUpdate();
     }
 
@@ -257,26 +236,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
             return false;
         }
     }
-
-    //TODO
-    /*protected Entity findPlayerToAttack() {
-        if (this.worldObj.getDifficulty().getDifficultyId() > 0 && (!this.worldObj.isDaytime()) && getIsAdult())// only attacks player at night
-        {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 12D);
-            if ((entityplayer != null)) {
-                return entityplayer;
-            }
-            {
-                if ((this.rand.nextInt(80) == 0)) {
-                    EntityLivingBase entityliving = getClosestEntityLiving(this, 10D);
-                    if (entityliving != null && !(entityliving instanceof EntityPlayer) && this.canEntityBeSeen(entityliving)) {
-                        return entityliving;
-                    }
-                }
-            }
-        }
-        return null;
-    }*/
 
     @Override
     public boolean entitiesToIgnore(Entity entity) {
@@ -334,13 +293,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void onDeath(DamageSource damagesource) {
         super.onDeath(damagesource);
-
         if (MoCreatures.isServer() && getIsAdult() && getHasBabies()) {
             int k = this.rand.nextInt(5);
             for (int i = 0; i < k; i++) {
-                MoCEntityPetScorpion entityscorpy = new MoCEntityPetScorpion(this.worldObj);
+                MoCEntityScorpion entityscorpy = new MoCEntityScorpion(this.worldObj);
                 entityscorpy.setPosition(this.posX, this.posY, this.posZ);
                 entityscorpy.setAdult(false);
+                entityscorpy.setEdad(20);
                 entityscorpy.setType(getType());
                 this.worldObj.spawnEntityInWorld(entityscorpy);
                 this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
@@ -460,11 +419,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         nbttagcompound.setBoolean("Babies", getHasBabies());
     }
 
-    /*@Override
-    public boolean isAIEnabled() {
-        return wantsToHide() && (this.getAttackTarget() == null) && (this.hideCounter < 50);
-    }*/
-
     @Override
     public int getTalkInterval() {
         return 300;
@@ -481,5 +435,53 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public float getAdjustedYOffset() {
         return 30F;
+    }
+
+    @Override
+    protected int getMaxEdad() {
+        return 120;
+    }
+
+    @Override
+    public boolean isNotScared() {
+        return getIsAdult() || this.getEdad() > 70;
+    }
+
+    @Override
+    public boolean interact(EntityPlayer entityplayer) {
+        if (super.interact(entityplayer)) {
+            return false;
+        }
+
+        if (MoCreatures.isServer() && this.ridingEntity == null && !getIsAdult() && getEdad() < 60) {
+            MoCEntityPetScorpion entitypetscorpy = new MoCEntityPetScorpion(this.worldObj);
+            entitypetscorpy.setPosition(this.posX, this.posY, this.posZ);
+            entitypetscorpy.setAdult(false);
+            entitypetscorpy.setEdad(this.getEdad());
+            entitypetscorpy.setType(getType());
+            this.worldObj.spawnEntityInWorld(entitypetscorpy);
+            entitypetscorpy.rotationYaw = entityplayer.rotationYaw;
+            entitypetscorpy.mountEntity(entityplayer);
+            MoCTools.tameWithName(entityplayer, entitypetscorpy);
+            entitypetscorpy.setPicked(true);
+            this.setDead();
+            return true;
+
+        }
+        return false;
+    }
+
+    @Override
+    public double getMountedYOffset() {
+        return (this.height * 0.75D) - 0.15D;
+    }
+
+    @Override
+    public void updateRiderPosition() {
+        double dist = (0.2D);
+        double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
+        double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
+        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        this.riddenByEntity.rotationYaw = this.rotationYaw;
     }
 }

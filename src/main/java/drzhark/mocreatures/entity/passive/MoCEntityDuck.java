@@ -25,7 +25,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     public MoCEntityDuck(World world) {
         super(world);
         this.texture = "duck.png";
-        setSize(0.3F, 0.4F);
+        setSize(0.4F, 0.7F);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));

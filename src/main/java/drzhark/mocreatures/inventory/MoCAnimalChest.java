@@ -1,11 +1,17 @@
 package drzhark.mocreatures.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.world.LockCode;
+
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.ILockableContainer;
 
-public class MoCAnimalChest extends InventoryBasic {
+public class MoCAnimalChest extends InventoryBasic implements ILockableContainer {
 
     public MoCAnimalChest(String name, int size) {
         super(name, true, size);
@@ -43,5 +49,29 @@ public class MoCAnimalChest extends InventoryBasic {
         }
 
         return var1;
+    }
+
+    @Override
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+        return null;
+    }
+
+    @Override
+    public String getGuiID() {
+        return null;
+    }
+
+    @Override
+    public boolean isLocked() {
+        return false;
+    }
+
+    @Override
+    public void setLockCode(LockCode code) {
+    }
+
+    @Override
+    public LockCode getLockCode() {
+        return null;
     }
 }

@@ -32,7 +32,6 @@ public class MoCEntityOgre extends MoCEntityMob {
     public int attackCounterRight;
     private int movingHead;
     public int smashCounter;
-    //public boolean pendingSmashAttack;
     public int armToAnimate; // 1 = left, 2 = right, 3 = both
     public int attackCounter;
 
@@ -43,7 +42,6 @@ public class MoCEntityOgre extends MoCEntityMob {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }

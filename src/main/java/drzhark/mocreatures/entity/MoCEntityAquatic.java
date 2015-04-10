@@ -918,84 +918,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     /**
-     * Moves the entity based on the specified heading.  Args: strafe, forward
-     */
-    public void moveEntityWithHeadingHorse(float strafe, float forward) {
-        if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase)//&& this.isHorseSaddled())
-        {
-            this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-            this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-            this.setRotation(this.rotationYaw, this.rotationPitch);
-            this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-            strafe = ((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F;
-            forward = ((EntityLivingBase) this.riddenByEntity).moveForward;
-
-            if (forward <= 0.0F) {
-                forward *= 0.25F;
-                //this.gallopTime = 0;
-            }
-
-            if (this.onGround)//&& this.jumpPower == 0.0F && this.isRearing() && !this.field_110294_bI)
-            {
-                strafe = 0.0F;
-                forward = 0.0F;
-            }
-
-            if (this.onGround) //(this.jumpPower > 0.0F && !this.isHorseJumping() && this.onGround)
-            {
-                //this.motionY = this.getHorseJumpStrength() * (double)this.jumpPower;
-
-                /*if (this.isPotionActive(Potion.jump)) {
-                    this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
-                }*/
-
-                //this.setHorseJumping(true);
-                this.isAirBorne = true;
-
-                if (forward > 0.0F) {
-                    float f2 = MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F);
-                    float f3 = MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F);
-                    //this.motionX += (double)(-0.4F * f2 * this.jumpPower);
-                    //this.motionZ += (double)(0.4F * f3 * this.jumpPower);
-                    this.playSound("mob.horse.jump", 0.4F, 1.0F);
-                }
-
-                //this.jumpPower = 0.0F;
-                net.minecraftforge.common.ForgeHooks.onLivingJump(this);
-            }
-
-            this.stepHeight = 1.0F;
-            this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-
-            if (!this.worldObj.isRemote) {
-                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
-                super.moveEntityWithHeading(strafe, forward);
-            }
-
-            if (this.onGround) {
-                //this.jumpPower = 0.0F;
-                //this.setHorseJumping(false);
-            }
-
-            this.prevLimbSwingAmount = this.limbSwingAmount;
-            double d1 = this.posX - this.prevPosX;
-            double d0 = this.posZ - this.prevPosZ;
-            float f4 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
-
-            if (f4 > 1.0F) {
-                f4 = 1.0F;
-            }
-
-            this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
-            this.limbSwing += this.limbSwingAmount;
-        } else {
-            this.stepHeight = 0.5F;
-            this.jumpMovementFactor = 0.02F;
-            super.moveEntityWithHeading(strafe, forward);
-        }
-    }
-
-    /**
      ** Riding Code
      * @param strafe
      * @param forward
@@ -1047,9 +969,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         } else if ((this.riddenByEntity != null) && getIsTamed() && this.riddenByEntity instanceof EntityLivingBase)// && isSwimming())
         {
             this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-            this.rotationPitch = this.riddenByEntity.rotationPitch;
+            this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
             this.setRotation(this.rotationYaw, this.rotationPitch);
-            //this.rotationYawHead = this.renderYawOffset = this.rotationYaw; //TODO TEST!!
+            this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
             strafe = ((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.35F;
             forward = ((EntityLivingBase) this.riddenByEntity).moveForward * (float) (this.getCustomSpeed() / 5D);
 

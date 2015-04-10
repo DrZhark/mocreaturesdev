@@ -238,7 +238,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                 return true;
             }
-            if (entity != this && entity instanceof EntityLivingBase && (this.worldObj.getDifficulty().getDifficultyId() > 0) && this.getType() != 3) {
+            if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && this.getType() != 3) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;

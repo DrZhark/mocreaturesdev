@@ -1,10 +1,12 @@
 package drzhark.mocreatures.client.model;
 
+import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelJellyFish extends ModelBase {
@@ -120,6 +122,27 @@ public class MoCModelJellyFish extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5);
+        MoCEntityJellyFish jellyfish = (MoCEntityJellyFish) entity;
+        boolean glowing = jellyfish.isGlowing();
+        boolean outOfWater = !jellyfish.isInWater();
+        GL11.glPushMatrix();
+
+        if (outOfWater) {
+            GL11.glTranslatef(0F, 0.6F, -0.3F);
+        } else {
+            GL11.glTranslatef(0F, 0.2F, 0F);
+
+            //GL11.glRotatef((float) (f1 * -60D), -1F, 0.0F, 0.0F);
+
+        }
+        GL11.glEnable(3042 /* GL_BLEND */);
+        if (!glowing || outOfWater) {
+            float transparency = 0.7F;
+            GL11.glBlendFunc(770, 771);
+            GL11.glColor4f(0.8F, 0.8F, 0.8F, transparency);
+        } else {
+            GL11.glBlendFunc(770, 1);
+        }
         this.Top.render(f5);
         this.Head.render(f5);
         this.HeadSmall.render(f5);
@@ -143,12 +166,12 @@ public class MoCModelJellyFish extends ModelBase {
         this.Leg7.render(f5);
         this.Leg8.render(f5);
         this.Leg9.render(f5);
+
+        GL11.glDisable(3042/* GL_BLEND */);
+        GL11.glPopMatrix();
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
-        //super.setRotationAngles(f, f1, f2, f3, f4, f5);
-        //FootA.rotateAngleX = (f * 0.6662F) * f1;
-        //FootA.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
         float f6 = f1 * 2.0F;
         if (f6 > 1.0F) {
             f6 = 1.0F;
@@ -167,11 +190,6 @@ public class MoCModelJellyFish extends ModelBase {
         this.Leg7.rotateAngleX = f6;
         this.Leg8.rotateAngleX = f6;
         this.Leg9.rotateAngleX = f6;
-
-        /*
-         * FootA.rotateAngleX = f6; FootB.rotateAngleX = f6; FootC.rotateAngleX
-         * = f6; FootD.rotateAngleX = f6; FootE.rotateAngleX = f6;
-         */
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -179,14 +197,6 @@ public class MoCModelJellyFish extends ModelBase {
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
-
-    /*
-     * ModelRenderer Body; ModelRenderer BodyUp; ModelRenderer BodyD;
-     * ModelRenderer FootA; ModelRenderer FootB; ModelRenderer FootC;
-     * ModelRenderer FootD; ModelRenderer FootE; ModelRenderer SpotA;
-     * ModelRenderer Core;
-     */
-    //public float pulsingSize;
 
     ModelRenderer Top;
     ModelRenderer Head;

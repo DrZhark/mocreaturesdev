@@ -80,7 +80,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
             if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                 return true;
             }
-            if (entity != this && entity instanceof EntityLivingBase && (this.worldObj.getDifficulty().getDifficultyId() > 0) && getIsAdult()) {
+            if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && getIsAdult()) {
                 setAttackTarget((EntityLivingBase) entity);
             }
             return true;

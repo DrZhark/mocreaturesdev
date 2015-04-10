@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity;
 
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+
 import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.pathfinding.PathNavigate;
@@ -49,6 +51,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected String texture;
     protected PathNavigate navigatorWater;
     protected PathNavigate navigatorFlyer;
+    protected EntityAIWanderMoC2 wander;
 
     public MoCEntityMob(World world) {
         super(world);
@@ -58,6 +61,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         this.moveHelper = new EntityAIMoverHelperMoC(this);
         this.navigatorWater = new PathNavigateSwimmer(this, world);
         this.navigatorFlyer = new PathNavigateFlyer(this, world);
+        this.tasks.addTask(4, this.wander = new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
     @Override
@@ -191,7 +195,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     // TODO move this to a class accessible by MocEntityMob and MoCentityAnimals
-    // ?? implements?
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
@@ -229,27 +232,46 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer() && forceUpdates() && this.rand.nextInt(1000) == 0) {
-            MoCTools.forceDataSync(this);
-        }
+        if (MoCreatures.isServer()) {
 
-        if (MoCreatures.isServer() && getIsTamed() && this.rand.nextInt(200) == 0) {
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
-                    this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
-        }
+            if (forceUpdates() && this.rand.nextInt(1000) == 0) {
+                MoCTools.forceDataSync(this);
+            }
 
-        if (MoCreatures.isServer() && this.isHarmedByDaylight()) {
-            if (this.worldObj.isDaytime()) {
-                float var1 = this.getBrightness(1.0F);
-                if (var1 > 0.5F
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
-                    this.setFire(8);
+            if (getIsTamed() && this.rand.nextInt(200) == 0) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
+                        this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+            }
+
+            if (this.isHarmedByDaylight()) {
+                if (this.worldObj.isDaytime()) {
+                    float var1 = this.getBrightness(1.0F);
+                    if (var1 > 0.5F
+                            && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
+                                    MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
+                        this.setFire(8);
+                    }
                 }
             }
+
+            if (!getIsAdult() && (this.rand.nextInt(300) == 0)) {
+                setEdad(getEdad() + 1);
+                if (getEdad() >= getMaxEdad()) {
+                    setAdult(true);
+                }
+            }
+
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && this.rand.nextInt(20) == 0) {
+                this.wander.makeUpdate();
+            }
         }
+
         this.getNavigator().onUpdateNavigation();
         super.onLivingUpdate();
+    }
+
+    protected int getMaxEdad() {
+        return 100;
     }
 
     protected boolean isHarmedByDaylight() {
@@ -780,8 +802,9 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         return false;
     }
 
+    //TODO add a timer / deactivate flying behaviour 
     @Override
     public boolean getIsFlying() {
-        return false;
+        return isFlyer();
     }
 }

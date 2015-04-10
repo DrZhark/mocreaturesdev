@@ -73,7 +73,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
             if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
                 return true;
             }
-            if (entity != this && this.isNotScared() && entity instanceof EntityLivingBase && this.worldObj.getDifficulty().getDifficultyId() > 0) {
+            if (entity != this && this.isNotScared() && entity instanceof EntityLivingBase && super.shouldAttackPlayers()) {
                 setAttackTarget((EntityLivingBase) entity);
                 setRevengeTarget((EntityLivingBase) entity);
                 return true;

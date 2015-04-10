@@ -81,7 +81,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                 Item itemheld = currentItem.getItem();
                 if (itemheld != null && itemheld instanceof ItemAxe) {
                     this.worldObj.getDifficulty();
-                    if ((this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)) {
+                    if (super.shouldAttackPlayers()) {
                         setAttackTarget(ep);
 
                     }

@@ -3,13 +3,18 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
@@ -34,12 +39,20 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     public MoCEntityHorseMob(World world) {
         super(world);
         setSize(1.4F, 1.6F);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
 
     @Override
@@ -55,21 +68,23 @@ public class MoCEntityHorseMob extends MoCEntityMob {
                 } else if (j <= (80)) {
                     setType(26); //skeleton horse
                 } else {
-                    setType(32);
+                    setType(32); //bat
                 }
             }
         }
     }
 
     /**
-     * Overridden for the dynamic nightmare texture. * 23 Undead 24 Undead
-     * Unicorn 25 Undead Pegasus
-     *
-     * 26 skeleton 27 skeleton unicorn 28 skeleton pegasus
-     *
+     * Overridden for the dynamic nightmare texture. * 
+     * 23 Undead 
+     * 24 Undead Unicorn 
+     * 25 Undead Pegasus
+     * 26 skeleton 
+     * 27 skeleton unicorn 
+     * 28 skeleton pegasus
      * 30 bug horse
-     *
-     * 32 Bat Horse
+     * 32 Bat Horse 
+     * 38 nightmare
      */
     @Override
     public ResourceLocation getTexture() {
@@ -181,29 +196,11 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         }
     }
 
-    /**
-     * Used to flicker ghosts
-     *
-     * @return
-     */
-    public float tFloat() {
-        if (++this.fCounter > 60) {
-            this.fCounter = 0;
-            this.transFloat = (this.rand.nextFloat() * (0.6F - 0.3F) + 0.3F);
-        }
-
-        return this.transFloat;
-    }
-
     @Override
     public boolean isFlyer() {
-        return this.getType() == 16 //pegasus
-                || this.getType() == 40 // dark pegasus
-                || this.getType() == 34 // fairy b
-                || this.getType() == 36 // fairy p
+        return this.getType() == 25 //undead pegasus
                 || this.getType() == 32 // bat horse
-                || this.getType() == 21 // ghost winged
-                || this.getType() == 25;// undead pegasus
+                || this.getType() == 28; // skeleton pegasus
     }
 
     /**
@@ -212,16 +209,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
      * @return
      */
     public boolean isUnicorned() {
-        return this.getType() == 18 || this.getType() == 34 || this.getType() == 36 || this.getType() == 40 || this.getType() == 24;
-    }
-
-    /**
-     * Is this a ghost horse?
-     *
-     * @return
-     */
-    public boolean isGhost() {
-        return this.getType() == 21 || this.getType() == 22;
+        return this.getType() == 24 || this.getType() == 27 || this.getType() == 32;
     }
 
     @Override
@@ -254,28 +242,20 @@ public class MoCEntityHorseMob extends MoCEntityMob {
                 wingFlap();
             }
 
-            if (this.worldObj.isDaytime()) {
-                float var1 = this.getBrightness(1.0F);
-                if (var1 > 0.5F
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
-                    this.setFire(8);
-                }
-            }
-
             if (!isOnAir() && (this.riddenByEntity == null) && this.rand.nextInt(300) == 0) {
                 setEating();
             }
 
-            if (this.riddenByEntity == null) {
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 3D, 4D));
+            if (this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
+                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity = (Entity) list.get(i);
                     if (!(entity instanceof EntityMob)) {
                         continue;
                     }
                     EntityMob entitymob = (EntityMob) entity;
-                    if (entitymob.ridingEntity == null && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie)) {
+                    if (entitymob.ridingEntity == null
+                            && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
                         entitymob.mountEntity(this);
                         break;
                     }
@@ -315,14 +295,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         {
             return MoCreatures.unicornhorn;
         }
-        if (this.getType() == 39) //pegasus
-        {
-            return Items.feather;
-        }
-        if (this.getType() == 40) //dark pegasus
-        {
-            return Items.feather;
-        }
+
         if (this.getType() == 38 && flag && this.worldObj.provider.doesWaterVaporize()) //nightmare
         {
             return MoCreatures.heartfire;
@@ -349,6 +322,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         return Items.leather;
     }
 
+    //TODO
     /*@Override
     protected void attackEntity(Entity par1Entity, float par2) {
         if (this.attackTime <= 0 && par2 < 2.5F && par1Entity.getEntityBoundingBox().maxY > this.getEntityBoundingBox().minY
@@ -373,17 +347,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
     @Override
     public double getMountedYOffset() {
-        return this.height * 0.75D - 0.5D;
-    }
-
-    @Override
-    public void updateRiderPosition() {
-        super.updateRiderPosition();
-        if (this.riddenByEntity == null) {
-            return;
-        }
-        ((EntityLivingBase) this.riddenByEntity).renderYawOffset = this.rotationYaw;
-        ((EntityLivingBase) this.riddenByEntity).prevRenderYawOffset = this.rotationYaw;
+        return (this.height * 0.75D) - 0.1D;
     }
 
     @Override
@@ -407,9 +371,31 @@ public class MoCEntityHorseMob extends MoCEntityMob {
      */
     @Override
     public EnumCreatureAttribute getCreatureAttribute() {
-        if (getType() == 23) {
+        if (getType() == 23 || getType() == 24 || getType() == 25) {
             return EnumCreatureAttribute.UNDEAD;
         }
         return super.getCreatureAttribute();
+    }
+
+    @Override
+    protected boolean isHarmedByDaylight() {
+        return true;
+    }
+
+    public int maxFlyingHeight() {
+        return 10;
+    }
+
+    public int minFlyingHeight() {
+        return 1;
+    }
+
+    @Override
+    public void updateRiderPosition() {
+        double dist = (0.4D);
+        double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
+        double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
+        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        this.riddenByEntity.rotationYaw = this.rotationYaw;
     }
 }

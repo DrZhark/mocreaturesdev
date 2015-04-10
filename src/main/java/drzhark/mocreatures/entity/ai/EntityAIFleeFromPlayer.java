@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -28,19 +29,13 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        if (this.theEntityCreature instanceof MoCEntityAnimal) {
-            if (((MoCEntityAnimal) this.theEntityCreature).isNotScared()) {
+
+        if (this.theEntityCreature instanceof IMoCEntity) {
+            if (((IMoCEntity) this.theEntityCreature).isNotScared()) {
                 return false;
             }
         }
 
-        /*if (theEntityCreature instanceof MoCEntityAquatic)
-        {
-            if (((MoCEntityAquatic)theEntityCreature).isNotScared())
-            {
-                return false;
-            }
-        }*/
         if (!this.IsNearPlayer(this.distance)) {
             return false;
         } else {

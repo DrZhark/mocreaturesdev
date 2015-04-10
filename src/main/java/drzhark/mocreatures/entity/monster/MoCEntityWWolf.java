@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
@@ -40,7 +43,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
@@ -186,5 +188,39 @@ public class MoCEntityWWolf extends MoCEntityMob {
     protected String getLivingSound() {
         openMouth();
         return "mocreatures:wolfgrunt";
+    }
+
+    @Override
+    public void updateRiderPosition() {
+        double dist = (0.1D);
+        double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
+        double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
+        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        this.riddenByEntity.rotationYaw = this.rotationYaw;
+    }
+
+    @Override
+    public double getMountedYOffset() {
+        return (this.height * 0.75D) - 0.1D;
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (MoCreatures.isServer() && this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            for (int i = 0; i < list.size(); i++) {
+                Entity entity = (Entity) list.get(i);
+                if (!(entity instanceof EntityMob)) {
+                    continue;
+                }
+                EntityMob entitymob = (EntityMob) entity;
+                if (entitymob.ridingEntity == null
+                        && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
+                    entitymob.mountEntity(this);
+                    break;
+                }
+            }
+        }
     }
 }

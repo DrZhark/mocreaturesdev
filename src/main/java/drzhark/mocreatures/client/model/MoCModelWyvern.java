@@ -1,5 +1,7 @@
 package drzhark.mocreatures.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.client.model.ModelBase;
@@ -787,9 +789,11 @@ public class MoCModelWyvern extends ModelBase {
         boolean isSitting = wyvern.getIsSitting();
         //boolean isFlying = wyvern.getIsFlying();
         int openMouth = wyvern.mouthCounter;
-        //TODO diving
 
         setRotationAngles(f, f1, f2, f3, f4, f5, onAir, flapwings, isRidden, openMouth, diving, isSitting);
+        float yOffset = wyvern.getAdjustedYOffset();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0F, yOffset, 0F);
         this.back1.render(f5);
         this.Tail.render(f5);
 
@@ -910,7 +914,7 @@ public class MoCModelWyvern extends ModelBase {
         this.diamondleftshoulder.render(f5);
         this.diamondrightshoulder.render(f5);
         this.diamondchestarmor.render(f5);
-
+        GL11.glPopMatrix();
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -929,23 +933,10 @@ public class MoCModelWyvern extends ModelBase {
         float f10 = 60F;
         if (f3 > f10) {
             f3 = f10;
-            //f3 = 0;
         }
         if (f3 < -f10) {
             f3 = -f10;
-            //f3 = 0;
         }
-        //System.out.println(f3);
-        //TODO Ssegmented neck/head rotation x - y DONE (kinda)
-        //shoulders movement contrary to legs while walking DONE
-        //leg walking movement DONE
-        //leg flying movement DONE
-        //head bobbling?
-        //wings floating, flapping, DONE
-        //open mouth + flap ears when making sounds
-        //remove head twisting when ridden
-        //wing diving
-
         this.neck2.rotateAngleX = -66F / this.radianF + (f4 * 1 / 3F / this.radianF);
         this.neck1.rotateAngleX = 30F / this.radianF + (f4 * 2 / 3F / this.radianF);
 

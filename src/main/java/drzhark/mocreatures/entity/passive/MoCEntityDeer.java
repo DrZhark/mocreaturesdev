@@ -28,7 +28,6 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         setAdult(true);
         setTamed(false);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        //this.tasks.addTask(1, new EntityAIFleeFromPlayer(this, this.getMyAISpeed() * 1.2D, 10D));
         this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate() {
 
             public boolean apply(Entity entity) {

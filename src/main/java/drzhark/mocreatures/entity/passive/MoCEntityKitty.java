@@ -202,7 +202,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
                     return true;
                 }
-                if (entityliving instanceof EntityPlayer) {
+                if (entityliving instanceof EntityPlayer && super.shouldAttackPlayers()) {
                     if (getKittyState() < 2) {
                         setAttackTarget(entityliving);
                         setKittyState(-1);

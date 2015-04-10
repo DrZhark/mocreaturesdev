@@ -25,6 +25,8 @@ public class MoCModelWolf extends ModelBase {
     ModelRenderer REar;
     ModelRenderer LEar2;
     ModelRenderer LEar;
+    ModelRenderer UTeeth;
+    ModelRenderer LTeeth;
 
     ModelRenderer Chest;
     ModelRenderer Body;
@@ -94,23 +96,24 @@ public class MoCModelWolf extends ModelBase {
         this.Mouth.addBox(-2F, 4F, -11.5F, 4, 1, 5);
         this.Mouth.setRotationPoint(0F, 7F, -10F);
 
-        this.MouthOpen = new ModelRenderer(this, 1, 34);
+        this.UTeeth = new ModelRenderer(this, 46, 18);
+        this.UTeeth.addBox(-2F, 4F, -12F, 4, 2, 5);
+        this.UTeeth.setRotationPoint(0F, 7F, -10F);
+
+        this.LTeeth = new ModelRenderer(this, 20, 109);
+        this.LTeeth.addBox(-1.5F, -12.9F, 1.2F, 3, 5, 2);
+        this.LTeeth.setRotationPoint(0F, 7F, -10F);
+        setRotation(this.LTeeth, 145 / 57.29578F, 0F, 0F);
+
+        /*this.MouthOpen = new ModelRenderer(this, 1, 34);
         this.MouthOpen.addBox(-2F, 0F, -12.5F, 4, 1, 5);
         this.MouthOpen.setRotationPoint(0F, 7F, -10F);
-        setRotation(this.MouthOpen, 0.6108652F, 0F, 0F);
+        setRotation(this.MouthOpen, 0.6108652F, 0F, 0F);*/
 
-        /*
-         * REar = new ModelRenderer(this, 22, 0); REar.addBox(-1.5F, -7.5F, -1F,
-         * 2, 5, 1); REar.setRotationPoint(0F, 7F, -10F); setRotation(REar, 0F,
-         * 0F, -0.4363323F); REar2 = new ModelRenderer(this, 28, 0);
-         * REar2.addBox(-4.6F, -6.2F, -0.9F, 2, 4, 1);
-         * REar2.setRotationPoint(0F, 7F, -10F); LEar2 = new ModelRenderer(this,
-         * 19, 14); LEar2.addBox(2.6F, -6.2F, -0.9F, 2, 4, 1);
-         * LEar2.setRotationPoint(0F, 7F, -10F); LEar = new ModelRenderer(this,
-         * 13, 14); LEar.addBox(-0.5F, -7.5F, -1F, 2, 5, 1);
-         * LEar.setRotationPoint(0F, 7F, -10F); setRotation(LEar, 0F, 0F,
-         * 0.4363323F);
-         */
+        this.MouthOpen = new ModelRenderer(this, 42, 69);
+        this.MouthOpen.addBox(-1.5F, -12.9F, -0.81F, 3, 9, 2);
+        this.MouthOpen.setRotationPoint(0F, 7F, -10F);
+        setRotation(this.MouthOpen, 145 / 57.29578F, 0F, 0F);
 
         this.REar = new ModelRenderer(this, 22, 0);
         this.REar.addBox(-3.5F, -7F, -1.5F, 3, 5, 1);
@@ -218,55 +221,11 @@ public class MoCModelWolf extends ModelBase {
         this.Leg4D.addBox(-2.506667F, 9.5F, -3F, 3, 2, 3);
         this.Leg4D.setRotationPoint(-3F, 12.5F, 7F);
 
-        /*
-         * Leg1A = new ModelRenderer(this, 28, 57); Leg1A.addBox(0F, -1F, -2.5F,
-         * 2, 8, 4); Leg1A.setRotationPoint(4F, 9.5F, -5.5F); setRotation(Leg1A,
-         * 0.2617994F, 0F, 0F); Leg1B = new ModelRenderer(this, 28, 69);
-         * Leg1B.addBox(0F, 6.2F, 1F, 2, 8, 2); Leg1B.setRotationPoint(4F, 9.5F,
-         * -5.5F); setRotation(Leg1B, -0.1745329F, 0F, 0F); Leg1C = new
-         * ModelRenderer(this, 28, 79); Leg1C.addBox(-0.5066667F, 12.5F, -2.5F,
-         * 3, 2, 3); Leg1C.setRotationPoint(4F, 9.5F, -5.5F); Leg2A = new
-         * ModelRenderer(this, 28, 84); Leg2A.addBox(-2F, -1F, -2.5F, 2, 8, 4);
-         * Leg2A.setRotationPoint(-4F, 9.5F, -5.5F); setRotation(Leg2A,
-         * 0.2617994F, 0F, 0F); Leg2B = new ModelRenderer(this, 28, 96);
-         * Leg2B.addBox(-2F, 6.2F, 1F, 2, 8, 2); Leg2B.setRotationPoint(-4F,
-         * 9.5F, -5.5F); setRotation(Leg2B, -0.1745329F, 0F, 0F); Leg2C = new
-         * ModelRenderer(this, 28, 106); Leg2C.addBox(-2.506667F, 12.5F, -2.5F,
-         * 3, 2, 3); Leg2C.setRotationPoint(-4F, 9.5F, -5.5F); Leg3A = new
-         * ModelRenderer(this, 0, 64); Leg3A.addBox(0F, -1F, -2.5F, 2, 7, 5);
-         * Leg3A.setRotationPoint(3F, 9.5F, 7F); setRotation(Leg3A, -0.3665191F,
-         * 0F, 0F); Leg3B = new ModelRenderer(this, 0, 76); Leg3B.addBox(-0.1F,
-         * 4.2F, 0.5F, 2, 2, 5); Leg3B.setRotationPoint(3F, 9.5F, 7F);
-         * setRotation(Leg3B, -0.7330383F, 0F, 0F); Leg3C = new
-         * ModelRenderer(this, 0, 83); Leg3C.addBox(0F, 6.2F, 0.5F, 2, 8, 2);
-         * Leg3C.setRotationPoint(3F, 9.5F, 7F); setRotation(Leg3C, -0.1745329F,
-         * 0F, 0F); Leg3D = new ModelRenderer(this, 0, 93);
-         * Leg3D.addBox(-0.5066667F, 12.5F, -3F, 3, 2, 3);
-         * Leg3D.setRotationPoint(3F, 9.5F, 7F); Leg4A = new ModelRenderer(this,
-         * 14, 64); Leg4A.addBox(-2F, -1F, -2.5F, 2, 7, 5);
-         * Leg4A.setRotationPoint(-3F, 9.5F, 7F); setRotation(Leg4A,
-         * -0.3665191F, 0F, 0F); Leg4B = new ModelRenderer(this, 14, 76);
-         * Leg4B.addBox(-1.9F, 4.2F, 0.5F, 2, 2, 5); Leg4B.setRotationPoint(-3F,
-         * 9.5F, 7F); setRotation(Leg4B, -0.7330383F, 0F, 0F); Leg4C = new
-         * ModelRenderer(this, 14, 83); Leg4C.addBox(-2F, 6.2F, 0.5F, 2, 8, 2);
-         * Leg4C.setRotationPoint(-3F, 9.5F, 7F); setRotation(Leg4C,
-         * -0.1745329F, 0F, 0F); Leg4D = new ModelRenderer(this, 14, 93);
-         * Leg4D.addBox(-2.506667F, 12.5F, -3F, 3, 2, 3);
-         * Leg4D.setRotationPoint(-3F, 9.5F, 7F);
-         */
-
     }
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        //super.render(entity, f, f1, f2, f3, f4, f5);
-
         MoCEntityWWolf entitywolf = (MoCEntityWWolf) entity;
-        //super.render(entity, f, f1, f2, f3, f4, f5);
-
-        //int type = entitywolf.type;
-
-        //boolean standing = (entityhorse.standCounter != 0 && entityhorse.riddenByEntity == null);
         boolean openMouth = (entitywolf.mouthCounter != 0);
         boolean moveTail = (entitywolf.tailCounter != 0);
 
@@ -278,16 +237,18 @@ public class MoCModelWolf extends ModelBase {
         this.Neck2.render(f5);
         this.LSide.render(f5);
         this.RSide.render(f5);
-        //REar2.render(f5);
         this.Nose.render(f5);
+
         if (openMouth) {
             this.MouthOpen.render(f5);
+            this.UTeeth.render(f5);
+            this.LTeeth.render(f5);
+
         } else {
             this.Mouth.render(f5);
             this.MouthB.render(f5);
         }
         this.REar.render(f5);
-        //LEar2.render(f5);
         this.LEar.render(f5);
         this.Chest.render(f5);
         this.Body.render(f5);
@@ -322,15 +283,19 @@ public class MoCModelWolf extends ModelBase {
 
         this.Head.rotateAngleX = f4 / 57.29578F;
         this.Head.rotateAngleY = f3 / 57.29578F;
-        float LLegX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-        float RLegX = MathHelper.cos((f * 0.6662F) + 3.141593F) * 1.4F * f1;
+        float LLegX = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
+        float RLegX = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
 
         this.Mouth.rotateAngleX = this.Head.rotateAngleX;
         this.Mouth.rotateAngleY = this.Head.rotateAngleY;
         this.MouthB.rotateAngleX = this.Head.rotateAngleX;
         this.MouthB.rotateAngleY = this.Head.rotateAngleY;
-        this.MouthOpen.rotateAngleX = (35 / 57.29578F) + this.Head.rotateAngleX;
+        this.UTeeth.rotateAngleX = this.Head.rotateAngleX;
+        this.UTeeth.rotateAngleY = this.Head.rotateAngleY;
+        this.MouthOpen.rotateAngleX = (145 / 57.29578F) + this.Head.rotateAngleX;
         this.MouthOpen.rotateAngleY = this.Head.rotateAngleY;
+        this.LTeeth.rotateAngleX = (145 / 57.29578F) + this.Head.rotateAngleX;
+        this.LTeeth.rotateAngleY = this.Head.rotateAngleY;
         this.Nose.rotateAngleX = (16 / 57.29578F) + this.Head.rotateAngleX;
         this.Nose.rotateAngleY = this.Head.rotateAngleY;
         this.Nose2.rotateAngleX = this.Head.rotateAngleX;
@@ -343,12 +308,8 @@ public class MoCModelWolf extends ModelBase {
 
         this.REar.rotateAngleX = this.Head.rotateAngleX;
         this.REar.rotateAngleY = this.Head.rotateAngleY;
-        //REar2.rotateAngleX = Head.rotateAngleX;
-        //REar2.rotateAngleY = Head.rotateAngleY;
         this.LEar.rotateAngleX = this.Head.rotateAngleX;
         this.LEar.rotateAngleY = this.Head.rotateAngleY;
-        //LEar2.rotateAngleX = Head.rotateAngleX;
-        //LEar2.rotateAngleY = Head.rotateAngleY;
 
         this.Leg1A.rotateAngleX = (15 / 57.29578F) + LLegX;
         this.Leg1B.rotateAngleX = (-10 / 57.29578F) + LLegX;
@@ -369,7 +330,6 @@ public class MoCModelWolf extends ModelBase {
         this.Leg4D.rotateAngleX = LLegX;
 
         float tailMov = -1.3089F + (f1 * 1.5F);
-        //if (tailMov > 0) tailMov = 0;
 
         if (tail) {
             this.TailA.rotateAngleY = MathHelper.cos(f2 * 0.5F);

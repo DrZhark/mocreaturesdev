@@ -109,7 +109,11 @@ public class MoCModelElephant extends ModelBase {
 
     float radianF = 57.29578F;
 
-    //boolean isSitting;
+    private boolean isSitting;
+    private int tailCounter;
+    private int earCounter;
+    private int trunkCounter;
+    byte tusks;
 
     public MoCModelElephant() {
         this.textureWidth = 128;
@@ -573,14 +577,17 @@ public class MoCModelElephant extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         //super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityElephant elephant = (MoCEntityElephant) entity;
-        byte tusks = elephant.getTusks();
+        this.tusks = elephant.getTusks();
         int type = elephant.getType();
+        this.tailCounter = elephant.tailCounter;
+        this.earCounter = elephant.earCounter;
+        this.trunkCounter = elephant.trunkCounter;
         byte harness = elephant.getArmorType();
         byte storage = elephant.getStorage();
-        boolean sitting = (elephant.sitCounter != 0);
-        boolean moveTail = (elephant.tailCounter != 0);
+        this.isSitting = (elephant.sitCounter != 0);
+        //boolean moveTail = (elephant.tailCounter != 0);
 
-        setRotationAngles(f, f1, f2, f3, f4, f5, tusks, sitting, moveTail);
+        setRotationAngles(f, f1, f2, f3, f4, f5);
 
         if (tusks == 0) {
             this.LeftTuskB.render(f5);
@@ -840,7 +847,7 @@ public class MoCModelElephant extends ModelBase {
 
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, byte tusks, boolean sitting, boolean tail) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {//, byte tusks, boolean sitting, boolean tail) {
 
         float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
@@ -859,34 +866,21 @@ public class MoCModelElephant extends ModelBase {
         float HeadYRot = (f3 / 57.29578F);
 
         float f10 = 0F;
-        if (sitting) {
+        if (isSitting) {
             f10 = 8F;
         }
         AdjustY(f10);
+
         /**
          * Random Trunk animation
          */
-        float TrunkXRot = f1 * 5F;//(f1 * 50F);//10F;
+        float TrunkXRot = 0F;
 
-        if (f1 > 0.5) //walking fast
-        {
+        if (trunkCounter != 0) {
             HeadXRot = 0F;
-            TrunkXRot = MathHelper.cos(f2 * 0.35F) * 4F;
+            TrunkXRot = MathHelper.cos(this.trunkCounter * 0.2F) * 12F;
         }
-
-        else {
-            TrunkXRot = (f1 * 50F);//10F;
-            //TrunkXRot = 40F - MathHelper.cos(f2 * 0.1F) * 10F;
-            float f2b = f2 % 200F;
-            if (f2b > 0 & f2b < 40) {
-                HeadXRot = 0F;
-                //TrunkXRot = (f2b * 50F);//10F;
-                TrunkXRot = 15F - MathHelper.cos(f2 * 0.2F) * 15F;
-            }
-
-        }
-
-        if (sitting) {
+        if (isSitting) {
             HeadXRot = 0F;
             TrunkXRot = 25F;
         }
@@ -915,9 +909,13 @@ public class MoCModelElephant extends ModelBase {
          */
         float EarF = 0F;
 
-        float f2a = f2 % 100F;
+        /*float f2a = f2 % 100F;
         if (f2a > 60 & f2a < 90) {
             EarF = MathHelper.cos(f2 * 0.5F) * 0.35F;
+        }*/
+
+        if (this.earCounter != 0) {
+            EarF = MathHelper.cos(this.earCounter * 0.5F) * 0.35F;
         }
 
         this.RightBigEar.rotateAngleY = (30F / this.radianF) + HeadYRot + EarF;
@@ -970,7 +968,7 @@ public class MoCModelElephant extends ModelBase {
         this.TrunkE.rotateAngleX = ((145F - TrunkXRot * 6F) / this.radianF) + HeadXRot;
 
         //legs
-        if (sitting) {
+        if (isSitting) {
             this.FrontRightUpperLeg.rotateAngleX = -30F / this.radianF;
             this.FrontLeftUpperLeg.rotateAngleX = -30F / this.radianF;
             this.BackLeftUpperLeg.rotateAngleX = -30F / this.radianF;
@@ -989,7 +987,7 @@ public class MoCModelElephant extends ModelBase {
 
         //To convert from degrees to radians, multiply by ((PI)/180o).
         //To convert from radians to degrees, multiply by (180o/(PI)).
-        if (sitting) {
+        if (isSitting) {
             this.FrontLeftLowerLeg.rotateAngleX = 90F / this.radianF;
             this.FrontRightLowerLeg.rotateAngleX = 90F / this.radianF;
             this.BackLeftLowerLeg.rotateAngleX = 90F / this.radianF;
@@ -1117,7 +1115,7 @@ public class MoCModelElephant extends ModelBase {
             tailMov = 0;
         }
 
-        if (tail) {
+        if (this.tailCounter != 0) {
             this.TailRoot.rotateAngleY = MathHelper.cos(f2 * 0.4F) * 1.3F;
             tailMov = 30F / this.radianF;
         } else {

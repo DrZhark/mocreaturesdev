@@ -44,7 +44,7 @@ public class MoCItemWhip extends MoCItem {
         int i1 = 0;
         Block block = worldIn.getBlockState(pos).getBlock();
         Block block1 = worldIn.getBlockState(pos.up()).getBlock();
-        if (side != EnumFacing.DOWN && (block == Blocks.air) && (block != Blocks.air) && (block != Blocks.standing_sign)) {
+        if (side != EnumFacing.DOWN && (block1 == Blocks.air) && (block != Blocks.air) && (block != Blocks.standing_sign)) {
             whipFX(worldIn, pos);
             worldIn.playSoundAtEntity(playerIn, "mocreatures:whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             stack.damageItem(1, playerIn);
