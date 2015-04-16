@@ -77,7 +77,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(getMoveSpeed());
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
     }
 
@@ -273,6 +273,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return entityliving;
     }
 
+    //TODO
     public boolean entitiesToIgnore(Entity entity) {
         return ((!(entity instanceof EntityLiving)) || (entity instanceof EntityMob) || (entity instanceof EntityPlayer)
                 || (entity instanceof MoCEntityKittyBed) || (entity instanceof MoCEntityLitterBox)
@@ -676,7 +677,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
         if (this.isServerWorld()) {
-            if (this.riddenByEntity instanceof EntityLivingBase) {
+            if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase) {
                 this.moveEntityWithRider(strafe, forward); //riding movement
                 return;
             }
@@ -839,7 +840,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         }
 
         if (MoCreatures.isServer()) {
-            //this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
             if (flyingMount) {
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 this.moveFlying(strafe, forward, this.flyerFriction() / 10F);
@@ -848,8 +848,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 this.motionZ *= this.flyerFriction();
                 this.motionX *= this.flyerFriction();
             } else {
+                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
                 super.moveEntityWithHeading(strafe, forward);
-
+                //System.out.println("regular movement");
                 /*if (isFlyer() && (this.riddenByEntity != null) && getIsTamed() && !this.onGround) {
                     this.motionY += (0.10D - (myFallSpeed() / 10D));//0.15D;
                     this.motionY *= this.myFallSpeed();//0.6D;
@@ -874,6 +875,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     public void moveEntityWithRiderUntamed(float strafe, float forward) {
         //Riding behaviour if untamed
+        System.out.println("riding an untamed creature");
         if ((this.riddenByEntity != null) && !getIsTamed()) {
             if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
                 this.motionY += getCustomJump();
@@ -1228,7 +1230,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * @return
      */
     protected double myFallSpeed() {
-        return 0.95D;
+        return 0.6D;
     }
 
     /**
@@ -1295,7 +1297,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * mount speed
      */
     public double getCustomSpeed() {
-        return 0.8D;
+        return 0.6D;
     }
 
     /**
@@ -1501,10 +1503,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     public boolean isFlyingAlone() {
         return false;
-    }
-
-    public float getMoveSpeed() {
-        return 0.7F;
     }
 
     /**

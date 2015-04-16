@@ -27,7 +27,6 @@ public class MoCRenderScorpion extends MoCRenderMoC {
     @Override
     protected void preRenderCallback(EntityLivingBase entityliving, float f) {
         MoCEntityScorpion entityscorpion = (MoCEntityScorpion) entityliving;
-
         if (entityscorpion.climbing()) {
             rotateAnimal(entityscorpion);
         }
@@ -44,18 +43,11 @@ public class MoCRenderScorpion extends MoCRenderMoC {
 
     protected void upsideDown(EntityLiving entityliving) {
         GL11.glRotatef(-90F, -1F, 0.0F, 0.0F);
-
-        if (entityliving.ridingEntity == MoCClientProxy.mc.thePlayer) {
-            GL11.glTranslatef(-0.55F, -1.9F, -0.7F);
-
-        } else {
-            GL11.glTranslatef(-1.555F, -0.5F, -0.5F);
-
-        }
-
+        GL11.glTranslatef(-1.5F, -0.5F, -2.5F);
     }
 
     protected void adjustHeight(EntityLiving entityliving) {
+
         GL11.glTranslatef(0.0F, -0.1F, 0.0F);
     }
 

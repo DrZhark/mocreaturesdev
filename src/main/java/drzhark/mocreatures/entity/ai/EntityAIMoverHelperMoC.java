@@ -24,6 +24,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
     @Override
     public void onUpdateMoveHelper() {
         boolean isFlyer = ((IMoCEntity) theCreature).isFlyer();
+        //boolean isFlying = ((IMoCEntity) theCreature).getIsFlying();
         boolean isSwimmer = this.theCreature.isInWater(); //TODO && theCreature.isSwimmer()
 
         if (!isFlyer && !isSwimmer) {
@@ -34,7 +35,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         /*
          * Flying specific movement code
          */
-        if (isFlyer && theCreature.riddenByEntity == null) { //TODO && getIsFlying()
+        if (isFlyer && theCreature.riddenByEntity == null) {
             this.flyingMovementUpdate();
         }
 
@@ -80,7 +81,6 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
     private void flyingMovementUpdate() {
 
         //Flying alone
-        //if (this.theCreature.getNavigator().noPath())
         if (((IMoCEntity) theCreature).getIsFlying()) {
             int distY = MoCTools.distanceToFloor(this.theCreature);
             if (distY <= ((IMoCEntity) theCreature).minFlyingHeight()
@@ -90,11 +90,13 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             if (distY > ((IMoCEntity) theCreature).maxFlyingHeight() || this.theCreature.worldObj.rand.nextInt(150) == 0) {
                 this.theCreature.motionY -= 0.02D;
             }
+
+        } else {
+            if (this.theCreature.motionY < 0) {
+                this.theCreature.motionY *= 0.6D;
+            }
         }
 
-        if (this.theCreature.motionY < 0) {
-            this.theCreature.motionY *= 0.5D;
-        }
     }
 
     /**

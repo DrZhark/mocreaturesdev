@@ -80,11 +80,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         return MoCreatures.proxy.getTexture(tempText);
     }
 
-    @Override
-    public float getMoveSpeed() {
-        return 0.3F;
-    }
-
     public boolean getIsHiding() {
         return (this.dataWatcher.getWatchableObjectByte(24) == 1);
     }

@@ -1,5 +1,7 @@
 package drzhark.mocreatures;
 
+import drzhark.mocreatures.item.MoCItemSword;
+
 import com.mojang.authlib.GameProfile;
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
@@ -724,11 +726,11 @@ public class MoCreatures {
         turtleraw = new MoCItemFood("turtleraw", 2, 0.3F, false);
         turtlesoup = new MoCItemTurtleSoup("turtlesoup", 6, 0.6F, false);
 
-        nunchaku = new MoCItemWeapon("nunchaku", ToolMaterial.IRON);
-        sai = new MoCItemWeapon("sai", ToolMaterial.IRON);
-        bo = new MoCItemWeapon("bo", ToolMaterial.IRON);
-        katana = new MoCItemWeapon("katana", ToolMaterial.IRON);
-        sharksword = new MoCItemWeapon("sharksword", ToolMaterial.IRON);
+        nunchaku = new MoCItemSword("nunchaku", Item.ToolMaterial.IRON);
+        sai = new MoCItemSword("sai", Item.ToolMaterial.IRON);
+        bo = new MoCItemSword("bo", Item.ToolMaterial.IRON);
+        katana = new MoCItemSword("katana", Item.ToolMaterial.IRON);
+        sharksword = new MoCItemSword("sharksword", Item.ToolMaterial.IRON);
 
         key = new MoCItem("key");
         essencedarkness = new MoCItem("essencedarkness");
@@ -776,10 +778,10 @@ public class MoCreatures {
         chitinNether = new MoCItem("chitinnether");
         chitin = new MoCItem("chitin");
 
-        scorpSwordCave = new MoCItemWeapon("scorpswordcave", ToolMaterial.IRON, 4, false);
-        scorpSwordFrost = new MoCItemWeapon("scorpswordfrost", ToolMaterial.IRON, 2, false);
-        scorpSwordNether = new MoCItemWeapon("scorpswordnether", ToolMaterial.IRON, 3, false);
-        scorpSwordDirt = new MoCItemWeapon("scorpsworddirt", ToolMaterial.IRON, 1, false);
+        scorpSwordCave = new MoCItemSword("scorpswordcave", ToolMaterial.IRON, 4, false);
+        scorpSwordFrost = new MoCItemSword("scorpswordfrost", ToolMaterial.IRON, 2, false);
+        scorpSwordNether = new MoCItemSword("scorpswordnether", ToolMaterial.IRON, 3, false);
+        scorpSwordDirt = new MoCItemSword("scorpsworddirt", ToolMaterial.IRON, 1, false);
 
         scorpPlateDirt = new MoCItemArmor("scorpplatedirt", scorpARMOR, 4, 1);
         scorpHelmetDirt = new MoCItemArmor("scorphelmetdirt", scorpARMOR, 4, 0);
@@ -820,7 +822,7 @@ public class MoCreatures {
 
         crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
         crabcooked = new MoCItemFood("crabcooked", 6, 0.6F, false);
-        silversword = new MoCItemWeapon("silversword", MoCreatures.SILVER);
+        silversword = new MoCItemSword("silversword", MoCreatures.SILVER);
 
         multiBlockNames.add("WyvernLair");
         multiBlockNames.add("OgreLair");
@@ -999,8 +1001,8 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsFur, 1), new Object[] {"X X", "X X", Character.valueOf('X'), fur});
 
-        GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'),
-                Items.iron_ingot,});
+        //GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'),
+        //        Items.iron_ingot,});
 
         GameRegistry.addRecipe(new ItemStack(petamulet, 1),
                 new Object[] {"X X", " Z ", "X X", Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond});
@@ -1108,6 +1110,9 @@ public class MoCreatures {
                 new ItemStack(staffPortal, 1),
                 new Object[] {"  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), essencelight,
                         Character.valueOf('R'), Items.blaze_rod});
+
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.dye, 1, 15), new Object[] {sharkteeth});
+
     }
 
     public static void burnPlayer(EntityPlayer player) {

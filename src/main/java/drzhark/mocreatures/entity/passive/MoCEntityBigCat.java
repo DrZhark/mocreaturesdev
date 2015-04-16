@@ -84,7 +84,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     }
 
-    @Override
+    //TODO
     public float getMoveSpeed() {
         switch (getType()) {
             case 1:

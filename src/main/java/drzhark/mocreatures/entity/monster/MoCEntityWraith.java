@@ -47,9 +47,9 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
-    public boolean d2() {
-        return super.getCanSpawnHere();
-    }
+    /*    public boolean d2() {
+            return super.getCanSpawnHere();
+        }*/
 
     @Override
     protected String getDeathSound() {
@@ -76,10 +76,10 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         return true;
     }
 
-    @Override
+    /*@Override
     public float getMoveSpeed() {
         return 1.3F;
-    }
+    }*/
 
     @Override
     public boolean canBePushed() {
@@ -139,4 +139,10 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         }
 
     }
+
+    //TODO ACTIVATE FOR RELEASE
+    /*@Override
+    protected boolean isHarmedByDaylight() {
+        return true;
+    }*/
 }

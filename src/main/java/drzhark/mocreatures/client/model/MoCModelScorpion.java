@@ -59,6 +59,11 @@ public class MoCModelScorpion extends ModelBase {
     ModelRenderer baby3;
     ModelRenderer baby4;
     ModelRenderer baby5;
+    protected boolean poisoning;
+    protected boolean isTalking;
+    protected boolean babies;
+    protected int attacking;
+    protected boolean sitting;
 
     float radianF = 57.29578F;
 
@@ -307,14 +312,16 @@ public class MoCModelScorpion extends ModelBase {
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        //super.render(entity, f, f1, f2, f3, f4, f5);
-
         MoCEntityScorpion scorpy = (MoCEntityScorpion) entity;
-        boolean poisoning = scorpy.swingingTail();
-        boolean isTalking = scorpy.mouthCounter != 0;
-        boolean babies = scorpy.getHasBabies();
-        int attacking = scorpy.armCounter;
-        setRotationAngles(f, f1, f2, f3, f4, f5, poisoning, isTalking, attacking, babies);
+        poisoning = scorpy.swingingTail();
+        isTalking = scorpy.mouthCounter != 0;
+        babies = scorpy.getHasBabies();
+        attacking = scorpy.armCounter;
+        setRotationAngles(f, f1, f2, f3, f4, f5);
+        renderParts(f5);
+    }
+
+    protected void renderParts(float f5) {
         this.Head.render(f5);
         this.MouthL.render(f5);
         this.MouthR.render(f5);
@@ -379,8 +386,7 @@ public class MoCModelScorpion extends ModelBase {
         model.rotateAngleZ = z / this.radianF;
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, boolean poisoning, boolean isTalking, int attacking,
-            boolean babies) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         //float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.4F * f1;
 
         if (!poisoning) {
@@ -628,109 +634,152 @@ public class MoCModelScorpion extends ModelBase {
         float f15 = Math.abs(MathHelper.sin(f * 0.6662F + 1.570796F) * 0.4F) * f1;
         float f16 = Math.abs(MathHelper.sin(f * 0.6662F + 4.712389F) * 0.4F) * f1;
 
-        this.Leg1A.rotateAngleX = -10F / this.radianF;
-        this.Leg1A.rotateAngleZ = 75F / this.radianF;
-        this.Leg1B.rotateAngleZ = 60F / this.radianF;
-        this.Leg1C.rotateAngleZ = 75F / this.radianF;
+        if (sitting) {
+            this.Leg1A.rotateAngleX = -10F / this.radianF;
+            this.Leg1A.rotateAngleZ = 35F / this.radianF;
+            this.Leg1B.rotateAngleZ = 20F / this.radianF;
+            this.Leg1C.rotateAngleZ = 35F / this.radianF;
 
-        this.Leg1A.rotateAngleX += f9;
-        this.Leg1B.rotateAngleX = this.Leg1A.rotateAngleX;
-        this.Leg1C.rotateAngleX = this.Leg1A.rotateAngleX;
+            this.Leg2A.rotateAngleX = -30F / this.radianF;
+            this.Leg2A.rotateAngleZ = 35F / this.radianF;
+            this.Leg2B.rotateAngleZ = 20F / this.radianF;
+            this.Leg2C.rotateAngleZ = 35F / this.radianF;
 
-        this.Leg1A.rotateAngleZ += f13;
-        this.Leg1B.rotateAngleZ += f13;
-        this.Leg1C.rotateAngleZ += f13;
+            this.Leg3A.rotateAngleX = -45F / this.radianF;
+            this.Leg3A.rotateAngleZ = 35F / this.radianF;
+            this.Leg3B.rotateAngleZ = 20F / this.radianF;
+            this.Leg3C.rotateAngleZ = 35F / this.radianF;
 
-        this.Leg2A.rotateAngleX = -30F / this.radianF;
-        this.Leg2A.rotateAngleZ = 70F / this.radianF;
-        this.Leg2B.rotateAngleZ = 60F / this.radianF;
-        this.Leg2C.rotateAngleZ = 70F / this.radianF;
+            this.Leg4A.rotateAngleX = -60F / this.radianF;
+            this.Leg4A.rotateAngleZ = 35F / this.radianF;
+            this.Leg4B.rotateAngleZ = 20F / this.radianF;
+            this.Leg4C.rotateAngleZ = 35F / this.radianF;
 
-        this.Leg2A.rotateAngleX += f10;
-        this.Leg2B.rotateAngleX = this.Leg2A.rotateAngleX;
-        this.Leg2C.rotateAngleX = this.Leg2A.rotateAngleX;
+            this.Leg5A.rotateAngleX = -10F / this.radianF;
+            this.Leg5A.rotateAngleZ = -35F / this.radianF;
+            this.Leg5B.rotateAngleZ = -20F / this.radianF;
+            this.Leg5C.rotateAngleZ = -35F / this.radianF;
 
-        this.Leg2A.rotateAngleZ += f14;
-        this.Leg2B.rotateAngleZ += f14;
-        this.Leg2C.rotateAngleZ += f14;
+            this.Leg6A.rotateAngleX = -30F / this.radianF;
+            this.Leg6A.rotateAngleZ = -35F / this.radianF;
+            this.Leg6B.rotateAngleZ = -20F / this.radianF;
+            this.Leg6C.rotateAngleZ = -35F / this.radianF;
 
-        this.Leg3A.rotateAngleX = -45F / this.radianF;
-        this.Leg3A.rotateAngleZ = 70F / this.radianF;
-        this.Leg3B.rotateAngleZ = 60F / this.radianF;
-        this.Leg3C.rotateAngleZ = 70F / this.radianF;
+            this.Leg7A.rotateAngleX = -45F / this.radianF;
+            this.Leg7A.rotateAngleZ = -35F / this.radianF;
+            this.Leg7B.rotateAngleZ = -20F / this.radianF;
+            this.Leg7C.rotateAngleZ = -35F / this.radianF;
 
-        this.Leg3A.rotateAngleX += f11;
-        this.Leg3B.rotateAngleX = this.Leg3A.rotateAngleX;
-        this.Leg3C.rotateAngleX = this.Leg3A.rotateAngleX;
+            this.Leg8A.rotateAngleX = -60F / this.radianF;
+            this.Leg8A.rotateAngleZ = -35F / this.radianF;
+            this.Leg8B.rotateAngleZ = -20F / this.radianF;
+            this.Leg8C.rotateAngleZ = -35F / this.radianF;
 
-        this.Leg3A.rotateAngleZ += f15;
-        this.Leg3B.rotateAngleZ += f15;
-        this.Leg3C.rotateAngleZ += f15;
+        } else {
+            this.Leg1A.rotateAngleX = -10F / this.radianF;
+            this.Leg1A.rotateAngleZ = 75F / this.radianF;
+            this.Leg1B.rotateAngleZ = 60F / this.radianF;
+            this.Leg1C.rotateAngleZ = 75F / this.radianF;
 
-        this.Leg4A.rotateAngleX = -60F / this.radianF;
-        this.Leg4A.rotateAngleZ = 70F / this.radianF;
-        this.Leg4B.rotateAngleZ = 60F / this.radianF;
-        this.Leg4C.rotateAngleZ = 70F / this.radianF;
+            this.Leg1A.rotateAngleX += f9;
+            this.Leg1B.rotateAngleX = this.Leg1A.rotateAngleX;
+            this.Leg1C.rotateAngleX = this.Leg1A.rotateAngleX;
 
-        this.Leg4A.rotateAngleX += f12;
-        this.Leg4B.rotateAngleX = this.Leg4A.rotateAngleX;
-        this.Leg4C.rotateAngleX = this.Leg4A.rotateAngleX;
+            this.Leg1A.rotateAngleZ += f13;
+            this.Leg1B.rotateAngleZ += f13;
+            this.Leg1C.rotateAngleZ += f13;
 
-        this.Leg4A.rotateAngleZ += f16;
-        this.Leg4B.rotateAngleZ += f16;
-        this.Leg4C.rotateAngleZ += f16;
+            this.Leg2A.rotateAngleX = -30F / this.radianF;
+            this.Leg2A.rotateAngleZ = 70F / this.radianF;
+            this.Leg2B.rotateAngleZ = 60F / this.radianF;
+            this.Leg2C.rotateAngleZ = 70F / this.radianF;
 
-        this.Leg5A.rotateAngleX = -10F / this.radianF;
-        this.Leg5A.rotateAngleZ = -75F / this.radianF;
-        this.Leg5B.rotateAngleZ = -60F / this.radianF;
-        this.Leg5C.rotateAngleZ = -75F / this.radianF;
+            this.Leg2A.rotateAngleX += f10;
+            this.Leg2B.rotateAngleX = this.Leg2A.rotateAngleX;
+            this.Leg2C.rotateAngleX = this.Leg2A.rotateAngleX;
 
-        this.Leg5A.rotateAngleX -= f9;
-        this.Leg5B.rotateAngleX = this.Leg5A.rotateAngleX;
-        this.Leg5C.rotateAngleX = this.Leg5A.rotateAngleX;
+            this.Leg2A.rotateAngleZ += f14;
+            this.Leg2B.rotateAngleZ += f14;
+            this.Leg2C.rotateAngleZ += f14;
 
-        this.Leg5A.rotateAngleZ -= f13;
-        this.Leg5B.rotateAngleZ -= f13;
-        this.Leg5C.rotateAngleZ -= f13;
+            this.Leg3A.rotateAngleX = -45F / this.radianF;
+            this.Leg3A.rotateAngleZ = 70F / this.radianF;
+            this.Leg3B.rotateAngleZ = 60F / this.radianF;
+            this.Leg3C.rotateAngleZ = 70F / this.radianF;
 
-        this.Leg6A.rotateAngleX = -30F / this.radianF;
-        this.Leg6A.rotateAngleZ = -70F / this.radianF;
-        this.Leg6B.rotateAngleZ = -60F / this.radianF;
-        this.Leg6C.rotateAngleZ = -70F / this.radianF;
+            this.Leg3A.rotateAngleX += f11;
+            this.Leg3B.rotateAngleX = this.Leg3A.rotateAngleX;
+            this.Leg3C.rotateAngleX = this.Leg3A.rotateAngleX;
 
-        this.Leg6A.rotateAngleX -= f10;
-        this.Leg6B.rotateAngleX = this.Leg6A.rotateAngleX;
-        this.Leg6C.rotateAngleX = this.Leg6A.rotateAngleX;
+            this.Leg3A.rotateAngleZ += f15;
+            this.Leg3B.rotateAngleZ += f15;
+            this.Leg3C.rotateAngleZ += f15;
 
-        this.Leg6A.rotateAngleZ -= f14;
-        this.Leg6B.rotateAngleZ -= f14;
-        this.Leg6C.rotateAngleZ -= f14;
+            this.Leg4A.rotateAngleX = -60F / this.radianF;
+            this.Leg4A.rotateAngleZ = 70F / this.radianF;
+            this.Leg4B.rotateAngleZ = 60F / this.radianF;
+            this.Leg4C.rotateAngleZ = 70F / this.radianF;
 
-        this.Leg7A.rotateAngleX = -45F / this.radianF;
-        this.Leg7A.rotateAngleZ = -70F / this.radianF;
-        this.Leg7B.rotateAngleZ = -60F / this.radianF;
-        this.Leg7C.rotateAngleZ = -70F / this.radianF;
+            this.Leg4A.rotateAngleX += f12;
+            this.Leg4B.rotateAngleX = this.Leg4A.rotateAngleX;
+            this.Leg4C.rotateAngleX = this.Leg4A.rotateAngleX;
 
-        this.Leg7A.rotateAngleX -= f11;
-        this.Leg7B.rotateAngleX = this.Leg7A.rotateAngleX;
-        this.Leg7C.rotateAngleX = this.Leg7A.rotateAngleX;
+            this.Leg4A.rotateAngleZ += f16;
+            this.Leg4B.rotateAngleZ += f16;
+            this.Leg4C.rotateAngleZ += f16;
 
-        this.Leg7A.rotateAngleZ -= f15;
-        this.Leg7B.rotateAngleZ -= f15;
-        this.Leg7C.rotateAngleZ -= f15;
+            this.Leg5A.rotateAngleX = -10F / this.radianF;
+            this.Leg5A.rotateAngleZ = -75F / this.radianF;
+            this.Leg5B.rotateAngleZ = -60F / this.radianF;
+            this.Leg5C.rotateAngleZ = -75F / this.radianF;
 
-        this.Leg8A.rotateAngleX = -60F / this.radianF;
-        this.Leg8A.rotateAngleZ = -70F / this.radianF;
-        this.Leg8B.rotateAngleZ = -60F / this.radianF;
-        this.Leg8C.rotateAngleZ = -70F / this.radianF;
+            this.Leg5A.rotateAngleX -= f9;
+            this.Leg5B.rotateAngleX = this.Leg5A.rotateAngleX;
+            this.Leg5C.rotateAngleX = this.Leg5A.rotateAngleX;
 
-        this.Leg8A.rotateAngleX -= f12;
-        this.Leg8B.rotateAngleX = this.Leg8A.rotateAngleX;
-        this.Leg8C.rotateAngleX = this.Leg8A.rotateAngleX;
+            this.Leg5A.rotateAngleZ -= f13;
+            this.Leg5B.rotateAngleZ -= f13;
+            this.Leg5C.rotateAngleZ -= f13;
 
-        this.Leg8A.rotateAngleZ -= f16;
-        this.Leg8B.rotateAngleZ -= f16;
-        this.Leg8C.rotateAngleZ -= f16;
+            this.Leg6A.rotateAngleX = -30F / this.radianF;
+            this.Leg6A.rotateAngleZ = -70F / this.radianF;
+            this.Leg6B.rotateAngleZ = -60F / this.radianF;
+            this.Leg6C.rotateAngleZ = -70F / this.radianF;
+
+            this.Leg6A.rotateAngleX -= f10;
+            this.Leg6B.rotateAngleX = this.Leg6A.rotateAngleX;
+            this.Leg6C.rotateAngleX = this.Leg6A.rotateAngleX;
+
+            this.Leg6A.rotateAngleZ -= f14;
+            this.Leg6B.rotateAngleZ -= f14;
+            this.Leg6C.rotateAngleZ -= f14;
+
+            this.Leg7A.rotateAngleX = -45F / this.radianF;
+            this.Leg7A.rotateAngleZ = -70F / this.radianF;
+            this.Leg7B.rotateAngleZ = -60F / this.radianF;
+            this.Leg7C.rotateAngleZ = -70F / this.radianF;
+
+            this.Leg7A.rotateAngleX -= f11;
+            this.Leg7B.rotateAngleX = this.Leg7A.rotateAngleX;
+            this.Leg7C.rotateAngleX = this.Leg7A.rotateAngleX;
+
+            this.Leg7A.rotateAngleZ -= f15;
+            this.Leg7B.rotateAngleZ -= f15;
+            this.Leg7C.rotateAngleZ -= f15;
+
+            this.Leg8A.rotateAngleX = -60F / this.radianF;
+            this.Leg8A.rotateAngleZ = -70F / this.radianF;
+            this.Leg8B.rotateAngleZ = -60F / this.radianF;
+            this.Leg8C.rotateAngleZ = -70F / this.radianF;
+
+            this.Leg8A.rotateAngleX -= f12;
+            this.Leg8B.rotateAngleX = this.Leg8A.rotateAngleX;
+            this.Leg8C.rotateAngleX = this.Leg8A.rotateAngleX;
+
+            this.Leg8A.rotateAngleZ -= f16;
+            this.Leg8B.rotateAngleZ -= f16;
+            this.Leg8C.rotateAngleZ -= f16;
+        }
 
     }
 

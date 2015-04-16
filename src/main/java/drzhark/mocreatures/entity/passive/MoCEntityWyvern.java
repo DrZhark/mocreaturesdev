@@ -51,11 +51,15 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     public static final String wyvernNames[] = {"Jungle", "Swamp", "Savanna", "Sand", "Mother", "Undead", "Light", "Dark", "Arctic", "Cave",
             "Mountain", "Sea"};
 
+    protected EntityAIWanderMoC2 wander;
+    private int transformType;
+    private int transformCounter;
+
     public MoCEntityWyvern(World world) {
         super(world);
         setSize(1.9F, 1.7F); //TODO
         setAdult(false);
-        setTamed(true);
+        setTamed(false);
         this.stepHeight = 1.0F;
 
         if (this.rand.nextInt(6) == 0) {
@@ -65,19 +69,19 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
+        this.tasks.addTask(4, this.wander = new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(2, new EntityAIHunt(this, EntityAnimal.class, true));
+
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
     }
@@ -167,7 +171,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
         this.setHealth(getMaxHealth());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(this.getType() >= 5 ? 10.0D : 5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(calculateAttackDmg());
     }
 
     @Override
@@ -176,14 +180,59 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     }
 
     public double calculateMaxHealth() {
-        if (this.getType() >= 50) {
+        if (this.getType() == 6 || this.getType() == 7 || this.getType() == 8) {
+            return 60D;
+        }
+        if (this.getType() == 5) {
             return 80D;
         }
         return 40D;
     }
 
+    public double calculateAttackDmg() {
+        if (this.getType() == 6 || this.getType() == 7 || this.getType() == 8) {
+            return 8D;
+        }
+        if (this.getType() == 5) {
+            return 12D;
+        }
+        return 5D;
+    }
+
+    /**
+    * 1-4 regular wyverns
+    * 5 mother wyvern
+    * 6 undead
+    * 7 light
+    * 8 darkness
+    * 9-12 extra wyverns
+    */
     @Override
     public ResourceLocation getTexture() {
+        if (this.transformCounter != 0 && this.transformType > 5) {
+            String newText = "wyverndark.png";
+            if (this.transformType == 6) {
+                newText = "wyvernundead.png";
+            }
+            if (this.transformType == 7) {
+                newText = "wyvernlight.png";
+            }
+            if (this.transformType == 8) {
+                newText = "wyverndark.png";
+            }
+
+            if ((this.transformCounter % 5) == 0) {
+                return MoCreatures.proxy.getTexture(newText);
+            }
+            if (this.transformCounter > 50 && (this.transformCounter % 3) == 0) {
+                return MoCreatures.proxy.getTexture(newText);
+            }
+
+            if (this.transformCounter > 75 && (this.transformCounter % 4) == 0) {
+                return MoCreatures.proxy.getTexture(newText);
+            }
+        }
+
         switch (getType()) {
             case 1:
                 return MoCreatures.proxy.getTexture("wyvernjungle.png");
@@ -214,80 +263,93 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
     }
 
+    public void transform(int tType) {
+        if (MoCreatures.isServer()) {
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType),
+                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+        }
+        this.transformType = tType;
+    }
+
     @Override
     public void onLivingUpdate() {
-        /**
-         * slow falling
-         */
-        if (!getIsFlying() && isOnAir() && (this.motionY < 0.0D)) {
-            this.motionY *= 0.6D;
-        }
-
-        if (this.mouthCounter > 0 && ++this.mouthCounter > 30) {
-            this.mouthCounter = 0;
-        }
-
-        if (this.diveCounter > 0 && ++this.diveCounter > 5) {
-            this.diveCounter = 0;
-        }
-
-        if ((this.jumpPending)) {
-            if (this.wingFlapCounter == 0) {
-                MoCTools.playCustomSound(this, "wingflap", this.worldObj);
-            }
-            this.wingFlapCounter = 1;
-        }
-
-        if (isOnAir() && this.rand.nextInt(30) == 0) {
-            this.wingFlapCounter = 1;
-        }
 
         if (this.wingFlapCounter > 0 && ++this.wingFlapCounter > 20) {
             this.wingFlapCounter = 0;
         }
+        if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
+            MoCTools.playCustomSound(this, "wyvernwingflap", this.worldObj);
+        }
 
-        if (isFlyingAlone()) {
-            this.wingFlapCounter = 1;
+        if (this.transformCounter > 0) {
+            if (this.transformCounter == 40) {
+                MoCTools.playCustomSound(this, "transform", this.worldObj);
+            }
+
+            if (++this.transformCounter > 100) {
+                this.transformCounter = 0;
+                if (this.transformType != 0) {
+                    setType(this.transformType);
+                    selectType();
+                }
+            }
         }
 
         if (MoCreatures.isServer()) {
-            if (isFlyingAlone() && this.rand.nextInt(60) == 0 && !isMovementCeased()) {
-                wingFlap();
-            }
-
-            // TODO
-            /*if (isFlyingAlone() && !hasPath() && !isMovementCeased() && getAttackTarget() == null && this.rand.nextInt(20) == 0) {
-                updateWanderPath();
-            }*/
-
-            if (this.riddenByEntity != null) {
-                setIsFlying(false);
-            } else if (getAttackTarget() != null && this.rand.nextInt(20) == 0) {
-                setIsFlying(true);
-            } else if (!getIsTamed() && this.rand.nextInt(300) == 0) {
+            if (!isMovementCeased() && this.rand.nextInt(getIsTamed() ? 1000 : 300) == 0) {
                 setIsFlying(!getIsFlying());
             }
+            if (isMovementCeased() && getIsFlying()) {
+                setIsFlying(false);
+            }
 
+            if (getAttackTarget() != null && !isMovementCeased() && this.rand.nextInt(20) == 0) {
+                setIsFlying(true);
+            }
             if (!getIsTamed() && this.dimension == MoCreatures.WyvernLairDimensionID && (this.rand.nextInt(50) == 0) && this.posY < 10D) {
                 this.setDead();
             }
-        }
 
-        if (this.motionY > 0.5) // prevent large boundingbox checks
-        {
-            this.motionY = 0.5;
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && rand.nextInt(30) == 0) {
+                this.wander.makeUpdate();
+            }
+
+            if (this.motionY > 0.5) // prevent large boundingbox checks
+            {
+                this.motionY = 0.5;
+            }
+
+            if (isOnAir()) {
+                float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
+                int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
+                if (this.riddenByEntity == null || wingFlapFreq < 5) {
+                    wingFlapFreq = 5;
+                }
+                if (this.rand.nextInt(wingFlapFreq) == 0) {
+                    wingFlap();
+                }
+            }
+
+        } else {
+
+            if (this.mouthCounter > 0 && ++this.mouthCounter > 30) {
+                this.mouthCounter = 0;
+            }
+
+            if (this.diveCounter > 0 && ++this.diveCounter > 5) {
+                this.diveCounter = 0;
+            }
         }
         super.onLivingUpdate();
     }
 
-    //using it?
     public void wingFlap() {
         if (this.wingFlapCounter == 0) {
-            MoCTools.playCustomSound(this, "wyvernwingflap", this.worldObj);
+            //if (this.riddenByEntity != null) System.out.println("wing flap. server = " + MoCreatures.isServer());
+            this.wingFlapCounter = 1;
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
+                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
         }
-        this.wingFlapCounter = 1;
-
-        this.motionY = 0.5D;
     }
 
     @Override
@@ -302,12 +364,14 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public int maxFlyingHeight() {
+        if (getIsTamed())
+            return 5;
         return 18;
     }
 
-    //TODO
-    protected float getFlyingSpeed() {
-        return 0.7F;
+    @Override
+    public int minFlyingHeight() {
+        return 1;
     }
 
     @Override
@@ -421,8 +485,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             }
 
             if (MoCreatures.isServer()) {
-                setType(6);
-                selectType();
+                transform(6);
             }
             return true;
         }
@@ -435,8 +498,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             }
 
             if (MoCreatures.isServer()) {
-                setType(7);
-                selectType();
+                transform(7);
             }
             return true;
         }
@@ -449,8 +511,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             }
 
             if (MoCreatures.isServer()) {
-                setType(8);
-                selectType();
+                transform(8);
             }
             return true;
         }
@@ -543,7 +604,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public double getMountedYOffset() {
-        return this.height * 0.90D * getSizeFactor();
+        return this.height * 0.85 * getSizeFactor();
     }
 
     @Override
@@ -593,24 +654,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     }
 
     /*@Override
-    protected Entity findPlayerToAttack() {
-        if (this.worldObj.getDifficulty().getDifficultyId() > 0 && !getIsTamed()) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 10D);
-            if ((entityplayer != null)) {
-                return entityplayer;
-            }
-            if ((this.rand.nextInt(500) == 0)) {
-                EntityLivingBase entityliving = getClosestEntityLiving(this, 8D);
-                return entityliving;
-            }
-        }
-        return null;
-    }*/
-
-    @Override
     public boolean entitiesToIgnore(Entity entity) {
         return (super.entitiesToIgnore(entity) || (entity instanceof MoCEntityWyvern) || (entity instanceof EntityPlayer));
-    }
+    }*/
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
@@ -687,6 +733,14 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         {
             this.diveCounter = 1;
         }
+        if (animationType == 3) {
+            this.wingFlapCounter = 1;
+        }
+        if (animationType > 5 && animationType < 9) //transform 6 - 8
+        {
+            this.transformType = animationType;
+            this.transformCounter = 1;
+        }
     }
 
     @Override
@@ -742,20 +796,20 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     @Override
     public double getCustomSpeed() {
         if (this.riddenByEntity != null) {
-            if (getType() < 5) {
-                return 2.0D;
-            }
-            return 3.0D;
+            return 1.0D;
         }
         return 0.8D;
     }
 
     @Override
     public int getMaxEdad() {
-        if (getType() >= 5) {
+        if (this.getType() == 5) {
             return 180;
         }
-        return 100;
+        if (this.getType() == 6 || this.getType() == 7 || this.getType() == 8) {
+            return 160;
+        }
+        return 120;
     }
 
     @Override
@@ -781,4 +835,34 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         return 0.6D;
     }
 
+    @Override
+    public float getAIMoveSpeed() {
+        if (getIsFlying()) {
+            return 0.4F;
+        }
+        return super.getAIMoveSpeed();
+    }
+
+    @Override
+    protected float flyerFriction() {
+        if (this.getType() == 5) {
+            return 0.96F;
+        }
+        if (this.getType() == 6 || this.getType() == 7 || this.getType() == 8) {
+            return 0.96F;
+        }
+        return 0.94F;
+    }
+
+    @Override
+    public void makeEntityJump() {
+        wingFlap();
+        //System.out.println("jumping wyvern, server = " + MoCreatures.isServer());
+        super.makeEntityJump();
+    }
+
+    @Override
+    public boolean shouldAttackPlayers() {
+        return !getIsTamed() && super.shouldAttackPlayers();
+    }
 }

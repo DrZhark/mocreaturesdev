@@ -83,11 +83,6 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    public float getMoveSpeed() {
-        return 0.8F;
-    }
-
-    @Override
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // byte IsPicked, 0 = false 1 = true

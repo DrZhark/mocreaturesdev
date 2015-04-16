@@ -43,9 +43,6 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public void onLivingUpdate() {
         if (!this.worldObj.isRemote) {
-            /*if (this.rand.nextInt(40) == 0) {
-                this.setFire(2);
-            }*/
             if (this.worldObj.isDaytime()) {
                 float f = getBrightness(1.0F);
                 if ((f > 0.5F)
@@ -58,10 +55,11 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
         super.onLivingUpdate();
     }
 
-    @Override
+    //TODO TEST
+    /*@Override
     public float getMoveSpeed() {
         return 1.1F;
-    }
+    }*/
 
     @Override
     protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
@@ -74,5 +72,10 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     @Override
     public boolean isBurning() {
         return this.rand.nextInt(100) == 0;
+    }
+
+    @Override
+    protected boolean isHarmedByDaylight() {
+        return false;
     }
 }

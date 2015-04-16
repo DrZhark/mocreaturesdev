@@ -407,18 +407,18 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         return this.height * 0.35D;
     }
 
-    @Override
-    public void floating() {
-        if ((getAttackTarget() != null && ((getAttackTarget().posY < (this.posY - 0.5D)) && getDistanceToEntity(getAttackTarget()) < 10F))) // || caughtPrey)
-        {
-            if (this.motionY < -0.1) {
-                this.motionY = -0.1;
+    //TODO
+    /*    public void floating() {
+            if ((getAttackTarget() != null && ((getAttackTarget().posY < (this.posY - 0.5D)) && getDistanceToEntity(getAttackTarget()) < 10F))) // || caughtPrey)
+            {
+                if (this.motionY < -0.1) {
+                    this.motionY = -0.1;
+                }
+            } else {
+                super.floating();
             }
-        } else {
-            super.floating();
         }
-    }
-
+    */
     @Override
     protected String getDeathSound() {
         return "mocreatures:crocdying";

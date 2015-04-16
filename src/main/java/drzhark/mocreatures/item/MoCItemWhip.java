@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -95,8 +96,15 @@ public class MoCItemWhip extends MoCItem {
 
                 if ((entity instanceof MoCEntityWyvern)) {
                     MoCEntityWyvern entitywyvern = (MoCEntityWyvern) entity;
-                    if (entitywyvern.getIsTamed() && !entitywyvern.isOnAir()) {
+                    if (entitywyvern.getIsTamed() && entitywyvern.riddenByEntity == null && !entitywyvern.isOnAir()) {
                         entitywyvern.setSitting(!entitywyvern.getIsSitting());
+                    }
+                }
+
+                if ((entity instanceof MoCEntityPetScorpion)) {
+                    MoCEntityPetScorpion petscorpion = (MoCEntityPetScorpion) entity;
+                    if (petscorpion.getIsTamed() && petscorpion.riddenByEntity == null) {
+                        petscorpion.setSitting(!petscorpion.getIsSitting());
                     }
                 }
 

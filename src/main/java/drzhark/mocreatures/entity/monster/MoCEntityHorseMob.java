@@ -50,7 +50,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
+        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
     }
@@ -334,6 +334,19 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             this.attackEntityAsMob(par1Entity);
         }
     }*/
+
+    //TODO TEST IF ANIMATION WORKS ON CLIENT
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        if (entityIn instanceof EntityPlayer && !shouldAttackPlayers()) {
+            return false;
+        }
+        if (this.onGround && !isOnAir())
+            stand();
+        openMouth();
+        MoCTools.playCustomSound(this, "horsemad", this.worldObj);
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public void onDeath(DamageSource damagesource) {

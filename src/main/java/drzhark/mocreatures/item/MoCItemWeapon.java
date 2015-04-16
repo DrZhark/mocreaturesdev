@@ -1,5 +1,14 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.item.Item;
+
+import com.google.common.collect.Multimap;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,17 +22,17 @@ import net.minecraft.world.World;
 
 public class MoCItemWeapon extends MoCItem {
 
-    private final float weaponDamage;
-    private final ToolMaterial toolMaterial;
+    private float attackDamage;
+    private final Item.ToolMaterial material;
     private int specialWeaponType = 0;
     private boolean breakable = false;
 
-    public MoCItemWeapon(String name, ToolMaterial par2ToolMaterial) {
+    public MoCItemWeapon(String name, Item.ToolMaterial par2ToolMaterial) {
         super(name);
-        this.toolMaterial = par2ToolMaterial;
+        this.material = par2ToolMaterial;
         this.maxStackSize = 1;
         this.setMaxDamage(par2ToolMaterial.getMaxUses());
-        this.weaponDamage = 4 + par2ToolMaterial.getDamageVsEntity();
+        this.attackDamage = 4F + par2ToolMaterial.getDamageVsEntity();
     }
 
     /**
@@ -40,41 +49,52 @@ public class MoCItemWeapon extends MoCItem {
     }
 
     /**
-     * Returns the strength of the stack against a given block. 1.0F base,
-     * (Quality+1)*2 if correct blocktype, 1.5F if sword
+     * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
      */
-    @Override
-    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block) {
-        return par2Block == Blocks.web ? 15.0F : 1.5F;
+    public float getDamageVsEntity() {
+        return this.material.getDamageVsEntity();
+    }
+
+    public float getStrVsBlock(ItemStack stack, Block block) {
+        if (block == Blocks.web) {
+            return 15.0F;
+        } else {
+            Material material = block.getMaterial();
+            return material != Material.plants && material != Material.vine && material != Material.coral && material != Material.leaves
+                    && material != Material.gourd ? 1.0F : 1.5F;
+        }
     }
 
     /**
-     * Current implementations of this method in child classes do not use the
-     * entry argument beside ev. They just raise the damage on the stack.
+     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+     * the damage on the stack.
+     *  
+     * @param target The Entity being hit
+     * @param attacker the attacking entity
      */
     @Override
-    public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving, EntityLivingBase par3EntityLiving) {
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase target, EntityLivingBase attacker) {
         int i = 1;
         if (this.breakable) {
             i = 10;
         }
-        par1ItemStack.damageItem(i, par3EntityLiving);
+        par1ItemStack.damageItem(i, attacker);
         int potionTime = 100;
         switch (this.specialWeaponType) {
             case 1: //poison
-                par2EntityLiving.addPotionEffect(new PotionEffect(Potion.poison.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, potionTime, 0));
                 break;
             case 2: //frost slowdown
-                par2EntityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, potionTime, 0));
                 break;
             case 3: //fire
-                par2EntityLiving.setFire(10);
+                target.setFire(10);
                 break;
             case 4: //confusion
-                par2EntityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(Potion.confusion.id, potionTime, 0));
                 break;
             case 5: //blindness
-                par2EntityLiving.addPotionEffect(new PotionEffect(Potion.blindness.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(Potion.blindness.id, potionTime, 0));
                 break;
             default:
                 break;
@@ -92,6 +112,7 @@ public class MoCItemWeapon extends MoCItem {
      * Returns True is the item is renderer in full 3D when hold.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean isFull3D() {
         return true;
     }
@@ -137,6 +158,48 @@ public class MoCItemWeapon extends MoCItem {
      */
     @Override
     public int getItemEnchantability() {
-        return this.toolMaterial.getEnchantability();
+        System.out.println("enchantability = " + this.material.getEnchantability());
+        return this.material.getEnchantability();
+    }
+
+    /**
+     * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
+     */
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
+        if ((double) blockIn.getBlockHardness(worldIn, pos) != 0.0D) {
+            stack.damageItem(2, playerIn);
+        }
+
+        return true;
+    }
+
+    /**
+     * Return the name for this tool's material.
+     */
+    public String getToolMaterialName() {
+        return this.material.toString();
+    }
+
+    /**
+     * Return whether this item is repairable in an anvil.
+     *  
+     * @param toRepair The ItemStack to be repaired
+     * @param repair The ItemStack that should repair this Item (leather for leather armor, etc.)
+     */
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        ItemStack mat = this.material.getRepairItemStack();
+        if (mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+            return true;
+        return super.getIsRepairable(toRepair, repair);
+    }
+
+    /**
+     * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
+     */
+    public Multimap getItemAttributeModifiers() {
+        Multimap multimap = super.getItemAttributeModifiers();
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier",
+                (double) this.attackDamage, 0));
+        return multimap;
     }
 }

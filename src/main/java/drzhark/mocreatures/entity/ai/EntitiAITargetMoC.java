@@ -63,7 +63,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
             return false;
         } else if (!attacker.canAttackClass(target.getClass())) {
             return false;
-        } else if (attacker instanceof MoCEntityAnimal) {
+        } else if (attacker instanceof MoCEntityAnimal && !(target instanceof EntityPlayer)) {
             MoCEntityAnimal mocattacker = (MoCEntityAnimal) attacker;
             if (!mocattacker.canAttackTarget(target)) {
                 return false;

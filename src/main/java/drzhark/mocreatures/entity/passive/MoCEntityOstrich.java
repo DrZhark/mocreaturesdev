@@ -56,7 +56,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         super(world);
         setSize(1.0F, 1.6F);
         setEdad(35);
-        setTamed(false);
+        setTamed(true);//TODO
         this.eggCounter = this.rand.nextInt(1000) + 1000;
         this.stepHeight = 1.0F;
         this.canLayEggs = false;
