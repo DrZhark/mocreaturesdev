@@ -63,12 +63,10 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         this.bodyswing = 2F;
         this.movInt = this.rand.nextInt(10);
         setEdad(50 + this.rand.nextInt(50));
-        //this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 30));
-        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -123,11 +121,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             default:
                 return MoCreatures.proxy.getTexture("snake1.png");
         }
-    }
-
-    @Override
-    protected boolean usesNewAI() {
-        return true;
     }
 
     @Override
@@ -595,55 +588,47 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
          * Extreme Hills Edge Jungle JungleHills
          *
          */
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
-        int l = this.rand.nextInt(10);
+        try {
+            BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+            int l = this.rand.nextInt(10);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
-            return false;
-        }
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+                return false;
+            }
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
-            if (l < 5) {
-                setType(7); // rattlesnake or spotted brownish ?
-            } else {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+                if (l < 5) {
+                    setType(7); // rattlesnake or spotted brownish ?
+                } else {
+                    setType(2);
+                }
+            }
+
+            if (getType() == 7 && !(BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))) {
                 setType(2);
             }
-        }
-
-        if (getType() == 7 && !(BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))) {
-            setType(2);
-        }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.HILLS)) {
-            if (l < 4) {
-                setType(1);
-            } else if (l < 7) {
-                setType(5);
-            } else {
-                setType(6);
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.HILLS)) {
+                if (l < 4) {
+                    setType(1);
+                } else if (l < 7) {
+                    setType(5);
+                } else {
+                    setType(6);
+                }
             }
-        }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SWAMP)) {
-            // python or bright green bright orange
-            if (l < 4) {
-                setType(8);
-            } else if (l < 8) {
-                setType(4);
-            } else {
-                setType(1);
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SWAMP)) {
+                // python or bright green bright orange
+                if (l < 4) {
+                    setType(8);
+                } else if (l < 8) {
+                    setType(4);
+                } else {
+                    setType(1);
+                }
             }
+        } catch (Exception e) {
         }
-
         return true;
-    }
-
-    @Override
-    public boolean updateMount() {
-        return getIsTamed();
-    }
-
-    @Override
-    public boolean forceUpdates() {
-        return getIsTamed();
     }
 
     @Override

@@ -48,8 +48,6 @@ public class MoCModelWyvern extends ModelBase {
     ModelRenderer torso;
     ModelRenderer rightshoulder;
     ModelRenderer leftshoulder;
-    //ModelRenderer rightwingflap;
-    //ModelRenderer leftwingflap;
     ModelRenderer leftfoot;
     ModelRenderer righttoe3;
     ModelRenderer righttoe2;
@@ -72,8 +70,6 @@ public class MoCModelWyvern extends ModelBase {
     ModelRenderer storage;
     ModelRenderer helmetstrap1;
     ModelRenderer helmetstrap2;
-    //ModelRenderer leftspreadwingflap;
-    //ModelRenderer rightspreadwingflap;
     ModelRenderer leftspine1;
     ModelRenderer leftspine2;
     ModelRenderer leftspine3;
@@ -140,6 +136,16 @@ public class MoCModelWyvern extends ModelBase {
     ModelRenderer rightwingflap3;
 
     private float radianF = 57.29578F;
+
+    private boolean isRidden;
+    private boolean isChested;
+    private boolean isSaddled;
+    private boolean flapwings;
+    private boolean onAir;
+    private boolean diving;
+    private boolean isSitting;
+    private boolean isGhost;
+    private int openMouth;
 
     public MoCModelWyvern() {
         this.textureWidth = 128;
@@ -780,20 +786,28 @@ public class MoCModelWyvern extends ModelBase {
 
         MoCEntityWyvern wyvern = (MoCEntityWyvern) entity;
         int armor = wyvern.getArmorType();
-        boolean isRidden = (wyvern.riddenByEntity != null);
-        boolean isChested = wyvern.getIsChested();
-        boolean isSaddled = wyvern.getIsRideable();
-        boolean flapwings = (wyvern.wingFlapCounter != 0);
-        boolean onAir = wyvern.isOnAir() || wyvern.getIsFlying();
-        boolean diving = (wyvern.diveCounter != 0);
-        boolean isSitting = wyvern.getIsSitting();
-        //boolean isFlying = wyvern.getIsFlying();
-        int openMouth = wyvern.mouthCounter;
+        this.isRidden = (wyvern.riddenByEntity != null);
+        this.isChested = wyvern.getIsChested();
+        this.isSaddled = wyvern.getIsRideable();
+        this.flapwings = (wyvern.wingFlapCounter != 0);
+        this.onAir = wyvern.isOnAir() || wyvern.getIsFlying();
+        this.diving = (wyvern.diveCounter != 0);
+        this.isSitting = wyvern.getIsSitting();
+        this.isGhost = wyvern.getIsGhost();
+        this.openMouth = wyvern.mouthCounter;
 
-        setRotationAngles(f, f1, f2, f3, f4, f5, onAir, flapwings, isRidden, openMouth, diving, isSitting);
+        setRotationAngles(f, f1, f2, f3, f4, f5);//, onAir, flapwings, isRidden, openMouth, diving, isSitting);
         float yOffset = wyvern.getAdjustedYOffset();
         GL11.glPushMatrix();
         GL11.glTranslatef(0F, yOffset, 0F);
+
+        if (isGhost) {
+            float transparency = wyvern.tFloat();
+            GL11.glEnable(3042 /* GL_BLEND */);
+            GL11.glBlendFunc(770, 771);
+            GL11.glColor4f(0.8F, 0.8F, 0.8F, transparency);
+            //GL11.glScalef(1.3F, 1.0F, 1.3F);
+        }
         this.back1.render(f5);
         this.Tail.render(f5);
 
@@ -914,6 +928,9 @@ public class MoCModelWyvern extends ModelBase {
         this.diamondleftshoulder.render(f5);
         this.diamondrightshoulder.render(f5);
         this.diamondchestarmor.render(f5);
+        if (isGhost) {
+            GL11.glDisable(3042/* GL_BLEND */);
+        }
         GL11.glPopMatrix();
     }
 
@@ -923,8 +940,7 @@ public class MoCModelWyvern extends ModelBase {
         model.rotateAngleZ = z;
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, boolean onAir, boolean flapwings, boolean rider,
-            int openMouth, boolean diving, boolean sitting) {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {//, boolean onAir, boolean flapwings, boolean rider, int openMouth, boolean diving, boolean sitting) {
         float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
 
@@ -948,7 +964,7 @@ public class MoCModelWyvern extends ModelBase {
         this.head.rotateAngleY = 0F;
         this.head.rotateAngleZ = 0F;
 
-        if (rider) {
+        if (isRidden) {
             //straight neck when mounted
             this.neck1.rotateAngleY = 0F;
             this.neck2.rotateAngleY = 0F;
@@ -965,7 +981,6 @@ public class MoCModelWyvern extends ModelBase {
         }
         float TailXRot = MathHelper.cos(f * 0.4F) * 0.2F * f1;
         this.tail1.rotateAngleX = (-19F / this.radianF);// - TailXRot;
-
         this.tail2.rotateAngleX = (-16F / this.radianF);// + TailXRot;
         this.tail3.rotateAngleX = (7F / this.radianF);// + TailXRot;
         this.tail4.rotateAngleX = (11F / this.radianF);// + TailXRot;
@@ -1000,7 +1015,7 @@ public class MoCModelWyvern extends ModelBase {
          * cruising, movement depends of speed
          */
         //float WingRot = 0F;
-        if (flapwings) {
+        if (flapwings && !isGhost) {
             WingSpread = MathHelper.cos((f2 * 0.3F) + 3.141593F) * 1.2F;// * f1;
         } else
         //cruising
@@ -1009,10 +1024,13 @@ public class MoCModelWyvern extends ModelBase {
             WingSpread = MathHelper.cos((f * 0.5F)) * 0.1F;//* 1.2F * f1;
         }
 
-        if (onAir) {
+        if (onAir || isGhost) {
             //rightfing1a.rotateAngleY = -70F/radianF+ WingSpread;
 
             float speedMov = (f1 * 0.5F);
+            if (isGhost) {
+                speedMov = 0.5F;
+            }
 
             this.leftuparm.rotateAngleZ = WingSpread * 2 / 3F;
             this.rightuparm.rotateAngleZ = -WingSpread * 2 / 3F;
@@ -1097,7 +1115,7 @@ public class MoCModelWyvern extends ModelBase {
 
         }
 
-        if (sitting) {
+        if (isSitting) {
             this.leftupleg.rotateAngleX = 45F / this.radianF + LLegXRot;
             this.rightupleg.rotateAngleX = 45F / this.radianF + RLegXRot;
             this.leftmidleg.rotateAngleX = 30F;

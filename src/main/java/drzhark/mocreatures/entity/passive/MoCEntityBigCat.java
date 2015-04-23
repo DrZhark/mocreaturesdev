@@ -4,16 +4,26 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -21,6 +31,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
@@ -38,23 +49,38 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     public MoCEntityBigCat(World world) {
         super(world);
-        setEdad(35);
+        setEdad(45);
         setSize(0.9F, 1.3F);
-        //health = 25;
         if (this.rand.nextInt(4) == 0) {
             setAdult(false);
 
         } else {
             setAdult(true);
         }
-        setHungry(true);
         setTamed(false);
+        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
+        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(5, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
+        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 0.8D, 30));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        //this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this)); //TODO
+        //this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this)); //TODO
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(4, new EntityAIHunt(this, EntityAnimal.class, true));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        //this.getAttributeMap().registerAttribute(SharedMonsterAttributes.followRange);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(8.0D);
     }
 
     /**
@@ -78,9 +104,11 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             } else {
                 setType(5);
             }
-
-            this.setHealth(getMaxHealth());
         }
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.setHealth(getMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(calculateAttackDmg());
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(getAttackRange());
 
     }
 
@@ -196,25 +224,25 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         }
     }
 
-    public int getForce() {
+    public double calculateAttackDmg() {
         switch (getType()) {
             case 1:
-                return 5;
+                return 5D;
             case 2:
-                return 5;
+                return 5D;
             case 3:
-                return 4;
+                return 4D;
             case 4:
-                return 3;
+                return 3D;
             case 5:
-                return 6;
+                return 6D;
             case 6:
-                return 3;
+                return 3D;
             case 7:
-                return 8;
+                return 8D;
 
             default:
-                return 5;
+                return 5D;
         }
     }
 
@@ -271,11 +299,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         super.entityInit();
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasEaten - 0 false 1 true
         this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isSitting - 0 false 1 true
-        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isHungry - 0 false 1 true
-    }
-
-    public boolean getIsHungry() {
-        return (this.dataWatcher.getWatchableObjectByte(25) == 1);
+        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isGhost - 0 false 1 true
     }
 
     public boolean getHasEaten() {
@@ -285,11 +309,6 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     @Override
     public boolean getIsSitting() {
         return (this.dataWatcher.getWatchableObjectByte(24) == 1);
-    }
-
-    public void setHungry(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(25, Byte.valueOf(input));
     }
 
     public void setEaten(boolean flag) {
@@ -302,43 +321,27 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(24, Byte.valueOf(input));
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (attackTime <= 0 && (f > 2.0F) && (f < 6F) && (this.rand.nextInt(50) == 0)) {
-            if (this.onGround) {
-                double d = entity.posX - this.posX;
-                double d1 = entity.posZ - this.posZ;
-                float f1 = MathHelper.sqrt_double((d * d) + (d1 * d1));
-                this.motionX = ((d / f1) * 0.5D * 0.8D) + (this.motionX * 0.2D);
-                this.motionZ = ((d1 / f1) * 0.5D * 0.8D) + (this.motionZ * 0.2D);
-                this.motionY = 0.4D;
-            }
-            return;
+    public boolean getIsGhost() {
+        return (this.dataWatcher.getWatchableObjectByte(25) == 1);
+    }
 
-        }
-
-        if (this.attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            entity.attackEntityFrom(DamageSource.causeMobDamage(this), getForce());
-            if (!(entity instanceof EntityPlayer)) {
-                MoCTools.destroyDrops(this, 3D);
-            }
-        }
-    }*/
+    public void setIsGhost(boolean flag) {
+        byte input = (byte) (flag ? 1 : 0);
+        this.dataWatcher.updateObject(25, Byte.valueOf(input));
+    }
 
     // Method used for receiving damage from another source
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        Entity entity = damagesource.getEntity();
+        if ((this.riddenByEntity != null) && (entity == this.riddenByEntity)) {
+            return false;
+        }
+
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
             if (entity != null && getIsTamed() && entity instanceof EntityPlayer) {
                 return false;
             }
-            if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
-                return true;
-            }
-            this.worldObj.getDifficulty();
             if (entity != this && entity instanceof EntityLivingBase && (this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL)) {
                 setAttackTarget((EntityLivingBase) entity);
             }
@@ -362,11 +365,12 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         return 0;
     }
 
-    @Override
+    //TODO
+    /*@Override
     protected Entity findPlayerToAttack() {
-        /*if (this.roper != null && this.roper instanceof EntityPlayer) {
+        if (this.roper != null && this.roper instanceof EntityPlayer) {
             return getMastersEnemy((EntityPlayer) this.roper, 12D);
-        }*/
+        }
 
         this.worldObj.getDifficulty();
         if (this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && MoCreatures.isHuntingEnabled()) {
@@ -388,7 +392,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     public boolean checkSpawningBiome() {
@@ -446,45 +450,6 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public EntityLivingBase getClosestTarget(Entity entity, double d) {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
-            if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity)
-                    || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof MoCEntityElephant)
-                    || (!getIsAdult() && ((entity1.width > 0.5D) || (entity1.height > 0.5D))) || (entity1 instanceof MoCEntityKittyBed)
-                    || (entity1 instanceof MoCEntityLitterBox) || ((entity1 instanceof EntityMob) && (!getIsTamed() || !getIsAdult()))
-                    || (getIsTamed() && (entity1 instanceof IMoCEntity) && ((IMoCEntity) entity1).getIsTamed())
-                    || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
-                    || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
-                    || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled()) // don't attack if hunting is disabled
-            ) {
-                continue;
-            }
-            if (entity1 instanceof MoCEntityBigCat) {
-                if (!getIsAdult()) {
-                    continue;
-                }
-                MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity1;
-                if ((getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7)
-                        || ((getType() != 2) && (getType() == entitybigcat.getType())) || ((getType() == 2) && (entitybigcat.getType() == 1))
-                        || (this.getHealth() < entitybigcat.getHealth())) {
-                    continue;
-                }
-            }
-            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-
-        return entityliving;
-    }
-
-    @Override
     protected String getDeathSound() {
         if (getIsAdult()) {
             return "mocreatures:liondeath";
@@ -516,7 +481,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         }
     }
 
-    public EntityCreature getMastersEnemy(EntityPlayer entityplayer, double d) {
+    /*public EntityCreature getMastersEnemy(EntityPlayer entityplayer, double d) {
         double d1 = -1D;
         EntityCreature entitycreature = null;
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, getEntityBoundingBox().expand(d, 4D, d));
@@ -532,7 +497,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         }
 
         return entitycreature;
-    }
+    }*/
 
     @Override
     public boolean interact(EntityPlayer entityplayer) {
@@ -559,7 +524,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.fish)) {
             this.setHealth(getMaxHealth());
             this.worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-            setHungry(false);
+            setIsHunting(false);
         }
         return false;
 
@@ -590,21 +555,11 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         super.onLivingUpdate();
 
         if ((this.rand.nextInt(300) == 0) && (this.getHealth() <= getMaxHealth()) && (this.deathTime == 0) && !this.worldObj.isRemote) {
-            //health++;
             this.setHealth(getHealth() + 1);
         }
-        if (!getIsAdult() && (this.rand.nextInt(250) == 0)) {
-            setEdad(getEdad() + 1);
-            if (getEdad() >= 100) {
-                setAdult(true);
-                // unused_flag = false;
-            }
-        }
-        if (!getIsHungry() && !getIsSitting() && (this.rand.nextInt(200) == 0)) {
-            setHungry(true);
-        }
 
-        if ((this.deathTime == 0) && getIsHungry() && !getIsSitting()) {
+        //TODO move to New AI
+        if ((this.deathTime == 0) && getIsHunting() && !getIsSitting()) {
             EntityItem entityitem = getClosestItem(this, 12D, Items.porkchop, Items.fish);
             if (entityitem != null) {
                 float f = entityitem.getDistanceToEntity(this);
@@ -619,7 +574,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
                     }
                     this.worldObj
                             .playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                    setHungry(false);
+                    setIsHunting(false);
                 }
             }
         }
@@ -627,7 +582,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isNotScared() {
-        return true;
+        return getIsAdult() || getEdad() > 80;
     }
 
     @Override
@@ -644,5 +599,28 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
+    }
+
+    @Override
+    public boolean isReadyToHunt() {
+        return getIsAdult() && !this.isMovementCeased();
+    }
+
+    @Override
+    public boolean canAttackTarget(EntityLivingBase entity) {
+        if (entity instanceof MoCEntityBigCat) {
+            if (!this.getIsAdult()) {
+                return false;
+            }
+
+            MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
+            if ((this.getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7)
+                    || ((this.getType() != 2) && (this.getType() == entitybigcat.getType()))
+                    || ((this.getType() == 2) && (entitybigcat.getType() == 1))) {
+                return false;
+            }
+            return true;
+        }
+        return entity.height <= 1.5D && entity.width <= 1.5D;
     }
 }

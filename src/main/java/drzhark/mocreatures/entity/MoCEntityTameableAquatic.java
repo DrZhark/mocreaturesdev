@@ -255,4 +255,21 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     public boolean allowLeashing() {
         return this.getIsTamed();
     }
+
+    /**
+     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
+     * @param entityIn
+     * @param sendAttachNotification
+     */
+    @Override
+    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+        if (entityIn instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) entityIn;
+            if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
+                    && !entityplayer.getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+                return;
+            }
+        }
+        super.setLeashedToEntity(entityIn, sendAttachNotification);
+    }
 }

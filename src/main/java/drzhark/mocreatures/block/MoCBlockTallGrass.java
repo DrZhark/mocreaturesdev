@@ -1,5 +1,8 @@
 package drzhark.mocreatures.block;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.world.World;
+
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -71,4 +74,11 @@ public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
     public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
         return null;
     }
+
+    @Override
+    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state) {
+        Block soil = worldIn.getBlockState(pos.down()).getBlock();
+        return soil == MoCreatures.mocGrass || soil == MoCreatures.mocDirt;
+    }
+
 }

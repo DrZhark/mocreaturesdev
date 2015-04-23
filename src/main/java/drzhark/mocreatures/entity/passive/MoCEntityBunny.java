@@ -95,9 +95,12 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         BlockPos pos = new BlockPos(i, j, k);
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
-            setType(3); //snow white bunnies!
-            return true;
+        try {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+                setType(3); //snow white bunnies!
+                return true;
+            }
+        } catch (Exception e) {
         }
         return true;
     }
@@ -265,15 +268,15 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         this.bunnyReproduceTickerA = this.rand.nextInt(64);
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return true;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return true;
-    }
+    }*/
 
     @Override
     public int nameYOffset() {
@@ -305,7 +308,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
         if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
-            return 0.5F;
+            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.25 : 0.5F;
         }
         if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.5F);

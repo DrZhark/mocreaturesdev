@@ -7,7 +7,7 @@ public interface IMoCEntity {
 
     public void riderIsDisconnecting(boolean flag);// = false;
 
-    public boolean forceUpdates();
+    //public boolean forceUpdates();
 
     public void selectType();
 
@@ -38,7 +38,7 @@ public interface IMoCEntity {
 
     public int nameYOffset();
 
-    public boolean updateMount();
+    //public boolean updateMount();
 
     /**
      * method used to sync jump client/server

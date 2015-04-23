@@ -1,5 +1,6 @@
 package drzhark.mocreatures.client.model;
 
+import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -18,6 +19,7 @@ public class MoCModelBird extends ModelBase {
     public ModelRenderer lwing;
     public ModelRenderer beak;
     public ModelRenderer tail;
+    private boolean isOnAir;
 
     public MoCModelBird() {
         byte byte0 = 16;
@@ -51,6 +53,8 @@ public class MoCModelBird extends ModelBase {
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        MoCEntityBird bird = (MoCEntityBird) entity;
+        this.isOnAir = bird.isOnAir() && bird.ridingEntity == null;
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.head.render(f5);
         this.beak.render(f5);
@@ -68,13 +72,15 @@ public class MoCModelBird extends ModelBase {
         //head.rotateAngleY = f3 / 2.0F / 57.29578F; //fixed SMP bug
         this.head.rotateAngleY = f3 / 57.29578F;
         this.beak.rotateAngleY = this.head.rotateAngleY;
-        this.leftleg.rotateAngleX = MathHelper.cos(f * 0.6662F) * f1;
-        this.rightleg.rotateAngleX = MathHelper.cos((f * 0.6662F) + 3.141593F) * f1;
+
+        if (this.isOnAir) {
+            this.leftleg.rotateAngleX = 1.4F;
+            this.rightleg.rotateAngleX = 1.4F;
+        } else {
+            this.leftleg.rotateAngleX = MathHelper.cos(f * 0.6662F) * f1;
+            this.rightleg.rotateAngleX = MathHelper.cos((f * 0.6662F) + 3.141593F) * f1;
+        }
         this.rwing.rotateAngleZ = f2;
         this.lwing.rotateAngleZ = -f2;
     }
-
-    //public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {}
-    //public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {}
-
 }

@@ -158,7 +158,6 @@ public class MoCItemWeapon extends MoCItem {
      */
     @Override
     public int getItemEnchantability() {
-        System.out.println("enchantability = " + this.material.getEnchantability());
         return this.material.getEnchantability();
     }
 

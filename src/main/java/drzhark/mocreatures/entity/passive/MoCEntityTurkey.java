@@ -77,11 +77,6 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     public boolean interact(EntityPlayer entityplayer) {
         if (super.interact(entityplayer)) {
             return false;

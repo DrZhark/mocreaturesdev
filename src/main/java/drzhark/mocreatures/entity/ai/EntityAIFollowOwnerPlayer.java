@@ -32,10 +32,10 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         this.maxDist = maxDistIn;
         this.setMutexBits(3);
 
-        if (!(thePetIn.getNavigator() instanceof PathNavigateGround)) {
-            //System.out.println("exiting due to first illegal argument");
-            throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
-        }
+        //if (!(thePetIn.getNavigator() instanceof PathNavigateGround)) {
+        //System.out.println("exiting due to first illegal argument");
+        //    throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+        //}
     }
 
     /**
@@ -46,9 +46,9 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         if (((IMoCEntity) this.thePet).getIsSitting()) {
             return false;
         }
-        if (!(this.thePet.getNavigator() instanceof PathNavigateGround)) {
-            return false;
-        }
+        //if (!(this.thePet.getNavigator() instanceof PathNavigateGround)) {
+        //    return false;
+        //}
         String OwnerName = ((IMoCTameable) this.thePet).getOwnerName();
         if (OwnerName == null || OwnerName.equals("")) {
             return false;
@@ -84,8 +84,8 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
     @Override
     public void startExecuting() {
         this.delayCounter = 0;
-        this.flag = ((PathNavigateGround) this.thePet.getNavigator()).getAvoidsWater();
-        ((PathNavigateGround) this.thePet.getNavigator()).setAvoidsWater(false);
+        //this.flag = ((PathNavigateGround) this.thePet.getNavigator()).getAvoidsWater();
+        //((PathNavigateGround) this.thePet.getNavigator()).setAvoidsWater(false);
     }
 
     /**
@@ -95,7 +95,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
     public void resetTask() {
         this.theOwner = null;
         this.petPathfinder.clearPathEntity();
-        ((PathNavigateGround) this.thePet.getNavigator()).setAvoidsWater(true);
+        //((PathNavigateGround) this.thePet.getNavigator()).setAvoidsWater(true); //TODO
     }
 
     /**

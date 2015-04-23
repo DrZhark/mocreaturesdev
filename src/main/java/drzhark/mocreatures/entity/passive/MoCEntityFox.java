@@ -75,11 +75,6 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     public ResourceLocation getTexture() {
 
         if (!getIsAdult()) {
@@ -196,7 +191,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     @Override
     public boolean canAttackTarget(EntityLivingBase entity) {
-        return !(entity instanceof MoCEntityFox) && super.canAttackTarget(entity);
+        return !(entity instanceof MoCEntityFox) && entity.height <= 0.7D && entity.width <= 0.7D;
     }
 
     @Override

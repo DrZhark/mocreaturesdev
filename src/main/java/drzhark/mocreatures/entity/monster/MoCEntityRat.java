@@ -94,7 +94,6 @@ public class MoCEntityRat extends MoCEntityMob {
                     MoCEntityRat entityrat = (MoCEntityRat) entity1;
                     if ((entityrat != null) && (entityrat.getAttackTarget() == null)) {
                         entityrat.setAttackTarget((EntityLivingBase) entity);
-                        System.out.println("Rat " + entityrat + " , will attack " + entity);
                     }
                 } while (true);
             }

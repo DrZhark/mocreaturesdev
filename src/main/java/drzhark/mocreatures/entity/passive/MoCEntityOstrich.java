@@ -856,15 +856,15 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         }
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return getIsTamed();
-    }
+    }*/
 
-    @Override
-    public boolean forceUpdates() {
-        return getIsTamed();
-    }
+    /* @Override
+     public boolean forceUpdates() {
+         return getIsTamed();
+     }*/
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {

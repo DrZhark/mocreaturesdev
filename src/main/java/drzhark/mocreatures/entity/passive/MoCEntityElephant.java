@@ -628,15 +628,15 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return getIsTamed();
     }
-
-    @Override
+    */
+    /*@Override
     public boolean forceUpdates() {
         return getIsTamed();
-    }
+    }*/
 
     @Override
     public boolean checkSpawningBiome() {
@@ -1078,10 +1078,5 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean isNotScared() {
         return getIsAdult() || getEdad() > 80 || getIsTamed();
-    }
-
-    @Override
-    protected boolean usesNewAI() {
-        return true;
     }
 }

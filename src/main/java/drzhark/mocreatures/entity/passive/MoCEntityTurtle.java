@@ -38,11 +38,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
@@ -104,6 +99,9 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
         if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+            if (((EntityPlayer) this.ridingEntity).isSneaking()) {
+                return -0.25D + ((300D - this.getEdad()) / 500D);
+            }
             return (300D - this.getEdad()) / 500D;
         }
         if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
@@ -378,15 +376,15 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         return false;
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return getIsTamed();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return getIsTamed();
-    }
+    }*/
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {

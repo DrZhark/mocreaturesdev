@@ -74,15 +74,13 @@ public class MoCItemWhip extends MoCItem {
                     MoCEntityHorse entityhorse = (MoCEntityHorse) entity;
                     if (entityhorse.getIsTamed()) {
                         if (entityhorse.riddenByEntity == null) {
-                            entityhorse.setEating(!entityhorse.getIsSitting());
+                            entityhorse.setSitting(!entityhorse.getIsSitting());
                         } else if (entityhorse.isNightmare()) {
-                            entityhorse.setNightmareInt(250);
+                            entityhorse.setNightmareInt(100);
                         } else if (entityhorse.sprintCounter == 0) {
                             entityhorse.sprintCounter = 1;
-                        }
-                        //TODO reactivate the right one prior to release
-                        else {
-                            entityhorse.setEating(!entityhorse.getIsSitting());
+                        } else {
+                            entityhorse.setSitting(!entityhorse.getIsSitting());
                         }
                     }
                 }

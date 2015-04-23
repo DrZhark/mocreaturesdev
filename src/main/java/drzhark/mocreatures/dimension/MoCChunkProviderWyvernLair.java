@@ -81,7 +81,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
         }
     }
 
-    public void func_180520_a(int p_180520_1_, int p_180520_2_, ChunkPrimer p_180520_3_) {
+    public void generateBaseBlocks(int p_180520_1_, int p_180520_2_, ChunkPrimer p_180520_3_) {
         byte b0 = 2;
         int k = b0 + 1;
         byte b1 = 33;
@@ -117,7 +117,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
                                 IBlockState iblockstate = null;
 
                                 if (d15 > 0.0D) {
-                                    iblockstate = MoCreatures.mocStone.getDefaultState();
+                                    iblockstate = MoCreatures.mocStone.getDefaultState(); //TODO Add proper metadata
                                 }
 
                                 int k2 = i2 + i1 * 8;
@@ -143,43 +143,41 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
 
     /**
      * Replaces the stone that was placed in with blocks that match the biome
+     * @param biomesForGeneration2 
+     * @param z 
+     * @param x 
      */
-    public void func_180519_a(ChunkPrimer p_180519_1_) {
-        ChunkProviderEvent.ReplaceBiomeBlocks event =
-                new ChunkProviderEvent.ReplaceBiomeBlocks(this, this.chunkX, this.chunkZ, p_180519_1_, this.worldObj);
+    public void insertBiomeBlocks(int x, int z, ChunkPrimer chunkPrimer, BiomeGenBase[] biomesForGeneration2) {
+        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, x, z, chunkPrimer, this.worldObj);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) {
             return;
         }
         for (int i = 0; i < 16; ++i) {
             for (int j = 0; j < 16; ++j) {
-                byte b0 = 1;
+                byte b0 = 5;
                 int k = -1;
-                IBlockState iblockstate = MoCreatures.mocStone.getDefaultState();
-                IBlockState iblockstate1 = MoCreatures.mocStone.getDefaultState();
+
+                BiomeGenBase biome = biomesForGeneration2[j + i * 16];
+                IBlockState iblockStateTopBlock = biome.topBlock;//MoCreatures.mocStone.getDefaultState();
+                IBlockState iblockStateFillerBlock = biome.fillerBlock;//MoCreatures.mocStone.getDefaultState();
 
                 for (int l = 127; l >= 0; --l) {
-                    IBlockState iblockstate2 = p_180519_1_.getBlockState(i, l, j);
+                    IBlockState iblockstate2 = chunkPrimer.getBlockState(i, l, j);
 
                     if (iblockstate2.getBlock().getMaterial() == Material.air) {
                         k = -1;
-                    } else if (iblockstate2.getBlock() == Blocks.stone) {
+                    } else if (iblockstate2.getBlock() == MoCreatures.mocStone.getDefaultState().getBlock()) {
                         if (k == -1) {
-                            if (b0 <= 0) {
-                                iblockstate = Blocks.air.getDefaultState();
-                                iblockstate1 = MoCreatures.mocStone.getDefaultState();
-                            }
-
                             k = b0;
-
                             if (l >= 0) {
-                                p_180519_1_.setBlockState(i, l, j, iblockstate);
+                                chunkPrimer.setBlockState(i, l, j, iblockStateTopBlock);
                             } else {
-                                p_180519_1_.setBlockState(i, l, j, iblockstate1);
+                                chunkPrimer.setBlockState(i, l, j, iblockStateFillerBlock);
                             }
                         } else if (k > 0) {
                             --k;
-                            p_180519_1_.setBlockState(i, l, j, iblockstate1);
+                            chunkPrimer.setBlockState(i, l, j, iblockStateFillerBlock);
                         }
                     }
                 }
@@ -208,8 +206,8 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
         this.RNGa.setSeed(x * 341873128712L + z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        this.func_180520_a(x, z, chunkprimer);
-        this.func_180519_a(chunkprimer);
+        this.generateBaseBlocks(x, z, chunkprimer); //method a
+        this.insertBiomeBlocks(x, z, chunkprimer, this.biomesForGeneration); //method b
         Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 

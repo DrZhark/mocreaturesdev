@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.network.play.server.S1BPacketEntityAttach;
+import net.minecraft.world.WorldServer;
+
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -39,6 +43,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public boolean interact(EntityPlayer entityplayer) {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
         //before ownership check
         if ((itemstack != null) && getIsTamed() && ((itemstack.getItem() == MoCreatures.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
                 && MoCTools.isThisPlayerAnOP(entityplayer)) {
@@ -275,5 +280,22 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public boolean allowLeashing() {
         return this.getIsTamed();
+    }
+
+    /**
+     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
+     * @param entityIn
+     * @param sendAttachNotification
+     */
+    @Override
+    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+        if (entityIn instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) entityIn;
+            if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
+                    && !entityplayer.getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+                return;
+            }
+        }
+        super.setLeashedToEntity(entityIn, sendAttachNotification);
     }
 }

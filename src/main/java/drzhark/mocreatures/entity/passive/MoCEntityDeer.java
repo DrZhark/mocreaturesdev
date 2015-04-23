@@ -47,11 +47,6 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);

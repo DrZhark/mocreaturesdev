@@ -218,7 +218,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
     @Override
     protected void playStepSound(BlockPos pos, Block par4) {
-        // TODO make the sounds
     }
 
     @Override
@@ -371,51 +370,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
     }
 
-    /*public void floating() {
-        if (!this.getNavigator().noPath()){
-            return;
-        }
-        if (true) return;
-           
-        float distY = MoCTools.distanceToSurface(this) - (float)this.getDivingDepth();
-
-        if (this.riddenByEntity != null) {
-            EntityPlayer ep = (EntityPlayer) this.riddenByEntity;
-            if (ep.isAirBorne) // TODO TEST
-            {
-                this.motionY += 0.09D;
-            } else {
-                this.motionY = -0.008D;
-            }
-            return;
-        }
-
-        if ((getAttackTarget() != null && ((getAttackTarget().posY < (this.posY - 0.5D)) && getDistanceToEntity(getAttackTarget()) < 10F))) {
-            if (this.motionY < -0.1) {
-                this.motionY = -0.1;
-            }
-            return;
-        }
-
-        if (distY < 1 || isDiving()) {
-            if (this.motionY < -0.05) {
-                this.motionY = -0.05;
-            }
-        } else {
-            if (this.motionY < 0) {
-                this.motionY = 0;
-            }
-            this.motionY += 0.001D;// 0.001
-
-            if (distY > 1) {
-                this.motionY += (distY * 0.01);
-                if (this.motionY > 0.1D) {
-                    this.motionY = 0.1D;
-                }
-            }
-        }
-    }*/
-
     // used to pick up objects while riding an entity
     public void Riding() {
         if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
@@ -493,7 +447,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
             /*if (this.isInWater() && this.isCollidedHorizontally && rand.nextInt(10) == 0)
             {
-                System.out.println(this + " is collided horizontally, jumping");
                 this.motionY += 0.05D;
             }*/
 
@@ -504,9 +457,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
              }
              */
 
-            if (forceUpdates() && this.rand.nextInt(500) == 0) {
+            /*if (forceUpdates() && this.rand.nextInt(500) == 0) {
                 MoCTools.forceDataSync(this);
-            }
+            }*/
 
             if (isFisheable() && !this.fishHooked && this.rand.nextInt(30) == 0) {
                 getFished();
@@ -673,15 +626,15 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return false;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return false;
-    }
+    }*/
 
     @Override
     public void makeEntityDive() {
@@ -755,7 +708,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     protected void dropMyStuff() {
-        // TODO Auto-generated method stub
     }
 
     /**
@@ -929,44 +881,12 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             return;
         }
 
-        //Riding behaviour if untamed
-        if ((this.riddenByEntity != null) && !getIsTamed()) {
-            if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
-                this.motionY += getCustomJump();
-                setIsJumping(true);
-                this.jumpPending = false;
-            }
-            if (this.rand.nextInt(10) == 0) {
-                this.motionX += this.rand.nextDouble() / 30D;
-                this.motionZ += this.rand.nextDouble() / 10D;
-            }
-            if (MoCreatures.isServer()) {
-                moveEntity(this.motionX, this.motionY, this.motionZ);
-            }
-            if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-                if (getUpsetSound() != null) {
-                    this.worldObj.playSoundAtEntity(this, getUpsetSound(), 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                }
-                this.riddenByEntity.motionY += 0.9D;
-                this.riddenByEntity.motionZ -= 0.3D;
-                this.riddenByEntity.mountEntity(null);
-                this.ridingEntity = null;
-            }
-            if (this.onGround) {
-                setIsJumping(false);
-            }
-            if (MoCreatures.isServer() && this instanceof IMoCTameable) {
-                int chance = (getMaxTemper() - getTemper());
-                if (chance <= 0) {
-                    chance = 1;
-                }
-                if (this.rand.nextInt(chance * 8) == 0) {
-                    MoCTools.tameWithName((EntityPlayer) this.riddenByEntity, (IMoCTameable) this);
-                }
+        if (this.riddenByEntity != null && !getIsTamed() && this.riddenByEntity instanceof EntityLivingBase) {
+            this.moveEntityWithRiderUntamed(strafe, forward);
+            return;
+        }
 
-            }
-            //Tamed movement with rider
-        } else if ((this.riddenByEntity != null) && getIsTamed() && this.riddenByEntity instanceof EntityLivingBase)// && isSwimming())
+        if ((this.riddenByEntity != null) && getIsTamed() && this.riddenByEntity instanceof EntityLivingBase)// && isSwimming())
         {
             this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
             this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
@@ -998,18 +918,43 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 this.moveFlying(strafe, forward, 0.1F);
             }
         }
+    }
 
-        //limb swing movement update
-        this.prevLimbSwingAmount = this.limbSwingAmount;
-        double d2 = this.posX - this.prevPosX;
-        double d3 = this.posZ - this.prevPosZ;
-        float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
-        if (f4 > 1.0F) {
-            f4 = 1.0F;
+    public void moveEntityWithRiderUntamed(float strafe, float forward) {
+        //Riding behaviour if untamed
+        if ((this.riddenByEntity != null) && !getIsTamed()) {
+            if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
+                this.motionY += getCustomJump();
+                setIsJumping(true);
+                this.jumpPending = false;
+            }
+            if (this.rand.nextInt(10) == 0) {
+                this.motionX += this.rand.nextDouble() / 30D;
+                this.motionZ += this.rand.nextDouble() / 10D;
+            }
+            if (MoCreatures.isServer()) {
+                moveEntity(this.motionX, this.motionY, this.motionZ);
+            }
+            if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
+                this.riddenByEntity.motionY += 0.9D;
+                this.riddenByEntity.motionZ -= 0.3D;
+                this.riddenByEntity.mountEntity(null);
+                this.ridingEntity = null;
+            }
+            if (this.onGround) {
+                setIsJumping(false);
+            }
+            if (MoCreatures.isServer() && this instanceof IMoCTameable) {
+                int chance = (getMaxTemper() - getTemper());
+                if (chance <= 0) {
+                    chance = 1;
+                }
+                if (this.rand.nextInt(chance * 8) == 0) {
+                    MoCTools.tameWithName((EntityPlayer) this.riddenByEntity, (IMoCTameable) this);
+                }
+
+            }
         }
-        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
-        this.limbSwing += this.limbSwingAmount;
-
     }
 
     /**

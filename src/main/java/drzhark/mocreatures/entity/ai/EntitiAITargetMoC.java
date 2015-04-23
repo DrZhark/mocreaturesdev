@@ -68,6 +68,11 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
             if (!mocattacker.canAttackTarget(target)) {
                 return false;
             }
+
+            //avoids attacking other tamed 
+            if (mocattacker.getIsTamed() && (target instanceof MoCEntityAnimal && ((MoCEntityAnimal) target).getIsTamed())) {
+                return false;
+            }
         }
         Team team = attacker.getTeam();
         Team team1 = target.getTeam();
@@ -91,17 +96,6 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
         }
 
     }
-
-    /*public boolean isSuitableTarget2(EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)
-    {
-
-            MoCEntityAnimal mocattacker = (MoCEntityAnimal)attacker;
-            if (!mocattacker.canAttackTarget(target))
-            {
-                return false;
-            }
-            return super.isSuitableTarget(attacker, target, includeInvincibles, checkSight);
-    }*/
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
@@ -204,7 +198,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
         PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(p_75295_1_);
 
         if (pathentity == null) {
-            System.out.println("couldn't find path");
+            //System.out.println("couldn't find path");
             return false;
         } else {
             PathPoint pathpoint = pathentity.getFinalPathPoint();

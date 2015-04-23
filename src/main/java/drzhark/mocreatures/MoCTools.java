@@ -2,7 +2,6 @@ package drzhark.mocreatures;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
-
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
@@ -954,9 +953,12 @@ public class MoCTools {
             if (mobGriefing && (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) && blockstate.getBlock() != Blocks.air) {
                 BlockEvent.BreakEvent event = null;
                 if (!entity.worldObj.isRemote) {
-                    event =
-                            new BlockEvent.BreakEvent(entity.worldObj, chunkposition, blockstate, FakePlayerFactory.get(
-                                    DimensionManager.getWorld(entity.worldObj.provider.getDimensionId()), MoCreatures.MOCFAKEPLAYER));
+                    try {
+                        event =
+                                new BlockEvent.BreakEvent(entity.worldObj, chunkposition, blockstate, FakePlayerFactory.get(
+                                        DimensionManager.getWorld(entity.worldObj.provider.getDimensionId()), MoCreatures.MOCFAKEPLAYER));
+                    } catch (Throwable t) {
+                    }
                 }
                 if (event != null && !event.isCanceled()) {
                     blockstate.getBlock().dropBlockAsItemWithChance(entity.worldObj, chunkposition, blockstate, 0.3F, 1);
@@ -1034,18 +1036,19 @@ public class MoCTools {
         return count;
     }
 
+    //apparently not needed anymore since vanilla does sync mounts?
     /**
      * Forces a data sync between server/client. currently used to syncrhonize
      * mounts
      */
-    public static void forceDataSync(IMoCEntity entityMoCreature) {
+    /*public static void forceDataSync(IMoCEntity entityMoCreature) {
         if (entityMoCreature.updateMount() && ((Entity) entityMoCreature).ridingEntity != null) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAttachedEntity(((Entity) entityMoCreature).getEntityId(),
                     ((Entity) entityMoCreature).ridingEntity.getEntityId()), new TargetPoint(
                     ((Entity) entityMoCreature).ridingEntity.worldObj.provider.getDimensionId(), ((Entity) entityMoCreature).ridingEntity.posX,
                     ((Entity) entityMoCreature).ridingEntity.posY, ((Entity) entityMoCreature).ridingEntity.posZ, 64));
         }
-    }
+    }*/
 
     public static void updatePlayerArmorEffects(EntityPlayer player) {
         ItemStack mystack[] = new ItemStack[4];

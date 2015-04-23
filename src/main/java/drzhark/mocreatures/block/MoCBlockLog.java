@@ -47,16 +47,16 @@ public class MoCBlockLog extends MoCBlock {
     /**
      * The type of render function that is called for this block
      */
-    @Override
-    public int getRenderType() {
-        return 31;
-    }
+    /*    @Override
+        public int getRenderType() {
+            return 31;
+        }*/
 
-    @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+    @Override
+    public void getSubBlocks(Item par1, CreativeTabs tab, List subItems) {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
-            subItems.add(new ItemStack(item, 1, ix));
+            subItems.add(new ItemStack(this, 1, ix));
         }
     }
 }

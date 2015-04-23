@@ -48,6 +48,7 @@ public class CommandMoCreatures extends CommandBase {
         commands.add("/moc debug <boolean>");
         // TODO commands.add("/moc deletepets <playername>");
         commands.add("/moc destroydrops <boolean>");
+        commands.add("/moc enablehunters <boolean>");
         commands.add("/moc easybreeding <boolean>");
         commands.add("/moc elephantbulldozer <boolean>");
         commands.add("/moc enableownership <boolean>");

@@ -41,7 +41,7 @@ public class MoCMessageShuffle implements IMessage, IMessageHandler<MoCMessageSh
         for (Entity ent : entList) {
             if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
                 if (this.flag) {
-                    ((MoCEntityHorse) ent).shuffle();
+                    //((MoCEntityHorse) ent).shuffle();
                 } else {
                     ((MoCEntityHorse) ent).shuffleCounter = 0;
                 }

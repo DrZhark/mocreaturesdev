@@ -295,7 +295,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             Entity entity1 = (Entity) list.get(i);
             if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer)
                     || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox)
-                    || ((entity1.width > 0.5D) && (entity1.height > 0.5D)) || ((entity instanceof IMoCEntity) && !MoCreatures.isHuntingEnabled())) {
+                    || ((entity1.width > 0.5D) && (entity1.height > 0.5D)) || ((entity instanceof IMoCEntity) && !MoCreatures.proxy.enableHunters)) {
                 continue;
             }
             double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
@@ -1255,15 +1255,15 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         nbttagcompound.setInteger("KittyState", getKittyState());
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return true;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return true;
-    }
+    }*/
 
     //drops medallion on death
     @Override

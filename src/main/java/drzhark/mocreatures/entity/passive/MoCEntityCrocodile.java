@@ -23,16 +23,9 @@ import net.minecraft.world.World;
 
 public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
-    // TODO
-    // fix floating so it moves faster if it's deep and caughts prey underneath
-
-    // for later?
-    // implement taming? (pick up small crocs to insta tame them)
-
     public float biteProgress;
     public float spin;
     public int spinInt;
-    //private float myMoveSpeed;
     private boolean waterbound;
     private int hunting;
 
@@ -42,11 +35,8 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         setSize(1.4F, 0.6F); //it was 2.0, 0.6F
         setEdad(50 + this.rand.nextInt(50));
         setTamed(false);
-        //this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWanderMoC2(this, 0.9D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
@@ -71,16 +61,11 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isBiting - 0 false 1 true
     }
 
-    @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
     public boolean getIsBiting() {
         return (this.dataWatcher.getWatchableObjectByte(25) == 1);
     }
 
-    public boolean getIsResting() {
+    public boolean getIsSitting() {
         return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
@@ -93,7 +78,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(25, Byte.valueOf(input));
     }
 
-    public void setIsResting(boolean flag) {
+    public void setIsSitting(boolean flag) {
         byte input = (byte) (flag ? 1 : 0);
         this.dataWatcher.updateObject(23, Byte.valueOf(input));
     }
@@ -103,101 +88,58 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(24, Byte.valueOf(input));
     }
 
-    /*@Override
+    @Override
     protected void jump() {
 
-        if (isInsideOfMaterial(Material.water)) {
-            if (getHasCaughtPrey() || (this.getAttackTarget() == null && this.rand.nextInt(20) != 0)) {
+        if (isSwimming()) {
+            if (getHasCaughtPrey()) {
                 return;
             }
 
             this.motionY = 0.3D;
-            if (isSprinting()) {
-                float f = this.rotationYaw * 0.01745329F;
-                this.motionX -= MathHelper.sin(f) * 0.2F;
-                this.motionZ += MathHelper.cos(f) * 0.2F;
-            }
             this.isAirBorne = true;
 
         } else if (this.getAttackTarget() != null || getHasCaughtPrey()) {
             super.jump();
         }
-    }*/
+    }
 
     @Override
     public boolean isMovementCeased() {
-        return getIsResting(); //TODO getIsSitting() instead?
+        return getIsSitting();
     }
-
-    /*
-    @Override
-    protected void updateEntityActionState() {
-        if (!getIsResting()) {
-            super.updateEntityActionState();
-        }
-    }*/
-
-    /*@Override
-    public boolean swimmerEntity() {
-        return true;
-    }*/
 
     @Override
     public void onLivingUpdate() {
-        if (getIsResting()) {
+        if (getIsSitting()) {
             this.rotationPitch = -5F;
-            if (!isInsideOfMaterial(Material.water) && this.biteProgress < 0.3F && this.rand.nextInt(5) == 0) {
+            if (!isSwimming() && this.biteProgress < 0.3F && this.rand.nextInt(5) == 0) {
                 this.biteProgress += 0.005F;
             }
-            /*setAttackTarget(findPlayerToAttack());
             if (this.getAttackTarget() != null) {
-                setIsResting(false);
-                getMyOwnPath(this.getAttackTarget(), 16F);
-            }*/
-            if (MoCreatures.isServer() && this.getAttackTarget() != null || getHasCaughtPrey() || this.rand.nextInt(500) == 0)// isInsideOfMaterial(Material.water)
+                setIsSitting(false);
+            }
+            if (MoCreatures.isServer() && this.getAttackTarget() != null || isSwimming() || getHasCaughtPrey() || this.rand.nextInt(500) == 0)// isInsideOfMaterial(Material.water)
             {
-                setIsResting(false);
+                setIsSitting(false);
                 this.biteProgress = 0;
                 this.hunting = 1;
             }
 
         } else {
-            if (MoCreatures.isServer() && (this.rand.nextInt(500) == 0) && this.getAttackTarget() == null && !getHasCaughtPrey())// && !isInsideOfMaterial(Material.water))
-            {
-                setIsResting(true);
+            if (MoCreatures.isServer() && (this.rand.nextInt(500) == 0) && this.getAttackTarget() == null && !getHasCaughtPrey() && !isSwimming()) {
+                setIsSitting(true);
                 this.getNavigator().clearPathEntity();
             }
 
         }
 
-        /*if (isInsideOfMaterial(Material.water)) {
-            this.myMoveSpeed = 0.8F;
-        } else {
-            this.myMoveSpeed = 0.4F;
-
-        }
-        if (this.hunting > 0) {
-            this.hunting++;
-            if (this.hunting > 120) {
-                this.hunting = 0;
-                this.myMoveSpeed = 0.5F;
-            } else {
-                this.myMoveSpeed = 1.0F;
-            }
-
-            if (getAttackTarget() == null) {
-                this.hunting = 0;
-                this.myMoveSpeed = 0.5F;
-            }
-
-        }*/
-
-        if (this.rand.nextInt(500) == 0 && !getHasCaughtPrey() && !getIsResting()) {
+        if (this.rand.nextInt(500) == 0 && !getHasCaughtPrey() && !getIsSitting()) {
             crocBite();
         }
 
         //TODO replace with move to water AI
-        /*if (MoCreatures.isServer() && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsResting() && !isInsideOfMaterial(Material.water)) {
+        if (MoCreatures.isServer() && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsSitting() && !isSwimming()) {
             MoCTools.MoveToWater(this);
         }
 
@@ -207,14 +149,14 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             } else {
                 this.waterbound = false;
             }
-        }*/
+        }
 
         if (getHasCaughtPrey()) {
             if (this.riddenByEntity != null) {
                 setAttackTarget(null);
 
                 this.biteProgress = 0.4F;
-                setIsResting(false);
+                setIsSitting(false);
 
                 if (!isInsideOfMaterial(Material.water)) {
                     this.waterbound = true;
@@ -261,12 +203,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         return true;
     }
 
-    @Override
-    public boolean getIsSitting() {
-        double d1 = 0.01D;
-        return (getIsResting() || ((this.motionX < d1 && this.motionX > -d1) && (this.motionZ < d1 && this.motionZ > -d1)));
-    }
-
     public void crocBite() {
         if (!getIsBiting()) {
             setBiting(true);
@@ -293,35 +229,23 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         super.onUpdate();
     }
 
-    /*@Override
-    protected void attackEntity(Entity entity, float f) {
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-            if (player.capabilities.isCreativeMode) {
-                return;
-            }
-        }
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
         if (getHasCaughtPrey()) {
-            return;
+            return false;
         }
 
-        if (attackTime <= 0 && (f < 3F) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
-                && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
-            attackTime = 20;
-            if (entity.ridingEntity == null && this.rand.nextInt(3) == 0) {
-                entity.mountEntity(this);
-                setHasCaughtPrey(true);
-            } else {
-                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 2);
-                if (!(entity instanceof EntityPlayer)) {
-                    MoCTools.destroyDrops(this, 3D);
-                }
-                crocBite();
-                setHasCaughtPrey(false);
-            }
+        //TODO FIX!!!!
+        /*if (MoCreatures.isServer() && entityIn.ridingEntity == null && this.rand.nextInt(3) == 0) {
+            entityIn.mountEntity(this);
+            this.setHasCaughtPrey(true);
+            return false;
+        } */
 
-        }
-    }*/
+        crocBite();
+        setHasCaughtPrey(false);
+        return super.attackEntityAsMob(entityIn);
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -351,33 +275,9 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    protected EntityLivingBase findPlayerToAttack() {
-        if (getHasCaughtPrey()) {
-            return null;
-        }
-
-        if (this.worldObj.getDifficulty().getDifficultyId() > 0) {
-            double attackD = 12D;
-
-            if (getIsResting()) {
-                attackD = 6D;
-            }
-
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, attackD);
-            if ((entityplayer != null) && getIsAdult()) {
-                return entityplayer;
-            }
-
-            EntityLivingBase entityliving = getClosestEntityLiving(this, attackD);
-            return entityliving;
-        }
-        return null;
-    }*/
-
     @Override
     public boolean canAttackTarget(EntityLivingBase entity) {
-        return !(entity instanceof MoCEntityCrocodile) && super.canAttackTarget(entity);
+        return !(entity instanceof MoCEntityCrocodile);
     }
 
     @Override
@@ -407,18 +307,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         return this.height * 0.35D;
     }
 
-    //TODO
-    /*    public void floating() {
-            if ((getAttackTarget() != null && ((getAttackTarget().posY < (this.posY - 0.5D)) && getDistanceToEntity(getAttackTarget()) < 10F))) // || caughtPrey)
-            {
-                if (this.motionY < -0.1) {
-                    this.motionY = -0.1;
-                }
-            } else {
-                super.floating();
-            }
-        }
-    */
     @Override
     protected String getDeathSound() {
         return "mocreatures:crocdying";
@@ -431,7 +319,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
     @Override
     protected String getLivingSound() {
-        if (getIsResting()) {
+        if (getIsSitting()) {
             return "mocreatures:crocresting";
         }
         return "mocreatures:crocgrunt";
@@ -443,7 +331,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     }
 
     public boolean isSpinning() {
-        return getHasCaughtPrey() && (this.riddenByEntity != null) && (isInsideOfMaterial(Material.water));
+        return getHasCaughtPrey() && (this.riddenByEntity != null) && (this.isSwimming());
     }
 
     @Override
@@ -474,5 +362,20 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     @Override
     public boolean isAmphibian() {
         return true;
+    }
+
+    @Override
+    public boolean isSwimming() {
+        return this.isInWater();
+    }
+
+    @Override
+    public boolean isReadyToHunt() {
+        return this.isNotScared() && !this.isMovementCeased() && this.riddenByEntity == null && !this.getHasCaughtPrey();
+    }
+
+    @Override
+    public void moveEntityWithHeading(float strafe, float forward) {
+        moveEntityWithHeadingBypassRider(strafe, forward);
     }
 }

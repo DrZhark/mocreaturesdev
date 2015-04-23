@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.network.play.server.S1BPacketEntityAttach;
+import net.minecraft.world.WorldServer;
+
+import net.minecraft.entity.passive.EntityTameable;
 import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import net.minecraft.entity.EntityCreature;
 import drzhark.mocreatures.MoCTools;
@@ -280,8 +284,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 || (this.getIsTamed() && (entity instanceof IMoCEntity && ((IMoCEntity) entity).getIsTamed()))
                 || ((entity instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
                 || ((entity instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))
-                || (entity.width >= this.width || entity.height >= this.height) || (entity instanceof MoCEntityEgg) || ((entity instanceof IMoCEntity) && !MoCreatures
-                .isHuntingEnabled()));
+                || (entity.width >= this.width || entity.height >= this.height) || (entity instanceof MoCEntityEgg) || ((entity instanceof IMoCEntity) && !MoCreatures.proxy.enableHunters));
     }
 
     /**
@@ -320,9 +323,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 Riding();
             }
 
-            if (forceUpdates() && this.rand.nextInt(500) == 0) {
+            /*if (forceUpdates() && this.rand.nextInt(500) == 0) {
                 MoCTools.forceDataSync(this);
-            }
+            }*/
 
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
@@ -335,7 +338,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 }
             }
 
-            if (this.isReadyToHunt() && !this.getIsHunting() && this.rand.nextInt(500) == 0) {
+            if (MoCreatures.proxy.enableHunters && this.isReadyToHunt() && !this.getIsHunting() && this.rand.nextInt(500) == 0) {
                 setIsHunting(true);
             }
 
@@ -401,9 +404,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean isInWater() {
-        /*if (isAmphibian()) {
-            return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, 0.0D, 0.0D), Material.water, this);
-        }*/
+        if (isAmphibian()) {
+            return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.2D, 0.0D), Material.water, this);
+        }
         return super.isInWater();
     }
 
@@ -517,7 +520,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public void getMyOwnPath(Entity entity, float f) {
         PathEntity pathentity = this.getNavigator().getPathToEntityLiving(entity);
         if (pathentity != null) {
-            this.getNavigator().setPath(pathentity, 1D);//TODO is 1D adequate speed?
+            this.getNavigator().setPath(pathentity, 1D);
         }
     }
 
@@ -699,83 +702,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         }
     }
 
-    /**
-     * Moves the entity based on the specified heading.  Args: strafe, forward
-     */
-    public void moveEntityWithHeadingHorse(float strafe, float forward) {
-        if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase)//&& this.isHorseSaddled())
-        {
-            this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-            this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-            this.setRotation(this.rotationYaw, this.rotationPitch);
-            this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-            strafe = ((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F;
-            forward = ((EntityLivingBase) this.riddenByEntity).moveForward;
-
-            if (forward <= 0.0F) {
-                forward *= 0.25F;
-                //this.gallopTime = 0;
-            }
-
-            if (this.onGround)//&& this.jumpPower == 0.0F && this.isRearing() && !this.field_110294_bI)
-            {
-                strafe = 0.0F;
-                forward = 0.0F;
-            }
-
-            if (this.onGround) //(this.jumpPower > 0.0F && !this.isHorseJumping() && this.onGround)
-            {
-                //this.motionY = this.getHorseJumpStrength() * (double)this.jumpPower;
-
-                /*if (this.isPotionActive(Potion.jump)) {
-                    this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
-                }*/
-
-                //this.setHorseJumping(true);
-                this.isAirBorne = true;
-
-                if (forward > 0.0F) {
-                    float f2 = MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F);
-                    float f3 = MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F);
-                    //this.motionX += (double)(-0.4F * f2 * this.jumpPower);
-                    //this.motionZ += (double)(0.4F * f3 * this.jumpPower);
-                    this.playSound("mob.horse.jump", 0.4F, 1.0F);
-                }
-
-                //this.jumpPower = 0.0F;
-                net.minecraftforge.common.ForgeHooks.onLivingJump(this);
-            }
-
-            this.stepHeight = 1.0F;
-            this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-
-            if (!this.worldObj.isRemote) {
-                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
-                super.moveEntityWithHeading(strafe, forward);
-            }
-
-            if (this.onGround) {
-                //this.jumpPower = 0.0F;
-                //this.setHorseJumping(false);
-            }
-
-            //updating animation code perhaps not needed, only for client and if called from server... no need
-            this.prevLimbSwingAmount = this.limbSwingAmount;
-            double d1 = this.posX - this.prevPosX;
-            double d0 = this.posZ - this.prevPosZ;
-            float f4 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
-
-            if (f4 > 1.0F) {
-                f4 = 1.0F;
-            }
-
-            this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
-            this.limbSwing += this.limbSwingAmount;
-        } else { //movement without rider
-            this.stepHeight = 0.5F;
-            this.jumpMovementFactor = 0.02F;
-            super.moveEntityWithHeading(strafe, forward);
-        }
+    public void moveEntityWithHeadingBypassRider(float strafe, float forward) {
+        super.moveEntityWithHeading(strafe, forward);
     }
 
     /**
@@ -811,22 +739,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
                 this.motionX += (-0.5F * velX);
                 this.motionZ += (0.5F * velZ);
-                //double limitSpeed = 0.7D;
-                /*if (motionX > limitSpeed)
-                {
-                    motionX = limitSpeed;
-                }if (motionX < -limitSpeed)
-                {
-                    motionX = -limitSpeed;
-                }
-                
-                if (motionZ > limitSpeed)
-                {
-                    motionZ = limitSpeed;
-                }if (motionZ < -limitSpeed)
-                {
-                    motionZ = -limitSpeed;
-                }*/
             }
         } else if (this.jumpPending && !getIsJumping()) {
             this.motionY = getCustomJump() * 2;
@@ -850,19 +762,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             } else {
                 this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
                 super.moveEntityWithHeading(strafe, forward);
-                //System.out.println("regular movement");
-                /*if (isFlyer() && (this.riddenByEntity != null) && getIsTamed() && !this.onGround) {
-                    this.motionY += (0.10D - (myFallSpeed() / 10D));//0.15D;
-                    this.motionY *= this.myFallSpeed();//0.6D;
-                    this.moveFlying(strafe, forward, 0.1F);
-                    
-                } else if (!isFlyingAlone()) {
-                    this.motionY -= 0.08D;
-                    this.motionY *= 0.98000001907348633D;
-                }*/
-
             }
-
         }
 
         if (this.onGround) {
@@ -875,7 +775,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     public void moveEntityWithRiderUntamed(float strafe, float forward) {
         //Riding behaviour if untamed
-        System.out.println("riding an untamed creature");
         if ((this.riddenByEntity != null) && !getIsTamed()) {
             if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
                 this.motionY += getCustomJump();
@@ -909,310 +808,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
             }
         }
-    }
-
-    public void moveEntityWithHeadingOld(float strafe, float forward) {
-
-        if (this.isAmphibian() && isInWater()) {
-            if (this.isServerWorld()) {
-                if (this.isInWater()) {
-                    this.moveFlying(strafe, forward, 0.1F);
-                    this.moveEntity(this.motionX, this.motionY, this.motionZ);
-                    this.motionX *= 0.8999999761581421D;
-                    this.motionY *= 0.8999999761581421D;
-                    this.motionZ *= 0.8999999761581421D;
-
-                    if (this.getAttackTarget() == null) {
-                        this.motionY -= 0.005D;
-                    }
-                } else {
-                    super.moveEntityWithHeading(strafe, forward);
-                }
-            } else {
-                super.moveEntityWithHeading(strafe, forward);
-            }
-        }
-        //the above code is needed as is
-
-        if (usesNewAI() || (!isFlyer() && (!rideableEntity() || this.riddenByEntity == null)))// || (this.ridingEntity != null && !(this.ridingEntity instanceof EntityPlayer)))
-        {
-            super.moveEntityWithHeading(strafe, forward);
-            return;
-        }
-        float par1 = strafe;
-        float par2 = forward;
-
-        if (handleWaterMovement()) {
-            if (this.riddenByEntity != null) {
-                this.motionX += this.riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
-                this.motionZ += this.riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
-                par1 = (float) (((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F * (getCustomSpeed() / 2.0D));
-                ;
-                par2 = (float) (((EntityLivingBase) this.riddenByEntity).moveForward * (getCustomSpeed() / 2.0D));
-
-                if (this.jumpPending && !getIsJumping()) {
-                    this.motionY = getCustomJump() * 2;
-                    setIsJumping(true);
-                    this.jumpPending = false;
-                }
-
-                if (!this.worldObj.isRemote) {
-                    super.moveEntityWithHeading(par1, par2);
-                    //moveEntity(motionX, motionY, motionZ);
-                }
-
-                this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-                if (this.rand.nextInt(20) == 0) {
-                    this.rotationYaw = this.riddenByEntity.rotationYaw;
-                }
-                setRotation(this.rotationYaw, this.rotationPitch);
-
-                if (MoCreatures.isServer() && !getIsTamed()) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                    this.riddenByEntity.motionY += 0.3D;
-                    this.riddenByEntity.motionZ -= 0.3D;
-                    this.riddenByEntity.mountEntity(null);
-                    this.riddenByEntity = null;
-                }
-
-                if (this.rand.nextInt(25) == 0) {
-                    setIsJumping(false);
-                }
-            }
-            double d = this.posY;
-            if (!this.worldObj.isRemote) {
-                moveFlying(strafe, forward, 0.02F);
-                //moveEntity(motionX, motionY, motionZ);
-                super.moveEntityWithHeading(par1, par2);
-            }
-            this.motionX *= 0.800000011920929D;
-            this.motionY *= 0.800000011920929D;
-            this.motionZ *= 0.800000011920929D;
-            this.motionY -= 0.02D;
-            if (this.isCollidedHorizontally
-                    && isOffsetPositionInLiquid(this.motionX, ((this.motionY + 0.60000002384185791D) - this.posY) + d, this.motionZ)) {
-                this.motionY = 0.30000001192092901D;
-            }
-        } else if (handleLavaMovement()) {
-            if (this.riddenByEntity != null) {
-                this.motionX += this.riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
-                this.motionZ += this.riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
-                par1 = (float) (((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F * (getCustomSpeed() / 2.0D));
-                ;
-                par2 = (float) (((EntityLivingBase) this.riddenByEntity).moveForward * (getCustomSpeed() / 2.0D));
-
-                if (this.jumpPending && !getIsJumping()) {
-                    this.motionY = getCustomJump();
-                    this.jumpPending = false;
-                }
-
-                //moveEntity(motionX, motionY, motionZ);
-                super.moveEntityWithHeading(par1, par2);
-
-                this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-                if (this.rand.nextInt(20) == 0) {
-                    this.rotationYaw = this.riddenByEntity.rotationYaw;
-                }
-                setRotation(this.rotationYaw, this.rotationPitch);
-                if (MoCreatures.isServer() && !getIsTamed()) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                    this.riddenByEntity.motionY += 0.3D;
-                    this.riddenByEntity.motionZ -= 0.3D;
-                    this.riddenByEntity.mountEntity(null);
-                    this.riddenByEntity = null;
-                }
-            }
-            double d1 = this.posY;
-
-            moveFlying(strafe, forward, 0.02F);
-            moveEntity(this.motionX, this.motionY, this.motionZ);
-
-            this.motionX *= 0.5D;
-            this.motionY *= 0.5D;
-            this.motionZ *= 0.5D;
-            this.motionY -= 0.02D;
-            if (this.isCollidedHorizontally
-                    && isOffsetPositionInLiquid(this.motionX, ((this.motionY + 0.60000002384185791D) - this.posY) + d1, this.motionZ)) {
-                this.motionY = 0.30000001192092901D;
-            }
-        } else {
-            float f2 = 0.91F;
-            if (this.onGround) {
-                f2 = 0.5460001F;
-                Block block =
-                        this.worldObj.getBlockState(
-                                new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY) - 1, MathHelper
-                                        .floor_double(this.posZ))).getBlock();
-                if (block != Blocks.air) {
-                    f2 = block.slipperiness * 0.91F;
-                }
-            }
-
-            float f3 = 0.162771F / (f2 * f2 * f2);
-            moveFlying(strafe, forward, this.onGround ? 0.1F * f3 : 0.02F);
-
-            if (isOnLadder()) {
-                this.fallDistance = 0.0F;
-                if (this.motionY < -0.15D) {
-                    this.motionY = -0.15D;
-                }
-            }
-            if ((this.riddenByEntity != null) && !getIsTamed()) {
-                if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.motionY < 0 && this.motionY > -0.2D) {
-                    this.motionY = this.getCustomJump();
-                    setIsJumping(true);
-                }
-                if (this.rand.nextInt(10) == 0) {
-                    this.motionX += this.rand.nextDouble() / 30D;
-                    this.motionZ += this.rand.nextDouble() / 10D;
-                }
-                // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (!this.worldObj.isRemote) {
-                    moveEntity(this.motionX, this.motionY, this.motionZ);
-                }
-
-                if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:" + getMadSound(), 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-                    this.riddenByEntity.motionY += 0.9D;
-                    this.riddenByEntity.motionZ -= 0.3D;
-                    this.riddenByEntity.mountEntity(null);
-                    this.riddenByEntity = null;
-                }
-
-                if (this.onGround) {
-                    setIsJumping(false);
-                }
-                if (MoCreatures.isServer() && this instanceof MoCEntityTameableAnimal) {
-                    int chance = (getMaxTemper() - getTemper());
-                    if (chance <= 0) {
-                        chance = 5;
-                    }
-                    if (this.rand.nextInt(chance * 8) == 0) {
-                        MoCTools.tameWithName((EntityPlayer) this.riddenByEntity, (MoCEntityTameableAnimal) this);
-                    }
-                }
-            }
-            if ((this.riddenByEntity != null) && getIsTamed()) {
-                // TODO
-                //getEntityBoundingBox().maxY = this.riddenByEntity.getEntityBoundingBox().maxY;
-                if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir())) {
-                    //motionX += riddenByEntity.motionX * getCustomSpeed();
-                    //motionZ += riddenByEntity.motionZ * getCustomSpeed();
-
-                    par1 = (float) (((EntityLivingBase) this.riddenByEntity).moveStrafing * 0.5F * getCustomSpeed());
-                    par2 = (float) (((EntityLivingBase) this.riddenByEntity).moveForward * getCustomSpeed());
-
-                }
-
-                if (this.jumpPending && (isFlyer())) {
-                    this.motionY += flyerThrust();//0.3D;
-                    this.jumpPending = false;
-
-                    if (selfPropelledFlyer() && isOnAir() && MoCreatures.isServer()) {
-                        float velX = (float) (0.5F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
-                        float velZ = (float) (0.5F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
-                        this.motionX -= velX;
-                        this.motionZ -= velZ;
-                        if (MoCreatures.isServer()) {
-                            moveEntity(this.motionX, 0D, this.motionZ);
-                        }
-                    }
-                } else if (this.jumpPending && !getIsJumping()) {
-                    this.motionY = getCustomJump() * 2;
-                    setIsJumping(true);
-                    this.jumpPending = false;
-                }
-
-                if (this.divePending) {
-                    this.divePending = false;
-                    this.motionY -= 0.3D;
-                }
-
-                // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (MoCreatures.isServer()) {
-                    //moveEntity(motionX, motionY, motionZ);
-                    super.moveEntityWithHeading(par1, par2);//, motionZ);
-                }
-                if (this.onGround) {
-                    // blood - fixes jump bug
-                    this.jumpPending = false;
-                    // setIsJumping(false);
-                    this.divePending = false;
-                }
-                this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-                this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-                setRotation(this.rotationYaw, this.rotationPitch);
-            }
-            // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-            if (!this.worldObj.isRemote) {
-                //needs to be left in so flying mounts can be controlled
-                //moveEntity(motionX, motionY, motionZ);
-                super.moveEntityWithHeading(par1, par2);//, motionZ);
-            }
-            if (isFlyingAlone()) {
-                int distY = MoCTools.distanceToFloor(this);
-                if (distY <= maxFlyingHeight()) {
-                    this.motionY *= 0.3 + (f2);
-                }
-                if (distY <= maxFlyingHeight() && (this.isCollidedHorizontally || this.rand.nextInt(100) == 0)) {
-                    this.motionY += 0.1D;
-                }
-                if (distY > maxFlyingHeight() || this.rand.nextInt(150) == 0) {
-                    this.motionY -= 0.10D;
-                }
-
-                if (isOnAir()) {
-                    double velX = 0.1F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                    double velZ = 0.1F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                    this.motionX -= velX;
-                    this.motionZ -= velZ;
-                }
-
-                if (this.motionY < 0) {
-                    this.motionY *= 0.5D;
-                }
-                /*
-                 * if (MoCreatures.isServer()) { moveEntity(motionX, motionY,
-                 * motionZ); //super.moveEntityWithHeading(par1, par2);//,
-                 * motionZ); }
-                 */
-            }
-
-            if (isFlyer() && this.riddenByEntity == null && this.getAttackTarget() != null && this.getAttackTarget().posY < this.posY
-                    && this.rand.nextInt(30) == 0) {
-                this.motionY = -0.25D;
-            }
-
-            if (isFlyer() && (this.riddenByEntity != null) && getIsTamed()) {
-                this.motionY += (0.21D - (myFallSpeed() / 10D));//0.15D;
-                this.motionY *= myFallSpeed();//0.6D;
-            } else if (!isFlyingAlone()) {
-                this.motionY -= 0.08D;
-                this.motionY *= 0.98000001907348633D;
-            }
-
-            if (this.riddenByEntity != null && isOnAir()) {
-                f2 = flyerFriction();
-
-            }
-
-            this.motionX *= f2;
-            this.motionZ *= f2;
-        }
-
-        this.prevLimbSwingAmount = this.limbSwingAmount;
-        double d2 = this.posX - this.prevPosX;
-        double d3 = this.posZ - this.prevPosZ;
-        float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
-        if (f4 > 1.0F) {
-            f4 = 1.0F;
-        }
-
-        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
-        this.limbSwing += this.limbSwingAmount;
     }
 
     /**
@@ -1555,7 +1150,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * onLivingUpdate update packets. It is currently used to fix mount bug when
      * players reconnect.
      */
-    @Override
+    /*@Override
     public void mountEntity(Entity par1Entity) {
         if (updateMount()) {
             if (par1Entity == null) {
@@ -1572,17 +1167,17 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         } else {
             super.mountEntity(par1Entity);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return false;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return false;
-    }
+    }*/
 
     @Override
     public void makeEntityDive() {
@@ -1629,9 +1224,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         Entity entity = damagesource.getEntity();
         if ((this.riddenByEntity != null && entity == this.riddenByEntity) || (this.ridingEntity != null && entity == this.ridingEntity)) {
             return false;
-        }
-        if (usesNewAI()) {
-            return super.attackEntityFrom(damagesource, i);
         }
 
         //this avoids damage done by Players to a tamed creature that is not theirs
@@ -1724,18 +1316,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * used to select which entities run the new AI
      * @return
      */
-    protected boolean usesNewAI() {
+    /*protected boolean usesNewAI() {
         return false;
-    }
+    }*/
 
     @Override
     public boolean canAttackTarget(EntityLivingBase entity) {
-        //TODO check to avoid attacking tamed animals/ambient/aquatic if they share owner
-        /*if (this.getIsTamed())
-        {
-            String myOwner = this.getOwnerName();
-        }
-        */
         return this.height >= entity.height && this.width >= entity.width;
     }
 

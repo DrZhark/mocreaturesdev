@@ -35,11 +35,6 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
@@ -82,20 +77,21 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         return true;
     }
 
-    @Override
+    /*@Override
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // byte IsPicked, 0 = false 1 = true
-    }
+    }*/
 
     public boolean getIsPicked() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+        return this.ridingEntity != null;
+        //return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
-    public void setPicked(boolean flag) {
+    /*public void setPicked(boolean flag) {
         byte input = (byte) (flag ? 1 : 0);
         this.dataWatcher.updateObject(23, Byte.valueOf(input));
-    }
+    }*/
 
     private boolean checkNearCats() {
         return true;
@@ -166,10 +162,10 @@ public class MoCEntityMouse extends MoCEntityAnimal {
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
             }
-            setPicked(true);
+            //setPicked(true);
         } else {
             this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
-            setPicked(false);
+            //setPicked(false);
             if (MoCreatures.isServer()) {
                 this.mountEntity(null);
             }
@@ -201,15 +197,15 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         return getIsPicked();
     }
 
-    @Override
+    /*@Override
     public boolean updateMount() {
         return true;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return true;
-    }
+    }*/
 
     /*@Override
     public boolean swimmerEntity() {

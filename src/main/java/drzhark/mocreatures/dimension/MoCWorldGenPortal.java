@@ -50,7 +50,7 @@ public class MoCWorldGenPortal extends WorldGenerator {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        System.out.println("GENERATING Portal @ " + pos);
+        //System.out.println("GENERATING Portal @ " + pos);
 
         this.stairMetadata = 2;
         for (int nZ = z - 3; nZ < z + 3; nZ = nZ + 5) {

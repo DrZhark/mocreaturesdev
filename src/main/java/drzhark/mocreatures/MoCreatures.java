@@ -373,6 +373,8 @@ public class MoCreatures {
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         // ***MUST REGISTER BIOMES AT THIS POINT TO MAKE SURE OUR ENTITIES GET ALL BIOMES FROM DICTIONARY****
         MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
+        BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.FOREST, Type.END);
+        BiomeDictionary.registerAllBiomes();
         MoCreatures.defaultBiomeSupport.add("biomesop");
         MoCreatures.defaultBiomeSupport.add("extrabiomes");
         MoCreatures.defaultBiomeSupport.add("highlands");
@@ -1156,9 +1158,5 @@ public class MoCreatures {
 
     public static boolean isServer() {
         return (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER);
-    }
-
-    public static boolean isHuntingEnabled() {
-        return proxy.forceDespawns;
     }
 }

@@ -439,7 +439,7 @@ public class MoCModelNewHorse extends ModelBase {
                 this.Unicorn.render(f5);
             }
 
-            if (entityhorse.getChestedHorse()) {
+            if (entityhorse.getIsChested()) {
                 this.Bag1.render(f5);
                 this.Bag2.render(f5);
             }
@@ -456,7 +456,7 @@ public class MoCModelNewHorse extends ModelBase {
             {
                 GL11.glPushMatrix();
                 GL11.glEnable(3042 /* GL_BLEND */);
-                float transparency = 0.9F;
+                float transparency = 0.7F;
                 GL11.glBlendFunc(770, 771);
                 GL11.glColor4f(1.2F, 1.2F, 1.2F, transparency);
                 GL11.glScalef(1.3F, 1.0F, 1.3F);

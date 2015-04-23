@@ -27,8 +27,9 @@ public class MoCItemSword extends ItemSword {
         GameRegistry.registerItem(this, name);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, meta, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+        if (!MoCreatures.isServer())
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, meta, new ModelResourceLocation("mocreatures:" + name, "inventory"));
     }
 
     public MoCItemSword(String name, Item.ToolMaterial material, int damageType, boolean fragile) {

@@ -87,12 +87,12 @@ public class MoCProxy implements IGuiHandler {
     public short fireOgreChance;
     public short caveOgreChance;
 
+    public boolean forceDespawns;
+    public boolean enableHunters;
     public boolean debug = false;
     public boolean allowInstaSpawn;
     public boolean needsUpdate = false;
     public boolean worldInitDone = false;
-    public boolean forceDespawns = false;
-    public boolean enableHunters = false;
     public int activeScreen = -1;
 
     public MoCConfiguration mocSettingsConfig;
@@ -294,7 +294,7 @@ public class MoCProxy implements IGuiHandler {
                         "Allows players to remove a tamed creatures owner essentially untaming it.").getBoolean(false);
         this.easyBreeding =
                 this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EasyBreeding", false, "Makes horse breeding simpler.")
-                        .getBoolean(true);
+                        .getBoolean(false);
         this.elephantBulldozer = this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ElephantBulldozer", true).getBoolean(true);
         this.zebraChance =
                 this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "ZebraChance", 10, "The percent for spawning a zebra.").getInt();
@@ -314,8 +314,8 @@ public class MoCProxy implements IGuiHandler {
                 this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "AttackWolves", false, "Allows creatures to attack wolves.")
                         .getBoolean(false);
         this.enableHunters =
-                this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EnableHunters", false,
-                        "Allows creatures to attack other creatures. Not recommended if despawning is off.").getBoolean(false);
+                this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "EnableHunters", true,
+                        "Allows creatures to attack other creatures. Not recommended if despawning is off.").getBoolean(true);
         this.destroyDrops = this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "DestroyDrops", false).getBoolean(false);
         this.killallVillagers = this.mocSettingsConfig.get(CATEGORY_MOC_CREATURE_GENERAL_SETTINGS, "KillAllVillagers", false).getBoolean(false);
         this.rareItemDropChance =

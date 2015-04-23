@@ -1,5 +1,7 @@
 package drzhark.mocreatures.block;
 
+import drzhark.mocreatures.MoCreatures;
+
 import com.google.common.base.Function;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -27,6 +29,7 @@ public class MultiItemBlock extends ItemMultiTexture {
         String name = block.getUnlocalizedName().replace("tile.", "").replace("MoC", "").toLowerCase();
         ModelBakery.addVariantName(this, "mocreatures:wyvern_" + name);
         ModelBakery.addVariantName(this, "mocreatures:ogre_" + name);
+
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                 .register(this, 0, new ModelResourceLocation("mocreatures:wyvern_" + name, "inventory"));
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
@@ -35,6 +38,7 @@ public class MultiItemBlock extends ItemMultiTexture {
                 .register(this, 2, new ModelResourceLocation("mocreatures:" + name, "variant=wyvern_lair"));
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                 .register(this, 3, new ModelResourceLocation("mocreatures:" + name, "variant=ogre_lair"));
+
     }
 
     @Override

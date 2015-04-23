@@ -1,5 +1,7 @@
 package drzhark.mocreatures.dimension;
 
+import net.minecraft.block.material.Material;
+
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -27,17 +29,14 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
      * @param heightlimit
      * @param leafdist
      */
-    public MoCWorldGenBigTree(boolean par1, Block logblock, int logmetadata, Block leafblock, int leafmetadata, int trunksize, int heightlimit,
-            int leafdist) {
+    public MoCWorldGenBigTree(boolean par1, IBlockState iblockstateLog, IBlockState iblockstateleaf, int trunksize, int heightlimit, int leafdist) {
         super(par1);
-        this.BlockLog = logblock;
-        this.BlockLeaf = leafblock;
-
+        this.iBlockStateLog = iblockstateLog;
+        this.iBlockStateLeaf = iblockstateleaf;
         this.trunkSize = trunksize;
         this.heightLimitLimit = heightlimit;
         this.leafDistanceLimit = leafdist;
-        this.MetadataLog = logmetadata;
-        this.MetadataLeaf = leafmetadata;
+
     }
 
     /**
@@ -59,10 +58,8 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
     double branchSlope = 0.381D;
     double scaleWidth = 1.0D;
     double leafDensity = 1.0D;
-    private Block BlockLog;
-    private Block BlockLeaf;
-    private int MetadataLog;
-    private int MetadataLeaf;
+    private IBlockState iBlockStateLog;
+    private IBlockState iBlockStateLeaf;
 
     /**
      * Currently always 1, can be set to 2 in the class constructor to generate
@@ -183,11 +180,11 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
                     IBlockState blockstate = this.worldObj.getBlockState(pos);
                     Block block = blockstate.getBlock();
 
-                    if (block != Blocks.air && block != MoCreatures.mocLeaf)//BlockLeafID)//Block.leaves)
+                    if (block != Blocks.air && block != this.iBlockStateLeaf.getBlock())//BlockLeafID)//Block.leaves)
                     {
                         ++var13;
                     } else {
-                        this.setBlockAndNotifyAdequately(this.worldObj, pos, MoCreatures.mocLog.getDefaultState());
+                        this.setBlockAndNotifyAdequately(this.worldObj, pos, this.iBlockStateLeaf);
                         ++var13;
                     }
                 }
@@ -285,11 +282,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
                         var17 = 8;
                     }
                 }
-
-                BlockPos pos = new BlockPos(var14[0], var14[1], var14[2]);
-                IBlockState blockstate = this.worldObj.getBlockState(pos);
-                Block block = blockstate.getBlock();
-                this.setBlockAndNotifyAdequately(this.worldObj, pos, MoCreatures.mocLog.getDefaultState());//var17);
+                this.setBlockAndNotifyAdequately(this.worldObj, new BlockPos(var14[0], var14[1], var14[2]), this.iBlockStateLog);
             }
         }
     }
@@ -328,18 +321,18 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
         int var4 = this.basePos[2];
         int[] var5 = new int[] {var1, var2, var4};
         int[] var6 = new int[] {var1, var3, var4};
-        this.func_150530_a(var5, var6, MoCreatures.mocLog);
+        this.func_150530_a(var5, var6, this.iBlockStateLog.getBlock());
 
         if (this.trunkSize == 2) {
             ++var5[0];
             ++var6[0];
-            this.func_150530_a(var5, var6, MoCreatures.mocLog);
+            this.func_150530_a(var5, var6, this.iBlockStateLog.getBlock());
             ++var5[2];
             ++var6[2];
-            this.func_150530_a(var5, var6, MoCreatures.mocLog);
+            this.func_150530_a(var5, var6, this.iBlockStateLog.getBlock());
             var5[0] += -1;
             var6[0] += -1;
-            this.func_150530_a(var5, var6, MoCreatures.mocLog);
+            this.func_150530_a(var5, var6, this.iBlockStateLog.getBlock());
         }
     }
 
@@ -358,7 +351,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
             int var6 = var3[1] - this.basePos[1];
 
             if (this.leafNodeNeedsBase(var6)) {
-                this.func_150530_a(var3, var5, MoCreatures.mocLog);
+                this.func_150530_a(var3, var5, this.iBlockStateLog.getBlock());
             }
         }
     }
@@ -418,13 +411,20 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
      * Returns a boolean indicating whether or not the current location for the
      * tree, spanning basePos to to the height limit, is valid.
      */
-    boolean validTreeLocation() {
-        int[] var1 = new int[] {this.basePos[0], this.basePos[1], this.basePos[2]};
-        int[] var2 = new int[] {this.basePos[0], this.basePos[1] + this.heightLimit - 1, this.basePos[2]};
-        Block block = this.worldObj.getBlockState(new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2])).getBlock();
+    boolean validTreeLocation(BlockPos pos, World par1World) {
+        int[] var1 = new int[] {pos.getX(), pos.getY(), pos.getZ()};
+        int[] var2 = new int[] {pos.getX(), pos.getY() + this.heightLimit - 1, pos.getZ()};
+        Block block = par1World.getBlockState(pos.down()).getBlock();
 
+        /*IBlockState iblockstate2 = this.worldObj.getBlockState(new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2]));
+
+        if (iblockstate2.getBlock() != MoCreatures.mocDirt.getDefaultState().getBlock() 
+                && iblockstate2.getBlock() != MoCreatures.mocGrass.getDefaultState().getBlock() ) {
+            System.out.println("invalid tree location option b = " +  iblockstate2.getBlock());
+        }
+        */
         if (block != MoCreatures.mocDirt && block != MoCreatures.mocGrass) {
-            //System.out.println("invalid tree location");
+            System.out.println("invalid tree location = " + block + ", x=" + pos.getX() + ", y=" + pos.getY() + ", z=" + pos.getZ());
             return false;
 
         } else {
@@ -460,12 +460,14 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
         this.worldObj = par1World;
         long var6 = par2Random.nextLong();
         this.rand.setSeed(var6);
-
+        this.basePos[0] = pos.getX();
+        this.basePos[1] = pos.getY();
+        this.basePos[2] = pos.getZ();
         if (this.heightLimit == 0) {
             this.heightLimit = 5 + this.rand.nextInt(this.heightLimitLimit);
         }
 
-        if (!this.validTreeLocation()) {
+        if (!this.validTreeLocation(pos, par1World)) {
             return false;
         } else {
             this.generateLeafNodeList();

@@ -1,5 +1,9 @@
 package drzhark.mocreatures.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirt;
+import net.minecraft.init.Blocks;
+
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,25 +25,22 @@ public class MoCBlockGrass extends MoCBlock {
         setTickRandomly(true);
     }
 
-    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-        if (!MoCreatures.isServer()) {
-            return;
-        }
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (!worldIn.isRemote) {
+            if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getBlock().getLightOpacity(worldIn, pos.up()) > 2) {
+                worldIn.setBlockState(pos, MoCreatures.mocDirt.getDefaultState());
+            } else {
+                if (worldIn.getLightFromNeighbors(pos.up()) >= 9) {
+                    for (int i = 0; i < 4; ++i) {
+                        BlockPos blockpos1 = pos.add(rand.nextInt(3) - 1, rand.nextInt(5) - 3, rand.nextInt(3) - 1);
+                        Block block = worldIn.getBlockState(blockpos1.up()).getBlock();
+                        IBlockState iblockstate1 = worldIn.getBlockState(blockpos1);
 
-        BlockPos pos = new BlockPos(par2, par3, par4);
-        if (par1World.getLightFromNeighbors(pos.up()) < 4 && par1World.getBlockState(pos.up()).getBlock().getLightOpacity() > 2) {
-            par1World.setBlockState(pos, MoCreatures.mocDirt.getDefaultState(), 3);
-        } else if (par1World.getLightFromNeighbors(pos.up()) >= 9) {
-            for (int i = 0; i < 45; i++) {
-                int j = (par2 + par5Random.nextInt(3)) - 1;
-                int k = (par3 + par5Random.nextInt(5)) - 3;
-                int l = (par4 + par5Random.nextInt(3)) - 1;
-                pos = new BlockPos(j, k, l);
-                IBlockState blockstate = par1World.getBlockState(pos.up());
-
-                if (par1World.getBlockState(pos).getBlock() == MoCreatures.mocDirt && par1World.getLightFromNeighbors(pos.up()) >= 4
-                        && blockstate.getBlock().getLightOpacity() <= 2) {
-                    par1World.setBlockState(pos, MoCreatures.mocGrass.getDefaultState(), 3);
+                        if (iblockstate1.getBlock() == MoCreatures.mocDirt && worldIn.getLightFromNeighbors(blockpos1.up()) >= 4
+                                && block.getLightOpacity(worldIn, blockpos1.up()) <= 2) {
+                            worldIn.setBlockState(blockpos1, MoCreatures.mocGrass.getDefaultState());
+                        }
+                    }
                 }
             }
         }

@@ -40,11 +40,6 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     }
 
     @Override
-    protected boolean usesNewAI() {
-        return true;
-    }
-
-    @Override
     protected String getDeathSound() {
         return "mocreatures:duckhurt";
     }

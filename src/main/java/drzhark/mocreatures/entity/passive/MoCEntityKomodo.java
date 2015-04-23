@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.block.material.Material;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -50,7 +52,6 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.1D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.1D, 4D));
         this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, true));
-        //this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWanderMoC2(this, 0.9D));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
@@ -65,11 +66,6 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.18D);
-    }
-
-    @Override
-    protected boolean usesNewAI() {
-        return true;
     }
 
     @Override
@@ -125,7 +121,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
             this.sitCounter = 0;
         }
         if (MoCreatures.isServer()) {
-            if (this.riddenByEntity == null && this.sitCounter == 0 && this.rand.nextInt(500) == 0) {
+            if (!this.isSwimming() && this.riddenByEntity == null && this.sitCounter == 0 && this.rand.nextInt(500) == 0) { //TODO
                 sit();
             }
 
@@ -356,5 +352,10 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     @Override
     public boolean isAmphibian() {
         return true;
+    }
+
+    @Override
+    public boolean isSwimming() {
+        return this.isInWater();
     }
 }

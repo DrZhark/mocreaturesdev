@@ -849,15 +849,15 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         }
     }
 
-    @Override
-    public boolean updateMount() {
-        return false;
-    }
-
-    @Override
+    /* @Override
+     public boolean updateMount() {
+         return false;
+     }
+    */
+    /*@Override
     public boolean forceUpdates() {
         return false;
-    }
+    }*/
 
     public boolean isOnAir() {
         return (this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.2D), MathHelper

@@ -450,12 +450,10 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean interact(EntityPlayer entityplayer) {
         if (super.interact(entityplayer)) {
-            System.out.println("exiting interact first check");
             return false;
         }
 
         if (MoCreatures.isServer() && this.ridingEntity == null && !getIsAdult() && getEdad() < 60) {
-            System.out.println("interact second check");
             MoCEntityPetScorpion entitypetscorpy = new MoCEntityPetScorpion(this.worldObj);
             entitypetscorpy.setPosition(this.posX, this.posY, this.posZ);
             entitypetscorpy.setAdult(false);

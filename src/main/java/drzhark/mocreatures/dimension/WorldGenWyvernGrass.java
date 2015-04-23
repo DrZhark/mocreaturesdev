@@ -1,7 +1,8 @@
 package drzhark.mocreatures.dimension;
 
-//perhaps not needed.
+import drzhark.mocreatures.block.MoCBlockTallGrass;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -11,36 +12,32 @@ import java.util.Random;
 public class WorldGenWyvernGrass extends WorldGenerator {
 
     /** Stores ID for WorldGenTallGrass */
-    private Block tallGrass;
-    private int tallGrassMetadata;
+    private IBlockState iBlockStateGrass;
+    private MoCBlockTallGrass grass;
 
-    public WorldGenWyvernGrass(Block block, int par2) {
-        this.tallGrass = block;
-        this.tallGrassMetadata = par2;
+    public WorldGenWyvernGrass(IBlockState iblockstategrass) {
+        this.iBlockStateGrass = iblockstategrass;
+        this.grass = (MoCBlockTallGrass) iBlockStateGrass.getBlock();
     }
 
     @Override
-    public boolean generate(World worldIn, Random p_180709_2_, BlockPos p_180709_3_) {
-        int var11;
+    public boolean generate(World worldIn, Random rand, BlockPos position) {
+        Block block;
 
-        /*Block block = null;
         do {
-            block = par1World.getBlockState(new BlockPos(par3, par4, par5)).getBlock();
-            if (block != null && !block.isLeaves(par1World, new BlockPos(par3, par4, par5))) {
+            block = worldIn.getBlockState(position).getBlock();
+            if (!block.isAir(worldIn, position) && !block.isLeaves(worldIn, position))
                 break;
-            }
-            par4--;
-        } while (par4 > 0);
+            position = position.down();
+        } while (position.getY() > 0);
 
-        for (int var7 = 0; var7 < 128; ++var7) {
-            int var8 = par3 + par2Random.nextInt(8) - par2Random.nextInt(8);
-            int var9 = par4 + par2Random.nextInt(4) - par2Random.nextInt(4);
-            int var10 = par5 + par2Random.nextInt(8) - par2Random.nextInt(8);
-            BlockPos pos = new BlockPos(var8, var9, var10);
-            if (par1World.isAirBlock(pos) && this.tallGrass.canBlockStay(par1World, var8, var9, var10)) {
-                par1World.setBlockState(pos, this.tallGrass.getDefaultState(), 3);
+        for (int i = 0; i < 128; ++i) {
+            BlockPos blockpos1 =
+                    position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+            if (worldIn.isAirBlock(blockpos1) && grass.canBlockStay(worldIn, blockpos1, iBlockStateGrass)) {
+                worldIn.setBlockState(blockpos1, this.iBlockStateGrass, 2);
             }
-        }*/
+        }
 
         return true;
     }

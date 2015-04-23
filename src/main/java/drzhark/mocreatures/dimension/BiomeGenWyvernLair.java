@@ -1,6 +1,7 @@
 package drzhark.mocreatures.dimension;
 
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
@@ -25,7 +26,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase {
         this.spawnableMonsterList.clear();
         this.spawnableWaterCreatureList.clear();
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntityBunny.class, 6, 2, 3));
-        //spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
+        this.spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 6, 1, 2));
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 10, 1, 4));
         this.topBlock = MoCreatures.mocGrass.getDefaultState();
@@ -33,7 +34,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase {
         this.minHeight = 0.3F;
         this.maxHeight = 1.5F;
         this.biomeName = "WyvernBiome";
-        this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog, 0, MoCreatures.mocLeaf, 0, 2, 30, 10);
+        this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog.getDefaultState(), MoCreatures.mocLeaf.getDefaultState(), 2, 30, 10);
         this.worldGenShrub = new WorldGenShrub(3, 0);
         this.theBiomeDecorator = new BiomeWyvernDecorator();
     }
@@ -55,7 +56,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase {
      */
     @Override
     public WorldGenerator getRandomWorldGenForGrass(Random par1Random) {
-        return new WorldGenWyvernGrass(MoCreatures.mocTallGrass, 0);
+        return new WorldGenWyvernGrass(MoCreatures.mocTallGrass.getDefaultState());
     }
 
     @Override

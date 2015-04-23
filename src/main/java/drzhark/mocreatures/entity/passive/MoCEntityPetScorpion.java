@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import net.minecraft.entity.passive.EntityAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
@@ -55,9 +57,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         this.tasks.addTask(5, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
         this.tasks.addTask(6, new EntityAIFollowOwnerPlayer(this, 1.0D, 2F, 10F));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-
-        setTamed(true);
-
+        this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
 
     @Override
@@ -275,22 +275,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         }
     }
 
-    //TODO hunting
-    /*    @Override
-        protected Entity findPlayerToAttack() {
-            if (this.worldObj.getDifficulty().getDifficultyId() > 0 && (!this.worldObj.isDaytime()) && getIsAdult())// only attacks player at night
-            {
-                
-                    if ((this.rand.nextInt(80) == 0)) {
-                        EntityLivingBase entityliving = getClosestEntityLiving(this, 10D);
-                        return entityliving;
-                    }
-
-                
-            }
-            return null;
-        }*/
-
     @Override
     protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         boolean flag = (entityIn instanceof EntityPlayer);
@@ -486,15 +470,15 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         nbttagcompound.setBoolean("Saddled", getIsRideable());
     }
 
-    @Override
-    public boolean updateMount() {
-        return getIsTamed();
-    }
+    /* @Override
+     public boolean updateMount() {
+         return getIsTamed();
+     }*/
 
-    @Override
+    /*@Override
     public boolean forceUpdates() {
         return getIsTamed();
-    }
+    }*/
 
     @Override
     public int nameYOffset() {
@@ -586,4 +570,15 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         }
         this.transformCounter = 1;
     }
+
+    @Override
+    public boolean isReadyToHunt() {
+        return this.getIsAdult() && !this.isMovementCeased();
+    }
+
+    @Override
+    public boolean canAttackTarget(EntityLivingBase entity) {
+        return !(entity instanceof MoCEntityFox) && entity.height <= 1D && entity.width <= 1D;
+    }
+
 }
