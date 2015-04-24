@@ -147,9 +147,11 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
                 new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY),
                         MathHelper.floor_double(this.posZ));
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
-
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
-            setType(2);
+        try {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+                setType(2);
+            }
+        } catch (Exception e) {
         }
         return true;
     }

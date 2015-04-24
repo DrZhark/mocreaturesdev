@@ -2,7 +2,6 @@ package drzhark.mocreatures.entity.passive;
 
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.world.DifficultyInstance;
-
 import net.minecraft.inventory.InventoryLargeChest;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
@@ -158,19 +157,21 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         String s = MoCTools.BiomeName(this.worldObj, pos);
-
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS)) {
-            if (this.rand.nextInt(3) == 0) {
+        try {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS)) {
+                if (this.rand.nextInt(3) == 0) {
+                    setType(60);// zebra
+                }
+            }
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
                 setType(60);// zebra
             }
-        }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
-            setType(60);// zebra
-        }
 
-        if (s.toLowerCase().contains("prairie"))//prairies spawn only regular horses, no zebras there
-        {
-            setType(this.rand.nextInt(5) + 1);
+            if (s.toLowerCase().contains("prairie"))//prairies spawn only regular horses, no zebras there
+            {
+                setType(this.rand.nextInt(5) + 1);
+            }
+        } catch (Exception e) {
         }
         return true;
     }

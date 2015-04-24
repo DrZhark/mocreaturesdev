@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import java.util.List;
 import java.util.Random;
 
-public class MoCChunkProviderWyvernLair implements IChunkProvider {
+public class ChunkProviderWyvernLair implements IChunkProvider {
 
     private Random RNGa;
     private NoiseGeneratorOctaves noiseGen1;
@@ -36,6 +36,8 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
     public NoiseGeneratorOctaves noiseGen5;
     private World worldObj;
     private double[] densities;
+    private int chunkX = 0;
+    private int chunkZ = 0;
 
     /** The biomes that are used to generate the chunk */
     private BiomeGenBase[] biomesForGeneration;
@@ -47,7 +49,7 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
     //int[][] field_73203_h = new int[32][32];
     byte[] metadat = new byte[32768];
 
-    public MoCChunkProviderWyvernLair(World par1World, long par2) {
+    public ChunkProviderWyvernLair(World par1World, long par2) {
         this.worldObj = par1World;
         this.RNGa = new Random(par2);
         this.noiseGen1 = new NoiseGeneratorOctaves(this.RNGa, 16);
@@ -73,12 +75,17 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
      * @param par2
      * @param metadata
      */
-    public MoCChunkProviderWyvernLair(World par1World, long par2, int metadata) {
+    public ChunkProviderWyvernLair(World par1World, long par2, int metadata) {
         this(par1World, par2);
 
         for (int i = 0; i < 32768; i++) {
             this.metadat[i] = (byte) metadata;
         }
+    }
+
+    @Override
+    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_) {
+        return false;
     }
 
     public void generateBaseBlocks(int p_180520_1_, int p_180520_2_, ChunkPrimer p_180520_3_) {
@@ -184,8 +191,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
             }
         }
     }
-
-    private int chunkX = 0, chunkZ = 0;
 
     /**
      * loads or generates the chunk at the chunk location specified
@@ -476,16 +481,6 @@ public class MoCChunkProviderWyvernLair implements IChunkProvider {
 
     @Override
     public void saveExtraData() {
-    }
-
-    @Override
-    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public List func_177458_a(EnumCreatureType p_177458_1_, BlockPos p_177458_2_) {
-        return this.worldObj.getBiomeGenForCoords(p_177458_2_).getSpawnableList(p_177458_1_);
     }
 
     @Override

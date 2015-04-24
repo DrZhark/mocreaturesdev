@@ -59,7 +59,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.3.0")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.4.0")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")

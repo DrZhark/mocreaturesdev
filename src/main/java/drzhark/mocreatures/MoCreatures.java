@@ -149,7 +149,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "6.3.1")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "8.0.0.devA")
 public class MoCreatures {
 
     @Instance("MoCreatures")

@@ -28,7 +28,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      */
     @Override
     public IChunkProvider createChunkGenerator() {
-        return new MoCChunkProviderWyvernLair(this.worldObj, this.worldObj.getSeed());
+        return new ChunkProviderWyvernLair(this.worldObj, this.worldObj.getSeed());
     }
 
     private void setCustomSky() {

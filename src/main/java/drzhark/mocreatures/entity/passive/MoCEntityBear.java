@@ -385,12 +385,13 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         BlockPos pos = new BlockPos(i, j, k);
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
-
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
-            setType(4);
-            return true;
+        try {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+                setType(4);
+                return true;
+            }
+        } catch (Exception e) {
         }
-
         if (currentbiome.biomeName.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds")) {
             setType(3);//panda
             return true;
