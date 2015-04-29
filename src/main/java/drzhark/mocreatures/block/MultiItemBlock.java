@@ -27,18 +27,19 @@ public class MultiItemBlock extends ItemMultiTexture {
         setHasSubtypes(true);
         //this.setUnlocalizedName("multiBlock");
         String name = block.getUnlocalizedName().replace("tile.", "").replace("MoC", "").toLowerCase();
-        ModelBakery.addVariantName(this, "mocreatures:wyvern_" + name);
-        ModelBakery.addVariantName(this, "mocreatures:ogre_" + name);
-
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, 0, new ModelResourceLocation("mocreatures:wyvern_" + name, "inventory"));
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, 1, new ModelResourceLocation("mocreatures:ogre_" + name, "inventory"));
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, 2, new ModelResourceLocation("mocreatures:" + name, "variant=wyvern_lair"));
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .register(this, 3, new ModelResourceLocation("mocreatures:" + name, "variant=ogre_lair"));
-
+        if (net.minecraftforge.fml.common.FMLCommonHandler.instance().getEffectiveSide() == net.minecraftforge.fml.relauncher.Side.CLIENT) {
+            ModelBakery.addVariantName(this, "mocreatures:wyvern_" + name);
+            ModelBakery.addVariantName(this, "mocreatures:ogre_" + name);
+    
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, 0, new ModelResourceLocation("mocreatures:wyvern_" + name, "inventory"));
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, 1, new ModelResourceLocation("mocreatures:ogre_" + name, "inventory"));
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, 2, new ModelResourceLocation("mocreatures:" + name, "variant=wyvern_lair"));
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+                    .register(this, 3, new ModelResourceLocation("mocreatures:" + name, "variant=ogre_lair"));
+        }
     }
 
     @Override
