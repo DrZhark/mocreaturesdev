@@ -163,8 +163,6 @@ public class EventHooks {
 
     @SubscribeEvent
     public void structureMapGen(InitMapGenEvent event) {
-        String structureClass = event.originalGen.getClass().toString();
-
         if (event.type == EventType.NETHER_BRIDGE) {
             if (CustomSpawner.environmentMap.get(WorldProviderHell.class) == null) {
                 CMSUtils.addWorldEnvironment(WorldProviderHell.class);
