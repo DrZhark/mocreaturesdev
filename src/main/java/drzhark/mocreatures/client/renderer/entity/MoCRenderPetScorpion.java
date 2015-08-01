@@ -32,7 +32,8 @@ public class MoCRenderPetScorpion extends MoCRenderMoC {
             rotateAnimal(entityscorpion);
         }
         if (sitting) {
-            GL11.glTranslatef(0F, 0.4F, 0F);
+            float factorY = 0.4F * (float) (entityscorpion.getEdad() / 100F);
+            GL11.glTranslatef(0F, factorY, 0F);
         }
         if (!entityscorpion.getIsAdult()) {
             stretch(entityscorpion);

@@ -77,7 +77,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
-        //this.tasks.addTask(2, new EntityAIPanicMoC(this, 0.8D));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
@@ -1028,10 +1027,13 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public int nameYOffset() {
+        int yOff = (int) ((100 / getEdad()) * (getSizeFactor() * -110));
         if (getIsAdult()) {
-            return (int) (getSizeFactor() * -110);
+            yOff = (int) (getSizeFactor() * -110);
         }
-        return (int) ((100 / getEdad()) * (getSizeFactor() * -110));
+        if (sitCounter != 0)
+            yOff += 25;
+        return yOff;
     }
 
     @Override

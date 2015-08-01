@@ -458,19 +458,19 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
     @Override
     public double getCustomJump() {
-        double HorseJump = 0.4D;
+        double HorseJump = 0.35D;
         if (getType() < 6) // tier 1
         {
-            HorseJump = 0.4;
+            HorseJump = 0.35;
         } else if (getType() > 5 && getType() < 11) // tier 2
         {
-            HorseJump = 0.45D;
+            HorseJump = 0.40D;
         } else if (getType() > 10 && getType() < 16) // tier 3
         {
-            HorseJump = 0.5D;
+            HorseJump = 0.45D;
         } else if (getType() > 15 && getType() < 21) // tier 4
         {
-            HorseJump = 0.55D;
+            HorseJump = 0.50D;
         }
 
         else if (getType() > 20 && getType() < 26) // ghost and undead
@@ -487,7 +487,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             HorseJump = 0.6D;
         } else if (getType() >= 60) // donkeys - zebras and the like
         {
-            HorseJump = 0.45D;
+            HorseJump = 0.4D;
         }
         return HorseJump;
     }
@@ -1585,49 +1585,49 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
             int colorInt = itemstack.getItemDamage();
             switch (colorInt) {
-                case 1: //orange
+                case 14: //orange
                     transform(59);
                     break;
-                case 2: //magenta TODO
+                case 13: //magenta TODO
                     //transform(46);
                     break;
-                case 3: //light blue
+                case 12: //light blue
                     transform(51);
                     break;
-                case 4: //yellow
+                case 11: //yellow
                     transform(48);
                     break;
-                case 5: //light green
+                case 10: //light green
                     transform(53);
                     break;
-                case 6: //pink
+                case 9: //pink
                     transform(52);
                     break;
-                case 7: //gray TODO
+                case 8: //gray TODO
                     //transform(50);
                     break;
-                case 8: //light gray TODO
+                case 7: //light gray TODO
                     //transform(50);
                     break;
-                case 9: //cyan
+                case 6: //cyan
                     transform(57);
                     break;
-                case 10: //purple
+                case 5: //purple
                     transform(49);
                     break;
-                case 11: //dark blue
+                case 4: //dark blue
                     transform(56);
                     break;
-                case 12: //brown TODO
+                case 3: //brown TODO
                     //transform(50);
                     break;
-                case 13: //green
+                case 2: //green
                     transform(58);
                     break;
-                case 14: //red
+                case 1: //red
                     transform(55);
                     break;
-                case 15: //black
+                case 0: //black
                     transform(54);
                     break;
 
@@ -2170,7 +2170,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 }
             }*/
 
-            // TODO test in MP or move out of this !isRemote
             /**
              * Buckling
              */
@@ -2178,20 +2177,9 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 MoCTools.buckleMobs(this, 2D, this.worldObj);
             }
 
-            if (isFlyer() && this.rand.nextInt(100) == 0 && !isMovementCeased() && !getIsSitting()) {
+            if (isFlyer() && !getIsTamed() && this.rand.nextInt(100) == 0 && !isMovementCeased() && !getIsSitting()) {
                 wingFlap();
             }
-
-            /*if (getHasBred() && !getIsAdult() && !getIsSitting()) {
-
-                MoCEntityHorse mommy = getClosestMommy(this, 16D);
-                if ((mommy != null) && (MoCTools.getSqDistanceTo(mommy, this.posX, this.posY, this.posZ) > 4D)) {
-                    // System.out.println("following mommy!");
-                    PathEntity pathentity = this.navigator.getPathToEntityLiving(mommy);
-                    this.navigator.setPath(pathentity, 16F);
-                }
-
-            }*/
 
             if (!ReadyforParenting(this)) {
                 return;
@@ -2673,16 +2661,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    public boolean updateMount() {
-        return getIsTamed();
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return getIsTamed();
-    }*/
-
     @Override
     public void performAnimation(int animationType) {
         //23,24,25,32,36,38,39,40,51,52,53
@@ -2714,10 +2692,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         return getIsTamed() && !isAmuletHorse();
     }
 
-    /*public void setImmuneToFire(boolean value) {
-        this.isImmuneToFire = value;
-    }*/
-
     @Override
     public int getMaxSpawnedInChunk() {
         return 4;
@@ -2741,4 +2715,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         return super.onSpawnFirstTime(difficulty, livingdata);
     }
 
+    @Override
+    public void updateRiderPosition() {
+        double dist = getSizeFactor() * (0.25D);
+        double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
+        double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
+        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+    }
 }

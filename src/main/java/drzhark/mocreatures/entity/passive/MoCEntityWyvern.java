@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCPetData;
+
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -316,7 +318,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
 
         if (MoCreatures.isServer()) {
-            if (!isMovementCeased() && this.rand.nextInt(getIsTamed() ? 1000 : 300) == 0) {
+            if (!isMovementCeased() && !this.getIsTamed() && this.rand.nextInt(300) == 0) {
                 setIsFlying(!getIsFlying());
             }
             if (isMovementCeased() && getIsFlying()) {
@@ -463,8 +465,6 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-
-            //entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
             setIsChested(true);
             this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
             return true;
@@ -475,7 +475,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 this.localchest = new MoCAnimalChest("WyvernChest", 9);
             }
             if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("OstrichChest", 0);
+                this.emptychest = new MoCAnimalChest("WyvernChest", 0);
             }
             if (MoCreatures.isServer()) {
 
@@ -485,7 +485,25 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90 && getType() < 5) {
+        if ((itemstack != null) && this.getIsGhost() && this.getIsTamed() && itemstack.getItem() == MoCreatures.amuletghost) {
+
+            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if (MoCreatures.isServer()) {
+                MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+                if (petData != null) {
+                    petData.setInAmulet(this.getOwnerPetId(), true);
+                }
+                this.dropMyStuff();
+                MoCTools.dropAmulet(this, 3);
+                this.isDead = true;
+            }
+
+            return true;
+
+        }
+
+        if ((itemstack != null) && !this.getIsGhost() && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90
+                && getType() < 5) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             } else {
@@ -504,7 +522,8 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essenceundead) && getIsTamed()) {
+        if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+                && (itemstack.getItem() == MoCreatures.essenceundead) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             } else {
@@ -517,7 +536,8 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed()) {
+        if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+                && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             } else {
@@ -530,7 +550,8 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getType() == 5 && (itemstack.getItem() == MoCreatures.essencedarkness) && getIsTamed()) {
+        if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+                && (itemstack.getItem() == MoCreatures.essencedarkness) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
             } else {
@@ -735,6 +756,8 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (yOff < -120) {
             yOff = -120;
         }
+        if (getIsSitting())
+            yOff += 25;
         return yOff;
     }
 
@@ -937,5 +960,10 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return 0F;
         }
         return fTransparency;
+    }
+
+    @Override
+    protected boolean canBeTrappedInNet() {
+        return this.getIsTamed() && !this.getIsGhost();
     }
 }

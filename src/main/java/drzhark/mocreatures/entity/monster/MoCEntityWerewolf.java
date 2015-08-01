@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.monster;
 
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.world.DifficultyInstance;
+
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
@@ -80,6 +83,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 setType(3);
             } else {
                 setType(4);
+                this.isImmuneToFire = true;
             }
         }
     }
@@ -402,5 +406,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             return 0.35F;
         }
         return 0.2F;
+    }
+
+    @Override
+    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+        if (getType() == 4) {
+            this.isImmuneToFire = true;
+        }
+        return super.onSpawnFirstTime(difficulty, livingdata);
     }
 }

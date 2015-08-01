@@ -196,4 +196,9 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     public int getMaxEdad() {
         return 120;
     }
+
+    @Override
+    public boolean isNotScared() {
+        return getIsTamed();
+    }
 }

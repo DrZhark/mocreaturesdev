@@ -1451,11 +1451,13 @@ public class MoCTools {
      */
     public static void dropAmulet(IMoCTameable entity, int amuletType) {
         if (MoCreatures.isServer()) {
-            ItemStack stack = new ItemStack(MoCreatures.fishnet, 1, 1);
+            ItemStack stack = new ItemStack(MoCreatures.fishnetfull, 1, 0);
             if (amuletType == 2) {
-                stack = new ItemStack(MoCreatures.petamulet, 1, 1);
+                stack = new ItemStack(MoCreatures.petamuletfull, 1, 0);
             }
-
+            if (amuletType == 3) {
+                stack = new ItemStack(MoCreatures.amuletghostfull, 1, 0);
+            }
             if (stack.getTagCompound() == null) {
                 stack.setTagCompound(new NBTTagCompound());
             }
@@ -1468,7 +1470,11 @@ public class MoCTools {
                 } else if (petClass.equalsIgnoreCase("Komodo")) {
                     petClass = "KomodoDragon";
                 }
-                nbtt.setString("SpawnClass", petClass);
+                if (amuletType == 3) {
+                    nbtt.setInteger("SpawnClass", 100);
+                } else {
+                    nbtt.setString("SpawnClass", petClass);
+                }
                 nbtt.setFloat("Health", ((EntityLiving) entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getName());
@@ -1502,16 +1508,16 @@ public class MoCTools {
     public static ItemStack getProperAmulet(MoCEntityAnimal entity) {
         if (entity instanceof MoCEntityHorse) {
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28) {
-                return new ItemStack(MoCreatures.amuletbonefull, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletbonefull, 1, 0);
             }
             if (entity.getType() > 47 && entity.getType() < 60) {
-                return new ItemStack(MoCreatures.amuletfairyfull, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletfairyfull, 1, 0);
             }
             if (entity.getType() == 39 || entity.getType() == 40) {
-                return new ItemStack(MoCreatures.amuletpegasusfull, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletpegasusfull, 1, 0);
             }
             if (entity.getType() == 21 || entity.getType() == 22) {
-                return new ItemStack(MoCreatures.amuletghostfull, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletghostfull, 1, 0);
             }
         }
         return null;
@@ -1527,16 +1533,16 @@ public class MoCTools {
     public static ItemStack getProperEmptyAmulet(MoCEntityAnimal entity) {
         if (entity instanceof MoCEntityHorse) {
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28) {
-                return new ItemStack(MoCreatures.amuletbone, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletbone, 1, 0);
             }
             if (entity.getType() > 49 && entity.getType() < 60) {
-                return new ItemStack(MoCreatures.amuletfairy, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletfairy, 1, 0);
             }
             if (entity.getType() == 39 || entity.getType() == 40) {
-                return new ItemStack(MoCreatures.amuletpegasus, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletpegasus, 1, 0);
             }
             if (entity.getType() == 21 || entity.getType() == 22) {
-                return new ItemStack(MoCreatures.amuletghost, 1, entity.getType());
+                return new ItemStack(MoCreatures.amuletghost, 1, 0);
             }
         }
         return null;

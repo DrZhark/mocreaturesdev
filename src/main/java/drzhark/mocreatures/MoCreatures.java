@@ -1,7 +1,5 @@
 package drzhark.mocreatures;
 
-import drzhark.mocreatures.item.MoCItemSword;
-
 import com.mojang.authlib.GameProfile;
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
@@ -39,7 +37,6 @@ import drzhark.mocreatures.entity.aquatic.MoCEntityRay;
 import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 import drzhark.mocreatures.entity.aquatic.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.entity.item.MoCEntityFishBowl;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.item.MoCEntityPlatform;
@@ -86,7 +83,6 @@ import drzhark.mocreatures.item.ItemStaffTeleport;
 import drzhark.mocreatures.item.MoCItem;
 import drzhark.mocreatures.item.MoCItemArmor;
 import drzhark.mocreatures.item.MoCItemEgg;
-import drzhark.mocreatures.item.MoCItemFishBowl;
 import drzhark.mocreatures.item.MoCItemFood;
 import drzhark.mocreatures.item.MoCItemHayStack;
 import drzhark.mocreatures.item.MoCItemHorseAmulet;
@@ -96,6 +92,7 @@ import drzhark.mocreatures.item.MoCItemLitterBox;
 import drzhark.mocreatures.item.MoCItemPetAmulet;
 import drzhark.mocreatures.item.MoCItemRecord;
 import drzhark.mocreatures.item.MoCItemSugarLump;
+import drzhark.mocreatures.item.MoCItemSword;
 import drzhark.mocreatures.item.MoCItemTurtleSoup;
 import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
@@ -207,7 +204,7 @@ public class MoCreatures {
     //public static Item horsearmordiamond;
     public static Item staffunicorn;
     public static Item medallion;
-    public static Item kittybed;
+    public static Item[] kittybed = new Item[16];
     public static Item litterbox;
     public static Item woolball;
     //public static Item rope;
@@ -218,7 +215,7 @@ public class MoCreatures {
     public static Item helmetCroc;
     public static Item legsCroc;
     public static Item bootsCroc;
-    public static Item fishbowl_e;
+    /*public static Item fishbowl_e;
     public static Item fishbowl_w;
     public static Item fishbowl_1;
     public static Item fishbowl_2;
@@ -230,7 +227,7 @@ public class MoCreatures {
     public static Item fishbowl_8;
     public static Item fishbowl_9;
     public static Item fishbowl_10;
-
+    */
     public static Item fur;
     public static Item omelet;
     public static Item turtleraw;
@@ -243,9 +240,12 @@ public class MoCreatures {
     public static Item sharksword;
     public static Item silversword;
 
-    public static Item key;
+    //public static Item key;
     public static Item essencedarkness;
     public static Item essencefire;
+    public static Item essenceundead;
+    public static Item essencelight;
+
     public static Item amuletbone;
     public static Item amuletbonefull;
     public static Item amuletghost;
@@ -254,9 +254,10 @@ public class MoCreatures {
     public static Item amuletfairyfull;
     public static Item amuletpegasus;
     public static Item amuletpegasusfull;
-
-    public static Item essenceundead;
-    public static Item essencelight;
+    public static Item fishnet;
+    public static Item fishnetfull;
+    public static Item petamulet;
+    public static Item petamuletfull;
 
     public static Item chestFur;
     public static Item helmetFur;
@@ -331,9 +332,6 @@ public class MoCreatures {
     public static Item scrollOfOwner;
     public static Item crabraw;
     public static Item crabcooked;
-
-    public static Item fishnet;
-    public static Item petamulet;
 
     public static MoCPlayerTracker tracker;
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
@@ -444,7 +442,6 @@ public class MoCreatures {
         registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545);//, 0x2600, 0x052500);
         registerEntity(MoCEntityGoat.class, "Goat", 7434694, 6053069);//, 0x2600, 0x052500);
         registerEntity(MoCEntityEgg.class, "Egg");//, 0x2600, 0x052500);
-        registerEntity(MoCEntityFishBowl.class, "FishBowl");//, 0x2600, 0x052500);
         registerEntity(MoCEntityOstrich.class, "Ostrich", 14020607, 9639167);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBee.class, "Bee", 65407, 15656192);//, 0x2600, 0x052500);
         registerEntity(MoCEntityFly.class, "Fly", 65407, 1);//, 0x2600, 0x052500);
@@ -698,7 +695,11 @@ public class MoCreatures {
         whip = new MoCItemWhip("whip");
 
         medallion = new MoCItem("medallion");
-        kittybed = new MoCItemKittyBed("kittybed");
+
+        for (int i = 0; i < 16; i++) {
+            String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
+            kittybed[i] = new MoCItemKittyBed("kittybed_" + s, i);
+        }
         litterbox = new MoCItemLitterBox("kittylitter");
         woolball = new MoCItem("woolball");
 
@@ -710,7 +711,7 @@ public class MoCreatures {
         helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, 0);
         legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, 2);
         bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, 3);
-        fishbowl_e = new MoCItemFishBowl("bowlempty", 0);
+        /*fishbowl_e = new MoCItemFishBowl("bowlempty", 0);
         fishbowl_w = new MoCItemFishBowl("bowlwater", 11);
         fishbowl_1 = new MoCItemFishBowl("bowlfish1", 1);
         fishbowl_2 = new MoCItemFishBowl("bowlfish2", 2);
@@ -721,7 +722,7 @@ public class MoCreatures {
         fishbowl_7 = new MoCItemFishBowl("bowlfish7", 7);
         fishbowl_8 = new MoCItemFishBowl("bowlfish8", 8);
         fishbowl_9 = new MoCItemFishBowl("bowlfish9", 9);
-        fishbowl_10 = new MoCItemFishBowl("bowlfish10", 10);
+        fishbowl_10 = new MoCItemFishBowl("bowlfish10", 10);*/
 
         fur = new MoCItem("fur");
         omelet = new MoCItemFood("omelet", 4, 0.6F, false);
@@ -734,9 +735,12 @@ public class MoCreatures {
         katana = new MoCItemSword("katana", Item.ToolMaterial.IRON);
         sharksword = new MoCItemSword("sharksword", Item.ToolMaterial.IRON);
 
-        key = new MoCItem("key");
+        //key = new MoCItem("key");
         essencedarkness = new MoCItem("essencedarkness");
         essencefire = new MoCItem("essencefire");
+        essenceundead = new MoCItem("essenceundead");
+        essencelight = new MoCItem("essencelight");
+
         amuletbone = new MoCItemHorseAmulet("amuletbone");
         amuletbonefull = new MoCItemHorseAmulet("amuletbonefull");
         amuletghost = new MoCItemHorseAmulet("amuletghost");
@@ -745,9 +749,10 @@ public class MoCreatures {
         amuletfairyfull = new MoCItemHorseAmulet("amuletfairyfull");
         amuletpegasus = new MoCItemHorseAmulet("amuletpegasus");
         amuletpegasusfull = new MoCItemHorseAmulet("amuletpegasusfull");
-
-        essenceundead = new MoCItem("essenceundead");
-        essencelight = new MoCItem("essencelight");
+        fishnet = new MoCItemPetAmulet("fishnet");
+        fishnetfull = new MoCItemPetAmulet("fishnetfull");
+        petamulet = new MoCItemPetAmulet("petamulet", 1);
+        petamuletfull = new MoCItemPetAmulet("petamuletfull", 1);
 
         chestFur = new MoCItemArmor("furchest", furARMOR, 4, 1);
         helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, 0);
@@ -761,7 +766,6 @@ public class MoCreatures {
         ostrichcooked = new MoCItemFood("ostrichcooked", 6, 0.6F, false);
         unicornhorn = new MoCItem("unicornhorn");
 
-        fishnet = new MoCItemPetAmulet("fishnet");
         horsearmorcrystal = new MoCItem("horsearmorcrystal");
 
         rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
@@ -832,7 +836,6 @@ public class MoCreatures {
         staffPortal = new ItemStaffPortal("staffportal");
         staffTeleport = new ItemStaffTeleport("staffteleport");
         scrollOfOwner = new MoCItem("scrollofowner");
-        petamulet = new MoCItemPetAmulet("petamulet", 1);
 
         //new blocks
         mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundTypeStone);
@@ -1037,7 +1040,7 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(sharksword, 1),
                 new Object[] {"#X#", "#X#", " X ", Character.valueOf('#'), sharkteeth, Character.valueOf('X'), Items.stick,});
 
-        GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] {"# #", "# #", "###", Character.valueOf('#'), Blocks.glass,});
+        //GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] {"# #", "# #", "###", Character.valueOf('#'), Blocks.glass,});
 
         //GameRegistry.addRecipe(new ItemStack(rope, 1), new Object[] { "# #", " # ", "# #", Character.valueOf('#'), Item.silk, });
 
@@ -1089,14 +1092,15 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(bootsCroc, 1), new Object[] {"X X", "X X", Character.valueOf('X'), hideCroc});
 
         for (int i = 0; i < 16; i++) {
-            GameRegistry.addShapelessRecipe(new ItemStack(kittybed, 1, i), new Object[] {new ItemStack(Items.dye, 1, i), new ItemStack(kittybed, 1)});
+            GameRegistry.addShapelessRecipe(new ItemStack(kittybed[Math.abs(i - 15)], 1), new Object[] {new ItemStack(Items.dye, 1, i),
+                    new ItemStack(kittybed[0], 1)});
 
-            GameRegistry.addRecipe(new ItemStack(kittybed, 1, i),
+            GameRegistry.addRecipe(new ItemStack(kittybed[i], 1),
                     new Object[] {"###", "#X#", "Z  ", Character.valueOf('#'), Blocks.planks, Character.valueOf('X'),
-                            new ItemStack(Blocks.wool, 1, MoCTools.colorize(i)), Character.valueOf('Z'), Items.iron_ingot,});
+                            new ItemStack(Blocks.wool, 1, i), Character.valueOf('Z'), Items.iron_ingot,});
             String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
-            LanguageRegistry.addName(new ItemStack(kittybed, 1, i), (s + " Kitty Bed"));
+            LanguageRegistry.addName(new ItemStack(kittybed[i], 1), (s + " Kitty Bed"));
         }
 
         for (int i = 0; i < multiBlockNames.size(); i++) {

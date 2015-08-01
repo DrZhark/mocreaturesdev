@@ -47,7 +47,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         super(world);
         setSize(1.4F, 0.9F);
         this.poisontimer = 0;
-        setAdult(false);
+        setAdult(true);//TODO
         setEdad(20);
         setHasBabies(false);
         this.stepHeight = 20.0F;
@@ -470,26 +470,18 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         nbttagcompound.setBoolean("Saddled", getIsRideable());
     }
 
-    /* @Override
-     public boolean updateMount() {
-         return getIsTamed();
-     }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return getIsTamed();
-    }*/
-
     @Override
     public int nameYOffset() {
         int n = (int) (1 - (getEdad() * 0.8));
-        if (n < -70) {
-            n = -70;
+        if (n < -60) {
+            n = -60;
         }
         if (getIsAdult()) {
-            n = -70;
+            n = -60;
         }
-
+        if (getIsSitting()) {
+            n = (int) (n * 0.8);
+        }
         return n;
     }
 

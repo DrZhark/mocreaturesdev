@@ -1,5 +1,9 @@
 package drzhark.mocreatures.entity.item;
 
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.util.DamageSource;
+
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.Entity;
@@ -26,7 +30,6 @@ public class MoCEntityLitterBox extends EntityLiving {
     public MoCEntityLitterBox(World world) {
         super(world);
         setSize(1.0F, 0.3F);
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "litterbox.png";
     }
 
     public ResourceLocation getTexture() {
@@ -124,10 +127,10 @@ public class MoCEntityLitterBox extends EntityLiving {
         if (((this.ridingEntity instanceof EntityPlayer) && !this.worldObj.isRemote) || this.ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
-            return (super.getYOffset() - 1.15F);
-        } else {
-            return super.getYOffset();
+            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.25 : 0.5F;
         }
+        return super.getYOffset();
+
     }
 
     @Override
@@ -219,5 +222,10 @@ public class MoCEntityLitterBox extends EntityLiving {
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         setUsedLitter(nbttagcompound.getBoolean("UsedLitter"));
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        return false;
     }
 }

@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.utils.MoCLog;
@@ -50,110 +51,101 @@ public class MoCItemPetAmulet extends MoCItem {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
-        int i = itemstack.getItemDamage();
 
-        if (i == 0) //empty fishnet
-        {
-            return itemstack;
+        double dist = 1D;
+        double newPosY = entityplayer.posY;
+        double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
+        double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
+
+        ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
+        if (this.amuletType == 1) {
+            emptyAmulet = new ItemStack(MoCreatures.petamulet, 1, 0);
         }
 
-        if (i != 0) {
-
-            double dist = 1D;
-            double newPosY = entityplayer.posY;
-            double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-            double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-
-            ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
-            if (this.amuletType == 1) {
-                emptyAmulet = new ItemStack(MoCreatures.petamulet, 1, 0);
+        //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
+        if (MoCreatures.isServer()) {
+            initAndReadNBT(itemstack);
+            if (this.spawnClass.isEmpty())// || creatureType == 0)
+            {
+                return itemstack;
             }
-
-            //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
-            if (MoCreatures.isServer()) {
-                initAndReadNBT(itemstack);
-                if (this.spawnClass.isEmpty())// || creatureType == 0)
-                {
-                    return itemstack;
+            try {
+                if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
+                    this.spawnClass = "WildHorse";
                 }
-                try {
-                    if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
-                        this.spawnClass = "WildHorse";
+
+                EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, worldObj);
+                if (tempLiving != null && tempLiving instanceof IMoCEntity) {
+                    IMoCTameable storedCreature = (IMoCTameable) tempLiving;
+                    ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);
+                    storedCreature.setType(this.creatureType);
+                    storedCreature.setTamed(true);
+                    storedCreature.setName(this.name);
+                    storedCreature.setOwnerPetId(this.PetId);
+                    storedCreature.setOwner(entityplayer.getCommandSenderName());
+                    ((EntityLiving) storedCreature).setHealth(this.health);
+                    storedCreature.setEdad(this.edad);
+                    storedCreature.setAdult(this.adult);
+                    // special case for kitty
+                    if (this.spawnClass.equalsIgnoreCase("Kitty")) {
+                        ((MoCEntityKitty) storedCreature).setKittyState(2); // allows name to render
                     }
 
-                    EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, worldObj);
-                    if (tempLiving != null && tempLiving instanceof IMoCEntity) {
-                        IMoCTameable storedCreature = (IMoCTameable) tempLiving;
-                        ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);
-                        storedCreature.setType(this.creatureType);
-                        storedCreature.setTamed(true);
-                        storedCreature.setName(this.name);
-                        storedCreature.setOwnerPetId(this.PetId);
-                        storedCreature.setOwner(entityplayer.getCommandSenderName());
-                        ((EntityLiving) storedCreature).setHealth(this.health);
-                        storedCreature.setEdad(this.edad);
-                        storedCreature.setAdult(this.adult);
-                        // special case for kitty
-                        if (this.spawnClass.equalsIgnoreCase("Kitty")) {
-                            ((MoCEntityKitty) storedCreature).setKittyState(2); // allows name to render
+                    //if the player using the amulet is different than the original owner
+                    if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getCommandSenderName())) && MoCreatures.instance.mapData != null) {
+                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerName);
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getCommandSenderName());
+                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getCommandSenderName());
+                        int maxCount = MoCreatures.proxy.maxTamed;
+                        if (MoCTools.isThisPlayerAnOP(epOwner)) {
+                            maxCount = MoCreatures.proxy.maxOPTamed;
                         }
-
-                        //if the player using the amulet is different than the original owner
-                        if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getCommandSenderName()))
-                                && MoCreatures.instance.mapData != null) {
-                            MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerName);
-                            MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getCommandSenderName());
-                            EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getCommandSenderName());
-                            int maxCount = MoCreatures.proxy.maxTamed;
-                            if (MoCTools.isThisPlayerAnOP(epOwner)) {
-                                maxCount = MoCreatures.proxy.maxOPTamed;
+                        if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0)
+                                || !MoCreatures.proxy.enableOwnership) {
+                            NBTTagCompound petNBT = new NBTTagCompound();
+                            if (tempLiving instanceof MoCEntityTameableAnimal) {
+                                ((MoCEntityTameableAnimal) storedCreature).writeEntityToNBT(petNBT);
+                            } else if (tempLiving instanceof MoCEntityTameableAquatic) {
+                                ((MoCEntityTameableAquatic) storedCreature).writeEntityToNBT(petNBT);
+                            } else if (tempLiving instanceof MoCEntityTameableAmbient) {
+                                ((MoCEntityTameableAmbient) storedCreature).writeEntityToNBT(petNBT);
                             }
-                            if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0)
-                                    || !MoCreatures.proxy.enableOwnership) {
-                                NBTTagCompound petNBT = new NBTTagCompound();
-                                if (tempLiving instanceof MoCEntityTameableAnimal) {
-                                    ((MoCEntityTameableAnimal) storedCreature).writeEntityToNBT(petNBT);
-                                } else if (tempLiving instanceof MoCEntityTameableAquatic) {
-                                    ((MoCEntityTameableAquatic) storedCreature).writeEntityToNBT(petNBT);
-                                } else if (tempLiving instanceof MoCEntityTameableAmbient) {
-                                    ((MoCEntityTameableAmbient) storedCreature).writeEntityToNBT(petNBT);
-                                }
-                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature, petNBT);
-                            }
-                            // remove pet entry from old owner
-                            if (oldOwner != null) {
-                                for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++) {
-                                    NBTTagCompound petEntry = oldOwner.getTamedList().getCompoundTagAt(j);
-                                    if (petEntry.getInteger("PetId") == this.PetId) {
-                                        // found match, remove
-                                        oldOwner.getTamedList().removeTag(j);
-                                    }
+                            MoCreatures.instance.mapData.updateOwnerPet(storedCreature, petNBT);
+                        }
+                        // remove pet entry from old owner
+                        if (oldOwner != null) {
+                            for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++) {
+                                NBTTagCompound petEntry = oldOwner.getTamedList().getCompoundTagAt(j);
+                                if (petEntry.getInteger("PetId") == this.PetId) {
+                                    // found match, remove
+                                    oldOwner.getTamedList().removeTag(j);
                                 }
                             }
                         }
+                    }
 
-                        if (entityplayer.worldObj.spawnEntityInWorld((EntityLiving) storedCreature)) {
-                            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving) storedCreature).getEntityId()),
-                                    new TargetPoint(entityplayer.worldObj.provider.getDimensionId(), entityplayer.posX, entityplayer.posY,
-                                            entityplayer.posZ, 64));
-                            if ((MoCreatures.proxy.enableOwnership && this.ownerName.isEmpty()) || this.name.isEmpty()) {
-                                MoCTools.tameWithName(entityplayer, storedCreature);
-                            }
+                    if (entityplayer.worldObj.spawnEntityInWorld((EntityLiving) storedCreature)) {
+                        MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving) storedCreature).getEntityId()),
+                                new TargetPoint(entityplayer.worldObj.provider.getDimensionId(), entityplayer.posX, entityplayer.posY,
+                                        entityplayer.posZ, 64));
+                        if ((MoCreatures.proxy.enableOwnership && this.ownerName.isEmpty()) || this.name.isEmpty()) {
+                            MoCTools.tameWithName(entityplayer, storedCreature);
+                        }
 
-                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
-                            MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
-                            if (petData != null) {
-                                petData.setInAmulet(storedCreature.getOwnerPetId(), false);
-                            }
+                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+                        MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                        if (petData != null) {
+                            petData.setInAmulet(storedCreature.getOwnerPetId(), false);
                         }
                     }
-                } catch (Exception ex) {
-                    if (MoCreatures.proxy.debug) {
-                        MoCLog.logger.warn("Error spawning creature from fishnet/amulet " + ex);
-                    }
+                }
+            } catch (Exception ex) {
+                if (MoCreatures.proxy.debug) {
+                    MoCLog.logger.warn("Error spawning creature from fishnet/amulet " + ex);
                 }
             }
         }
+
         return itemstack;
     }
 

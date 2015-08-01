@@ -1,5 +1,12 @@
 package drzhark.mocreatures.item;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,22 +15,29 @@ import net.minecraft.world.World;
 
 public class MoCItemKittyBed extends MoCItem {
 
+    private int sheetType;
+
     public MoCItemKittyBed(String name) {
         super(name);
-        this.maxStackSize = 8;
-        //setHasSubtypes(true);
+    }
+
+    public MoCItemKittyBed(String name, int type) {
+        this(name);
+        this.sheetType = type;
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
         if (MoCreatures.isServer()) {
-            itemstack.stackSize--;
-            MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, itemstack.getItemDamage());
+            MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, Math.abs(this.sheetType - 15));
             entitykittybed.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
             world.spawnEntityInWorld(entitykittybed);
             entitykittybed.motionY += world.rand.nextFloat() * 0.05F;
             entitykittybed.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             entitykittybed.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
+            if (--itemstack.stackSize == 0) {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            }
         }
         return itemstack;
     }

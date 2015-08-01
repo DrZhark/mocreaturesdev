@@ -79,8 +79,6 @@ public class MoCItemWhip extends MoCItem {
                             entityhorse.setNightmareInt(100);
                         } else if (entityhorse.sprintCounter == 0) {
                             entityhorse.sprintCounter = 1;
-                        } else {
-                            entityhorse.setSitting(!entityhorse.getIsSitting());
                         }
                     }
                 }

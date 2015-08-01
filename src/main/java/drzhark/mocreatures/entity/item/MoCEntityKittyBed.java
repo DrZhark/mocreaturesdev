@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.item;
 
+import net.minecraft.util.DamageSource;
+
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -20,14 +22,12 @@ public class MoCEntityKittyBed extends EntityLiving {
         super(world);
         setSize(1.0F, 0.3F);
         this.milklevel = 0.0F;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
     }
 
     public MoCEntityKittyBed(World world, double d, double d1, double d2) {
         super(world);
         setSize(1.0F, 0.3F);
         this.milklevel = 0.0F;
-        //texture = MoCreatures.proxy.MODEL_TEXTURE + "kittybed.png";
     }
 
     public MoCEntityKittyBed(World world, int i) {
@@ -149,7 +149,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         if (((this.ridingEntity instanceof EntityPlayer) && !this.worldObj.isRemote) || this.ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
-            return (super.getYOffset() - 1.15F);
+            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.25 : 0.5F;
         }
         return super.getYOffset();
     }
@@ -181,7 +181,7 @@ public class MoCEntityKittyBed extends EntityLiving {
                 && (itemstack != null)
                 && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe)
                         || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed, 1, getSheetColor()));
+            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[Math.abs(getSheetColor() - 15)], 1));
             this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
@@ -203,7 +203,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public void moveEntity(double d, double d1, double d2) {
-        if ((this.ridingEntity != null) || !this.onGround || !MoCreatures.proxy.staticBed) {
+        if ((this.ridingEntity != null) || !this.onGround || !MoCreatures.proxy.staticLitter) {
             if (!this.worldObj.isRemote) {
                 super.moveEntity(d, d1, d2);
             }
@@ -240,5 +240,18 @@ public class MoCEntityKittyBed extends EntityLiving {
         nbttagcompound.setInteger("SheetColour", getSheetColor());
         nbttagcompound.setBoolean("HasFood", getHasFood());
         nbttagcompound.setFloat("MilkLevel", this.milklevel);
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        this.moveStrafing = 0.0F;
+        this.moveForward = 0.0F;
+        this.randomYawVelocity = 0.0F;
+        super.onLivingUpdate();
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        return false;
     }
 }
