@@ -146,7 +146,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "8.0.0.devA")
+@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "8.0.1")
 public class MoCreatures {
 
     @Instance("MoCreatures")
@@ -181,7 +181,6 @@ public class MoCreatures {
     public static Item staffTeleport;
     public static Item builderHammer;
 
-    // TODO - fix texture names
     static ArmorMaterial scorpARMOR = EnumHelper.addArmorMaterial("crocARMOR", "crocARMOR", 15, new int[] {2, 6, 5, 2}, 12);
     static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", "furARMOR", 15, new int[] {2, 6, 5, 2}, 12);
     static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", "hideARMOR", 15, new int[] {2, 6, 5, 2}, 12);
@@ -711,19 +710,6 @@ public class MoCreatures {
         helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, 0);
         legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, 2);
         bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, 3);
-        /*fishbowl_e = new MoCItemFishBowl("bowlempty", 0);
-        fishbowl_w = new MoCItemFishBowl("bowlwater", 11);
-        fishbowl_1 = new MoCItemFishBowl("bowlfish1", 1);
-        fishbowl_2 = new MoCItemFishBowl("bowlfish2", 2);
-        fishbowl_3 = new MoCItemFishBowl("bowlfish3", 3);
-        fishbowl_4 = new MoCItemFishBowl("bowlfish4", 4);
-        fishbowl_5 = new MoCItemFishBowl("bowlfish5", 5);
-        fishbowl_6 = new MoCItemFishBowl("bowlfish6", 6);
-        fishbowl_7 = new MoCItemFishBowl("bowlfish7", 7);
-        fishbowl_8 = new MoCItemFishBowl("bowlfish8", 8);
-        fishbowl_9 = new MoCItemFishBowl("bowlfish9", 9);
-        fishbowl_10 = new MoCItemFishBowl("bowlfish10", 10);*/
-
         fur = new MoCItem("fur");
         omelet = new MoCItemFood("omelet", 4, 0.6F, false);
         turtleraw = new MoCItemFood("turtleraw", 2, 0.3F, false);

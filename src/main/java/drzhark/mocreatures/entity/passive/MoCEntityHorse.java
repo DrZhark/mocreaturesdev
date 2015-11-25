@@ -2078,13 +2078,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             }
         }
 
-        if ((this.jumpPending)) {
-            if (isFlyer() && this.wingFlapCounter == 0) {
-                MoCTools.playCustomSound(this, "wingflap", this.worldObj);
-            }
-            this.wingFlapCounter = 1;
-        }
-
         if (this.rand.nextInt(200) == 0) {
             moveTail();
         }
@@ -2097,8 +2090,28 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             StarFX();
         }
 
-        if (isOnAir() && isFlyer() && this.rand.nextInt(30) == 0) {
-            this.wingFlapCounter = 1;
+        if (MoCreatures.isServer() && isFlyer() && isOnAir()) {
+            float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
+            int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
+            if (this.riddenByEntity == null || wingFlapFreq < 5) {
+                wingFlapFreq = 5;
+            }
+            if (this.rand.nextInt(wingFlapFreq) == 0) {
+                wingFlap();
+            }
+        }
+
+        if (isFlyer()) {
+            if (this.wingFlapCounter > 0 && ++this.wingFlapCounter > 20) {
+                this.wingFlapCounter = 0;
+            }
+            if (this.wingFlapCounter != 0 && this.wingFlapCounter % 5 == 0 && !MoCreatures.isServer()) {
+                StarFX();
+            }
+            if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
+                System.out.println("playing sound");
+                MoCTools.playCustomSound(this, "wingflap", this.worldObj);
+            }
         }
 
         if (isUndead() && (this.getType() < 26) && getIsAdult() && (this.rand.nextInt(20) == 0)) {
@@ -2373,7 +2386,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             }
         }
 
-        if (this.wingFlapCounter > 0) {
+        /*if (this.wingFlapCounter > 0) {
             ++this.wingFlapCounter;
             if (this.wingFlapCounter % 5 == 0 && !MoCreatures.isServer()) {
                 StarFX();
@@ -2382,7 +2395,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.wingFlapCounter = 0;
 
             }
-        }
+        }*/
 
         if (this.transformCounter > 0) {
             if (this.transformCounter == 40) {
@@ -2604,12 +2617,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     }
 
     public void wingFlap() {
-
-        if (isFlyer() && this.wingFlapCounter == 0) {
-            MoCTools.playCustomSound(this, "wingflap", this.worldObj);
+        if (this.isFlyer() && this.wingFlapCounter == 0) {
+            this.wingFlapCounter = 1;
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
+                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
         }
-        this.wingFlapCounter = 1;
-        this.motionY = 0.5D;
     }
 
     @Override
@@ -2669,6 +2681,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             this.transformType = animationType;
             this.transformCounter = 1;
         }
+        if (animationType == 3) //wing flap 
+        {
+            this.wingFlapCounter = 1;
+        }
         if (animationType == 101) //zebra Shuffle starts
         {
             this.shuffleCounter = 1;
@@ -2721,5 +2737,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
         this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+    }
+
+    @Override
+    public void makeEntityJump() {
+        wingFlap();
+        super.makeEntityJump();
     }
 }
