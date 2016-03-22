@@ -8,15 +8,12 @@ import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderWerewolf extends RenderLiving {
+public class MoCRenderWerewolf extends RenderLiving<MoCEntityWerewolf> {
 
     private final MoCModelWere tempWerewolf;
 
@@ -27,19 +24,18 @@ public class MoCRenderWerewolf extends RenderLiving {
     }
 
     @Override
-    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1) {
-        MoCEntityWerewolf entitywerewolf = (MoCEntityWerewolf) entityliving;
+    public void doRender(MoCEntityWerewolf entitywerewolf, double d, double d1, double d2, float f, float f1) {
         this.tempWerewolf.hunched = entitywerewolf.getIsHunched();
-        super.doRender(entityliving, d, d1, d2, f, f1);
+        super.doRender(entitywerewolf, d, d1, d2, f, f1);
 
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityWerewolf) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityWerewolf entitywerewolf) {
+        return entitywerewolf.getTexture();
     }
 
-    private class LayerMoCWereHuman implements LayerRenderer {
+    private class LayerMoCWereHuman implements LayerRenderer<MoCEntityWerewolf> {
 
         private final MoCRenderWerewolf mocRenderer;
         private final MoCModelWereHuman mocModel = new MoCModelWereHuman();
@@ -82,11 +78,6 @@ public class MoCRenderWerewolf extends RenderLiving {
         @Override
         public boolean shouldCombineTextures() {
             return true;
-        }
-
-        @Override
-        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
-            this.doRenderLayer((MoCEntityWerewolf) entity, f1, f2, f3, f4, f5, f6, f7);
         }
     }
 }

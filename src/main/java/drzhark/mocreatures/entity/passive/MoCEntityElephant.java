@@ -216,7 +216,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             if (getIsTamed() && (this.riddenByEntity == null) && getArmorType() >= 1 && this.rand.nextInt(20) == 0) {
                 EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 3D);
-                if (ep != null && (!MoCreatures.proxy.enableOwnership || ep.getCommandSenderName().equals(getOwnerName())) && ep.isSneaking()) {
+                if (ep != null && (!MoCreatures.proxy.enableOwnership || ep.getName().equals(getOwnerName())) && ep.isSneaking()) {
                     sit();
                 }
             }

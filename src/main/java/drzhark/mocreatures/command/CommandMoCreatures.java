@@ -184,7 +184,7 @@ public class CommandMoCreatures extends CommandBase {
                                 foundIds.add(mocreature.getOwnerPetId());
                                 tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type"
                                         + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
-                                        + ((EntityLiving) mocreature).getCommandSenderName() + EnumChatFormatting.DARK_AQUA + ", Name"
+                                        + ((EntityLiving) mocreature).getName() + EnumChatFormatting.DARK_AQUA + ", Name"
                                         + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName()
                                         + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
                                         + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":"
@@ -230,7 +230,7 @@ public class CommandMoCreatures extends CommandBase {
                             + EnumChatFormatting.WHITE + " does not have any tamed animals."));
                 }
             } else if (command.equalsIgnoreCase("tamed") || command.equalsIgnoreCase("tame") && !par2.equals("")) {
-                String playername = par1ICommandSender.getCommandSenderName();
+                String playername = par1ICommandSender.getName();
                 List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
                 int unloadedCount = 0;
                 int loadedCount = 0;
@@ -248,7 +248,7 @@ public class CommandMoCreatures extends CommandBase {
                                 foundIds.add(mocreature.getOwnerPetId());
                                 tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type"
                                         + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
-                                        + ((EntityLiving) mocreature).getCommandSenderName() + EnumChatFormatting.DARK_AQUA + ", Name"
+                                        + ((EntityLiving) mocreature).getName() + EnumChatFormatting.DARK_AQUA + ", Name"
                                         + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName()
                                         + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
                                         + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":"
@@ -329,7 +329,7 @@ public class CommandMoCreatures extends CommandBase {
                             if (!result) {
                                 par1ICommandSender.addChatMessage(new ChatComponentTranslation("Unable to transfer entity ID "
                                         + EnumChatFormatting.GREEN + petId + EnumChatFormatting.WHITE + ". It may only be transferred to "
-                                        + EnumChatFormatting.AQUA + player.getCommandSenderName()));
+                                        + EnumChatFormatting.AQUA + player.getName()));
                             }
                         }
                         break;
@@ -343,7 +343,7 @@ public class CommandMoCreatures extends CommandBase {
             List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
             for (int i = 0; i < players.size(); i++) {
                 EntityPlayerMP player = (EntityPlayerMP) players.get(i);
-                if (player.getCommandSenderName().equalsIgnoreCase(playername)) {
+                if (player.getName().equalsIgnoreCase(playername)) {
                     int tamedCount = MoCTools.numberTamedByPlayer(player);
                     par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + playername
                             + "'s recorded tamed count is " + EnumChatFormatting.AQUA + tamedCount));
@@ -586,7 +586,7 @@ public class CommandMoCreatures extends CommandBase {
                 if (compound != null && compound.getString("Owner") != null) {
                     String owner = compound.getString("Owner");
                     String name = compound.getString("Name");
-                    if (owner != null && owner.equalsIgnoreCase(player.getCommandSenderName())) {
+                    if (owner != null && owner.equalsIgnoreCase(player.getName())) {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);

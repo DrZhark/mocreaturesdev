@@ -7,16 +7,16 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderMoC extends RenderLiving {
+public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
 
     public MoCRenderMoC(ModelBase modelbase, float f) {
         super(MoCClientProxy.mc.getRenderManager(), modelbase, f);
@@ -24,18 +24,17 @@ public class MoCRenderMoC extends RenderLiving {
     }
 
     @Override
-    public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
+    public void doRender(T entity, double d, double d1, double d2, float f, float f1) {
         doRenderMoC(entity, d, d1, d2, f, f1);
     }
 
-    public void doRenderMoC(Entity entity, double d, double d1, double d2, float f, float f1) {
+    public void doRenderMoC(T entity, double d, double d1, double d2, float f, float f1) {
         super.doRender(entity, d, d1, d2, f, f1);
 
         IMoCEntity entityMoC = (IMoCEntity) entity;
 
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
-        boolean flag2 = MoCreatures.proxy.getDisplayPetIcons();
         if (entityMoC.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
@@ -58,22 +57,20 @@ public class MoCRenderMoC extends RenderLiving {
                     if (!flag) {
                         yOff += 8;
                     }
-                    tessellator1.getWorldRenderer().startDrawingQuads();
+                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     // might break SSP
                     float f8 = ((EntityLiving) entityMoC).getHealth();
                     float f9 = ((EntityLiving) entityMoC).getMaxHealth();
                     float f10 = f8 / f9;
                     float f11 = 40F * f10;
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.7F, 0.0F, 0.0F, 1.0F);
-                    tessellator1.getWorldRenderer().addVertex(-20F + f11, -10 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-20F + f11, -6 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(20D, -6 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(20D, -10 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.0F, 0.7F, 0.0F, 1.0F);
-                    tessellator1.getWorldRenderer().addVertex(-20D, -10 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-20D, -6 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(f11 - 20F, -6 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(f11 - 20F, -10 + yOff, 0.0D);
+                    tessellator1.getWorldRenderer().pos(-20F + f11, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20F + f11, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(20D, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(20D, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20D, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20D, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(f11 - 20F, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(f11 - 20F, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                 }
@@ -83,13 +80,12 @@ public class MoCRenderMoC extends RenderLiving {
                     GL11.glEnable(3042 /* GL_BLEND */);
                     GL11.glBlendFunc(770, 771);
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);
-                    tessellator1.getWorldRenderer().startDrawingQuads();
+                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     int i = fontrenderer.getStringWidth(s) / 2;
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-                    tessellator1.getWorldRenderer().addVertex(-i - 1, -1 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-i - 1, 8 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(i + 1, 8 + yOff, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(i + 1, -1 + yOff, 0.0D);
+                    tessellator1.getWorldRenderer().pos(-i - 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-i - 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(i + 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(i + 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                     fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, yOff, 0x20ffffff);
@@ -114,7 +110,7 @@ public class MoCRenderMoC extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
+    protected void preRenderCallback(T entityliving, float f) {
         IMoCEntity mocreature = (IMoCEntity) entityliving;
         //adjustOffsets is not working well
         //adjustOffsets(mocreature.getAdjustedXOffset(), mocreature.getAdjustedYOffset(), mocreature.getAdjustedZOffset());
@@ -167,7 +163,8 @@ public class MoCRenderMoC extends RenderLiving {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
+    protected ResourceLocation getEntityTexture(EntityLiving entity) {
         return ((IMoCEntity) entity).getTexture();
     }
+
 }

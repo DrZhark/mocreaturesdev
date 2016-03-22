@@ -216,7 +216,7 @@ public class MoCTools {
 
             if (entityToSpawn != null) {
                 IEntityLivingData entitylivingdata = null;
-                entityToSpawn.onSpawnFirstTime(player.worldObj.getDifficultyForLocation(new BlockPos(entityToSpawn)), entitylivingdata); // onSpawnWithEgg
+                entityToSpawn.onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entityToSpawn)), entitylivingdata); // onSpawnWithEgg
                 entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                 worldObj.spawnEntityInWorld(entityToSpawn);
             }
@@ -817,7 +817,7 @@ public class MoCTools {
     }
 
     public static boolean mobGriefing(World world) {
-        return world.getGameRules().getGameRuleBooleanValue("mobGriefing");
+        return world.getGameRules().getBoolean("mobGriefing");
     }
 
     public static void DestroyBlast(Entity entity, double d, double d1, double d2, float f, boolean flag) {
@@ -1271,7 +1271,7 @@ public class MoCTools {
     /**
      * Method called to tame an entity, it will check that the player has slots
      * for taming, increase the taming count of the player, add the
-     * player.getCommandSenderName() as the owner of the entity, and name the entity.
+     * player.getName() as the owner of the entity, and name the entity.
      *
      * @param ep
      * @param storedCreature
@@ -1291,20 +1291,20 @@ public class MoCTools {
             int max = 0;
             max = MoCreatures.proxy.maxTamed;
             // only check count for new pets as owners may be changing the name
-            if (!MoCreatures.instance.mapData.isExistingPet(ep.getCommandSenderName(), storedCreature)) {
+            if (!MoCreatures.instance.mapData.isExistingPet(ep.getName(), storedCreature)) {
                 int count = MoCTools.numberTamedByPlayer(ep);
                 if (isThisPlayerAnOP(ep)) {
                     max = MoCreatures.proxy.maxOPTamed;
                 }
                 if (count >= max) {
-                    String message = "\2474" + ep.getCommandSenderName() + " can not tame more creatures, limit of " + max + " reached";
+                    String message = "\2474" + ep.getName() + " can not tame more creatures, limit of " + max + " reached";
                     ep.addChatMessage(new ChatComponentTranslation(message));
                     return false;
                 }
             }
         }
 
-        storedCreature.setOwner(ep.getCommandSenderName()); // ALWAYS SET OWNER. Required for our new pet save system.
+        storedCreature.setOwner(ep.getName()); // ALWAYS SET OWNER. Required for our new pet save system.
         MoCMessageHandler.INSTANCE.sendTo(new MoCMessageNameGUI(((Entity) storedCreature).getEntityId()), (EntityPlayerMP) ep);
         storedCreature.setTamed(true);
         return true;
@@ -1318,8 +1318,8 @@ public class MoCTools {
      */
     public static int numberTamedByPlayer(EntityPlayer ep) {
         if (MoCreatures.instance.mapData != null) {
-            if (MoCreatures.instance.mapData.getPetData(ep.getCommandSenderName()) != null) {
-                return MoCreatures.instance.mapData.getPetData(ep.getCommandSenderName()).getTamedList().tagCount();
+            if (MoCreatures.instance.mapData.getPetData(ep.getName()) != null) {
+                return MoCreatures.instance.mapData.getPetData(ep.getName()).getTamedList().tagCount();
             }
         }
         return 0;

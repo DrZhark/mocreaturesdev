@@ -2,33 +2,29 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderOstrich extends MoCRenderMoC {
+public class MoCRenderOstrich extends MoCRenderMoC<MoCEntityOstrich> {
 
     public MoCRenderOstrich(ModelBase modelbase, float f) {
         super(modelbase, 0.5F);
-        //tempSnake = (MoCModelSnake) modelbase;
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityOstrich) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityOstrich entityostrich) {
+        return entityostrich.getTexture();
     }
 
-    protected void adjustHeight(EntityLiving entityliving, float FHeight) {
+    protected void adjustHeight(MoCEntityOstrich entityliving, float FHeight) {
         GL11.glTranslatef(0.0F, FHeight, 0.0F);
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
+    protected void preRenderCallback(MoCEntityOstrich entityliving, float f) {
         MoCEntityOstrich entityostrich = (MoCEntityOstrich) entityliving;
         if (entityostrich.getType() == 1) {
             stretch(entityostrich);

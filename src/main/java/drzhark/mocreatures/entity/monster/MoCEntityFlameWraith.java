@@ -62,11 +62,11 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
     }*/
 
     @Override
-    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+    protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         if (MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
             entityLivingBaseIn.setFire(this.burningTime);
         }
-        super.func_174815_a(entityLivingBaseIn, entityIn);
+        super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 
     @Override

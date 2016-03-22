@@ -69,7 +69,7 @@ public class CommandMoCTP extends CommandBase {
         } catch (NumberFormatException e) {
             petId = -1;
         }
-        String playername = par1ICommandSender.getCommandSenderName();
+        String playername = par1ICommandSender.getName();
         EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerByUsername(playername);
         // search for tamed entity in mocreatures.dat
         MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
@@ -96,7 +96,7 @@ public class CommandMoCTP extends CommandBase {
                         if (!result) {
                             par1ICommandSender.addChatMessage(new ChatComponentTranslation("Unable to transfer entity ID " + EnumChatFormatting.GREEN
                                     + petId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA
-                                    + player.getCommandSenderName()));
+                                    + player.getName()));
                         }
                     }
                     break;
@@ -128,7 +128,7 @@ public class CommandMoCTP extends CommandBase {
                 if (compound != null && compound.getString("Owner") != null) {
                     String owner = compound.getString("Owner");
                     String name = compound.getString("Name");
-                    if (owner != null && owner.equalsIgnoreCase(player.getCommandSenderName())) {
+                    if (owner != null && owner.equalsIgnoreCase(player.getName())) {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);

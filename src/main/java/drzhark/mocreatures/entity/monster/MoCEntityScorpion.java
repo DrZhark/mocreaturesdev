@@ -68,7 +68,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
-        this.tasks.addTask(3, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(7, new EntityAIFleeSun(this, 1.0D));
         this.tasks.addTask(5, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
         this.tasks.addTask(6, new EntityAILeapAtTarget(this, 0.4F));
@@ -244,7 +243,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     @Override
-    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+    protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         boolean flag = (entityIn instanceof EntityPlayer);
         if (!getIsPoisoning() && this.rand.nextInt(5) == 0 && entityIn instanceof EntityLivingBase) {
             setPoisoning(true);
@@ -271,7 +270,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         } else {
             swingArm();
         }
-        super.func_174815_a(entityLivingBaseIn, entityIn);
+        super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 
     public void swingArm() {

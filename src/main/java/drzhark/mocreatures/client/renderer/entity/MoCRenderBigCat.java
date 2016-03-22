@@ -9,35 +9,31 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderBigCat extends RenderLiving {
+public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
 
     public MoCModelBigCat2 bigcat1;
 
-    public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f) {
+	public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f) {
         super(MoCClientProxy.mc.getRenderManager(), modelbigcat2, f);
         this.addLayer(new LayerMoCBigCat(this));
         this.bigcat1 = modelbigcat2;
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityBigCat) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityBigCat entitybigcat) {
+        return entitybigcat.getTexture();
     }
 
-    @Override
-    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1) {
-
-        MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entityliving;
-
+    @SuppressWarnings("unused")
+	@Override
+    public void doRender(MoCEntityBigCat entitybigcat, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitybigcat, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitybigcat.getName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
@@ -64,29 +60,28 @@ public class MoCRenderBigCat extends RenderLiving {
                     if (!flag) {
                         byte0 += 8;
                     }
-                    tessellator1.getWorldRenderer().startDrawingQuads();
+
+                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     // may break SSP, need to test
                     float f8;
                     f8 = entitybigcat.getHealth();
 
                     /*
                      * if(MoCreatures.mc.isMultiplayerWorld()) { f8 =
-                     * entitybigcat.getHealth(); } else { f8 =
-                     * entitybigcat.getHealth(); }
+                     * entityliving.getHealth(); } else { f8 =
+                     * entityliving.getHealth(); }
                      */
                     float f9 = entitybigcat.getMaxHealth();
                     float f10 = f8 / f9;
                     float f11 = 40F * f10;
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.7F, 0.0F, 0.0F, 1.0F);
-                    tessellator1.getWorldRenderer().addVertex(-20F + f11, -10 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-20F + f11, -6 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(20D, -6 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(20D, -10 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.0F, 0.7F, 0.0F, 1.0F);
-                    tessellator1.getWorldRenderer().addVertex(-20D, -10 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-20D, -6 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(f11 - 20F, -6 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(f11 - 20F, -10 + byte0, 0.0D);
+                    tessellator1.getWorldRenderer().pos(-20F + f11, -10 + byte0, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20F + f11, -6 + byte0, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(20D, -6 + byte0, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(20D, -10 + byte0, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20D, -10 + byte0, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-20D, -6 + byte0, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(f11 - 20F, -6 + byte0, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getWorldRenderer().pos(f11 - 20F, -10 + byte0, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                 }
@@ -96,13 +91,12 @@ public class MoCRenderBigCat extends RenderLiving {
                     GL11.glEnable(3042 /* GL_BLEND */);
                     GL11.glBlendFunc(770, 771);
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);
-                    tessellator1.getWorldRenderer().startDrawingQuads();
+                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     int i = fontrenderer.getStringWidth(s) / 2;
-                    tessellator1.getWorldRenderer().setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-                    tessellator1.getWorldRenderer().addVertex(-i - 1, -1 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(-i - 1, 8 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(i + 1, 8 + byte0, 0.0D);
-                    tessellator1.getWorldRenderer().addVertex(i + 1, -1 + byte0, 0.0D);
+                    tessellator1.getWorldRenderer().pos(-i - 1, -1 + byte0, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(-i - 1, 8 + byte0, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(i + 1, 8 + byte0, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getWorldRenderer().pos(i + 1, -1 + byte0, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                     fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, byte0, 0x20ffffff);
@@ -120,15 +114,13 @@ public class MoCRenderBigCat extends RenderLiving {
     }
 
     @Override
-    protected float handleRotationFloat(EntityLivingBase entityliving, float f) {
-        MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entityliving;
+    protected float handleRotationFloat(MoCEntityBigCat entitybigcat, float f) {
         stretch(entitybigcat);
-        return entityliving.ticksExisted + f;
+        return entitybigcat.ticksExisted + f;
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entityliving;
+    protected void preRenderCallback(MoCEntityBigCat entitybigcat, float f) {
         this.bigcat1.sitting = entitybigcat.getIsSitting();
         this.bigcat1.tamed = entitybigcat.getIsTamed();
     }
@@ -141,7 +133,7 @@ public class MoCRenderBigCat extends RenderLiving {
         GL11.glScalef(f * entitybigcat.getWidthF(), f * entitybigcat.getHeightF(), f * entitybigcat.getLengthF());
     }
 
-    private class LayerMoCBigCat implements LayerRenderer {
+    private class LayerMoCBigCat implements LayerRenderer<MoCEntityBigCat> {
 
         private final MoCRenderBigCat mocRenderer;
         private final MoCModelBigCat1 mocModel = new MoCModelBigCat1();
@@ -150,15 +142,15 @@ public class MoCRenderBigCat extends RenderLiving {
             this.mocRenderer = render;
         }
 
-        public void doRenderLayer(MoCEntityBigCat entity, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
-            if (entity.getType() == 2 && entity.getIsAdult()) {
+        public void doRenderLayer(MoCEntityBigCat entitybigcat, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
+            if (entitybigcat.getType() == 2 && entitybigcat.getIsAdult()) {
                 bindTexture(MoCreatures.proxy.getTexture("lionb.png"));
             } else {
                 bindTexture(MoCreatures.proxy.getTexture("lionc.png"));
             }
             this.mocModel.setModelAttributes(this.mocRenderer.getMainModel());
-            this.mocModel.setLivingAnimations(entity, f, f1, f2);
-            this.mocModel.render(entity, f, f1, f3, f4, f5, f6);
+            this.mocModel.setLivingAnimations(entitybigcat, f, f1, f2);
+            this.mocModel.render(entitybigcat, f, f1, f3, f4, f5, f6);
         }
 
         @Override
@@ -166,9 +158,5 @@ public class MoCRenderBigCat extends RenderLiving {
             return true;
         }
 
-        @Override
-        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
-            this.doRenderLayer((MoCEntityBigCat) entity, f1, f2, f3, f4, f5, f6, f7);
-        }
     }
 }

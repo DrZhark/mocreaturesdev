@@ -416,14 +416,14 @@ public final class CustomSpawner {
         }
         if (blockLightLevel < minLightLevel && minLightLevel != -1) {
             if (debug) {
-                CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel
+                CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel
                         + " under minimum threshold of " + minLightLevel + " in dimension " + worldObj.provider.getDimensionId() + " at coords " + x
                         + ", " + y + ", " + z);
             }
             return false;
         } else if (blockLightLevel > maxLightLevel && maxLightLevel != -1) {
             if (debug) {
-                CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getCommandSenderName() + blockLightLevel
+                CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel
                         + " over maximum threshold of " + maxLightLevel + " in dimension " + worldObj.provider.getDimensionId() + " at coords " + x
                         + ", " + y + ", " + z);
             }
@@ -673,7 +673,7 @@ public final class CustomSpawner {
         IEntityLivingData entitylivingdata = null;
         if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, pos.getX(), pos.getY(), pos.getZ())) {
             entitylivingdata =
-                    par0EntityLiving.onSpawnFirstTime(par1World.getDifficultyForLocation(new BlockPos(par0EntityLiving)), entitylivingdata);
+                    par0EntityLiving.onInitialSpawn(par1World.getDifficultyForLocation(new BlockPos(par0EntityLiving)), entitylivingdata);
         }
         return entitylivingdata;
     }
@@ -728,7 +728,7 @@ public final class CustomSpawner {
                                 if (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())) {
                                     world.spawnEntityInWorld(entityliving);
                                     if (CMSUtils.getEnvironment(world).debug) {
-                                        CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getCommandSenderName()
+                                        CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getName()
                                                 + " at " + entityliving.getPosition() + " with CREATURE:" + spawnlistentry.itemWeight + ":"
                                                 + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":"
                                                 + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName

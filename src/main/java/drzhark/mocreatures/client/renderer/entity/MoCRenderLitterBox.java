@@ -4,14 +4,12 @@ import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelLitterBox;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderLitterBox extends RenderLiving {
+public class MoCRenderLitterBox extends RenderLiving<MoCEntityLitterBox> {
 
     public MoCModelLitterBox litterbox;
 
@@ -21,13 +19,12 @@ public class MoCRenderLitterBox extends RenderLiving {
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityLitterBox entitylitterbox = (MoCEntityLitterBox) entityliving;
+    protected void preRenderCallback(MoCEntityLitterBox entitylitterbox, float f) {
         this.litterbox.usedlitter = entitylitterbox.getUsedLitter();
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityLitterBox) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityLitterBox entitylitterbox) {
+        return entitylitterbox.getTexture();
     }
 }

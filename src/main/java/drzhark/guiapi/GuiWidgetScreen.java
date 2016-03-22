@@ -75,8 +75,7 @@ public class GuiWidgetScreen extends Widget {
             GuiWidgetScreen.instance.gui.applyTheme(GuiWidgetScreen.instance.theme);
             GuiWidgetScreen.instance.minecraftInstance = ModSettings.getMcinst();
             GuiWidgetScreen.instance.screenSize =
-                    new ScaledResolution(GuiWidgetScreen.instance.minecraftInstance, GuiWidgetScreen.instance.minecraftInstance.displayWidth,
-                            GuiWidgetScreen.instance.minecraftInstance.displayHeight);
+                    new ScaledResolution(GuiWidgetScreen.instance.minecraftInstance);
         } catch (Throwable e) {
             e.printStackTrace();
             RuntimeException e2 = new RuntimeException("error loading theme");
@@ -121,7 +120,7 @@ public class GuiWidgetScreen extends Widget {
 
     @Override
     public void layout() {
-        this.screenSize = new ScaledResolution(this.minecraftInstance, this.minecraftInstance.displayWidth, this.minecraftInstance.displayHeight);
+        this.screenSize = new ScaledResolution(this.minecraftInstance);
         if (this.currentWidget != null) {
             GuiWidgetScreen.screenwidth = this.screenSize.getScaledWidth();
             GuiWidgetScreen.screenheight = this.screenSize.getScaledHeight();

@@ -91,9 +91,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
         selectType();
-        return super.onSpawnFirstTime(difficulty, par1EntityLivingData);
+        return super.onInitialSpawn(difficulty, par1EntityLivingData);
     }
 
     /**
@@ -1228,7 +1228,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null
-                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName())
+                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getName().equals(getOwnerName())
                 && !MoCTools.isThisPlayerAnOP((EntityPlayer) entity)) {
             return false;
         }
@@ -1331,7 +1331,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
                         .getAttributeValue()));
         if (flag) {
-            this.func_174815_a(this, entityIn);
+            this.applyEnchantments(this, entityIn);
         }
 
         return flag;

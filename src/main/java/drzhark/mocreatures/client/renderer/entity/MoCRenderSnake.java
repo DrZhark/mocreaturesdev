@@ -3,34 +3,29 @@ package drzhark.mocreatures.client.renderer.entity;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderSnake extends MoCRenderMoC {
+public class MoCRenderSnake extends MoCRenderMoC<MoCEntitySnake> {
 
     public MoCRenderSnake(ModelBase modelbase, float f) {
         super(modelbase, 0.0F);
-        //tempSnake = (MoCModelSnake) modelbase;
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(MoCEntitySnake par1Entity) {
         return ((MoCEntitySnake) par1Entity).getTexture();
     }
 
-    protected void adjustHeight(EntityLiving entityliving, float FHeight) {
+    protected void adjustHeight(MoCEntitySnake entitysnake, float FHeight) {
         GL11.glTranslatef(0.0F, FHeight, 0.0F);
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntitySnake entitysnake = (MoCEntitySnake) entityliving;
+    protected void preRenderCallback(MoCEntitySnake entitysnake, float f) {
         stretch(entitysnake);
 
         /*
@@ -62,8 +57,7 @@ public class MoCRenderSnake extends MoCRenderMoC {
             adjustHeight(entitysnake, -0.25F);
         }
 
-        super.preRenderCallback(entityliving, f);
-
+        super.preRenderCallback(entitysnake, f);
     }
 
     protected void stretch(MoCEntitySnake entitysnake) {

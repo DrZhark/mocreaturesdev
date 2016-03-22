@@ -141,8 +141,7 @@ public class GuiModScreen extends GuiScreen {
         }
         LWJGLRenderer var4 = (LWJGLRenderer) GuiWidgetScreen.getInstance().gui.getRenderer();
         ScaledResolution var5 =
-                new ScaledResolution(GuiWidgetScreen.getInstance().minecraftInstance, GuiWidgetScreen.getInstance().minecraftInstance.displayWidth,
-                        GuiWidgetScreen.getInstance().minecraftInstance.displayHeight);
+                new ScaledResolution(GuiWidgetScreen.getInstance().minecraftInstance);
         RenderScale.scale = var5.getScaleFactor();
         var4.syncViewportSize();
         GuiWidgetScreen.getInstance().gui.update();

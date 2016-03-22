@@ -42,7 +42,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         setHumanForm(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -409,10 +408,10 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
         if (getType() == 4) {
             this.isImmuneToFire = true;
         }
-        return super.onSpawnFirstTime(difficulty, livingdata);
+        return super.onInitialSpawn(difficulty, livingdata);
     }
 }

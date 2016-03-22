@@ -56,7 +56,7 @@ public class MoCItemWhip extends MoCItem {
                 if (entity instanceof MoCEntityAnimal) {
                     MoCEntityAnimal animal = (MoCEntityAnimal) entity;
                     if (MoCreatures.proxy.enableOwnership && animal.getOwnerName() != null && !animal.getOwnerName().equals("")
-                            && !playerIn.getCommandSenderName().equals(animal.getOwnerName()) && !MoCTools.isThisPlayerAnOP(playerIn)) {
+                            && !playerIn.getName().equals(animal.getOwnerName()) && !MoCTools.isThisPlayerAnOP(playerIn)) {
                         continue;
                     }
                 }

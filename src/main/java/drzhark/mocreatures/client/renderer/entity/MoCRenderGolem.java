@@ -4,17 +4,16 @@ import drzhark.mocreatures.client.model.MoCModelGolem;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderGolem extends MoCRenderMoC {
+public class MoCRenderGolem extends MoCRenderMoC<MoCEntityGolem> {
 
-    private final ModelBase MoCModelG = new MoCModelGolem();
+    @SuppressWarnings("unused")
+	private final ModelBase MoCModelG = new MoCModelGolem();
 
     public MoCRenderGolem(ModelBase modelbase, float f) {
         super(modelbase, f);
@@ -22,11 +21,11 @@ public class MoCRenderGolem extends MoCRenderMoC {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
+    protected ResourceLocation getEntityTexture(MoCEntityGolem par1Entity) {
         return ((MoCEntityGolem) par1Entity).getTexture();
     }
 
-    private class LayerMoCGolem implements LayerRenderer {
+    private class LayerMoCGolem implements LayerRenderer<MoCEntityGolem> {
 
         private final MoCRenderGolem mocRenderer;
         private final MoCModelGolem mocModel = new MoCModelGolem();
@@ -71,11 +70,6 @@ public class MoCRenderGolem extends MoCRenderMoC {
         @Override
         public boolean shouldCombineTextures() {
             return true;
-        }
-
-        @Override
-        public void doRenderLayer(EntityLivingBase entity, float f1, float f2, float f3, float f4, float f5, float f6, float f7) {
-            this.doRenderLayer((MoCEntityGolem) entity, f1, f2, f3, f4, f5, f6, f7);
         }
     }
 }

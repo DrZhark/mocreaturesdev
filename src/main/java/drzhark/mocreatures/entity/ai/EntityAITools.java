@@ -22,7 +22,7 @@ public class EntityAITools {
         for (int i = 0; i < ((EntityLiving) pet).worldObj.playerEntities.size(); ++i) {
             EntityPlayer entityplayer = (EntityPlayer) ((EntityLiving) pet).worldObj.playerEntities.get(i);
 
-            if (pet.getOwnerName().equals(entityplayer.getCommandSenderName())) {
+            if (pet.getOwnerName().equals(entityplayer.getName())) {
                 return entityplayer;
             }
         }

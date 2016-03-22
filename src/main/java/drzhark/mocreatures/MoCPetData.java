@@ -20,7 +20,7 @@ public class MoCPetData {
 
     public MoCPetData(IMoCTameable pet) {
         this.ownerData.setTag("TamedList", this.tamedList);
-        this.ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getCommandSenderName();
+        this.ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getName();
         //ownerData.setName("PetData");
     }
 

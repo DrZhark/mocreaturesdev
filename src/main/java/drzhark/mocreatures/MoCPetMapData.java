@@ -52,7 +52,7 @@ public class MoCPetMapData extends WorldSavedData {
     public void updateOwnerPet(IMoCTameable pet, NBTTagCompound petNBT) {
         this.markDirty();
         if (pet.getOwnerPetId() == -1 || this.petMap.get(pet.getOwnerName()) == null) {
-            String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getCommandSenderName();
+            String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getName();
             MoCPetData petData = null;
             int id = -1;
             if (this.petMap.containsKey(owner)) {

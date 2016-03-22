@@ -72,7 +72,7 @@ public class CommandMoCPets extends CommandBase {
         int loadedCount = 0;
         ArrayList foundIds = new ArrayList();
         ArrayList<String> tamedlist = new ArrayList<String>();
-        String playername = par1ICommandSender.getCommandSenderName();
+        String playername = par1ICommandSender.getName();
         // search for tamed entity
         for (int dimension : DimensionManager.getIDs()) {
             WorldServer world = DimensionManager.getWorld(dimension);
@@ -84,7 +84,7 @@ public class CommandMoCPets extends CommandBase {
                         loadedCount++;
                         foundIds.add(mocreature.getOwnerPetId());
                         tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE
-                                + ":" + EnumChatFormatting.GREEN + ((EntityLiving) mocreature).getCommandSenderName() + EnumChatFormatting.DARK_AQUA
+                                + ":" + EnumChatFormatting.GREEN + ((EntityLiving) mocreature).getName() + EnumChatFormatting.DARK_AQUA
                                 + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName()
                                 + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
                                 + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":"
@@ -167,7 +167,7 @@ public class CommandMoCPets extends CommandBase {
                 if (compound != null && compound.getString("Owner") != null) {
                     String owner = compound.getString("Owner");
                     String name = compound.getString("Name");
-                    if (owner != null && owner.equalsIgnoreCase(player.getCommandSenderName())) {
+                    if (owner != null && owner.equalsIgnoreCase(player.getName())) {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);

@@ -155,7 +155,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     @Override
-    public void handleHealthUpdate(byte byte0) {
+    public void handleStatusUpdate(byte byte0) {
     }
 
     @Override

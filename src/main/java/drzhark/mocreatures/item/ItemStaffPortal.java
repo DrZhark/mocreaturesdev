@@ -49,7 +49,7 @@ public class ItemStaffPortal extends MoCItem {
                 this.portalPosZ = (int) thePlayer.posZ;
                 writeToNBT(nbtcompound);
 
-                BlockPos var2 = thePlayer.mcServer.worldServerForDimension(MoCreatures.WyvernLairDimensionID).func_180504_m();
+                BlockPos var2 = thePlayer.mcServer.worldServerForDimension(MoCreatures.WyvernLairDimensionID).getSpawnCoordinate();
 
                 if (var2 != null) {
                     thePlayer.playerNetServerHandler.setPlayerLocation(var2.getX(), var2.getY(), var2.getZ(), 0.0F, 0.0F);

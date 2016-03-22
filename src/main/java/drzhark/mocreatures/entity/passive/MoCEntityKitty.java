@@ -501,7 +501,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return false;
         }
         //Ownership code
-        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.getCommandSenderName().equals(getOwnerName())) { return true; }
+        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.getName().equals(getOwnerName())) { return true; }
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((getKittyState() == 2) && (itemstack != null) && (itemstack.getItem() == MoCreatures.medallion)) {

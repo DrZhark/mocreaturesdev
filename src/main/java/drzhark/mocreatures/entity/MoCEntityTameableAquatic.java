@@ -58,7 +58,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
         //if the player interacting is not the owner, do nothing!
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
-                && !entityplayer.getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) {
+                && !entityplayer.getName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP(entityplayer)) {
             return true;
         }
 
@@ -226,7 +226,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     // Override to fix heart animation on clients
     @Override
     @SideOnly(Side.CLIENT)
-    public void handleHealthUpdate(byte par1) {
+    public void handleStatusUpdate(byte par1) {
         if (par1 == 2) {
             this.limbSwingAmount = 1.5F;
             this.hurtResistantTime = this.maxHurtResistantTime;
@@ -266,7 +266,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         if (entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
             if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
-                    && !entityplayer.getCommandSenderName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+                    && !entityplayer.getName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
                 return;
             }
         }

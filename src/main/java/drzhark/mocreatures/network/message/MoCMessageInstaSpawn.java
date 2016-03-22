@@ -38,12 +38,12 @@ public class MoCMessageInstaSpawn implements IMessage, IMessageHandler<MoCMessag
         {
             MoCTools.spawnNearPlayer(ctx.getServerHandler().playerEntity, this.entityId, this.numberToSpawn);
             if (MoCreatures.proxy.debug) {
-                MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getCommandSenderName() + " used MoC instaspawner and got "
+                MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getName() + " used MoC instaspawner and got "
                         + this.numberToSpawn + " creatures spawned");
             }
         } else {
             if (MoCreatures.proxy.debug) {
-                MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getCommandSenderName()
+                MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getName()
                         + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
             }
         }

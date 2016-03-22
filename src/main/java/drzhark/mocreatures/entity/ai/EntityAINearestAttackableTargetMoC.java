@@ -3,11 +3,11 @@ package drzhark.mocreatures.entity.ai;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import drzhark.mocreatures.entity.IMoCEntity;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EntitySelectors;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,7 +98,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
             double d0 = this.getTargetDistance();
             List list =
                     this.taskOwner.worldObj.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0),
-                            Predicates.and(this.targetEntitySelector, IEntitySelector.NOT_SPECTATING));
+                            Predicates.and(this.targetEntitySelector, EntitySelectors.NOT_SPECTATING));
             Collections.sort(list, this.theNearestAttackableTargetSorter);
 
             if (list.isEmpty()) {

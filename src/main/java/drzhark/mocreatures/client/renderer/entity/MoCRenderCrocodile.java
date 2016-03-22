@@ -5,9 +5,7 @@ import drzhark.mocreatures.client.model.MoCModelCrocodile;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderCrocodile extends RenderLiving {
+public class MoCRenderCrocodile extends RenderLiving<MoCEntityCrocodile> {
 
     public MoCRenderCrocodile(MoCModelCrocodile modelbase, float f) {
         super(MoCClientProxy.mc.getRenderManager(), modelbase, f);
@@ -23,20 +21,17 @@ public class MoCRenderCrocodile extends RenderLiving {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityCrocodile) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityCrocodile entitycrocodile) {
+        return ((MoCEntityCrocodile) entitycrocodile).getTexture();
     }
 
     @Override
-    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1) {
-
-        MoCEntityCrocodile entitycrocodile = (MoCEntityCrocodile) entityliving;
+    public void doRender(MoCEntityCrocodile entitycrocodile, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitycrocodile, d, d1, d2, f, f1);
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityCrocodile entitycrocodile = (MoCEntityCrocodile) entityliving;
+    protected void preRenderCallback(MoCEntityCrocodile entitycrocodile, float f) {
         this.croc.biteProgress = entitycrocodile.biteProgress;
         this.croc.swimming = entitycrocodile.isSwimming();
         this.croc.resting = entitycrocodile.getIsSitting();
@@ -52,9 +47,7 @@ public class MoCRenderCrocodile extends RenderLiving {
             }
 
         }
-        /*
-         * if(!entitycrocodile.getIsAdult()) { }
-         */
+        // if(!entitycrocodile.getIsAdult()) { }
     }
 
     protected void rotateAnimal(MoCEntityCrocodile entitycrocodile) {
@@ -65,13 +58,12 @@ public class MoCRenderCrocodile extends RenderLiving {
         //GL11.glTranslatef(0.0F-f2, 0.5F, 0.0F);
     }
 
-    protected void adjustHeight(EntityLiving entityliving, float FHeight) {
+    protected void adjustHeight(MoCEntityCrocodile entitycrocodile, float FHeight) {
         GL11.glTranslatef(0.0F, FHeight, 0.0F);
     }
 
-    protected void spinCroc(MoCEntityCrocodile croc, EntityLiving prey) {
-        int intSpin = croc.spinInt;
-
+    protected void spinCroc(MoCEntityCrocodile entitycrocodile, EntityLiving prey) {
+        int intSpin = entitycrocodile.spinInt;
         int direction = 1;
         if (intSpin > 40) {
             intSpin -= 40;
@@ -98,12 +90,9 @@ public class MoCRenderCrocodile extends RenderLiving {
     }
 
     protected void stretch(MoCEntityCrocodile entitycrocodile) {
-
-        //        float f = 1.3F;
+        // float f = 1.3F;
         float f = entitycrocodile.getEdad() * 0.01F;
-        /*
-         * if(!entitycrocodile.getIsAdult()) { f = entitycrocodile.edad; }
-         */
+        // if(!entitycrocodile.getIsAdult()) { f = entitycrocodile.edad; }
         GL11.glScalef(f, f, f);
     }
 

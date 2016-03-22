@@ -5,6 +5,7 @@ import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -35,7 +36,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase {
         this.maxHeight = 1.5F;
         this.biomeName = "WyvernBiome";
         this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog.getDefaultState(), MoCreatures.mocLeaf.getDefaultState(), 2, 30, 10);
-        this.worldGenShrub = new WorldGenShrub(3, 0);
+        this.worldGenShrub = new WorldGenShrub(Blocks.dirt.getDefaultState(), Blocks.air.getDefaultState());
         this.theBiomeDecorator = new BiomeWyvernDecorator();
     }
 

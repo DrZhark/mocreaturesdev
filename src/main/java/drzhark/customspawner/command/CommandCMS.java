@@ -310,7 +310,7 @@ public class CommandCMS extends CommandBase {
             {
                 // get entity type
                 EntityData entityData = environment.entityMap.get(par2);
-                String playername = par1ICommandSender.getCommandSenderName();
+                String playername = par1ICommandSender.getName();
                 int count = 0;
                 for (int dimension : DimensionManager.getIDs()) {
                     WorldServer world = DimensionManager.getWorld(dimension);

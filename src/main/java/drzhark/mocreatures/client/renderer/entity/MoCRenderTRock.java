@@ -2,9 +2,6 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.init.Blocks;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -16,12 +13,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderTRock extends Render {
+public class MoCRenderTRock extends Render<Entity> {
 
-    private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
+    @SuppressWarnings("unused")
+	private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
 
     public MoCRenderTRock() {
         super(MoCClientProxy.mc.getRenderManager());

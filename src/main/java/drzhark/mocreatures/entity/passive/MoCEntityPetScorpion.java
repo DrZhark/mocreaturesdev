@@ -276,7 +276,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+    protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         boolean flag = (entityIn instanceof EntityPlayer);
         if (!getIsPoisoning() && this.rand.nextInt(5) == 0 && entityIn instanceof EntityLivingBase) {
             setPoisoning(true);
@@ -303,7 +303,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         } else {
             swingArm();
         }
-        super.func_174815_a(entityLivingBaseIn, entityIn);
+        super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 
     public void swingArm() {

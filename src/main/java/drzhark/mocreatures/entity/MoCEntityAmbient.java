@@ -75,9 +75,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
         selectType();
-        return super.onSpawnFirstTime(difficulty, par1EntityLivingData);
+        return super.onInitialSpawn(difficulty, par1EntityLivingData);
     }
 
     /**
@@ -512,7 +512,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                     && isOffsetPositionInLiquid(this.motionX, ((this.motionY + 0.60000002384185791D) - this.posY) + d, this.motionZ)) {
                 this.motionY = 0.30000001192092901D;
             }
-        } else if (handleLavaMovement()) {
+        } else if (isNotColliding()) {
             if (this.riddenByEntity != null) {
                 this.motionX += this.riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 this.motionZ += this.riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
@@ -890,7 +890,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         Entity entity = damagesource.getEntity();
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null
-                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName())
+                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getName().equals(getOwnerName())
                 && !MoCTools.isThisPlayerAnOP(((EntityPlayer) entity))) {
             return false;
         }

@@ -49,7 +49,7 @@ public class MoCEntityPlatform extends Entity {
     }
 
     @Override
-    public void handleHealthUpdate(byte byte0) {
+    public void handleStatusUpdate(byte byte0) {
     }
 
     private EntityLivingBase getMaster() {

@@ -78,9 +78,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData par1EntityLivingData) {
         selectType();
-        return super.onSpawnFirstTime(difficulty, par1EntityLivingData);
+        return super.onInitialSpawn(difficulty, par1EntityLivingData);
     }
 
     /**
@@ -682,7 +682,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
         //this avoids damage done by Players to a tamed creature that is not theirs
         if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && entity != null
-                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getCommandSenderName().equals(getOwnerName())
+                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getName().equals(getOwnerName())
                 && !MoCTools.isThisPlayerAnOP((EntityPlayer) entity)) {
             return false;
         }
@@ -961,7 +961,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
      * Whether or not the current entity is in lava
      */
     @Override
-    public boolean handleLavaMovement() {
+    public boolean isNotColliding() {
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this);
     }
 
@@ -1089,7 +1089,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
                         .getAttributeValue()));
         if (flag) {
-            this.func_174815_a(this, entityIn);
+            this.applyEnchantments(this, entityIn);
         }
         return flag;
     }

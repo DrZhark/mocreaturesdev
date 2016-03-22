@@ -336,12 +336,12 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+    protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         if (entityIn instanceof EntityPlayer) {
             MoCreatures.poisonPlayer((EntityPlayer) entityIn);
         }
         ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 150, 0));
-        super.func_174815_a(entityLivingBaseIn, entityIn);
+        super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 
     @Override

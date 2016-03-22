@@ -3,16 +3,13 @@ package drzhark.mocreatures.client.renderer.entity;
 import drzhark.mocreatures.client.model.MoCModelTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderTurtle extends MoCRenderMoC {
+public class MoCRenderTurtle extends MoCRenderMoC<MoCEntityTurtle> {
 
     public MoCModelTurtle turtly;
 
@@ -22,13 +19,12 @@ public class MoCRenderTurtle extends MoCRenderMoC {
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityTurtle entityturtle = (MoCEntityTurtle) entityliving;
+    protected void preRenderCallback(MoCEntityTurtle entityturtle, float f) {
         this.turtly.upsidedown = entityturtle.getIsUpsideDown();
         this.turtly.swingProgress = entityturtle.swingProgress;
         this.turtly.isHiding = entityturtle.getIsHiding();
 
-        if (!entityliving.worldObj.isRemote && (entityliving.ridingEntity != null)) {
+        if (!entityturtle.worldObj.isRemote && (entityturtle.ridingEntity != null)) {
 
             GL11.glTranslatef(0.0F, 1.3F, 0.0F);
 
@@ -56,7 +52,7 @@ public class MoCRenderTurtle extends MoCRenderMoC {
         GL11.glTranslatef(0.0F - f2, 0.5F * entityturtle.getEdad() * 0.01F, 0.0F);
     }
 
-    protected void adjustHeight(EntityLiving entityliving, float height) {
+    protected void adjustHeight(MoCEntityTurtle entityturtle, float height) {
         GL11.glTranslatef(0.0F, height, 0.0F);
     }
 
@@ -66,7 +62,7 @@ public class MoCRenderTurtle extends MoCRenderMoC {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityTurtle) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityTurtle entityturtle) {
+        return entityturtle.getTexture();
     }
 }

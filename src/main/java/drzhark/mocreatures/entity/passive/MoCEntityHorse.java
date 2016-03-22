@@ -2724,11 +2724,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public IEntityLivingData onSpawnFirstTime(DifficultyInstance difficulty, IEntityLivingData livingdata) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
         if (getType() == 38 || getType() == 40) {
             this.isImmuneToFire = true;
         }
-        return super.onSpawnFirstTime(difficulty, livingdata);
+        return super.onInitialSpawn(difficulty, livingdata);
     }
 
     @Override

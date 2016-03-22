@@ -2,25 +2,22 @@ package drzhark.mocreatures.client.renderer.entity;
 
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class MoCRenderBear extends MoCRenderMoC {
+public class MoCRenderBear extends MoCRenderMoC<MoCEntityBear> {
 
     public MoCRenderBear(MoCModelBear modelbase, float f) {
         super(modelbase, f);
     }
 
     @Override
-    protected void preRenderCallback(EntityLivingBase entityliving, float f) {
-        MoCEntityBear entitybear = (MoCEntityBear) entityliving;
+    protected void preRenderCallback(MoCEntityBear entitybear, float f) {
         stretch(entitybear);
-        super.preRenderCallback(entityliving, f);
+        super.preRenderCallback(entitybear, f);
 
     }
 
@@ -34,7 +31,7 @@ public class MoCRenderBear extends MoCRenderMoC {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        return ((MoCEntityBear) par1Entity).getTexture();
+    protected ResourceLocation getEntityTexture(MoCEntityBear entitybear) {
+        return entitybear.getTexture();
     }
 }

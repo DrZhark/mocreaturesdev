@@ -96,16 +96,16 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setAdult(this.adult);
                     storedCreature.setArmorType(this.armor);
                     storedCreature.setOwnerPetId(this.PetId);
-                    storedCreature.setOwner(entityplayer.getCommandSenderName());
+                    storedCreature.setOwner(entityplayer.getName());
                     if (this.spawnClass == 100) {
                         ((MoCEntityWyvern) storedCreature).setIsGhost(true);
                     }
 
                     //if the player using the amulet is different than the original owner
-                    if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getCommandSenderName())) && MoCreatures.instance.mapData != null) {
+                    if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getName())) && MoCreatures.instance.mapData != null) {
                         MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerName);
-                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getCommandSenderName());
-                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getCommandSenderName());
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getName());
+                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getName());
                         int maxCount = MoCreatures.proxy.maxTamed;
                         if (MoCTools.isThisPlayerAnOP(epOwner)) {
                             maxCount = MoCreatures.proxy.maxOPTamed;

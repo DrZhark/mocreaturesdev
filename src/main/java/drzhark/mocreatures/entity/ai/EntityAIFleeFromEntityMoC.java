@@ -4,11 +4,12 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.Vec3;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
         List list =
                 this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity,
                         this.theEntity.getEntityBoundingBox().expand((double) this.avoidDistance, 3.0D, (double) this.avoidDistance),
-                        Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
+                        Predicates.and(new Predicate[] {EntitySelectors.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
         if (list.isEmpty()) {
             return false;
