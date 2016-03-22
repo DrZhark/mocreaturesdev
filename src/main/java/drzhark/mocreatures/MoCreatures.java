@@ -1078,7 +1078,7 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(bootsCroc, 1), new Object[] {"X X", "X X", Character.valueOf('X'), hideCroc});
 
         for (int i = 0; i < 16; i++) {
-            GameRegistry.addShapelessRecipe(new ItemStack(kittybed[Math.abs(i - 15)], 1), new Object[] {new ItemStack(Items.dye, 1, i),
+            GameRegistry.addShapelessRecipe(new ItemStack(kittybed[i], 1), new Object[] {new ItemStack(Items.dye, 1, i),
                     new ItemStack(kittybed[0], 1)});
 
             GameRegistry.addRecipe(new ItemStack(kittybed[i], 1),

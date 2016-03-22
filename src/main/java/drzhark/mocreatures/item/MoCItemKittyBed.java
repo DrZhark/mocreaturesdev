@@ -1,12 +1,5 @@
 package drzhark.mocreatures.item;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +22,7 @@ public class MoCItemKittyBed extends MoCItem {
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
         if (MoCreatures.isServer()) {
-            MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, Math.abs(this.sheetType - 15));
+            MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, this.sheetType);
             entitykittybed.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
             world.spawnEntityInWorld(entitykittybed);
             entitykittybed.motionY += world.rand.nextFloat() * 0.05F;

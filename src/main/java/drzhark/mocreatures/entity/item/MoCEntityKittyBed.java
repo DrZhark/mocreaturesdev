@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -17,6 +18,7 @@ import net.minecraft.world.World;
 public class MoCEntityKittyBed extends EntityLiving {
 
     public float milklevel;
+    public String bedColor;
 
     public MoCEntityKittyBed(World world) {
         super(world);
@@ -36,7 +38,11 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     public ResourceLocation getTexture() {
-        return MoCreatures.proxy.getTexture("kittybed.png");
+        if (this.bedColor == null) {
+            this.bedColor = EnumDyeColor.byMetadata(getSheetColor()).getUnlocalizedName().toLowerCase();
+        }
+
+        return MoCreatures.proxy.getTexture("kittybed_" + this.bedColor + ".png");
     }
 
     @Override
@@ -87,6 +93,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     public void setSheetColor(int i) {
         this.dataWatcher.updateObject(18, Integer.valueOf(i));
+        this.bedColor = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
     }
 
     public boolean attackEntityFrom(Entity entity, int i) {
@@ -181,7 +188,7 @@ public class MoCEntityKittyBed extends EntityLiving {
                 && (itemstack != null)
                 && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe)
                         || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[Math.abs(getSheetColor() - 15)], 1));
+            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[getSheetColor()], 1));
             this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
