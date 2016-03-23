@@ -20,7 +20,7 @@ public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
 
     public MoCModelBigCat2 bigcat1;
 
-	public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f) {
+    public MoCRenderBigCat(MoCModelBigCat2 modelbigcat2, MoCModelBigCat1 modelbigcat1, float f) {
         super(MoCClientProxy.mc.getRenderManager(), modelbigcat2, f);
         this.addLayer(new LayerMoCBigCat(this));
         this.bigcat1 = modelbigcat2;
@@ -32,7 +32,7 @@ public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
     }
 
     @SuppressWarnings("unused")
-	@Override
+    @Override
     public void doRender(MoCEntityBigCat entitybigcat, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitybigcat, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitybigcat.getMoCName()).isEmpty();

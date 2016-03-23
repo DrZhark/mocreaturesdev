@@ -346,10 +346,10 @@ public class MoCreatures {
         proxy.ConfigInit(event);
         proxy.initTextures();
         if (!isServer()) {
-            FMLCommonHandler.instance().bus().register(new MoCClientTickHandler());
-            FMLCommonHandler.instance().bus().register(new MoCKeyHandler());
+            MinecraftForge.EVENT_BUS.register(new MoCClientTickHandler());
+            MinecraftForge.EVENT_BUS.register(new MoCKeyHandler());
         }
-        FMLCommonHandler.instance().bus().register(new MoCPlayerTracker());
+        MinecraftForge.EVENT_BUS.register(new MoCPlayerTracker());
     }
 
     //how to check for client: if(FMLCommonHandler.instance().getSide().isRemote())

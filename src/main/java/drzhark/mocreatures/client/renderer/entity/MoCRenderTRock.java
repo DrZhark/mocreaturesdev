@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MoCRenderTRock extends Render<Entity> {
 
     @SuppressWarnings("unused")
-	private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
+    private static final ResourceLocation TEXTURE_TERRAIN = new ResourceLocation("terrain.png");
 
     public MoCRenderTRock() {
         super(MoCClientProxy.mc.getRenderManager());

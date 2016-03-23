@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@IFMLLoadingPlugin.MCVersion("1.8.9")
 @SideOnly(Side.CLIENT)
 public class GuiAPI implements IFMLLoadingPlugin {
 
@@ -43,7 +44,7 @@ public class GuiAPI implements IFMLLoadingPlugin {
         } catch (Throwable e) {
             throw new RuntimeException("Unable to get Field reference for GuiScreen.controlList!", e);
         }
-        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public List getControlList(GuiOptions gui) {
@@ -78,10 +79,7 @@ public class GuiAPI implements IFMLLoadingPlugin {
         int xPos = -1; // difficulty
         int yPos = -1; // touchscreen mode
         for (GuiOptionButton guiButton : buttonsPreSorted) {
-            /*
-             * if(guiButton.returnEnumOptions() ==
-             * GameSettings.Options.DIFFICULTY) { xPos = guiButton.xPosition; }
-             */
+             // if(guiButton.returnEnumOptions() == GameSettings.Options.DIFFICULTY) { xPos = guiButton.xPosition; }
 
             if (guiButton.returnEnumOptions() == GameSettings.Options.TOUCHSCREEN) {
                 yPos = guiButton.yPosition;
@@ -131,7 +129,6 @@ public class GuiAPI implements IFMLLoadingPlugin {
 
     @Override
     public String getAccessTransformerClass() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

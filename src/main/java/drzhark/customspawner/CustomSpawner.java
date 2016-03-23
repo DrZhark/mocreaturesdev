@@ -59,7 +59,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.4.0")
+@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.5.0")
 public final class CustomSpawner {
 
     @Instance("CustomSpawner")
@@ -110,7 +110,7 @@ public final class CustomSpawner {
 
     @EventHandler
     public void load(FMLInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(new SpawnTickHandler());
+        MinecraftForge.EVENT_BUS.register(new SpawnTickHandler());
     }
 
     @EventHandler

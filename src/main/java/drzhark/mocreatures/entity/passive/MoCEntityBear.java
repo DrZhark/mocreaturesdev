@@ -45,7 +45,6 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         setEdad(55);
         if (this.rand.nextInt(4) == 0) {
             setAdult(false);
-
         } else {
             setAdult(true);
         }
