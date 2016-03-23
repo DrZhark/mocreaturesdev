@@ -24,7 +24,7 @@ public class MoCItemEgg extends MoCItem {
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
         itemstack.stackSize--;
-        if (MoCreatures.isServer()) {
+        if (MoCreatures.isServer() && entityplayer.onGround) {
             int i = itemstack.getItemDamage();
             if (i == 30) {
                 i = 31; //for ostrich eggs. placed eggs become stolen eggs.

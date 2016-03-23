@@ -11,8 +11,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-
 public class MoCMessageNameGUI implements IMessage, IMessageHandler<MoCMessageNameGUI, IMessage> {
 
     int entityId;
@@ -44,10 +42,11 @@ public class MoCMessageNameGUI implements IMessage, IMessageHandler<MoCMessageNa
 
     @SideOnly(Side.CLIENT)
     public void handleClientMessage(MoCMessageNameGUI message, MessageContext ctx) {
-        List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
-        for (Entity ent : entList) {
-            if (ent.getEntityId() == message.entityId && ent instanceof IMoCEntity) {
-                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) ent), ((IMoCEntity) ent).getMoCName()));
+        // Due to a timing issue with Forge, we now need to check for a match for a certain period of time.
+        for (int count = 0; count < 100; count++) {
+            Entity entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
+            if (entity != null) {
+                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) entity), ((IMoCEntity) entity).getMoCName()));
                 break;
             }
         }
