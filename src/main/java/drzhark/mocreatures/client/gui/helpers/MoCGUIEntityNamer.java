@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.gui.helpers;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
@@ -24,12 +24,13 @@ public class MoCGUIEntityNamer extends GuiScreen {
 
     protected String screenTitle;
     private final IMoCEntity NamedEntity;
+    @SuppressWarnings("unused")
     private int updateCounter;
     private String NameToSet;
     protected int xSize;
     protected int ySize;
     private static TextureManager textureManager = MoCClientProxy.mc.getTextureManager();
-    private static final ResourceLocation TEXTURE_MOCNAME = new ResourceLocation("mocreatures", MoCreatures.proxy.GUI_TEXTURE + "mocname.png");
+    private static final ResourceLocation TEXTURE_MOCNAME = new ResourceLocation("mocreatures", MoCProxy.GUI_TEXTURE + "mocname.png");
 
     public MoCGUIEntityNamer(IMoCEntity mocanimal, String s) {
         this.xSize = 256;

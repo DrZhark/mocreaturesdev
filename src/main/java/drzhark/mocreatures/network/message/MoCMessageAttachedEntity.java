@@ -1,16 +1,15 @@
 package drzhark.mocreatures.network.message;
 
-import drzhark.mocreatures.client.MoCClientProxy;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MoCMessageAttachedEntity implements IMessage, IMessageHandler<MoCMessageAttachedEntity, IMessage> {
 
-    private int sourceEntityId;
-    private int targetEntityId;
+    public int sourceEntityId;
+    public int targetEntityId;
 
     public MoCMessageAttachedEntity() {
     }
@@ -34,12 +33,7 @@ public class MoCMessageAttachedEntity implements IMessage, IMessageHandler<MoCMe
 
     @Override
     public IMessage onMessage(MoCMessageAttachedEntity message, MessageContext ctx) {
-        Object var2 = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.sourceEntityId);
-        Entity var3 = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.targetEntityId);
-
-        if (var2 != null) {
-            ((Entity) var2).mountEntity(var3);
-        }
+        MoCMessageHandler.handleMessage(message, ctx);
         return null;
     }
 

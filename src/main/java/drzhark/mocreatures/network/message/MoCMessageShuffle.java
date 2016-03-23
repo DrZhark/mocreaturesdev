@@ -1,19 +1,15 @@
 package drzhark.mocreatures.network.message;
 
-import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.List;
-
 public class MoCMessageShuffle implements IMessage, IMessageHandler<MoCMessageShuffle, IMessage> {
 
-    private int entityId;
-    private boolean flag;
+    public int entityId;
+    public boolean flag;
 
     public MoCMessageShuffle() {
     }
@@ -37,17 +33,7 @@ public class MoCMessageShuffle implements IMessage, IMessageHandler<MoCMessageSh
 
     @Override
     public IMessage onMessage(MoCMessageShuffle message, MessageContext ctx) {
-        List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
-        for (Entity ent : entList) {
-            if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
-                if (this.flag) {
-                    //((MoCEntityHorse) ent).shuffle();
-                } else {
-                    ((MoCEntityHorse) ent).shuffleCounter = 0;
-                }
-                break;
-            }
-        }
+        MoCMessageHandler.handleMessage(message, ctx);
         return null;
     }
 

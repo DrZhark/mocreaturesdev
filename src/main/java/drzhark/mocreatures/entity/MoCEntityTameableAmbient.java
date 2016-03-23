@@ -236,4 +236,17 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     public boolean allowLeashing() {
         return this.getIsTamed();
     }
+
+    /**
+     * Used to spawn hearts at this location
+     */
+    @Override
+    public void spawnHeart() {
+        double var2 = this.rand.nextGaussian() * 0.02D;
+        double var4 = this.rand.nextGaussian() * 0.02D;
+        double var6 = this.rand.nextGaussian() * 0.02D;
+
+        this.worldObj.spawnParticle(EnumParticleTypes.HEART, this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width, this.posY + 0.5D
+                + this.rand.nextFloat() * this.height, this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, var2, var4, var6);
+    }
 }

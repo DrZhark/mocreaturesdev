@@ -1,18 +1,14 @@
 package drzhark.mocreatures.network.message;
 
-import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.List;
-
 public class MoCMessageVanish implements IMessage, IMessageHandler<MoCMessageVanish, IMessage> {
 
-    private int entityId;
+    public int entityId;
 
     public MoCMessageVanish() {
     }
@@ -33,13 +29,7 @@ public class MoCMessageVanish implements IMessage, IMessageHandler<MoCMessageVan
 
     @Override
     public IMessage onMessage(MoCMessageVanish message, MessageContext ctx) {
-        List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
-        for (Entity ent : entList) {
-            if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
-                ((MoCEntityHorse) ent).setVanishC((byte) 1);
-                break;
-            }
-        }
+        MoCMessageHandler.handleMessage(message, ctx);
         return null;
     }
 

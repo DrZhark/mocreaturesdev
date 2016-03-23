@@ -1,18 +1,16 @@
 package drzhark.mocreatures.network.message;
 
-import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.entity.monster.MoCEntityGolem;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MoCMessageTwoBytes implements IMessage, IMessageHandler<MoCMessageTwoBytes, IMessage> {
 
-    private int entityId;
-    private byte slot;
-    private byte value;
+    public int entityId;
+    public byte slot;
+    public byte value;
 
     public MoCMessageTwoBytes() {
     }
@@ -39,10 +37,7 @@ public class MoCMessageTwoBytes implements IMessage, IMessageHandler<MoCMessageT
 
     @Override
     public IMessage onMessage(MoCMessageTwoBytes message, MessageContext ctx) {
-        Entity ent = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
-        if (ent != null && ent instanceof MoCEntityGolem) {
-            ((MoCEntityGolem) ent).saveGolemCube(message.slot, message.value);
-        }
+        MoCMessageHandler.handleMessage(message, ctx);
         return null;
     }
 

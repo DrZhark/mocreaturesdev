@@ -325,7 +325,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 setIsFlying(false);
             }
 
-            if (getAttackTarget() != null && !isMovementCeased() && this.rand.nextInt(20) == 0) {
+            if (getAttackTarget() != null && (!this.getIsTamed() || this.ridingEntity != null) && !isMovementCeased() && this.rand.nextInt(20) == 0) {
                 setIsFlying(true);
             }
             if (!getIsTamed() && this.dimension == MoCreatures.WyvernLairDimensionID && (this.rand.nextInt(50) == 0) && this.posY < 10D) {
@@ -924,7 +924,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 MoCTools.spawnMaggots(this.worldObj, this);
             }
 
-            if (getIsTamed() && this.rand.nextInt(4) == 0) {
+            if (!getIsGhost() && getIsTamed() && this.rand.nextInt(4) == 0) {
                 MoCEntityWyvern entitywyvern = new MoCEntityWyvern(this.worldObj);
                 entitywyvern.setPosition(this.posX, this.posY, this.posZ);
                 this.worldObj.spawnEntityInWorld(entitywyvern);

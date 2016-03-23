@@ -1,19 +1,15 @@
 package drzhark.mocreatures.network.message;
 
-import drzhark.mocreatures.client.MoCClientProxy;
-import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.network.MoCMessageHandler;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.List;
-
 public class MoCMessageAnimation implements IMessage, IMessageHandler<MoCMessageAnimation, IMessage> {
 
-    private int entityId;
-    private int animationType;
+    public int entityId;
+    public int animationType;
 
     public MoCMessageAnimation() {
     }
@@ -37,13 +33,7 @@ public class MoCMessageAnimation implements IMessage, IMessageHandler<MoCMessage
 
     @Override
     public IMessage onMessage(MoCMessageAnimation message, MessageContext ctx) {
-        List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
-        for (Entity ent : entList) {
-            if (ent.getEntityId() == message.entityId && ent instanceof IMoCEntity) {
-                ((IMoCEntity) ent).performAnimation(message.animationType);
-                break;
-            }
-        }
+        MoCMessageHandler.handleMessage(message, ctx);
         return null;
     }
 
