@@ -42,12 +42,12 @@ public class MoCMessageNameGUI implements IMessage, IMessageHandler<MoCMessageNa
 
     @SideOnly(Side.CLIENT)
     public void handleClientMessage(MoCMessageNameGUI message, MessageContext ctx) {
-        // Due to a timing issue with Forge, we now need to check for a match for a certain period of time.
-        for (int count = 0; count < 100; count++) {
-            Entity entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
+        // Due to a timing issue with Forge, we now need to wait for client to find a match.
+        Entity entity = null;
+        while (entity == null) {
+            entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
             if (entity != null) {
                 MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) entity), ((IMoCEntity) entity).getMoCName()));
-                break;
             }
         }
     }

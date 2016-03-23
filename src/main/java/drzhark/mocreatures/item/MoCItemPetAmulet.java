@@ -51,7 +51,6 @@ public class MoCItemPetAmulet extends MoCItem {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
-
         double dist = 1D;
         double newPosY = entityplayer.posY;
         double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
@@ -128,7 +127,7 @@ public class MoCItemPetAmulet extends MoCItem {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving) storedCreature).getEntityId()),
                                 new TargetPoint(entityplayer.worldObj.provider.getDimensionId(), entityplayer.posX, entityplayer.posY,
                                         entityplayer.posZ, 64));
-                        if ((MoCreatures.proxy.enableOwnership && this.ownerName.isEmpty()) || this.name.isEmpty()) {
+                        if (this.ownerName.isEmpty() || this.name.isEmpty()) {
                             MoCTools.tameWithName(entityplayer, storedCreature);
                         }
 
