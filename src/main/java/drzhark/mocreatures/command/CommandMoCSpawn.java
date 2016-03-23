@@ -75,6 +75,10 @@ public class CommandMoCSpawn extends CommandBase {
             } else if (entityType.equalsIgnoreCase("wyvern")) {
                 specialEntity = new MoCEntityWyvern(player.worldObj);
                 specialEntity.setAdult(false);
+            } else if (entityType.equalsIgnoreCase("wyvernghost")) {
+                specialEntity = new MoCEntityWyvern(player.worldObj);
+                specialEntity.setAdult(false);
+                ((MoCEntityWyvern)specialEntity).setIsGhost(true);
             } else {
                 par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "ERROR:" + EnumChatFormatting.WHITE
                         + "The entity spawn type " + entityType + " is not a valid type."));
