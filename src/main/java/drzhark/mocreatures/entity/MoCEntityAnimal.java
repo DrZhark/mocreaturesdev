@@ -137,7 +137,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getMoCName() != null && !getMoCName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override
@@ -151,7 +151,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public String getName() {
+    public String getMoCName() {
         return this.dataWatcher.getWatchableObjectString(17);
     }
 
@@ -182,7 +182,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public void setName(String name) {
+    public void setMoCName(String name) {
         this.dataWatcher.updateObject(17, String.valueOf(name));
     }
 
@@ -658,7 +658,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         nbttagcompound.setBoolean("Adult", getIsAdult());
         nbttagcompound.setInteger("Edad", getEdad());
-        nbttagcompound.setString("Name", getName());
+        nbttagcompound.setString("Name", getMoCName());
         nbttagcompound.setInteger("TypeInt", getType());
         nbttagcompound.setString("Owner", getOwnerName());
     }
@@ -669,7 +669,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         setTamed(nbttagcompound.getBoolean("Tamed"));
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
-        setName(nbttagcompound.getString("Name"));
+        setMoCName(nbttagcompound.getString("Name"));
         setType(nbttagcompound.getInteger("TypeInt"));
         setOwner(nbttagcompound.getString("Owner"));
     }

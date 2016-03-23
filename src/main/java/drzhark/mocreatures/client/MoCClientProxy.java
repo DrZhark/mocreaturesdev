@@ -310,7 +310,7 @@ public class MoCClientProxy extends MoCProxy {
      */
     @Override
     public void setName(EntityPlayer player, IMoCEntity mocanimal) {
-        mc.displayGuiScreen(new MoCGUIEntityNamer(mocanimal, mocanimal.getName()));
+        mc.displayGuiScreen(new MoCGUIEntityNamer(mocanimal, mocanimal.getMoCName()));
 
     }
 

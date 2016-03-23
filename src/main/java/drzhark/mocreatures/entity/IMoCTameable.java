@@ -10,9 +10,9 @@ public interface IMoCTameable {
 
     String getOwnerName();
 
-    String getName();
+    String getMoCName();
 
-    void setName(String name);
+    void setMoCName(String name);
 
     void setTamed(boolean par1);
 

@@ -11,9 +11,9 @@ public interface IMoCEntity {
 
     public void selectType();
 
-    public String getName();
+    public String getMoCName();
 
-    public void setName(String name);
+    public void setMoCName(String name);
 
     public boolean getIsTamed();
 

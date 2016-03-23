@@ -85,7 +85,7 @@ public class CommandMoCPets extends CommandBase {
                         foundIds.add(mocreature.getOwnerPetId());
                         tamedlist.add(EnumChatFormatting.WHITE + "Found pet with " + EnumChatFormatting.DARK_AQUA + "Type" + EnumChatFormatting.WHITE
                                 + ":" + EnumChatFormatting.GREEN + ((EntityLiving) mocreature).getName() + EnumChatFormatting.DARK_AQUA
-                                + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getName()
+                                + ", Name" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN + mocreature.getMoCName()
                                 + EnumChatFormatting.DARK_AQUA + ", Owner" + EnumChatFormatting.WHITE + ":" + EnumChatFormatting.GREEN
                                 + mocreature.getOwnerName() + EnumChatFormatting.DARK_AQUA + ", PetId" + EnumChatFormatting.WHITE + ":"
                                 + EnumChatFormatting.GREEN + mocreature.getOwnerPetId() + EnumChatFormatting.DARK_AQUA + ", Dimension"
@@ -159,7 +159,7 @@ public class CommandMoCPets extends CommandBase {
         for (int j = 0; j < world.loadedEntityList.size(); j++) {
             Entity entity = (Entity) world.loadedEntityList.get(j);
             // search for entities that are MoCEntityAnimal's
-            if (IMoCTameable.class.isAssignableFrom(entity.getClass()) && !((IMoCTameable) entity).getName().equals("")
+            if (IMoCTameable.class.isAssignableFrom(entity.getClass()) && !((IMoCTameable) entity).getMoCName().equals("")
                     && ((IMoCTameable) entity).getOwnerPetId() == petId) {
                 // grab the entity data
                 NBTTagCompound compound = new NBTTagCompound();

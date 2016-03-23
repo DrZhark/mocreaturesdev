@@ -85,7 +85,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
-                this.setName("");
+                this.setMoCName("");
                 this.dropMyStuff();
                 this.setTamed(false);
             }

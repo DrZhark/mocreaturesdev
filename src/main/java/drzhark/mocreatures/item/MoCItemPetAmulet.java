@@ -80,7 +80,7 @@ public class MoCItemPetAmulet extends MoCItem {
                     ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(this.creatureType);
                     storedCreature.setTamed(true);
-                    storedCreature.setName(this.name);
+                    storedCreature.setMoCName(this.name);
                     storedCreature.setOwnerPetId(this.PetId);
                     storedCreature.setOwner(entityplayer.getName());
                     ((EntityLiving) storedCreature).setHealth(this.health);

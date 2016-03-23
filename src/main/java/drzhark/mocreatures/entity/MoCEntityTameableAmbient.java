@@ -78,7 +78,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
-                this.setName("");
+                this.setMoCName("");
                 this.dropMyStuff();
                 this.setTamed(false);
             }

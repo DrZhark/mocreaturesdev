@@ -127,7 +127,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public String getName() {
+    public String getMoCName() {
         return this.dataWatcher.getWatchableObjectString(17);
     }
 
@@ -148,7 +148,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public void setName(String name) {
+    public void setMoCName(String name) {
         this.dataWatcher.updateObject(17, String.valueOf(name));
     }
 
@@ -301,7 +301,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         nbttagcompound.setBoolean("Adult", getIsAdult());
         nbttagcompound.setInteger("Edad", getEdad());
-        nbttagcompound.setString("Name", getName());
+        nbttagcompound.setString("Name", getMoCName());
         nbttagcompound.setInteger("TypeInt", getType());
 
     }
@@ -312,7 +312,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         setTamed(nbttagcompound.getBoolean("Tamed"));
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
-        setName(nbttagcompound.getString("Name"));
+        setMoCName(nbttagcompound.getString("Name"));
         setType(nbttagcompound.getInteger("TypeInt"));
 
     }
@@ -403,7 +403,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getName() != null && !getName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getMoCName() != null && !getMoCName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     /*@Override

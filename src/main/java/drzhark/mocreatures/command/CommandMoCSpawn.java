@@ -87,7 +87,7 @@ public class CommandMoCSpawn extends CommandBase {
             specialEntity.setPosition(newPosX, newPosY, newPosZ);
             specialEntity.setTamed(true);
             specialEntity.setOwner("NoOwner");
-            specialEntity.setName("Rename_Me");
+            specialEntity.setMoCName("Rename_Me");
             specialEntity.setType(type);
 
             if ((entityType.equalsIgnoreCase("horse") && (type < 1 || type > 67))

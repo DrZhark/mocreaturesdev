@@ -120,7 +120,7 @@ public class CommandMoCTP extends CommandBase {
         for (int j = 0; j < world.loadedEntityList.size(); j++) {
             Entity entity = (Entity) world.loadedEntityList.get(j);
             // search for entities that are MoCEntityAnimal's
-            if (IMoCTameable.class.isAssignableFrom(entity.getClass()) && !((IMoCTameable) entity).getName().equals("")
+            if (IMoCTameable.class.isAssignableFrom(entity.getClass()) && !((IMoCTameable) entity).getMoCName().equals("")
                     && ((IMoCTameable) entity).getOwnerPetId() == petId) {
                 // grab the entity data
                 NBTTagCompound compound = new NBTTagCompound();

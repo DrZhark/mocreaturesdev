@@ -47,7 +47,7 @@ public class MoCMessageNameGUI implements IMessage, IMessageHandler<MoCMessageNa
         List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
         for (Entity ent : entList) {
             if (ent.getEntityId() == message.entityId && ent instanceof IMoCEntity) {
-                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) ent), ((IMoCEntity) ent).getName()));
+                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) ent), ((IMoCEntity) ent).getMoCName()));
                 break;
             }
         }

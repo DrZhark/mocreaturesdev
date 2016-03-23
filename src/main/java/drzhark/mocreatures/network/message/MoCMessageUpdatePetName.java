@@ -53,7 +53,7 @@ public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMes
 
         for (Entity ent : entList) {
             if (ent.getEntityId() == message.entityId && ent instanceof IMoCTameable) {
-                ((IMoCEntity) ent).setName(message.name);
+                ((IMoCEntity) ent).setMoCName(message.name);
                 ownerName = ((IMoCEntity) ent).getOwnerName();
                 pet = ent;
                 break;
@@ -68,7 +68,7 @@ public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMes
                 NBTTagCompound nbt = tag.getCompoundTagAt(i);
                 if (nbt.getInteger("PetId") == id) {
                     nbt.setString("Name", message.name);
-                    ((IMoCTameable) pet).setName(message.name);
+                    ((IMoCTameable) pet).setMoCName(message.name);
                 }
             }
         }

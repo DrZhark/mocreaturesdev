@@ -46,7 +46,7 @@ public class MoCRenderGoat extends RenderLiving<MoCEntityGoat> {
         this.tempGoat.eatMov = entitygoat.mouthMovement();
 
         super.doRender(entitygoat, d, d1, d2, f, f1);
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitygoat.getName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitygoat.getMoCName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         if (entitygoat.renderName()) {
             float f2 = 1.6F;
@@ -54,7 +54,7 @@ public class MoCRenderGoat extends RenderLiving<MoCEntityGoat> {
             float f4 = entitygoat.getDistanceToEntity(this.renderManager.livingPlayer);
             if (f4 < 16F) {
                 String s = "";
-                s = (new StringBuilder()).append(s).append(entitygoat.getName()).toString();
+                s = (new StringBuilder()).append(s).append(entitygoat.getMoCName()).toString();
                 float f5 = 0.1F;
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();

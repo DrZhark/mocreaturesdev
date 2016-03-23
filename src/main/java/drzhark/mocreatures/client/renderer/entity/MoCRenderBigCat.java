@@ -35,7 +35,7 @@ public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
 	@Override
     public void doRender(MoCEntityBigCat entitybigcat, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitybigcat, d, d1, d2, f, f1);
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitybigcat.getName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitybigcat.getMoCName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         boolean flag2 = MoCreatures.proxy.getDisplayPetIcons();
         if (entitybigcat.renderName()) {
@@ -44,7 +44,7 @@ public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
             float f5 = entitybigcat.getDistanceToEntity(this.renderManager.livingPlayer);
             if (f5 < 16F) {
                 String s = "";
-                s = (new StringBuilder()).append(s).append(entitybigcat.getName()).toString();
+                s = (new StringBuilder()).append(s).append(entitybigcat.getMoCName()).toString();
                 float f7 = 0.1F;
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();

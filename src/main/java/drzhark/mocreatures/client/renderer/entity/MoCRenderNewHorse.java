@@ -12,7 +12,6 @@ public class MoCRenderNewHorse extends MoCRenderMoC<MoCEntityHorse> {
 
     public MoCRenderNewHorse(MoCModelNewHorse modelbase) {
         super(modelbase, 0.5F);
-
     }
 
     @Override
@@ -33,7 +32,6 @@ public class MoCRenderNewHorse extends MoCRenderMoC<MoCEntityHorse> {
             adjustHeight(entityhorse, -0.3F + (entityhorse.tFloat() / 5F));
         }
         super.preRenderCallback(entityhorse, f);
-
     }
 
     protected void stretch(MoCEntityHorse entityhorse) {

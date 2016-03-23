@@ -37,13 +37,13 @@ public class MoCEntityFXVacuum extends EntityFX {
     }
 
     @Override
-    public void renderParticle(WorldRenderer p_180434_1_, Entity p_180434_2, float par2, float par3, float par4, float par5, float par6, float par7) {
-        float var8 = (this.particleAge + par2) / this.particleMaxAge;
+    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+        float var8 = (this.particleAge + partialTicks) / this.particleMaxAge;
         var8 = 1.0F - var8;
         var8 *= var8;
         var8 = 1.0F - var8;
         this.particleScale = this.portalParticleScale * var8;
-        super.renderParticle(p_180434_1_, p_180434_2, par2, par3, par4, par5, par6, par7);
+        super.renderParticle(worldRendererIn, entityIn, partialTicks, par3, par4, par5, par6, par7);
     }
 
     @Override

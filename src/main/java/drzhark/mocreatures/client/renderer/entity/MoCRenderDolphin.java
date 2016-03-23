@@ -23,7 +23,7 @@ public class MoCRenderDolphin extends RenderLiving<MoCEntityDolphin> {
     @Override
     public void doRender(MoCEntityDolphin entitydolphin, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitydolphin, d, d1, d2, f, f1);
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitydolphin.getName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitydolphin.getMoCName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         //boolean flag2 = MoCreatures.proxy.getdisplayPetIcons();
         if (entitydolphin.renderName()) {
@@ -32,7 +32,7 @@ public class MoCRenderDolphin extends RenderLiving<MoCEntityDolphin> {
             float f4 = entitydolphin.getDistanceToEntity(this.renderManager.livingPlayer);
             if (f4 < 16F) {
                 String s = "";
-                s = (new StringBuilder()).append(s).append(entitydolphin.getName()).toString();
+                s = (new StringBuilder()).append(s).append(entitydolphin.getMoCName()).toString();
                 float f5 = 0.1F;
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();
@@ -100,7 +100,7 @@ public class MoCRenderDolphin extends RenderLiving<MoCEntityDolphin> {
             float f3 = 0.01666667F * f2;
             float f4 = entitydolphin.getDistanceToEntity(this.renderManager.livingPlayer);
             String s = "";
-            s = (new StringBuilder()).append(s).append(entitydolphin.getName()).toString();
+            s = (new StringBuilder()).append(s).append(entitydolphin.getMoCName()).toString();
             if ((f4 < 12F) && (s.length() > 0)) {
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();

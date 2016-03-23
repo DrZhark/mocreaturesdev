@@ -91,7 +91,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setTamed(true);
                     storedCreature.setRideable(this.rideable);
                     storedCreature.setEdad(this.edad);
-                    storedCreature.setName(this.name);
+                    storedCreature.setMoCName(this.name);
                     storedCreature.setHealth(this.health);
                     storedCreature.setAdult(this.adult);
                     storedCreature.setArmorType(this.armor);
