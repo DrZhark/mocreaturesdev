@@ -53,9 +53,16 @@ public class CMSUtils {
     }
 
     public static List<String> parseName(String biomeConfigEntry) {
+        List<String> biomeParts = new ArrayList<String>();
+        if (biomeConfigEntry.indexOf('|') == -1) {
+            biomeParts.add("");
+            if (CustomSpawner.debug) {
+                CustomSpawner.globalLog.logger.info("Invalid biome entry '" + biomeConfigEntry + "' detected in config while attempting to parse name. Please review your biome configs for possible typos. Skipping...");
+            }
+            return biomeParts;
+        }
         String tag = biomeConfigEntry.substring(0, biomeConfigEntry.indexOf('|'));
         String biomeName = biomeConfigEntry.substring(biomeConfigEntry.indexOf('|') + 1, biomeConfigEntry.length());
-        List<String> biomeParts = new ArrayList<String>();
         biomeParts.add(tag);
         biomeParts.add(biomeName);
         return biomeParts;

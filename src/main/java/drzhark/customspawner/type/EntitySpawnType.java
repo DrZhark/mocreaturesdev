@@ -41,8 +41,8 @@ public class EntitySpawnType {
     public static final String WATERCREATURE = "WATER_CREATURE";
     public static final String UNDERGROUND = "UNDERGROUND";
 
-    public EntitySpawnType(EnvironmentSettings environment, String type) // used for initial config creation
-    {
+    // used for initial config creation
+    public EntitySpawnType(EnvironmentSettings environment, String type) {
         this.environment = environment;
         this.entitySpawnType = type;
     }

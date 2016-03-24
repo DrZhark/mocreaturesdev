@@ -1,5 +1,6 @@
 package drzhark.customspawner;
 
+import com.google.common.collect.Sets;
 import drzhark.customspawner.command.CommandCMS;
 import drzhark.customspawner.configuration.CMSConfiguration;
 import drzhark.customspawner.entity.EntityData;
@@ -57,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 
 @Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.5.0")
@@ -64,6 +66,7 @@ public final class CustomSpawner {
 
     @Instance("CustomSpawner")
     public static CustomSpawner INSTANCE;
+    private static final int MOB_COUNT_DIV = (int)Math.pow(17.0D, 2.0D);
 
     public static boolean forceDespawns = false;
     public static boolean debug = false;
@@ -83,7 +86,7 @@ public final class CustomSpawner {
 
     private static List<BiomeGenBase> biomeList;
 
-    private HashMap<ChunkCoordIntPair, Boolean> eligibleChunksForSpawning = new HashMap<ChunkCoordIntPair, Boolean>();
+    private final Set<ChunkCoordIntPair> eligibleChunksForSpawning = Sets.<ChunkCoordIntPair>newHashSet();
 
     static {
         entityTypes.put("UNDEFINED", null);
@@ -182,7 +185,7 @@ public final class CustomSpawner {
      * Returns a count of entities that classify themselves as the specified
      * creature type.
      */
-    public int countEntities(WorldServer world, EntitySpawnType entitySpawnType) {
+     public int countEntities(WorldServer world, EntitySpawnType entitySpawnType) {
         int count = 0;
         for (int x = 0; x < world.loadedEntityList.size(); x++) {
             EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(((Entity) world.loadedEntityList.get(x)).getClass());
@@ -190,50 +193,49 @@ public final class CustomSpawner {
                 count++;
             }
         }
+
         return count;
     }
 
-    /**
-     * New customSpawner
-     *
-     *
-     */
     public final int doCustomSpawning(WorldServer world, EntitySpawnType entitySpawnType, int mobSpawnRange, boolean enforceMaxSpawnLimits) {
         this.eligibleChunksForSpawning.clear();
-        int countTotal;
-        int var6;
+        int i = 0;
+        Iterator<EntityPlayer> iterator = world.playerEntities.iterator();
 
-        byte spawnRadius = 8;
-        for (countTotal = 0; countTotal < world.playerEntities.size(); ++countTotal) {
-            EntityPlayer entityplayer = (EntityPlayer) world.playerEntities.get(countTotal);
-            int var5 = MathHelper.floor_double(entityplayer.posX / 16.0D);
-            var6 = MathHelper.floor_double(entityplayer.posZ / 16.0D);
-            // spawnRadius = 8;
-            spawnRadius = (byte) mobSpawnRange;
-            spawnRadius =
-                    (spawnRadius > FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
-                            ? (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance()
-                            : spawnRadius;
-            spawnRadius = (spawnRadius > 8) ? 8 : spawnRadius;
+        while (iterator.hasNext()) {
+            EntityPlayer entityplayer = (EntityPlayer)iterator.next();
 
-            for (int var8 = -spawnRadius; var8 <= spawnRadius; ++var8) {
-                for (int var9 = -spawnRadius; var9 <= spawnRadius; ++var9) {
-                    boolean var10 = var8 == -spawnRadius || var8 == spawnRadius || var9 == -spawnRadius || var9 == spawnRadius;
-                    ChunkCoordIntPair var11 = new ChunkCoordIntPair(var8 + var5, var9 + var6);
+            if (!entityplayer.isSpectator()) {
+                int x = MathHelper.floor_double(entityplayer.posX / 16.0D);
+                int z = MathHelper.floor_double(entityplayer.posZ / 16.0D);
+                byte spawnRadius = 8;
 
-                    if (!var10) {
-                        this.eligibleChunksForSpawning.put(var11, Boolean.valueOf(false));
-                    } else if (!this.eligibleChunksForSpawning.containsKey(var11)) {
-                        this.eligibleChunksForSpawning.put(var11, Boolean.valueOf(true));
+                spawnRadius = (byte) mobSpawnRange;
+                spawnRadius =
+                        (spawnRadius > FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
+                                ? (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance()
+                                : spawnRadius;
+                spawnRadius = (spawnRadius > 8) ? 8 : spawnRadius;
+        
+                for (int var8 = -spawnRadius; var8 <= spawnRadius; ++var8) {
+                    for (int var9 = -spawnRadius; var9 <= spawnRadius; ++var9) {
+                        boolean flag = var8 == -spawnRadius || var8 == spawnRadius || var9 == -spawnRadius || var9 == spawnRadius;
+                        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(var8 + x, var9 + z);
+        
+                        if (!this.eligibleChunksForSpawning.contains(chunkcoordintpair)) {
+                            ++i;
+        
+                            if (!flag && world.getWorldBorder().contains(chunkcoordintpair)) {
+                                this.eligibleChunksForSpawning.add(chunkcoordintpair);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        countTotal = 0;
+        int countTotal = 0;
         BlockPos chunkcoordspawn = world.getSpawnPoint();
-        EnumCreatureType[] enumcreaturevalues = EnumCreatureType.values();
-        var6 = enumcreaturevalues.length;
         int limit = 0;
 
         limit = entitySpawnType.getSpawnCap();
@@ -241,140 +243,124 @@ public final class CustomSpawner {
             return 0;
         }
 
-        int mobcnt = 0;
-        //System.out.println("1max = " + (getMax(entitySpawnType) * eligibleChunksForSpawning.size() / 256) + ", count = " + countEntities(world, entitySpawnType));
-        int spawnsLeft = (getMax(entitySpawnType) * this.eligibleChunksForSpawning.size() / 256) - (countEntities(world, entitySpawnType));
-        int maxcnt = (getMax(entitySpawnType) * this.eligibleChunksForSpawning.size() / 256);
-        mobcnt = countEntities(world, entitySpawnType);
-        if (mobcnt <= maxcnt) {
-            Iterator<ChunkCoordIntPair> iterator = this.eligibleChunksForSpawning.keySet().iterator();
-            ArrayList<ChunkCoordIntPair> tmp = new ArrayList<ChunkCoordIntPair>(this.eligibleChunksForSpawning.keySet());
-            Collections.shuffle(tmp);
-            iterator = tmp.iterator();
-            int moblimit = (limit * this.eligibleChunksForSpawning.size() / 256) - mobcnt + 1;
-
-            label108: while (iterator.hasNext() && moblimit > 0) {
-                ChunkCoordIntPair chunkcoordintpair = iterator.next();
-                if (this.eligibleChunksForSpawning.get(chunkcoordintpair) != null
-                        && !((Boolean) this.eligibleChunksForSpawning.get(chunkcoordintpair)).booleanValue()) // blood - added null check to avoid crashing during SSP spawning
-                {
-                    BlockPos chunkpos = getRandomSpawningPointInChunk(world, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
-                    int posX = chunkpos.getX();
-                    int posY = chunkpos.getY();
-                    int posZ = chunkpos.getZ();
-
-                    BlockPos pos = new BlockPos(posX, posY, posZ);
-                    if (!world.getBlockState(pos).getBlock().isNormalCube()
-                            && world.getBlockState(pos).getBlock().getMaterial() == entitySpawnType.getLivingMaterial()) {
-                        int spawnedMob = 0;
-                        int spawnCount = 0;
-
-                        while (spawnCount < 3) {
-                            int tempX = posX;
-                            int tempY = posY;
-                            int tempZ = posZ;
-                            byte var20 = 6;
-                            SpawnListEntry spawnlistentry = null;
-                            int spawnAttempt = 0;
-
-                            while (true) {
-                                if (spawnAttempt < 4)
-
-                                {
-                                    label101: {
-                                        tempX += world.rand.nextInt(var20) - world.rand.nextInt(var20);
-                                        tempY += world.rand.nextInt(1) - world.rand.nextInt(1);
-                                        tempZ += world.rand.nextInt(var20) - world.rand.nextInt(var20);
-
-                                        if (canCreatureTypeSpawnAtLocation(entitySpawnType, world, new BlockPos(tempX, tempY, tempZ))) {
-
-                                            float spawnX = tempX + 0.5F;
-                                            float spawnY = tempY;
-                                            float spawnZ = tempZ + 0.5F;
-                                            if (world.getClosestPlayer(spawnX, spawnY, spawnZ, 24.0D) == null) {
-                                                float var26 = spawnX - chunkcoordspawn.getX();
-                                                float var27 = spawnY - chunkcoordspawn.getY();
-                                                float var28 = spawnZ - chunkcoordspawn.getZ();
-                                                float spawnDist = var26 * var26 + var27 * var27 + var28 * var28;
-                                                if (spawnDist >= 576.0F) {
-                                                    if (spawnlistentry == null) {
-                                                        //this is where it has to be changed to include the custom list
-                                                        //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
-                                                        spawnlistentry = getRandomCustomMob(world, entitySpawnType, tempX, tempY, tempZ);
-                                                        //System.out.println("spawnlistentry = " + spawnlistentry + " for type " + entitySpawnType.name());
-                                                        if (spawnlistentry == null) {
-                                                            break label101;
-                                                        }
-                                                    }
-
-                                                    EntityLiving entityliving;
-                                                    EntityData entityData;
-
-                                                    try {
-                                                        entityliving =
-                                                                (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] {World.class})
-                                                                        .newInstance(new Object[] {world});
-                                                    } catch (Exception exception) {
-                                                        exception.printStackTrace();
-                                                        return countTotal;
-                                                    }
-                                                    entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
-                                                    // spawn checks
-                                                    entityliving.setLocationAndAngles(spawnX, spawnY, spawnZ, world.rand.nextFloat() * 360.0F, 0.0F);
-                                                    Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, world, spawnX, spawnY, spawnZ);
-
-                                                    if (isValidLightLevel(entityliving, world, entityData.getMinLightLevel(),
-                                                            entityData.getMaxLightLevel())
-                                                            && (canSpawn == Result.ALLOW
-                                                                    || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere()) || (entityData
-                                                                    .getLivingSpawnType() == entityData.getEnvironment().LIVINGTYPE_UNDERGROUND && CMSUtils
-                                                                    .isValidUndergroundLightLevel(entityliving)))) {
-                                                        ++spawnedMob;
-                                                        world.spawnEntityInWorld(entityliving);
-                                                        creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ));
-                                                        // changed check from maxSpawnedInChunk to maxGroupCount.
-                                                        CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
-                                                                entitySpawnType.name(), world.getBiomeGenForCoords(new BlockPos(
-                                                                        (chunkcoordintpair.chunkXPos * 16) + 16, 0,
-                                                                        (chunkcoordintpair.chunkZPos * 16) + 16)).biomeName, entityData
-                                                                        .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
-                                                                        .floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft,
-                                                                spawnlistentry);
-
-                                                        if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving)) {
-                                                            continue label108;
-                                                        }
-                                                        if (enforceMaxSpawnLimits) {
-                                                            moblimit--;
-                                                            if (moblimit <= 0) // If we're past limit, stop spawn
-                                                            {
-                                                                continue label108;
-                                                            }
-                                                        }
-                                                    } else {
-                                                        //if (verboseConsole) globalLog.logger.info("unable to spawn " + entityliving + " at coords " + var26 + ", " + var27 + ", " + var28);
-                                                    }
-                                                    countTotal += spawnedMob;
-                                                }
-                                            }
-                                        }
-
-                                        ++spawnAttempt;
-                                        continue;
-                                    }
-                                }
-
-                                ++spawnCount;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
+        int mobcnt = countEntities(world, entitySpawnType);
+        int maxcnt = getMax(entitySpawnType) * i / MOB_COUNT_DIV;
+        int spawnsLeft = maxcnt - (countEntities(world, entitySpawnType));
+        if (mobcnt > maxcnt) {
             if (CMSUtils.getEnvironment(world).debug) {
                 CMSUtils.getEnvironment(world).envLog.logger.info("[" + entitySpawnType.name().toUpperCase() + "]Unable to spawn, Total count "
                         + mobcnt + " exceeds limit of " + maxcnt);
+            }
+            return countTotal;
+        }
+
+        Iterator<ChunkCoordIntPair> iterator1 = this.eligibleChunksForSpawning.iterator();
+        ArrayList<ChunkCoordIntPair> tmp = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
+        Collections.shuffle(tmp);
+        iterator1 = tmp.iterator();
+        int moblimit = limit * i / 256 - mobcnt + 1;
+
+        label108: while (iterator1.hasNext() && moblimit > 0) {
+            ChunkCoordIntPair chunkcoordintpair = iterator1.next();
+            BlockPos chunkpos = getRandomSpawningPointInChunk(world, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+            int posX = chunkpos.getX();
+            int posY = chunkpos.getY();
+            int posZ = chunkpos.getZ();
+
+            BlockPos pos = new BlockPos(posX, posY, posZ);
+            if (!world.getBlockState(pos).getBlock().isNormalCube()
+                    && world.getBlockState(pos).getBlock().getMaterial() == entitySpawnType.getLivingMaterial()) {
+                int spawnedMob = 0;
+                int spawnCount = 0;
+
+                while (spawnCount < 3) {
+                    int tempX = posX;
+                    int tempY = posY;
+                    int tempZ = posZ;
+                    byte var20 = 6;
+                    SpawnListEntry spawnlistentry = null;
+                    int spawnAttempt = 0;
+
+                    while (true) {
+                        if (spawnAttempt < 4) {
+                            label101: {
+                                tempX += world.rand.nextInt(var20) - world.rand.nextInt(var20);
+                                tempY += world.rand.nextInt(1) - world.rand.nextInt(1);
+                                tempZ += world.rand.nextInt(var20) - world.rand.nextInt(var20);
+
+                                if (canCreatureTypeSpawnAtLocation(entitySpawnType, world, new BlockPos(tempX, tempY, tempZ))) {
+                                    float spawnX = tempX + 0.5F;
+                                    float spawnY = tempY;
+                                    float spawnZ = tempZ + 0.5F;
+                                    if (!world.isAnyPlayerWithinRangeAt(spawnX, spawnY, spawnZ, 24.0D) && chunkcoordspawn.distanceSq(spawnX, spawnY, spawnZ) >= 576.0D) {
+                                        if (spawnlistentry == null) {
+                                            //this is where it has to be changed to include the custom list
+                                            spawnlistentry = getRandomCustomMob(world, entitySpawnType, tempX, tempY, tempZ);
+                                            if (spawnlistentry == null) {
+                                                break label101;
+                                            }
+                                        }
+
+                                        EntityLiving entityliving;
+                                        EntityData entityData;
+
+                                        try {
+                                            entityliving =
+                                                    (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] {World.class})
+                                                            .newInstance(new Object[] {world});
+                                        } catch (Exception exception) {
+                                            exception.printStackTrace();
+                                            return countTotal;
+                                        }
+                                        entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
+                                        // spawn checks
+                                        entityliving.setLocationAndAngles(spawnX, spawnY, spawnZ, world.rand.nextFloat() * 360.0F, 0.0F);
+                                        Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, world, spawnX, spawnY, spawnZ);
+                                        boolean validLightLevel = isValidLightLevel(entityliving, world, entityData.getMinLightLevel(), entityData.getMaxLightLevel());
+                                        boolean canEntitySpawn = canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere());
+                                        boolean underGroundSpawn = (entityData.getLivingSpawnType() == entityData.getEnvironment().LIVINGTYPE_UNDERGROUND && CMSUtils
+                                                .isValidUndergroundLightLevel(entityliving));
+
+                                        if (validLightLevel && (canEntitySpawn || underGroundSpawn)) {
+                                            ++spawnedMob;
+                                            world.spawnEntityInWorld(entityliving);
+                                            creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ));
+                                            // changed check from maxSpawnedInChunk to maxGroupCount.
+                                            CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
+                                                    entitySpawnType.name(), world.getBiomeGenForCoords(new BlockPos(
+                                                            (chunkcoordintpair.chunkXPos * 16) + 16, 0,
+                                                            (chunkcoordintpair.chunkZPos * 16) + 16)).biomeName, entityData
+                                                            .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
+                                                            .floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft,
+                                                    spawnlistentry);
+
+                                            if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving)) {
+                                                continue label108;
+                                            }
+                                            if (enforceMaxSpawnLimits) {
+                                                moblimit--;
+                                                if (moblimit <= 0) { // If we're past limit, stop spawn
+                                                    continue label108;
+                                                }
+                                            }
+                                        } else {
+                                            if (CMSUtils.getEnvironment(world).debug) {
+                                                CMSUtils.getEnvironment(world).envLog.logger.info("[Unable to spawn " + entityliving + " at coords " + spawnX + ", " + spawnY + ", " + spawnZ + "][ValidLightLevel ? " + validLightLevel + "][CanSpawn ? " + canEntitySpawn + "]");
+                                            }
+                                        }
+                                        countTotal += spawnedMob;
+                                    }
+                                }
+
+                                ++spawnAttempt;
+                                continue;
+                            }
+                        }
+
+                        ++spawnCount;
+                        break;
+                    }
+                }
             }
         }
 
