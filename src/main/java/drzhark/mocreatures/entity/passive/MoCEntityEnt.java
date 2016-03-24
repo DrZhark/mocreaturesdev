@@ -24,7 +24,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -149,11 +148,11 @@ public class MoCEntityEnt extends MoCEntityAnimal {
      * Makes small creatures follow the Ent
      */
     private void atractCritter() {
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
         int n = this.rand.nextInt(3) + 1;
         int j = 0;
         for (int k = 0; k < list.size(); k++) {
-            Entity entity = (Entity) list.get(k);
+            Entity entity = list.get(k);
             if (entity instanceof EntityAnimal && entity.width < 0.6F && entity.height < 0.6F) {
                 EntityAnimal entityanimal = (EntityAnimal) entity;
                 if (entityanimal.getAttackTarget() == null && !MoCTools.isTamed(entityanimal)) {
@@ -161,7 +160,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     entityanimal.setAttackTarget(this);
                     entityanimal.getNavigator().setPath(pathentity, 1D);
                     j++;
-                    //System.out.println("attracting " + entityanimal);
                     if (j > n) {
                         return;
                     }
@@ -177,9 +175,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         Block blockOnFeet = this.worldObj.getBlockState(pos).getBlock();
 
         if (blockUnderFeet == Blocks.dirt) {
-            int xCoord = MathHelper.floor_double(this.posX);
-            int yCoord = MathHelper.floor_double(this.posY - 1);
-            int zCoord = MathHelper.floor_double(this.posZ);
             Block block = Blocks.grass;
             BlockEvent.BreakEvent event = null;
             if (!this.worldObj.isRemote) {

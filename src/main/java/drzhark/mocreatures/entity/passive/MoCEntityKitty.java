@@ -45,7 +45,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     private int madtimer;
     private boolean foundTree;
     private final int treeCoord[] = {-1, -1, -1};
-    private int displaycount;
 
     private boolean isSwinging;
     private boolean onTree;
@@ -191,9 +190,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             if (entity != this && entity instanceof EntityLivingBase) {
                 EntityLivingBase entityliving = (EntityLivingBase) entity;
                 if (getKittyState() == 10) {
-                    List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
+                    List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
                     for (int j = 0; j < list.size(); j++) {
-                        Entity entity1 = (Entity) list.get(j);
+                        Entity entity1 = list.get(j);
                         if ((entity1 instanceof MoCEntityKitty) && (((MoCEntityKitty) entity1).getKittyState() == 21)) {
                             ((MoCEntityKitty) entity1).setAttackTarget(entityliving);
                             return true;
@@ -271,11 +270,10 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     //TODO
     //change this so MoCAnimal getBoogey is used instead to decrease duplication of code
     public EntityLivingBase getBoogey(double d, boolean flag) {
-        double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if ((entity instanceof EntityLivingBase) && !(entity instanceof MoCEntityDeer) && !(entity instanceof MoCEntityHorse)
                     && ((entity.width >= 0.5D) || (entity.height >= 0.5D)) && (flag || !(entity instanceof EntityPlayer))) {
                 entityliving = (EntityLivingBase) entity;
@@ -290,9 +288,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     public EntityLiving getClosestTarget(Entity entity, double d) {
         double d1 = -1D;
         EntityLiving entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLiving) || (entity1 instanceof MoCEntityKitty) || (entity1 instanceof EntityPlayer)
                     || (entity1 instanceof EntityMob) || (entity1 instanceof MoCEntityKittyBed) || (entity1 instanceof MoCEntityLitterBox)
                     || ((entity1.width > 0.5D) && (entity1.height > 0.5D)) || ((entity instanceof IMoCEntity) && !MoCreatures.proxy.enableHunters)) {
@@ -398,9 +396,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     public EntityLiving getKittyStuff(Entity entity, double d, boolean flag) {
         double d1 = -1D;
         Object obj = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entity, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entity, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if (flag) {
                 if (!(entity1 instanceof MoCEntityLitterBox)) {
                     continue;
@@ -814,13 +812,13 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                 case 9: // looking for mate
                     this.kittytimer++;
                     if (this.rand.nextInt(50) == 0) {
-                        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
+                        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
                         int j = 0;
                         do {
                             if (j >= list.size()) {
                                 break;
                             }
-                            Entity entity = (Entity) list.get(j);
+                            Entity entity = list.get(j);
                             if (entity instanceof MoCEntityKitty && ((MoCEntityKitty) entity).getKittyState() == 9) {
                                 changeKittyState(18);
                                 setAttackTarget((EntityLivingBase) entity);
@@ -842,9 +840,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         break;
                     }
                     if (this.rand.nextInt(50) == 0) {
-                        List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
+                        List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(16D, 6D, 16D));
                         for (int k = 0; k < list1.size(); k++) {
-                            Entity entity1 = (Entity) list1.get(k);
+                            Entity entity1 = list1.get(k);
                             if (!(entity1 instanceof MoCEntityKitty) || (((MoCEntityKitty) entity1).getKittyState() != 21)) {
                                 continue;
                             }
@@ -1027,20 +1025,15 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if ((j1 - MathHelper.floor_double(this.posY)) > 2) {
                         this.motionY += 0.029999999999999999D;
                     }
-                    boolean flag = false;
-                    boolean flag1 = false;
+
                     if (this.posX < l) {
-                        int j2 = l - MathHelper.floor_double(this.posX);
                         this.motionX += 0.01D;
                     } else {
-                        int k2 = MathHelper.floor_double(this.posX) - l;
                         this.motionX -= 0.01D;
                     }
                     if (this.posZ < l1) {
-                        int j3 = l1 - MathHelper.floor_double(this.posZ);
                         this.motionZ += 0.01D;
                     } else {
-                        int k3 = MathHelper.floor_double(this.posX) - l1;
                         this.motionZ -= 0.01D;
                     }
                     if (this.onGround || !this.isCollidedHorizontally || !this.isCollidedVertically) {
@@ -1146,10 +1139,10 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                 case 21: // '\025'
                     this.kittytimer++;
                     if (this.kittytimer > 2000) {
-                        List list2 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(24D, 8D, 24D));
+                        List<Entity> list2 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(24D, 8D, 24D));
                         int i3 = 0;
                         for (int l3 = 0; l3 < list2.size(); l3++) {
-                            Entity entity2 = (Entity) list2.get(l3);
+                            Entity entity2 = list2.get(l3);
                             if ((entity2 instanceof MoCEntityKitty) && (((MoCEntityKitty) entity2).getKittyState() == 10)) {
                                 i3++;
                             }

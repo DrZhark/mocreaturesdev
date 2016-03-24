@@ -66,9 +66,6 @@ public class EventHooks {
     @SubscribeEvent
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event) {
         EntityData entityData = CMSUtils.getEnvironment(event.entity.worldObj).classToEntityMapping.get(event.entityLiving.getClass());
-        int x = MathHelper.floor_double(event.x);
-        int y = MathHelper.floor_double(event.y);
-        int z = MathHelper.floor_double(event.z);
         if (entityData != null && !entityData.getCanSpawn()) {
             if (entityData.getEnvironment().debug) {
                 entityData.getEnvironment().envLog.logger.info("Denied spawn for entity " + entityData.getEntityClass()
@@ -76,10 +73,6 @@ public class EventHooks {
             }
             event.setResult(Result.DENY);
         }
-        /*
-         * BiomeGenBase biome = event.world.getBiomeGenForCoords(x, z); if
-         * (biome != null) { // handle biome specific spawn settings }
-         */
     }
 
     // used for Despawner

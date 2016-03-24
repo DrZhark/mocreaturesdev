@@ -1,18 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.inventory.InventoryLargeChest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -22,19 +14,23 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -236,9 +232,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer) {
                 if (this.sitCounter != 0 && getArmorType() >= 3 && !secondRider()) {
-                    List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
+                    List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
                     for (int i = 0; i < list.size(); i++) {
-                        Entity entity1 = (Entity) list.get(i);
+                        Entity entity1 = list.get(i);
 
                         if (!(entity1 instanceof EntityPlayer) || entity1 == this.riddenByEntity) {
                             continue;
@@ -293,9 +289,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     private boolean secondRider() {
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if ((entity1 instanceof MoCEntityPlatform) && (entity1.riddenByEntity != null)) {
                 return true;
             }
@@ -322,13 +318,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
      * Destroys dummy entity platforms used for second rider
      */
     private void destroyPlatforms() {
-        int j = 0;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = (Entity) list.get(i);
             if ((entity1 instanceof MoCEntityPlatform)) {
                 entity1.setDead();
-                j++;
             }
         }
     }
@@ -640,16 +634,13 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
-        String s = MoCTools.BiomeName(this.worldObj, pos);
-
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(3 + this.rand.nextInt(2));
             return true;
         }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
             setType(1);
             return true;
         }
@@ -827,10 +818,10 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public void Riding() {
         if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
                     if (entity.isDead) {
                         continue;
                     }

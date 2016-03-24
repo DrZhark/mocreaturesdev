@@ -1,10 +1,9 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import net.minecraft.client.model.ModelBase;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.model.MoCModelKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;

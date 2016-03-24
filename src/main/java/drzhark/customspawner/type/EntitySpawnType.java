@@ -19,12 +19,16 @@ public class EntitySpawnType {
     private boolean hardSpawnLimit;
     private Material livingMaterial = Material.air;
     private boolean enabled = true;
+    @SuppressWarnings("unused")
     private boolean debug = false;
     // optional
+    @SuppressWarnings("unused")
     private int spawnLightLevel;
+    @SuppressWarnings("unused")
     private int despawnLightLevel;
     private int minSpawnHeight = 0;
     private int maxSpawnHeight = 256;
+    @SuppressWarnings("unused")
     private boolean allowChunkSpawning = false;
     private Boolean shouldSeeSky;
     private int spawnDistance = 8;

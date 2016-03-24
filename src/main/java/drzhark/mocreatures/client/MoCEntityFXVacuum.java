@@ -30,7 +30,6 @@ public class MoCEntityFXVacuum extends EntityFX {
         this.portalPosY = this.posY = par4;// + 0.7D;
         this.portalPosZ = this.posZ = par6;
         this.noClip = true;
-        float var14 = this.rand.nextFloat() * 0.6F + 0.4F;
         this.portalParticleScale = this.particleScale = this.rand.nextFloat() * 0.2F + 0.5F;
         this.setParticleTextureIndex(partTexture);
         this.particleMaxAge = (int) (Math.random() * 10.0D) + 30;

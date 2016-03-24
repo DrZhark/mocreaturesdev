@@ -107,7 +107,6 @@ public class CMSConfigCategory implements Map<String, CMSProperty> {
     public void write(BufferedWriter out, int indent) throws IOException {
         String pad0 = getIndent(indent);
         String pad1 = getIndent(indent + 1);
-        String pad2 = getIndent(indent + 2);
 
         write(out, pad0, "####################");
         write(out, pad0, "# ", this.name);

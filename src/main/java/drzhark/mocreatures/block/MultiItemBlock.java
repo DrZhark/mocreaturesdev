@@ -1,7 +1,5 @@
 package drzhark.mocreatures.block;
 
-import drzhark.mocreatures.MoCreatures;
-
 import com.google.common.base.Function;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -12,16 +10,12 @@ import net.minecraft.item.ItemStack;
 
 public class MultiItemBlock extends ItemMultiTexture {
 
+    @SuppressWarnings("deprecation")
     public MultiItemBlock(Block block) {
-        super(block, block, new Function() {
+        super(block, block, new Function<ItemStack, String>() {
 
             public String apply(ItemStack stack) {
                 return MoCBlock.EnumType.byMetadata(stack.getMetadata()).getUnlocalizedName();
-            }
-
-            @Override
-            public Object apply(Object p_apply_1_) {
-                return this.apply((ItemStack) p_apply_1_);
             }
         });
         setHasSubtypes(true);

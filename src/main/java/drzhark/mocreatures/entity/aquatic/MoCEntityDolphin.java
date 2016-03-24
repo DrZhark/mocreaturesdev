@@ -357,9 +357,9 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                 return;
             }
             int i = 0;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 2D, 8D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 2D, 8D));
             for (int j = 0; j < list.size(); j++) {
-                Entity entity = (Entity) list.get(j);
+                Entity entity = list.get(j);
                 if (entity instanceof MoCEntityDolphin) {
                     i++;
                 }
@@ -368,9 +368,9 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             if (i > 1) {
                 return;
             }
-            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int k = 0; k < list1.size(); k++) {
-                Entity entity1 = (Entity) list1.get(k);
+                Entity entity1 = list1.get(k);
                 if (!(entity1 instanceof MoCEntityDolphin) || (entity1 == this)) {
                     continue;
                 }

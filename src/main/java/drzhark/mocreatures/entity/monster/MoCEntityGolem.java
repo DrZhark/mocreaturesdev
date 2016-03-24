@@ -1,13 +1,9 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -18,6 +14,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -272,7 +271,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      */
     public void receiveRock(IBlockState state) {
         if (MoCreatures.isServer()) {
-            byte myBlock = translateOre(state.getBlock().getIdFromBlock(state.getBlock()));
+            byte myBlock = translateOre(Block.getIdFromBlock(state.getBlock()));
             byte slot = (byte) getRandomCubeAdj();
             if ((slot != -1) && (slot < 23) && (myBlock != -1) && getGolemState() != 4) {
                 MoCTools.playCustomSound(this, "golemattach", this.worldObj, 3F);
@@ -365,7 +364,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             return false;
         }
 
-        List missingChestBlocks = missingChestCubes();
+        List<Integer> missingChestBlocks = missingChestCubes();
         boolean uncoveredChest = (missingChestBlocks.size() == 4);
         if (!openChest() && !uncoveredChest && getGolemState() != 1) {
             int j = this.worldObj.getDifficulty().getDifficultyId();
@@ -560,7 +559,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      *
      * @return
      */
-    private List missingCubes() {
+    private List<Integer> missingCubes() {
         List<Integer> emptyBlocks = new ArrayList<Integer>();
 
         for (int i = 0; i < 23; i++) {
@@ -585,7 +584,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         return false;
     }
 
-    private List missingChestCubes() {
+    private List<Integer> missingChestCubes() {
         List<Integer> emptyChestBlocks = new ArrayList<Integer>();
 
         for (int i = 0; i < 4; i++) {
@@ -601,7 +600,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      *
      * @return
      */
-    private List usedCubes() {
+    private List<Integer> usedCubes() {
         List<Integer> usedBlocks = new ArrayList<Integer>();
 
         for (int i = 0; i < 23; i++) {
@@ -715,10 +714,10 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      */
     public boolean openChest() {
         if (isMissingCubes()) {
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
 
             for (int i = 0; i < list.size(); i++) {
-                Entity entity1 = (Entity) list.get(i);
+                Entity entity1 = list.get(i);
                 if (entity1 instanceof MoCEntityThrowableRock) {
                     if (MoCreatures.proxy.getParticleFX() > 0) {
                         MoCreatures.proxy.VacuumFX(this);

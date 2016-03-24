@@ -19,14 +19,14 @@ import java.util.List;
 
 public class MoCBlockBush extends BlockBush {
 
-    public static final PropertyEnum VARIANT = PropertyEnum.create("variant", MoCBlockBush.EnumType.class);
+    public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
     public MoCBlockBush(String name, Material material) {
         super(material);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, MoCBlockBush.EnumType.WYVERN_LAIR));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.WYVERN_LAIR));
     }
 
     @Override
@@ -36,12 +36,12 @@ public class MoCBlockBush extends BlockBush {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) {
-        MoCBlockBush.EnumType[] aenumtype = MoCBlockBush.EnumType.values();
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        EnumType[] aenumtype = EnumType.values();
         int i = aenumtype.length;
 
         for (int j = 0; j < i; ++j) {
-            MoCBlockBush.EnumType enumtype = aenumtype[j];
+            EnumType enumtype = aenumtype[j];
             list.add(new ItemStack(itemIn, 1, enumtype.getMetadata()));
         }
     }
@@ -68,8 +68,6 @@ public class MoCBlockBush extends BlockBush {
         private final int meta;
         private final String name;
         private final String unlocalizedName;
-
-        private static final String __OBFID = "CL_00002081";
 
         private EnumType(int meta, String name) {
             this(meta, name, name);

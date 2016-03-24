@@ -97,7 +97,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * positions.
      */
     @Override
-    public BlockPos findBiomePosition(int x, int z, int range, List biomes, Random random) {
+    public BlockPos findBiomePosition(int x, int z, int range, List<BiomeGenBase> biomes, Random random) {
         return biomes.contains(this.biomeGenerator) ? new BlockPos(x - range + random.nextInt(range * 2 + 1), 0, z - range
                 + random.nextInt(range * 2 + 1)) : null;
     }
@@ -106,7 +106,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * checks given Chunk's Biomes against List of allowed ones
      */
     @Override
-    public boolean areBiomesViable(int par1, int par2, int par3, List par4List) {
-        return par4List.contains(this.biomeGenerator);
+    public boolean areBiomesViable(int par1, int par2, int par3, List<BiomeGenBase> biomes) {
+        return biomes.contains(this.biomeGenerator);
     }
 }

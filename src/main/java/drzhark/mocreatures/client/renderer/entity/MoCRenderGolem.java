@@ -12,9 +12,6 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class MoCRenderGolem extends MoCRenderMoC<MoCEntityGolem> {
 
-    @SuppressWarnings("unused")
-    private final ModelBase MoCModelG = new MoCModelGolem();
-
     public MoCRenderGolem(ModelBase modelbase, float f) {
         super(modelbase, f);
         this.addLayer(new LayerMoCGolem(this));

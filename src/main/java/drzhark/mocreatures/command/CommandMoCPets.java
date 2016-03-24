@@ -23,7 +23,7 @@ import java.util.List;
 public class CommandMoCPets extends CommandBase {
 
     private static List<String> commands = new ArrayList<String>();
-    private static List aliases = new ArrayList<String>();
+    private static List<String> aliases = new ArrayList<String>();
 
     static {
         commands.add("/mocpets");
@@ -37,7 +37,7 @@ public class CommandMoCPets extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases() {
+    public List<String> getCommandAliases() {
         return aliases;
     }
 
@@ -56,21 +56,9 @@ public class CommandMoCPets extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender par1ICommandSender, String[] paramArray) {
-        String command = "";
-        if (paramArray.length == 0) {
-            command = "help";
-        } else {
-            command = paramArray[0];
-        }
-        String page = "";
-
-        if (paramArray.length == 1) {
-            page = paramArray[0];
-        }
-
         int unloadedCount = 0;
         int loadedCount = 0;
-        ArrayList foundIds = new ArrayList();
+        ArrayList<Integer> foundIds = new ArrayList<Integer>();
         ArrayList<String> tamedlist = new ArrayList<String>();
         String playername = par1ICommandSender.getName();
         // search for tamed entity
@@ -150,7 +138,7 @@ public class CommandMoCPets extends CommandBase {
      * Returns a sorted list of all possible commands for the given
      * ICommandSender.
      */
-    protected List getSortedPossibleCommands(ICommandSender par1ICommandSender) {
+    protected List<String> getSortedPossibleCommands(ICommandSender par1ICommandSender) {
         Collections.sort(CommandMoCPets.commands);
         return CommandMoCPets.commands;
     }
@@ -209,12 +197,7 @@ public class CommandMoCPets extends CommandBase {
 
     public void sendPageHelp(ICommandSender sender, byte pagelimit, ArrayList<String> list, String[] par2ArrayOfStr) {
         int x = (list.size() - 1) / pagelimit;
-        boolean flag = false;
         int j = 0;
-        String par1 = "";
-        if (par2ArrayOfStr.length > 1) {
-            par1 = par2ArrayOfStr[0];
-        }
 
         if (par2ArrayOfStr.length > 0 && Character.isDigit(par2ArrayOfStr[0].charAt(0))) {
             try {

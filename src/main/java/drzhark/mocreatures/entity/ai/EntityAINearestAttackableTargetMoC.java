@@ -15,7 +15,7 @@ import java.util.List;
 
 public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
 
-    protected final Class targetClass;
+    protected final Class<? extends EntityLivingBase> targetClass;
     private final int targetChance;
     /** Instance of EntityAINearestAttackableTargetSorter. */
     protected final EntityAINearestAttackableTargetMoC.Sorter theNearestAttackableTargetSorter;
@@ -23,20 +23,20 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
      * This filter is applied to the Entity search.  Only matching entities will be targetted.  (null -> no
      * restrictions)
      */
-    protected Predicate targetEntitySelector;
+    protected Predicate<EntityLivingBase> targetEntitySelector;
     protected EntityLivingBase targetEntity;
     private IMoCEntity theAttacker;
 
-    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class classTarget, boolean checkSight) {
+    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class<? extends EntityLivingBase> classTarget, boolean checkSight) {
         this(creature, classTarget, checkSight, false);
     }
 
-    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class classTarget, boolean checkSight, boolean onlyNearby) {
-        this(creature, classTarget, 10, checkSight, onlyNearby, (Predicate) null);
+    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class<? extends EntityLivingBase> classTarget, boolean checkSight, boolean onlyNearby) {
+        this(creature, classTarget, 10, checkSight, onlyNearby, null);
     }
 
-    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class classTarget, int chance, boolean checkSight, boolean onlyNearby,
-            final Predicate targetSelector) {
+    public EntityAINearestAttackableTargetMoC(EntityCreature creature, Class<? extends EntityLivingBase> classTarget, int chance, boolean checkSight, boolean onlyNearby,
+            final Predicate<EntityLivingBase> targetSelector) {
         super(creature, checkSight, onlyNearby);
         if (creature instanceof IMoCEntity) {
             this.theAttacker = (IMoCEntity) creature;
@@ -45,9 +45,10 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
         this.targetChance = chance;
         this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTargetMoC.Sorter(creature);
         this.setMutexBits(1);
-        this.targetEntitySelector = new Predicate() {
+        this.targetEntitySelector = new Predicate<EntityLivingBase>() {
 
-            public boolean isApplicable(EntityLivingBase entitylivingbaseIn) {
+            @Override
+            public boolean apply(EntityLivingBase entitylivingbaseIn) {
                 if (targetSelector != null && !targetSelector.apply(entitylivingbaseIn)) {
                     return false;
                 } else {
@@ -76,11 +77,6 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
                     return EntityAINearestAttackableTargetMoC.this.isSuitableTarget(entitylivingbaseIn, false);
                 }
             }
-
-            @Override
-            public boolean apply(Object p_apply_1_) {
-                return this.isApplicable((EntityLivingBase) p_apply_1_);
-            }
         };
     }
 
@@ -96,7 +92,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
             return false;
         } else {
             double d0 = this.getTargetDistance();
-            List list =
+            List<EntityLivingBase> list =
                     this.taskOwner.worldObj.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0),
                             Predicates.and(this.targetEntitySelector, EntitySelectors.NOT_SPECTATING));
             Collections.sort(list, this.theNearestAttackableTargetSorter);
@@ -122,7 +118,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
         super.startExecuting();
     }
 
-    public static class Sorter implements Comparator {
+    public static class Sorter implements Comparator<Entity> {
 
         private final Entity theEntity;
 
@@ -134,11 +130,6 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
             double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
             double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
             return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
-        }
-
-        @Override
-        public int compare(Object p_compare_1_, Object p_compare_2_) {
-            return this.compare((Entity) p_compare_1_, (Entity) p_compare_2_);
         }
     }
 

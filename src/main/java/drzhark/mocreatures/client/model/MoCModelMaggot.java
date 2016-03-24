@@ -1,10 +1,9 @@
 package drzhark.mocreatures.client.model;
 
-import net.minecraft.util.MathHelper;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class MoCModelMaggot extends ModelBase {
@@ -62,6 +61,7 @@ public class MoCModelMaggot extends ModelBase {
 
     }
 
+    @SuppressWarnings("unused")
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;

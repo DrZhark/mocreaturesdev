@@ -102,8 +102,6 @@ public class MoCEntityPlatform extends Entity {
     @Override
     public void updateRiderPosition() {
         if (this.riddenByEntity != null) {
-            double var1 = Math.cos(this.rotationYaw * Math.PI / 180.0D) * 0.4D;
-            double var3 = Math.sin(this.rotationYaw * Math.PI / 180.0D) * 0.4D;
             this.riddenByEntity.setPosition(this.posX, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ);
             this.riddenByEntity.rotationYaw = this.rotationYaw;
         }

@@ -28,15 +28,10 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         setAdult(true);
         setTamed(false);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+        this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
                 return !(entity instanceof MoCEntityDeer) && (entity.height > 0.8F || entity.width > 0.8F);
-            }
-
-            @Override
-            public boolean apply(Object p_apply_1_) {
-                return this.apply((Entity) p_apply_1_);
             }
         }, 6.0F, this.getMyAISpeed(), this.getMyAISpeed() * 1.2D));
         this.tasks.addTask(2, new EntityAIPanic(this, this.getMyAISpeed() * 1.2D));

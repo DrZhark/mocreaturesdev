@@ -44,7 +44,7 @@ public class StructureRegistry {
     }
 
     public void addStructToConfig(EnvironmentSettings environment, MapGenBase base, String structKey) {
-        List spawnList = null;
+        List<SpawnListEntry> spawnList = null;
         String structCategoryName = "";
         if (structKey.equalsIgnoreCase("NETHER_BRIDGE") && base instanceof MapGenNetherBridge) {
             structCategoryName = "netherbridge";
@@ -70,7 +70,7 @@ public class StructureRegistry {
                 spawnListCat.put(structCategoryName, new CMSProperty(structCategoryName, new ArrayList<String>(), Type.STRING));
                 CMSProperty spawnListProp = spawnListCat.get(structCategoryName);
                 for (int i = 0; i < spawnList.size(); i++) {
-                    SpawnListEntry spawnlistentry = (SpawnListEntry) spawnList.get(i);
+                    SpawnListEntry spawnlistentry = spawnList.get(i);
                     // determine mod
                     EntityData entityData = environment.classToEntityMapping.get(spawnlistentry.entityClass);
                     if (entityData == null) {
@@ -102,9 +102,7 @@ public class StructureRegistry {
             } else {
                 // read config
                 CMSConfigCategory spawnListCat = environment.CMSStructureConfig.getCategory("spawnlist");
-                CMSConfigCategory structCat = environment.CMSStructureConfig.getCategory(structCategoryName);
                 environment.initializeEntities();
-                //spawnList.clear();
                 CMSProperty spawnListProperty = spawnListCat.get(structCategoryName);
 
                 if (spawnListProperty != null) {

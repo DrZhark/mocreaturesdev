@@ -3,7 +3,6 @@ package drzhark.mocreatures.entity;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -18,7 +17,6 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
@@ -39,9 +37,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     protected boolean divePending;
     protected boolean jumpPending;
     protected boolean isEntityJumping;
-    private PathEntity pathEntity;
     private int outOfWater;
-    private int maxHealth;
     private boolean diving;
     private int divingCount;
     private int mountCount;
@@ -227,9 +223,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     public EntityItem getClosestFish(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -374,10 +370,10 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     public void Riding() {
         if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
                     if (entity.isDead) {
                         continue;
                     }
@@ -468,9 +464,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             if (this.fishHooked && this.rand.nextInt(200) == 0) {
                 this.fishHooked = false;
 
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2, 2, 2));
+                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2, 2, 2));
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity1 = (Entity) list.get(i);
+                    Entity entity1 = list.get(i);
 
                     if (entity1 instanceof EntityFishHook) {
                         if (((EntityFishHook) entity1).caughtEntity == this) {
@@ -787,11 +783,10 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
      * @return
      */
     protected EntityLivingBase getBoogey(double d) {
-        double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if (entitiesToInclude(entity)) {
                 entityliving = (EntityLivingBase) entity;
             }
@@ -812,11 +807,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     @Override
     public boolean isNotScared() {
         return false;
-    }
-
-    @Override
-    public void riderIsDisconnecting(boolean flag) {
-        this.riderIsDisconnecting = true;
     }
 
     @Override

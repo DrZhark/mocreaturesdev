@@ -1,8 +1,6 @@
 package drzhark.mocreatures.client.model;
 
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
-
-import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -14,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MoCModelWraith extends ModelBiped {
 
     private int attackCounter;
-    private float radianF = 57.29578F;
 
     public MoCModelWraith() {
         //TODO 4.1 FIX

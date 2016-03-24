@@ -25,9 +25,6 @@ import net.minecraft.world.World;
 
 public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
 
-    private boolean isHungry;
-    private int hungryCounter;
-
     public MoCEntityRaccoon(World world) {
         super(world);
         setSize(0.5F, 0.6F);

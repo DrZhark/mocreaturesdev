@@ -573,7 +573,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The boolean value.
      */
-    @SuppressWarnings("rawtypes")
     public Boolean getBooleanSettingValue(String backendName, String context) {
         return getSettingBoolean(backendName).get(context);
     }
@@ -595,7 +594,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The Float value.
      */
-    @SuppressWarnings("rawtypes")
     public Float getFloatSettingValue(String backendName, String context) {
         return getSettingFloat(backendName).get(context);
     }
@@ -617,7 +615,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The Int value.
      */
-    @SuppressWarnings("rawtypes")
     public Integer getIntSettingValue(String backendName, String context) {
         return getSettingInt(backendName).get(context);
     }
@@ -639,7 +636,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The Key value.
      */
-    @SuppressWarnings("rawtypes")
     public Integer getKeySettingValue(String backendName, String context) {
         return getSettingKey(backendName).get(context);
     }
@@ -661,7 +657,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The text label for the value.
      */
-    @SuppressWarnings("rawtypes")
     public String getMultiSettingLabel(String backendName, String context) {
         SettingMulti setting = getSettingMulti(backendName);
 
@@ -685,7 +680,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The Multi value.
      */
-    @SuppressWarnings("rawtypes")
     public Integer getMultiSettingValue(String backendName, String context) {
         return getSettingMulti(backendName).get(context);
     }
@@ -696,6 +690,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingBoolean.
      */
+    @SuppressWarnings("rawtypes")
     public SettingBoolean getSettingBoolean(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingBoolean.class.isAssignableFrom(setting.getClass())) {
@@ -714,6 +709,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingFloat.
      */
+    @SuppressWarnings("rawtypes")
     public SettingFloat getSettingFloat(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingFloat.class.isAssignableFrom(setting.getClass())) {
@@ -732,6 +728,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingInt.
      */
+    @SuppressWarnings("rawtypes")
     public SettingInt getSettingInt(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingInt.class.isAssignableFrom(setting.getClass())) {
@@ -750,6 +747,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingKey.
      */
+    @SuppressWarnings("rawtypes")
     public SettingKey getSettingKey(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingKey.class.isAssignableFrom(setting.getClass())) {
@@ -768,6 +766,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingList.
      */
+    @SuppressWarnings("rawtypes")
     public SettingDictionary getSettingList(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingDictionary.class.isAssignableFrom(setting.getClass())) {
@@ -786,6 +785,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingMulti.
      */
+    @SuppressWarnings("rawtypes")
     public SettingMulti getSettingMulti(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingMulti.class.isAssignableFrom(setting.getClass())) {
@@ -804,6 +804,7 @@ public class ModSettings {
      * @param backendName The backend name of the setting.
      * @return The SettingText.
      */
+    @SuppressWarnings("rawtypes")
     public SettingText getSettingText(String backendName) {
         for (Setting setting : this.Settings) {
             if (!SettingText.class.isAssignableFrom(setting.getClass())) {
@@ -833,7 +834,6 @@ public class ModSettings {
      * @param context The context from which to copy from.
      * @return The Text value.
      */
-    @SuppressWarnings("rawtypes")
     public String getTextSettingValue(String backendName, String context) {
         return getSettingText(backendName).get(context);
     }
@@ -880,7 +880,7 @@ public class ModSettings {
                 }
                 break;
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
                 break;
             }
         }

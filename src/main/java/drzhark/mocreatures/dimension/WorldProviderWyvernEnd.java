@@ -53,7 +53,6 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      * Return Vec3D with biome specific fog color
      */
     public Vec3 getFogColor(float par1, float par2) {
-        int var3 = 10518688;
         float var4 = MathHelper.cos(par1 * (float) Math.PI * 2.0F) * 2.0F + 0.5F;
 
         if (var4 < 0.0F) {

@@ -1,10 +1,10 @@
 package drzhark.mocreatures.entity.item;
 
-import net.minecraft.block.state.IBlockState;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -19,9 +19,7 @@ import java.util.List;
 public class MoCEntityThrowableRock extends Entity {
 
     public int rockTimer;
-    private int masterID;
     public int acceleration = 100;
-    private int blockMetadata;
     private double oPosX;
     private double oPosY;
     private double oPosZ;
@@ -109,18 +107,17 @@ public class MoCEntityThrowableRock extends Entity {
             transformToItem();
         }
 
-        if (getBehavior() == 0) {
-            //System.out.println("Zero Rock, Server? =" + MoCreatures.isServer() + " age " + rockTimer + " at " + this);
-        }
+        /*if (getBehavior() == 0) {
+            System.out.println("Zero Rock, Server? =" + MoCreatures.isServer() + " age " + rockTimer + " at " + this);
+        }*/
         //held Trocks don't need to adjust its position
         if (getBehavior() == 1) {
             return;
         }
 
         //rock damage code (for all rock behaviors)
-        if (!this.onGround) //onground!
-        {
-            List list =
+        if (!this.onGround) {
+            List<Entity> list =
                     this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
                             this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 

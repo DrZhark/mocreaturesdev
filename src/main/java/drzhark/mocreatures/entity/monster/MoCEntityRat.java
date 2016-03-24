@@ -3,7 +3,6 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -80,17 +79,16 @@ public class MoCEntityRat extends MoCEntityMob {
         if (entity != null && entity instanceof EntityLivingBase) {
             setAttackTarget((EntityLivingBase) entity);
             if (MoCreatures.isServer()) {
-                List list =
+                List<MoCEntityRat> list =
                         this.worldObj.getEntitiesWithinAABB(MoCEntityRat.class,
                                 AxisAlignedBB.fromBounds(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D)
                                         .expand(16D, 4D, 16D));
-                Iterator iterator = list.iterator();
+                Iterator<MoCEntityRat> iterator = list.iterator();
                 do {
                     if (!iterator.hasNext()) {
                         break;
                     }
-                    Entity entity1 = (Entity) iterator.next();
-                    MoCEntityRat entityrat = (MoCEntityRat) entity1;
+                    MoCEntityRat entityrat = (MoCEntityRat) iterator.next();
                     if ((entityrat != null) && (entityrat.getAttackTarget() == null)) {
                         entityrat.setAttackTarget((EntityLivingBase) entity);
                     }

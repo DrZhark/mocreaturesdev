@@ -35,6 +35,7 @@ public class MoCKeyHandler {
         this.localScreen = MoCClientProxy.instance.MoCScreen;
     }
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
         Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying

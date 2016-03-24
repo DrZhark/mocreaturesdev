@@ -49,9 +49,9 @@ public class MoCItemWhip extends MoCItem {
             whipFX(worldIn, pos);
             worldIn.playSoundAtEntity(playerIn, "mocreatures:whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             stack.damageItem(1, playerIn);
-            List list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(12D, 12D, 12D));
+            List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(12D, 12D, 12D));
             for (int l1 = 0; l1 < list.size(); l1++) {
-                Entity entity = (Entity) list.get(l1);
+                Entity entity = list.get(l1);
 
                 if (entity instanceof MoCEntityAnimal) {
                     MoCEntityAnimal animal = (MoCEntityAnimal) entity;

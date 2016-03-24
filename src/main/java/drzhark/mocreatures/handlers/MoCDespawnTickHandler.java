@@ -2,6 +2,7 @@ package drzhark.mocreatures.handlers;
 
 public class MoCDespawnTickHandler {
 
+    @SuppressWarnings("unused")
     private void onTickInGame() {
         /*
          * if (MoCreatures.proxy.useDespawner) { for (int dimension :

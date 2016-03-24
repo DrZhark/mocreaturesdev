@@ -1154,6 +1154,7 @@ public class MoCModelElephant extends ModelBase {
      * @param target : target model
      * @param origin : origin model
      */
+    @SuppressWarnings("unused")
     private void adjustYRotationPoints(ModelRenderer target, ModelRenderer origin) {
         //rotation point Z and X adjusted for head =
         //Z rotation point = attached rotation point Z - cos(attached.rotateangleX) * distance
@@ -1164,15 +1165,12 @@ public class MoCModelElephant extends ModelBase {
         } else {
             distanceZ = origin.rotationPointZ - target.rotationPointZ;
         }
-        /*
-         * float distanceZ = target.rotationPointZ - origin.rotationPointZ; if
-         * (distanceZ < 0F) { distanceZ *= -1F; }
-         */
+
         target.rotationPointZ = origin.rotationPointZ - (MathHelper.cos(origin.rotateAngleY) * distanceZ);
         target.rotationPointX = origin.rotationPointX - (MathHelper.sin(origin.rotateAngleY) * distanceZ);
-
     }
 
+    @SuppressWarnings("unused")
     private void adjustAllRotationPoints(ModelRenderer target, ModelRenderer origin) {
 
         float distanceY = 0F;

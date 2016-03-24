@@ -70,9 +70,8 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
-        String s = MoCTools.BiomeName(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(3); //white mice!
             }
         } catch (Exception e) {
@@ -96,10 +95,12 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         this.dataWatcher.updateObject(23, Byte.valueOf(input));
     }*/
 
+    @SuppressWarnings("unused")
     private boolean checkNearCats() {
         return true;
     }
 
+    @SuppressWarnings("unused")
     private boolean checkNearRock() {
         return true;
     }
@@ -193,25 +194,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         }
     }
 
-    private void reproduce() {
-    }
-
     public boolean upsideDown() {
         return getIsPicked();
     }
-
-    /*@Override
-    public boolean updateMount() {
-        return true;
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return true;
-    }*/
-
-    /*@Override
-    public boolean swimmerEntity() {
-        return true;
-    }*/
 }

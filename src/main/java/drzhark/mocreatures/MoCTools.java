@@ -1,19 +1,15 @@
 package drzhark.mocreatures;
 
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAttachedEntity;
 import drzhark.mocreatures.network.message.MoCMessageNameGUI;
 import drzhark.mocreatures.utils.MoCLog;
 import net.minecraft.block.Block;
@@ -43,6 +39,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
@@ -65,7 +63,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -150,9 +147,9 @@ public class MoCTools {
     }
 
     public static void buckleMobs(EntityLiving entityattacker, Double dist, World worldObj) {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
         for (int i = 0; i < list.size(); i++) {
-            Entity entitytarget = (Entity) list.get(i);
+            Entity entitytarget = list.get(i);
             if (!(entitytarget instanceof EntityLiving) || (entityattacker.riddenByEntity != null && entitytarget == entityattacker.riddenByEntity)) {
                 continue;
             }
@@ -165,9 +162,9 @@ public class MoCTools {
     }
 
     public static void buckleMobsNotPlayers(EntityLiving entityattacker, Double dist, World worldObj) {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
         for (int i = 0; i < list.size(); i++) {
-            Entity entitytarget = (Entity) list.get(i);
+            Entity entitytarget = list.get(i);
             if (!(entitytarget instanceof EntityLiving) || (entitytarget instanceof EntityPlayer)
                     || (entityattacker.riddenByEntity != null && entitytarget == entityattacker.riddenByEntity)) {
                 continue;
@@ -187,10 +184,10 @@ public class MoCTools {
         for (int i = 0; i < numberToSpawn; i++) {
             EntityLiving entityliving = null;
             try {
-                Class entityClass = MoCreatures.instaSpawnerMap.get(entityId);
+                Class<? extends EntityLiving> entityClass = MoCreatures.instaSpawnerMap.get(entityId);
                 entityliving = (EntityLiving) entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
             if (entityliving != null) {
@@ -208,10 +205,10 @@ public class MoCTools {
             EntityLiving entityToSpawn = null;
             try {
                 MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
-                Class myClass = entityData.getEntityClass();
+                Class<? extends EntityLiving> myClass = entityData.getEntityClass();
                 entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
             if (entityToSpawn != null) {
@@ -244,9 +241,8 @@ public class MoCTools {
         EntityLiving entityToSpawn = null;
         try {
             MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
-            Class myClass = null;
-            if (entityData == null && eName.contains("PetScorpion")) // since we don't add this to our map, we need to check for it manually
-            {
+            Class<? extends EntityLiving> myClass = null;
+            if (entityData == null && eName.contains("PetScorpion")) { // since we don't add this to our map, we need to check for it manually
                 myClass = MoCEntityPetScorpion.class;
             } else {
                 myClass = entityData.getEntityClass();
@@ -335,7 +331,6 @@ public class MoCTools {
     }
 
     public static void checkForTwistedEntities(World world) {
-        int k = 0;
         for (int l = 0; l < world.loadedEntityList.size(); l++) {
             Entity entity = (Entity) world.loadedEntityList.get(l);
             if (entity instanceof EntityLivingBase) {
@@ -619,10 +614,10 @@ public class MoCTools {
         return ~i & 0xf;
     }
 
-    public int countEntities(Class class1, World worldObj) {
+    public int countEntities(Class<? extends EntityLiving> class1, World worldObj) {
         int i = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
+            Entity entity = worldObj.loadedEntityList.get(j);
             if (class1.isAssignableFrom(entity.getClass())) {
                 i++;
             }
@@ -686,7 +681,7 @@ public class MoCTools {
             return;
         }
 
-        List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
 
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = (Entity) list.get(i);
@@ -701,7 +696,7 @@ public class MoCTools {
     }
 
     public static void repelMobs(Entity entity1, Double dist, World worldObj) {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = (Entity) list.get(i);
             if (!(entity instanceof EntityMob)) {
@@ -883,7 +878,7 @@ public class MoCTools {
             int l1 = MathHelper.floor_double(d1 + f + 1.0D);
             int i2 = MathHelper.floor_double(d2 - f - 1.0D);
             int j2 = MathHelper.floor_double(d2 + f + 1.0D);
-            List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, AxisAlignedBB.fromBounds(k, k1, i2, i1, l1, j2));
+            List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, AxisAlignedBB.fromBounds(k, k1, i2, i1, l1, j2));
             Vec3 vec3d = new Vec3(d, d1, d2);
             for (int k2 = 0; k2 < list.size(); k2++) {
                 Entity entity1 = (Entity) list.get(k2);
@@ -995,6 +990,7 @@ public class MoCTools {
         return despawnVanillaAnimals(worldObj, null);
     }
 
+    @SuppressWarnings("rawtypes")
     public static int despawnVanillaAnimals(World worldObj, List[] classList) {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
@@ -1714,7 +1710,7 @@ public class MoCTools {
     public static EntityItem getClosestFood(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
             Entity entity1 = (Entity) list.get(k);
             if (!(entity1 instanceof EntityItem)) {

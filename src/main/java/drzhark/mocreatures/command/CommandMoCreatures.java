@@ -9,7 +9,6 @@ import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.configuration.MoCProperty;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.entity.Entity;
@@ -19,9 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -29,14 +26,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class CommandMoCreatures extends CommandBase {
 
     private static List<String> commands = new ArrayList<String>();
-    private static List aliases = new ArrayList<String>();
-    private static Map<String, String> commmentMap = new TreeMap<String, String>();
-    private static List tabCompletionStrings = new ArrayList<String>();
+    private static List<String> aliases = new ArrayList<String>();
+    private static List<String> tabCompletionStrings = new ArrayList<String>();
 
     static {
         commands.add("/moc attackdolphins <boolean>");
@@ -120,7 +115,7 @@ public class CommandMoCreatures extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases() {
+    public List<String> getCommandAliases() {
         return aliases;
     }
 
@@ -141,7 +136,7 @@ public class CommandMoCreatures extends CommandBase {
      * Adds the strings available in this command to the given list of tab
      * completion options.
      */
-    public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
+    public List<String> addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
         return getListOfStringsMatchingLastWord(par2ArrayOfStr, (String[]) tabCompletionStrings.toArray(new String[tabCompletionStrings.size()]));
     }
 
@@ -169,7 +164,7 @@ public class CommandMoCreatures extends CommandBase {
             if (charArray.length == 2 && !Character.isDigit(charArray[1].charAt(0))) {
                 int unloadedCount = 0;
                 int loadedCount = 0;
-                ArrayList foundIds = new ArrayList();
+                ArrayList<Integer> foundIds = new ArrayList<Integer>();
                 ArrayList<String> tamedlist = new ArrayList<String>();
                 String playername = par2;
                 // search for tamed entity
@@ -230,11 +225,9 @@ public class CommandMoCreatures extends CommandBase {
                             + EnumChatFormatting.WHITE + " does not have any tamed animals."));
                 }
             } else if (command.equalsIgnoreCase("tamed") || command.equalsIgnoreCase("tame") && !par2.equals("")) {
-                String playername = par1ICommandSender.getName();
-                List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
                 int unloadedCount = 0;
                 int loadedCount = 0;
-                ArrayList foundIds = new ArrayList();
+                ArrayList<Integer> foundIds = new ArrayList<Integer>();
                 ArrayList<String> tamedlist = new ArrayList<String>();
                 // search for mocreature tamed entities
                 for (int dimension : DimensionManager.getIDs()) {
@@ -322,9 +315,6 @@ public class CommandMoCreatures extends CommandBase {
                                     + Math.round(posX) + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posY)
                                     + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + Math.round(posZ) + EnumChatFormatting.WHITE
                                     + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
-                            int x = MathHelper.floor_double(posX);
-                            int z = MathHelper.floor_double(posZ);
-                            Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
                             boolean result = teleportLoadedPet(world, player, petId, petName, par1ICommandSender); // attempt to TP again
                             if (!result) {
                                 par1ICommandSender.addChatMessage(new ChatComponentTranslation("Unable to transfer entity ID "
@@ -340,7 +330,7 @@ public class CommandMoCreatures extends CommandBase {
             }
         } else if (command.equalsIgnoreCase("tamedcount")) {
             String playername = par2;
-            List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
+            List<EntityPlayerMP> players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
             for (int i = 0; i < players.size(); i++) {
                 EntityPlayerMP player = (EntityPlayerMP) players.get(i);
                 if (player.getName().equalsIgnoreCase(playername)) {
@@ -464,7 +454,6 @@ public class CommandMoCreatures extends CommandBase {
                     if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(command)) {
                         continue;
                     }
-                    MoCProperty property = propEntry.getValue();
                     List<String> propList = propEntry.getValue().valueList;
                     String propValue = propEntry.getValue().value;
                     if (propList == null && propValue == null) {
@@ -482,8 +471,6 @@ public class CommandMoCreatures extends CommandBase {
         // START OTHER SECTIONS
         else {
             for (Map.Entry<String, MoCConfigCategory> catEntry : config.categories.entrySet()) {
-                String catName = catEntry.getValue().getQualifiedName();
-
                 for (Map.Entry<String, MoCProperty> propEntry : catEntry.getValue().entrySet()) {
                     if (propEntry.getValue() == null || !propEntry.getKey().equalsIgnoreCase(command)) {
                         continue;
@@ -536,8 +523,6 @@ public class CommandMoCreatures extends CommandBase {
             List<String> list = this.getSortedPossibleCommands(par1ICommandSender);
             byte b0 = 10;
             int i = (list.size() - 1) / b0;
-            boolean flag = false;
-            ICommand icommand;
             int j = 0;
 
             if (charArray.length > 1) {
@@ -569,7 +554,7 @@ public class CommandMoCreatures extends CommandBase {
      * Returns a sorted list of all possible commands for the given
      * ICommandSender.
      */
-    protected List getSortedPossibleCommands(ICommandSender par1ICommandSender) {
+    protected List<String> getSortedPossibleCommands(ICommandSender par1ICommandSender) {
         Collections.sort(CommandMoCreatures.commands);
         return CommandMoCreatures.commands;
     }
@@ -628,16 +613,7 @@ public class CommandMoCreatures extends CommandBase {
 
     public void sendPageHelp(ICommandSender sender, byte pagelimit, ArrayList<String> list, String[] par2ArrayOfStr, String title) {
         int x = (list.size() - 1) / pagelimit;
-        boolean flag = false;
         int j = 0;
-        String par1 = "";
-        if (par2ArrayOfStr.length > 1) {
-            par1 = par2ArrayOfStr[0];
-        }
-        String par2 = "";
-        if (par2ArrayOfStr.length > 1) {
-            par2 = par2ArrayOfStr[1];
-        }
 
         if (Character.isDigit(par2ArrayOfStr[par2ArrayOfStr.length - 1].charAt(0))) {
             try {

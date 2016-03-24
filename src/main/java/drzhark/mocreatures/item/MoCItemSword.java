@@ -1,17 +1,15 @@
 package drzhark.mocreatures.item;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.Item;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MoCItemSword extends ItemSword {
 

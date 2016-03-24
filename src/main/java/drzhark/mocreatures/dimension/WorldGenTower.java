@@ -12,30 +12,20 @@ public class WorldGenTower extends WorldGenerator {
 
     private Block MainBlock;
     private Block brickBlock;
-    private Block decoBlock;
-    private int MainMetadata;
-    private int brickMetadata;
-    private int decoMetadata;
 
     public WorldGenTower(Block Main, Block Brick, Block Deco) {
         this.MainBlock = Main;
         this.brickBlock = Brick;
-        this.decoBlock = Deco;
     }
 
     public WorldGenTower(Block Main, int MainMeta, Block Brick, int BrickMeta, Block Deco, int DecoMeta) {
         this.MainBlock = Main;
         this.brickBlock = Brick;
-        this.decoBlock = Deco;
-        this.MainMetadata = MainMeta;
-        this.brickMetadata = BrickMeta;
-        this.decoMetadata = DecoMeta;
     }
 
     @Override
     public boolean generate(World world, Random rand, BlockPos pos) {
         int t = 3;
-
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -91,28 +81,6 @@ public class WorldGenTower extends WorldGenerator {
                 world.setBlockState(new BlockPos(x + 4, Ny + 6, z - 2), this.brickBlock.getDefaultState(), t);
                 world.setBlockState(new BlockPos(x + 2, Ny + 7, z - 4), this.brickBlock.getDefaultState(), t);
                 world.setBlockState(new BlockPos(x + 1, Ny + 7, z - 4), this.brickBlock.getDefaultState(), t);
-
-                /*
-                 * world.setBlockState(new BlockPos(x-1, Ny, z-3, brickBlockID, MainMetadata, t);
-                 * world.setBlockState(new BlockPos(x-2, Ny, z-3, brickBlockID, MainMetadata, t);
-                 * world.setBlockState(new BlockPos(x-3, Ny+1, z-1, brickBlockID, MainMetadata,
-                 * t); world.setBlockState(new BlockPos(x-3, Ny+1, z-2, brickBlockID,
-                 * MainMetadata, t); world.setBlockState(new BlockPos(x-3, Ny+2, z+1,
-                 * brickBlockID, MainMetadata, t); world.setBlockState(new BlockPos(x-3, Ny+2,
-                 * z+2, brickBlockID, MainMetadata, t); world.setBlockState(new BlockPos(x-2,
-                 * Ny+3, z+3, brickBlockID, MainMetadata, t);
-                 * world.setBlockState(new BlockPos(x-1, Ny+3, z+3, brickBlockID, MainMetadata,
-                 * t); world.setBlockState(new BlockPos(x+1, Ny+4, z+3, brickBlockID,
-                 * MainMetadata, t); world.setBlockState(new BlockPos(x+2, Ny+4, z+3,
-                 * brickBlockID, MainMetadata, t); world.setBlockState(new BlockPos(x+3, Ny+5,
-                 * z+2, brickBlockID, MainMetadata, t); world.setBlockState(new BlockPos(x+3,
-                 * Ny+5, z+1, brickBlockID, MainMetadata, t);
-                 * world.setBlockState(new BlockPos(x+3, Ny+6, z-1, brickBlockID, MainMetadata,
-                 * t); world.setBlockState(new BlockPos(x+3, Ny+6, z-2, brickBlockID,
-                 * MainMetadata, t); world.setBlockState(new BlockPos(x+2, Ny+7, z-3,
-                 * brickBlockID, MainMetadata, t); world.setBlockState(new BlockPos(x+1, Ny+7,
-                 * z-3, brickBlockID, MainMetadata, t);
-                 */
             }
             return true;
         }

@@ -5,7 +5,6 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -32,8 +31,6 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     public int standCounter;
     public int tailCounter;
     public int eatingCounter;
-    private int fCounter;
-    private float transFloat = 0.2F;
     public int wingFlapCounter;
 
     public MoCEntityHorseMob(World world) {
@@ -246,9 +243,9 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             }
 
             if (this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
                     if (!(entity instanceof EntityMob)) {
                         continue;
                     }

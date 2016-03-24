@@ -19,22 +19,14 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     public static final String fishNames[] = {"Salmon", "Cod", "Bass"};
 
-    private int latMovCounter;
-    private EntityAIWanderMoC2 wander;
-
     public MoCEntityMediumFish(World world) {
         super(world);
         setSize(0.6F, 0.3F);
         setEdad(30 + this.rand.nextInt(70));
-        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
                 return (entity.height > 0.6F && entity.width > 0.3F);
-            }
-
-            @Override
-            public boolean apply(Object p_apply_1_) {
-                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 50));

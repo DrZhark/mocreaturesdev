@@ -11,6 +11,7 @@ import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -36,8 +37,6 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
     public NoiseGeneratorOctaves noiseGen5;
     private World worldObj;
     private double[] densities;
-    private int chunkX = 0;
-    private int chunkZ = 0;
 
     /** The biomes that are used to generate the chunk */
     private BiomeGenBase[] biomesForGeneration;
@@ -206,8 +205,6 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
      */
     @Override
     public Chunk provideChunk(int x, int z) {
-        this.chunkX = x;
-        this.chunkZ = z;
         this.RNGa.setSeed(x * 341873128712L + z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
@@ -370,8 +367,6 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
         int var5 = par3 * 16;
         BiomeGenBase var6 = this.worldObj.getBiomeGenForCoords(new BlockPos(var4 + 16, 0, var5 + 16));
 
-        long var7 = this.RNGa.nextLong() / 2L * 2L + 1L;
-        long var9 = this.RNGa.nextLong() / 2L * 2L + 1L;
         boolean var11 = false;
 
         int var12;
@@ -459,7 +454,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
      * given location.
      */
     @Override
-    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, BlockPos pos) {
+    public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType par1EnumCreatureType, BlockPos pos) {
         BiomeGenBase var5 = this.worldObj.getBiomeGenForCoords(pos);
         return var5 == null ? null : var5.getSpawnableList(par1EnumCreatureType);
     }

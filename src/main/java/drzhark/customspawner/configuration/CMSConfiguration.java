@@ -160,7 +160,7 @@ public class CMSConfiguration {
     }
 
     public CMSProperty get(String category, String key, int[] defaultValue, String comment) {
-        List<String> values = new ArrayList();
+        List<String> values = new ArrayList<String>();
         for (int i = 0; i < defaultValue.length; i++) {
             values.add(Integer.toString(defaultValue[i]));
         }
@@ -178,7 +178,7 @@ public class CMSConfiguration {
     }
 
     public CMSProperty get(String category, String key, double[] defaultValue, String comment) {
-        List<String> values = new ArrayList();
+        List<String> values = new ArrayList<String>();
         for (int i = 0; i < defaultValue.length; i++) {
             values.add(Double.toString(defaultValue[i]));
         }
@@ -197,7 +197,7 @@ public class CMSConfiguration {
     }
 
     public CMSProperty get(String category, String key, boolean[] defaultValue, String comment) {
-        List<String> values = new ArrayList();
+        List<String> values = new ArrayList<String>();
         for (int i = 0; i < defaultValue.length; i++) {
             values.add(Boolean.toString(defaultValue[i]));
         }
@@ -331,7 +331,6 @@ public class CMSConfiguration {
                     int nameStart = -1, nameEnd = -1;
                     boolean skip = false;
                     boolean quoted = false;
-                    boolean newline = true;
 
                     for (int i = 0; i < line.length() && !skip; ++i) {
                         if (Character.isLetterOrDigit(line.charAt(i)) || ALLOWED_CHARS.indexOf(line.charAt(i)) != -1
@@ -602,11 +601,8 @@ public class CMSConfiguration {
     public static class UnicodeInputStreamReader extends Reader {
 
         private final InputStreamReader input;
-        @SuppressWarnings("unused")
-        private final String defaultEnc;
 
         public UnicodeInputStreamReader(InputStream source, String encoding) throws IOException {
-            this.defaultEnc = encoding;
             String enc = encoding;
             byte[] data = new byte[4];
 

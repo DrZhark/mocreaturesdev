@@ -1,19 +1,10 @@
 package drzhark.mocreatures.entity.monster;
 
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
-
-import java.util.List;
-
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import net.minecraft.item.ItemStack;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -26,6 +17,9 @@ import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -36,12 +30,13 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import java.util.List;
 
 public class MoCEntityScorpion extends MoCEntityMob {
 
@@ -49,7 +44,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     private int poisontimer;
     public int mouthCounter;
     public int armCounter;
-    private int hideCounter;
 
     public MoCEntityScorpion(World world) {
         super(world);
@@ -193,9 +187,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
 
         if (MoCreatures.isServer() && this.riddenByEntity == null && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
-                Entity entity = (Entity) list.get(i);
+                Entity entity = list.get(i);
                 if (!(entity instanceof EntityMob)) {
                     continue;
                 }
@@ -396,7 +390,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(4);
         } else if (!this.worldObj.canBlockSeeSky(pos) && (this.posY < 50D)) {
             setType(2);

@@ -1,11 +1,9 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.pathfinding.PathNavigate;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -20,20 +18,18 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -245,9 +241,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public EntityItem getClosestItem(Entity entity, double d, ItemStack item, ItemStack item1) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
+            Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -268,9 +264,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public EntityItem getClosestEntityItem(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
+            Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -334,10 +330,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public void Riding() {
         if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
                     if (entity.isDead) {
                         continue;
                     }
@@ -772,7 +768,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     public void repelMobs(Entity entity1, Double dist, World worldObj) {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = (Entity) list.get(i);
             if (!(entity instanceof EntityMob)) {
@@ -837,6 +833,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         return false;
     }
 
+    @SuppressWarnings("unused")
     private void followPlayer() {
         EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer1 == null) {
@@ -848,16 +845,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
             this.getNavigator().tryMoveToEntityLiving(entityplayer1, 1D); //TODO check if 1D is adequate
         }
     }
-
-    /* @Override
-     public boolean updateMount() {
-         return false;
-     }
-    */
-    /*@Override
-    public boolean forceUpdates() {
-        return false;
-    }*/
 
     public boolean isOnAir() {
         return (this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.2D), MathHelper
@@ -912,9 +899,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
 
             if (entitiesToIgnore(entity1)) {
                 continue;
@@ -952,11 +939,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
      * @return
      */
     protected EntityLivingBase getBoogey(double d) {
-        double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if (entitiesToInclude(entity)) {
                 entityliving = (EntityLivingBase) entity;
             }
@@ -1017,11 +1003,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         } else {
             return false;
         }
-    }
-
-    @Override
-    public void riderIsDisconnecting(boolean flag) {
-        this.riderIsDisconnecting = true;
     }
 
     @Override

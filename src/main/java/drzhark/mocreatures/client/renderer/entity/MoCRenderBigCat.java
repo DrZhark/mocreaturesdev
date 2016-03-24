@@ -31,13 +31,12 @@ public class MoCRenderBigCat extends RenderLiving<MoCEntityBigCat> {
         return entitybigcat.getTexture();
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void doRender(MoCEntityBigCat entitybigcat, double d, double d1, double d2, float f, float f1) {
         super.doRender(entitybigcat, d, d1, d2, f, f1);
         boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entitybigcat.getMoCName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
-        boolean flag2 = MoCreatures.proxy.getDisplayPetIcons();
+
         if (entitybigcat.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;

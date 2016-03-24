@@ -154,19 +154,18 @@ public class MoCModelSnake extends ModelBase {
         float f6 = entitysnake.bodyswing;
         boolean nearplayer = entitysnake.getNearPlayer();
         boolean picked = entitysnake.pickedUp();
-        float fsize = entitysnake.getSizeF();
         setRotationAngles(f3, f4, tongueOff, mouthOff, rattleOff, nearplayer, typeI);
 
         float sidef = 0.0F;
-        float anglef = 10F;
 
-        //y = A * sin(w * t - k *x)
-        /*
-         * w1 = speed of wave propagation +/- as needed t = time k = number of
-         * waves A = amplitude of wave (how much will it depart from center x =
-         * position? :)A 1.3k 0.5w -3.5
-         */
+        // y = A * sin(w * t - k *x)
+        // w1 = speed of wave propagation +/- as needed
+        // t = time
+        // k = number of waves
+        // A = amplitude of wave (how much will it depart from center
+        // x = position? :)A 1.3k 0.5w -3.5
 
+        @SuppressWarnings("unused")
         float A = 0.4F;//0.8F;
         float w = 1.5F;
         float t = f / 2;
@@ -179,10 +178,11 @@ public class MoCModelSnake extends ModelBase {
             GL11.glPushMatrix();
             if (isresting) {
                 //this part doesn't work at all
-                /*
-                 * if (i > (bodyparts/3) && (i <2*bodyparts/3)) { direction =
-                 * -1; }else { direction = 1; }
-                 */
+                /* if (i > (bodyparts/3) && (i <2*bodyparts/3)) {
+                       direction = -1;
+                   } else {
+                       direction = 1; 
+                   }*/
 
                 //this shortens the snake while resting
                 //TODO reactivate ?
@@ -201,9 +201,7 @@ public class MoCModelSnake extends ModelBase {
                 if (i < this.bodyparts / 3) {
                     yOff = (i - (this.bodyparts / 3)) * 0.09F;
                     float zOff = (i - (this.bodyparts / 3)) * 0.065F;
-                    /*
-                     * if (picked) { yOff = yOff*-1F; //zOff = zOff*-1F; }
-                     */
+                    // if (picked) { yOff = yOff*-1F; //zOff = zOff*-1F; }
                     GL11.glTranslatef(0.0F, yOff / 1.5F, -zOff * f6);
                 }
 
@@ -278,10 +276,6 @@ public class MoCModelSnake extends ModelBase {
             //sidef = (0.4F * MathHelper.sin(-3.7F * t - 0.2F * (float)i)) + (0.3F * MathHelper.sin(-2F * t - 0.2F * (float)i));
             //sidef = 1.1F * MathHelper.sin(-2F * t - 0.2F * (float)i);
 
-            {
-
-            }
-
             this.bodySnake[i].render(f5);
 
             if (i == 0) {
@@ -336,16 +330,10 @@ public class MoCModelSnake extends ModelBase {
             }
 
             GL11.glPopMatrix();
-
         }
-
     }
 
-    /*
-     * public float sinusMovement(float A, float w, float t, float k, float x) {
-     * return A * MathHelper.sin(w* t - k * x); }
-     */
-
+    @SuppressWarnings("unused")
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;

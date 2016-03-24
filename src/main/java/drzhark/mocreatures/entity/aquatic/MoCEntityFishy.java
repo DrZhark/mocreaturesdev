@@ -24,7 +24,6 @@ import java.util.List;
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public int gestationtime;
-    private boolean hasEaten;
 
     public static final String fishNames[] = {"Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy", "Red"};
 
@@ -33,15 +32,10 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.3D));
-        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
                 return (entity.height > 0.3F || entity.width > 0.3F);
-            }
-
-            @Override
-            public boolean apply(Object p_apply_1_) {
-                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
@@ -140,9 +134,9 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 return;
             }
             int i = 0;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 3D, 4D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 3D, 4D));
             for (int j = 0; j < list.size(); j++) {
-                Entity entity = (Entity) list.get(j);
+                Entity entity = list.get(j);
                 if (entity instanceof MoCEntityFishy) {
                     i++;
                 }
@@ -151,9 +145,9 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
             if (i > 1) {
                 return;
             }
-            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int k = 0; k < list.size(); k++) {
-                Entity entity1 = (Entity) list1.get(k);
+                Entity entity1 = list1.get(k);
                 if (!(entity1 instanceof MoCEntityFishy) || (entity1 == this)) {
                     continue;
                 }

@@ -1,7 +1,5 @@
 package drzhark.mocreatures.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.client.model.ModelBase;
@@ -10,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelWyvern extends ModelBase {
@@ -940,6 +939,7 @@ public class MoCModelWyvern extends ModelBase {
         model.rotateAngleZ = z;
     }
 
+    @SuppressWarnings("unused")
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {//, boolean onAir, boolean flapwings, boolean rider, int openMouth, boolean diving, boolean sitting) {
         float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;

@@ -13,12 +13,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MoCEntityFXVanish extends EntityFX {
 
-    private final float portalParticleScale;
     private final double portalPosX;
     private final double portalPosY;
     private final double portalPosZ;
     private final boolean implode;
-    private final float textureBrightness = 1.0F;
 
     public MoCEntityFXVanish(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, float red, float green,
             float blue, boolean flag) {
@@ -34,7 +32,6 @@ public class MoCEntityFXVanish extends EntityFX {
         this.portalPosY = this.posY = par4;// + 0.7D;
         this.portalPosZ = this.posZ = par6;
         this.noClip = true;
-        this.portalParticleScale = this.particleScale = this.rand.nextFloat() * 0.3F + 0.5F;
         this.implode = flag;
         this.particleMaxAge = (int) (Math.random() * 10.0D) + 70;
     }

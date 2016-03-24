@@ -1,6 +1,5 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
@@ -55,15 +54,11 @@ public class MoCItemCreaturePedia extends MoCItem {
     public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
         if (!worldObj.isRemote) {
             double dist = 5D;
-            double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-            double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-            double newPosY = entityplayer.posY - 1D;
-
             double d1 = -1D;
             EntityLivingBase entityliving = null;
-            List list = worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.getEntityBoundingBox().expand(dist, dist, dist));
+            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.getEntityBoundingBox().expand(dist, dist, dist));
             for (int i = 0; i < list.size(); i++) {
-                Entity entity1 = (Entity) list.get(i);
+                Entity entity1 = list.get(i);
                 if (entity1 == null || !(entity1 instanceof EntityLivingBase)) {
                     continue;
                 }
@@ -98,18 +93,8 @@ public class MoCItemCreaturePedia extends MoCItem {
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/bunny.png");
                 return itemstack;
             }
-
-            //TODO 4FIX
-            /*
-             * if (entityliving instanceof MoCEntityDolphin) {
-             * //System.out.println("showing dolphin");
-             * MoCreatures.showCreaturePedia(entityplayer,
-             * "/mocreatures/pedia/dolphin.png"); return itemstack; }
-             */
         }
 
         return itemstack;
     }
-
-    private int ageCounter;
 }

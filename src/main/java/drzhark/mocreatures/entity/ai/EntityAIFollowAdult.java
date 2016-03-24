@@ -28,15 +28,15 @@ public class EntityAIFollowAdult extends EntityAIBase {
         if ((!(this.childAnimal instanceof IMoCEntity)) || ((IMoCEntity) this.childAnimal).getIsAdult()) {
             return false;
         } else {
-            List list =
+            List<EntityLiving> list =
                     this.childAnimal.worldObj.getEntitiesWithinAABB(this.childAnimal.getClass(),
                             this.childAnimal.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
             EntityLiving entityliving = null;
             double d0 = Double.MAX_VALUE;
-            Iterator iterator = list.iterator();
+            Iterator<EntityLiving> iterator = list.iterator();
 
             while (iterator.hasNext()) {
-                EntityLiving entityliving1 = (EntityLiving) iterator.next();
+                EntityLiving entityliving1 = iterator.next();
 
                 if (((IMoCEntity) entityliving1).getIsAdult()) {
                     double d1 = this.childAnimal.getDistanceSqToEntity(entityliving1);

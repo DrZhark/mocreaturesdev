@@ -47,6 +47,7 @@ public class GuiAPI implements IFMLLoadingPlugin {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @SuppressWarnings("rawtypes")
     public List getControlList(GuiOptions gui) {
         try {
             return (List) this.controlListField.get(gui);
@@ -56,6 +57,7 @@ public class GuiAPI implements IFMLLoadingPlugin {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void processGuiOptions(GuiOptions gui) {
         List controlList = getControlList(gui);
         if (controlList == null) {

@@ -28,7 +28,6 @@ import java.util.List;
 
 public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
-    private boolean pickedUp;
     private int bunnyReproduceTickerA;
     private int bunnyReproduceTickerB;
     private int jumpTimer;
@@ -96,7 +95,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(3); //snow white bunnies!
                 return true;
             }
@@ -183,7 +182,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
             }
-            this.pickedUp = true;
 
             if (MoCreatures.isServer() && !getIsTamed()) {
                 MoCTools.tameWithName(entityplayer, this);
@@ -193,7 +191,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             if (MoCreatures.isServer()) {
                 this.mountEntity(null);
             }
-            this.pickedUp = false;
         }
 
         this.motionX = entityplayer.motionX * 5D;
@@ -226,13 +223,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             } else if (this.bunnyReproduceTickerB < 127) {
                 this.bunnyReproduceTickerB++;
             } else {
-                /*
-                 * int k = worldObj.countEntities(this.getClass()); if (k >
-                 * MoCreatures.proxy.bunnyBreedThreshold) { proceed(); return; }
-                 */
-
-                List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4.0D, 4.0D, 4.0D));
-                boolean flag = false;
+                List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4.0D, 4.0D, 4.0D));
                 for (int i1 = 0; i1 < list1.size(); i1++) {
                     Entity entity1 = (Entity) list1.get(i1);
                     if (!(entity1 instanceof MoCEntityBunny) || (entity1 == this)) {
@@ -255,7 +246,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                     this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
                     proceed();
                     entitybunny.proceed();
-                    flag = true;
                     break;
                 }
             }

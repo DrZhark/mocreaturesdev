@@ -32,7 +32,7 @@ public class MoCDespawner {
     public static int despawnLightLevel = 7;
     public static int despawnTickRate = 111;
     public List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-    private List<Class> vanillaClassList;
+    private List<Class<? extends EntityLiving>> vanillaClassList;
 
     public MoCDespawner() {
         this.biomeList = new ArrayList<BiomeGenBase>();
@@ -45,7 +45,7 @@ public class MoCDespawner {
                 this.biomeList.add(biomegenbase);
             }
 
-            this.vanillaClassList = new ArrayList<Class>();
+            this.vanillaClassList = new ArrayList<Class<? extends EntityLiving>>();
             this.vanillaClassList.add(EntityChicken.class);
             this.vanillaClassList.add(EntityCow.class);
             this.vanillaClassList.add(EntityPig.class);
@@ -112,10 +112,10 @@ public class MoCDespawner {
         return count;
     }
 
-    public final int countEntities(Class class1, World worldObj) {
+    public final int countEntities(Class<? extends EntityLiving> class1, World worldObj) {
         int i = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
+            Entity entity = worldObj.loadedEntityList.get(j);
             if (class1.isAssignableFrom(entity.getClass())) {
                 i++;
             }

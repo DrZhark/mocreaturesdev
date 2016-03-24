@@ -2,17 +2,13 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -22,9 +18,7 @@ import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -351,10 +345,9 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     }
 
     public int checkNearBigKitties(double d) {
-        boolean flag = false;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int j = 0; j < list.size(); j++) {
-            Entity entity = (Entity) list.get(j);
+            Entity entity = list.get(j);
             if ((entity != this) && (entity instanceof MoCEntityBigCat)) {
                 MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
                 return entitybigcat.getType();
@@ -403,7 +396,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(6); //snow leopard
                 return true;
             }

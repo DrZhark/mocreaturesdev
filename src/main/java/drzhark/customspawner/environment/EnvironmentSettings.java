@@ -14,6 +14,7 @@ import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -62,7 +63,7 @@ public class EnvironmentSettings {
     public Map<String, EntityModData> entityModMap = new TreeMap<String, EntityModData>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, EntityModData> defaultModMap = new TreeMap<String, EntityModData>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, BiomeModData> biomeModMap = new TreeMap<String, BiomeModData>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Class<? extends EntityLiving>, EntityData> classToEntityMapping = new HashMap<Class<? extends EntityLiving>, EntityData>();
+    public Map<Class<? extends Entity>, EntityData> classToEntityMapping = new HashMap<Class<? extends Entity>, EntityData>();
     public Map<String, EntitySpawnType> entitySpawnTypes = new TreeMap<String, EntitySpawnType>(String.CASE_INSENSITIVE_ORDER);
     public EntitySpawnType LIVINGTYPE_UNDEFINED = new EntitySpawnType(this, EntitySpawnType.UNDEFINED, 0, 0, 0.0F, false);
     public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 35, 0.1F, true);
@@ -76,9 +77,6 @@ public class EnvironmentSettings {
     private static final String CATEGORY_CUSTOMSPAWNER_SETTINGS = "customspawner-settings";
     private static final String CATEGORY_BIOMEGROUP_DEFAULTS = "biomegroup-defaults";
     private static final String CATEGORY_MOD_MAPPINGS = "mod-mappings";
-    private static final String CATEGORY_CREATURES = "Creatures";
-    private static final String CATEGORY_ENTITY_SPAWN_TYPES = "entity-spawn-types";
-    private static final String CATEGORY_WORLD_SETTINGS = "world-settings";
     private static final String CREATURES_FILE_PATH = File.separator + "Creatures" + File.separator;
     private static final String BIOMES_FILE_PATH = File.separator + "Biomes" + File.separator;
 
@@ -244,11 +242,9 @@ public class EnvironmentSettings {
     }
 
     public void initializeEntities() {
-        for (Object obj : EntityList.classToStringMapping.entrySet()) {
-            Map.Entry entry = (Map.Entry) obj;
-            Class clazz = (Class) entry.getKey();
-            if (this.classToEntityMapping.get(clazz) == null) // don't process if it already exists
-            {
+        for (Map.Entry<Class<? extends Entity>, String> entry : EntityList.classToStringMapping.entrySet()) {
+            Class<? extends Entity> clazz = entry.getKey();
+            if (this.classToEntityMapping.get(clazz) == null) { // don't process if it already exists
                 registerEntity(clazz);
             } else {
                 processEntityConfig(this.classToEntityMapping.get(clazz));
@@ -257,14 +253,15 @@ public class EnvironmentSettings {
         this.CMSEnvironmentConfig.save();
     }
 
-    public EntityData registerEntity(Class<? extends EntityLiving> clazz) {
+    @SuppressWarnings("unchecked")
+    public EntityData registerEntity(Class<? extends Entity> clazz) {
         EntityLiving entityliving = null;
         EntityData entityData = null;
         try {
             if (this.debug) {
                 this.envLog.logger.info("Attempting to register Entity from class " + clazz + "...");
             }
-            entityliving = clazz.getConstructor(new Class[] {World.class}).newInstance(new Object[] {DimensionManager.getWorld(0)});
+            entityliving = (EntityLiving) clazz.getConstructor(new Class[] {World.class}).newInstance(new Object[] {DimensionManager.getWorld(0)});
         } catch (Throwable throwable) {
             if (this.debug) {
                 this.envLog.logger.info(clazz + " is not a valid Entity for registration, Skipping...");
@@ -291,7 +288,7 @@ public class EnvironmentSettings {
             EnumCreatureType creatureType = null;
             SpawnListEntry spawnListEntry = CustomSpawner.defaultSpawnListEntryMap.get(clazz.getName());
             if (spawnListEntry == null) {
-                spawnListEntry = new SpawnListEntry(clazz, 8, 2, 3);
+                spawnListEntry = new SpawnListEntry((Class<? extends EntityLiving>) clazz, 8, 2, 3);
             }
             // temp fix for MoCreature ambients
             if (((EntityAnimal.class.isAssignableFrom(clazz) && !entityliving.isCreatureType(EnumCreatureType.AMBIENT, true)) || entityliving
@@ -403,7 +400,7 @@ public class EnvironmentSettings {
                         this.envLog.logger.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
                     }
                     CMSConfigCategory modMapCat = this.CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
-                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)),
+                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList<String>(Arrays.asList(modKey.toUpperCase(), configName)),
                             CMSProperty.Type.STRING, "automatically generated"));
 
                     EntityModData modData = this.entityModMap.get(modKey);
@@ -559,7 +556,6 @@ public class EnvironmentSettings {
                         + " with types " + types);
             }
             boolean found = false;
-            BiomeModData biomeModData = null;
             for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
                 if (biomeClass.contains(modEntry.getKey())) {
                     // Found match, use config
@@ -600,7 +596,7 @@ public class EnvironmentSettings {
                         this.envLog.logger.info("Added Automatic Mod Biome Mapping " + modKey + " with tag " + modKey + " to file " + configName);
                     }
                     CMSConfigCategory modMapCat = this.CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
-                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList(Arrays.asList(modKey.toUpperCase(), configName)),
+                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList<String>(Arrays.asList(modKey.toUpperCase(), configName)),
                             CMSProperty.Type.STRING, "automatically generated"));
                     biomeData.setTag(modData.getModTag());
                     biomeData.setDefined((true));
@@ -779,7 +775,7 @@ public class EnvironmentSettings {
                     this.CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(
                             entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT", prop);
                     entityCategory.put("biomegroups",
-                            new CMSProperty("biomegroups", new ArrayList(Arrays.asList(entityData.getEntityName().toUpperCase() + "_DEFAULT")),
+                            new CMSProperty("biomegroups", new ArrayList<String>(Arrays.asList(entityData.getEntityName().toUpperCase() + "_DEFAULT")),
                                     CMSProperty.Type.STRING));
                     entityData.setBiomeGroups(prop.valueList);
                     this.biomeGroupMap.put(entityData.getEntityMod().getModTag() + "_" + entityData.getEntityName().toUpperCase() + "_DEFAULT",
@@ -806,8 +802,6 @@ public class EnvironmentSettings {
             this.envLog.logger.info("Scanning mod configs for entities...");
         }
         for (Map.Entry<String, EntityModData> modEntry : this.entityModMap.entrySet()) {
-            ArrayList<Map<String, EntityData>> entityList = new ArrayList();
-
             for (EntitySpawnType entitySpawnType : this.entitySpawnTypes.values()) {
                 if (entitySpawnType.name().equalsIgnoreCase("UNDEFINED") || modEntry.getValue().getSpawnListFromType(entitySpawnType) == null) {
                     continue;
@@ -949,7 +943,7 @@ public class EnvironmentSettings {
         // generate default key mappings
         for (Map.Entry<String, EntityModData> modEntry : this.defaultModMap.entrySet()) {
             List<String> values =
-                    new ArrayList(Arrays.asList(modEntry.getValue().getModTag(), modEntry.getValue().getModConfig().getFileName() + ".cfg"));
+                    new ArrayList<String>(Arrays.asList(modEntry.getValue().getModTag(), modEntry.getValue().getModConfig().getFileName() + ".cfg"));
             modMapCat.put(modEntry.getKey(), new CMSProperty(modEntry.getKey(), values, CMSProperty.Type.STRING));
             this.biomeModMap.put(modEntry.getKey(), new BiomeModData(modEntry.getKey(), modEntry.getValue().getModTag(), new CMSConfiguration(
                     new File(this.CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH

@@ -55,7 +55,7 @@ public class CMSUtils {
     public static List<String> parseName(String biomeConfigEntry) {
         String tag = biomeConfigEntry.substring(0, biomeConfigEntry.indexOf('|'));
         String biomeName = biomeConfigEntry.substring(biomeConfigEntry.indexOf('|') + 1, biomeConfigEntry.length());
-        List<String> biomeParts = new ArrayList();
+        List<String> biomeParts = new ArrayList<String>();
         biomeParts.add(tag);
         biomeParts.add(biomeName);
         return biomeParts;

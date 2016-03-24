@@ -20,7 +20,6 @@ public class CustomDespawner {
     public static int despawnLightLevel = 7;
     public static int despawnTickRate = 111;
     public List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-    private List<Class> vanillaClassList;
 
     //New DesPawner stuff
     public final static int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int minDespawnLightLevel, int maxDespawnLightLevel) {
@@ -57,10 +56,10 @@ public class CustomDespawner {
         return 0;
     }
 
-    public final static int countEntities(Class class1, World worldObj) {
+    public final static int countEntities(Class<? extends Entity> class1, World worldObj) {
         int i = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
+            Entity entity = worldObj.loadedEntityList.get(j);
             if (class1.isAssignableFrom(entity.getClass())) {
                 i++;
             }

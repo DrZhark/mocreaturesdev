@@ -572,7 +572,6 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        String s = MoCTools.BiomeName(this.worldObj, pos);
         /**
          * swamp: python, bright green, #1 (done) plains: coral, cobra #1, #2,
          * #3, #4 (everyone but 7) desert: rattlesnake , #2 jungle: all except
@@ -592,11 +591,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
             int l = this.rand.nextInt(10);
 
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 return false;
             }
 
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
                 if (l < 5) {
                     setType(7); // rattlesnake or spotted brownish ?
                 } else {
@@ -604,7 +603,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
                 }
             }
 
-            if (getType() == 7 && !(BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT))) {
+            if (getType() == 7 && !(BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY))) {
                 setType(2);
             }
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.HILLS)) {

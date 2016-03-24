@@ -19,22 +19,15 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     public static final String fishNames[] = {"Anchovy", "Angelfish", "Angler", "Clownfish", "Goldfish", "Hippotang", "Manderin"};
 
-    private int latMovCounter;
-
     public MoCEntitySmallFish(World world) {
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(70 + this.rand.nextInt(30));
         this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
-        this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate() {
+        this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
                 return (entity.height > 0.3F || entity.width > 0.3F);
-            }
-
-            @Override
-            public boolean apply(Object p_apply_1_) {
-                return this.apply((Entity) p_apply_1_);
             }
         }, 2.0F, 0.6D, 1.5D));
         //this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 10));

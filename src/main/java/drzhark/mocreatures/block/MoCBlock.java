@@ -21,19 +21,19 @@ import java.util.List;
 
 public class MoCBlock extends Block {
 
-    public static final PropertyEnum VARIANT = PropertyEnum.create("variant", MoCBlock.EnumType.class);
+    public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
     public MoCBlock(String name, Material material) {
         super(material);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerBlock(this, MultiItemBlock.class, name);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, MoCBlock.EnumType.WYVERN_LAIR));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.WYVERN_LAIR));
     }
 
     @Override
     public int damageDropped(IBlockState state) {
-        return ((MoCBlock.EnumType) state.getValue(VARIANT)).getMetadata();
+        return ((EnumType) state.getValue(VARIANT)).getMetadata();
     }
 
     @Override
@@ -43,8 +43,8 @@ public class MoCBlock extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List list) {
-        MoCBlock.EnumType[] aenumtype = MoCBlock.EnumType.values();
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        EnumType[] aenumtype = EnumType.values();
         int i = aenumtype.length;
 
         for (int j = 0; j < i; ++j) {
@@ -75,8 +75,6 @@ public class MoCBlock extends Block {
         private final int meta;
         private final String name;
         private final String unlocalizedName;
-
-        private static final String __OBFID = "CL_00002081";
 
         private EnumType(int meta, String name) {
             this(meta, name, name);

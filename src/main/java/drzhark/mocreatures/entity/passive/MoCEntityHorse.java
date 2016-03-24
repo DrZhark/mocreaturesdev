@@ -1,20 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.inventory.InventoryLargeChest;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.pathfinding.PathNavigateGround;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -22,29 +12,33 @@ import drzhark.mocreatures.network.message.MoCMessageHeart;
 import drzhark.mocreatures.network.message.MoCMessageVanish;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.SoundType;
-import net.minecraft.block.BlockJukebox;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -57,7 +51,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
-import java.util.jar.JarFile;
 
 public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
@@ -163,7 +156,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                     setType(60);// zebra
                 }
             }
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
                 setType(60);// zebra
             }
 
@@ -2109,7 +2102,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 StarFX();
             }
             if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
-                System.out.println("playing sound");
                 MoCTools.playCustomSound(this, "wingflap", this.worldObj);
             }
         }
@@ -2163,10 +2155,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             /**
              * zebras on the run!
              */
+            /*
             if (this.getType() == 60 && !getIsTamed()) {
                 boolean flag = isZebraRunning();
-
-            }
+            }*/
 
             /**
              * foal following mommy!
@@ -2200,9 +2192,9 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
             int i = 0;
 
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
             for (int j = 0; j < list.size(); j++) {
-                Entity entity = (Entity) list.get(j);
+                Entity entity = list.get(j);
                 if (entity instanceof MoCEntityHorse || entity instanceof EntityHorse) {
                     i++;
                 }
@@ -2211,9 +2203,9 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             if (i > 1) {
                 return;
             }
-            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int k = 0; k < list1.size(); k++) {
-                Entity horsemate = (Entity) list1.get(k);
+                Entity horsemate = list1.get(k);
                 boolean flag = (horsemate instanceof EntityHorse);
                 if (!(horsemate instanceof MoCEntityHorse || flag) || (horsemate == this)) {
                     continue;

@@ -9,10 +9,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 public class SpawnTickHandler {
 
-    /*
-     * @Override public String getLabel() { return "CustomMobSpawner"; }
-     */
-
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public void worldTick(WorldTickEvent event) {
         WorldServer worldObj = (WorldServer) event.world;

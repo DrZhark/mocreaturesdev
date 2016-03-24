@@ -9,7 +9,6 @@ import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.utils.MoCLog;
@@ -27,7 +26,6 @@ import java.util.List;
 
 public class MoCItemPetAmulet extends MoCItem {
 
-    private int ageCounter;
     private String name;
     private float health;
     private int edad;
@@ -175,7 +173,7 @@ public class MoCItemPetAmulet extends MoCItem {
      * allows items to add custom lines of information to the mouseover description
      */
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
         initAndReadNBT(par1ItemStack);
         if (this.spawnClass != "") {
             par3List.add(EnumChatFormatting.AQUA + this.spawnClass);

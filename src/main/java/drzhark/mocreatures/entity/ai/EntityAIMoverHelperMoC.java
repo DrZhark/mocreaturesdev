@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.ai;
 
-import drzhark.mocreatures.entity.monster.MoCEntityWraith;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.MoCEntityAquatic;
@@ -9,7 +7,6 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 
 public class EntityAIMoverHelperMoC extends EntityMoveHelper {

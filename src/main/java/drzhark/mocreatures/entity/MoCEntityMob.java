@@ -1,20 +1,15 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.pathfinding.PathNavigate;
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHealth;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,9 +18,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -45,8 +41,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     protected boolean divePending;
     protected int maxHealth;
-    private PathEntity entitypath;
-    private boolean riderIsDisconnecting;
     protected float moveSpeed;
     protected String texture;
     protected PathNavigate navigatorWater;
@@ -56,7 +50,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public MoCEntityMob(World world) {
         super(world);
         setTamed(false);
-        this.riderIsDisconnecting = false;
         this.texture = "blank.jpg";
         this.moveHelper = new EntityAIMoverHelperMoC(this);
         this.navigatorWater = new PathNavigateSwimmer(this, world);
@@ -198,9 +191,9 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
 
             if (entitiesToIgnore(entity1)) {
                 continue;
@@ -534,11 +527,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public float getAdjustedXOffset() {
         return 0F;
-    }
-
-    @Override
-    public void riderIsDisconnecting(boolean flag) {
-        this.riderIsDisconnecting = true;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.entity.ai.EntityAIWander;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
@@ -12,6 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -71,9 +70,9 @@ public class MoCEntityInsect extends MoCEntityAmbient {
             }
 
             if (isFlyer() && !getIsFlying() && this.rand.nextInt(getFlyingFreq()) == 0) {
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity1 = (Entity) list.get(i);
+                    Entity entity1 = list.get(i);
                     if (!(entity1 instanceof EntityLivingBase)) {
                         continue;
                     }

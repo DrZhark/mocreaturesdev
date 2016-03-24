@@ -149,7 +149,7 @@ public class MoCPetMapData extends WorldSavedData {
      */
     @Override
     public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-        Iterator iterator = par1NBTTagCompound.getKeySet().iterator();
+        Iterator<String> iterator = par1NBTTagCompound.getKeySet().iterator();
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
             NBTTagCompound nbt = (NBTTagCompound) par1NBTTagCompound.getTag(s);

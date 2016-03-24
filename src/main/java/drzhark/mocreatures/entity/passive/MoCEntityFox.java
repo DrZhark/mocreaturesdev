@@ -31,9 +31,6 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class MoCEntityFox extends MoCEntityTameableAnimal {
 
-    private boolean isHungry;
-    private int hungryCounter;
-
     public MoCEntityFox(World world) {
         super(world);
         setSize(0.6F, 0.7F);
@@ -148,7 +145,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
                         MathHelper.floor_double(this.posZ));
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(2);
             }
         } catch (Exception e) {

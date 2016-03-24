@@ -23,9 +23,6 @@ import net.minecraft.world.World;
 
 public class MoCEntityBoar extends MoCEntityAnimal {
 
-    private boolean isHungry;
-    private int hungryCounter;
-
     public MoCEntityBoar(World world) {
         super(world);
         setSize(0.9F, 0.8F);

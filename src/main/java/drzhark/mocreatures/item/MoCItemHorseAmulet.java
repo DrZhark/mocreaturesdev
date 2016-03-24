@@ -201,7 +201,7 @@ public class MoCItemHorseAmulet extends MoCItem {
      * allows items to add custom lines of information to the mouseover description
      */
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
         initAndReadNBT(par1ItemStack);
         if (this.spawnClass == 100) {
             par3List.add(EnumChatFormatting.AQUA + "Wyvern");

@@ -1,10 +1,7 @@
 package drzhark.mocreatures.client.audio;
 
-import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,14 +38,6 @@ public class MoCSounds {
         //  event.manager.addStreaming("mocreatures:shuffling.ogg");
     }
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onPlayStreaming(PlayStreamingEvent event) {
-        if (event.name == "shuffling") {
-            //FMLClientHandler.instance().getClient().sndManager.playStreaming("mocreatures:shuffling", (float) event.x + 0.5F, (float) event.y + 0.5F, (float) event.z + 0.5F);
-        }
-    }
-
     /**
      * List directory contents for a resource folder. Not recursive. This is
      * basically a brute-force implementation. Works for regular files and also
@@ -62,6 +51,7 @@ public class MoCSounds {
      * @throws URISyntaxException
      * @throws IOException
      */
+    @SuppressWarnings("rawtypes")
     String[] getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (dirURL != null && dirURL.getProtocol().equals("file")) {

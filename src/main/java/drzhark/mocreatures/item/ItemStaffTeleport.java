@@ -20,11 +20,6 @@ public class ItemStaffTeleport extends MoCItem {
         setMaxDamage(128);
     }
 
-    private int portalPosX;
-    private int portalPosY;
-    private int portalPosZ;
-    private int portalDimension;
-
     /**
      * Returns True is the item is renderer in full 3D when hold.
      */

@@ -148,6 +148,7 @@ public class MoCEventHooks {
     /**
      * Gets the amount of light on a block without taking into account sunlight
      */
+    @SuppressWarnings("unused")
     private int getLightFromNeighbors(Chunk chunk, int x, int y, int z) {
         ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
 

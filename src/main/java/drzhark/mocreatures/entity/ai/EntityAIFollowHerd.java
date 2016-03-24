@@ -40,15 +40,15 @@ public class EntityAIFollowHerd extends EntityAIBase {
             return false;
         }
 
-        List list =
+        List<EntityLiving> list =
                 this.theAnimal.worldObj.getEntitiesWithinAABB(this.theAnimal.getClass(),
                         this.theAnimal.getEntityBoundingBox().expand(this.maxRange, 4.0D, this.maxRange));
         EntityLiving entityliving = null;
         double d0 = Double.MAX_VALUE;
-        Iterator iterator = list.iterator();
+        Iterator<EntityLiving> iterator = list.iterator();
 
         while (iterator.hasNext()) {
-            EntityLiving entityliving1 = (EntityLiving) iterator.next();
+            EntityLiving entityliving1 = iterator.next();
             double d1 = this.theAnimal.getDistanceSqToEntity(entityliving1);
             if (d1 >= this.minRange && this.theAnimal != entityliving1) {
                 d0 = d1;

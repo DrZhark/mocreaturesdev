@@ -6,7 +6,6 @@ import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -27,7 +26,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     public float spin;
     public int spinInt;
     private boolean waterbound;
-    private int hunting;
 
     public MoCEntityCrocodile(World world) {
         super(world);
@@ -123,7 +121,6 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             {
                 setIsSitting(false);
                 this.biteProgress = 0;
-                this.hunting = 1;
             }
 
         } else {

@@ -193,7 +193,7 @@ public class MoCModelSilverSkeleton extends ModelBase {
 
         float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
-        float ClothRot = MathHelper.cos(f * 0.9F) * 0.6F * f1;
+        // float ClothRot = MathHelper.cos(f * 0.9F) * 0.6F * f1;
 
         float RLegXRotB = RLegXRot;
         float LLegXRotB = LLegXRot;

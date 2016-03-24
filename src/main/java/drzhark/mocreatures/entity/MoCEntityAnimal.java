@@ -1,19 +1,13 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.network.play.server.S1BPacketEntityAttach;
-import net.minecraft.world.WorldServer;
-
-import net.minecraft.entity.passive.EntityTameable;
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.entity.EntityCreature;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -27,11 +21,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
@@ -39,7 +29,6 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
@@ -54,10 +43,8 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     protected boolean jumpPending;
     protected int temper;
     protected boolean isEntityJumping;
-    private PathEntity entitypath;
     // used by MoCPlayerTracker to prevent dupes when a player disconnects on animal from server
     protected boolean riderIsDisconnecting;
-    private int petDataId = -1;
     public float moveSpeed;
     protected String texture;
     private int huntingCounter;
@@ -218,9 +205,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
 
             if (entitiesToIgnore(entity1)) {
                 continue;
@@ -238,9 +225,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public EntityLivingBase getClosestTarget(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity)
                     || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
                     || (this.height <= entity1.height) || (this.width <= entity1.width)) {
@@ -256,12 +243,12 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return entityliving;
     }
 
-    protected EntityLivingBase getClosestSpecificEntity(Entity entity, Class myClass, double d) {
+    protected EntityLivingBase getClosestSpecificEntity(Entity entity, Class<? extends EntityLiving> myClass, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
+            Entity entity1 = list.get(i);
             if (!myClass.isAssignableFrom(entity1.getClass())) {
                 continue;
             }
@@ -294,11 +281,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * @return
      */
     protected EntityLivingBase getBoogey(double d) {
-        double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if (entitiesToInclude(entity)) {
                 entityliving = (EntityLivingBase) entity;
             }
@@ -418,9 +404,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public EntityItem getClosestItem(Entity entity, double d, Item item, Item item1) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
+            Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -441,9 +427,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public EntityItem getClosestEntityItem(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
+            Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -461,9 +447,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public EntityItem getClosestFood(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
-            Entity entity1 = (Entity) list.get(k);
+            Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
@@ -530,10 +516,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public void Riding() {
         if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
-                    Entity entity = (Entity) list.get(i);
+                    Entity entity = list.get(i);
                     if (entity.isDead) {
                         continue;
                     }
@@ -1058,9 +1044,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     public void repelMobs(Entity entity1, Double dist, World worldObj) {
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if (!(entity instanceof EntityMob)) {
                 continue;
             }
@@ -1120,6 +1106,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     //TODO MOVE TO NEW AI
+    @SuppressWarnings("unused")
     private void followPlayer() {
         EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer1 == null) {
@@ -1154,16 +1141,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         } else {
             super.mountEntity(par1Entity);
         }
-    }*/
-
-    /*@Override
-    public boolean updateMount() {
-        return false;
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return false;
     }*/
 
     @Override
@@ -1292,11 +1269,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     protected boolean canBeTrappedInNet() {
         return (this instanceof IMoCTameable) && getIsTamed();
-    }
-
-    @Override
-    public void riderIsDisconnecting(boolean flag) {
-        this.riderIsDisconnecting = true;
     }
 
     /**

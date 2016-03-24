@@ -13,7 +13,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -24,7 +23,7 @@ import java.util.List;
 public class CommandMoCTP extends CommandBase {
 
     private static List<String> commands = new ArrayList<String>();
-    private static List aliases = new ArrayList<String>();
+    private static List<String> aliases = new ArrayList<String>();
 
     static {
         commands.add("/moctp <entityid> <playername>");
@@ -39,7 +38,7 @@ public class CommandMoCTP extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases() {
+    public List<String> getCommandAliases() {
         return aliases;
     }
 
@@ -91,7 +90,6 @@ public class CommandMoCTP extends CommandBase {
                                 + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + x + EnumChatFormatting.WHITE + ", "
                                 + EnumChatFormatting.LIGHT_PURPLE + y + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + z
                                 + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
-                        Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
                         boolean result = teleportLoadedPet(world, player, petId, petName, par1ICommandSender); // attempt to TP again
                         if (!result) {
                             par1ICommandSender.addChatMessage(new ChatComponentTranslation("Unable to transfer entity ID " + EnumChatFormatting.GREEN
@@ -111,7 +109,7 @@ public class CommandMoCTP extends CommandBase {
      * Returns a sorted list of all possible commands for the given
      * ICommandSender.
      */
-    protected List getSortedPossibleCommands(ICommandSender par1ICommandSender) {
+    protected List<String> getSortedPossibleCommands(ICommandSender par1ICommandSender) {
         Collections.sort(CommandMoCTP.commands);
         return CommandMoCTP.commands;
     }

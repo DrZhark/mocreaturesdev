@@ -21,7 +21,7 @@ import java.util.List;
 public class CommandMoCSpawn extends CommandBase {
 
     private static List<String> commands = new ArrayList<String>();
-    private static List aliases = new ArrayList<String>();
+    private static List<String> aliases = new ArrayList<String>();
 
     static {
         commands.add("/mocspawn <horse|wyvern> <int>");
@@ -35,7 +35,7 @@ public class CommandMoCSpawn extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases() {
+    public List<String> getCommandAliases() {
         return aliases;
     }
 
@@ -114,7 +114,7 @@ public class CommandMoCSpawn extends CommandBase {
      * Returns a sorted list of all possible commands for the given
      * ICommandSender.
      */
-    protected List getSortedPossibleCommands(ICommandSender par1ICommandSender) {
+    protected List<String> getSortedPossibleCommands(ICommandSender par1ICommandSender) {
         Collections.sort(CommandMoCSpawn.commands);
         return CommandMoCSpawn.commands;
     }

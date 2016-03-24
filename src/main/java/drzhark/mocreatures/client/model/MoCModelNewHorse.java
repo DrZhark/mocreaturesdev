@@ -598,12 +598,6 @@ public class MoCModelNewHorse extends ModelBase {
          * f = distance walked f1 = speed 0 - 1 f2 = timer
          */
 
-        /*
-         * if (rider) { //System.out.println("f = " + f);
-         * //System.out.println("f1 = " + f1); //System.out.println("f2 = " +
-         * f2); }
-         */
-
         if (shuffle) {
             HeadXRot = HeadXRot + (MathHelper.cos(f2 * 0.4F) * 0.15F);
         } else if (f1 > 0.2F && !floating) {

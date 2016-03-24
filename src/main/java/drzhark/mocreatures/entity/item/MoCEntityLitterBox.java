@@ -1,9 +1,5 @@
 package drzhark.mocreatures.entity.item;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.util.DamageSource;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.Entity;
@@ -17,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -191,9 +188,9 @@ public class MoCEntityLitterBox extends EntityLiving {
         if (getUsedLitter() && MoCreatures.isServer()) {
             this.littertime++;
             this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 4D, 12D));
+            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 4D, 12D));
             for (int i = 0; i < list.size(); i++) {
-                Entity entity = (Entity) list.get(i);
+                Entity entity = list.get(i);
                 if (!(entity instanceof EntityMob)) {
                     continue;
                 }
