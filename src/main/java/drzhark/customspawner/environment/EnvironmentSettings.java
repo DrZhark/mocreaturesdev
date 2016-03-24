@@ -291,7 +291,7 @@ public class EnvironmentSettings {
                 spawnListEntry = new SpawnListEntry((Class<? extends EntityLiving>) clazz, 8, 2, 3);
             }
             // temp fix for MoCreature ambients
-            if (((EntityAnimal.class.isAssignableFrom(clazz) && !entityliving.isCreatureType(EnumCreatureType.AMBIENT, true)) || entityliving
+            if (((EntityAnimal.class.isAssignableFrom(clazz) && !entityliving.isCreatureType(EnumCreatureType.AMBIENT, false)) || entityliving
                     .isCreatureType(EnumCreatureType.CREATURE, false))) //&& !(MoCEntityAmbient.class.isAssignableFrom(clazz)))
             {
                 creatureType = EnumCreatureType.CREATURE;
@@ -300,15 +300,13 @@ public class EnvironmentSettings {
                     || entityliving.isCreatureType(EnumCreatureType.MONSTER, false)) {
                 creatureType = EnumCreatureType.MONSTER;
                 entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
-            } else if (EntityAmbientCreature.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.AMBIENT, true)) //|| MoCEntityAmbient.class.isAssignableFrom(clazz))
-            {
+            } else if (EntityAmbientCreature.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.AMBIENT, false)) {
                 creatureType = EnumCreatureType.AMBIENT;
                 entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
-            } else if (EntityWaterMob.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.WATER_CREATURE, true)) {
+            } else if (EntityWaterMob.class.isAssignableFrom(clazz) || entityliving.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) {
                 creatureType = EnumCreatureType.WATER_CREATURE;
                 entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
-            } else if (clazz != EntityLiving.class && clazz != EntityMob.class)//&& clazz != MoCEntityFishBowl.class && clazz != MoCEntityLitterBox.class && clazz != MoCEntityEgg.class && clazz != MoCEntityKittyBed.class)
-            {
+            } else if (clazz != EntityLiving.class && clazz != EntityMob.class) {
                 entityData = new EntityData(this, spawnListEntry, entityName, entityliving.getEntityId(), creatureType);
                 entityData.setCanSpawn(false); // dont allow undefined types to spawn
             } else if (entityData == null) {

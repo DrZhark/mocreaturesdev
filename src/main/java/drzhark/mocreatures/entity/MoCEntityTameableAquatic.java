@@ -252,6 +252,11 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     }
 
     @Override
+    public void setRiderDisconnecting(boolean flag) {
+        this.riderIsDisconnecting = flag;
+    }
+
+    @Override
     public boolean allowLeashing() {
         return this.getIsTamed();
     }

@@ -6,6 +6,8 @@ public interface IMoCTameable {
 
     boolean isRiderDisconnecting();
 
+    void setRiderDisconnecting(boolean flag);
+
     void playTameEffect(boolean par1);
 
     String getOwnerName();

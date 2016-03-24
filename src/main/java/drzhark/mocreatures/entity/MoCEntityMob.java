@@ -13,6 +13,7 @@ import drzhark.mocreatures.network.message.MoCMessageHealth;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -609,5 +610,21 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public boolean getIsFlying() {
         return isFlyer();
+    }
+
+    /**
+     * Returns true if the entity is of the @link{EnumCreatureType} provided
+     *
+     * @param type The EnumCreatureType type this entity is evaluating
+     * @param forSpawnCount If this is being invoked to check spawn count caps.
+     * @return If the creature is of the type provided
+     */
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        if (type == EnumCreatureType.MONSTER) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

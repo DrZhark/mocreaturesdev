@@ -275,6 +275,11 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     }
 
     @Override
+    public void setRiderDisconnecting(boolean flag) {
+        this.riderIsDisconnecting = flag;
+    }
+
+    @Override
     public boolean allowLeashing() {
         return this.getIsTamed();
     }

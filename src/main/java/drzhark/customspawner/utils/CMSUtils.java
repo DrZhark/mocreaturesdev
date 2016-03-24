@@ -149,35 +149,27 @@ public class CMSUtils {
 
     public static void dumpEntitySpawnLists() {
         for (EnvironmentSettings environment : CustomSpawner.environmentMap.values()) {
-            if (environment.debug) {
-                environment.envLog.logger.info("[" + environment.name().toUpperCase() + "]" + " Dumping SPAWN LISTS...");
-            } else {
+            if (!environment.debug) {
                 continue;
             }
+
+            environment.envLog.logger.info("[" + environment.name().toUpperCase() + "]" + " Dumping SPAWN LISTS...");
             for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
                 if (entitySpawnType.name().equalsIgnoreCase("undefined")) {
                     continue;
                 }
-                if (environment.debug) {
-                    environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
-                }
+                environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
                 for (int j = 0; j < BiomeGenBase.getBiomeGenArray().length; j++) {
                     if (BiomeGenBase.getBiomeGenArray()[j] != null) {
                         BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[j];
-                        if (environment.debug) {
-                            environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
-                        }
+                        environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
                         if (entitySpawnType.getBiomeSpawnList(biome.biomeID) == null) {
-                            if (environment.debug) {
-                                environment.envLog.logger.info("NONE!");
-                            }
+                            environment.envLog.logger.info("NONE!");
                             continue;
                         }
                         for (SpawnListEntry spawn : entitySpawnType.getBiomeSpawnList(biome.biomeID)) {
-                            if (environment.debug) {
-                                environment.envLog.logger.info("[SpawnListEntry]" + spawn.entityClass + " - " + spawn.itemWeight + ":"
-                                        + spawn.minGroupCount + ":" + spawn.maxGroupCount);
-                            }
+                            environment.envLog.logger.info("[SpawnListEntry]" + spawn.entityClass + " - " + spawn.itemWeight + ":"
+                                    + spawn.minGroupCount + ":" + spawn.maxGroupCount);
                         }
                     }
                 }
@@ -186,20 +178,16 @@ public class CMSUtils {
     }
 
     public static void dumpDefaultSpawnList() {
-        if (CustomSpawner.debug) {
-            for (Map.Entry<String, ArrayList<BiomeGenBase>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
-                if (CustomSpawner.debug) {
-                    CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
-                }
-                for (BiomeGenBase biome : defaultEntry.getValue()) {
-                    if (CustomSpawner.debug) {
-                        CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
-                    }
-                }
-                if (CustomSpawner.debug) {
-                    CustomSpawner.globalLog.logger.info("");
-                }
+        if (!CustomSpawner.debug) {
+            return;
+        }
+
+        for (Map.Entry<String, ArrayList<BiomeGenBase>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
+            CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
+            for (BiomeGenBase biome : defaultEntry.getValue()) {
+                CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
             }
+            CustomSpawner.globalLog.logger.info("");
         }
     }
 

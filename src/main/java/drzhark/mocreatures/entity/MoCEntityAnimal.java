@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -577,14 +578,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
                 && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty()
                 && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
-    }
-
-    public boolean getCanSpawnHereAquatic() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox());
-    }
-
-    public boolean getCanSpawnHere2() {
-        return getCanSpawnHereCreature() && getCanSpawnHereLiving();
     }
 
     @Override
@@ -1413,5 +1406,21 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean getIsFlying() {
         return false;
+    }
+
+    /**
+     * Returns true if the entity is of the @link{EnumCreatureType} provided
+     *
+     * @param type The EnumCreatureType type this entity is evaluating
+     * @param forSpawnCount If this is being invoked to check spawn count caps.
+     * @return If the creature is of the type provided
+     */
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        if (type == EnumCreatureType.CREATURE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

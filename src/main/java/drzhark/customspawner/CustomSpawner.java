@@ -210,14 +210,11 @@ public final class CustomSpawner {
             var6 = MathHelper.floor_double(entityplayer.posZ / 16.0D);
             // spawnRadius = 8;
             spawnRadius = (byte) mobSpawnRange;
-            // Spigot Start
-
             spawnRadius =
                     (spawnRadius > FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
                             ? (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance()
                             : spawnRadius;
             spawnRadius = (spawnRadius > 8) ? 8 : spawnRadius;
-            // Spigot End
 
             for (int var8 = -spawnRadius; var8 <= spawnRadius; ++var8) {
                 for (int var9 = -spawnRadius; var9 <= spawnRadius; ++var9) {
@@ -240,7 +237,6 @@ public final class CustomSpawner {
         int limit = 0;
 
         limit = entitySpawnType.getSpawnCap();
-
         if (limit == 0) {
             return 0;
         }
@@ -638,7 +634,12 @@ public final class CustomSpawner {
         if (list == null || list.isEmpty()) {
             return null;
         } else {
-            return (SpawnListEntry) WeightedRandom.getRandomItem(worldObj.rand, list);
+            // Prevent crash when setting frequencies to 0
+            try {
+                return (SpawnListEntry) WeightedRandom.getRandomItem(worldObj.rand, list);
+            } catch (Throwable t) {
+                return null;
+            }
         }
     }
 
