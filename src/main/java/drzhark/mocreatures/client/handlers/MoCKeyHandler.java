@@ -12,8 +12,9 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 public class MoCKeyHandler {
 
@@ -35,10 +36,13 @@ public class MoCKeyHandler {
         this.localScreen = MoCClientProxy.instance.MoCScreen;
     }
 
-    @SuppressWarnings("unused")
     @SubscribeEvent
-    public void onKeyInput(KeyInputEvent event) {
-        Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying
+    public void onInput(InputEvent event) {
+        int keyPressed = (Mouse.getEventButton() + -100);
+        if (keyPressed == -101) {
+            keyPressed = Keyboard.getEventKey();
+        }
+
         EntityPlayer ep = MoCClientProxy.mc.thePlayer;
         if (ep == null) {
             return;
@@ -46,16 +50,18 @@ public class MoCKeyHandler {
         if (FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().getChatOpen()) {
             return; // if chatting return
         }
-        boolean kbJump = Keyboard.isKeyDown(MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode());
-        boolean kbDive = Keyboard.isKeyDown(diveBinding.getKeyCode());
+        if (Keyboard.getEventKeyState() && ep.ridingEntity != null) {
+            Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying
+        }
+
+        boolean kbJump = keyPressed == MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode();
+        boolean kbDive = keyPressed == diveBinding.getKeyCode();
         boolean kbGui = Keyboard.isKeyDown(guiBinding.getKeyCode());
-        boolean isJumpKeyDown = Keyboard.isKeyDown(MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode());
         //boolean kbDismount = kb.keyDescription.equals("MoCreatures Dismount");
 
-        if ((kbGui) && (!MoCreatures.isServer())) {
-            this.localScreen = MoCClientProxy.instance.MoCScreen;
-            if ((MoCClientProxy.mc.inGameHasFocus) && (this.localScreen != null)) {
-                GuiModScreen.show(this.localScreen.theWidget);
+        if (kbGui && !MoCreatures.isServer()) {
+            if (MoCClientProxy.mc.inGameHasFocus && (this.localScreen == null)) {
+                GuiModScreen.show(MoCClientProxy.instance.MoCScreen.theWidget);
             } else {
                 this.localScreen = null; // kill our instance
             }
