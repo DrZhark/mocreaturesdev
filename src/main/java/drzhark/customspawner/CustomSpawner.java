@@ -10,8 +10,8 @@ import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -208,23 +208,18 @@ public final class CustomSpawner {
             if (!entityplayer.isSpectator()) {
                 int x = MathHelper.floor_double(entityplayer.posX / 16.0D);
                 int z = MathHelper.floor_double(entityplayer.posZ / 16.0D);
-                byte spawnRadius = 8;
+                byte chunkSpawnRadius = (byte) mobSpawnRange;
+                byte serverViewDistance = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance();
+                chunkSpawnRadius = chunkSpawnRadius > serverViewDistance ? serverViewDistance : chunkSpawnRadius;
+                chunkSpawnRadius = chunkSpawnRadius > 8 ? 8 : chunkSpawnRadius;
 
-                spawnRadius = (byte) mobSpawnRange;
-                spawnRadius =
-                        (spawnRadius > FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance())
-                                ? (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance()
-                                : spawnRadius;
-                spawnRadius = (spawnRadius > 8) ? 8 : spawnRadius;
-        
-                for (int var8 = -spawnRadius; var8 <= spawnRadius; ++var8) {
-                    for (int var9 = -spawnRadius; var9 <= spawnRadius; ++var9) {
-                        boolean flag = var8 == -spawnRadius || var8 == spawnRadius || var9 == -spawnRadius || var9 == spawnRadius;
+                for (int var8 = -chunkSpawnRadius; var8 <= chunkSpawnRadius; ++var8) {
+                    for (int var9 = -chunkSpawnRadius; var9 <= chunkSpawnRadius; ++var9) {
+                        boolean flag = var8 == -chunkSpawnRadius || var8 == chunkSpawnRadius || var9 == -chunkSpawnRadius || var9 == chunkSpawnRadius;
                         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(var8 + x, var9 + z);
-        
+
                         if (!this.eligibleChunksForSpawning.contains(chunkcoordintpair)) {
                             ++i;
-        
                             if (!flag && world.getWorldBorder().contains(chunkcoordintpair)) {
                                 this.eligibleChunksForSpawning.add(chunkcoordintpair);
                             }
@@ -287,19 +282,21 @@ public final class CustomSpawner {
                                 tempX += world.rand.nextInt(var20) - world.rand.nextInt(var20);
                                 tempY += world.rand.nextInt(1) - world.rand.nextInt(1);
                                 tempZ += world.rand.nextInt(var20) - world.rand.nextInt(var20);
+                                float spawnX = tempX + 0.5F;
+                                float spawnY = tempY;
+                                float spawnZ = tempZ + 0.5F;
+                                BlockPos blockpos = new BlockPos(tempX, tempY, tempZ);
 
-                                if (canCreatureTypeSpawnAtLocation(entitySpawnType, world, new BlockPos(tempX, tempY, tempZ))) {
-                                    float spawnX = tempX + 0.5F;
-                                    float spawnY = tempY;
-                                    float spawnZ = tempZ + 0.5F;
-                                    if (!world.isAnyPlayerWithinRangeAt(spawnX, spawnY, spawnZ, 24.0D) && chunkcoordspawn.distanceSq(spawnX, spawnY, spawnZ) >= 576.0D) {
+                                if (!world.isAnyPlayerWithinRangeAt(spawnX, spawnY, spawnZ, 24.0D) && chunkcoordspawn.distanceSq(spawnX, spawnY, spawnZ) >= 576.0D) {
+                                    if (spawnlistentry == null) {
+                                        //this is where it has to be changed to include the custom list
+                                        spawnlistentry = getRandomCustomMob(world, entitySpawnType, tempX, tempY, tempZ);
                                         if (spawnlistentry == null) {
-                                            //this is where it has to be changed to include the custom list
-                                            spawnlistentry = getRandomCustomMob(world, entitySpawnType, tempX, tempY, tempZ);
-                                            if (spawnlistentry == null) {
-                                                break label101;
-                                            }
+                                            break label101;
                                         }
+                                    }
+
+                                    if (canCreatureTypeSpawnAtLocation(entitySpawnType, world, blockpos)) {
 
                                         EntityLiving entityliving;
                                         EntityData entityData;
@@ -557,7 +554,11 @@ public final class CustomSpawner {
      * Returns whether or not the specified creature type can spawn at the
      * specified location.
      */
-    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, World par1World, BlockPos pos) {
+    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, World world, BlockPos pos) {
+        if (!world.getWorldBorder().contains(pos)) {
+            return false;
+        }
+
         if (entitySpawnType.getMinSpawnHeight() != -1) {
             if (pos.getY() < entitySpawnType.getMinSpawnHeight()) {
                 return false;
@@ -570,32 +571,30 @@ public final class CustomSpawner {
         }
 
         if (entitySpawnType.getLivingMaterial() == Material.water) {
-            return par1World.getBlockState(pos).getBlock().getMaterial().isLiquid()
-                    && par1World.getBlockState(pos.down()).getBlock().getMaterial().isLiquid()
-                    && !par1World.getBlockState(pos.up()).getBlock().isNormalCube();
-        } else if (!World.doesBlockHaveSolidTopSurface(par1World, pos.down())) {
-            return false;
+            return world.getBlockState(pos).getBlock().getMaterial().isLiquid()
+                    && world.getBlockState(pos.down()).getBlock().getMaterial().isLiquid()
+                    && !world.getBlockState(pos.up()).getBlock().isNormalCube();
         } else {
-            Block block = par1World.getBlockState(pos.down()).getBlock();
-            boolean spawnBlock;
-            if (entitySpawnType.getEnumCreatureType() != null) {
-                spawnBlock = block != null && block.canCreatureSpawn(par1World, pos.down(), EntityLiving.SpawnPlacementType.ON_GROUND);
-            } else {
-                spawnBlock = (block != null && canCreatureSpawn(block, par1World, pos.down()));
+            Block block = world.getBlockState(pos).getBlock();
+            BlockPos blockpos = pos.down();
+
+            if (!world.getBlockState(blockpos).getBlock().canCreatureSpawn(world, blockpos, EntityLiving.SpawnPlacementType.ON_GROUND)) {
+                return false;
             }
-            return spawnBlock && block != Blocks.bedrock && !par1World.getBlockState(pos).getBlock().isNormalCube()
-                    && !par1World.getBlockState(pos).getBlock().getMaterial().isLiquid()
-                    && !par1World.getBlockState(pos.up()).getBlock().isNormalCube();
+
+            Block block1 = world.getBlockState(blockpos).getBlock();
+            boolean flag = block1 != Blocks.bedrock && block1 != Blocks.barrier;
+            boolean result = flag && !block.isNormalCube() && !block.getMaterial().isLiquid() && !world.getBlockState(pos.up()).getBlock().isNormalCube();
+            return result;
         }
     }
 
     public static boolean canCreatureSpawn(Block block, World world, BlockPos pos) {
-        IBlockState blockstate = world.getBlockState(pos);
-        int meta = blockstate.getBlock().getMetaFromState(blockstate);
-        if (block instanceof BlockStoneSlab) {
-            return (((meta & 8) == 8) || block.isOpaqueCube());
+        IBlockState state = world.getBlockState(pos);
+        if (block instanceof BlockSlab) {
+            return (block.isFullBlock() || state.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP);
         } else if (block instanceof BlockStairs) {
-            return ((meta & 4) != 0);
+            return state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP;
         }
         return block.isSideSolid(world, pos, EnumFacing.UP);
     }

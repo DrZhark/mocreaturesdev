@@ -67,10 +67,10 @@ public class EnvironmentSettings {
     public Map<String, EntitySpawnType> entitySpawnTypes = new TreeMap<String, EntitySpawnType>(String.CASE_INSENSITIVE_ORDER);
     public EntitySpawnType LIVINGTYPE_UNDEFINED = new EntitySpawnType(this, EntitySpawnType.UNDEFINED, 0, 0, 0.0F, false);
     public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 35, 0.1F, true);
-    public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 100, 15);
-    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 100, 5, Material.water);
+    public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 1, 15);
+    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 1, 15, Material.water);
     public EntitySpawnType LIVINGTYPE_MONSTER = new EntitySpawnType(this, EntitySpawnType.MONSTER, 1, 70);
-    public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 400, 15, 0, 63, 0.0F, false);
+    public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 1, 15, 0, 63, 0.0F, false);
     public Map<String, String> worldEnvironmentMap = new HashMap<String, String>();
     public StructureRegistry structureData = new StructureRegistry();
 
@@ -117,58 +117,6 @@ public class EnvironmentSettings {
         this.envLog.logger.info("Initializing WorldSettings Config File at " + this.ROOT_PATH + "...");
     }
 
-    /*
-     * public void registerEntitySpawnType(EntitySpawnType entitySpawnType) { if
-     * (entitySpawnType.name().equalsIgnoreCase("UNDEFINED")) return; if
-     * (CMSLivingSpawnTypeConfig
-     * .hasCategory(entitySpawnType.name().toLowerCase())) { CMSConfigCategory
-     * cat =
-     * CMSLivingSpawnTypeConfig.getCategory(entitySpawnType.name().toLowerCase
-     * ()); for (Map.Entry<String, CMSProperty> propEntry :
-     * cat.getValues().entrySet()) { if
-     * (propEntry.getKey().equalsIgnoreCase("ChunkGenSpawnChance")) {
-     * entitySpawnType
-     * .setChunkSpawnChance(Float.parseFloat(propEntry.getValue().value)); }
-     * else if (propEntry.getKey().equalsIgnoreCase("minSpawnHeight")) {
-     * entitySpawnType
-     * .setMinSpawnHeight(Integer.parseInt(propEntry.getValue().value)); } else
-     * if (propEntry.getKey().equalsIgnoreCase("maxSpawnHeight")) {
-     * entitySpawnType
-     * .setMaxSpawnHeight(Integer.parseInt(propEntry.getValue().value)); } else
-     * if (propEntry.getKey().equalsIgnoreCase("SpawnCap")) {
-     * entitySpawnType.setSpawnCap
-     * (Integer.parseInt(propEntry.getValue().value)); } else if
-     * (propEntry.getKey().equalsIgnoreCase("SpawnTickRate")) {
-     * entitySpawnType.setSpawnTickRate
-     * (Integer.parseInt(propEntry.getValue().value)); } else if
-     * (propEntry.getKey().equalsIgnoreCase("SpawnCap")) {
-     * entitySpawnType.setSpawnCap
-     * (Integer.parseInt(propEntry.getValue().value)); } else if
-     * (propEntry.getKey().equalsIgnoreCase("ShouldSeeSky") &&
-     * !propEntry.getValue().value.equalsIgnoreCase("UNDEFINED")) {
-     * entitySpawnType
-     * .setShouldSeeSky(Boolean.parseBoolean(propEntry.getValue().value)); } } }
-     * else { CMSConfigCategory configCat =
-     * CMSLivingSpawnTypeConfig.getCategory(
-     * entitySpawnType.name().toLowerCase()); configCat.put("SpawnTickRate", new
-     * CMSProperty("SpawnTickRate",
-     * Integer.toString(entitySpawnType.getSpawnTickRate()),
-     * CMSProperty.Type.INTEGER)); configCat.put("minSpawnHeight", new
-     * CMSProperty("minSpawnHeight",
-     * Integer.toString(entitySpawnType.getMinSpawnHeight()),
-     * CMSProperty.Type.INTEGER)); configCat.put("maxSpawnHeight", new
-     * CMSProperty("maxSpawnHeight",
-     * Integer.toString(entitySpawnType.getMaxSpawnHeight()),
-     * CMSProperty.Type.INTEGER)); configCat.put("SpawnCap", new
-     * CMSProperty("SpawnCap", Integer.toString(entitySpawnType.getSpawnCap()),
-     * CMSProperty.Type.INTEGER)); configCat.put("ChunkGenSpawnChance", new
-     * CMSProperty
-     * ("ChunkGenSpawnChance",Float.toString(entitySpawnType.getChunkSpawnChance
-     * ()), CMSProperty.Type.DOUBLE)); configCat.put("ShouldSeeSky", new
-     * CMSProperty("ShouldSeeSky", entitySpawnType.getShouldSeeSky() == null ?
-     * "UNDEFINED" : Boolean.toString(entitySpawnType.getShouldSeeSky()),
-     * CMSProperty.Type.STRING)); } CMSLivingSpawnTypeConfig.save(); }
-     */
     public void registerLivingSpawnTypes() {
         // register defaults
         this.entitySpawnTypes.put(EntitySpawnType.UNDEFINED, this.LIVINGTYPE_UNDEFINED);
@@ -185,6 +133,8 @@ public class EnvironmentSettings {
             if (!this.CMSLivingSpawnTypeConfig.hasCategory(entitySpawnType.name().toLowerCase())) {
                 CMSConfigCategory configCat = this.CMSLivingSpawnTypeConfig.getCategory(entitySpawnType.name().toLowerCase());
                 configCat.put("SpawnTickRate", new CMSProperty("spawntickrate", Integer.toString(entitySpawnType.getSpawnTickRate()),
+                        CMSProperty.Type.INTEGER));
+                configCat.put("MobSpawnRange", new CMSProperty("mobspawnrange", Integer.toString(entitySpawnType.getMobSpawnRange()),
                         CMSProperty.Type.INTEGER));
                 configCat.put("minSpawnHeight", new CMSProperty("minspawnheight", Integer.toString(entitySpawnType.getMinSpawnHeight()),
                         CMSProperty.Type.INTEGER));
@@ -210,6 +160,8 @@ public class EnvironmentSettings {
                     }
                     if (propEntry.getKey().equalsIgnoreCase("chunkgenspawnchance")) {
                         entitySpawnType.setChunkSpawnChance(Float.parseFloat(propEntry.getValue().value));
+                    } else if (propEntry.getKey().equalsIgnoreCase("mobspawnrange")) {
+                        entitySpawnType.setMobSpawnRange(Integer.parseInt(propEntry.getValue().value));
                     } else if (propEntry.getKey().equalsIgnoreCase("minspawnheight")) {
                         entitySpawnType.setMinSpawnHeight(Integer.parseInt(propEntry.getValue().value));
                     } else if (propEntry.getKey().equalsIgnoreCase("maxspawnheight")) {

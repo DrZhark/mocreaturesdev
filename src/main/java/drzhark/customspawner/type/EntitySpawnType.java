@@ -31,7 +31,7 @@ public class EntitySpawnType {
     @SuppressWarnings("unused")
     private boolean allowChunkSpawning = false;
     private Boolean shouldSeeSky;
-    private int spawnDistance = 8;
+    private int mobSpawnRange = 8;
     private Map<Integer, ArrayList<SpawnListEntry>> livingSpawnList = new HashMap<Integer, ArrayList<SpawnListEntry>>();
 
     public static final String UNDEFINED = "UNDEFINED";
@@ -48,26 +48,26 @@ public class EntitySpawnType {
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap) {
-        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.air, null, 8, false, true);
+        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.air, null, false, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, Material livingMaterial) {
-        this(environment, type, spawnTickRate, spawnCap, 0.0F, livingMaterial, null, 8, false, true);
+        this(environment, type, spawnTickRate, spawnCap, 0.0F, livingMaterial, null, false, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, float chunkSpawnChance, Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, 8, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, false, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, int minY, int maxY, float chunkSpawnChance,
             Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, 8, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, false, true);
         this.minSpawnHeight = minY;
         this.maxSpawnHeight = maxY;
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String spawnType, int spawnTickRate, int spawnCap, float chunkSpawnChance,
-            Material livingMaterial, Boolean shouldSeeSky, int spawnDistance, boolean hardSpawnLimit, boolean enabled) {
+            Material livingMaterial, Boolean shouldSeeSky, boolean hardSpawnLimit, boolean enabled) {
         this.entitySpawnType = spawnType;
         this.environment = environment;
         this.spawnTickRate = spawnTickRate;
@@ -76,7 +76,6 @@ public class EntitySpawnType {
         if (shouldSeeSky != null) {
             this.shouldSeeSky = new Boolean(shouldSeeSky);
         }
-        this.spawnDistance = spawnDistance;
         this.hardSpawnLimit = hardSpawnLimit;
         this.livingMaterial = livingMaterial;
         this.enabled = enabled;
@@ -122,8 +121,12 @@ public class EntitySpawnType {
         this.shouldSeeSky = shouldSeeSky;
     }
 
-    public int getEntitySpawnDistance() {
-        return this.spawnDistance;
+    public int getMobSpawnRange() {
+        return this.mobSpawnRange;
+    }
+
+    public void setMobSpawnRange(int radius) {
+        this.mobSpawnRange = radius;
     }
 
     public boolean getHardSpawnLimit() {
