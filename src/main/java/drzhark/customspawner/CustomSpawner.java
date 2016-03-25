@@ -16,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -303,7 +304,7 @@ public final class CustomSpawner {
                                         }
                                     }
 
-                                    if (canCreatureTypeSpawnAtLocation(entitySpawnType, world, blockpos)) {
+                                    if (canCreatureTypeSpawnAtLocation(entitySpawnType, spawnlistentry, world, blockpos)) {
 
                                         EntityLiving entityliving;
                                         EntityData entityData;
@@ -561,7 +562,7 @@ public final class CustomSpawner {
      * Returns whether or not the specified creature type can spawn at the
      * specified location.
      */
-    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, World world, BlockPos pos) {
+    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, SpawnListEntry spawnListEntry, World world, BlockPos pos) {
         if (!world.getWorldBorder().contains(pos)) {
             return false;
         }
@@ -584,12 +585,16 @@ public final class CustomSpawner {
         } else {
             Block block = world.getBlockState(pos).getBlock();
             BlockPos blockpos = pos.down();
-
-            if (!world.getBlockState(blockpos).getBlock().canCreatureSpawn(world, blockpos, EntityLiving.SpawnPlacementType.ON_GROUND)) {
+            Block block1 = world.getBlockState(blockpos).getBlock();
+            EntityLiving.SpawnPlacementType spawnPlacementType = EntitySpawnPlacementRegistry.getPlacementForEntity(spawnListEntry.entityClass);
+            if (spawnPlacementType == null) {
+                if (!canCreatureSpawn(block1, world, blockpos)) {
+                    return false;
+                }
+            } else if (!block1.canCreatureSpawn(world, blockpos, spawnPlacementType)) {
                 return false;
             }
 
-            Block block1 = world.getBlockState(blockpos).getBlock();
             boolean flag = block1 != Blocks.bedrock && block1 != Blocks.barrier;
             boolean result = flag && !block.isNormalCube() && !block.getMaterial().isLiquid() && !world.getBlockState(pos.up()).getBlock().isNormalCube();
             return result;
@@ -666,69 +671,73 @@ public final class CustomSpawner {
      */
     public static void performWorldGenSpawning(EntitySpawnType entitySpawnType, World world, BiomeGenBase par1BiomeGenBase, int par2, int par3,
             int par4, int par5, Random par6Random, List<SpawnListEntry> customSpawnList, boolean worldGenCreatureSpawning) {
-        if (!customSpawnList.isEmpty() && worldGenCreatureSpawning) {
-            while (par6Random.nextFloat() < entitySpawnType.getChunkSpawnChance()) {
-                //this is where it has to be changed to include the custom list
-                //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
-                SpawnListEntry spawnlistentry = null;
-                try {
-                    spawnlistentry = (SpawnListEntry) WeightedRandom.getRandomItem(world.rand, customSpawnList);
-                } catch (IllegalArgumentException e) {
-                    // If we world.rand returns an invalid value, just continue to avoid crash
-                    continue;
-                }
-                if (spawnlistentry != null) {
-                    int i1 = spawnlistentry.minGroupCount + par6Random.nextInt(1 + spawnlistentry.maxGroupCount - spawnlistentry.minGroupCount);
-                    int j1 = par2 + par6Random.nextInt(par4);
-                    int k1 = par3 + par6Random.nextInt(par5);
-                    int l1 = j1;
-                    int i2 = k1;
-                    EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
-                    for (int j2 = 0; j2 < i1; ++j2) {
-                        boolean flag = false;
+        if (!worldGenCreatureSpawning || customSpawnList.isEmpty()) {
+            return;
+        }
 
-                        for (int k2 = 0; !flag && k2 < 4; ++k2) {
-                            BlockPos blockpos = world.getTopSolidOrLiquidBlock(new BlockPos(j1, 0, k1));
+        while (par6Random.nextFloat() < entitySpawnType.getChunkSpawnChance()) {
+            //this is where it has to be changed to include the custom list
+            //spawnlistentry = worldObj.getRandomMob(enumcreaturetype, tempX, tempY, tempZ);
+            SpawnListEntry spawnlistentry = null;
+            try {
+                spawnlistentry = (SpawnListEntry) WeightedRandom.getRandomItem(world.rand, customSpawnList);
+            } catch (IllegalArgumentException e) {
+                // If world.rand returns an invalid value, just continue to avoid crash
+                continue;
+            }
+            if (spawnlistentry == null) {
+                continue;
+            }
 
-                            if (canCreatureTypeSpawnAtLocation(entityData.getLivingSpawnType(), world, blockpos)) {
+            int i1 = spawnlistentry.minGroupCount + par6Random.nextInt(1 + spawnlistentry.maxGroupCount - spawnlistentry.minGroupCount);
+            int j1 = par2 + par6Random.nextInt(par4);
+            int k1 = par3 + par6Random.nextInt(par5);
+            int l1 = j1;
+            int i2 = k1;
+            EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
+            for (int j2 = 0; j2 < i1; ++j2) {
+                boolean flag = false;
 
-                                EntityLiving entityliving;
+                for (int k2 = 0; !flag && k2 < 4; ++k2) {
+                    BlockPos blockpos = world.getTopSolidOrLiquidBlock(new BlockPos(j1, 0, k1));
 
-                                try {
-                                    entityliving =
-                                            (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] {World.class}).newInstance(
-                                                    new Object[] {world});
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
-                                    continue;
-                                }
+                    if (canCreatureTypeSpawnAtLocation(entityData.getLivingSpawnType(), spawnlistentry, world, blockpos)) {
 
-                                BlockPos pos = new BlockPos(j1 + 0.5F, blockpos.getY(), k1 + 0.5F);
-                                entityliving.setLocationAndAngles(j1 + 0.5F, blockpos.getY(), k1 + 0.5F, par6Random.nextFloat() * 360.0F, 0.0F);
-                                Result canSpawn =
-                                        ForgeEventFactory.canEntitySpawn(entityliving, world, entityliving.getPosition().getX(), entityliving
-                                                .getPosition().getY(), entityliving.getPosition().getZ());
-                                if (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())) {
-                                    world.spawnEntityInWorld(entityliving);
-                                    if (CMSUtils.getEnvironment(world).debug) {
-                                        CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getName()
-                                                + " at " + entityliving.getPosition() + " with CREATURE:" + spawnlistentry.itemWeight + ":"
-                                                + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":"
-                                                + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName
-                                                + "]");
-                                    }
-                                    creatureSpecificInit(entityliving, world, pos);
-                                    flag = true;
-                                }
-                            }
+                        EntityLiving entityliving;
 
-                            j1 += par6Random.nextInt(5) - par6Random.nextInt(5);
-
-                            for (k1 += par6Random.nextInt(5) - par6Random.nextInt(5); j1 < par2 || j1 >= par2 + par4 || k1 < par3
-                                    || k1 >= par3 + par4; k1 = i2 + par6Random.nextInt(5) - par6Random.nextInt(5)) {
-                                j1 = l1 + par6Random.nextInt(5) - par6Random.nextInt(5);
-                            }
+                        try {
+                            entityliving =
+                                    (EntityLiving) spawnlistentry.entityClass.getConstructor(new Class[] {World.class}).newInstance(
+                                            new Object[] {world});
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            continue;
                         }
+
+                        BlockPos pos = new BlockPos(j1 + 0.5F, blockpos.getY(), k1 + 0.5F);
+                        entityliving.setLocationAndAngles(j1 + 0.5F, blockpos.getY(), k1 + 0.5F, par6Random.nextFloat() * 360.0F, 0.0F);
+                        Result canSpawn =
+                                ForgeEventFactory.canEntitySpawn(entityliving, world, entityliving.getPosition().getX(), entityliving
+                                        .getPosition().getY(), entityliving.getPosition().getZ());
+                        if (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())) {
+                            world.spawnEntityInWorld(entityliving);
+                            if (CMSUtils.getEnvironment(world).debug) {
+                                CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getName()
+                                        + " at " + entityliving.getPosition() + " with CREATURE:" + spawnlistentry.itemWeight + ":"
+                                        + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":"
+                                        + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1BiomeGenBase.biomeName
+                                        + "]");
+                            }
+                            creatureSpecificInit(entityliving, world, pos);
+                            flag = true;
+                        }
+                    }
+
+                    j1 += par6Random.nextInt(5) - par6Random.nextInt(5);
+
+                    for (k1 += par6Random.nextInt(5) - par6Random.nextInt(5); j1 < par2 || j1 >= par2 + par4 || k1 < par3
+                            || k1 >= par3 + par4; k1 = i2 + par6Random.nextInt(5) - par6Random.nextInt(5)) {
+                        j1 = l1 + par6Random.nextInt(5) - par6Random.nextInt(5);
                     }
                 }
             }
