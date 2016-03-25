@@ -186,15 +186,22 @@ public final class CustomSpawner {
      * creature type.
      */
      public int countEntities(WorldServer world, EntitySpawnType entitySpawnType) {
-        int count = 0;
-        for (int x = 0; x < world.loadedEntityList.size(); x++) {
-            EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(((Entity) world.loadedEntityList.get(x)).getClass());
-            if (entityData != null && entityData.getLivingSpawnType() == entitySpawnType) {
-                count++;
-            }
-        }
+         int count = 0;
 
-        return count;
+         for (int i = 0; i < world.loadedEntityList.size(); i++) {
+             Entity entity = ((Entity) world.loadedEntityList.get(i));
+             EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(entity.getClass());
+             int x = MathHelper.floor_double(entity.posX);
+             int z = MathHelper.floor_double(entity.posZ);
+             ChunkCoordIntPair chunkcoord = new ChunkCoordIntPair(x >> 4, z >> 4);
+             if (this.eligibleChunksForSpawning.contains(chunkcoord)) {
+                 if (entityData != null && entityData.getLivingSpawnType() == entitySpawnType) {
+                     count++;
+                 }
+             }
+         }
+
+         return count;
     }
 
     public final int doCustomSpawning(WorldServer world, EntitySpawnType entitySpawnType, int mobSpawnRange, boolean enforceMaxSpawnLimits) {

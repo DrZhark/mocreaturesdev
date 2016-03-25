@@ -66,9 +66,9 @@ public class EnvironmentSettings {
     public Map<Class<? extends Entity>, EntityData> classToEntityMapping = new HashMap<Class<? extends Entity>, EntityData>();
     public Map<String, EntitySpawnType> entitySpawnTypes = new TreeMap<String, EntitySpawnType>(String.CASE_INSENSITIVE_ORDER);
     public EntitySpawnType LIVINGTYPE_UNDEFINED = new EntitySpawnType(this, EntitySpawnType.UNDEFINED, 0, 0, 0.0F, false);
-    public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 35, 0.1F, true);
-    public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 1, 15);
-    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 1, 15, Material.water);
+    public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 20, 0.1F, true);
+    public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 100, 15);
+    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 1, 20, Material.water);
     public EntitySpawnType LIVINGTYPE_MONSTER = new EntitySpawnType(this, EntitySpawnType.MONSTER, 1, 70);
     public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 1, 15, 0, 63, 0.0F, false);
     public Map<String, String> worldEnvironmentMap = new HashMap<String, String>();
@@ -343,15 +343,17 @@ public class EnvironmentSettings {
                 if (!modKey.equals("")) {
                     String configName = modKey + ".cfg";
 
-                    this.entityModMap.put(modKey,
-                            new EntityModData(modKey, modKey, new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
-                                    CREATURES_FILE_PATH + configName))));
-                    if (this.debug) {
-                        this.envLog.logger.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
+                    if (!entityModMap.containsKey(modKey)) {
+                        this.entityModMap.put(modKey,
+                                new EntityModData(modKey, modKey, new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
+                                        CREATURES_FILE_PATH + configName))));
+                        if (this.debug) {
+                            this.envLog.logger.info("Added Automatic Mod Entity Mapping " + modKey + " to file " + configName);
+                        }
+                        CMSConfigCategory modMapCat = this.CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
+                        modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList<String>(Arrays.asList(modKey.toUpperCase(), configName)),
+                                CMSProperty.Type.STRING, "automatically generated"));
                     }
-                    CMSConfigCategory modMapCat = this.CMSEnvironmentConfig.getCategory(CATEGORY_MOD_MAPPINGS);
-                    modMapCat.put(modKey, new CMSProperty(modKey, new ArrayList<String>(Arrays.asList(modKey.toUpperCase(), configName)),
-                            CMSProperty.Type.STRING, "automatically generated"));
 
                     EntityModData modData = this.entityModMap.get(modKey);
                     if (this.debug) {
@@ -609,24 +611,6 @@ public class EnvironmentSettings {
             this.CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(type.name(), prop);
             this.CMSEntityBiomeGroupsConfig.save();
         }
-        // add any biomes that we may have missed to biome group UNDEFINED
-        /*
-         * if (debug) envLog.logger.info(
-         * "Scanning biomeMap for biomes not found in MoCBiomeGroups.cfg ...");
-         * BiomeModData biomeModData = biomeModMap.get("undefined"); for
-         * (Map.Entry<String, BiomeData> biomeEntry : biomeMap.entrySet()) {
-         * BiomeData biomeData = biomeEntry.getValue(); if
-         * (!biomeData.isDefined()) { biomeModData.addBiome(biomeData); if
-         * (debug) envLog.logger.warning("Biome " + biomeData.getBiomeName() +
-         * " was NOT DEFINED, Added biome to UNDEFINED BIOME GROUP"); } else if
-         * (debug) envLog.logger.info("Biome " + biomeData.getBiomeName() +
-         * " was DEFINED"); } if (biomeModData.getBiomes().size() > 0) {
-         * CMSConfigCategory cat =
-         * biomeModData.getModConfig().getCategory("biomegroups"); for
-         * (CMSProperty prop : cat.values()) { if (prop != null) {
-         * prop.valueList = biomeModData.getBiomes(); } }
-         * biomeModData.getModConfig().save(); }
-         */
     }
 
     public void populateSpawnBiomes() {
@@ -829,7 +813,7 @@ public class EnvironmentSettings {
             this.defaultModMap.put("twilightforest", new EntityModData("twilightforest", "TF", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "TwilightForest.cfg"))));
         }
-        if (Loader.isModLoaded("GrimoireGaia2")) {
+        if (Loader.isModLoaded("grimoiregaia")) {
             this.defaultModMap.put("gaia", new EntityModData("gaia", "GAIA", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "GrimoireOfGaia.cfg"))));
         }

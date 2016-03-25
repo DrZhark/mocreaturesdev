@@ -31,7 +31,7 @@ public class EntitySpawnType {
     @SuppressWarnings("unused")
     private boolean allowChunkSpawning = false;
     private Boolean shouldSeeSky;
-    private int mobSpawnRange = 8;
+    private int mobSpawnRange = 4;
     private Map<Integer, ArrayList<SpawnListEntry>> livingSpawnList = new HashMap<Integer, ArrayList<SpawnListEntry>>();
 
     public static final String UNDEFINED = "UNDEFINED";

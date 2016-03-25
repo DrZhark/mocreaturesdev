@@ -39,17 +39,21 @@ public class EntityModData {
     }
 
     public boolean addCreature(EntityData entityData) {
-        boolean result = true;
-        if (entityData != null) {
-            if (this.livingSpawnMap.get(entityData.getLivingSpawnType()) == null) {
-                this.livingSpawnMap.put(entityData.getLivingSpawnType(), new HashMap<String, EntityData>());
-                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
-            } else if (!this.livingSpawnMap.get(entityData.getLivingSpawnType()).containsKey(entityData.getEntityName())) {
-                this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
-            } else {
-                result = false;
-            }
+        if (entityData == null) {
+            return false;
         }
+
+        boolean result = true;
+        if (!this.livingSpawnMap.containsKey(entityData.getLivingSpawnType())) {
+            this.livingSpawnMap.put(entityData.getLivingSpawnType(), new HashMap<String, EntityData>());
+        }
+
+        if (!this.livingSpawnMap.get(entityData.getLivingSpawnType()).containsKey(entityData.getEntityName())) {
+            this.livingSpawnMap.get(entityData.getLivingSpawnType()).put(entityData.getEntityName(), entityData);
+        } else {
+            result = false;
+        }
+
         return result;
     }
 
