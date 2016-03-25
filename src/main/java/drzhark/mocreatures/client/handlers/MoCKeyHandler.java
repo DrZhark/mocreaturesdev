@@ -22,7 +22,7 @@ public class MoCKeyHandler {
     //static KeyBinding jumpBinding = new KeyBinding("jumpBind", Keyboard.KEY_F);
     //static KeyBinding jumpBinding = new KeyBinding("MoCreatures Jump", MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode(), "key.categories.movement");
     static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_F, "key.categories.movement");
-    static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F6, "key.categories.misc");
+    static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F8, "key.categories.misc");
 
     //static KeyBinding dismountBinding = new KeyBinding("MoCreatures Dismount", Keyboard.KEY_F);
 
@@ -40,7 +40,7 @@ public class MoCKeyHandler {
     public void onKeyInput(KeyInputEvent event) {
         Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying
         EntityPlayer ep = MoCClientProxy.mc.thePlayer;
-        if (ep == null || ep.ridingEntity == null) {
+        if (ep == null) {
             return;
         }
         if (FMLClientHandler.instance().getClient().ingameGUI.getChatGUI().getChatOpen()) {

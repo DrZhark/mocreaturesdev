@@ -370,11 +370,10 @@ public class MoCreatures {
         MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
         BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.FOREST, Type.END);
         BiomeDictionary.registerAllBiomes();
-        MoCreatures.defaultBiomeSupport.add("biomesop");
+        MoCreatures.defaultBiomeSupport.add("BiomesOPlenty");
         MoCreatures.defaultBiomeSupport.add("extrabiomes");
         MoCreatures.defaultBiomeSupport.add("highlands");
         MoCreatures.defaultBiomeSupport.add("ted80");
-        MoCreatures.defaultBiomeSupport.add("extrabiomes");
         MoCreatures.defaultBiomeSupport.add("minecraft");
         registerEntities();
     }

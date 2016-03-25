@@ -4,6 +4,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleButtonModel;
+import drzhark.guiapi.GuiAPI;
 import drzhark.guiapi.GuiApiHelper;
 import drzhark.guiapi.GuiModScreen;
 import drzhark.guiapi.ModAction;
@@ -183,16 +184,19 @@ import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageInstaSpawn;
 import drzhark.mocreatures.utils.MoCLog;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -661,9 +665,27 @@ public class MoCClientProxy extends MoCProxy {
 
     public MoCEntityData currentSelectedEntity;
 
+    public GuiAPI gui = new GuiAPI();
+
     @Override
     public void ConfigInit(FMLPreInitializationEvent event) {
         super.ConfigInit(event);
+        try {
+            Field[] fields = GuiScreen.class.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                if (fields[i].getType() == List.class) {
+                    this.gui.controlListField = fields[i];
+                    this.gui.controlListField.setAccessible(true);
+                    break;
+                }
+            }
+            if (this.gui.controlListField == null) {
+                throw new Exception("No fields found on GuiScreen (" + GuiScreen.class.getSimpleName() + ") of type List! This should never happen!");
+            }
+        } catch (Throwable e) {
+            throw new RuntimeException("Unable to get Field reference for GuiScreen.controlList!", e);
+        }
+        MinecraftForge.EVENT_BUS.register(this.gui);
     }
 
     @SuppressWarnings("unused")
