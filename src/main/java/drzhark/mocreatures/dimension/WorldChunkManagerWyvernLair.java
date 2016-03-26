@@ -35,20 +35,20 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * Returns an array of biomes for the location input.
      */
     @Override
-    public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5) {
-        return new BiomeGenBase[] {this.biomeGenerator};
+    public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] biomes, int xStart, int zStart, int xSize, int zSize) {
+        return getBiomeGenAt(biomes, xStart, zStart, xSize, zSize, true);
     }
 
     /**
      * Returns a list of temperatures to use for the specified blocks. Args:
      * listToReuse, x, y, width, length
      */
-    public float[] getTemperatures(float[] par1ArrayOfFloat, int par2, int par3, int par4, int par5) {
-        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < par4 * par5) {
-            par1ArrayOfFloat = new float[par4 * par5];
+    public float[] getTemperatures(float[] par1ArrayOfFloat, int xStart, int zStart, int xSize, int zSize) {
+        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < xSize * zSize) {
+            par1ArrayOfFloat = new float[xSize * zSize];
         }
 
-        Arrays.fill(par1ArrayOfFloat, 0, par4 * par5, this.hellTemperature);
+        Arrays.fill(par1ArrayOfFloat, 0, xSize * zSize, this.hellTemperature);
         return par1ArrayOfFloat;
     }
 
@@ -57,12 +57,12 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * listToReuse, x, z, width, length.
      */
     @Override
-    public float[] getRainfall(float[] par1ArrayOfFloat, int par2, int par3, int par4, int par5) {
-        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < par4 * par5) {
-            par1ArrayOfFloat = new float[par4 * par5];
+    public float[] getRainfall(float[] par1ArrayOfFloat, int xStart, int zStart, int xSize, int zSize) {
+        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < xSize * zSize) {
+            par1ArrayOfFloat = new float[xSize * zSize];
         }
 
-        Arrays.fill(par1ArrayOfFloat, 0, par4 * par5, this.rainfall);
+        Arrays.fill(par1ArrayOfFloat, 0, xSize * zSize, this.rainfall);
         return par1ArrayOfFloat;
     }
 
@@ -72,13 +72,8 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * x, z, width, depth
      */
     @Override
-    public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5) {
-        if (par1ArrayOfBiomeGenBase == null || par1ArrayOfBiomeGenBase.length < par4 * par5) {
-            par1ArrayOfBiomeGenBase = new BiomeGenBase[par4 * par5];
-        }
-
-        Arrays.fill(par1ArrayOfBiomeGenBase, 0, par4 * par5, this.biomeGenerator);
-        return par1ArrayOfBiomeGenBase;
+    public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase[] biomes, int xStart, int zStart, int xSize, int zSize) {
+        return getBiomeGenAt(biomes, xStart, zStart, xSize, zSize, true);
     }
 
     /**
@@ -87,8 +82,13 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
      * infinite loop in BiomeCacheBlock)
      */
     @Override
-    public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] par1ArrayOfBiomeGenBase, int par2, int par3, int par4, int par5, boolean par6) {
-        return new BiomeGenBase[] {this.biomeGenerator};
+    public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] biomes, int xStart, int zStart, int xSize, int zSize, boolean par6) {
+        if (biomes == null || biomes.length < xSize * zSize) {
+            biomes = new BiomeGenBase[xSize * zSize];
+        }
+
+        Arrays.fill(biomes, 0, xSize * zSize, this.biomeGenerator);
+        return biomes;
     }
 
     /**
