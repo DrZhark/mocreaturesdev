@@ -37,11 +37,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     public ResourceLocation getTexture() {
-        if (this.bedColor == null) {
-            this.bedColor = EnumDyeColor.byMetadata(getSheetColor()).getUnlocalizedName().toLowerCase();
-        }
-
-        return MoCreatures.proxy.getTexture("kittybed_" + this.bedColor + ".png");
+        return MoCreatures.proxy.getTexture("kittybed_model.png");
     }
 
     @Override
