@@ -1125,6 +1125,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return 50; // white fairy
         }
 
+        // unicorn plus black pegasus (they will both vanish!)
+        if (typeA == 36 && typeB == 40 || typeB == 36 && typeA == 40) {
+            return 54; // black fairy
+        }
+
         // rare horse mixture: produces a regular horse 1-5
         if (typeA > 20 && typeB > 20 && (typeA != typeB)) {
             return (this.rand.nextInt(5)) + 1;
@@ -1539,7 +1544,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             // to return undead horses to pristine conditions
             if (this.isUndead() && this.getIsAdult() && MoCreatures.isServer()) {
                 setEdad(10);
-                if (this.getType() > 26) {
+                if (this.getType() >= 26) {
                     setType(getType() - 3);
                 }
             }
@@ -2211,10 +2216,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                     continue;
                 }
 
-                if (!ReadyforParenting(this)) {
-                    return;
-                }
-
                 if (!flag) {
                     if (!ReadyforParenting((MoCEntityHorse) horsemate)) {
                         return;
@@ -2254,7 +2255,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 }
                 int l = HorseGenetics(this.getType(), horsemateType);
 
-                if (l == 50) // fairy horse!
+                if (l == 50 || l == 54) // fairy horse!
                 {
                     MoCTools.playCustomSound(this, "appearmagic", this.worldObj);
                     if (!flag) {

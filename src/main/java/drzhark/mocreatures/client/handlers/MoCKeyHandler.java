@@ -54,9 +54,10 @@ public class MoCKeyHandler {
             Keyboard.enableRepeatEvents(true); // allow holding down key. Fixes flying
         }
 
-        boolean kbJump = keyPressed == MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode();
-        boolean kbDive = keyPressed == diveBinding.getKeyCode();
-        boolean kbGui = Keyboard.isKeyDown(guiBinding.getKeyCode());
+        // isKeyDown must be called with valid keys only. Mouse binds always use negative id's so we avoid them here.
+        boolean kbJump = MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode() >= 0 ? Keyboard.isKeyDown(MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode()) : keyPressed == MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode();
+        boolean kbDive = diveBinding.getKeyCode() >= 0 ? Keyboard.isKeyDown(diveBinding.getKeyCode()) : keyPressed == diveBinding.getKeyCode();
+        boolean kbGui = guiBinding.getKeyCode() >= 0 ? Keyboard.isKeyDown(guiBinding.getKeyCode()) : keyPressed == guiBinding.getKeyCode();
         //boolean kbDismount = kb.keyDescription.equals("MoCreatures Dismount");
 
         if (kbGui && !MoCreatures.isServer()) {
