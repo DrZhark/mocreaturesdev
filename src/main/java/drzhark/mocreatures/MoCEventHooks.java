@@ -16,8 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -143,19 +141,5 @@ public class MoCEventHooks {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Gets the amount of light on a block without taking into account sunlight
-     */
-    @SuppressWarnings("unused")
-    private int getLightFromNeighbors(Chunk chunk, int x, int y, int z) {
-        ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
-
-        if (extendedblockstorage == null) {
-            return 0;
-        } else {
-            return extendedblockstorage.getExtBlocklightValue(x, y & 15, z);
-        }
     }
 }

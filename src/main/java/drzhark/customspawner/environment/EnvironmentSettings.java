@@ -66,9 +66,9 @@ public class EnvironmentSettings {
     public Map<Class<? extends Entity>, EntityData> classToEntityMapping = new HashMap<Class<? extends Entity>, EntityData>();
     public Map<String, EntitySpawnType> entitySpawnTypes = new TreeMap<String, EntitySpawnType>(String.CASE_INSENSITIVE_ORDER);
     public EntitySpawnType LIVINGTYPE_UNDEFINED = new EntitySpawnType(this, EntitySpawnType.UNDEFINED, 0, 0, 0.0F, false);
-    public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 20, 0.1F, true);
+    public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 15, 0.1F, true);
     public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 100, 15);
-    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 1, 20, Material.water);
+    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 1, 15, Material.water);
     public EntitySpawnType LIVINGTYPE_MONSTER = new EntitySpawnType(this, EntitySpawnType.MONSTER, 1, 70);
     public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 1, 15, 0, 63, 0.0F, false);
     public Map<String, String> worldEnvironmentMap = new HashMap<String, String>();

@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -63,7 +64,9 @@ public class MoCMessageHandler {
     // This solves random NPE issues when attempting to access world data on client
     @SuppressWarnings("rawtypes")
     public static void handleMessage(IMessageHandler message, MessageContext ctx) {
-        FMLCommonHandler.instance().getWorldThread(FMLCommonHandler.instance().getClientToServerNetworkManager().getNetHandler()).addScheduledTask(new SendPacketTask(message, ctx));
+        if (ctx.side == Side.CLIENT) {
+            FMLCommonHandler.instance().getWorldThread(FMLCommonHandler.instance().getClientToServerNetworkManager().getNetHandler()).addScheduledTask(new SendPacketTask(message, ctx));
+        }
     }
 
     // redirects client world tasks to main thread to avoid NPEs

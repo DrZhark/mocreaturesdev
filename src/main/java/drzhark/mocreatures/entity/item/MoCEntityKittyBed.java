@@ -37,7 +37,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     public ResourceLocation getTexture() {
-        return MoCreatures.proxy.getTexture("kittybed_model.png");
+        return MoCreatures.proxy.getTexture("kittybeda.png");
     }
 
     @Override
