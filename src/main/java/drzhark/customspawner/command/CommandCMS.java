@@ -16,6 +16,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -240,6 +241,22 @@ public class CommandCMS extends CommandBase {
                 title =
                         "Showing total entities in chunk " + EnumChatFormatting.AQUA + pos.getX() + EnumChatFormatting.WHITE + ", "
                                 + EnumChatFormatting.AQUA + pos.getZ() + EnumChatFormatting.WHITE + " ";
+            } else if (par2.equalsIgnoreCase("all")) {
+                for (Class <? extends Entity > clazz : EntityList.classToStringMapping.keySet()) {
+                    int count = 0;
+                    for (int i = 0; i < world.loadedEntityList.size(); i++) {
+                        Entity entity = (Entity) world.loadedEntityList.get(i);
+                        if (entity instanceof EntityPlayer || !entity.getClass().isAssignableFrom(clazz)) {
+                            continue;
+                        }
+                        count++;
+                        totalCount++;
+                    }
+                    if (count != 0) {
+                        countMap.put(EnumChatFormatting.GREEN + clazz.getName(), count);
+                    }
+                }
+                title = "Showing total entities in dimension " + world.provider.getDimensionId();
             } else {
                 for (EntityData entityData : CMSUtils.getEnvironment(world).classToEntityMapping.values()) {
                     int count = 0;

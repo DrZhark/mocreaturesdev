@@ -146,7 +146,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-@Mod(modid = "MoCreatures", name = "DrZhark's Mo'Creatures", version = "8.1.0")
+@Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION)
 public class MoCreatures {
 
     @Instance("MoCreatures")

@@ -12,9 +12,9 @@ public interface IMoCTameable {
 
     String getOwnerName();
 
-    String getMoCName();
+    String getPetName();
 
-    void setMoCName(String name);
+    void setPetName(String name);
 
     void setTamed(boolean par1);
 

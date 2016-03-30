@@ -7,9 +7,9 @@ public interface IMoCEntity {
 
     public void selectType();
 
-    public String getMoCName();
+    public String getPetName();
 
-    public void setMoCName(String name);
+    public void setPetName(String name);
 
     public boolean getIsTamed();
 

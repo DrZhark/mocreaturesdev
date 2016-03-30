@@ -31,8 +31,9 @@ public class MoCPetData {
         this.loadPetDataMap(nbt.getCompoundTag("PetIdData"));
     }
 
-    public int addPet(IMoCTameable pet, NBTTagCompound petNBT) {
+    public int addPet(IMoCTameable pet) {
         BlockPos coords = new BlockPos(((Entity) pet).chunkCoordX, ((Entity) pet).chunkCoordY, ((Entity) pet).chunkCoordZ);
+        NBTTagCompound petNBT = MoCTools.getEntityData((Entity) pet);
         if (this.tamedList != null) {
             int id = getNextFreePetId();
             petNBT.setInteger("PetId", id);

@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
@@ -338,12 +339,14 @@ public class MoCEntityEgg extends EntityLiving {
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
+        nbttagcompound = MoCTools.getEntityData(this);
         setEggType(nbttagcompound.getInteger("EggType"));
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
+        nbttagcompound = MoCTools.getEntityData(this);
         nbttagcompound.setInteger("EggType", getEggType());
     }
 

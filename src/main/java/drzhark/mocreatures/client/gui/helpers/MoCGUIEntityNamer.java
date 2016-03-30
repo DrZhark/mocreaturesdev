@@ -48,7 +48,7 @@ public class MoCGUIEntityNamer extends GuiScreen {
     }
 
     public void updateName() {
-        this.NamedEntity.setMoCName(this.NameToSet);
+        this.NamedEntity.setPetName(this.NameToSet);
         MoCMessageHandler.INSTANCE.sendToServer(new MoCMessageUpdatePetName(((EntityLiving) this.NamedEntity).getEntityId(), this.NameToSet));
         this.mc.displayGuiScreen(null);
     }

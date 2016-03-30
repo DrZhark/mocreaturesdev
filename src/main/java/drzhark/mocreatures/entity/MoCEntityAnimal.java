@@ -125,7 +125,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getMoCName() != null && !getMoCName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
     }
 
     @Override
@@ -139,7 +139,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public String getMoCName() {
+    public String getPetName() {
         return this.dataWatcher.getWatchableObjectString(17);
     }
 
@@ -170,7 +170,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public void setMoCName(String name) {
+    public void setPetName(String name) {
         this.dataWatcher.updateObject(17, String.valueOf(name));
     }
 
@@ -634,10 +634,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
+        nbttagcompound = MoCTools.getEntityData(this);
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         nbttagcompound.setBoolean("Adult", getIsAdult());
         nbttagcompound.setInteger("Edad", getEdad());
-        nbttagcompound.setString("Name", getMoCName());
+        nbttagcompound.setString("Name", getPetName());
         nbttagcompound.setInteger("TypeInt", getType());
         nbttagcompound.setString("Owner", getOwnerName());
     }
@@ -645,10 +646,11 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
+        nbttagcompound = MoCTools.getEntityData(this);
         setTamed(nbttagcompound.getBoolean("Tamed"));
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
-        setMoCName(nbttagcompound.getString("Name"));
+        setPetName(nbttagcompound.getString("Name"));
         setType(nbttagcompound.getInteger("TypeInt"));
         setOwner(nbttagcompound.getString("Owner"));
     }

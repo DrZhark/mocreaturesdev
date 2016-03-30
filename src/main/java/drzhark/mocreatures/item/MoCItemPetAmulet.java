@@ -5,9 +5,6 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
@@ -77,7 +74,7 @@ public class MoCItemPetAmulet extends MoCItem {
                     ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);
                     storedCreature.setType(this.creatureType);
                     storedCreature.setTamed(true);
-                    storedCreature.setMoCName(this.name);
+                    storedCreature.setPetName(this.name);
                     storedCreature.setOwnerPetId(this.PetId);
                     storedCreature.setOwner(entityplayer.getName());
                     ((EntityLiving) storedCreature).setHealth(this.health);
@@ -99,15 +96,7 @@ public class MoCItemPetAmulet extends MoCItem {
                         }
                         if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0)
                                 || !MoCreatures.proxy.enableOwnership) {
-                            NBTTagCompound petNBT = new NBTTagCompound();
-                            if (tempLiving instanceof MoCEntityTameableAnimal) {
-                                ((MoCEntityTameableAnimal) storedCreature).writeEntityToNBT(petNBT);
-                            } else if (tempLiving instanceof MoCEntityTameableAquatic) {
-                                ((MoCEntityTameableAquatic) storedCreature).writeEntityToNBT(petNBT);
-                            } else if (tempLiving instanceof MoCEntityTameableAmbient) {
-                                ((MoCEntityTameableAmbient) storedCreature).writeEntityToNBT(petNBT);
-                            }
-                            MoCreatures.instance.mapData.updateOwnerPet(storedCreature, petNBT);
+                            MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
                         }
                         // remove pet entry from old owner
                         if (oldOwner != null) {

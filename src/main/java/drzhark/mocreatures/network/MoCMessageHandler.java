@@ -1,8 +1,5 @@
 package drzhark.mocreatures.network;
 
-import drzhark.mocreatures.MoCPetData;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.gui.helpers.MoCGUIEntityNamer;
 import drzhark.mocreatures.entity.IMoCEntity;
@@ -24,18 +21,14 @@ import drzhark.mocreatures.network.message.MoCMessageShuffle;
 import drzhark.mocreatures.network.message.MoCMessageTwoBytes;
 import drzhark.mocreatures.network.message.MoCMessageUpdatePetName;
 import drzhark.mocreatures.network.message.MoCMessageVanish;
-import drzhark.mocreatures.utils.MoCLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -65,19 +58,20 @@ public class MoCMessageHandler {
     @SuppressWarnings("rawtypes")
     public static void handleMessage(IMessageHandler message, MessageContext ctx) {
         if (ctx.side == Side.CLIENT) {
-            FMLCommonHandler.instance().getWorldThread(FMLCommonHandler.instance().getClientToServerNetworkManager().getNetHandler()).addScheduledTask(new SendPacketTask(message, ctx));
+            FMLCommonHandler.instance().getWorldThread(FMLCommonHandler.instance().getClientToServerNetworkManager().getNetHandler()).addScheduledTask(new ClientPacketTask(message, ctx));
         }
     }
 
-    // redirects client world tasks to main thread to avoid NPEs
-    public static class SendPacketTask implements Runnable {
+    // redirects client received packets to main thread to avoid NPEs
+    public static class ClientPacketTask implements Runnable {
 
         @SuppressWarnings("rawtypes")
         private IMessageHandler message;
-        private MessageContext ctx;
+        @SuppressWarnings("unused")
+		private MessageContext ctx;
 
         @SuppressWarnings("rawtypes")
-        public SendPacketTask(IMessageHandler message, MessageContext ctx) {
+        public ClientPacketTask(IMessageHandler message, MessageContext ctx) {
             this.message = message;
             this.ctx = ctx;
         }
@@ -145,21 +139,6 @@ public class MoCMessageHandler {
                     }
                 }
                 return;
-            } else if (this.message instanceof MoCMessageInstaSpawn) {
-                MoCMessageInstaSpawn message = (MoCMessageInstaSpawn) this.message;
-                if ((MoCreatures.proxy.getProxyMode() == 1 && MoCreatures.proxy.allowInstaSpawn) || MoCreatures.proxy.getProxyMode() == 2) { // make sure the client has admin rights on server!
-                    MoCTools.spawnNearPlayer(ctx.getServerHandler().playerEntity, message.entityId, message.numberToSpawn);
-                    if (MoCreatures.proxy.debug) {
-                        MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getName() + " used MoC instaspawner and got "
-                                + message.numberToSpawn + " creatures spawned");
-                    }
-                } else {
-                    if (MoCreatures.proxy.debug) {
-                        MoCLog.logger.info("Player " + ctx.getServerHandler().playerEntity.getName()
-                                + " tried to use MoC instaspawner, but the allowInstaSpawn setting is set to " + MoCreatures.proxy.allowInstaSpawn);
-                    }
-                }
-                return;
             } else if (this.message instanceof MoCMessageShuffle) {
                 MoCMessageShuffle message = (MoCMessageShuffle) this.message;
                 List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
@@ -181,34 +160,6 @@ public class MoCMessageHandler {
                     ((MoCEntityGolem) ent).saveGolemCube(message.slot, message.value);
                 }
                 return;
-            } else if (this.message instanceof MoCMessageUpdatePetName) {
-                MoCMessageUpdatePetName message = (MoCMessageUpdatePetName) this.message;
-                Entity pet = null;
-                List<Entity> entList = ctx.getServerHandler().playerEntity.worldObj.loadedEntityList;
-                String ownerName = "";
-
-                for (Entity ent : entList) {
-                    if (ent.getEntityId() == message.entityId && ent instanceof IMoCTameable) {
-                        ((IMoCEntity) ent).setMoCName(message.name);
-                        ownerName = ((IMoCEntity) ent).getOwnerName();
-                        pet = ent;
-                        break;
-                    }
-                }
-                // update petdata
-                MoCPetData petData = MoCreatures.instance.mapData.getPetData(ownerName);
-                if (petData != null && pet != null && ((IMoCTameable) pet).getOwnerPetId() != -1) {
-                    int id = ((IMoCTameable) pet).getOwnerPetId();
-                    NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
-                    for (int i = 0; i < tag.tagCount(); i++) {
-                        NBTTagCompound nbt = tag.getCompoundTagAt(i);
-                        if (nbt.getInteger("PetId") == id) {
-                            nbt.setString("Name", message.name);
-                            ((IMoCTameable) pet).setMoCName(message.name);
-                        }
-                    }
-                }
-                return;
             } else if (this.message instanceof MoCMessageVanish) {
                 MoCMessageVanish message = (MoCMessageVanish) this.message;
                 List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
@@ -222,7 +173,7 @@ public class MoCMessageHandler {
             } else if (this.message instanceof MoCMessageNameGUI) {
                 MoCMessageNameGUI message = (MoCMessageNameGUI) this.message;
                 Entity entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
-                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) entity), ((IMoCEntity) entity).getMoCName()));
+                MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) entity), ((IMoCEntity) entity).getPetName()));
                 return;
             }
         }

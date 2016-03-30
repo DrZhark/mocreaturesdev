@@ -1303,15 +1303,13 @@ public class MoCTools {
         storedCreature.setOwner(ep.getName()); // ALWAYS SET OWNER. Required for our new pet save system.
         MoCMessageHandler.INSTANCE.sendTo(new MoCMessageNameGUI(((Entity) storedCreature).getEntityId()), (EntityPlayerMP) ep);
         storedCreature.setTamed(true);
+        // Required to update petId data for pet amulets
+        if (MoCreatures.instance.mapData != null && storedCreature.getOwnerPetId() == -1) {
+            MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
+        }
         return true;
     }
 
-    /**
-     * returns the number of entities already tamed by the player ep
-     *
-     * @param ep
-     * @return
-     */
     public static int numberTamedByPlayer(EntityPlayer ep) {
         if (MoCreatures.instance.mapData != null) {
             if (MoCreatures.instance.mapData.getPetData(ep.getName()) != null) {
@@ -1419,7 +1417,7 @@ public class MoCTools {
                 nbtt.setInteger("SpawnClass", 21);
                 nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
-                nbtt.setString("Name", entity.getMoCName());
+                nbtt.setString("Name", entity.getPetName());
                 nbtt.setBoolean("Rideable", entity.getIsRideable());
                 nbtt.setByte("Armor", entity.getArmorType());
                 nbtt.setInteger("CreatureType", entity.getType());
@@ -1473,7 +1471,7 @@ public class MoCTools {
                 }
                 nbtt.setFloat("Health", ((EntityLiving) entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
-                nbtt.setString("Name", entity.getMoCName());
+                nbtt.setString("Name", entity.getPetName());
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setString("OwnerName", entity.getOwnerName());
                 nbtt.setBoolean("Adult", entity.getIsAdult());
@@ -1739,5 +1737,13 @@ public class MoCTools {
     public static boolean isItemEdible(Item item1) {
         return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
                 || item1 == Items.egg;
+    }
+
+    public static NBTTagCompound getEntityData(Entity entity) {
+        if (!entity.getEntityData().hasKey(MoCConstants.MOD_ID)) {
+            entity.getEntityData().setTag(MoCConstants.MOD_ID, new NBTTagCompound());
+        }
+
+        return entity.getEntityData().getCompoundTag(MoCConstants.MOD_ID);
     }
 }

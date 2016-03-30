@@ -91,7 +91,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setTamed(true);
                     storedCreature.setRideable(this.rideable);
                     storedCreature.setEdad(this.edad);
-                    storedCreature.setMoCName(this.name);
+                    storedCreature.setPetName(this.name);
                     storedCreature.setHealth(this.health);
                     storedCreature.setAdult(this.adult);
                     storedCreature.setArmorType(this.armor);
@@ -113,16 +113,12 @@ public class MoCItemHorseAmulet extends MoCItem {
                         if (newOwner == null) {
                             if (maxCount > 0 || !MoCreatures.proxy.enableOwnership) {
                                 // create new PetData for new owner
-                                NBTTagCompound petNBT = new NBTTagCompound();
-                                storedCreature.writeEntityToNBT(petNBT);
-                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature, petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
                             }
                         } else // add pet to existing pet data
                         {
                             if (newOwner.getTamedList().tagCount() < maxCount || !MoCreatures.proxy.enableOwnership) {
-                                NBTTagCompound petNBT = new NBTTagCompound();
-                                storedCreature.writeEntityToNBT(petNBT);
-                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature, petNBT);
+                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
                             }
                         }
                         // remove pet entry from old owner

@@ -30,7 +30,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
     public void doRenderMoC(T entity, double d, double d1, double d2, float f, float f1) {
         super.doRender(entity, d, d1, d2, f, f1);
         IMoCEntity entityMoC = (IMoCEntity) entity;
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getMoCName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getPetName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         if (entityMoC.renderName()) {
             float f2 = 1.6F;
@@ -38,7 +38,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
             float f5 = ((Entity) entityMoC).getDistanceToEntity(this.renderManager.livingPlayer);
             if (f5 < 16F) {
                 String s = "";
-                s = (new StringBuilder()).append(s).append(entityMoC.getMoCName()).toString();
+                s = (new StringBuilder()).append(s).append(entityMoC.getPetName()).toString();
                 float f7 = 0.1F;
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();

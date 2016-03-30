@@ -49,7 +49,7 @@ public class MoCPetMapData extends WorldSavedData {
         return false;
     }
 
-    public void updateOwnerPet(IMoCTameable pet, NBTTagCompound petNBT) {
+    public void updateOwnerPet(IMoCTameable pet) {
         this.markDirty();
         if (pet.getOwnerPetId() == -1 || this.petMap.get(pet.getOwnerName()) == null) {
             String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getName();
@@ -57,11 +57,11 @@ public class MoCPetMapData extends WorldSavedData {
             int id = -1;
             if (this.petMap.containsKey(owner)) {
                 petData = this.petMap.get(owner);
-                id = petData.addPet(pet, petNBT);
+                id = petData.addPet(pet);
             } else // create new pet data
             {
                 petData = new MoCPetData(pet);
-                id = petData.addPet(pet, petNBT);
+                id = petData.addPet(pet);
                 this.petMap.put(owner, petData);
             }
             pet.setOwnerPetId(id);
@@ -77,12 +77,8 @@ public class MoCPetMapData extends WorldSavedData {
             for (int i = 0; i < tag.tagCount(); i++) {
                 NBTTagCompound nbt = tag.getCompoundTagAt(i);
                 if (nbt.getInteger("PetId") == id) {
-                    //nbt = (NBTTagCompound)petNBT.copy(); //this breaks updates
-                    double posX = Math.round(petNBT.getTagList("Pos", 6).getDoubleAt(0));
-                    double posY = Math.round(petNBT.getTagList("Pos", 6).getDoubleAt(1));
-                    double posZ = Math.round(petNBT.getTagList("Pos", 6).getDoubleAt(2));
                     // Update what we need for commands
-                    nbt.setTag("Pos", this.newDoubleNBTList(new double[] {posX, posY, posZ}));
+                    nbt.setTag("Pos", this.newDoubleNBTList(new double[] {((Entity) pet).posX, ((Entity) pet).posY, ((Entity) pet).posZ}));
                     nbt.setInteger("ChunkX", ((Entity) pet).chunkCoordX);
                     nbt.setInteger("ChunkY", ((Entity) pet).chunkCoordY);
                     nbt.setInteger("ChunkZ", ((Entity) pet).chunkCoordZ);

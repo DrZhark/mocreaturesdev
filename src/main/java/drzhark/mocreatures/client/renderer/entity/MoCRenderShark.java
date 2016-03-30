@@ -23,7 +23,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
     @Override
     public void doRender(MoCEntityShark entityshark, double d, double d1, double d2, float f, float f1) {
         super.doRender(entityshark, d, d1, d2, f, f1);
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityshark.getMoCName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityshark.getPetName()).isEmpty();
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         if (entityshark.renderName()) {
             float f2 = 1.6F;
@@ -31,7 +31,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
             float f4 = entityshark.getDistanceToEntity(this.renderManager.livingPlayer);
             if (f4 < 16F) {
                 String s = "";
-                s = (new StringBuilder()).append(s).append(entityshark.getMoCName()).toString();
+                s = (new StringBuilder()).append(s).append(entityshark.getPetName()).toString();
                 float f5 = 0.1F;
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();
@@ -98,7 +98,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
             float f3 = 0.01666667F * f2;
             float f4 = entityshark.getDistanceToEntity(this.renderManager.livingPlayer);
             String s = "";
-            s = (new StringBuilder()).append(s).append(entityshark.getMoCName()).toString();
+            s = (new StringBuilder()).append(s).append(entityshark.getPetName()).toString();
             if ((f4 < 12F) && (s.length() > 0)) {
                 FontRenderer fontrenderer = getFontRendererFromRenderManager();
                 GL11.glPushMatrix();

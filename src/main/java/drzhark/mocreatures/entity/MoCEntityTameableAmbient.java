@@ -78,7 +78,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
                 this.setOwner("");
-                this.setMoCName("");
+                this.setPetName("");
                 this.dropMyStuff();
                 this.setTamed(false);
             }
@@ -187,7 +187,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
         }
         if (this instanceof IMoCTameable && getIsTamed() && MoCreatures.instance.mapData != null) {
-            MoCreatures.instance.mapData.updateOwnerPet(this, nbttagcompound);
+            MoCreatures.instance.mapData.updateOwnerPet(this);
         }
     }
 

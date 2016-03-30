@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
@@ -77,6 +78,7 @@ public class MoCEntityThrowableRock extends Entity {
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         IBlockState iblockstate = this.getState();
+        nbttagcompound = MoCTools.getEntityData(this);
         nbttagcompound.setInteger("Behavior", getBehavior());
         nbttagcompound.setInteger("MasterID", getMasterID());
         nbttagcompound.setShort("BlockID", (short) Block.getIdFromBlock(iblockstate.getBlock()));
@@ -85,6 +87,7 @@ public class MoCEntityThrowableRock extends Entity {
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
+        nbttagcompound = MoCTools.getEntityData(this);
         setBehavior(nbttagcompound.getInteger("Behavior"));
         setMasterID(nbttagcompound.getInteger("MasterID"));
         IBlockState iblockstate;

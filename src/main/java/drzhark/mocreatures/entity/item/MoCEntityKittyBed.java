@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.item;
 
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -230,6 +231,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
+        nbttagcompound = MoCTools.getEntityData(this);
         setHasMilk(nbttagcompound.getBoolean("HasMilk"));
         setSheetColor(nbttagcompound.getInteger("SheetColour"));
         setHasFood(nbttagcompound.getBoolean("HasFood"));
@@ -238,6 +240,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
+        nbttagcompound = MoCTools.getEntityData(this);
         nbttagcompound.setBoolean("HasMilk", getHasMilk());
         nbttagcompound.setInteger("SheetColour", getSheetColor());
         nbttagcompound.setBoolean("HasFood", getHasFood());
