@@ -62,10 +62,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
-@Mod(modid = "CustomSpawner", name = "DrZhark's CustomSpawner", version = "3.5.0")
+@Mod(modid = CMSConstants.MOD_ID, name = CMSConstants.MOD_NAME, version = CMSConstants.MOD_VERSION)
 public final class CustomSpawner {
 
-    @Instance("CustomSpawner")
+    @Instance(CMSConstants.MOD_ID)
     public static CustomSpawner INSTANCE;
     private static final int MOB_COUNT_DIV = (int)Math.pow(17.0D, 2.0D);
 

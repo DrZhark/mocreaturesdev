@@ -149,7 +149,7 @@ import java.util.UUID;
 @Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION)
 public class MoCreatures {
 
-    @Instance("MoCreatures")
+    @Instance(MoCConstants.MOD_ID)
     public static MoCreatures instance;
 
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")

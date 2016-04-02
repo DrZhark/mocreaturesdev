@@ -793,14 +793,16 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     }
 
                     if (this.itemAttackTarget != null && this.itemAttackTarget instanceof EntityItem) {
-                        float f1 = getDistanceToEntity(getAttackTarget());
-                        if (f1 < 1.5F) {
-                            swingArm();
-                            if (this.rand.nextInt(10) == 0) {
-                                //float force = 0.3F;
-                                //if (type == 10) force = 0.2F;
-                                MoCTools.bigsmack(this, this.itemAttackTarget, 0.3F);
-                                //kittySmack(this, entityLivingToAttack);
+                        if (getAttackTarget() != null) {
+                            float f1 = getDistanceToEntity(getAttackTarget());
+                            if (f1 < 1.5F) {
+                                swingArm();
+                                if (this.rand.nextInt(10) == 0) {
+                                    //float force = 0.3F;
+                                    //if (type == 10) force = 0.2F;
+                                    MoCTools.bigsmack(this, this.itemAttackTarget, 0.3F);
+                                    //kittySmack(this, entityLivingToAttack);
+                                }
                             }
                         }
                     }

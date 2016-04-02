@@ -364,10 +364,10 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
      * @return
      */
     public boolean isTMNT() {
-        if (getMoCName().equals("Donatello") || getMoCName().equals("donatello") || getMoCName().equals("Leonardo") || getMoCName().equals("leonardo")
-                || getMoCName().equals("Rafael") || getMoCName().equals("rafael") || getMoCName().equals("raphael") || getMoCName().equals("Raphael")
-                || getMoCName().equals("Michelangelo") || getMoCName().equals("michelangelo") || getMoCName().equals("Michaelangelo")
-                || getMoCName().equals("michaelangelo")) {
+        if (getPetName().equals("Donatello") || getPetName().equals("donatello") || getPetName().equals("Leonardo") || getPetName().equals("leonardo")
+                || getPetName().equals("Rafael") || getPetName().equals("rafael") || getPetName().equals("raphael") || getPetName().equals("Raphael")
+                || getPetName().equals("Michelangelo") || getPetName().equals("michelangelo") || getPetName().equals("Michaelangelo")
+                || getPetName().equals("michaelangelo")) {
             return true;
         }
         return false;
