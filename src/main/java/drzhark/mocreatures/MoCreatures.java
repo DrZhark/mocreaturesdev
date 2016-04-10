@@ -335,7 +335,6 @@ public class MoCreatures {
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
     public static Map<Class<? extends EntityLiving>, MoCEntityData> entityMap = new HashMap<Class<? extends EntityLiving>, MoCEntityData>();
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
-    public static List<String> defaultBiomeSupport = new ArrayList<String>();
     public static final String CATEGORY_ITEM_IDS = "item-ids";
 
     @EventHandler
@@ -370,11 +369,6 @@ public class MoCreatures {
         MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
         BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.FOREST, Type.END);
         BiomeDictionary.registerAllBiomes();
-        MoCreatures.defaultBiomeSupport.add("BiomesOPlenty");
-        MoCreatures.defaultBiomeSupport.add("extrabiomes");
-        MoCreatures.defaultBiomeSupport.add("highlands");
-        MoCreatures.defaultBiomeSupport.add("ted80");
-        MoCreatures.defaultBiomeSupport.add("minecraft");
         registerEntities();
     }
 
@@ -633,14 +627,7 @@ public class MoCreatures {
             SpawnListEntry spawnEntry = entityData.getSpawnListEntry();
             for (BiomeDictionary.Type type : entityData.getBiomeTypes()) {
                 for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type)) {
-                    boolean match = false;
-                    for (String allowedBiomeMod : defaultBiomeSupport) {
-                        if (biome.getClass().getName().contains(allowedBiomeMod)) {
-                            match = true;
-                            break;
-                        }
-                    }
-                    if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry) && match) {
+                    if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry)) {
                         biome.getSpawnableList(entityData.getType()).add(spawnEntry);
                     }
                 }
