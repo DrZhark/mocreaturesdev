@@ -1,33 +1,32 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
 import com.google.common.base.Predicate;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.pathfinding.PathNavigateGround;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class MoCEntityBird extends MoCEntityTameableAnimal {
 
@@ -123,6 +122,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
+    @Override
     public boolean getIsFlying() {
         return (this.dataWatcher.getWatchableObjectByte(24) == 1);
     }
@@ -358,7 +358,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
                 setIsFlying(false);
             }
 
-            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && rand.nextInt(30) == 0) {
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && this.rand.nextInt(30) == 0) {
                 this.wander.makeUpdate();
             }
 
@@ -382,11 +382,11 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
                 this.wander.makeUpdate();
             }
 
-            if (getIsFlying() && rand.nextInt(200) == 0) {
+            if (getIsFlying() && this.rand.nextInt(200) == 0) {
                 setIsFlying(false);
             }
 
-            if (this.fleeing && rand.nextInt(50) == 0) {
+            if (this.fleeing && this.rand.nextInt(50) == 0) {
                 this.fleeing = false;
             }
 
@@ -420,8 +420,9 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             EntityPlayer entityplayer = (EntityPlayer) this.ridingEntity;
             this.rotationYaw = entityplayer.rotationYaw;
             entityplayer.fallDistance = 0.0F;
-            if (entityplayer.motionY < -0.1D)
+            if (entityplayer.motionY < -0.1D) {
                 entityplayer.motionY *= 0.60;
+            }
         }
 
         if (--this.jumpTimer <= 0 && this.onGround
@@ -521,8 +522,9 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public int maxFlyingHeight() {
-        if (getIsTamed())
+        if (getIsTamed()) {
             return 4;
+        }
         return 6;
     }
 

@@ -1,13 +1,7 @@
 package drzhark.mocreatures.entity.ambient;
 
-import com.google.common.base.Predicate;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.Entity;
-
 import drzhark.mocreatures.entity.MoCEntityAmbient;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;

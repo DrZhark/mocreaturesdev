@@ -5,15 +5,11 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -22,8 +18,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class MoCEntityHorseMob extends MoCEntityMob {
 
@@ -75,15 +69,15 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     }
 
     /**
-     * Overridden for the dynamic nightmare texture. * 
-     * 23 Undead 
-     * 24 Undead Unicorn 
+     * Overridden for the dynamic nightmare texture. *
+     * 23 Undead
+     * 24 Undead Unicorn
      * 25 Undead Pegasus
-     * 26 skeleton 
-     * 27 skeleton unicorn 
+     * 26 skeleton
+     * 27 skeleton unicorn
      * 28 skeleton pegasus
      * 30 bug horse
-     * 32 Bat Horse 
+     * 32 Bat Horse
      * 38 nightmare
      */
     @Override
@@ -247,7 +241,8 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             }
 
             if (this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
-                List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                MoCTools.findMobRider(this);
+                /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity = (Entity) list.get(i);
                     if (!(entity instanceof EntityMob)) {
@@ -259,7 +254,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
                         entitymob.mountEntity(this);
                         break;
                     }
-                }
+                }*/
             }
         }
     }
@@ -322,27 +317,14 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         return Items.leather;
     }
 
-    //TODO
-    /*@Override
-    protected void attackEntity(Entity par1Entity, float par2) {
-        if (this.attackTime <= 0 && par2 < 2.5F && par1Entity.getEntityBoundingBox().maxY > this.getEntityBoundingBox().minY
-                && par1Entity.getEntityBoundingBox().minY < this.getEntityBoundingBox().maxY) {
-            this.attackTime = 20;
-            stand();
-            openMouth();
-            MoCTools.playCustomSound(this, "horsemad", this.worldObj);
-            this.attackEntityAsMob(par1Entity);
-        }
-    }*/
-
-    //TODO TEST IF ANIMATION WORKS ON CLIENT
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         if (entityIn instanceof EntityPlayer && !shouldAttackPlayers()) {
             return false;
         }
-        if (this.onGround && !isOnAir())
+        if (this.onGround && !isOnAir()) {
             stand();
+        }
         openMouth();
         MoCTools.playCustomSound(this, "horsemad", this.worldObj);
         return super.attackEntityAsMob(entityIn);
@@ -395,10 +377,12 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         return true;
     }
 
+    @Override
     public int maxFlyingHeight() {
         return 10;
     }
 
+    @Override
     public int minFlyingHeight() {
         return 1;
     }

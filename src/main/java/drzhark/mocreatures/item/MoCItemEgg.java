@@ -15,9 +15,10 @@ public class MoCItemEgg extends MoCItem {
         this.maxStackSize = 16;
         setHasSubtypes(true);
         for (int i = 0; i < 91; i++) {
-            if (!MoCreatures.isServer())
+            if (!MoCreatures.isServer()) {
                 Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                         .register(this, i, new ModelResourceLocation("mocreatures:mocegg", "inventory"));
+            }
         }
     }
 

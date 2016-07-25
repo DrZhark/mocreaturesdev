@@ -92,6 +92,9 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
         if (this.theAttacker != null && (this.theAttacker.isMovementCeased() || !this.theAttacker.isNotScared())) {
             return false;
         }
+        /*if (this.theAttacker != null && this.targetEntity != null) {
+            if (this.targetEntity.getClass().isAssignableFrom(this.theAttacker.getClass())) return false;
+        }*/
         if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
             return false;
         } else {

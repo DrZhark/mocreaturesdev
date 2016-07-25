@@ -589,7 +589,7 @@ public class MoCModelElephant extends ModelBase {
 
         setRotationAngles(f, f1, f2, f3, f4, f5);
 
-        if (tusks == 0) {
+        if (this.tusks == 0) {
             this.LeftTuskB.render(f5);
             this.RightTuskB.render(f5);
             if (elephant.getIsAdult() || elephant.getEdad() > 70) {
@@ -600,7 +600,7 @@ public class MoCModelElephant extends ModelBase {
                 this.LeftTuskD.render(f5);
                 this.RightTuskD.render(f5);
             }
-        } else if (tusks == 1) {
+        } else if (this.tusks == 1) {
             this.TuskLW1.render(f5);
             this.TuskLW2.render(f5);
             this.TuskLW3.render(f5);
@@ -611,7 +611,7 @@ public class MoCModelElephant extends ModelBase {
             this.TuskRW3.render(f5);
             this.TuskRW4.render(f5);
             this.TuskRW5.render(f5);
-        } else if (tusks == 2) {
+        } else if (this.tusks == 2) {
             this.TuskLI1.render(f5);
             this.TuskLI2.render(f5);
             this.TuskLI3.render(f5);
@@ -622,7 +622,7 @@ public class MoCModelElephant extends ModelBase {
             this.TuskRI3.render(f5);
             this.TuskRI4.render(f5);
             this.TuskRI5.render(f5);
-        } else if (tusks == 3) {
+        } else if (this.tusks == 3) {
             this.TuskLD1.render(f5);
             this.TuskLD2.render(f5);
             this.TuskLD3.render(f5);
@@ -866,7 +866,7 @@ public class MoCModelElephant extends ModelBase {
         float HeadYRot = (f3 / 57.29578F);
 
         float f10 = 0F;
-        if (isSitting) {
+        if (this.isSitting) {
             f10 = 8F;
         }
         AdjustY(f10);
@@ -876,11 +876,11 @@ public class MoCModelElephant extends ModelBase {
          */
         float TrunkXRot = 0F;
 
-        if (trunkCounter != 0) {
+        if (this.trunkCounter != 0) {
             HeadXRot = 0F;
             TrunkXRot = MathHelper.cos(this.trunkCounter * 0.2F) * 12F;
         }
-        if (isSitting) {
+        if (this.isSitting) {
             HeadXRot = 0F;
             TrunkXRot = 25F;
         }
@@ -968,7 +968,7 @@ public class MoCModelElephant extends ModelBase {
         this.TrunkE.rotateAngleX = ((145F - TrunkXRot * 6F) / this.radianF) + HeadXRot;
 
         //legs
-        if (isSitting) {
+        if (this.isSitting) {
             this.FrontRightUpperLeg.rotateAngleX = -30F / this.radianF;
             this.FrontLeftUpperLeg.rotateAngleX = -30F / this.radianF;
             this.BackLeftUpperLeg.rotateAngleX = -30F / this.radianF;
@@ -987,7 +987,7 @@ public class MoCModelElephant extends ModelBase {
 
         //To convert from degrees to radians, multiply by ((PI)/180o).
         //To convert from radians to degrees, multiply by (180o/(PI)).
-        if (isSitting) {
+        if (this.isSitting) {
             this.FrontLeftLowerLeg.rotateAngleX = 90F / this.radianF;
             this.FrontRightLowerLeg.rotateAngleX = 90F / this.radianF;
             this.BackLeftLowerLeg.rotateAngleX = 90F / this.radianF;
@@ -1009,7 +1009,7 @@ public class MoCModelElephant extends ModelBase {
             this.BackRightLowerLeg.rotateAngleX = LLegXRotD / this.radianF;
         }
 
-        if (tusks == 0) {
+        if (this.tusks == 0) {
             this.LeftTuskB.rotateAngleY = HeadYRot;
             this.LeftTuskC.rotateAngleY = HeadYRot;
             this.LeftTuskD.rotateAngleY = HeadYRot;
@@ -1023,7 +1023,7 @@ public class MoCModelElephant extends ModelBase {
             this.RightTuskB.rotateAngleX = (40F / this.radianF) + HeadXRot;
             this.RightTuskC.rotateAngleX = (10F / this.radianF) + HeadXRot;
             this.RightTuskD.rotateAngleX = (-20F / this.radianF) + HeadXRot;
-        } else if (tusks == 1) {
+        } else if (this.tusks == 1) {
             this.TuskLW1.rotateAngleY = HeadYRot;
             this.TuskLW2.rotateAngleY = HeadYRot;
             this.TuskLW3.rotateAngleY = HeadYRot;
@@ -1045,7 +1045,7 @@ public class MoCModelElephant extends ModelBase {
             this.TuskRW3.rotateAngleX = (-20F / this.radianF) + HeadXRot;
             this.TuskRW4.rotateAngleX = (10F / this.radianF) + HeadXRot;
             this.TuskRW5.rotateAngleX = (-20F / this.radianF) + HeadXRot;
-        } else if (tusks == 2) {
+        } else if (this.tusks == 2) {
             this.TuskLI1.rotateAngleY = HeadYRot;
             this.TuskLI2.rotateAngleY = HeadYRot;
             this.TuskLI3.rotateAngleY = HeadYRot;
@@ -1067,7 +1067,7 @@ public class MoCModelElephant extends ModelBase {
             this.TuskRI3.rotateAngleX = (-20F / this.radianF) + HeadXRot;
             this.TuskRI4.rotateAngleX = (10F / this.radianF) + HeadXRot;
             this.TuskRI5.rotateAngleX = (-20F / this.radianF) + HeadXRot;
-        } else if (tusks == 3) {
+        } else if (this.tusks == 3) {
             this.TuskLD1.rotateAngleY = HeadYRot;
             this.TuskLD2.rotateAngleY = HeadYRot;
             this.TuskLD3.rotateAngleY = HeadYRot;

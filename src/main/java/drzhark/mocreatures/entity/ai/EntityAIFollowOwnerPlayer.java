@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -43,7 +42,7 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        if (((IMoCEntity) this.thePet).getIsSitting()) {
+        if (((IMoCEntity) this.thePet).isMovementCeased()) {
             return false;
         }
         //if (!(this.thePet.getNavigator() instanceof PathNavigateGround)) {

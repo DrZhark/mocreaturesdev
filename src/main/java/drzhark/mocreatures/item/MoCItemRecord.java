@@ -18,9 +18,10 @@ public class MoCItemRecord extends ItemRecord {
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
-        if (!MoCreatures.isServer())
+        if (!MoCreatures.isServer()) {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                     .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+        }
     }
 
     @SideOnly(Side.CLIENT)

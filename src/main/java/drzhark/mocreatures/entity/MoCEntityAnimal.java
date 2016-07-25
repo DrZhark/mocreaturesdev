@@ -1,19 +1,13 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.network.play.server.S1BPacketEntityAttach;
-import net.minecraft.world.WorldServer;
-
-import net.minecraft.entity.passive.EntityTameable;
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.entity.EntityCreature;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -27,11 +21,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
@@ -65,7 +55,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     protected PathNavigate navigatorFlyer;
 
     private double divingDepth;
-    private boolean randomAttributesUpdated; //used to update divingDepth on world load 
+    private boolean randomAttributesUpdated; //used to update divingDepth on world load
 
     public MoCEntityAnimal(World world) {
         super(world);
@@ -176,7 +166,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public void setAdult(boolean flag) {
-
         byte input = (byte) (flag ? 1 : 0);
         this.dataWatcher.updateObject(21, Byte.valueOf(input));
     }
@@ -815,6 +804,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      *
      * @return
      */
+    @Override
     public int maxFlyingHeight() {
         return 5;
     }
@@ -868,6 +858,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     /**
      * Boolean used for flying mounts
      */
+    @Override
     public boolean isFlyer() {
         return false;
     }

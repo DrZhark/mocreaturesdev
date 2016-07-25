@@ -3,7 +3,6 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -74,7 +73,7 @@ public class MoCEntityCricket extends MoCEntityInsect
     public void onUpdate() {
         super.onUpdate();
         if (MoCreatures.isServer()) {
-            if (onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
+            if (this.onGround && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
                 if (this.jumpCounter == 0 && this.onGround
                         && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
                     this.motionY = 0.45D;
@@ -82,6 +81,7 @@ public class MoCEntityCricket extends MoCEntityInsect
                     this.motionZ *= 5D;
                     this.jumpCounter = 1;
                 }
+            }
         }
     }
 

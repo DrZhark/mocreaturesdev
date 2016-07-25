@@ -1,9 +1,5 @@
 package drzhark.mocreatures.entity.item;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.util.DamageSource;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.Entity;
@@ -17,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;

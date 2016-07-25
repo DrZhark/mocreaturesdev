@@ -61,7 +61,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
         }
         List list =
                 this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity,
-                        this.theEntity.getEntityBoundingBox().expand((double) this.avoidDistance, 3.0D, (double) this.avoidDistance),
+                        this.theEntity.getEntityBoundingBox().expand(this.avoidDistance, 3.0D, this.avoidDistance),
                         Predicates.and(new Predicate[] {IEntitySelector.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
         if (list.isEmpty()) {

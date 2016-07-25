@@ -599,7 +599,7 @@ public class MoCModelOgre extends ModelBase {
 
         setRotationAngles(f, f1, f2, f3, f4, f5);
 
-        if (type == 1 || type == 3 || type == 5) {
+        if (this.type == 1 || this.type == 3 || this.type == 5) {
             this.Head.render(f5);
             this.Brow.render(f5);
             this.NoseBridge.render(f5);
@@ -716,9 +716,9 @@ public class MoCModelOgre extends ModelBase {
         this.LoinCloth.rotateAngleX = ClothRot;
         this.ButtCover.rotateAngleX = ClothRot;
 
-        float armMov = -(MathHelper.cos((attackCounter) * 0.18F) * 3F);
+        float armMov = -(MathHelper.cos((this.attackCounter) * 0.18F) * 3F);
 
-        //leftArm 
+        //leftArm
         //attacking with left arm
         if (this.armToAnimate == 1 || this.armToAnimate == 3) {
             this.LftShoulder.rotateAngleX = +armMov;
@@ -767,17 +767,17 @@ public class MoCModelOgre extends ModelBase {
             this.RgtHand.rotateAngleX = (-45F / this.radianF);
         }*/
 
-        if (headMoving == 2) {
+        if (this.headMoving == 2) {
             this.Head2.rotateAngleX = hRotX;
             this.Head2.rotateAngleY = hRotY;
         }
 
-        if (headMoving == 3) {
+        if (this.headMoving == 3) {
             this.Head3.rotateAngleX = hRotX;
             this.Head3.rotateAngleY = hRotY;
         }
 
-        if (type == 1 || type == 3 || type == 5) {
+        if (this.type == 1 || this.type == 3 || this.type == 5) {
             this.Head.rotateAngleX = hRotX;
             this.Head.rotateAngleY = hRotY;
 

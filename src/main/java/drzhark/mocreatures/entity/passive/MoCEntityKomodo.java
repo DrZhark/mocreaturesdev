@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.block.material.Material;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;

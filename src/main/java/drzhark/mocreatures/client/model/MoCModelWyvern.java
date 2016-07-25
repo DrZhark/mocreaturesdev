@@ -1,7 +1,5 @@
 package drzhark.mocreatures.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.client.model.ModelBase;
@@ -10,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelWyvern extends ModelBase {
@@ -801,7 +800,7 @@ public class MoCModelWyvern extends ModelBase {
         GL11.glPushMatrix();
         GL11.glTranslatef(0F, yOffset, 0F);
 
-        if (isGhost) {
+        if (this.isGhost) {
             float transparency = wyvern.tFloat();
             GL11.glEnable(3042 /* GL_BLEND */);
             GL11.glBlendFunc(770, 771);
@@ -823,11 +822,11 @@ public class MoCModelWyvern extends ModelBase {
         this.neck3.render(f5);
         this.torso.render(f5);
 
-        if (isChested) {
+        if (this.isChested) {
             this.storage.render(f5);
         }
 
-        if (isSaddled) {
+        if (this.isSaddled) {
             this.saddle.render(f5);
             this.mouthrod.isHidden = false; //render(f5);
             this.helmetstrap1.isHidden = false; //render(f5);
@@ -835,7 +834,7 @@ public class MoCModelWyvern extends ModelBase {
             this.chestbelt.render(f5);
             this.stomachbelt.render(f5);
 
-            if (isRidden) {
+            if (this.isRidden) {
                 this.controlrope1.isHidden = false;
                 this.controlrope2.isHidden = false;
             } else {
@@ -928,7 +927,7 @@ public class MoCModelWyvern extends ModelBase {
         this.diamondleftshoulder.render(f5);
         this.diamondrightshoulder.render(f5);
         this.diamondchestarmor.render(f5);
-        if (isGhost) {
+        if (this.isGhost) {
             GL11.glDisable(3042/* GL_BLEND */);
         }
         GL11.glPopMatrix();
@@ -964,12 +963,12 @@ public class MoCModelWyvern extends ModelBase {
         this.head.rotateAngleY = 0F;
         this.head.rotateAngleZ = 0F;
 
-        if (isRidden) {
+        if (this.isRidden) {
             //straight neck when mounted
             this.neck1.rotateAngleY = 0F;
             this.neck2.rotateAngleY = 0F;
 
-            if (onAir) {
+            if (this.onAir) {
                 this.neck1.rotateAngleX = 0F;
                 this.neck2.rotateAngleX = 0F;
 
@@ -1015,7 +1014,7 @@ public class MoCModelWyvern extends ModelBase {
          * cruising, movement depends of speed
          */
         //float WingRot = 0F;
-        if (flapwings && !isGhost) {
+        if (this.flapwings && !this.isGhost) {
             WingSpread = MathHelper.cos((f2 * 0.3F) + 3.141593F) * 1.2F;// * f1;
         } else
         //cruising
@@ -1024,11 +1023,11 @@ public class MoCModelWyvern extends ModelBase {
             WingSpread = MathHelper.cos((f * 0.5F)) * 0.1F;//* 1.2F * f1;
         }
 
-        if (onAir || isGhost) {
+        if (this.onAir || this.isGhost) {
             //rightfing1a.rotateAngleY = -70F/radianF+ WingSpread;
 
             float speedMov = (f1 * 0.5F);
-            if (isGhost) {
+            if (this.isGhost) {
                 speedMov = 0.5F;
             }
 
@@ -1115,7 +1114,7 @@ public class MoCModelWyvern extends ModelBase {
 
         }
 
-        if (isSitting) {
+        if (this.isSitting) {
             this.leftupleg.rotateAngleX = 45F / this.radianF + LLegXRot;
             this.rightupleg.rotateAngleX = 45F / this.radianF + RLegXRot;
             this.leftmidleg.rotateAngleX = 30F;
@@ -1123,7 +1122,7 @@ public class MoCModelWyvern extends ModelBase {
             this.neck2.rotateAngleX = -36F / this.radianF + (f4 * 1 / 3F / this.radianF);
             this.neck1.rotateAngleX = 30F / this.radianF + (f4 * 2 / 3F / this.radianF);
         }
-        if (diving) {
+        if (this.diving) {
             this.leftuparm.rotateAngleZ = -40F / this.radianF;
             this.rightuparm.rotateAngleZ = 40F / this.radianF;
             this.leftlowarm.rotateAngleZ = 0F;
@@ -1150,8 +1149,8 @@ public class MoCModelWyvern extends ModelBase {
             this.rightfing3a.rotateAngleY = -10F / this.radianF;
         }
 
-        if (openMouth != 0) {
-            float mouthMov = (MathHelper.cos((openMouth - 15) * 0.11F) * 0.8F);
+        if (this.openMouth != 0) {
+            float mouthMov = (MathHelper.cos((this.openMouth - 15) * 0.11F) * 0.8F);
             this.Jaw.rotateAngleX = (-10F / this.radianF) + mouthMov;
             this.leftearskin.rotateAngleY = +mouthMov;
             this.rightearskin.rotateAngleY = -mouthMov;

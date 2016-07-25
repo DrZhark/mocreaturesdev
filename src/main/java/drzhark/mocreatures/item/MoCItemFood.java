@@ -14,9 +14,10 @@ public class MoCItemFood extends ItemFood {
         this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
         this.maxStackSize = 32;
-        if (!MoCreatures.isServer())
+        if (!MoCreatures.isServer()) {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                     .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+        }
     }
 
     public MoCItemFood(String name, int j, float f, boolean flag) {
@@ -24,8 +25,9 @@ public class MoCItemFood extends ItemFood {
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
-        if (!MoCreatures.isServer())
+        if (!MoCreatures.isServer()) {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                     .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+        }
     }
 }

@@ -313,10 +313,10 @@ public class MoCModelScorpion extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         MoCEntityScorpion scorpy = (MoCEntityScorpion) entity;
-        poisoning = scorpy.swingingTail();
-        isTalking = scorpy.mouthCounter != 0;
-        babies = scorpy.getHasBabies();
-        attacking = scorpy.armCounter;
+        this.poisoning = scorpy.swingingTail();
+        this.isTalking = scorpy.mouthCounter != 0;
+        this.babies = scorpy.getHasBabies();
+        this.attacking = scorpy.armCounter;
         setRotationAngles(f, f1, f2, f3, f4, f5);
         renderParts(f5);
     }
@@ -365,7 +365,7 @@ public class MoCModelScorpion extends ModelBase {
         this.Leg8A.render(f5);
         this.Leg8B.render(f5);
         this.Leg8C.render(f5);
-        if (babies) {
+        if (this.babies) {
             this.baby1.render(f5);
             this.baby2.render(f5);
             this.baby3.render(f5);
@@ -389,7 +389,7 @@ public class MoCModelScorpion extends ModelBase {
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         //float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.4F * f1;
 
-        if (!poisoning) {
+        if (!this.poisoning) {
             this.Body.rotateAngleX = 5F / this.radianF;
             this.Tail1.rotateAngleX = 35F / this.radianF;
             this.Tail1.rotationPointY = 16F;
@@ -454,7 +454,7 @@ public class MoCModelScorpion extends ModelBase {
          * Mouth animation
          */
         float MouthRot = 0F;
-        if (isTalking) {
+        if (this.isTalking) {
             MouthRot = MathHelper.cos((f2 * 1.1F)) * 0.2F;
         }
         this.MouthR.rotateAngleY = (22F / this.radianF) + MouthRot;
@@ -489,7 +489,7 @@ public class MoCModelScorpion extends ModelBase {
         /**
          * Random hand animations
          */
-        if (attacking == 0) {
+        if (this.attacking == 0) {
 
             /**
              * LHand random animation
@@ -516,7 +516,7 @@ public class MoCModelScorpion extends ModelBase {
         } else
         //hand attacking sequence
         {
-            if (attacking > 0 && attacking < 5) {
+            if (this.attacking > 0 && this.attacking < 5) {
                 //LArm ahead open
                 this.LArm1.rotateAngleX = 50F / this.radianF;
                 this.LArm2.rotationPointX = 8F;
@@ -531,7 +531,7 @@ public class MoCModelScorpion extends ModelBase {
                 this.LArm4.rotateAngleY = 40F / this.radianF;
             }
 
-            if (attacking >= 5 && attacking < 10) {
+            if (this.attacking >= 5 && this.attacking < 10) {
                 //LArm ahead closed
                 this.LArm1.rotateAngleX = 70F / this.radianF;
                 this.LArm2.rotationPointX = 7F;
@@ -545,7 +545,7 @@ public class MoCModelScorpion extends ModelBase {
                 this.LArm4.rotationPointZ = -19F;
                 this.LArm4.rotateAngleY = 0F;
             }
-            if (attacking >= 10 && attacking < 15) {
+            if (this.attacking >= 10 && this.attacking < 15) {
                 //Rarm ahead open
                 this.RArm1.rotateAngleX = 50F / this.radianF;
                 this.RArm2.rotationPointX = -8F;
@@ -559,7 +559,7 @@ public class MoCModelScorpion extends ModelBase {
                 this.RArm4.rotationPointZ = -18F;
                 this.RArm4.rotateAngleY = -40F / this.radianF;
             }
-            if (attacking >= 15 && attacking < 20) {
+            if (this.attacking >= 15 && this.attacking < 20) {
                 //RArm ahead closed
                 this.RArm1.rotateAngleX = 70F / this.radianF;
                 this.RArm2.rotationPointX = -7F;
@@ -578,7 +578,7 @@ public class MoCModelScorpion extends ModelBase {
         /**
          * Babies animation
          */
-        if (babies) {
+        if (this.babies) {
             float fmov = f2 % 100;
             float fb1 = 0F;
             float fb2 = 142F / this.radianF;
@@ -634,7 +634,7 @@ public class MoCModelScorpion extends ModelBase {
         float f15 = Math.abs(MathHelper.sin(f * 0.6662F + 1.570796F) * 0.4F) * f1;
         float f16 = Math.abs(MathHelper.sin(f * 0.6662F + 4.712389F) * 0.4F) * f1;
 
-        if (sitting) {
+        if (this.sitting) {
             this.Leg1A.rotateAngleX = -10F / this.radianF;
             this.Leg1A.rotateAngleZ = 35F / this.radianF;
             this.Leg1B.rotateAngleZ = 20F / this.radianF;

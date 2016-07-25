@@ -1,8 +1,6 @@
 package drzhark.mocreatures.client.model;
 
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
-
-import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -61,7 +59,7 @@ public class MoCModelWraith extends ModelBiped {
         this.bipedRightArm.rotateAngleY = -(0.1F - (f6 * 0.6F));
         this.bipedLeftArm.rotateAngleY = 0.1F - (f6 * 0.6F);
         if (this.attackCounter != 0) {
-            float armMov = (MathHelper.cos((attackCounter) * 0.12F) * 4F);
+            float armMov = (MathHelper.cos((this.attackCounter) * 0.12F) * 4F);
 
             this.bipedRightArm.rotateAngleX = -armMov;
             this.bipedLeftArm.rotateAngleX = -armMov;

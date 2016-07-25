@@ -150,9 +150,9 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
 
     /**
      * Replaces the stone that was placed in with blocks that match the biome
-     * @param biomesForGeneration2 
-     * @param z 
-     * @param x 
+     * @param biomesForGeneration2
+     * @param z
+     * @param x
      */
     public void insertBiomeBlocks(int x, int z, ChunkPrimer chunkPrimer, BiomeGenBase[] biomesForGeneration2) {
         ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, x, z, chunkPrimer, this.worldObj);

@@ -3,7 +3,6 @@ package drzhark.mocreatures.entity;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -1107,6 +1106,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     /**
      * Boolean used for flying mounts
      */
+    @Override
     public boolean isFlyer() {
         return false;
     }

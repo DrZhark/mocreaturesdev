@@ -1,16 +1,11 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.network.message.MoCMessageExplode;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -18,8 +13,9 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 {
@@ -94,13 +90,16 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     public void fall(float f, float f1) {
     }
 
+    @Override
     protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos) {
     }
 
+    @Override
     public int maxFlyingHeight() {
         return 10;
     }
 
+    @Override
     public int minFlyingHeight() {
         return 3;
     }
@@ -126,8 +125,9 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
     public void onLivingUpdate() {
         if (this.attackCounter > 0) {
             this.attackCounter += 2;
-            if (this.attackCounter > 10)
+            if (this.attackCounter > 10) {
                 this.attackCounter = 0;
+            }
         }
         super.onLivingUpdate();
     }
@@ -140,9 +140,8 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 
     }
 
-    //TODO ACTIVATE FOR RELEASE
-    /*@Override
+    @Override
     protected boolean isHarmedByDaylight() {
         return true;
-    }*/
+    }
 }

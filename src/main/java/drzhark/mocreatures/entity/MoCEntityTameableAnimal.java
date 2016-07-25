@@ -1,12 +1,9 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.network.play.server.S1BPacketEntityAttach;
-import net.minecraft.world.WorldServer;
-
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -283,7 +280,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     }
 
     /**
-     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
+     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled
      * @param entityIn
      * @param sendAttachNotification
      */
@@ -297,5 +294,10 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             }
         }
         super.setLeashedToEntity(entityIn, sendAttachNotification);
+    }
+
+    @Override
+    public boolean readytoBreed() {
+        return false;
     }
 }

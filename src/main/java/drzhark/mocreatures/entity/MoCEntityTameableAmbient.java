@@ -236,4 +236,9 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     public boolean allowLeashing() {
         return this.getIsTamed();
     }
+
+    @Override
+    public boolean readytoBreed() {
+        return false;
+    }
 }

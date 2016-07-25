@@ -12,6 +12,7 @@ import net.minecraft.world.pathfinder.NodeProcessor;
 
 public class FlyNodeProcessor extends NodeProcessor {
 
+    @Override
     public void initProcessor(IBlockAccess iblockaccessIn, Entity entityIn) {
         super.initProcessor(iblockaccessIn, entityIn);
     }
@@ -21,6 +22,7 @@ public class FlyNodeProcessor extends NodeProcessor {
      * {@link net.minecraft.world.pathfinder.WalkNodeProcessor WalkNodeProcessor} uses this to change its field {@link
      * net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater avoidsWater}
      */
+    @Override
     public void postProcess() {
         super.postProcess();
     }
@@ -28,6 +30,7 @@ public class FlyNodeProcessor extends NodeProcessor {
     /**
      * Returns given entity's position as PathPoint
      */
+    @Override
     public PathPoint getPathPointTo(Entity entityIn) {
         return this.openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX),
                 MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
@@ -35,17 +38,19 @@ public class FlyNodeProcessor extends NodeProcessor {
 
     /**
      * Returns PathPoint for given coordinates
-     *  
+     *
      * @param entityIn entity which size will be used to center position
      * @param x target x coordinate
      * @param y target y coordinate
      * @param target z coordinate
      */
+    @Override
     public PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double target) {
-        return this.openPoint(MathHelper.floor_double(x - (double) (entityIn.width / 2.0F)), MathHelper.floor_double(y + 0.5D),
-                MathHelper.floor_double(target - (double) (entityIn.width / 2.0F)));
+        return this.openPoint(MathHelper.floor_double(x - entityIn.width / 2.0F), MathHelper.floor_double(y + 0.5D),
+                MathHelper.floor_double(target - entityIn.width / 2.0F));
     }
 
+    @Override
     public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
         int i = 0;
         EnumFacing[] aenumfacing = EnumFacing.values();

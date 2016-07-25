@@ -8,6 +8,7 @@ import drzhark.mocreatures.entity.aquatic.MoCEntityPiranha;
 import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 import drzhark.mocreatures.entity.aquatic.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
@@ -298,6 +299,21 @@ public class MoCEntityEgg extends EntityLiving {
                     {
                         MoCEntityWyvern entityspawn = new MoCEntityWyvern(this.worldObj);
                         int typeInt = getEggType() - 49;
+                        entityspawn.setPosition(this.posX, this.posY, this.posZ);
+                        entityspawn.setType(typeInt);
+                        entityspawn.setAdult(false);
+                        entityspawn.setEdad(30);
+                        this.worldObj.spawnEntityInWorld(entityspawn);
+                        entityspawn.setHealth(entityspawn.getMaxHealth());
+                        EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 24D);
+                        if (entityplayer != null) {
+                            MoCTools.tameWithName(entityplayer, entityspawn);
+                        }
+                    }
+                    if (getEggType() > 61 && getEggType() < 66) //manticorePets for now it uses 62 - 65
+                    {
+                        MoCEntityManticorePet entityspawn = new MoCEntityManticorePet(this.worldObj);
+                        int typeInt = getEggType() - 61;
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
                         entityspawn.setType(typeInt);
                         entityspawn.setAdult(false);

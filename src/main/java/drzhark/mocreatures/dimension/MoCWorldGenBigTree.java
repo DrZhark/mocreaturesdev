@@ -1,7 +1,5 @@
 package drzhark.mocreatures.dimension;
 
-import net.minecraft.block.material.Material;
-
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -418,13 +416,13 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
 
         /*IBlockState iblockstate2 = this.worldObj.getBlockState(new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2]));
 
-        if (iblockstate2.getBlock() != MoCreatures.mocDirt.getDefaultState().getBlock() 
+        if (iblockstate2.getBlock() != MoCreatures.mocDirt.getDefaultState().getBlock()
                 && iblockstate2.getBlock() != MoCreatures.mocGrass.getDefaultState().getBlock() ) {
             System.out.println("invalid tree location option b = " +  iblockstate2.getBlock());
         }
         */
         if (block != MoCreatures.mocDirt && block != MoCreatures.mocGrass) {
-            System.out.println("invalid tree location = " + block + ", x=" + pos.getX() + ", y=" + pos.getY() + ", z=" + pos.getZ());
+            //System.out.println("invalid tree location = " + block + ", x=" + pos.getX() + ", y=" + pos.getY() + ", z=" + pos.getZ());
             return false;
 
         } else {

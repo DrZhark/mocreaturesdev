@@ -1,22 +1,17 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import net.minecraft.client.renderer.OpenGlHelper;
-
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.init.Blocks;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MoCRenderTRock extends Render {
@@ -38,7 +33,7 @@ public class MoCRenderTRock extends Render {
         int i = entitytrock.getBrightnessForRender(partialTicks);
         int j = i % 65536;
         int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture(TextureMap.locationBlocksTexture);
         float lightLevel = entitytrock.getBrightness(partialTicks);

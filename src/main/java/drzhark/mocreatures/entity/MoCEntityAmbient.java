@@ -1,11 +1,9 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.pathfinding.PathNavigate;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -20,20 +18,18 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -709,6 +705,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     /**
      * Boolean used for flying mounts
      */
+    @Override
     public boolean isFlyer() {
         return false;
     }
@@ -1096,6 +1093,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
      *
      * @return
      */
+    @Override
     public int maxFlyingHeight() {
         return 4;
     }

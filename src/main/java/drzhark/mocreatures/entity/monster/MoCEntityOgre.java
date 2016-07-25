@@ -1,20 +1,18 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.network.message.MoCMessageExplode;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageExplode;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -193,7 +191,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         }
 
         if (this.attackCounter > 0) {
-            if (armToAnimate == 3) {
+            if (this.armToAnimate == 3) {
                 this.attackCounter++;
             } else {
                 this.attackCounter += 2;
@@ -236,8 +234,9 @@ public class MoCEntityOgre extends MoCEntityMob {
      */
     private void startArmSwingAttack() {
         if (MoCreatures.isServer()) {
-            if (this.smashCounter != 0)
+            if (this.smashCounter != 0) {
                 return;
+            }
 
             boolean leftArmW = (getType() == 2 || getType() == 4 || getType() == 6) && this.rand.nextInt(2) == 0;
 

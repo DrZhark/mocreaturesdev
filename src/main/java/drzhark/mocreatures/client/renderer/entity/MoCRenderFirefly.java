@@ -1,11 +1,7 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.client.model.MoCModelFirefly;
 import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -59,7 +55,7 @@ public class MoCRenderFirefly extends MoCRenderInsect {
                 this.mocModel.render(p_177162_1_, p_177162_2_, p_177162_3_, p_177162_5_, p_177162_6_, p_177162_7_, p_177162_8_);
             }
 
-            
+
             protected void setTailBrightness(MoCEntityFirefly entityliving, float par3) {
                 this.mocRenderer.bindTexture(MoCreatures.proxy.getTexture("fireflyglow.png"));
                 float var4 = 1.0F;

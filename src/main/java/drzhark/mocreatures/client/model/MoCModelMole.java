@@ -1,7 +1,6 @@
 package drzhark.mocreatures.client.model;
 
 import drzhark.mocreatures.entity.passive.MoCEntityMole;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;

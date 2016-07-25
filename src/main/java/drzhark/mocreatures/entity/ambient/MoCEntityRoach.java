@@ -1,12 +1,10 @@
 package drzhark.mocreatures.entity.ambient;
 
 import com.google.common.base.Predicate;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

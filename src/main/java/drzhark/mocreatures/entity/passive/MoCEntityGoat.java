@@ -325,7 +325,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         this.attacking = 30;
         if (entityIn instanceof MoCEntityGoat) {
             MoCTools.bigsmack(this, entityIn, 0.4F);
-            MoCTools.playCustomSound(this, "goatsmack", worldObj);
+            MoCTools.playCustomSound(this, "goatsmack", this.worldObj);
             if (this.rand.nextInt(3) == 0) {
                 calm();
                 ((MoCEntityGoat) entityIn).calm();

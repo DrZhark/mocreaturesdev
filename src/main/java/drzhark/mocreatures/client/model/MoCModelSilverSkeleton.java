@@ -146,7 +146,7 @@ public class MoCModelSilverSkeleton extends ModelBase {
             //renderParts(f5);
             //GL11.glPopMatrix();
         }
-        if (riding) {
+        if (this.riding) {
 
             GL11.glTranslatef(0.0F, 0.5F, 0.0F);
             //renderParts(f5);
@@ -198,20 +198,20 @@ public class MoCModelSilverSkeleton extends ModelBase {
         float RLegXRotB = RLegXRot;
         float LLegXRotB = LLegXRot;
 
-        if (leftAttack == 0) {
+        if (this.leftAttack == 0) {
             this.LeftArm.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
             this.LeftArm.rotateAngleX = RLegXRot;
         } else {
-            float armMov = -(MathHelper.cos((leftAttack) * 0.18F) * 3F);
+            float armMov = -(MathHelper.cos((this.leftAttack) * 0.18F) * 3F);
             this.LeftArm.rotateAngleX = +armMov;
         }
 
-        if (rightAttack == 0) {
+        if (this.rightAttack == 0) {
             this.RightArm.rotateAngleZ = -(MathHelper.cos(f2 * 0.09F) * 0.05F) + 0.05F;
             this.RightArm.rotateAngleX = LLegXRot;
 
         } else {
-            float armMov = -(MathHelper.cos((rightAttack) * 0.18F) * 3F);
+            float armMov = -(MathHelper.cos((this.rightAttack) * 0.18F) * 3F);
             this.RightArm.rotateAngleX = +armMov;
         }
 
@@ -225,18 +225,18 @@ public class MoCModelSilverSkeleton extends ModelBase {
         this.RightHand.rotateAngleZ =
                 this.RightSwordA.rotateAngleZ = this.RightSwordB.rotateAngleZ = this.RightSwordC.rotateAngleZ = this.RightArm.rotateAngleZ;
 
-        if (riding) {
+        if (this.riding) {
             this.RightLeg.rotateAngleX = 0F;
 
-            this.RightThigh.rotateAngleX = -60F / radianF;
-            this.RightThigh.rotateAngleY = 20F / radianF;
-            this.RightKnee.rotateAngleY = 20F / radianF;
-            this.RightKnee.rotateAngleX = -60F / radianF;
+            this.RightThigh.rotateAngleX = -60F / this.radianF;
+            this.RightThigh.rotateAngleY = 20F / this.radianF;
+            this.RightKnee.rotateAngleY = 20F / this.radianF;
+            this.RightKnee.rotateAngleX = -60F / this.radianF;
             this.LeftLeg.rotateAngleX = 0F;
-            this.LeftThigh.rotateAngleY = -20F / radianF;
-            this.LeftKnee.rotateAngleY = -20F / radianF;
-            this.LeftThigh.rotateAngleX = -60F / radianF;
-            this.LeftKnee.rotateAngleX = -60F / radianF;
+            this.LeftThigh.rotateAngleY = -20F / this.radianF;
+            this.LeftKnee.rotateAngleY = -20F / this.radianF;
+            this.LeftThigh.rotateAngleX = -60F / this.radianF;
+            this.LeftKnee.rotateAngleX = -60F / this.radianF;
         } else {
             this.RightThigh.rotateAngleY = 0F;
             this.RightKnee.rotateAngleY = 0F;

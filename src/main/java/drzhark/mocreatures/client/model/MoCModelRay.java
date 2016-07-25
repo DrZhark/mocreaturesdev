@@ -117,7 +117,7 @@ public class MoCModelRay extends ModelBase {
         super.render(entity, f, f1, f2, f3, f4, f5);
         MoCEntityRay ray = (MoCEntityRay) entity;
         this.attacking = ray.isPoisoning();
-        this.typeInt = ray.getType();
+        this.isMantaRay = ray.isMantaRay();
 
         setRotationAngles(f, f1, f2, f3, f4, f5);
         this.Tail.render(f5);
@@ -131,7 +131,7 @@ public class MoCModelRay extends ModelBase {
         this.LWingA.render(f5);
         this.LWingB.render(f5);
 
-        if (this.typeInt == 1) {
+        if (this.isMantaRay) {
             this.Right.render(f5);
             this.Left.render(f5);
             this.RWingC.render(f5);
@@ -196,7 +196,8 @@ public class MoCModelRay extends ModelBase {
 
     }
 
-    public int typeInt;
+    //public int typeInt;
+    public boolean isMantaRay;
     public boolean attacking;
     ModelRenderer Tail;
     ModelRenderer Body;

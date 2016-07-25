@@ -1,18 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.inventory.InventoryLargeChest;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -22,19 +14,23 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -65,7 +61,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         setAdult(true);
         setTamed(false);
         setEdad(50);
-        setSize(1.1F, 3F); //TODO 
+        setSize(1.1F, 3F); //TODO
         this.stepHeight = 1.0F;
 
         if (MoCreatures.isServer()) {
@@ -206,7 +202,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
-            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
+            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && this.rand.nextInt(15) == 0) {
                 MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
             }
 
@@ -272,7 +268,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             }
 
             if (this.trunkCounter == 0 && this.rand.nextInt(200) == 0) {
-                this.trunkCounter = rand.nextInt(10) + 1;
+                this.trunkCounter = this.rand.nextInt(10) + 1;
             }
 
             if (this.earCounter > 0 && ++this.earCounter > 30) {
@@ -280,7 +276,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             }
 
             if (this.rand.nextInt(200) == 0) {
-                this.earCounter = rand.nextInt(20) + 1;
+                this.earCounter = this.rand.nextInt(20) + 1;
             }
 
         }
@@ -506,7 +502,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             initChest();
             if (getStorage() == 1) {
                 if (MoCreatures.isServer()) {
-                    InventoryLargeChest singleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, emptyelephantchest);
+                    InventoryLargeChest singleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.emptyelephantchest);
                     entityplayer.displayGUIChest(singleChest);
                 }
                 return true;
@@ -1031,8 +1027,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (getIsAdult()) {
             yOff = (int) (getSizeFactor() * -110);
         }
-        if (sitCounter != 0)
+        if (this.sitCounter != 0) {
             yOff += 25;
+        }
         return yOff;
     }
 

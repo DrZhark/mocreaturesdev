@@ -1,7 +1,5 @@
 package drzhark.mocreatures.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -9,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MoCModelTurkey extends ModelBase {
@@ -109,7 +108,7 @@ public class MoCModelTurkey extends ModelBase {
         this.RFoot.render(f5);
         this.LLeg.render(f5);
         this.LFoot.render(f5);
-        if (male) {
+        if (this.male) {
             this.UBody.render(f5);
             this.Body.render(f5);
             this.Chest.render(f5);

@@ -1,6 +1,5 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import net.minecraft.entity.Entity;
@@ -32,7 +31,7 @@ public class MoCRenderPetScorpion extends MoCRenderMoC {
             rotateAnimal(entityscorpion);
         }
         if (sitting) {
-            float factorY = 0.4F * (float) (entityscorpion.getEdad() / 100F);
+            float factorY = 0.4F * (entityscorpion.getEdad() / 100F);
             GL11.glTranslatef(0F, factorY, 0F);
         }
         if (!entityscorpion.getIsAdult()) {

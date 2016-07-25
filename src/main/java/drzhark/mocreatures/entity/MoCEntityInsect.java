@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity;
 
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.entity.ai.EntityAIWander;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
@@ -12,6 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -51,6 +50,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
         return getIsFlying();
     }
 
+    @Override
     public boolean getIsFlying() {
         return (this.dataWatcher.getWatchableObjectByte(22) == 1);
     }

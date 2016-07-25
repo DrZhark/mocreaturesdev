@@ -1,20 +1,15 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-
-import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.pathfinding.PathNavigate;
-import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
-import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHealth;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,9 +18,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -291,6 +287,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
      *
      * @return
      */
+    @Override
     public boolean isFlyer() {
         return false;
     }
@@ -617,7 +614,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         return false;
     }
 
-    //TODO add a timer / deactivate flying behaviour 
+    //TODO add a timer / deactivate flying behaviour
     @Override
     public boolean getIsFlying() {
         return isFlyer();

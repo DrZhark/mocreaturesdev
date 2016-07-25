@@ -24,7 +24,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -245,13 +244,13 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             case 6:
             case 7:
                 blockID = 31;
-                metaData = rand.nextInt(2) + 1;
+                metaData = this.rand.nextInt(2) + 1;
                 break;
             case 8:
             case 9:
             case 10:
                 blockID = 175; //other flowers
-                metaData = rand.nextInt(6);
+                metaData = this.rand.nextInt(6);
                 break;
             case 11:
             case 12:
@@ -262,7 +261,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             case 15:
             case 16:
                 blockID = 38; //flowers
-                metaData = rand.nextInt(9);
+                metaData = this.rand.nextInt(9);
                 break;
             case 17:
                 blockID = 39; //brown mushroom

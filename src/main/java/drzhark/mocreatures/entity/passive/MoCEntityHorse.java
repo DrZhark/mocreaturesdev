@@ -1,20 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.inventory.InventoryLargeChest;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.pathfinding.PathNavigateGround;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -22,29 +12,33 @@ import drzhark.mocreatures.network.message.MoCMessageHeart;
 import drzhark.mocreatures.network.message.MoCMessageVanish;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.SoundType;
-import net.minecraft.block.BlockJukebox;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -57,7 +51,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
-import java.util.jar.JarFile;
 
 public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
@@ -103,6 +96,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 setAdult(true);
             }
         }
+
+        setType(39);
+        setTamed(true);
+
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(3, new EntityAIFollowAdult(this, 1.0D));
@@ -2109,7 +2106,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 StarFX();
             }
             if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
-                System.out.println("playing sound");
+                //System.out.println("playing sound");
                 MoCTools.playCustomSound(this, "wingflap", this.worldObj);
             }
         }
@@ -2134,8 +2131,8 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             /**
              * Shuffling LMFAO!
              */
-            if (this.getType() == 60 && getIsTamed() && this.rand.nextInt(50) == 0 && nearMusicBox() && shuffleCounter == 0) {
-                shuffleCounter = 1;
+            if (this.getType() == 60 && getIsTamed() && this.rand.nextInt(50) == 0 && nearMusicBox() && this.shuffleCounter == 0) {
+                this.shuffleCounter = 1;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 101),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             }
@@ -2681,7 +2678,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             this.transformType = animationType;
             this.transformCounter = 1;
         }
-        if (animationType == 3) //wing flap 
+        if (animationType == 3) //wing flap
         {
             this.wingFlapCounter = 1;
         }

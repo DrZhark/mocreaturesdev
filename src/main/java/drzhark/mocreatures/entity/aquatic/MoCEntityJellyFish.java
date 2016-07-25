@@ -1,16 +1,13 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import net.minecraft.util.MathHelper;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -136,8 +133,9 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     public float getSizeFactor() {
         float myMoveSpeed = MoCTools.getMyMovementSpeed(this);
         float pulseSpeed = 0.08F;
-        if (myMoveSpeed > 0F)
+        if (myMoveSpeed > 0F) {
             pulseSpeed = 0.5F;
+        }
         float pulseSize = MathHelper.cos(this.ticksExisted * pulseSpeed) * 0.2F;
         return getEdad() * 0.01F + (pulseSize / 5);
     }

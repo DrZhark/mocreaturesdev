@@ -1,19 +1,10 @@
 package drzhark.mocreatures.entity.monster;
 
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
-
-import java.util.List;
-
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import net.minecraft.item.ItemStack;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -36,7 +27,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -194,7 +184,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
 
         if (MoCreatures.isServer() && this.riddenByEntity == null && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            MoCTools.findMobRider(this);
+            /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity = (Entity) list.get(i);
                 if (!(entity instanceof EntityMob)) {
@@ -206,7 +197,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     entitymob.mountEntity(this);
                     break;
                 }
-            }
+            }*/
         }
 
         if (getIsPoisoning()) {

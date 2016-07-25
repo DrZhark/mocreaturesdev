@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.ai;
 
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -31,7 +30,7 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
     public boolean shouldExecute() {
 
         if (this.theEntityCreature instanceof IMoCEntity) {
-            if (((IMoCEntity) this.theEntityCreature).isNotScared()) {
+            if (((IMoCEntity) this.theEntityCreature).isNotScared() || ((IMoCEntity) this.theEntityCreature).isMovementCeased()) {
                 return false;
             }
         }

@@ -69,7 +69,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
                 return false;
             }
 
-            //avoids attacking other tamed 
+            //avoids attacking other tamed
             if (mocattacker.getIsTamed() && (target instanceof MoCEntityAnimal && ((MoCEntityAnimal) target).getIsTamed())) {
                 return false;
             }

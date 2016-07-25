@@ -1,6 +1,5 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelScorpion;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import net.minecraft.entity.Entity;

@@ -1,15 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import net.minecraft.inventory.InventoryLargeChest;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.pathfinding.PathNavigateGround;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -18,16 +13,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
@@ -418,7 +418,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
         if (MoCreatures.isServer()) {
             //ostrich buckle!
-            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
+            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && this.rand.nextInt(15) == 0) {
                 MoCTools.buckleMobs(this, 2D, this.worldObj);
             }
             // TODO
@@ -1001,12 +1001,13 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         return 1;
     }
 
-    //TODO 
+    //TODO
     //improve fall flapping wing animation
     //IMPROVE DIVE CODE
     //ATTACK!
     //EGG LYING
 
+    @Override
     public int getMaxEdad() {
         return 20;
     }

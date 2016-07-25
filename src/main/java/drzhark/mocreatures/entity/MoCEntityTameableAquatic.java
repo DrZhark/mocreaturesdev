@@ -257,7 +257,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     }
 
     /**
-     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
+     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled
      * @param entityIn
      * @param sendAttachNotification
      */
@@ -271,5 +271,10 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             }
         }
         super.setLeashedToEntity(entityIn, sendAttachNotification);
+    }
+
+    @Override
+    public boolean readytoBreed() {
+        return false;
     }
 }

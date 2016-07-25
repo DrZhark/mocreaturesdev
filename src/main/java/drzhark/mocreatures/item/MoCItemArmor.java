@@ -19,9 +19,10 @@ public class MoCItemArmor extends ItemArmor {
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
-        if (!MoCreatures.isServer())
+        if (!MoCreatures.isServer()) {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
                     .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+        }
     }
 
     @Override

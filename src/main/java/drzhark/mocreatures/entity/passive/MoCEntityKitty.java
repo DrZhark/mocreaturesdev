@@ -1283,8 +1283,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     @Override
     public int nameYOffset() {
-        if (this.getIsSitting())
+        if (this.getIsSitting()) {
             return -30;
+        }
         return -40;
     }
 }

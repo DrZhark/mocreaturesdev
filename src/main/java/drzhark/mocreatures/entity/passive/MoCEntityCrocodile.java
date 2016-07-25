@@ -6,7 +6,6 @@ import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -65,6 +64,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         return (this.dataWatcher.getWatchableObjectByte(25) == 1);
     }
 
+    @Override
     public boolean getIsSitting() {
         return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }

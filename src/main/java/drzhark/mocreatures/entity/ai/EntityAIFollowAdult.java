@@ -25,7 +25,8 @@ public class EntityAIFollowAdult extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        if ((!(this.childAnimal instanceof IMoCEntity)) || ((IMoCEntity) this.childAnimal).getIsAdult()) {
+        if ((!(this.childAnimal instanceof IMoCEntity)) || ((IMoCEntity) this.childAnimal).isMovementCeased()
+                || ((IMoCEntity) this.childAnimal).getIsAdult()) {
             return false;
         } else {
             List list =

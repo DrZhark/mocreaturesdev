@@ -1,24 +1,12 @@
 package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCPetData;
-
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.inventory.InventoryLargeChest;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityWolf;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -27,14 +15,22 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -100,6 +96,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         this.dataWatcher.addObject(28, Byte.valueOf((byte) 0)); // isGhost - 0 false 1 true
     }
 
+    @Override
     public boolean getIsFlying() {
         return (this.dataWatcher.getWatchableObjectByte(25) == 1);
     }
@@ -161,7 +158,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     @Override
     public void selectType() {
         if (getType() == 0) {
-            if (rand.nextInt(5) == 0) {
+            if (this.rand.nextInt(5) == 0) {
                 setType(5);
             } else {
                 int i = this.rand.nextInt(100);
@@ -332,7 +329,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 this.setDead();
             }
 
-            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && rand.nextInt(30) == 0) {
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && this.rand.nextInt(30) == 0) {
                 this.wander.makeUpdate();
             }
 
@@ -393,8 +390,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public int maxFlyingHeight() {
-        if (getIsTamed())
+        if (getIsTamed()) {
             return 5;
+        }
         return 18;
     }
 
@@ -756,8 +754,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (yOff < -120) {
             yOff = -120;
         }
-        if (getIsSitting())
+        if (getIsSitting()) {
             yOff += 25;
+        }
         return yOff;
     }
 
@@ -959,7 +958,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (this.getEdad() < 10) {
             return 0F;
         }
-        return fTransparency;
+        return this.fTransparency;
     }
 
     @Override

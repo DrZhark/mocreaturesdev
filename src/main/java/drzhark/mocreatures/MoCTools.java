@@ -1,19 +1,18 @@
 package drzhark.mocreatures;
 
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
+import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAttachedEntity;
 import drzhark.mocreatures.network.message.MoCMessageNameGUI;
 import drzhark.mocreatures.utils.MoCLog;
 import net.minecraft.block.Block;
@@ -30,7 +29,9 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
@@ -43,6 +44,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
@@ -65,7 +68,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -248,6 +250,12 @@ public class MoCTools {
             if (entityData == null && eName.contains("PetScorpion")) // since we don't add this to our map, we need to check for it manually
             {
                 myClass = MoCEntityPetScorpion.class;
+            } else if (entityData == null && eName.contains("ManticorePet")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityManticorePet.class;
+            } else if (entityData == null && eName.contains("BigCat")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityBigCat.class;
             } else {
                 myClass = entityData.getEntityClass();
             }
@@ -1743,5 +1751,21 @@ public class MoCTools {
     public static boolean isItemEdible(Item item1) {
         return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
                 || item1 == Items.egg;
+    }
+
+    public static void findMobRider(Entity mountEntity) {
+        List list = mountEntity.worldObj.getEntitiesWithinAABBExcludingEntity(mountEntity, mountEntity.getEntityBoundingBox().expand(4D, 2D, 4D));
+        for (int i = 0; i < list.size(); i++) {
+            Entity entity = (Entity) list.get(i);
+            if (!(entity instanceof EntityMob)) {
+                continue;
+            }
+            EntityMob entitymob = (EntityMob) entity;
+            if (entitymob.ridingEntity == null
+                    && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
+                entitymob.mountEntity(mountEntity);
+                break;
+            }
+        }
     }
 }
