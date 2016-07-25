@@ -254,4 +254,9 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         this.worldObj.spawnParticle(EnumParticleTypes.HEART, this.posX + this.rand.nextFloat() * this.width * 2.0F - this.width, this.posY + 0.5D
                 + this.rand.nextFloat() * this.height, this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, var2, var4, var6);
     }
+
+	@Override
+	public boolean readytoBreed() {
+		return false;
+	}
 }

@@ -40,7 +40,7 @@ public class MoCEntityManticore extends MoCEntityMob {
         this.isImmuneToFire = true;
         //this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
+        //this.tasks.addTask(2, this.aiAvoidExplodingCreepers);
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
 
@@ -323,7 +323,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     @Override
-    protected void func_174815_a(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
+    protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
         boolean flag = (entityIn instanceof EntityPlayer);
         if (!getIsPoisoning() && this.rand.nextInt(5) == 0 && entityIn instanceof EntityLivingBase) {
             setPoisoning(true);
@@ -350,7 +350,7 @@ public class MoCEntityManticore extends MoCEntityMob {
         } else {
             openMouth();
         }
-        super.func_174815_a(entityLivingBaseIn, entityIn);
+        super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 
     public boolean swingingTail() {

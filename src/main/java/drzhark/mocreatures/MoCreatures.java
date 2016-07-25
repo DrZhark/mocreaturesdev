@@ -645,7 +645,7 @@ public class MoCreatures {
         mocEntityMap.put(
                 "Manticore",
                 new MoCEntityData("Manticore", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityManticore.class, 8, 1, 3), new ArrayList<Type>(
-                        Arrays.asList(Type.DESERT, Type.FOREST, Type.FROZEN, Type.JUNGLE, Type.HILLS, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
+                        Arrays.asList(Type.DESERT, Type.FOREST, Type.SNOWY, Type.JUNGLE, Type.HILLS, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
                                 Type.WASTELAND, Type.NETHER, Type.DEAD, Type.SPOOKY))));
 
         for (MoCEntityData entityData : mocEntityMap.values()) {
