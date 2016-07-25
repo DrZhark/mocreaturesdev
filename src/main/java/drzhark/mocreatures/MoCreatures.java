@@ -577,8 +577,10 @@ public class MoCreatures {
                 MoCEntityMediumFish.class, 10, 1, 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("Piranha", new MoCEntityData("Piranha", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityPiranha.class, 4, 1,
                 3), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
-        mocEntityMap.put("Ray", new MoCEntityData("Ray", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityRay.class, 10, 1, 2),
-                new ArrayList<Type>(Arrays.asList(Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
+        mocEntityMap.put("MantaRay", new MoCEntityData("MantaRay", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityMantaRay.class,
+                10, 1, 2), new ArrayList<Type>(Arrays.asList(Type.OCEAN))));
+        mocEntityMap.put("StingRay", new MoCEntityData("StingRay", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityStingRay.class,
+                10, 1, 2), new ArrayList<Type>(Arrays.asList(Type.SWAMP, Type.WATER, Type.RIVER))));
         mocEntityMap.put("Shark", new MoCEntityData("Shark", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityShark.class, 6, 1, 2),
                 new ArrayList<Type>(Arrays.asList(Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("SmallFish", new MoCEntityData("SmallFish", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntitySmallFish.class,
@@ -642,7 +644,7 @@ public class MoCreatures {
                                 Type.WASTELAND))));
         mocEntityMap.put(
                 "Manticore",
-                new MoCEntityData("Manticore", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityManticore.class, 8, 1, 3), new ArrayList(
+                new MoCEntityData("Manticore", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityManticore.class, 8, 1, 3), new ArrayList<Type>(
                         Arrays.asList(Type.DESERT, Type.FOREST, Type.FROZEN, Type.JUNGLE, Type.HILLS, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
                                 Type.WASTELAND, Type.NETHER, Type.DEAD, Type.SPOOKY))));
 
