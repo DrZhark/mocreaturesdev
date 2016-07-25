@@ -6,6 +6,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.utils.MoCLog;
@@ -67,7 +68,47 @@ public class MoCItemPetAmulet extends MoCItem {
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
                     this.spawnClass = "WildHorse";
                 }
-
+                if (this.spawnClass.equalsIgnoreCase("BigCat")) {
+                    switch (this.creatureType) {
+                        case 1:
+                            this.spawnClass = "Lion";
+                            this.creatureType = 1;//female
+                            break;
+                        case 2:
+                            this.spawnClass = "Lion";
+                            this.creatureType = 2;//male
+                            break;
+                        case 3:
+                            this.spawnClass = "Panther";
+                            this.creatureType = 1;
+                            break;
+                        case 4:
+                            //cheetah
+                            break;
+                        case 5:
+                            this.spawnClass = "Tiger";
+                            this.creatureType = 1;
+                            break;
+                        case 6:
+                            this.spawnClass = "Leopard";
+                            this.creatureType = 2;
+                            break;
+                        case 7:
+                            this.spawnClass = "Tiger";
+                            this.creatureType = 2;
+                            break;
+                    }
+                }
+                if (this.spawnClass.equalsIgnoreCase("Ray")) {
+                    switch (this.creatureType) {
+                        case 1:
+                            this.spawnClass = "MantaRay";
+                            break;
+                        case 2:
+                            this.spawnClass = "StingRay";
+                            break;
+                    }
+                }
                 EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, worldObj);
                 if (tempLiving != null && tempLiving instanceof IMoCEntity) {
                     IMoCTameable storedCreature = (IMoCTameable) tempLiving;
@@ -80,6 +121,9 @@ public class MoCItemPetAmulet extends MoCItem {
                     ((EntityLiving) storedCreature).setHealth(this.health);
                     storedCreature.setEdad(this.edad);
                     storedCreature.setAdult(this.adult);
+                    if (storedCreature instanceof MoCEntityNewBigCat) {
+                        ((MoCEntityNewBigCat) storedCreature).setHasAmulet(true);
+                    }
                     // special case for kitty
                     if (this.spawnClass.equalsIgnoreCase("Kitty")) {
                         ((MoCEntityKitty) storedCreature).setKittyState(2); // allows name to render

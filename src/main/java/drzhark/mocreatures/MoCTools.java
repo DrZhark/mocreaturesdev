@@ -244,6 +244,12 @@ public class MoCTools {
             Class<? extends EntityLiving> myClass = null;
             if (entityData == null && eName.contains("PetScorpion")) { // since we don't add this to our map, we need to check for it manually
                 myClass = MoCEntityPetScorpion.class;
+            } else if (entityData == null && eName.contains("ManticorePet")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityManticorePet.class;
+            } else if (entityData == null && eName.contains("BigCat")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityBigCat.class;
             } else {
                 myClass = entityData.getEntityClass();
             }
@@ -1745,5 +1751,21 @@ public class MoCTools {
         }
 
         return entity.getEntityData().getCompoundTag(MoCConstants.MOD_ID);
+    }
+
+    public static void findMobRider(Entity mountEntity) {
+        List list = mountEntity.worldObj.getEntitiesWithinAABBExcludingEntity(mountEntity, mountEntity.getEntityBoundingBox().expand(4D, 2D, 4D));
+        for (int i = 0; i < list.size(); i++) {
+            Entity entity = (Entity) list.get(i);
+            if (!(entity instanceof EntityMob)) {
+                continue;
+            }
+            EntityMob entitymob = (EntityMob) entity;
+            if (entitymob.ridingEntity == null
+                    && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
+                entitymob.mountEntity(mountEntity);
+                break;
+            }
+        }
     }
 }

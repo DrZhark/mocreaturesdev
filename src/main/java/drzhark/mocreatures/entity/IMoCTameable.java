@@ -47,4 +47,6 @@ public interface IMoCTameable {
     float getPetHealth();
 
     void spawnHeart();
+
+    boolean readytoBreed();
 }
