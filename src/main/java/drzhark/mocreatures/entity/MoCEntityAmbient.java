@@ -32,7 +32,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
@@ -552,7 +552,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                         this.worldObj.getBlockState(
                                 new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY) - 1, MathHelper
                                         .floor_double(this.posZ))).getBlock();
-                if (block != Blocks.air) {
+                if (block != Blocks.AIR) {
                     f2 = block.slipperiness * 0.91F;
                 }
             }
@@ -754,7 +754,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.getRidingEntity() == null));
     }
 
     @Override

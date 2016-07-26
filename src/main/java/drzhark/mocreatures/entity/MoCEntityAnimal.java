@@ -30,7 +30,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
@@ -125,7 +125,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.getRidingEntity() == null));
     }
 
     @Override
@@ -230,7 +230,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity)
-                    || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
+                    || (entity1 == entity.getRidingEntity()) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
                     || (this.height <= entity1.height) || (this.width <= entity1.width)) {
                 continue;
             }
@@ -531,7 +531,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (this.rand.nextInt(10) == 0)) {
                         attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity),
-                                (float) ((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue());
+                                (float) ((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
                     }
                 }
             }
@@ -773,7 +773,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 this.riddenByEntity.motionY += 0.9D;
                 this.riddenByEntity.motionZ -= 0.3D;
                 this.riddenByEntity.mountEntity(null);
-                this.ridingEntity = null;
+                this.getRidingEntity() = null;
             }
             if (this.onGround) {
                 setIsJumping(false);
@@ -1123,14 +1123,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public void mountEntity(Entity par1Entity) {
         if (updateMount()) {
             if (par1Entity == null) {
-                if (this.ridingEntity != null) {
-                    this.setLocationAndAngles(this.ridingEntity.posX, this.ridingEntity.getEntityBoundingBox().minY + this.ridingEntity.height,
-                            this.ridingEntity.posZ, this.rotationYaw, this.rotationPitch);
-                    this.ridingEntity.riddenByEntity = null;
+                if (this.getRidingEntity() != null) {
+                    this.setLocationAndAngles(this.getRidingEntity().posX, this.getRidingEntity().getEntityBoundingBox().minY + this.getRidingEntity().height,
+                            this.getRidingEntity().posZ, this.rotationYaw, this.rotationPitch);
+                    this.getRidingEntity().riddenByEntity = null;
                 }
-                this.ridingEntity = null;
+                this.getRidingEntity() = null;
             } else {
-                this.ridingEntity = par1Entity;
+                this.getRidingEntity() = par1Entity;
                 par1Entity.riddenByEntity = this;
             }
         } else {
@@ -1181,7 +1181,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         Entity entity = damagesource.getEntity();
-        if ((this.riddenByEntity != null && entity == this.riddenByEntity) || (this.ridingEntity != null && entity == this.ridingEntity)) {
+        if ((this.riddenByEntity != null && entity == this.riddenByEntity) || (this.getRidingEntity() != null && entity == this.getRidingEntity())) {
             return false;
         }
 
@@ -1282,7 +1282,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         boolean flag =
-                entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
+                entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), ((int) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
                         .getAttributeValue()));
         if (flag) {
             this.applyEnchantments(this, entityIn);

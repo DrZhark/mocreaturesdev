@@ -4,7 +4,7 @@ import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class MoCModelSilverSkeleton extends ModelBase {
@@ -137,7 +137,7 @@ public class MoCModelSilverSkeleton extends ModelBase {
         boolean sprinting = samurai.isSprinting();
         this.leftAttack = samurai.attackCounterLeft;
         this.rightAttack = samurai.attackCounterRight;
-        this.riding = samurai.ridingEntity != null;
+        this.riding = samurai.getRidingEntity() != null;
         setRotationAngles(f, f1, f2, f3, f4, f5);
         GL11.glPushMatrix();
         if (sprinting && f1 > 0.3F) {

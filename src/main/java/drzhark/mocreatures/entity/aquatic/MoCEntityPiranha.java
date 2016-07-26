@@ -34,8 +34,8 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         if (super.attackEntityFrom(damagesource, i) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
             Entity entity = damagesource.getEntity();
             if (entity instanceof EntityLivingBase) {
-                if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
+                if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
                     return true;
                 }
                 if (entity != this) {

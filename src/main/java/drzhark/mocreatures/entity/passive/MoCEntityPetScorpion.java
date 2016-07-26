@@ -59,10 +59,10 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
     public boolean getIsPicked() {
         //return (this.dataWatcher.getWatchableObjectByte(24) == 1);
-        return this.ridingEntity != null;
+        return this.getRidingEntity() != null;
     }
 
     public boolean getIsPoisoning() {
@@ -212,8 +212,8 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
     @Override
     public void onLivingUpdate() {
-        if (!this.onGround && (this.ridingEntity != null)) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;
+        if (!this.onGround && (this.getRidingEntity() != null)) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
 
         if (this.mouthCounter != 0 && this.mouthCounter++ > 50) {
@@ -419,7 +419,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             }
             return true;
         }
-        if (this.ridingEntity == null && getEdad() < 60 && !getIsAdult()) {
+        if (this.getRidingEntity() == null && getEdad() < 60 && !getIsAdult()) {
             this.rotationYaw = entityplayer.rotationYaw;
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
@@ -428,7 +428,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             if (MoCreatures.isServer() && !getIsTamed()) {
                 MoCTools.tameWithName(entityplayer, this);
             }
-        } else if (this.ridingEntity != null && getIsPicked()) {
+        } else if (this.getRidingEntity() != null && getIsPicked()) {
             this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
             if (MoCreatures.isServer()) {
                 this.mountEntity(null);

@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -47,8 +47,8 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
     }
 
@@ -189,7 +189,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             return false;
         }
 
-        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.air) {
+        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.AIR) {
             IBlockState iblockstate = getBlockStateToBePlanted();
             int plantChance = 3;
             if (iblockstate.getBlock() == Blocks.sapling) {
@@ -211,7 +211,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     }
                     cantPlant = (event != null && event.isCanceled());
                     Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
-                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.air) {
+                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
                         this.worldObj.setBlockState(pos1, iblockstate, 3);
                     }
                 }

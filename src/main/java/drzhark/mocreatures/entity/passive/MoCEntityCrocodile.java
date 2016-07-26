@@ -46,8 +46,8 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(25.0D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
@@ -233,7 +233,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
 
         //TODO FIX!!!!
-        /*if (MoCreatures.isServer() && entityIn.ridingEntity == null && this.rand.nextInt(3) == 0) {
+        /*if (MoCreatures.isServer() && entityIn.getRidingEntity() == null && this.rand.nextInt(3) == 0) {
             entityIn.mountEntity(this);
             this.setHasCaughtPrey(true);
             return false;

@@ -6,10 +6,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class CustomDespawner {
     public static boolean debug = false;
     public static int despawnLightLevel = 7;
     public static int despawnTickRate = 111;
-    public List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+    public List<Biome> biomeList = new ArrayList<Biome>();
 
     //New DesPawner stuff
     public final static int entityDespawnCheck(WorldServer worldObj, EntityLiving entityliving, int minDespawnLightLevel, int maxDespawnLightLevel) {

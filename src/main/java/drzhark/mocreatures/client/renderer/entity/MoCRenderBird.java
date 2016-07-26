@@ -3,7 +3,7 @@ package drzhark.mocreatures.client.renderer.entity;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,7 +36,7 @@ public class MoCRenderBird extends MoCRenderMoC<MoCEntityBird> {
 
     @Override
     protected void preRenderCallback(MoCEntityBird entitybird, float f) {
-        if (!entitybird.worldObj.isRemote && (entitybird.ridingEntity != null)) {
+        if (!entitybird.worldObj.isRemote && (entitybird.getRidingEntity() != null)) {
             GL11.glTranslatef(0.0F, 1.3F, 0.0F);
         }
     }

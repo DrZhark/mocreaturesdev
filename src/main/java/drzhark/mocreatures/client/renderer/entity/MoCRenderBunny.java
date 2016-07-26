@@ -39,7 +39,7 @@ public class MoCRenderBunny extends MoCRenderMoC<MoCEntityBunny> {
     }
 
     protected void rotBunny(MoCEntityBunny entitybunny) {
-        if (!entitybunny.onGround && (entitybunny.ridingEntity == null)) {
+        if (!entitybunny.onGround && (entitybunny.getRidingEntity() == null)) {
             if (entitybunny.motionY > 0.5D) {
                 GL11.glRotatef(35F, -1F, 0.0F, 0.0F);
             } else if (entitybunny.motionY < -0.5D) {

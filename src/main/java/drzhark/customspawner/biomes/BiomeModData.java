@@ -1,7 +1,7 @@
 package drzhark.customspawner.biomes;
 
 import drzhark.customspawner.configuration.CMSConfiguration;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class BiomeModData {
         return biomes;
     }
 
-    public boolean hasBiome(BiomeGenBase biome) {
+    public boolean hasBiome(Biome biome) {
         for (BiomeData biomeData : this.biomeMap.values()) {
             if (biomeData.getBiome() == biome) {
                 return true;
@@ -58,7 +58,7 @@ public class BiomeModData {
         return false;
     }
 
-    public BiomeGenBase getBiome(String biomeName) {
+    public Biome getBiome(String biomeName) {
         if (this.biomeMap.get(biomeName) != null) {
             return this.biomeMap.get(biomeName).getBiome();
         } else {

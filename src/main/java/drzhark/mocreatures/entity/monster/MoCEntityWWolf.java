@@ -21,10 +21,10 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -49,7 +49,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         int j = MathHelper.floor_double(getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
-        BiomeGenBase biome = MoCTools.Biomekind(this.worldObj, new BlockPos(i, j, k));
+        Biome biome = MoCTools.Biomekind(this.worldObj, new BlockPos(i, j, k));
         if (BiomeDictionary.isBiomeOfType(biome, Type.SNOWY)) {
             setType(3);
         }
@@ -147,7 +147,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity)
-                    || (entity1 == entity.ridingEntity) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
+                    || (entity1 == entity.getRidingEntity()) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
                     || (entity1 instanceof MoCEntityBigCat) || (entity1 instanceof MoCEntityBear) || (entity1 instanceof EntityCow)
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))) {
@@ -210,7 +210,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
                     continue;
                 }
                 EntityMob entitymob = (EntityMob) entity;
-                if (entitymob.ridingEntity == null
+                if (entitymob.getRidingEntity() == null
                         && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
                     entitymob.mountEntity(this);
                     break;

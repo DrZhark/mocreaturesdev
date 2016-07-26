@@ -121,8 +121,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -182,7 +182,7 @@ public class MoCreatures {
     public static Block mocBlock;
 
     public static ArrayList<String> multiBlockNames = new ArrayList<String>();
-    public static BiomeGenBase WyvernLairBiome;
+    public static Biome WyvernLairBiome;
     public static Item staffPortal;
     public static Item staffTeleport;
     public static Item builderHammer;
@@ -653,7 +653,7 @@ public class MoCreatures {
             }
             SpawnListEntry spawnEntry = entityData.getSpawnListEntry();
             for (BiomeDictionary.Type type : entityData.getBiomeTypes()) {
-                for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type)) {
+                for (Biome biome : BiomeDictionary.getBiomesForType(type)) {
                     if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry)) {
                         biome.getSpawnableList(entityData.getType()).add(spawnEntry);
                     }

@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.pathfinder.NodeProcessor;
 
@@ -80,7 +80,7 @@ public class FlyNodeProcessor extends NodeProcessor {
                     BlockPos blockpos = new BlockPos(l, i1, j1);
                     Block block = this.blockaccess.getBlockState(blockpos).getBlock();
 
-                    if (block.getMaterial() != Material.air) {
+                    if (block.getMaterial() != Material.AIR) {
                         return 0;
                     }
                 }

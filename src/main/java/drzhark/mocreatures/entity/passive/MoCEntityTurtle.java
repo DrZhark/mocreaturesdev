@@ -17,7 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -98,13 +98,13 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
-            if (((EntityPlayer) this.ridingEntity).isSneaking()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+            if (((EntityPlayer) this.getRidingEntity()).isSneaking()) {
                 return -0.25D + ((300D - this.getEdad()) / 500D);
             }
             return (300D - this.getEdad()) / 500D;
         }
-        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.3F);
         }
 
@@ -122,7 +122,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                 flipflop(false);
                 return true;
             }
-            if (this.ridingEntity == null) {
+            if (this.getRidingEntity() == null) {
                 this.rotationYaw = entityplayer.rotationYaw;
                 // TODO change sound
                 this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
@@ -216,7 +216,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         Entity entity = damagesource.getEntity();
-        if (this.ridingEntity != null) {
+        if (this.getRidingEntity() != null) {
             return false;
         }
         if (entity == null) {
@@ -252,8 +252,8 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public void onUpdate() {
         super.onUpdate();
 
-        if ((this.ridingEntity != null) && (this.ridingEntity instanceof EntityPlayer)) {
-            EntityPlayer entityplayer = (EntityPlayer) this.ridingEntity;
+        if ((this.getRidingEntity() != null) && (this.getRidingEntity() instanceof EntityPlayer)) {
+            EntityPlayer entityplayer = (EntityPlayer) this.getRidingEntity();
             if (entityplayer != null) {
                 this.rotationYaw = entityplayer.rotationYaw;
             }
@@ -265,7 +265,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         if (getIsUpsideDown() && isInWater()) {
             setIsUpsideDown(false);
         }
-        if (getIsUpsideDown() && (this.ridingEntity == null) && this.rand.nextInt(20) == 0) {
+        if (getIsUpsideDown() && (this.getRidingEntity() == null) && this.rand.nextInt(20) == 0) {
             setSwinging(true);
             this.flopcounter++;
         }

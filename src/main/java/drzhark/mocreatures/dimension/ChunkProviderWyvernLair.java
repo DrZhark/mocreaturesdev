@@ -8,10 +8,10 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IProgressUpdate;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -39,7 +39,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
     private double[] densities;
 
     /** The biomes that are used to generate the chunk */
-    private BiomeGenBase[] biomesForGeneration;
+    private Biome[] biomesForGeneration;
     double[] noiseData1;
     double[] noiseData2;
     double[] noiseData3;
@@ -153,7 +153,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
      * @param z 
      * @param x 
      */
-    public void insertBiomeBlocks(int x, int z, ChunkPrimer chunkPrimer, BiomeGenBase[] biomesForGeneration2) {
+    public void insertBiomeBlocks(int x, int z, ChunkPrimer chunkPrimer, Biome[] biomesForGeneration2) {
         ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, x, z, chunkPrimer, this.worldObj);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) {
@@ -164,14 +164,14 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
                 byte b0 = 5;
                 int k = -1;
 
-                BiomeGenBase biome = biomesForGeneration2[j + i * 16];
+                Biome biome = biomesForGeneration2[j + i * 16];
                 IBlockState iblockStateTopBlock = biome.topBlock;//MoCreatures.mocStone.getDefaultState();
                 IBlockState iblockStateFillerBlock = biome.fillerBlock;//MoCreatures.mocStone.getDefaultState();
 
                 for (int l = 127; l >= 0; --l) {
                     IBlockState iblockstate2 = chunkPrimer.getBlockState(i, l, j);
 
-                    if (iblockstate2.getBlock().getMaterial() == Material.air) {
+                    if (iblockstate2.getBlock().getMaterial() == Material.AIR) {
                         k = -1;
                     } else if (iblockstate2.getBlock() == MoCreatures.mocStone.getDefaultState().getBlock()) {
                         if (k == -1) {
@@ -365,7 +365,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
 
         int var4 = par2 * 16;
         int var5 = par3 * 16;
-        BiomeGenBase var6 = this.worldObj.getBiomeGenForCoords(new BlockPos(var4 + 16, 0, var5 + 16));
+        Biome var6 = this.worldObj.getBiomeGenForCoords(new BlockPos(var4 + 16, 0, var5 + 16));
 
         boolean var11 = false;
 
@@ -455,7 +455,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
      */
     @Override
     public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType par1EnumCreatureType, BlockPos pos) {
-        BiomeGenBase var5 = this.worldObj.getBiomeGenForCoords(pos);
+        Biome var5 = this.worldObj.getBiomeGenForCoords(pos);
         return var5 == null ? null : var5.getSpawnableList(par1EnumCreatureType);
     }
 

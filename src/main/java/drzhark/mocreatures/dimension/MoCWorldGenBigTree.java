@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
@@ -178,7 +178,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
                     IBlockState blockstate = this.worldObj.getBlockState(pos);
                     Block block = blockstate.getBlock();
 
-                    if (block != Blocks.air && block != this.iBlockStateLeaf.getBlock())//BlockLeafID)//Block.leaves)
+                    if (block != Blocks.AIR && block != this.iBlockStateLeaf.getBlock())//BlockLeafID)//Block.leaves)
                     {
                         ++var13;
                     } else {

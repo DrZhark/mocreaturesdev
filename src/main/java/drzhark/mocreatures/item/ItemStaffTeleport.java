@@ -9,7 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemStaffTeleport extends MoCItem {
@@ -43,7 +43,7 @@ public class ItemStaffTeleport extends MoCItem {
      */
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer) {
-        if (entityplayer.ridingEntity != null || entityplayer.riddenByEntity != null) {
+        if (entityplayer.getRidingEntity() != null || entityplayer.riddenByEntity != null) {
             return par1ItemStack;
         }
 
@@ -60,7 +60,7 @@ public class ItemStaffTeleport extends MoCItem {
                             * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * x);
             BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
             IBlockState blockstate = entityplayer.worldObj.getBlockState(pos);
-            if (blockstate.getBlock() != Blocks.air) {
+            if (blockstate.getBlock() != Blocks.AIR) {
                 newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1);
                 newPosX =
                         coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))

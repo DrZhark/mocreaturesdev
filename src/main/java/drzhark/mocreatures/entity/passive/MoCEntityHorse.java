@@ -36,11 +36,11 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -148,7 +148,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
 
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         String s = MoCTools.BiomeName(this.worldObj, pos);
         try {
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS)) {
@@ -424,7 +424,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                     this.worldObj.getBlockState(
                             new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.20000000298023221D
                                     - this.prevRotationPitch), MathHelper.floor_double(this.posZ))).getBlock();
-            if (block != Blocks.air) {
+            if (block != Blocks.AIR) {
                 SoundType stepsound = block.stepSound;
                 this.worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getFrequency() * 0.75F);
             }
@@ -1714,7 +1714,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && ((itemstack.getItem() == Items.apple) || (itemstack.getItem() == Items.golden_apple)) && !isMagicHorse()
+        if ((itemstack != null) && ((itemstack.getItem() == Items.APPLE) || (itemstack.getItem() == Items.golden_apple)) && !isMagicHorse()
                 && !isUndead()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -1941,8 +1941,8 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         EntityPlayer ep1 = this.worldObj.getClosestPlayerToEntity(this, 8D);
         if (ep1 != null) {
             flag = true;
-            if (ep1.ridingEntity != null && ep1.ridingEntity instanceof MoCEntityHorse) {
-                MoCEntityHorse playerHorse = (MoCEntityHorse) ep1.ridingEntity;
+            if (ep1.getRidingEntity() != null && ep1.getRidingEntity() instanceof MoCEntityHorse) {
+                MoCEntityHorse playerHorse = (MoCEntityHorse) ep1.getRidingEntity();
                 if (playerHorse.getType() == 16 || playerHorse.getType() == 17 || playerHorse.getType() == 60 || playerHorse.getType() == 61) {
                     flag = false;
                 }
@@ -2420,7 +2420,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
     public boolean ReadyforParenting(MoCEntityHorse entityhorse) {
         int i = entityhorse.getType();
-        return (entityhorse.riddenByEntity == null) && (entityhorse.ridingEntity == null) && entityhorse.getIsTamed() && entityhorse.eatenpumpkin
+        return (entityhorse.riddenByEntity == null) && (entityhorse.getRidingEntity() == null) && entityhorse.getIsTamed() && entityhorse.eatenpumpkin
                 && entityhorse.getIsAdult() && !entityhorse.isUndead() && !entityhorse.isGhost() && (i != 61) && (i < 66);
     }
 

@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -273,11 +273,11 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
-            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.2 : 0.45F;
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+            return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.2 : 0.45F;
         }
 
-        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.45F);
         } else {
             return super.getYOffset();
@@ -307,7 +307,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         }
 
         this.rotationYaw = entityplayer.rotationYaw;
-        if (this.ridingEntity == null) {
+        if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
             }
@@ -407,12 +407,12 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     public void onUpdate() {
         super.onUpdate();
 
-        if (this.ridingEntity != null) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;
+        if (this.getRidingEntity() != null) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
 
-        if ((this.ridingEntity != null) && (this.ridingEntity instanceof EntityPlayer)) {
-            EntityPlayer entityplayer = (EntityPlayer) this.ridingEntity;
+        if ((this.getRidingEntity() != null) && (this.getRidingEntity() instanceof EntityPlayer)) {
+            EntityPlayer entityplayer = (EntityPlayer) this.getRidingEntity();
             this.rotationYaw = entityplayer.rotationYaw;
             entityplayer.fallDistance = 0.0F;
             if (entityplayer.motionY < -0.1D)

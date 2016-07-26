@@ -16,10 +16,10 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
@@ -31,18 +31,18 @@ public class MoCDespawner {
     public static boolean debug = false;
     public static int despawnLightLevel = 7;
     public static int despawnTickRate = 111;
-    public List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
+    public List<Biome> biomeList = new ArrayList<Biome>();
     private List<Class<? extends EntityLiving>> vanillaClassList;
 
     public MoCDespawner() {
-        this.biomeList = new ArrayList<BiomeGenBase>();
+        this.biomeList = new ArrayList<Biome>();
         try {
-            for (BiomeGenBase biomegenbase : BiomeGenBase.getBiomeGenArray()) {
-                if (biomegenbase == null) {
+            for (Biome Biome : Biome.getBiomeGenArray()) {
+                if (Biome == null) {
                     continue;
                 }
 
-                this.biomeList.add(biomegenbase);
+                this.biomeList.add(Biome);
             }
 
             this.vanillaClassList = new ArrayList<Class<? extends EntityLiving>>();

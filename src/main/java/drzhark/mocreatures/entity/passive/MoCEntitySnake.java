@@ -24,10 +24,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -75,9 +75,9 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
@@ -151,7 +151,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     public boolean pickedUp() {
-        return (this.ridingEntity != null);
+        return (this.getRidingEntity() != null);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
          */
 
         this.rotationYaw = entityplayer.rotationYaw;
-        if (this.ridingEntity == null) {
+        if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
             }
@@ -235,11 +235,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
             return 0.1F;
         }
 
-        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.1F);
         } else {
             return super.getYOffset();
@@ -362,8 +362,8 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
         }
 
-        if (!this.onGround && (this.ridingEntity != null)) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;// -90F;
+        if (!this.onGround && (this.getRidingEntity() != null)) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;// -90F;
         }
 
         if (this.worldObj.getDifficulty().getDifficultyId() > 0 && getNearPlayer() && !getIsTamed() && isNotScared()) {
@@ -508,7 +508,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
 
-            if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
+            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
                 return true;
             }
             if ((entity != this) && entity instanceof EntityLivingBase && (super.shouldAttackPlayers())) {
@@ -588,7 +588,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
          *
          */
         try {
-            BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+            Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
             int l = this.rand.nextInt(10);
 
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {

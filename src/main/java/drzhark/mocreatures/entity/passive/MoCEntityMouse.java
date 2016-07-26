@@ -15,10 +15,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -68,7 +68,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
         try {
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
@@ -86,7 +86,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }*/
 
     public boolean getIsPicked() {
-        return this.ridingEntity != null;
+        return this.getRidingEntity() != null;
         //return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
@@ -148,11 +148,11 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
             return (super.getYOffset() - 0.7F);
         }
 
-        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() - 0.1F);
         } else {
             return super.getYOffset();
@@ -162,7 +162,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public boolean interact(EntityPlayer entityplayer) {
         this.rotationYaw = entityplayer.rotationYaw;
-        if (this.ridingEntity == null) {
+        if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
             }
@@ -189,8 +189,8 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!this.onGround && (this.ridingEntity != null)) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;
+        if (!this.onGround && (this.getRidingEntity() != null)) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
     }
 

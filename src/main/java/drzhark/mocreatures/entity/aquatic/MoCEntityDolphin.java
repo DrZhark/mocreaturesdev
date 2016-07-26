@@ -39,8 +39,8 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             Entity entity = damagesource.getEntity();
             if (entity instanceof EntityLivingBase) {
                 EntityLivingBase entityliving = (EntityLivingBase) entity;
-                if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
+                if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
                     return true;
                 }
                 if (entity != this && this.getEdad() >= 100) {
@@ -413,7 +413,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     public boolean ReadyforParenting(MoCEntityDolphin entitydolphin) {
-        return (entitydolphin.riddenByEntity == null) && (entitydolphin.ridingEntity == null) && entitydolphin.getIsTamed()
+        return (entitydolphin.riddenByEntity == null) && (entitydolphin.getRidingEntity() == null) && entitydolphin.getIsTamed()
                 && entitydolphin.getHasEaten() && entitydolphin.getIsAdult();
     }
 

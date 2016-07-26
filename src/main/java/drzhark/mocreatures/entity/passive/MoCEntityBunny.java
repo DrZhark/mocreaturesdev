@@ -17,10 +17,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -93,7 +93,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         int k = MathHelper.floor_double(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(3); //snow white bunnies!
@@ -177,7 +177,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
          */
 
         this.rotationYaw = entityplayer.rotationYaw;
-        if (this.ridingEntity == null) {
+        if (this.getRidingEntity() == null) {
             // This is required since the server will send a Packet39AttachEntity which informs the client to mount
             if (MoCreatures.isServer()) {
                 mountEntity(entityplayer);
@@ -204,8 +204,8 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     public void onUpdate() {
         super.onUpdate();
 
-        if (this.ridingEntity != null) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;
+        if (this.getRidingEntity() != null) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
         if (MoCreatures.isServer()) {
 
@@ -215,7 +215,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                 this.jumpTimer = 15;
             }
 
-            if (!getIsTamed() || !getIsAdult() || !getHasEaten() || (this.ridingEntity != null)) {
+            if (!getIsTamed() || !getIsAdult() || !getHasEaten() || (this.getRidingEntity() != null)) {
                 return;
             }
             if (this.bunnyReproduceTickerA < 1023) {
@@ -230,7 +230,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                         continue;
                     }
                     MoCEntityBunny entitybunny = (MoCEntityBunny) entity1;
-                    if ((entitybunny.ridingEntity != null) || (entitybunny.bunnyReproduceTickerA < 1023) || !entitybunny.getIsAdult()
+                    if ((entitybunny.getRidingEntity() != null) || (entitybunny.bunnyReproduceTickerA < 1023) || !entitybunny.getIsAdult()
                             || !entitybunny.getHasEaten()) {
                         continue;
                     }
@@ -283,7 +283,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
      */
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (this.ridingEntity != null) {
+        if (this.getRidingEntity() != null) {
             return false;
         }
         return super.attackEntityFrom(damagesource, i);
@@ -297,10 +297,10 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (this.ridingEntity instanceof EntityPlayer && this.ridingEntity == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
-            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.25 : 0.5F;
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+            return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
         }
-        if ((this.ridingEntity instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
             return (super.getYOffset() + 0.5F);
         }
         return super.getYOffset();

@@ -15,8 +15,8 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.BiomeDictionary;
@@ -166,9 +166,9 @@ public class CMSUtils {
                     continue;
                 }
                 environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
-                for (int j = 0; j < BiomeGenBase.getBiomeGenArray().length; j++) {
-                    if (BiomeGenBase.getBiomeGenArray()[j] != null) {
-                        BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[j];
+                for (int j = 0; j < Biome.getBiomeGenArray().length; j++) {
+                    if (Biome.getBiomeGenArray()[j] != null) {
+                        Biome biome = Biome.getBiomeGenArray()[j];
                         environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
                         if (entitySpawnType.getBiomeSpawnList(biome.biomeID) == null) {
                             environment.envLog.logger.info("NONE!");
@@ -189,9 +189,9 @@ public class CMSUtils {
             return;
         }
 
-        for (Map.Entry<String, ArrayList<BiomeGenBase>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
+        for (Map.Entry<String, ArrayList<Biome>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
             CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
-            for (BiomeGenBase biome : defaultEntry.getValue()) {
+            for (Biome biome : defaultEntry.getValue()) {
                 CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
             }
             CustomSpawner.globalLog.logger.info("");
@@ -271,15 +271,15 @@ public class CMSUtils {
 
     public static void copyVanillaSpawnLists() {
         // SAFEST POINT TO COPY VANILLA SPAWN LISTS //
-        List<BiomeGenBase> biomeList = new ArrayList<BiomeGenBase>();
-        for (int j = 0; j < BiomeGenBase.getBiomeGenArray().length; j++) {
-            if (BiomeGenBase.getBiomeGenArray()[j] != null) {
-                biomeList.add(BiomeGenBase.getBiomeGenArray()[j]);
+        List<Biome> biomeList = new ArrayList<Biome>();
+        for (int j = 0; j < Biome.getBiomeGenArray().length; j++) {
+            if (Biome.getBiomeGenArray()[j] != null) {
+                biomeList.add(Biome.getBiomeGenArray()[j]);
             }
         }
 
         if (biomeList.size() > 0) {
-            BiomeGenBase[] allBiomes = new BiomeGenBase[biomeList.size()];
+            Biome[] allBiomes = new Biome[biomeList.size()];
             allBiomes = biomeList.toArray(allBiomes);
             // used for generating default entity biome groups and settings.
             // the defaults will only generate if a biomegroup category is not found for an entity
@@ -291,10 +291,10 @@ public class CMSUtils {
     }
 
     public static void registerAllBiomes() {
-        for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
-            if (BiomeGenBase.getBiomeGenArray()[i] != null) {
-                if (!BiomeDictionary.isBiomeRegistered(BiomeGenBase.getBiomeGenArray()[i])) {
-                    BiomeDictionary.makeBestGuess(BiomeGenBase.getBiomeGenArray()[i]);
+        for (int i = 0; i < Biome.getBiomeGenArray().length; i++) {
+            if (Biome.getBiomeGenArray()[i] != null) {
+                if (!BiomeDictionary.isBiomeRegistered(Biome.getBiomeGenArray()[i])) {
+                    BiomeDictionary.makeBestGuess(Biome.getBiomeGenArray()[i]);
                 }
             }
         }

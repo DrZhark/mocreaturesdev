@@ -39,7 +39,7 @@ public class ItemStaffPortal extends MoCItem {
         NBTTagCompound nbtcompound = stack.getTagCompound();
 
         EntityPlayerMP thePlayer = (EntityPlayerMP) playerIn;
-        if (thePlayer.ridingEntity != null || thePlayer.riddenByEntity != null) {
+        if (thePlayer.getRidingEntity() != null || thePlayer.riddenByEntity != null) {
             return false;
         } else {
             if (thePlayer.dimension != MoCreatures.WyvernLairDimensionID) {
@@ -75,7 +75,7 @@ public class ItemStaffPortal extends MoCItem {
                             IBlockState blockstate = thePlayer.mcServer.worldServerForDimension(0).getBlockState(pos.add(0, i1, 0));
                             IBlockState blockstate1 = thePlayer.mcServer.worldServerForDimension(0).getBlockState(pos.add(0, i1 + 1, 0));
 
-                            if (blockstate.getBlock() == Blocks.air && blockstate1.getBlock() == Blocks.air) {
+                            if (blockstate.getBlock() == Blocks.AIR && blockstate1.getBlock() == Blocks.AIR) {
                                 thePlayer.playerNetServerHandler.setPlayerLocation(var2.getX(), (double) var2.getY() + i1 + 1, var2.getZ(), 0.0F,
                                         0.0F);
                                 if (MoCreatures.proxy.debug) {

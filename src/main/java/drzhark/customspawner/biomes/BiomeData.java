@@ -1,37 +1,37 @@
 package drzhark.customspawner.biomes;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class BiomeData {
 
-    private Class<? extends BiomeGenBase> clazz;
+    private Class<? extends Biome> clazz;
     private boolean defined;
-    private BiomeGenBase biome;
+    private Biome biome;
     private String tag;
     private BiomeDictionary.Type[] types;
 
-    public BiomeData(BiomeGenBase biome) {
+    public BiomeData(Biome biome) {
         this.clazz = biome.getClass();
         this.biome = biome;
         this.defined = false;
     }
 
-    public BiomeData(BiomeGenBase biome, String tag) {
+    public BiomeData(Biome biome, String tag) {
         this.clazz = biome.getClass();
         this.biome = biome;
         this.defined = false;
         this.tag = tag;
     }
 
-    public BiomeData(BiomeGenBase biome, boolean flag) {
+    public BiomeData(Biome biome, boolean flag) {
         this.clazz = biome.getClass();
         this.biome = biome;
         this.defined = flag;
     }
 
-    public Class<? extends BiomeGenBase> getBiomeClass() {
+    public Class<? extends Biome> getBiomeClass() {
         return this.clazz;
     }
 
@@ -39,7 +39,7 @@ public class BiomeData {
         return this.biome.biomeName;
     }
 
-    public BiomeGenBase getBiome() {
+    public Biome getBiome() {
         return this.biome;
     }
 

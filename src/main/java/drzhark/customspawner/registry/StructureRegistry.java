@@ -6,7 +6,7 @@ import drzhark.customspawner.configuration.CMSProperty.Type;
 import drzhark.customspawner.entity.EntityData;
 import drzhark.customspawner.environment.EnvironmentSettings;
 import drzhark.customspawner.utils.CMSUtils;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
 import net.minecraft.world.gen.structure.MapGenScatteredFeature;

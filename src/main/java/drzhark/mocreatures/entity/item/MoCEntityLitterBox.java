@@ -122,10 +122,10 @@ public class MoCEntityLitterBox extends EntityLiving {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((this.ridingEntity instanceof EntityPlayer) && !this.worldObj.isRemote) || this.ridingEntity == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.worldObj.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
         {
             setPickedUp(true);
-            return ((EntityPlayer) this.ridingEntity).isSneaking() ? 0.25 : 0.5F;
+            return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
         }
         return super.getYOffset();
 
@@ -157,7 +157,7 @@ public class MoCEntityLitterBox extends EntityLiving {
             return true;
         } else {
             this.rotationYaw = entityplayer.rotationYaw;
-            if (this.ridingEntity == null) {
+            if (this.getRidingEntity() == null) {
                 if (MoCreatures.isServer()) {
                     mountEntity(entityplayer);
                 }
@@ -173,7 +173,7 @@ public class MoCEntityLitterBox extends EntityLiving {
 
     @Override
     public void moveEntity(double d, double d1, double d2) {
-        if ((this.ridingEntity != null) || !this.onGround || !MoCreatures.proxy.staticLitter) {
+        if ((this.getRidingEntity() != null) || !this.onGround || !MoCreatures.proxy.staticLitter) {
             if (!this.worldObj.isRemote) {
                 super.moveEntity(d, d1, d2);
             }

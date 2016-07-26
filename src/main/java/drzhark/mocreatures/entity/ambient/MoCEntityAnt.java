@@ -7,7 +7,7 @@ import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityAnt extends MoCEntityInsect {
@@ -46,7 +46,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
         if (MoCreatures.isServer()) {
             if (!getHasFood()) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 8D);
-                if (entityitem != null && entityitem.ridingEntity == null) {
+                if (entityitem != null && entityitem.getRidingEntity() == null) {
                     float f = entityitem.getDistanceToEntity(this);
                     if (f > 1.0F) {
                         int i = MathHelper.floor_double(entityitem.posX);
@@ -70,7 +70,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
         if (getHasFood()) {
             if (this.riddenByEntity == null) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 2D);
-                if (entityitem != null && entityitem.ridingEntity == null) {
+                if (entityitem != null && entityitem.getRidingEntity() == null) {
                     entityitem.mountEntity(this);
                     return;
 
