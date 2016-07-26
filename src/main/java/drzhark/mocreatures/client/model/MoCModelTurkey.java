@@ -108,7 +108,7 @@ public class MoCModelTurkey extends ModelBase {
         this.RFoot.render(f5);
         this.LLeg.render(f5);
         this.LFoot.render(f5);
-        if (this.male) {
+        if (male) {
             this.UBody.render(f5);
             this.Body.render(f5);
             this.Chest.render(f5);

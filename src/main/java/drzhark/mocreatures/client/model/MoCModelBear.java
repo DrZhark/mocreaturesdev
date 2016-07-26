@@ -420,7 +420,7 @@ public class MoCModelBear extends ModelBase {
         this.attackSwing = entitybear.getAttackSwing();
         setRotationAngles(f, f1, f2, f3, f4, f5);
 
-        if (this.bearstate == 0) {
+        if (bearstate == 0) {
             if (openMouth) {
                 this.MouthOpen.render(f5);
             } else {
@@ -447,7 +447,7 @@ public class MoCModelBear extends ModelBase {
             this.LegRL2.render(f5);
             this.LegRL3.render(f5);
             this.Tail.render(f5);
-        } else if (this.bearstate == 1) {
+        } else if (bearstate == 1) {
             this.BHead.render(f5);
             this.BSnout.render(f5);
             if (openMouth) {
@@ -474,7 +474,7 @@ public class MoCModelBear extends ModelBase {
             this.BLegRR1.render(f5);
             this.BLegRR2.render(f5);
             this.BLegRR3.render(f5);
-        } else if (this.bearstate == 2) {
+        } else if (bearstate == 2) {
             if (openMouth) {
                 this.CMouthOpen.render(f5);
             } else {
@@ -585,13 +585,13 @@ public class MoCModelBear extends ModelBase {
             this.BLegFL2.rotateAngleZ = -breathing;
             this.BLegFL3.rotateAngleZ = -breathing;
 
-            this.BLegFL1.rotateAngleX = 0.2617994F + this.attackSwing;
-            this.BLegFL2.rotateAngleX = -0.5576792F + this.attackSwing;
-            this.BLegFL3.rotateAngleX = 2.007645F + this.attackSwing;
+            this.BLegFL1.rotateAngleX = 0.2617994F + attackSwing;
+            this.BLegFL2.rotateAngleX = -0.5576792F + attackSwing;
+            this.BLegFL3.rotateAngleX = 2.007645F + attackSwing;
 
-            this.BLegFR1.rotateAngleX = 0.2617994F + this.attackSwing;
-            this.BLegFR2.rotateAngleX = -0.5576792F + this.attackSwing;
-            this.BLegFR3.rotateAngleX = 2.007645F + this.attackSwing;
+            this.BLegFR1.rotateAngleX = 0.2617994F + attackSwing;
+            this.BLegFR2.rotateAngleX = -0.5576792F + attackSwing;
+            this.BLegFR3.rotateAngleX = 2.007645F + attackSwing;
 
             this.BLegRR1.rotateAngleX = -0.1745329F + LLegRotX;
             this.BLegRR2.rotateAngleX = LLegRotX;

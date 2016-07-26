@@ -113,9 +113,6 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public boolean interact(EntityPlayer entityplayer) {
-        //this.setNewDivingDepth();
-        //System.out.println("new diving depth = " + this.getDivingDepth() + ", min depth = " + this.minDivingDepth()+ ", edad = " + this.getEdad());
-
         if (super.interact(entityplayer)) {
             return false;
         }

@@ -271,7 +271,7 @@ public class MoCModelCrab extends ModelBase {
         /**
          * f = distance walked f1 = speed 0 - 1 f2 = timer
          */
-        if (this.fleeing) {
+        if (fleeing) {
             //LeftArmA.rotateAngleY = 45F/radianF;
             this.LeftArmA.rotateAngleX = -90F / this.radianF;
             this.RightArmA.rotateAngleX = -90F / this.radianF;

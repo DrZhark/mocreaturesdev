@@ -156,7 +156,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                     setType(60);// zebra
                 }
             }
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
                 setType(60);// zebra
             }
 
@@ -1125,6 +1125,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return 50; // white fairy
         }
 
+        // unicorn plus black pegasus (they will both vanish!)
+        if (typeA == 36 && typeB == 40 || typeB == 36 && typeA == 40) {
+            return 54; // black fairy
+        }
+
         // rare horse mixture: produces a regular horse 1-5
         if (typeA > 20 && typeB > 20 && (typeA != typeB)) {
             return (this.rand.nextInt(5)) + 1;
@@ -1539,7 +1544,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             // to return undead horses to pristine conditions
             if (this.isUndead() && this.getIsAdult() && MoCreatures.isServer()) {
                 setEdad(10);
-                if (this.getType() > 26) {
+                if (this.getType() >= 26) {
                     setType(getType() - 3);
                 }
             }
@@ -2102,7 +2107,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 StarFX();
             }
             if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
-                //System.out.println("playing sound");
                 MoCTools.playCustomSound(this, "wingflap", this.worldObj);
             }
         }
@@ -2127,8 +2131,8 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             /**
              * Shuffling LMFAO!
              */
-            if (this.getType() == 60 && getIsTamed() && this.rand.nextInt(50) == 0 && nearMusicBox() && this.shuffleCounter == 0) {
-                this.shuffleCounter = 1;
+            if (this.getType() == 60 && getIsTamed() && this.rand.nextInt(50) == 0 && nearMusicBox() && shuffleCounter == 0) {
+                shuffleCounter = 1;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 101),
                         new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
             }
@@ -2156,10 +2160,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             /**
              * zebras on the run!
              */
+            /*
             if (this.getType() == 60 && !getIsTamed()) {
                 boolean flag = isZebraRunning();
-
-            }
+            }*/
 
             /**
              * foal following mommy!
@@ -2212,10 +2216,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                     continue;
                 }
 
-                if (!ReadyforParenting(this)) {
-                    return;
-                }
-
                 if (!flag) {
                     if (!ReadyforParenting((MoCEntityHorse) horsemate)) {
                         return;
@@ -2255,7 +2255,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 }
                 int l = HorseGenetics(this.getType(), horsemateType);
 
-                if (l == 50) // fairy horse!
+                if (l == 50 || l == 54) // fairy horse!
                 {
                     MoCTools.playCustomSound(this, "appearmagic", this.worldObj);
                     if (!flag) {

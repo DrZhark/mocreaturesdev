@@ -59,6 +59,7 @@ public class MoCTextures {
      * @throws URISyntaxException
      * @throws IOException
      */
+    @SuppressWarnings("rawtypes")
     String[] getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (dirURL != null && dirURL.getProtocol().equals("file")) {

@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MoCModelWraith extends ModelBiped {
 
     private int attackCounter;
-    private float radianF = 57.29578F;
 
     public MoCModelWraith() {
         //TODO 4.1 FIX
@@ -59,7 +58,7 @@ public class MoCModelWraith extends ModelBiped {
         this.bipedRightArm.rotateAngleY = -(0.1F - (f6 * 0.6F));
         this.bipedLeftArm.rotateAngleY = 0.1F - (f6 * 0.6F);
         if (this.attackCounter != 0) {
-            float armMov = (MathHelper.cos((this.attackCounter) * 0.12F) * 4F);
+            float armMov = (MathHelper.cos((attackCounter) * 0.12F) * 4F);
 
             this.bipedRightArm.rotateAngleX = -armMov;
             this.bipedLeftArm.rotateAngleX = -armMov;

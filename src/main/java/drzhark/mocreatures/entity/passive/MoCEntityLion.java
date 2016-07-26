@@ -25,8 +25,8 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
                 setType(rand.nextInt(2)+6);//white lions
             }else
             {
-            setType(this.rand.nextInt(2) + 1);
-        }
+                setType(this.rand.nextInt(2) + 1);
+            }
         }
         super.selectType();
     }

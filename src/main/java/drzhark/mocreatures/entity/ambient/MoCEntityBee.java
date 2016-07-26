@@ -17,7 +17,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class MoCEntityBee extends MoCEntityInsect
-
 {
 
     private int soundCount;

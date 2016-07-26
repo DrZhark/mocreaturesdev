@@ -27,22 +27,12 @@ public interface IMoCEntity {
 
     public boolean getCanSpawnHere();
 
-    /**
-     * Used to synchronize animations between server and clients
-     *
-     * @param i = animationType
-     */
     public void performAnimation(int i);
 
     public boolean renderName();
 
     public int nameYOffset();
 
-    //public boolean updateMount();
-
-    /**
-     * method used to sync jump client/server
-     */
     public void makeEntityJump();
 
     public void makeEntityDive();

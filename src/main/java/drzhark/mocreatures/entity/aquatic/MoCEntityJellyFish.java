@@ -133,9 +133,8 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     public float getSizeFactor() {
         float myMoveSpeed = MoCTools.getMyMovementSpeed(this);
         float pulseSpeed = 0.08F;
-        if (myMoveSpeed > 0F) {
+        if (myMoveSpeed > 0F)
             pulseSpeed = 0.5F;
-        }
         float pulseSize = MathHelper.cos(this.ticksExisted * pulseSpeed) * 0.2F;
         return getEdad() * 0.01F + (pulseSize / 5);
     }

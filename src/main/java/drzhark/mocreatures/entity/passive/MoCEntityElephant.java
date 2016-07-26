@@ -202,7 +202,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
-            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && this.rand.nextInt(15) == 0) {
+            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
             }
 
@@ -268,7 +268,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             }
 
             if (this.trunkCounter == 0 && this.rand.nextInt(200) == 0) {
-                this.trunkCounter = this.rand.nextInt(10) + 1;
+                this.trunkCounter = rand.nextInt(10) + 1;
             }
 
             if (this.earCounter > 0 && ++this.earCounter > 30) {
@@ -276,7 +276,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             }
 
             if (this.rand.nextInt(200) == 0) {
-                this.earCounter = this.rand.nextInt(20) + 1;
+                this.earCounter = rand.nextInt(20) + 1;
             }
 
         }
@@ -318,13 +318,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
      * Destroys dummy entity platforms used for second rider
      */
     private void destroyPlatforms() {
-        int j = 0;
         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = (Entity) list.get(i);
             if ((entity1 instanceof MoCEntityPlatform)) {
                 entity1.setDead();
-                j++;
             }
         }
     }
@@ -636,16 +634,13 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
-
-        String s = MoCTools.BiomeName(this.worldObj, pos);
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(3 + this.rand.nextInt(2));
             return true;
         }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.DESERT)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
             setType(1);
             return true;
         }
@@ -1027,9 +1022,8 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (getIsAdult()) {
             yOff = (int) (getSizeFactor() * -110);
         }
-        if (this.sitCounter != 0) {
+        if (sitCounter != 0)
             yOff += 25;
-        }
         return yOff;
     }
 

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 public class MoCEntityKittyBed extends EntityLiving {
 
     public float milklevel;
+    public String bedColor;
 
     public MoCEntityKittyBed(World world) {
         super(world);

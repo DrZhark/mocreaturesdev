@@ -191,7 +191,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         }
 
         if (this.attackCounter > 0) {
-            if (this.armToAnimate == 3) {
+            if (armToAnimate == 3) {
                 this.attackCounter++;
             } else {
                 this.attackCounter += 2;
@@ -234,9 +234,8 @@ public class MoCEntityOgre extends MoCEntityMob {
      */
     private void startArmSwingAttack() {
         if (MoCreatures.isServer()) {
-            if (this.smashCounter != 0) {
+            if (this.smashCounter != 0)
                 return;
-            }
 
             boolean leftArmW = (getType() == 2 || getType() == 4 || getType() == 6) && this.rand.nextInt(2) == 0;
 

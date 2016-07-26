@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
@@ -145,10 +146,9 @@ public class MoCEntityEgg extends EntityLiving {
                 }
 
                 if (this.tCounter >= 30) {
-                    if (getEggType() < 10) // fishy
+                    if (getEggType() <= 10) // fishy
                     {
                         MoCEntityFishy entityspawn = new MoCEntityFishy(this.worldObj);
-
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
                         entityspawn.setType(getEggType());
                         entityspawn.setEdad(30);
@@ -162,7 +162,6 @@ public class MoCEntityEgg extends EntityLiving {
                     else if (getEggType() == 11) // shark
                     {
                         MoCEntityShark entityspawn = new MoCEntityShark(this.worldObj);
-
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
                         entityspawn.setEdad(30);
                         this.worldObj.spawnEntityInWorld(entityspawn);
@@ -175,7 +174,6 @@ public class MoCEntityEgg extends EntityLiving {
                     else if (getEggType() == 90) // piranha
                     {
                         MoCEntityPiranha entityspawn = new MoCEntityPiranha(this.worldObj);
-
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
                         this.worldObj.spawnEntityInWorld(entityspawn);
                         entityspawn.setEdad(30);
@@ -185,7 +183,7 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                     }
 
-                    else if (getEggType() > 79 && getEggType() < (80 + MoCEntitySmallFish.fishNames.length)) // smallfish
+                    else if (getEggType() >= 80 && getEggType() < (80 + MoCEntitySmallFish.fishNames.length)) // smallfish
                     {
                         MoCEntitySmallFish entityspawn = new MoCEntitySmallFish(this.worldObj);
 
@@ -199,10 +197,9 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                     }
 
-                    else if (getEggType() > 69 && getEggType() < (80 + MoCEntityMediumFish.fishNames.length)) // mediumfish
+                    else if (getEggType() >= 70 && getEggType() < (80 + MoCEntityMediumFish.fishNames.length)) // mediumfish
                     {
                         MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(this.worldObj);
-
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
                         entityspawn.setType(getEggType() - 69);
                         this.worldObj.spawnEntityInWorld(entityspawn);
@@ -217,7 +214,7 @@ public class MoCEntityEgg extends EntityLiving {
                 }
             }
 
-            else if (getEggType() > 20 && (this.rand.nextInt(20) == 0)) // non aquatic creatures
+            else if (!isInWater() && getEggType() > 20 && (this.rand.nextInt(20) == 0)) // non aquatic creatures
             {
                 this.tCounter++;
                 //if (getEggType() == 30) tCounter = 0; //with this, wild ostriches won't spawn eggs.

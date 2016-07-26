@@ -72,7 +72,7 @@ public class MoCSettings extends ModSettings {
     /**
      * convenience list setting adder
      */
-    public MoCSettingList addSetting(Widget w2, String nicename, String backendname, ArrayList options) {
+    public MoCSettingList addSetting(Widget w2, String nicename, String backendname, ArrayList<String> options) {
 
         MoCSettingList s = new MoCSettingList(backendname, options);
         WidgetList w = new WidgetList(s, nicename);
@@ -84,7 +84,7 @@ public class MoCSettings extends ModSettings {
     /**
      * convenience list setting adder
      */
-    public MoCSettingList addSetting(Widget w2, String nicename, String backendname, ArrayList options, MoCConfiguration config, String category) {
+    public MoCSettingList addSetting(Widget w2, String nicename, String backendname, ArrayList<String> options, MoCConfiguration config, String category) {
 
         MoCSettingList s = new MoCSettingList(config, category, backendname, options);
         WidgetList w = new WidgetList(s, nicename);
@@ -101,7 +101,6 @@ public class MoCSettings extends ModSettings {
      * @param context The context to load from.
      */
     @Override
-    @SuppressWarnings("rawtypes")
     public void load(String context) {
         // DO NOTHING
     }

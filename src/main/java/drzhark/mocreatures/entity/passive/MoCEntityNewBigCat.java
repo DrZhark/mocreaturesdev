@@ -641,7 +641,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 return true;
-        }
+            }
             return true;
         }
         

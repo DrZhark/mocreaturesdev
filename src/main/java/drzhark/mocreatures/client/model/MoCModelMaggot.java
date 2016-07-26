@@ -61,6 +61,7 @@ public class MoCModelMaggot extends ModelBase {
 
     }
 
+    @SuppressWarnings("unused")
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;

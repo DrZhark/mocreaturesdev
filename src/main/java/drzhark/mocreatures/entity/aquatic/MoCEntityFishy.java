@@ -24,7 +24,6 @@ import java.util.List;
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public int gestationtime;
-    private boolean hasEaten;
 
     public static final String fishNames[] = {"Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy", "Red"};
 

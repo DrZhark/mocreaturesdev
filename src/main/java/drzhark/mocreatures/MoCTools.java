@@ -192,7 +192,7 @@ public class MoCTools {
                 Class entityClass = MoCreatures.instaSpawnerMap.get(entityId);
                 entityliving = (EntityLiving) entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
             if (entityliving != null) {
@@ -213,7 +213,7 @@ public class MoCTools {
                 Class myClass = entityData.getEntityClass();
                 entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
             if (entityToSpawn != null) {
@@ -1003,6 +1003,7 @@ public class MoCTools {
         return despawnVanillaAnimals(worldObj, null);
     }
 
+    @SuppressWarnings("rawtypes")
     public static int despawnVanillaAnimals(World worldObj, List[] classList) {
         int count = 0;
         for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
@@ -1318,12 +1319,6 @@ public class MoCTools {
         return true;
     }
 
-    /**
-     * returns the number of entities already tamed by the player ep
-     *
-     * @param ep
-     * @return
-     */
     public static int numberTamedByPlayer(EntityPlayer ep) {
         if (MoCreatures.instance.mapData != null) {
             if (MoCreatures.instance.mapData.getPetData(ep.getCommandSenderName()) != null) {

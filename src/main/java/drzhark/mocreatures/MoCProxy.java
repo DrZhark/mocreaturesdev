@@ -105,8 +105,6 @@ public class MoCProxy implements IGuiHandler {
     protected static final String CATEGORY_MOC_WATER_CREATURE_GENERAL_SETTINGS = "water-mob-general-settings";
     protected static final String CATEGORY_MOC_AMBIENT_GENERAL_SETTINGS = "ambient-general-settings";
     protected static final String CATEGORY_MOC_ID_SETTINGS = "custom-id-settings";
-    private static final String CATEGORY_VANILLA_CREATURE_FREQUENCIES = "vanilla-creature-frequencies";
-    private static final String CATEGORY_CREATURES = "Creatures";
     private static final String CATEGORY_OWNERSHIP_SETTINGS = "ownership-settings";
 
     public void resetAllData() {
@@ -202,7 +200,7 @@ public class MoCProxy implements IGuiHandler {
     public List<String> parseName(String biomeConfigEntry) {
         String tag = biomeConfigEntry.substring(0, biomeConfigEntry.indexOf('|'));
         String biomeName = biomeConfigEntry.substring(biomeConfigEntry.indexOf('|') + 1, biomeConfigEntry.length());
-        List<String> biomeParts = new ArrayList();
+        List<String> biomeParts = new ArrayList<String>();
         biomeParts.add(tag);
         biomeParts.add(biomeName);
         return biomeParts;

@@ -26,8 +26,6 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     public int standCounter;
     public int tailCounter;
     public int eatingCounter;
-    private int fCounter;
-    private float transFloat = 0.2F;
     public int wingFlapCounter;
 
     public MoCEntityHorseMob(World world) {

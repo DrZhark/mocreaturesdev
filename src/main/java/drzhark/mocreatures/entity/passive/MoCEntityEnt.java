@@ -160,7 +160,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     entityanimal.setAttackTarget(this);
                     entityanimal.getNavigator().setPath(pathentity, 1D);
                     j++;
-                    //System.out.println("attracting " + entityanimal);
                     if (j > n) {
                         return;
                     }
@@ -176,9 +175,6 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         Block blockOnFeet = this.worldObj.getBlockState(pos).getBlock();
 
         if (blockUnderFeet == Blocks.dirt) {
-            int xCoord = MathHelper.floor_double(this.posX);
-            int yCoord = MathHelper.floor_double(this.posY - 1);
-            int zCoord = MathHelper.floor_double(this.posZ);
             Block block = Blocks.grass;
             BlockEvent.BreakEvent event = null;
             if (!this.worldObj.isRemote) {
@@ -244,13 +240,13 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             case 6:
             case 7:
                 blockID = 31;
-                metaData = this.rand.nextInt(2) + 1;
+                metaData = rand.nextInt(2) + 1;
                 break;
             case 8:
             case 9:
             case 10:
                 blockID = 175; //other flowers
-                metaData = this.rand.nextInt(6);
+                metaData = rand.nextInt(6);
                 break;
             case 11:
             case 12:
@@ -261,7 +257,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             case 15:
             case 16:
                 blockID = 38; //flowers
-                metaData = this.rand.nextInt(9);
+                metaData = rand.nextInt(9);
                 break;
             case 17:
                 blockID = 39; //brown mushroom

@@ -37,7 +37,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     private int poisontimer;
     public int mouthCounter;
     public int armCounter;
-    private int hideCounter;
     private int transformCounter;
 
     public MoCEntityPetScorpion(World world) {

@@ -46,7 +46,6 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         setSize(0.9F, 1.3F);
         if (this.rand.nextInt(4) == 0) {
             setAdult(false);
-
         } else {
             setAdult(true);
         }
@@ -573,7 +572,6 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
                 }
             }
         }
-
     }
 
     @Override

@@ -11,11 +11,11 @@ public class MoCModelPetScorpion extends MoCModelScorpion {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         MoCEntityPetScorpion scorpy = (MoCEntityPetScorpion) entity;
-        this.poisoning = scorpy.swingingTail();
-        this.isTalking = scorpy.mouthCounter != 0;
-        this.babies = scorpy.getHasBabies();
-        this.attacking = scorpy.armCounter;
-        this.sitting = scorpy.getIsSitting();
+        poisoning = scorpy.swingingTail();
+        isTalking = scorpy.mouthCounter != 0;
+        babies = scorpy.getHasBabies();
+        attacking = scorpy.armCounter;
+        sitting = scorpy.getIsSitting();
         setRotationAngles(f, f1, f2, f3, f4, f5);
         renderParts(f5);
     }

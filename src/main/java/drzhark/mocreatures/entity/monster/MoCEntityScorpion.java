@@ -39,7 +39,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     private int poisontimer;
     public int mouthCounter;
     public int armCounter;
-    private int hideCounter;
 
     public MoCEntityScorpion(World world) {
         super(world);

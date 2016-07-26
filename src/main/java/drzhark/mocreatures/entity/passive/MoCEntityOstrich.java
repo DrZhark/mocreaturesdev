@@ -56,7 +56,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         super(world);
         setSize(1.0F, 1.6F);
         setEdad(35);
-        setTamed(true);//TODO
         this.eggCounter = this.rand.nextInt(1000) + 1000;
         this.stepHeight = 1.0F;
         this.canLayEggs = false;
@@ -418,7 +417,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
         if (MoCreatures.isServer()) {
             //ostrich buckle!
-            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && this.rand.nextInt(15) == 0) {
+            if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobs(this, 2D, this.worldObj);
             }
             // TODO

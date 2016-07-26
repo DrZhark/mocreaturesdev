@@ -444,16 +444,14 @@ public class MoCModelNewHorse extends ModelBase {
                 this.Bag2.render(f5);
             }
 
-            if (entityhorse.isFlyer() && type < 45)//pegasus
-            {
+            if (entityhorse.isFlyer() && type < 45) { //pegasus
                 this.MidWing.render(f5);
                 this.InnerWing.render(f5);
                 this.OuterWing.render(f5);
                 this.InnerWingR.render(f5);
                 this.MidWingR.render(f5);
                 this.OuterWingR.render(f5);
-            } else if (type > 44 && type < 60)//fairys
-            {
+            } else if (type > 44 && type < 60) { //fairys
                 GL11.glPushMatrix();
                 GL11.glEnable(3042 /* GL_BLEND */);
                 float transparency = 0.7F;
@@ -598,12 +596,6 @@ public class MoCModelNewHorse extends ModelBase {
 
         /**
          * f = distance walked f1 = speed 0 - 1 f2 = timer
-         */
-
-        /*
-         * if (rider) { //System.out.println("f = " + f);
-         * //System.out.println("f1 = " + f1); //System.out.println("f2 = " +
-         * f2); }
          */
 
         if (shuffle) {

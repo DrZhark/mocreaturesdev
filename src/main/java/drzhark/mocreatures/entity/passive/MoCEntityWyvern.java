@@ -158,7 +158,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     @Override
     public void selectType() {
         if (getType() == 0) {
-            if (this.rand.nextInt(5) == 0) {
+            if (rand.nextInt(5) == 0) {
                 setType(5);
             } else {
                 int i = this.rand.nextInt(100);
@@ -322,14 +322,14 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 setIsFlying(false);
             }
 
-            if (getAttackTarget() != null && !isMovementCeased() && this.rand.nextInt(20) == 0) {
+            if (getAttackTarget() != null && (!this.getIsTamed() || this.ridingEntity != null) && !isMovementCeased() && this.rand.nextInt(20) == 0) {
                 setIsFlying(true);
             }
             if (!getIsTamed() && this.dimension == MoCreatures.WyvernLairDimensionID && (this.rand.nextInt(50) == 0) && this.posY < 10D) {
                 this.setDead();
             }
 
-            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && this.rand.nextInt(30) == 0) {
+            if (getIsFlying() && this.getNavigator().noPath() && !isMovementCeased() && this.getAttackTarget() == null && rand.nextInt(30) == 0) {
                 this.wander.makeUpdate();
             }
 
@@ -805,13 +805,10 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     protected void dropFewItems(boolean flag, int x) {
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
         int chance = MoCreatures.proxy.wyvernEggDropChance;
-        if (getType() == 5) //mother wyverns drop eggs more frequently
-        {
+        if (getType() == 5) { //mother wyverns drop eggs more frequently
             chance = MoCreatures.proxy.motherWyvernEggDropChance;
         }
-        String s = MoCTools.BiomeName(this.worldObj, pos);
         if (this.rand.nextInt(100) < chance) {
             entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 49), 0.0F);
         }
@@ -923,7 +920,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 MoCTools.spawnMaggots(this.worldObj, this);
             }
 
-            if (getIsTamed() && this.rand.nextInt(4) == 0) {
+            if (!getIsGhost() && getIsTamed() && this.rand.nextInt(4) == 0) {
                 MoCEntityWyvern entitywyvern = new MoCEntityWyvern(this.worldObj);
                 entitywyvern.setPosition(this.posX, this.posY, this.posZ);
                 this.worldObj.spawnEntityInWorld(entitywyvern);
@@ -958,7 +955,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (this.getEdad() < 10) {
             return 0F;
         }
-        return this.fTransparency;
+        return fTransparency;
     }
 
     @Override
