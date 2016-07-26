@@ -134,7 +134,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasAmulet  -  0 false 1 true
+        this.dataWatcher.addObject(28, Byte.valueOf((byte) 0)); // hasAmulet  -  0 false 1 true
         this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isSitting -  0 false 1 true
         this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isGhost -    0 false 1 true
         this.dataWatcher.addObject(26, Byte.valueOf((byte) 0)); // isChested -  0 false 1 true
@@ -147,7 +147,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     }
 
     public boolean getHasAmulet() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+        return (this.dataWatcher.getWatchableObjectByte(28) == 1);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
     public void setHasAmulet(boolean flag) {
         byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+        this.dataWatcher.updateObject(28, Byte.valueOf(input));
     }
 
     public void setSitting(boolean flag) {
@@ -189,7 +189,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         this.dataWatcher.updateObject(26, Byte.valueOf(input));
     }
 
-    public void setIsRideable(boolean flag) {
+    public void setRideable(boolean flag) {
         byte input = (byte) (flag ? 1 : 0);
         this.dataWatcher.updateObject(27, Byte.valueOf(input));
     }
@@ -313,9 +313,10 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     public void onDeath(DamageSource damagesource) {
         if (MoCreatures.isServer()) {
-            /*if (getIsTamed()) {
+            if (getHasAmulet()) {
                     MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.medallion, 1));
-            }*/
+                    setHasAmulet(false);
+            }
 
             if (getIsTamed() && !getIsGhost() && this.rand.nextInt(4) == 0) {
                 this.spawnGhost();
@@ -595,7 +596,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
-        setIsRideable(nbttagcompound.getBoolean("Saddle"));
+        setRideable(nbttagcompound.getBoolean("Saddle"));
         setSitting(nbttagcompound.getBoolean("Sitting"));
         setIsChested(nbttagcompound.getBoolean("Chested"));
 
@@ -626,13 +627,24 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                 setHasAmulet(true);
                 MoCTools.tameWithName(entityplayer, this);
             }
-            if (getIsTamed() && --itemstack.stackSize == 0) {
+            if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 return true;
             }
-
-            return false;
+            return true;
         }
+
+        if ((itemstack != null) && getIsTamed() && !getHasAmulet() && (itemstack.getItem() == MoCreatures.medallion)) {
+            if (MoCreatures.isServer()) {
+                setHasAmulet(true);
+            }
+            if (--itemstack.stackSize == 0) {
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                return true;
+        }
+            return true;
+        }
+        
         if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip)) {
             setSitting(!getIsSitting());
             return true;
@@ -650,7 +662,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
-            setIsRideable(true);
+            setRideable(true);
             return true;
         }
 

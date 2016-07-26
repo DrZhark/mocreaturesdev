@@ -1668,7 +1668,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 1);
             }
             return true;
@@ -1688,7 +1688,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 2);
             }
             return true;
@@ -1708,7 +1708,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 3);
             }
             return true;
@@ -1726,7 +1726,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
             this.setHealth(getMaxHealth());
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100) && MoCreatures.isServer()) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad()) && MoCreatures.isServer()) {
                 setEdad(getEdad() + 1);
             }
 

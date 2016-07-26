@@ -21,7 +21,7 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
     public void selectType() {
 
         if (getType() == 0) {
-            if (this.rand.nextInt(10) == 0) {
+            if (this.rand.nextInt(20) == 0) {
                 setType(2);
             } else {
                 setType(1);

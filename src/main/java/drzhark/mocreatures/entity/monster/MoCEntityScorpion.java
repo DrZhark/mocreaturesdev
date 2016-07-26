@@ -17,9 +17,6 @@ import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -35,8 +32,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
 
 public class MoCEntityScorpion extends MoCEntityMob {
 
@@ -187,9 +182,10 @@ public class MoCEntityScorpion extends MoCEntityMob {
         }
 
         if (MoCreatures.isServer() && this.riddenByEntity == null && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            MoCTools.findMobRider(this);
+            /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+                Entity entity = (Entity) list.get(i);
                 if (!(entity instanceof EntityMob)) {
                     continue;
                 }
@@ -199,7 +195,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     entitymob.mountEntity(this);
                     break;
                 }
-            }
+            }*/
         }
 
         if (getIsPoisoning()) {

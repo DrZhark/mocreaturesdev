@@ -56,7 +56,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
@@ -513,8 +512,6 @@ public class MoCreatures {
         // creatures
         mocEntityMap.put("Bear", new MoCEntityData("Bear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBear.class, 6, 1, 2),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SNOWY))));
-        mocEntityMap.put("BigCat", new MoCEntityData("BigCat", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBigCat.class, 6, 1, 2),
-                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SNOWY))));
         mocEntityMap.put("Bird", new MoCEntityData("Bird", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBird.class, 15, 2, 3),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS))));
         mocEntityMap.put("Boar", new MoCEntityData("Boar", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBoar.class, 8, 2, 2),
@@ -558,6 +555,8 @@ public class MoCreatures {
                 "Snake",
                 new MoCEntityData("Snake", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntitySnake.class, 8, 1, 2), new ArrayList<Type>(Arrays
                         .asList(Type.SANDY, Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP, Type.WASTELAND))));
+        mocEntityMap.put("Tiger", new MoCEntityData("Tiger", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityTiger.class, 6, 1, 2),
+                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS))));
         mocEntityMap.put("Turkey", new MoCEntityData("Turkey", 2, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityTurkey.class, 8, 1, 2),
                 new ArrayList<Type>(Arrays.asList(Type.PLAINS))));
         mocEntityMap.put("Turtle", new MoCEntityData("Turtle", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityTurtle.class, 6, 1, 2),

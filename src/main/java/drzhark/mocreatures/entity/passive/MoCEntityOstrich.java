@@ -1006,6 +1006,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     //ATTACK!
     //EGG LYING
 
+    @Override
     public int getMaxEdad() {
         return 20;
     }

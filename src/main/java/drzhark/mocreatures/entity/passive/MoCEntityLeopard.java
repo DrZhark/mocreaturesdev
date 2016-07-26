@@ -38,7 +38,7 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(2); //snow leopard
                 return true;
             }

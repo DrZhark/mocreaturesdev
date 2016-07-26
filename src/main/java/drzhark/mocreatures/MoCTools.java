@@ -1,9 +1,20 @@
 package drzhark.mocreatures;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
+import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.inventory.MoCAnimalChest;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageNameGUI;
+import drzhark.mocreatures.utils.MoCLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
@@ -58,21 +69,10 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
-import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageNameGUI;
-import drzhark.mocreatures.utils.MoCLog;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class MoCTools {
 

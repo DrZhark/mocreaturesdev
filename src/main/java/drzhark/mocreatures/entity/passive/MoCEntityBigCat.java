@@ -54,7 +54,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
-        this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
+        //this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
         this.tasks.addTask(2, new EntityAIWanderMoC2(this, 0.8D, 30));
@@ -597,11 +597,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        if (this.getHasEaten()) {
             return getIsAdult() && !this.isMovementCeased();
-        } else {
-            return !this.isMovementCeased();
-        }
     }
 
     @Override
