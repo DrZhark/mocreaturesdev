@@ -641,7 +641,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         String s = MoCTools.BiomeName(this.worldObj, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(3 + this.rand.nextInt(2));
             return true;
         }

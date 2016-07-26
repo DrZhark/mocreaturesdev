@@ -78,7 +78,7 @@ public class MoCEntityManticore extends MoCEntityMob {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(3);
         }
 

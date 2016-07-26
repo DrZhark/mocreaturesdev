@@ -148,7 +148,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
                         MathHelper.floor_double(this.posZ));
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(2);
             }
         } catch (Exception e) {

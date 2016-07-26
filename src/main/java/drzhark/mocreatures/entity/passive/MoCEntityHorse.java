@@ -96,10 +96,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 setAdult(true);
             }
         }
-
-        setType(39);
-        setTamed(true);
-
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(3, new EntityAIFollowAdult(this, 1.0D));
@@ -1667,7 +1663,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 1);
             }
             return true;
@@ -1687,7 +1683,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 2);
             }
             return true;
@@ -1707,7 +1703,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                 this.setHealth(getMaxHealth());
             }
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100)) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad())) {
                 setEdad(getEdad() + 3);
             }
             return true;
@@ -1725,7 +1721,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
             this.setHealth(getMaxHealth());
             eatingHorse();
-            if (!getIsAdult() && (getEdad() < 100) && MoCreatures.isServer()) {
+            if (!getIsAdult() && (getEdad() < getMaxEdad()) && MoCreatures.isServer()) {
                 setEdad(getEdad() + 1);
             }
 

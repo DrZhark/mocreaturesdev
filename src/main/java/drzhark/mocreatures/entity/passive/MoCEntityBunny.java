@@ -96,7 +96,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(3); //snow white bunnies!
                 return true;
             }

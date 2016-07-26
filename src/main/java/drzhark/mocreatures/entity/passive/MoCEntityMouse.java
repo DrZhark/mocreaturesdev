@@ -72,7 +72,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
         String s = MoCTools.BiomeName(this.worldObj, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(3); //white mice!
             }
         } catch (Exception e) {

@@ -20,7 +20,13 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
     public void selectType() {
 
         if (getType() == 0) {
+            if (rand.nextInt(20) == 0)
+            {
+                setType(rand.nextInt(2)+6);//white lions
+            }else
+            {
             setType(this.rand.nextInt(2) + 1);
+        }
         }
         super.selectType();
     }
@@ -78,7 +84,7 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
         }
 
         //TODO ERASE! TESTING ONLY
-        if (itemstack != null && (itemstack.getItem() == MoCreatures.essencefire)) {
+        /*if (itemstack != null && (itemstack.getItem() == MoCreatures.essencefire)) {
             setType(getType() + 1);
             if (getType() > 9) {
                 setType(1);
@@ -89,7 +95,7 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
         if (itemstack != null && (itemstack.getItem() == MoCreatures.essenceundead)) {
             this.setIsGhost(!getIsGhost());
             return true;
-        }
+        }*/
 
         if (getIsRideable() && getIsAdult() && (this.riddenByEntity == null)) {
             entityplayer.rotationYaw = this.rotationYaw;

@@ -113,7 +113,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
         BiomeGenBase biome = MoCTools.Biomekind(this.worldObj, new BlockPos(i, j, k));
         int l = this.rand.nextInt(10);
 
-        if (BiomeDictionary.isBiomeOfType(biome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(biome, Type.SNOWY)) {
             setType(3);
         }
         selectType();

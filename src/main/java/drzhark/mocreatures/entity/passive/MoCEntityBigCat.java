@@ -397,7 +397,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(6); //snow leopard
                 return true;
             }

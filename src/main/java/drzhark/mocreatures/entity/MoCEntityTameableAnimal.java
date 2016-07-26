@@ -64,7 +64,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
 
         //changes name
         if (MoCreatures.isServer() && itemstack != null && getIsTamed()
-                && (itemstack.getItem() == MoCreatures.medallion || itemstack.getItem() == Items.book || itemstack.getItem() == Items.name_tag)) {
+                && (itemstack.getItem() == Items.book || itemstack.getItem() == Items.name_tag)) {
             if (MoCTools.tameWithName(entityplayer, this)) {
                 return true;
             }

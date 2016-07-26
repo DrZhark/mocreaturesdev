@@ -388,7 +388,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
         BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.FROZEN)) {
+        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(4);
         } else if (!this.worldObj.canBlockSeeSky(pos) && (this.posY < 50D)) {
             setType(2);
