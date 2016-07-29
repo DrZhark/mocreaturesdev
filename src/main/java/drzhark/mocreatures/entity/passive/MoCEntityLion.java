@@ -18,7 +18,6 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
 
     @Override
     public void selectType() {
-
         if (getType() == 0) {
             if (rand.nextInt(20) == 0)
             {
@@ -50,6 +49,8 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
                 return MoCreatures.proxy.getTexture("BCwhiteLion.png");//male white
             case 8:
                 return MoCreatures.proxy.getTexture("BCwhiteLion.png");//winged male white
+            case 9:
+                return MoCreatures.proxy.getTexture("BCliard.png");// Male Lion X leopard
             default:
                 return MoCreatures.proxy.getTexture("BCfemaleLion.png");
         }
@@ -83,20 +84,6 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
             return true;
         }
 
-        //TODO ERASE! TESTING ONLY
-        /*if (itemstack != null && (itemstack.getItem() == MoCreatures.essencefire)) {
-            setType(getType() + 1);
-            if (getType() > 9) {
-                setType(1);
-            }
-            setEdad(getMaxEdad());
-            return true;
-        }
-        if (itemstack != null && (itemstack.getItem() == MoCreatures.essenceundead)) {
-            this.setIsGhost(!getIsGhost());
-            return true;
-        }*/
-
         if (getIsRideable() && getIsAdult() && (this.riddenByEntity == null)) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
@@ -111,6 +98,9 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
 
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
+    	if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
+            return "Panther";
+        }
         return "Lion";
     }
 
@@ -124,6 +114,12 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
         int x = 0;
         if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
             return 4; //liger
+        }
+        if (getType() == 2 && mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
+            return 9; //liard
+        }
+        if (getType() == 2 && mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
+            return 5; //lither
         }
         if (mate instanceof MoCEntityLion) {
             int lionMateType = ((MoCEntityLion) mate).getType();
@@ -158,6 +154,12 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
     @Override
     public boolean compatibleMate(Entity mate) {
         if (this.getType() == 2 && mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
+            return true;
+        }
+        if (this.getType() == 2 && mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
+            return true;
+        }
+        if (this.getType() == 2 && mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
             return true;
         }
         if (mate instanceof MoCEntityLion) {
@@ -197,8 +199,11 @@ public class MoCEntityLion extends MoCEntityNewBigCat {
 
     @Override
     public int getMaxEdad() {
-        if (getType() == 1) {
+        if (getType() == 1 || getType() == 6) {
             return 110;
+        }
+        if (getType() == 9) {
+            return 100;
         }
         if (getType() >= 4) {
             return 135;
