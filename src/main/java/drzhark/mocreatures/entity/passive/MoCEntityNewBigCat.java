@@ -323,7 +323,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             }
         }
         super.onDeath(damagesource);
-
     }
 
     public void spawnGhost() {
@@ -379,6 +378,11 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                     setEdad(getMaxEdad());
                     setAdult(true);
                 }
+            }
+            
+            if (!getIsGhost() && getEdad() <10)
+            {
+            	this.setDead();
             }
 
             /*if (getHasEaten() && rand.nextInt(300) == 0)
