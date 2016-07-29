@@ -14,7 +14,6 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
 
     public MoCEntityTiger(World world) {
         super(world);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -39,6 +38,8 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
                 return MoCreatures.proxy.getTexture("BCwhiteTiger.png");
             case 3:
                 return MoCreatures.proxy.getTexture("BCwhiteTiger.png"); //winged tiger
+            case 4:
+            	return MoCreatures.proxy.getTexture("BCleoger.png"); // Tiger x Leopard
             default:
                 return MoCreatures.proxy.getTexture("BCtiger.png");
         }
@@ -65,20 +66,7 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
             setType(3);
             return true;
         }
-        //TODO ERASE! TESTING ONLY
-        /*if (itemstack != null && (itemstack.getItem() == MoCreatures.essencefire))
-        {
-            setType(getType()+1);
-            if (getType() >9) setType(1);
-            setEdad(getMaxEdad());
-            return true;
-        }
-        if (itemstack != null && (itemstack.getItem() == MoCreatures.essenceundead))
-        {
-            this.setIsGhost(!getIsGhost());
-            return true;
-        }*/
-
+        
         if (getIsRideable() && getIsAdult() && (this.riddenByEntity == null)) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
@@ -97,6 +85,9 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
             return "Lion";
         }
+        if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
+            return "Panther";
+        }
         return "Tiger";
     }
 
@@ -110,13 +101,21 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
             return 4; //liger
         }
+        if (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
+            return 4; //leoger
+        }
+        if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
+            return 4; //panthger
+        }
         return this.getType();
     }
 
     @Override
     public boolean compatibleMate(Entity mate) {
         return (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3)
-                || (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2);
+                || (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2)
+                || (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1)
+        		|| (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1);
     }
 
     @Override

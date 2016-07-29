@@ -575,7 +575,8 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         nbttagcompound.setBoolean("Saddle", getIsRideable());
         nbttagcompound.setBoolean("Sitting", getIsSitting());
         nbttagcompound.setBoolean("Chested", getIsChested());
-
+        nbttagcompound.setBoolean("Ghost", getIsGhost());
+        nbttagcompound.setBoolean("Amulet", getHasAmulet());
         if (getIsChested() && this.localchest != null) {
             NBTTagList nbttaglist = new NBTTagList();
             for (int i = 0; i < this.localchest.getSizeInventory(); i++) {
@@ -599,7 +600,8 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         setRideable(nbttagcompound.getBoolean("Saddle"));
         setSitting(nbttagcompound.getBoolean("Sitting"));
         setIsChested(nbttagcompound.getBoolean("Chested"));
-
+        setIsGhost(nbttagcompound.getBoolean("Ghost"));
+        setHasAmulet(nbttagcompound.getBoolean("Amulet"));
         if (getIsChested()) {
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);
             this.localchest = new MoCAnimalChest("BigCatChest", 18);
