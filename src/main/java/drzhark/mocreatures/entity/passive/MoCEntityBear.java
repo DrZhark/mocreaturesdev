@@ -271,26 +271,26 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         /**
          * panda bears and cubs will sit down every now and then
          */
-        if ((MoCreatures.isServer()) && (getType() == 3 || (!getIsAdult() && getEdad() < 60)) && (this.rand.nextInt(300) == 0)) {
+        if ((MoCreatures.isServer()) && !getIsTamed() && (getType() == 3 || (!getIsAdult() && getEdad() < 60)) && (this.rand.nextInt(300) == 0)) {
             setBearState(2);
         }
 
         /**
-         * Sitting bears will resume on fours stance every now and then
+         * Sitting non tamed bears will resume on fours stance every now and then
          */
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && (this.rand.nextInt(800) == 0)) {
+        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && (this.rand.nextInt(800) == 0)) {
             setBearState(0);
         }
 
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && !this.getNavigator().noPath()) {
+        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && !this.getNavigator().noPath()) {
             setBearState(0);
         }
 
         /**
-         * Adult non panda bears will stand on hind legs if close to player
+         * Adult non tamed non panda bears will stand on hind legs if close to player
          */
 
-        if ((MoCreatures.isServer()) && this.standingCounter == 0 && getBearState() != 2 && getIsAdult() && getType() != 3) {
+        if ((MoCreatures.isServer()) && !getIsTamed() && this.standingCounter == 0 && getBearState() != 2 && getIsAdult() && getType() != 3) {
             EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 4D);
             if ((entityplayer1 != null && this.canEntityBeSeen(entityplayer1)) || (this.rand.nextInt(2000) == 0)) {
                 this.standingCounter = 1;
@@ -344,6 +344,14 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
                 setEdad(getEdad() + 1);
             }
 
+            return true;
+        }
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip)) {
+            if (getBearState() == 0) {
+                setBearState(2);
+            }else {
+                setBearState(0);
+            }
             return true;
         }
         return false;

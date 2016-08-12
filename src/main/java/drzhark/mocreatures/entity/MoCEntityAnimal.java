@@ -1324,7 +1324,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
     }
 
     @Override

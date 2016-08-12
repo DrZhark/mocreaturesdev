@@ -1,15 +1,7 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.passive.MoCEntityElephant;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
-import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +11,17 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.passive.MoCEntityBear;
+import drzhark.mocreatures.entity.passive.MoCEntityElephant;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 
 public class MoCItemWhip extends MoCItem {
 
@@ -123,6 +124,18 @@ public class MoCItemWhip extends MoCItem {
                     //makes elephants charge
                     if (entityelephant.riddenByEntity != null && entityelephant.sprintCounter == 0) {
                         entityelephant.sprintCounter = 1;
+                    }
+                }
+                
+                if (entity instanceof MoCEntityBear) {
+                    MoCEntityBear entitybear = (MoCEntityBear) entity;
+
+                    if (entitybear.getIsTamed()) {
+                       if (entitybear.getBearState() == 0) {
+                               entitybear.setBearState(2);
+                           }else {
+                               entitybear.setBearState(0);
+                           }
                     }
                 }
             }
