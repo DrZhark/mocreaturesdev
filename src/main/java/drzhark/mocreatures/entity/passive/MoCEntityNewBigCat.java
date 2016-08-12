@@ -70,16 +70,16 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
         ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
-        //this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
-        this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
-        this.tasks.addTask(5, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
-        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 0.8D, 30));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
+        this.tasks.addTask(2, new EntityAIFollowAdult(this, 1.0D));
+        this.tasks.addTask(3, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(4, new EntityAIWanderMoC2(this, 0.8D, 30));
+        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         //this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this)); //TODO
         //this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this)); //TODO
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
-        this.targetTasks.addTask(4, new EntityAIHunt(this, EntityAnimal.class, true));
+        this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+        
     }
 
     @Override

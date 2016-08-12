@@ -56,7 +56,7 @@ public class MoCRenderKittyBed extends RenderLiving {
 
         public void doRenderLayer(MoCEntityKittyBed entity, float f, float f1, float f2, float f3, float f4, float f5, float f6) {
 
-            bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
+            //bindTexture(MoCreatures.proxy.getTexture("kittybed.png"));
             float f8 = 0.35F;
             int j = MoCTools.colorize(this.mocRenderer.mycolor);
             GL11.glColor3f(f8 * fleeceColorTable[j][0], f8 * fleeceColorTable[j][1], f8 * fleeceColorTable[j][2]);

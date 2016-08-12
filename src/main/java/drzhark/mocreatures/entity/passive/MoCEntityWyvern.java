@@ -909,11 +909,6 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean shouldAttackPlayers() {
-        return !getIsTamed() && super.shouldAttackPlayers();
-    }
-
-    @Override
     public void onDeath(DamageSource damagesource) {
         if (MoCreatures.isServer()) {
             if (this.getType() == 6) {
