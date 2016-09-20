@@ -1,17 +1,17 @@
 package drzhark.mocreatures.client;
 
-import drzhark.mocreatures.MoCProxy;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCProxy;
 
 @SideOnly(Side.CLIENT)
-public class MoCEntityFXStar extends EntityFX {
+public class MoCEntityFXStar extends Particle {
 
     public MoCEntityFXStar(World worldObj, double posX, double posY, double posZ, float red, float green, float blue) {
         super(worldObj, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
@@ -54,13 +54,13 @@ public class MoCEntityFXStar extends EntityFX {
         this.motionY *= 0.2D;
         this.motionZ *= 0.9D;
 
-        if (this.onGround) {
+        if (this.isCollided) {
             this.motionX *= 0.7D;
             this.motionZ *= 0.7D;
         }
 
         if (this.particleMaxAge-- <= 0) {
-            this.setDead();
+            this.setExpired();
         }
     }
 
@@ -69,7 +69,7 @@ public class MoCEntityFXStar extends EntityFX {
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("mocreatures", MoCProxy.MISC_TEXTURE + "fxstar.png"));
         float sizeFactor = 0.1F * this.particleScale;
         float var13 = (float) (this.prevPosX + (this.posX - this.prevPosX) * partialTicks - interpPosX);

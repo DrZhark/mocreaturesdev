@@ -64,7 +64,7 @@ public class MoCEntityManticorePet extends MoCEntityNewBigCat {
             return true;
         }
         */
-        if (getIsRideable() && getIsAdult() && (this.riddenByEntity == null)) {
+        if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
             setSitting(false);

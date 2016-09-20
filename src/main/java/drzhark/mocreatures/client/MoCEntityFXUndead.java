@@ -1,17 +1,17 @@
 package drzhark.mocreatures.client;
 
-import drzhark.mocreatures.MoCProxy;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCProxy;
 
 @SideOnly(Side.CLIENT)
-public class MoCEntityFXUndead extends EntityFX {
+public class MoCEntityFXUndead extends Particle {
 
     public MoCEntityFXUndead(World par1World, double par2, double par4, double par6) {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
@@ -31,7 +31,7 @@ public class MoCEntityFXUndead extends EntityFX {
      */
     @Override
     public int getFXLayer() {
-        if (this.onGround) {
+        if (this.isCollided) {
             return 1;
         }
         return 2;
@@ -53,25 +53,25 @@ public class MoCEntityFXUndead extends EntityFX {
         this.motionY *= 0.5D;
         this.motionZ *= 0.8D;
 
-        if (this.onGround) {
+        if (this.isCollided) {
             this.motionX *= 0.7D;
             this.motionZ *= 0.7D;
         }
 
         if (this.particleMaxAge-- <= 0) {
-            this.setDead();
+            this.setExpired();
         }
     }
 
     private String getCurrentTexture() {
-        if (this.onGround) {
+        if (this.isCollided) {
             return "fxundead1.png";
         }
         return "fxundead2.png";
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("mocreatures", MoCProxy.MISC_TEXTURE
                 + getCurrentTexture()));
         float sizeFactor = 0.1F * this.particleScale;

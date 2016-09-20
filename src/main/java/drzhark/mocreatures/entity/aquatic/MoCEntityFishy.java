@@ -44,8 +44,8 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(6.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             this.prevRenderYawOffset = this.renderYawOffset = this.rotationYaw = this.prevRotationYaw;
             this.rotationPitch = this.prevRotationPitch;
         }
@@ -160,7 +160,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 }
                 if (this.gestationtime % 3 == 0) {
                     MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                            new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                            new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
                 }
                 if (this.gestationtime <= 50) {
                     continue;
@@ -208,7 +208,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     @Override
     public float rollRotationOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             return -90F;
         }
         return 0F;
@@ -216,7 +216,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedYOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             return -0.1F;
         }
         return 0.0F;
@@ -224,7 +224,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedXOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             return -0.2F;
         }
         return 0F;

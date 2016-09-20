@@ -1,7 +1,15 @@
 package drzhark.mocreatures.item;
 
-import java.util.List;
-
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.passive.MoCEntityElephant;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,17 +19,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityElephant;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
-import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
+
+import java.util.List;
 
 public class MoCItemWhip extends MoCItem {
 
@@ -46,7 +45,7 @@ public class MoCItemWhip extends MoCItem {
         int i1 = 0;
         Block block = worldIn.getBlockState(pos).getBlock();
         Block block1 = worldIn.getBlockState(pos.up()).getBlock();
-        if (side != EnumFacing.DOWN && (block1 == Blocks.air) && (block != Blocks.air) && (block != Blocks.standing_sign)) {
+        if (side != EnumFacing.DOWN && (block1 == Blocks.AIR) && (block != Blocks.AIR) && (block != Blocks.standing_sign)) {
             whipFX(worldIn, pos);
             worldIn.playSoundAtEntity(playerIn, "mocreatures:whip", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             stack.damageItem(1, playerIn);
@@ -109,7 +108,7 @@ public class MoCItemWhip extends MoCItem {
                     MoCEntityOstrich entityostrich = (MoCEntityOstrich) entity;
 
                     //makes ridden ostrich sprint
-                    if (entityostrich.riddenByEntity != null && entityostrich.sprintCounter == 0) {
+                    if (entityostrich.isBeingRidden() && entityostrich.sprintCounter == 0) {
                         entityostrich.sprintCounter = 1;
                     }
 
@@ -122,20 +121,8 @@ public class MoCItemWhip extends MoCItem {
                     MoCEntityElephant entityelephant = (MoCEntityElephant) entity;
 
                     //makes elephants charge
-                    if (entityelephant.riddenByEntity != null && entityelephant.sprintCounter == 0) {
+                    if (entityelephant.isBeingRidden() && entityelephant.sprintCounter == 0) {
                         entityelephant.sprintCounter = 1;
-                    }
-                }
-                
-                if (entity instanceof MoCEntityBear) {
-                    MoCEntityBear entitybear = (MoCEntityBear) entity;
-
-                    if (entitybear.getIsTamed()) {
-                       if (entitybear.getBearState() == 0) {
-                               entitybear.setBearState(2);
-                           }else {
-                               entitybear.setBearState(0);
-                           }
                     }
                 }
             }

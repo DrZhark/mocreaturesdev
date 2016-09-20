@@ -4,7 +4,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,7 +54,7 @@ public class MoCModelBird extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         MoCEntityBird bird = (MoCEntityBird) entity;
-        this.isOnAir = bird.isOnAir() && bird.ridingEntity == null;
+        this.isOnAir = bird.isOnAir() && bird.getRidingEntity() == null;
         setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.head.render(f5);
         this.beak.render(f5);

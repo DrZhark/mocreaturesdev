@@ -53,7 +53,7 @@ public class MoCRenderSnake extends MoCRenderMoC<MoCEntitySnake> {
              */
         }
 
-        if (entitysnake.isInsideOfMaterial(Material.water)) {
+        if (entitysnake.isInsideOfMaterial(Material.WATER)) {
             adjustHeight(entitysnake, -0.25F);
         }
 

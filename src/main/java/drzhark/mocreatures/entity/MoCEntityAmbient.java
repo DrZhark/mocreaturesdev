@@ -32,7 +32,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
@@ -198,7 +198,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     public boolean isSwimming() {
-        return ((isInsideOfMaterial(Material.water)));
+        return ((isInsideOfMaterial(Material.WATER)));
     }
 
     /**
@@ -328,7 +328,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
      * Called to make ridden entities pass on collision to rider
      */
     public void Riding() {
-        if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
+        if ((this.isBeingRidden()) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
             List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
@@ -468,13 +468,13 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     public void moveEntityWithHeadingOld(float f, float f1) {
         //If the entity is not ridden by entityplayer, then execute the normal Entityliving code
-        if (!isFlyer() && (!rideableEntity() || this.riddenByEntity == null)) {
+        if (!isFlyer() && (!rideableEntity() || !this.isBeingRidden())) {
             super.moveEntityWithHeading(f, f1);
             return;
         }
 
         if (handleWaterMovement()) {
-            if (this.riddenByEntity != null) {
+            if (this.isBeingRidden()) {
                 this.motionX += this.riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 this.motionZ += this.riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
 
@@ -511,7 +511,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 this.motionY = 0.30000001192092901D;
             }
         } else if (isNotColliding()) {
-            if (this.riddenByEntity != null) {
+            if (this.isBeingRidden()) {
                 this.motionX += this.riddenByEntity.motionX * (getCustomSpeed() / 2.0D);
                 this.motionZ += this.riddenByEntity.motionZ * (getCustomSpeed() / 2.0D);
 
@@ -552,7 +552,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                         this.worldObj.getBlockState(
                                 new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY) - 1, MathHelper
                                         .floor_double(this.posZ))).getBlock();
-                if (block != Blocks.air) {
+                if (block != Blocks.AIR) {
                     f2 = block.slipperiness * 0.91F;
                 }
             }
@@ -566,7 +566,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                     this.motionY = -0.15D;
                 }
             }
-            if ((this.riddenByEntity != null) && !getIsTamed()) {
+            if ((this.isBeingRidden()) && !getIsTamed()) {
 
                 if (this.rand.nextInt(10) == 0) {
                     this.motionX += this.rand.nextDouble() / 30D;
@@ -585,7 +585,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                     this.riddenByEntity = null;
                 }
             }
-            if ((this.riddenByEntity != null) && getIsTamed()) {
+            if ((this.isBeingRidden()) && getIsTamed()) {
                 // TODO
                 //getEntityBoundingBox().maxY = this.riddenByEntity.getEntityBoundingBox().maxY;
                 if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir())) {
@@ -627,12 +627,12 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 }
             }
 
-            if (isFlyer() && this.riddenByEntity == null && getAttackTarget() != null && getAttackTarget().posY < this.posY
+            if (isFlyer() && !this.isBeingRidden() && getAttackTarget() != null && getAttackTarget().posY < this.posY
                     && this.rand.nextInt(30) == 0) {
                 this.motionY = -0.25D;
             }
 
-            if (isFlyer() && (this.riddenByEntity != null) && getIsTamed()) {
+            if (isFlyer() && (this.isBeingRidden()) && getIsTamed()) {
                 this.motionY -= 0.08D;
                 this.motionY *= myFallSpeed();//0.6D;
             } else if (!isFlyingAlone()) {
@@ -640,7 +640,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 this.motionY *= 0.98000001907348633D;
             }
 
-            if (this.riddenByEntity != null && isOnAir()) {
+            if (this.isBeingRidden() && isOnAir()) {
                 f2 = flyerFriction();
 
             }
@@ -754,7 +754,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean renderName() {
         return MoCreatures.proxy.getDisplayPetName()
-                && (getPetName() != null && !getPetName().equals("") && (this.riddenByEntity == null) && (this.ridingEntity == null));
+                && (getPetName() != null && !getPetName().equals("") && (!this.isBeingRidden()) && (this.getRidingEntity() == null));
     }
 
     @Override
@@ -886,7 +886,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
         if (MoCreatures.isServer() && getIsTamed()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
-                    this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         return super.attackEntityFrom(damagesource, i);
     }

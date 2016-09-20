@@ -14,7 +14,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -29,10 +29,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -71,10 +71,10 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 setAdult(true);
             }
         }
-        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
-        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
@@ -82,10 +82,10 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (getType() == 0) {
             setType(this.rand.nextInt(2) + 1);
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
         this.setHealth(getMaxHealth());
     }
 
@@ -202,7 +202,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
-            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.riddenByEntity != null) && rand.nextInt(15) == 0) {
+            if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.isBeingRidden()) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
             }
 
@@ -210,14 +210,14 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 this.sprintCounter = 0;
             }
 
-            if (getIsTamed() && (this.riddenByEntity == null) && getArmorType() >= 1 && this.rand.nextInt(20) == 0) {
+            if (getIsTamed() && (!this.isBeingRidden()) && getArmorType() >= 1 && this.rand.nextInt(20) == 0) {
                 EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 3D);
                 if (ep != null && (!MoCreatures.proxy.enableOwnership || ep.getName().equals(getOwnerName())) && ep.isSneaking()) {
                     sit();
                 }
             }
 
-            if (MoCreatures.proxy.elephantBulldozer && getIsTamed() && (this.riddenByEntity != null) && (getTusks() > 0)) {
+            if (MoCreatures.proxy.elephantBulldozer && getIsTamed() && (this.isBeingRidden()) && (getTusks() > 0)) {
                 int height = 2;
                 if (getType() == 3) {
                     height = 3;
@@ -230,7 +230,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             }
 
-            if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer) {
+            if (this.isBeingRidden() && this.riddenByEntity instanceof EntityPlayer) {
                 if (this.sitCounter != 0 && getArmorType() >= 3 && !secondRider()) {
                     List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
                     for (int i = 0; i < list.size(); i++) {
@@ -249,7 +249,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             }
 
-            if (this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
+            if (!this.isBeingRidden() && this.rand.nextInt(100) == 0) {
                 destroyPlatforms();
             }
 
@@ -292,7 +292,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
-            if ((entity1 instanceof MoCEntityPlatform) && (entity1.riddenByEntity != null)) {
+            if ((entity1 instanceof MoCEntityPlatform) && (entity1.isBeingRidden())) {
                 return true;
             }
         }
@@ -331,7 +331,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         this.sitCounter = 1;
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.getNavigator().clearPathEntity();
     }
@@ -634,7 +634,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(3 + this.rand.nextInt(2));
@@ -806,7 +806,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMovementCeased() {
-        return (this.riddenByEntity != null) || this.sitCounter != 0;
+        return (this.isBeingRidden()) || this.sitCounter != 0;
     }
 
     @Override
@@ -816,7 +816,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void Riding() {
-        if ((this.riddenByEntity != null) && (this.riddenByEntity instanceof EntityPlayer)) {
+        if ((this.isBeingRidden()) && (this.riddenByEntity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.riddenByEntity;
             List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
@@ -845,12 +845,12 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public boolean canBePushed() {
-        return this.riddenByEntity == null;
+        return !this.isBeingRidden();
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.riddenByEntity == null;
+        return !this.isBeingRidden();
     }
 
     @Override
@@ -1034,7 +1034,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if ((entity != null && getIsTamed() && entity instanceof EntityPlayer) || !(entity instanceof EntityLivingBase)) {
                 return false;
             }
-            if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
+            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
                 return true;
             }
             if (entity != this && super.shouldAttackPlayers()) {
@@ -1053,7 +1053,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (i > 0) {
                 attackEntityFrom(DamageSource.fall, i);
             }
-            if ((this.riddenByEntity != null) && (i > 0)) {
+            if ((this.isBeingRidden()) && (i > 0)) {
                 this.riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }
 

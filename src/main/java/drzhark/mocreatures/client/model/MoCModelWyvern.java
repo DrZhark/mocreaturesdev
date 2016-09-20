@@ -5,7 +5,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -785,7 +785,7 @@ public class MoCModelWyvern extends ModelBase {
 
         MoCEntityWyvern wyvern = (MoCEntityWyvern) entity;
         int armor = wyvern.getArmorType();
-        this.isRidden = (wyvern.riddenByEntity != null);
+        this.isRidden = (wyvern.isBeingRidden());
         this.isChested = wyvern.getIsChested();
         this.isSaddled = wyvern.getIsRideable();
         this.flapwings = (wyvern.wingFlapCounter != 0);

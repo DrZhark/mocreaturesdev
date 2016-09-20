@@ -24,14 +24,14 @@ public class MoCRenderTurtle extends MoCRenderMoC<MoCEntityTurtle> {
         this.turtly.swingProgress = entityturtle.swingProgress;
         this.turtly.isHiding = entityturtle.getIsHiding();
 
-        if (!entityturtle.worldObj.isRemote && (entityturtle.ridingEntity != null)) {
+        if (!entityturtle.worldObj.isRemote && (entityturtle.getRidingEntity() != null)) {
 
             GL11.glTranslatef(0.0F, 1.3F, 0.0F);
 
         }
         if (entityturtle.getIsHiding()) {
             adjustHeight(entityturtle, 0.15F * entityturtle.getEdad() * 0.01F);
-        } else if (!entityturtle.getIsHiding() && !entityturtle.getIsUpsideDown() && !entityturtle.isInsideOfMaterial(Material.water)) {
+        } else if (!entityturtle.getIsHiding() && !entityturtle.getIsUpsideDown() && !entityturtle.isInsideOfMaterial(Material.WATER)) {
             adjustHeight(entityturtle, 0.05F * entityturtle.getEdad() * 0.01F);
         }
         if (entityturtle.getIsUpsideDown()) {

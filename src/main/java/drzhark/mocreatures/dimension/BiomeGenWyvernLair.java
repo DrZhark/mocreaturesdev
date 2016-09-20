@@ -8,7 +8,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
 import net.minecraft.world.gen.feature.WorldGenVines;
@@ -16,7 +16,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
-public class BiomeGenWyvernLair extends BiomeGenBase {
+public class BiomeGenWyvernLair extends Biome {
 
     private MoCWorldGenBigTree wyvernGenBigTree;
     private WorldGenShrub worldGenShrub;
@@ -36,7 +36,7 @@ public class BiomeGenWyvernLair extends BiomeGenBase {
         this.maxHeight = 1.5F;
         this.biomeName = "WyvernBiome";
         this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog.getDefaultState(), MoCreatures.mocLeaf.getDefaultState(), 2, 30, 10);
-        this.worldGenShrub = new WorldGenShrub(Blocks.dirt.getDefaultState(), Blocks.air.getDefaultState());
+        this.worldGenShrub = new WorldGenShrub(Blocks.dirt.getDefaultState(), Blocks.AIR.getDefaultState());
         this.theBiomeDecorator = new BiomeWyvernDecorator();
     }
 

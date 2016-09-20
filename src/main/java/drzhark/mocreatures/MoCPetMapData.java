@@ -82,7 +82,7 @@ public class MoCPetMapData extends WorldSavedData {
                     nbt.setInteger("ChunkX", ((Entity) pet).chunkCoordX);
                     nbt.setInteger("ChunkY", ((Entity) pet).chunkCoordY);
                     nbt.setInteger("ChunkZ", ((Entity) pet).chunkCoordZ);
-                    nbt.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionId());
+                    nbt.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionType().getId());
                     nbt.setInteger("PetId", pet.getOwnerPetId());
                 }
             }

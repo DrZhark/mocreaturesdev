@@ -14,7 +14,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -492,7 +492,7 @@ public class MoCModelOstrich extends ModelBase {
         boolean isHiding = entityostrich.getHiding();
         boolean wingFlap = (entityostrich.wingCounter != 0);
         boolean bagged = entityostrich.getIsChested();
-        boolean rider = (entityostrich.riddenByEntity != null);
+        boolean rider = (entityostrich.isBeingRidden());
         int jumpCounter = entityostrich.jumpCounter;
         boolean floating = (entityostrich.isFlyer() && entityostrich.isOnAir());
 

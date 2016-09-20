@@ -26,8 +26,8 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -68,7 +68,7 @@ public class EnvironmentSettings {
     public EntitySpawnType LIVINGTYPE_UNDEFINED = new EntitySpawnType(this, EntitySpawnType.UNDEFINED, 0, 0, 0.0F, false);
     public EntitySpawnType LIVINGTYPE_CREATURE = new EntitySpawnType(this, EntitySpawnType.CREATURE, 400, 40, 0.1F, true);
     public EntitySpawnType LIVINGTYPE_AMBIENT = new EntitySpawnType(this, EntitySpawnType.AMBIENT, 100, 20);
-    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 100, 25, Material.water);
+    public EntitySpawnType LIVINGTYPE_WATERCREATURE = new EntitySpawnType(this, EntitySpawnType.WATERCREATURE, 100, 25, Material.WATER);
     public EntitySpawnType LIVINGTYPE_MONSTER = new EntitySpawnType(this, EntitySpawnType.MONSTER, 1, 70);
     public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 400, 15, 0, 63, 0.0F, false);
     public Map<String, String> worldEnvironmentMap = new HashMap<String, String>();
@@ -493,8 +493,8 @@ public class EnvironmentSettings {
     }
 
     public void initializeBiomes() {
-        for (int i = 0; i < BiomeGenBase.getBiomeGenArray().length; i++) {
-            BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[i];
+        for (int i = 0; i < Biome.getBiomeGenArray().length; i++) {
+            Biome biome = Biome.getBiomeGenArray()[i];
             if (biome == null) {
                 continue;
             }
@@ -587,7 +587,7 @@ public class EnvironmentSettings {
         // scan all biome mods for biome dictionary groups
         for (BiomeDictionary.Type type : BiomeDictionary.Type.values()) {
             List<String> biomes = new ArrayList<String>();
-            for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type)) {
+            for (Biome biome : BiomeDictionary.getBiomesForType(type)) {
                 for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
                     BiomeModData biomeModData = modEntry.getValue();
                     if (biomeModData.hasBiome(biome)) {
@@ -630,7 +630,7 @@ public class EnvironmentSettings {
                 List<String> biomeGroups = entityCategory.get("biomegroups").valueList;
                 for (int i = 0; i < biomeGroups.size(); i++) {
                     String biomeGroupName = biomeGroups.get(i);
-                    List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
+                    List<Biome> spawnBiomes = new ArrayList<Biome>();
                     // check default entity biome config
                     if (this.CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).containsKey(
                             entityData.getEntityMod().getModTag().toUpperCase() + "_" + biomeGroupName)) {
@@ -660,7 +660,7 @@ public class EnvironmentSettings {
                                     if (spawnBiomes.contains(biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j)))) {
                                         continue;
                                     }
-                                    BiomeGenBase biome = biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j));
+                                    Biome biome = biomeModData.getBiome(biomeModData.getModTag() + "|" + biomeProps.valueList.get(j));
                                     if (biome == null) {
                                         continue;
                                     }
@@ -680,7 +680,7 @@ public class EnvironmentSettings {
                             + ", generating defaults...");
                 }
                 ArrayList<String> biomes = new ArrayList<String>();
-                ArrayList<BiomeGenBase> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
+                ArrayList<Biome> entryBiomes = CustomSpawner.entityDefaultSpawnBiomes.get(entityData.getEntityClass().getName());
                 if (entryBiomes != null) {
                     for (int i = 0; i < entryBiomes.size(); i++) {
                         for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
@@ -744,7 +744,7 @@ public class EnvironmentSettings {
                 for (Map.Entry<String, EntityData> entityEntry : modEntry.getValue().getSpawnListFromType(entitySpawnType).entrySet()) {
                     EntityData entityData = entityEntry.getValue();
                     if (entityData.getSpawnBiomes() != null && entityData.getSpawnBiomes().size() > 0 && entityData.getLivingSpawnType() != null) {
-                        BiomeGenBase[] biomesToSpawn = new BiomeGenBase[entityData.getSpawnBiomes().size()];
+                        Biome[] biomesToSpawn = new Biome[entityData.getSpawnBiomes().size()];
                         biomesToSpawn = entityData.getSpawnBiomes().toArray(biomesToSpawn);
                         if (this.debug) {
                             this.envLog.logger.info(entityData.getEntityName() + " canSpawn = " + entityData.getCanSpawn());

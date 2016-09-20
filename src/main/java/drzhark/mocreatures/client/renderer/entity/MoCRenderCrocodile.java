@@ -6,7 +6,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,7 +40,7 @@ public class MoCRenderCrocodile extends RenderLiving<MoCEntityCrocodile> {
         }
         stretch(entitycrocodile);
         if (entitycrocodile.getIsSitting()) {
-            if (!entitycrocodile.isInsideOfMaterial(Material.water)) {
+            if (!entitycrocodile.isInsideOfMaterial(Material.WATER)) {
                 adjustHeight(entitycrocodile, 0.2F);
             } else {
                 //adjustHeight(entitycrocodile, 0.1F);

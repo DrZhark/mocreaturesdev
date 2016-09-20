@@ -1,5 +1,25 @@
 package drzhark.mocreatures.client;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
@@ -87,7 +107,6 @@ import drzhark.mocreatures.client.model.MoCModelWolf;
 import drzhark.mocreatures.client.model.MoCModelWraith;
 import drzhark.mocreatures.client.model.MoCModelWyvern;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderBear;
-import drzhark.mocreatures.client.renderer.entity.MoCRenderBigCat;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderBird;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderBunny;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderButterfly;
@@ -192,26 +211,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageInstaSpawn;
 import drzhark.mocreatures.utils.MoCLog;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class MoCClientProxy extends MoCProxy {
 
@@ -253,8 +252,6 @@ public class MoCClientProxy extends MoCProxy {
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityBoar.class, new MoCRenderMoC(new MoCModelBoar(), 0.5F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityBear.class, new MoCRenderBear(new MoCModelBear(), 0.7F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityDuck.class, new MoCRenderMoC(new MoCModelDuck(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(MoCEntityBigCat.class, new MoCRenderBigCat(new MoCModelBigCat2(), new MoCModelBigCat1(),
-                0.7F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityDeer.class, new MoCRenderMoC(new MoCModelDeer(), 0.5F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityWWolf.class, new MoCRenderWWolf(new MoCModelWolf(), 0.7F));
         RenderingRegistry.registerEntityRenderingHandler(MoCEntityWraith.class, new MoCRenderWraith(new MoCModelWraith(), 0.5F));
@@ -1263,7 +1260,7 @@ public class MoCClientProxy extends MoCProxy {
 
     @Override
     public void printMessageToPlayer(String msg) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation(msg));
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentTranslation(msg));
     }
 
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {

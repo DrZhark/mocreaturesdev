@@ -7,7 +7,7 @@ import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class EntityAIWanderMoC2 extends EntityAIBase {
@@ -39,7 +39,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
         if (this.entity instanceof IMoCEntity && ((IMoCEntity) this.entity).isMovementCeased()) {
             return false;
         }
-        if (this.entity.riddenByEntity != null && !(this.entity instanceof MoCEntityAnt || this.entity instanceof MoCEntityMob)) {
+        if (this.entity.isBeingRidden() && !(this.entity instanceof MoCEntityAnt || this.entity instanceof MoCEntityMob)) {
             return false;
         }
 

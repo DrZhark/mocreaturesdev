@@ -1,14 +1,14 @@
 package drzhark.mocreatures.client;
 
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MoCEntityFXVacuum extends EntityFX {
+public class MoCEntityFXVacuum extends Particle {
 
     private final float portalParticleScale;
     private final double portalPosX;
@@ -29,14 +29,13 @@ public class MoCEntityFXVacuum extends EntityFX {
         this.portalPosX = this.posX = par2;
         this.portalPosY = this.posY = par4;// + 0.7D;
         this.portalPosZ = this.posZ = par6;
-        this.noClip = true;
         this.portalParticleScale = this.particleScale = this.rand.nextFloat() * 0.2F + 0.5F;
         this.setParticleTextureIndex(partTexture);
         this.particleMaxAge = (int) (Math.random() * 10.0D) + 30;
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge;
         var8 = 1.0F - var8;
         var8 *= var8;
@@ -62,16 +61,13 @@ public class MoCEntityFXVacuum extends EntityFX {
         return var4 | var5 << 16;
     }
 
-    /**
-     * Gets how bright this entity is.
-     */
-    @Override
+    /*@Override
     public float getBrightness(float par1) {
         float var2 = super.getBrightness(par1);
         float var3 = (float) this.particleAge / (float) this.particleMaxAge;
         var3 = var3 * var3 * var3 * var3;
         return var2 * (1.0F - var3) + var3;
-    }
+    }*/
 
     /**
      * Called to update the entity's position/logic.
@@ -90,7 +86,7 @@ public class MoCEntityFXVacuum extends EntityFX {
         this.posZ = this.portalPosZ + this.motionZ * var1;
 
         if (this.particleAge++ >= this.particleMaxAge) {
-            this.setDead();
+            this.setExpired();
         }
     }
 }

@@ -14,7 +14,7 @@ import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -25,10 +25,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -48,24 +48,28 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         } else {
             setAdult(true);
         }
-        this.tasks.addTask(1, new EntityAISwimming(this));
+        
+    }
+
+    protected void initEntityAI() {
+    	this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
-        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }
 
     /**
@@ -105,8 +109,8 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             } else {
                 setType(3);
             }
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(getAttackStrength());
+            this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
+            this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getAttackStrength());
             this.setHealth(getMaxHealth());
         }
     }
@@ -234,7 +238,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.ridingEntity == entity)) {
+            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
                 return true;
             }
             if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && this.getType() != 3) {
@@ -271,26 +275,26 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         /**
          * panda bears and cubs will sit down every now and then
          */
-        if ((MoCreatures.isServer()) && !getIsTamed() && (getType() == 3 || (!getIsAdult() && getEdad() < 60)) && (this.rand.nextInt(300) == 0)) {
+        if ((MoCreatures.isServer()) && (getType() == 3 || (!getIsAdult() && getEdad() < 60)) && (this.rand.nextInt(300) == 0)) {
             setBearState(2);
         }
 
         /**
-         * Sitting non tamed bears will resume on fours stance every now and then
+         * Sitting bears will resume on fours stance every now and then
          */
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && (this.rand.nextInt(800) == 0)) {
+        if ((MoCreatures.isServer()) && (getBearState() == 2) && (this.rand.nextInt(800) == 0)) {
             setBearState(0);
         }
 
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && !this.getNavigator().noPath()) {
+        if ((MoCreatures.isServer()) && (getBearState() == 2) && !this.getNavigator().noPath()) {
             setBearState(0);
         }
 
         /**
-         * Adult non tamed non panda bears will stand on hind legs if close to player
+         * Adult non panda bears will stand on hind legs if close to player
          */
 
-        if ((MoCreatures.isServer()) && !getIsTamed() && this.standingCounter == 0 && getBearState() != 2 && getIsAdult() && getType() != 3) {
+        if ((MoCreatures.isServer()) && this.standingCounter == 0 && getBearState() != 2 && getIsAdult() && getType() != 3) {
             EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 4D);
             if ((entityplayer1 != null && this.canEntityBeSeen(entityplayer1)) || (this.rand.nextInt(2000) == 0)) {
                 this.standingCounter = 1;
@@ -346,14 +350,6 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip)) {
-            if (getBearState() == 0) {
-                setBearState(2);
-            }else {
-                setBearState(0);
-            }
-            return true;
-        }
         return false;
     }
 
@@ -391,7 +387,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         int k = MathHelper.floor_double(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(4);
@@ -422,7 +418,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
         if (MoCreatures.isServer() && this.attackCounter == 0 && getBearState() == 1) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             this.attackCounter = 1;
         }
     }

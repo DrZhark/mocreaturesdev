@@ -121,8 +121,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -182,7 +182,7 @@ public class MoCreatures {
     public static Block mocBlock;
 
     public static ArrayList<String> multiBlockNames = new ArrayList<String>();
-    public static BiomeGenBase WyvernLairBiome;
+    public static Biome WyvernLairBiome;
     public static Item staffPortal;
     public static Item staffTeleport;
     public static Item builderHammer;
@@ -373,7 +373,7 @@ public class MoCreatures {
         DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         // ***MUST REGISTER BIOMES AT THIS POINT TO MAKE SURE OUR ENTITIES GET ALL BIOMES FROM DICTIONARY****
         MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
-        BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.MAGICAL, Type.END);
+        BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.FOREST, Type.END);
         BiomeDictionary.registerAllBiomes();
         registerEntities();
     }
@@ -517,7 +517,7 @@ public class MoCreatures {
         mocEntityMap.put("Boar", new MoCEntityData("Boar", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBoar.class, 8, 2, 2),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS))));
         mocEntityMap.put("Bunny", new MoCEntityData("Bunny", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBunny.class, 8, 2, 3),
-                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS, Type.SNOWY, Type.MAGICAL))));
+                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS, Type.SNOWY))));
         mocEntityMap.put("Crocodile", new MoCEntityData("Crocodile", 2, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityCrocodile.class, 6, 1,
                 2), new ArrayList<Type>(Arrays.asList(Type.SWAMP))));
         mocEntityMap.put("Deer", new MoCEntityData("Deer", 2, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityDeer.class, 8, 1, 2),
@@ -554,7 +554,7 @@ public class MoCreatures {
         mocEntityMap.put(
                 "Snake",
                 new MoCEntityData("Snake", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntitySnake.class, 8, 1, 2), new ArrayList<Type>(Arrays
-                        .asList(Type.SANDY, Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP, Type.WASTELAND, Type.MAGICAL))));
+                        .asList(Type.SANDY, Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP, Type.WASTELAND))));
         mocEntityMap.put("Tiger", new MoCEntityData("Tiger", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityTiger.class, 6, 1, 2),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS))));
         mocEntityMap.put("Turkey", new MoCEntityData("Turkey", 2, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityTurkey.class, 8, 1, 2),
@@ -564,7 +564,7 @@ public class MoCreatures {
         mocEntityMap.put("WildHorse", new MoCEntityData("WildHorse", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityHorse.class, 8, 1, 4),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS))));
         mocEntityMap.put("Wyvern", new MoCEntityData("Wyvern", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3),
-                new ArrayList<Type>(Arrays.asList(Type.MAGICAL))));
+                new ArrayList<Type>()));
         // water creatures
         mocEntityMap.put("Dolphin", new MoCEntityData("Dolphin", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityDolphin.class, 6, 2,
                 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.WATER, Type.OCEAN, Type.RIVER))));
@@ -653,7 +653,7 @@ public class MoCreatures {
             }
             SpawnListEntry spawnEntry = entityData.getSpawnListEntry();
             for (BiomeDictionary.Type type : entityData.getBiomeTypes()) {
-                for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type)) {
+                for (Biome biome : BiomeDictionary.getBiomesForType(type)) {
                     if (!biome.getSpawnableList(entityData.getType()).contains(spawnEntry)) {
                         biome.getSpawnableList(entityData.getType()).add(spawnEntry);
                     }
@@ -873,20 +873,20 @@ public class MoCreatures {
 
         GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.paper, Items.feather});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(Items.leather, 1), new Object[] {animalHide});
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.LEATHER, 1), new Object[] {animalHide});
 
         GameRegistry.addShapelessRecipe(new ItemStack(Blocks.wool, 1), new Object[] {fur});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordNether, 1), new Object[] {Items.diamond_sword, scorpStingNether, scorpStingNether,
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordNether, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingNether, scorpStingNether,
                 scorpStingNether});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordFrost, 1), new Object[] {Items.diamond_sword, scorpStingFrost, scorpStingFrost,
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordFrost, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingFrost, scorpStingFrost,
                 scorpStingFrost});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordCave, 1), new Object[] {Items.diamond_sword, scorpStingCave, scorpStingCave,
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordCave, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingCave, scorpStingCave,
                 scorpStingCave});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordDirt, 1), new Object[] {Items.diamond_sword, scorpStingDirt, scorpStingDirt,
+        GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordDirt, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingDirt, scorpStingDirt,
                 scorpStingDirt});
 
         GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] {new ItemStack(turtleraw, 1), new ItemStack(Items.bowl, 1)});
@@ -894,42 +894,42 @@ public class MoCreatures {
         GameRegistry.addShapelessRecipe(new ItemStack(essencelight, 1), new Object[] {essenceundead, essencefire, essencedarkness});
 
         GameRegistry.addRecipe(new ItemStack(fishnet, 1),
-                new Object[] {" # ", "S#S", "#S#", Character.valueOf('#'), Items.string, Character.valueOf('S'), sharkteeth});
+                new Object[] {" # ", "S#S", "#S#", Character.valueOf('#'), Items.STRING, Character.valueOf('S'), sharkteeth});
 
         GameRegistry.addRecipe(new ItemStack(tusksWood, 1),
-                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Blocks.planks, Character.valueOf('R'), Items.lead});
+                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Blocks.PLANKS, Character.valueOf('R'), Items.LEAD});
 
         GameRegistry.addRecipe(new ItemStack(tusksIron, 1),
-                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Items.iron_ingot, Character.valueOf('R'), Items.lead});
+                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Items.IRON_INGOT, Character.valueOf('R'), Items.LEAD});
 
         GameRegistry.addRecipe(new ItemStack(tusksDiamond, 1),
-                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Items.diamond, Character.valueOf('R'), Items.lead});
+                new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Items.DIAMOND, Character.valueOf('R'), Items.LEAD});
 
         GameRegistry.addRecipe(new ItemStack(mammothPlatform, 1),
-                new Object[] {"WRW", "PPP", "WRW", Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.lead, Character.valueOf('P'),
-                        Blocks.planks});
+                new Object[] {"WRW", "PPP", "WRW", Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.LEAD, Character.valueOf('P'),
+                        Blocks.PLANKS});
 
         GameRegistry.addRecipe(new ItemStack(elephantChest, 1),
                 new Object[] {" W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0),
-                        Character.valueOf('C'), Blocks.chest});
+                        Character.valueOf('C'), Blocks.CHEST});
 
         GameRegistry.addRecipe(new ItemStack(elephantHarness, 1),
                 new Object[] {"HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0),
-                        Character.valueOf('I'), Items.iron_ingot});
+                        Character.valueOf('I'), Items.IRON_INGOT});
 
         GameRegistry.addRecipe(new ItemStack(elephantHowdah, 1),
-                new Object[] {"SRS", "RYR", "SRS", Character.valueOf('S'), Items.stick, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14),
+                new Object[] {"SRS", "RYR", "SRS", Character.valueOf('S'), Items.STICK, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14),
                         Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4)});
 
         GameRegistry.addRecipe(new ItemStack(elephantGarment, 1), new Object[] {"pyg", "RMR", "BYB", Character.valueOf('R'),
                 new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4), Character.valueOf('B'),
-                new ItemStack(Blocks.wool, 1, 11), Character.valueOf('M'), medallion, Character.valueOf('p'), new ItemStack(Items.dye, 1, 9),
-                Character.valueOf('y'), new ItemStack(Items.dye, 1, 11), Character.valueOf('g'), new ItemStack(Items.dye, 1, 10)});
+                new ItemStack(Blocks.wool, 1, 11), Character.valueOf('M'), medallion, Character.valueOf('p'), new ItemStack(Items.DYE, 1, 9),
+                Character.valueOf('y'), new ItemStack(Items.DYE, 1, 11), Character.valueOf('g'), new ItemStack(Items.DYE, 1, 10)});
 
         //Items.dye.itemID
         GameRegistry.addRecipe(new ItemStack(ratBurger, 1),
-                new Object[] {"SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.bread, Character.valueOf('S'),
-                        Items.pumpkin_seeds, Character.valueOf('G'), Items.wheat_seeds});
+                new Object[] {"SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.BREAD, Character.valueOf('S'),
+                        Items.PUMPKIN_SEEDS, Character.valueOf('G'), Items.WHEAT_SEEDS});
 
         GameRegistry.addRecipe(new ItemStack(scorpPlateFrost, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), chitinFrost});
 
@@ -971,8 +971,8 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsHide, 1), new Object[] {"X X", "X X", Character.valueOf('X'), animalHide});
 
-        GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] {"  D", "CDC", "DCD", Character.valueOf('D'), Items.diamond,
-                Character.valueOf('C'), Blocks.glass});
+        GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] {"  D", "CDC", "DCD", Character.valueOf('D'), Items.DIAMOND,
+                Character.valueOf('C'), Blocks.GLASS});
 
         //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 15) });
 
@@ -984,18 +984,18 @@ public class MoCreatures {
                 new Object[] {"X", "Y", "Z", Character.valueOf('X'), essenceundead, Character.valueOf('Y'), essencefire, Character.valueOf('Z'),
                         essencedarkness});
 
-        GameRegistry.addRecipe(new ItemStack(essenceundead, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.rotten_flesh,
-                Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Items.glass_bottle});
+        GameRegistry.addRecipe(new ItemStack(essenceundead, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.ROTTEN_FLESH,
+                Character.valueOf('Y'), heartundead, Character.valueOf('Z'), Items.GLASS_BOTTLE});
 
-        GameRegistry.addRecipe(new ItemStack(essencefire, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.blaze_powder,
-                Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.glass_bottle});
+        GameRegistry.addRecipe(new ItemStack(essencefire, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.BLAZE_POWDER,
+                Character.valueOf('Y'), heartfire, Character.valueOf('Z'), Items.GLASS_BOTTLE});
 
         GameRegistry.addRecipe(new ItemStack(essencefire, 1),
-                new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Blocks.fire, Character.valueOf('Y'), heartfire, Character.valueOf('Z'),
-                        Items.glass_bottle});
+                new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Blocks.FIRE, Character.valueOf('Y'), heartfire, Character.valueOf('Z'),
+                        Items.GLASS_BOTTLE});
 
-        GameRegistry.addRecipe(new ItemStack(essencedarkness, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.ender_pearl,
-                Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.glass_bottle});
+        GameRegistry.addRecipe(new ItemStack(essencedarkness, 1), new Object[] {" X ", " Y ", " Z ", Character.valueOf('X'), Items.ENDER_PEARL,
+                Character.valueOf('Y'), heartdarkness, Character.valueOf('Z'), Items.GLASS_BOTTLE});
 
         GameRegistry.addRecipe(new ItemStack(chestFur, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), fur});
 
@@ -1009,78 +1009,78 @@ public class MoCreatures {
         //        Items.iron_ingot,});
 
         GameRegistry.addRecipe(new ItemStack(petamulet, 1),
-                new Object[] {"X X", " Z ", "X X", Character.valueOf('X'), Items.gold_nugget, Character.valueOf('Z'), Items.diamond});
+                new Object[] {"X X", " Z ", "X X", Character.valueOf('X'), Items.GOLD_NUGGET, Character.valueOf('Z'), Items.DIAMOND});
 
         GameRegistry.addRecipe(
                 new ItemStack(amuletbone, 1),
-                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget,
-                        Character.valueOf('Z'), Items.ender_pearl});
+                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Items.BONE, Character.valueOf('X'), Items.GOLD_NUGGET,
+                        Character.valueOf('Z'), Items.ENDER_PEARL});
 
         GameRegistry.addRecipe(
                 new ItemStack(amuletghost, 1),
-                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Items.bone, Character.valueOf('X'), Items.gold_nugget,
-                        Character.valueOf('Z'), Items.ghast_tear});
+                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Items.BONE, Character.valueOf('X'), Items.GOLD_NUGGET,
+                        Character.valueOf('Z'), Items.GHAST_TEAR});
 
         GameRegistry.addRecipe(
                 new ItemStack(amuletfairy, 1),
-                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget,
+                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.FIRE, Character.valueOf('X'), Items.GOLD_NUGGET,
                         Character.valueOf('Z'), unicornhorn});
 
         GameRegistry.addRecipe(
                 new ItemStack(amuletfairy, 1),
-                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget,
+                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.FIRE, Character.valueOf('X'), Items.GOLD_NUGGET,
                         Character.valueOf('Z'), essencelight});
 
         GameRegistry.addRecipe(
                 new ItemStack(amuletpegasus, 1),
-                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.fire, Character.valueOf('X'), Items.gold_nugget,
-                        Character.valueOf('Z'), Items.diamond});
+                new Object[] {"#X#", "XZX", "#X#", Character.valueOf('#'), Blocks.FIRE, Character.valueOf('X'), Items.GOLD_NUGGET,
+                        Character.valueOf('Z'), Items.DIAMOND});
 
         GameRegistry.addRecipe(new ItemStack(sharksword, 1),
-                new Object[] {"#X#", "#X#", " X ", Character.valueOf('#'), sharkteeth, Character.valueOf('X'), Items.stick,});
+                new Object[] {"#X#", "#X#", " X ", Character.valueOf('#'), sharkteeth, Character.valueOf('X'), Items.STICK,});
 
         //GameRegistry.addRecipe(new ItemStack(fishbowl_e, 1), new Object[] {"# #", "# #", "###", Character.valueOf('#'), Blocks.glass,});
 
         //GameRegistry.addRecipe(new ItemStack(rope, 1), new Object[] { "# #", " # ", "# #", Character.valueOf('#'), Item.silk, });
 
-        GameRegistry.addShapelessRecipe(new ItemStack(petfood, 4), new Object[] {new ItemStack(Items.fish, 1), new ItemStack(Items.porkchop, 1)});
+        GameRegistry.addShapelessRecipe(new ItemStack(petfood, 4), new Object[] {new ItemStack(Items.FISH, 1), new ItemStack(Items.PORKCHOP, 1)});
 
-        GameRegistry.addRecipe(new ItemStack(woolball, 1), new Object[] {" # ", "# #", " # ", Character.valueOf('#'), Items.string,});
+        GameRegistry.addRecipe(new ItemStack(woolball, 1), new Object[] {" # ", "# #", " # ", Character.valueOf('#'), Items.STRING,});
 
         GameRegistry.addRecipe(new ItemStack(litterbox, 1),
-                new Object[] {"###", "#X#", "###", Character.valueOf('#'), Blocks.planks, Character.valueOf('X'), Blocks.sand,});
+                new Object[] {"###", "#X#", "###", Character.valueOf('#'), Blocks.PLANKS, Character.valueOf('X'), Blocks.SAND,});
 
         GameRegistry.addRecipe(
                 new ItemStack(medallion, 1),
-                new Object[] {"# #", "XZX", " X ", Character.valueOf('#'), Items.leather, Character.valueOf('Z'), Items.diamond,
-                        Character.valueOf('X'), Items.gold_ingot,});
+                new Object[] {"# #", "XZX", " X ", Character.valueOf('#'), Items.LEATHER, Character.valueOf('Z'), Items.DIAMOND,
+                        Character.valueOf('X'), Items.GOLD_INGOT,});
 
-        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] {"# #", " X ", Character.valueOf('#'), Items.leather,
-                Character.valueOf('X'), Items.gold_ingot,});
+        GameRegistry.addRecipe(new ItemStack(medallion, 1), new Object[] {"# #", " X ", Character.valueOf('#'), Items.LEATHER,
+                Character.valueOf('X'), Items.GOLD_INGOT,});
 
         GameRegistry.addRecipe(new ItemStack(whip, 1), new Object[] {"#X#", "X X", "# Z", Character.valueOf('#'), bigcatclaw, Character.valueOf('X'),
-                Items.leather, Character.valueOf('Z'), Items.iron_ingot});
+                Items.LEATHER, Character.valueOf('Z'), Items.IRON_INGOT});
 
         GameRegistry.addRecipe(new ItemStack(horsesaddle, 1),
-                new Object[] {"XXX", "X#X", "# #", Character.valueOf('#'), Items.iron_ingot, Character.valueOf('X'), Items.leather});
+                new Object[] {"XXX", "X#X", "# #", Character.valueOf('#'), Items.IRON_INGOT, Character.valueOf('X'), Items.LEATHER});
 
-        GameRegistry.addRecipe(new ItemStack(haystack, 1), new Object[] {"XXX", "XXX", Character.valueOf('X'), Items.wheat});
+        GameRegistry.addRecipe(new ItemStack(haystack, 1), new Object[] {"XXX", "XXX", Character.valueOf('X'), Items.WHEAT});
 
-        GameRegistry.addRecipe(new ItemStack(Items.wheat, 6), new Object[] {"X", Character.valueOf('X'), haystack});
+        GameRegistry.addRecipe(new ItemStack(Items.WHEAT, 6), new Object[] {"X", Character.valueOf('X'), haystack});
 
-        GameRegistry.addRecipe(new ItemStack(sugarlump, 1), new Object[] {"XX", "##", Character.valueOf('X'), Items.sugar, Character.valueOf('#'),
-                Items.sugar});
+        GameRegistry.addRecipe(new ItemStack(sugarlump, 1), new Object[] {"XX", "##", Character.valueOf('X'), Items.SUGAR, Character.valueOf('#'),
+                Items.SUGAR});
 
-        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] {"X", "#", Character.valueOf('X'), Items.saddle, Character.valueOf('#'),
-                Items.iron_ingot});
+        GameRegistry.addRecipe(new ItemStack(horsesaddle, 1), new Object[] {"X", "#", Character.valueOf('X'), Items.SADDLE, Character.valueOf('#'),
+                Items.IRON_INGOT});
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), sharkteeth});
+        GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_CHESTPLATE, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), sharkteeth});
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_helmet, 1), new Object[] {"XXX", "X X", Character.valueOf('X'), sharkteeth});
+        GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_HELMET, 1), new Object[] {"XXX", "X X", Character.valueOf('X'), sharkteeth});
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings, 1), new Object[] {"XXX", "X X", "X X", Character.valueOf('X'), sharkteeth});
+        GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_LEGGINGS, 1), new Object[] {"XXX", "X X", "X X", Character.valueOf('X'), sharkteeth});
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots, 1), new Object[] {"X X", "X X", Character.valueOf('X'), sharkteeth});
+        GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_BOOTS, 1), new Object[] {"X X", "X X", Character.valueOf('X'), sharkteeth});
 
         GameRegistry.addRecipe(new ItemStack(plateCroc, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), hideCroc});
 
@@ -1091,12 +1091,12 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(bootsCroc, 1), new Object[] {"X X", "X X", Character.valueOf('X'), hideCroc});
 
         for (int i = 0; i < 16; i++) {
-            GameRegistry.addShapelessRecipe(new ItemStack(kittybed[Math.abs(i - 15)], 1), new Object[] {new ItemStack(Items.dye, 1, i),
+            GameRegistry.addShapelessRecipe(new ItemStack(kittybed[i], 1), new Object[] {new ItemStack(Items.DYE, 1, i),
                     new ItemStack(kittybed[0], 1)});
 
             GameRegistry.addRecipe(new ItemStack(kittybed[i], 1),
-                    new Object[] {"###", "#X#", "Z  ", Character.valueOf('#'), Blocks.planks, Character.valueOf('X'),
-                            new ItemStack(Blocks.wool, 1, i), Character.valueOf('Z'), Items.iron_ingot,});
+                    new Object[] {"###", "#X#", "Z  ", Character.valueOf('#'), Blocks.PLANKS, Character.valueOf('X'),
+                            new ItemStack(Blocks.wool, 1, i), Character.valueOf('Z'), Items.IRON_INGOT,});
             String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             LanguageRegistry.addName(new ItemStack(kittybed[i], 1), (s + " Kitty Bed"));
@@ -1108,15 +1108,15 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(
                 new ItemStack(staffPortal, 1),
-                new Object[] {"  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), unicornhorn,
-                        Character.valueOf('R'), Items.blaze_rod});
+                new Object[] {"  E", " U ", "R  ", Character.valueOf('E'), Items.ENDER_EYE, Character.valueOf('U'), unicornhorn,
+                        Character.valueOf('R'), Items.BLAZE_ROD});
 
         GameRegistry.addRecipe(
                 new ItemStack(staffPortal, 1),
-                new Object[] {"  E", " U ", "R  ", Character.valueOf('E'), Items.ender_eye, Character.valueOf('U'), essencelight,
-                        Character.valueOf('R'), Items.blaze_rod});
+                new Object[] {"  E", " U ", "R  ", Character.valueOf('E'), Items.ENDER_EYE, Character.valueOf('U'), essencelight,
+                        Character.valueOf('R'), Items.BLAZE_ROD});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(Items.dye, 1, 15), new Object[] {sharkteeth});
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.DYE, 1, 15), new Object[] {sharkteeth});
 
     }
 

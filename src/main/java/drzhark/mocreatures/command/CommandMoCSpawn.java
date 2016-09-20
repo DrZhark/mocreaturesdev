@@ -102,7 +102,7 @@ public class CommandMoCSpawn extends CommandBase {
             }
             player.worldObj.spawnEntityInWorld(specialEntity);
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(specialEntity.getEntityId()),
-                    new TargetPoint(player.worldObj.provider.getDimensionId(), player.posX, player.posY, player.posZ, 64));
+                    new TargetPoint(player.worldObj.provider.getDimensionType().getId(), player.posX, player.posY, player.posZ, 64));
             MoCTools.playCustomSound(specialEntity, "appearmagic", player.worldObj);
         } else {
             par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "ERROR:" + EnumChatFormatting.WHITE

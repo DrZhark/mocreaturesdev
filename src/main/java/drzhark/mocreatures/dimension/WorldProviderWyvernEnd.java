@@ -2,7 +2,7 @@ package drzhark.mocreatures.dimension;
 
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.IChunkProvider;

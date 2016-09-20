@@ -7,10 +7,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -36,7 +36,7 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
         int k = MathHelper.floor_double(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
         try {
             if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
                 setType(2); //snow leopard
@@ -67,7 +67,7 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
             return false;
         }
 
-        if (getIsRideable() && getIsAdult() && (this.riddenByEntity == null)) {
+        if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
             setSitting(false);
@@ -84,25 +84,13 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
             return "Panther";
         }
-        if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
-            return "Tiger";
-        }
-        if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return "Lion";
-        }
         return "Leopard";
     }
 
     @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return 3; //panthard
-        }
-        if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
-            return 4; //leoger
-        }
-        if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return 4; //liard
+            return 3; //jaglion
         }
         return this.getType();
     }
@@ -110,9 +98,7 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
     @Override
     public boolean compatibleMate(Entity mate) {
         return (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == this.getType())
-                || (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1)
-                || (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1)
-                || (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2);
+                || (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1);
     }
 
     @Override

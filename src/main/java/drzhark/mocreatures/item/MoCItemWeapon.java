@@ -197,7 +197,7 @@ public class MoCItemWeapon extends MoCItem {
     @SuppressWarnings("deprecation")
     public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
         Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier",
+        multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier",
                 (double) this.attackDamage, 0));
         return multimap;
     }

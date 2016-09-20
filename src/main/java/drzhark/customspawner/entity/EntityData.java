@@ -6,8 +6,8 @@ import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.guiapi.widget.WidgetSimplewindow;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,9 +36,9 @@ public class EntityData {
     @SideOnly(Side.CLIENT)
     private WidgetSimplewindow entityWindow;
 
-    private List<BiomeGenBase> spawnBiomes = new ArrayList<BiomeGenBase>();
+    private List<Biome> spawnBiomes = new ArrayList<Biome>();
     private List<String> biomeGroups = new ArrayList<String>();
-    private Map<String, List<BiomeGenBase>> biomeGroupSpawnMap = new HashMap<String, List<BiomeGenBase>>();
+    private Map<String, List<Biome>> biomeGroupSpawnMap = new HashMap<String, List<Biome>>();
     private int frequency = 8;
     private int minGroup = 1;
     private int maxGroup = 1;
@@ -235,25 +235,25 @@ public class EntityData {
         this.entityWindow = window;
     }
 
-    public void addBiomeGroupSpawnMap(String biomeGroupName, List<BiomeGenBase> biomes) {
+    public void addBiomeGroupSpawnMap(String biomeGroupName, List<Biome> biomes) {
         this.biomeGroupSpawnMap.put(biomeGroupName, biomes);
     }
 
-    public List<BiomeGenBase> getBiomeGroupSpawnMap(String biomeGroupName) {
+    public List<Biome> getBiomeGroupSpawnMap(String biomeGroupName) {
         return this.biomeGroupSpawnMap.get(biomeGroupName);
     }
 
-    public void addSpawnBiome(BiomeGenBase biome) {
+    public void addSpawnBiome(Biome biome) {
         if (!this.spawnBiomes.contains(biome)) {
             this.spawnBiomes.add(biome);
         }
     }
 
-    public void removeSpawnBiome(BiomeGenBase biome) {
+    public void removeSpawnBiome(Biome biome) {
         this.spawnBiomes.remove(biome);
     }
 
-    public List<BiomeGenBase> getSpawnBiomes() {
+    public List<Biome> getSpawnBiomes() {
         return this.spawnBiomes;
     }
 

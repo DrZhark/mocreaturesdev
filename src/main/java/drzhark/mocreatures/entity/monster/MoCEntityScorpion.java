@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
@@ -25,10 +25,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -55,7 +55,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             }
         }
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(7, new EntityAIFleeSun(this, 1.0D));
         this.tasks.addTask(5, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
@@ -66,9 +66,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(18.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(18.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     public void setPoisoning(boolean flag) {
         if (flag && MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.isPoisoning = flag;
     }
@@ -165,8 +165,8 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void onLivingUpdate() {
 
-        if (!this.onGround && (this.ridingEntity != null)) {
-            this.rotationYaw = this.ridingEntity.rotationYaw;
+        if (!this.onGround && (this.getRidingEntity() != null)) {
+            this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
 
         if (this.mouthCounter != 0 && this.mouthCounter++ > 50) {
@@ -181,7 +181,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             this.armCounter = 0;
         }
 
-        if (MoCreatures.isServer() && this.riddenByEntity == null && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
+        if (MoCreatures.isServer() && !this.isBeingRidden() && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
             MoCTools.findMobRider(this);
             /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
@@ -190,7 +190,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                     continue;
                 }
                 EntityMob entitymob = (EntityMob) entity;
-                if (entitymob.ridingEntity == null
+                if (entitymob.getRidingEntity() == null
                         && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
                     entitymob.mountEntity(this);
                     break;
@@ -266,7 +266,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     public void swingArm() {
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -311,7 +311,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     protected String getLivingSound() {
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         return "mocreatures:scorpiongrunt";
     }
@@ -384,7 +384,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         int k = MathHelper.floor_double(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        BiomeGenBase currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
 
         if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
             setType(4);
@@ -442,7 +442,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             return false;
         }
 
-        if (MoCreatures.isServer() && this.ridingEntity == null && !getIsAdult() && getEdad() < 60) {
+        if (MoCreatures.isServer() && this.getRidingEntity() == null && !getIsAdult() && getEdad() < 60) {
             MoCEntityPetScorpion entitypetscorpy = new MoCEntityPetScorpion(this.worldObj);
             entitypetscorpy.setPosition(this.posX, this.posY, this.posZ);
             entitypetscorpy.setAdult(false);

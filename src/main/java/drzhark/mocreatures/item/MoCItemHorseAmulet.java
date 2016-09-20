@@ -135,7 +135,7 @@ public class MoCItemHorseAmulet extends MoCItem {
 
                     if (entityplayer.worldObj.spawnEntityInWorld(storedCreature)) {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(storedCreature.getEntityId()), new TargetPoint(
-                                entityplayer.worldObj.provider.getDimensionId(), entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
+                                entityplayer.worldObj.provider.getDimensionType().getId(), entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
                         MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
                         //gives an empty amulet
                         if (this.spawnClass == 100 || this.creatureType == 21 || this.creatureType == 22) {

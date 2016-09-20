@@ -23,7 +23,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             return false;
         }
 
-        if (this.riddenByEntity == null && getType() == 1) {
+        if (!this.isBeingRidden() && getType() == 1) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
             entityplayer.posY = this.posY;

@@ -13,7 +13,7 @@ public class MoCModelManticore extends MoCModelNewBigCat {
         this.flapwings = (bigcat.wingFlapCounter != 0);
         this.floating = (this.isFlyer && bigcat.isOnAir());
         this.poisoning = bigcat.swingingTail();
-        this.isRidden = (bigcat.riddenByEntity != null);
+        this.isRidden = (bigcat.isBeingRidden());
         this.hasMane = true;
         this.hasSaberTeeth = true;
         this.onAir = (bigcat.isOnAir());

@@ -19,7 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -35,7 +35,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -68,9 +68,9 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         setTamed(false);
         this.stepHeight = 1.0F;
 
-        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
         //this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 0.8D, 4D));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIFollowOwnerPlayer(this, 1D, 2F, 10F));
@@ -85,10 +85,10 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(8.0D);
     }
 
@@ -97,9 +97,9 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
      */
     @Override
     public void selectType() {
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
         this.setHealth(getMaxHealth());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(calculateAttackDmg());
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(calculateAttackDmg());
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(getAttackRange());
         if (getIsAdult()) {
             setEdad(getMaxEdad());
@@ -203,7 +203,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         Entity entity = damagesource.getEntity();
-        if ((this.riddenByEntity != null) && (entity == this.riddenByEntity)) {
+        if ((this.isBeingRidden()) && (entity == this.riddenByEntity)) {
             return false;
         }
 
@@ -323,6 +323,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             }
         }
         super.onDeath(damagesource);
+
     }
 
     public void spawnGhost() {
@@ -379,11 +380,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                     setAdult(true);
                 }
             }
-            
-            if (!getIsGhost() && getEdad() <10)
-            {
-            	this.setDead();
-            }
 
             /*if (getHasEaten() && rand.nextInt(300) == 0)
             {
@@ -394,7 +390,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         if (MoCreatures.isServer() && isFlyer() && isOnAir()) {
             float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
             int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
-            if (this.riddenByEntity == null || wingFlapFreq < 5) {
+            if (!this.isBeingRidden() || wingFlapFreq < 5) {
                 wingFlapFreq = 5;
             }
             if (this.rand.nextInt(wingFlapFreq) == 0) {
@@ -472,7 +468,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
             this.gestationtime++;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
 
             if (this.gestationtime <= 50) {
                 continue;
@@ -525,7 +521,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public boolean readytoBreed() {
-        return this.riddenByEntity == null && this.ridingEntity == null && this.getIsTamed() && this.getHasEaten() && this.getIsAdult()
+        return !this.isBeingRidden() && this.getRidingEntity() == null && this.getIsTamed() && this.getHasEaten() && this.getIsAdult()
                 && !this.getIsGhost();
     }
 
@@ -533,7 +529,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         if (this.wingFlapCounter == 0) {
             this.wingFlapCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -716,7 +712,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             if (i > 1F) {
                 attackEntityFrom(DamageSource.fall, i);
             }
-            if ((this.riddenByEntity != null) && (i > 1F)) {
+            if ((this.isBeingRidden()) && (i > 1F)) {
                 this.riddenByEntity.attackEntityFrom(DamageSource.fall, i);
             }
 
@@ -724,7 +720,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                     this.worldObj.getBlockState(
                             new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.20000000298023221D
                                     - this.prevRotationPitch), MathHelper.floor_double(this.posZ))).getBlock();
-            if (block != Blocks.air) {
+            if (block != Blocks.AIR) {
                 SoundType stepsound = block.stepSound;
                 this.worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getFrequency() * 0.75F);
             }

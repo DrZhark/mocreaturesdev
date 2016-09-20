@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -65,9 +65,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         } else {
             setEdad(80 + this.rand.nextInt(20));
         }
-        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+        
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(4, this.wander = new EntityAIWanderMoC2(this, 1.0D, 80));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -77,10 +77,10 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
     }
 
     @Override
@@ -180,9 +180,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 }
             }
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(calculateMaxHealth());
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
         this.setHealth(getMaxHealth());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(calculateAttackDmg());
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(calculateAttackDmg());
     }
 
     @Override
@@ -282,7 +282,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     public void transform(int tType) {
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.transformType = tType;
     }
@@ -319,7 +319,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 setIsFlying(false);
             }
 
-            if (getAttackTarget() != null && (!this.getIsTamed() || this.ridingEntity != null) && !isMovementCeased() && this.rand.nextInt(20) == 0) {
+            if (getAttackTarget() != null && (!this.getIsTamed() || this.getRidingEntity() != null) && !isMovementCeased() && this.rand.nextInt(20) == 0) {
                 setIsFlying(true);
             }
             if (!getIsTamed() && this.dimension == MoCreatures.WyvernLairDimensionID && (this.rand.nextInt(50) == 0) && this.posY < 10D) {
@@ -338,7 +338,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             if (isOnAir()) {
                 float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
                 int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
-                if (this.riddenByEntity == null || wingFlapFreq < 5) {
+                if (!this.isBeingRidden() || wingFlapFreq < 5) {
                     wingFlapFreq = 5;
                 }
                 if (this.rand.nextInt(wingFlapFreq) == 0) {
@@ -371,7 +371,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (this.wingFlapCounter == 0) {
             this.wingFlapCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -382,7 +382,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isFlyingAlone() {
-        return getIsFlying() && this.riddenByEntity == null;
+        return getIsFlying() && !this.isBeingRidden();
     }
 
     @Override
@@ -404,7 +404,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.whip) && getIsTamed() && (this.riddenByEntity == null)) {
+        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.whip) && getIsTamed() && (!this.isBeingRidden())) {
             setSitting(!getIsSitting());
             return true;
         }
@@ -499,9 +499,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if ((itemstack != null) && !this.getIsGhost() && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90
                 && getType() < 5) {
             if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
 
             if (MoCreatures.isServer()) {
@@ -519,9 +519,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (itemstack.getItem() == MoCreatures.essenceundead) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
 
             if (MoCreatures.isServer()) {
@@ -533,9 +533,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (itemstack.getItem() == MoCreatures.essencelight) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
 
             if (MoCreatures.isServer()) {
@@ -547,9 +547,9 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if ((itemstack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (itemstack.getItem() == MoCreatures.essencedarkness) && getIsTamed()) {
             if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle));
+                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
 
             if (MoCreatures.isServer()) {
@@ -558,7 +558,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (getIsRideable() && getEdad() > 90 && (this.riddenByEntity == null)) {
+        if (getIsRideable() && getEdad() > 90 && (!this.isBeingRidden())) {
             entityplayer.rotationYaw = this.rotationYaw;
             entityplayer.rotationPitch = this.rotationPitch;
 
@@ -632,7 +632,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMovementCeased() {
-        return (this.riddenByEntity != null) || getIsSitting();
+        return (this.isBeingRidden()) || getIsSitting();
     }
 
     @Override
@@ -679,7 +679,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         Entity entity = damagesource.getEntity();
-        if ((this.riddenByEntity != null) && (entity == this.riddenByEntity)) {
+        if ((this.isBeingRidden()) && (entity == this.riddenByEntity)) {
             return false;
         }
         if (super.attackEntityFrom(damagesource, i)) {
@@ -764,7 +764,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (MoCreatures.isServer()) {
             this.mouthCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
 
     }
@@ -793,7 +793,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
     public void makeEntityDive() {
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2),
-                    new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         super.makeEntityDive();
     }
@@ -811,7 +811,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.riddenByEntity == null;
+        return !this.isBeingRidden();
     }
 
     @Override
@@ -838,7 +838,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public double getCustomSpeed() {
-        if (this.riddenByEntity != null) {
+        if (this.isBeingRidden()) {
             return 1.0D;
         }
         return 0.8D;
@@ -865,7 +865,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isReadyToHunt() {
-        return !this.isMovementCeased() && this.riddenByEntity == null;
+        return !this.isMovementCeased() && !this.isBeingRidden();
     }
 
     @Override

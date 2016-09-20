@@ -7,7 +7,7 @@ import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -32,7 +32,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         super(world);
         setSize(1.4F, 1.6F);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
 
@@ -41,9 +41,9 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3D);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             moveTail();
         }
 
-        if (!isOnAir() && (this.riddenByEntity == null) && this.rand.nextInt(250) == 0) {
+        if (!isOnAir() && (!this.isBeingRidden()) && this.rand.nextInt(250) == 0) {
             stand();
         }
 
@@ -233,11 +233,11 @@ public class MoCEntityHorseMob extends MoCEntityMob {
                 wingFlap();
             }
 
-            if (!isOnAir() && (this.riddenByEntity == null) && this.rand.nextInt(300) == 0) {
+            if (!isOnAir() && (!this.isBeingRidden()) && this.rand.nextInt(300) == 0) {
                 setEating();
             }
 
-            if (this.riddenByEntity == null && this.rand.nextInt(100) == 0) {
+            if (!this.isBeingRidden() && this.rand.nextInt(100) == 0) {
                 MoCTools.findMobRider(this);
                 /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
@@ -246,7 +246,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
                         continue;
                     }
                     EntityMob entitymob = (EntityMob) entity;
-                    if (entitymob.ridingEntity == null
+                    if (entitymob.getRidingEntity() == null
                             && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
                         entitymob.mountEntity(this);
                         break;
@@ -311,7 +311,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             return Items.ghast_tear;
         }
 
-        return Items.leather;
+        return Items.LEATHER;
     }
 
     @Override

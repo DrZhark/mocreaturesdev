@@ -37,8 +37,8 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
             /*if (!isNotScared() && this.rand.nextInt(5) == 0 && !getIsTamed()) {
                 EntityLivingBase entityliving = getBoogey(8D);
-                if (entityliving != null && entityliving.isInsideOfMaterial(Material.water)) {
+                if (entityliving != null && entityliving.isInsideOfMaterial(Material.WATER)) {
                     MoCTools.runLikeHell(this, entityliving);
                 }
             }*/

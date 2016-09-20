@@ -41,7 +41,7 @@ public class MoCPetData {
             petData.setInteger("ChunkX", coords.getX());
             petData.setInteger("ChunkY", coords.getY());
             petData.setInteger("ChunkZ", coords.getZ());
-            petData.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionId());
+            petData.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionType().getId());
             this.tamedList.appendTag(petData);
             this.ownerData.setTag("PetIdData", savePetDataMap());
             return id;

@@ -256,7 +256,7 @@ public class CommandCMS extends CommandBase {
                         countMap.put(EnumChatFormatting.GREEN + clazz.getName(), count);
                     }
                 }
-                title = "Showing total entities in dimension " + world.provider.getDimensionId();
+                title = "Showing total entities in dimension " + world.provider.getDimensionType().getId();
             } else {
                 for (EntityData entityData : CMSUtils.getEnvironment(world).classToEntityMapping.values()) {
                     int count = 0;
@@ -273,7 +273,7 @@ public class CommandCMS extends CommandBase {
                                 + EnumChatFormatting.GREEN + entityData.getEntityName(), count);
                     }
                 }
-                title = "Showing total entities in dimension " + world.provider.getDimensionId();
+                title = "Showing total entities in dimension " + world.provider.getDimensionType().getId();
             }
 
             Map<String, Integer> sortedMap = CMSUtils.sortByComparator(countMap, false); // sort desc
@@ -294,7 +294,7 @@ public class CommandCMS extends CommandBase {
                         + EnumChatFormatting.WHITE + "."));
             } else {
                 par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.WHITE + "No entities found in world "
-                        + world.getWorldInfo().getWorldName() + " in dimension " + world.provider.getDimensionId() + "."));
+                        + world.getWorldInfo().getWorldName() + " in dimension " + world.provider.getDimensionType().getId() + "."));
             }
             return;
         } else if (par1.equalsIgnoreCase("killall")) {

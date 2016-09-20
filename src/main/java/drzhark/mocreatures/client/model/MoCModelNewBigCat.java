@@ -4,7 +4,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 public class MoCModelNewBigCat extends ModelBase {
@@ -552,7 +552,7 @@ public class MoCModelNewBigCat extends ModelBase {
         this.floating = (this.isFlyer && this.onAir);
         //this.poisoning = bigcat.swingingTail();
         this.openMouthCounter = bigcat.mouthCounter;
-        this.isRidden = (bigcat.riddenByEntity != null);
+        this.isRidden = (bigcat.isBeingRidden());
         this.hasMane = bigcat.hasMane();
         this.isTamed = bigcat.getHasAmulet();
         this.isSitting = bigcat.getIsSitting();

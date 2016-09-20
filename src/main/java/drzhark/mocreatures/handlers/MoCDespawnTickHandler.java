@@ -10,7 +10,7 @@ public class MoCDespawnTickHandler {
          * DimensionManager.getWorld(dimension); // despawn tick if (worldObj !=
          * null && (worldObj.getWorldInfo().getWorldTotalTime() %
          * MoCDespawner.despawnTickRate == 0L)) //&&
-         * worldObj.provider.getDimensionId() !=
+         * worldObj.provider.getDimensionType().getId() !=
          * MoCreatures.WyvernLairDimensionID) { if
          * (worldObj.playerEntities.size() > 0) { int numDespawns =
          * MoCDespawner.despawnVanillaAnimals(worldObj,

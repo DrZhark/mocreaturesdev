@@ -1,17 +1,17 @@
 package drzhark.mocreatures.client;
 
-import drzhark.mocreatures.MoCProxy;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import drzhark.mocreatures.MoCProxy;
 
 @SideOnly(Side.CLIENT)
-public class MoCEntityFXVanish extends EntityFX {
+public class MoCEntityFXVanish extends Particle {
 
     private final double portalPosX;
     private final double portalPosY;
@@ -31,7 +31,6 @@ public class MoCEntityFXVanish extends EntityFX {
         this.portalPosX = this.posX = par2;
         this.portalPosY = this.posY = par4;// + 0.7D;
         this.portalPosZ = this.posZ = par6;
-        this.noClip = true;
         this.implode = flag;
         this.particleMaxAge = (int) (Math.random() * 10.0D) + 70;
     }
@@ -69,12 +68,12 @@ public class MoCEntityFXVanish extends EntityFX {
         this.posZ = this.portalPosZ + this.motionZ * var1;
 
         if (this.particleAge++ >= this.particleMaxAge) {
-            this.setDead();
+            this.setExpired();
         }
     }
 
     @Override
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("mocreatures", MoCProxy.MISC_TEXTURE + "fxvanish.png"));
         float scale = 0.1F * this.particleScale;
         float xPos = (float) (this.prevPosX + (this.posX - this.prevPosX) * partialTicks - interpPosX);

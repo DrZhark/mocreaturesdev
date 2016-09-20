@@ -66,14 +66,14 @@ public class MoCEntityPlatform extends Entity {
     @Override
     public void onUpdate() {
         EntityLivingBase master = getMaster();
-        if (master == null || this.riddenByEntity == null) {
+        if (master == null || !this.isBeingRidden()) {
             if (MoCreatures.isServer()) {
                 this.setDead();
             }
             return;
         }
 
-        if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).isSneaking()
+        if (this.isBeingRidden() && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).isSneaking()
                 && ++this.mountCount > 10) {
             this.riddenByEntity.mountEntity(null);
             this.riddenByEntity = null;
@@ -101,7 +101,7 @@ public class MoCEntityPlatform extends Entity {
 
     @Override
     public void updateRiderPosition() {
-        if (this.riddenByEntity != null) {
+        if (this.isBeingRidden()) {
             this.riddenByEntity.setPosition(this.posX, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ);
             this.riddenByEntity.rotationYaw = this.rotationYaw;
         }

@@ -26,7 +26,7 @@ public class MoCEntityStingRay extends MoCEntityRay {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(10D);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MoCEntityStingRay extends MoCEntityRay {
             if (!getIsTamed() && ++this.poisoncounter > 250 && (this.worldObj.getDifficulty().getDifficultyId() > 0) && this.rand.nextInt(30) == 0) {
                 if (MoCTools.findNearPlayerAndPoison(this, true)) {
                     MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                            new TargetPoint(this.worldObj.provider.getDimensionId(), this.posX, this.posY, this.posZ, 64));
+                            new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
                     this.poisoncounter = 0;
                 }
             }

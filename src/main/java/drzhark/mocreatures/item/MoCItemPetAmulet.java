@@ -156,7 +156,7 @@ public class MoCItemPetAmulet extends MoCItem {
 
                     if (entityplayer.worldObj.spawnEntityInWorld((EntityLiving) storedCreature)) {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving) storedCreature).getEntityId()),
-                                new TargetPoint(entityplayer.worldObj.provider.getDimensionId(), entityplayer.posX, entityplayer.posY,
+                                new TargetPoint(entityplayer.worldObj.provider.getDimensionType().getId(), entityplayer.posX, entityplayer.posY,
                                         entityplayer.posZ, 64));
                         if (this.ownerName.isEmpty() || this.name.isEmpty()) {
                             MoCTools.tameWithName(entityplayer, storedCreature);

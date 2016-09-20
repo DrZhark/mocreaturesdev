@@ -2,7 +2,7 @@ package drzhark.customspawner.utils;
 
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.environment.EnvironmentSettings;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import org.apachev1.log4j.FileAppender;
 import org.apachev1.log4j.Logger;
 import org.apachev1.log4j.SimpleLayout;

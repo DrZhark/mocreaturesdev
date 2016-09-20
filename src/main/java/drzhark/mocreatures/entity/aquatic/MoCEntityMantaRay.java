@@ -16,7 +16,7 @@ public class MoCEntityMantaRay extends MoCEntityRay {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20D);
     }
 
     @Override

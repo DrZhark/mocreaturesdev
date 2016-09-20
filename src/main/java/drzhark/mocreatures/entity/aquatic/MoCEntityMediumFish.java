@@ -35,8 +35,8 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(8.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
                 this.setHealth(getMaxHealth());
             }
         }
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             this.prevRenderYawOffset = this.renderYawOffset = this.rotationYaw = this.prevRotationYaw;
             this.rotationPitch = this.prevRotationPitch;
         }
@@ -96,7 +96,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedYOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             return -0.1F;
         }
         return 0.7F;
@@ -110,7 +110,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     @SideOnly(Side.CLIENT)
     @Override
     public float yawRotationOffset() {
-        if (!this.isInsideOfMaterial(Material.water)) {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
             return 90F;
         }
         return 90F + super.yawRotationOffset();

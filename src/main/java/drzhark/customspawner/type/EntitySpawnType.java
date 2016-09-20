@@ -3,7 +3,7 @@ package drzhark.customspawner.type;
 import drzhark.customspawner.environment.EnvironmentSettings;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class EntitySpawnType {
     private int spawnCap = 15;
     private float chunkSpawnChance = 0.0f;
     private boolean hardSpawnLimit;
-    private Material livingMaterial = Material.air;
+    private Material livingMaterial = Material.AIR;
     private boolean enabled = true;
     @SuppressWarnings("unused")
     private boolean debug = false;
@@ -48,7 +48,7 @@ public class EntitySpawnType {
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap) {
-        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.air, null, false, true);
+        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.AIR, null, false, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, Material livingMaterial) {
@@ -56,12 +56,12 @@ public class EntitySpawnType {
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, float chunkSpawnChance, Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, false, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, int minY, int maxY, float chunkSpawnChance,
             Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.air, shouldSeeSky, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, false, true);
         this.minSpawnHeight = minY;
         this.maxSpawnHeight = maxY;
     }

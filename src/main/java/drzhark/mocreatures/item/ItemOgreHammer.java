@@ -12,7 +12,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemOgreHammer extends MoCItem {
@@ -69,7 +69,7 @@ public class ItemOgreHammer extends MoCItem {
             BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
             IBlockState blockstate = entityplayer.worldObj.getBlockState(pos);
 
-            if (blockstate.getBlock() != Blocks.air) {
+            if (blockstate.getBlock() != Blocks.AIR) {
                 newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1);
                 newPosX =
                         coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
@@ -78,7 +78,7 @@ public class ItemOgreHammer extends MoCItem {
                         coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
                                 * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
                 pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-                if (entityplayer.worldObj.getBlockState(pos).getBlock() != Blocks.air) {
+                if (entityplayer.worldObj.getBlockState(pos).getBlock() != Blocks.AIR) {
                     return par1ItemStack;
                 }
 

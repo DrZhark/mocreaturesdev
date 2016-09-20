@@ -85,7 +85,7 @@ public class MoCRenderKitty extends MoCRenderMoC<MoCEntityKitty> {
     protected void onMaBack(MoCEntityKitty entitykitty) {
         GL11.glRotatef(90F, 0.0F, 0.0F, -1F);
 
-        if (!entitykitty.worldObj.isRemote && (entitykitty.ridingEntity != null)) {
+        if (!entitykitty.worldObj.isRemote && (entitykitty.getRidingEntity() != null)) {
             GL11.glTranslatef(-1.5F, 0.2F, -0.2F);
         } else {
             GL11.glTranslatef(0.1F, 0.2F, -0.2F);

@@ -3,7 +3,7 @@ package drzhark.mocreatures.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,7 +62,7 @@ public class MoCModelBunny extends ModelBase {
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        this.bunnyHat = entity.ridingEntity != null;
+        this.bunnyHat = entity.getRidingEntity() != null;
         setRotationAngles(f, f1, f2, f3, f4, f5);
         this.part1.render(f5);
         this.part8.render(f5);

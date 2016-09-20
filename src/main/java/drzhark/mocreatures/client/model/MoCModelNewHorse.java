@@ -32,7 +32,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -370,10 +370,10 @@ public class MoCModelNewHorse extends ModelBase {
         boolean openMouth = (entityhorse.mouthCounter != 0);
         boolean moveTail = (entityhorse.tailCounter != 0);
 
-        boolean rider = (entityhorse.riddenByEntity != null);
+        boolean rider = (entityhorse.isBeingRidden());
         boolean floating = (entityhorse.isGhost() || (entityhorse.isFlyer() && entityhorse.isOnAir()));
         //                || (entityhorse.riddenByEntity == null && !entityhorse.onGround)
-        //                || (entityhorse.riddenByEntity != null && !entityhorse.riddenByEntity.onGround));
+        //                || (entityhorse.isBeingRidden() && !entityhorse.riddenByEntity.onGround));
         setRotationAngles(f, f1, f2, f3, f4, f5, eating, rider, floating, standing, saddled, moveTail, wings, flapwings, shuffling, type);
 
         if (!entityhorse.isGhost() && vanishingInt == 0) {

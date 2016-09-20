@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class EntityAIMoverHelperMoC extends EntityMoveHelper {
 
@@ -59,7 +59,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             float f = (float) (Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
             this.theCreature.rotationYaw = this.limitAngle(this.theCreature.rotationYaw, f, 30.0F);
             this.theCreature.renderYawOffset = this.theCreature.rotationYaw;
-            float f1 = (float) (this.speed * this.theCreature.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+            float f1 = (float) (this.speed * this.theCreature.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
             this.theCreature.setAIMoveSpeed(this.theCreature.getAIMoveSpeed() + (f1 - this.theCreature.getAIMoveSpeed()) * 0.125F);
             double d4 = Math.sin((double) (this.theCreature.ticksExisted + this.theCreature.getEntityId()) * 0.75D) * 0.01D;
             double d5 = Math.cos((double) (this.theCreature.rotationYaw * (float) Math.PI / 180.0F));
@@ -100,7 +100,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
      * Makes creatures in the water float to the right depth
      */
     private void swimmerMovementUpdate() {
-        if (theCreature.riddenByEntity != null) {
+        if (theCreature.isBeingRidden()) {
             return;
         }
 

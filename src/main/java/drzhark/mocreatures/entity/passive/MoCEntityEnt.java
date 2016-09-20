@@ -9,7 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -38,7 +38,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         setSize(1.4F, 7F);
         this.stepHeight = 2F;
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0D, true));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
@@ -46,10 +46,10 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             return false;
         }
 
-        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.air) {
+        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.AIR) {
             IBlockState iblockstate = getBlockStateToBePlanted();
             int plantChance = 3;
             if (iblockstate.getBlock() == Blocks.sapling) {
@@ -211,7 +211,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     }
                     cantPlant = (event != null && event.isCanceled());
                     Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
-                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.air) {
+                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
                         this.worldObj.setBlockState(pos1, iblockstate, 3);
                     }
                 }
