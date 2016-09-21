@@ -517,7 +517,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return false;
         }
         if ((getKittyState() == 7) && (itemstack != null)
-                && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.fish) || (itemstack.getItem() == Items.cooked_fish))) {
+                && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.cooked_fish))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -541,7 +541,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             this.itemAttackTarget = entityitem;
             return true;
         }
-        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.fish) || (itemstack.getItem() == Items.cooked_fish))) {
+        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.cooked_fish))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }

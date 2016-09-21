@@ -788,7 +788,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             if (flag) {
                 return MoCreatures.heartundead;
             }
-            return Items.rotten_flesh;
+            return Items.ROTTEN_FLESH;
         }
         return MoCreatures.ostrichraw;
     }

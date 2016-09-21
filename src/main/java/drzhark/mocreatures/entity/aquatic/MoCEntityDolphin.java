@@ -1,12 +1,7 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageHeart;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,17 +9,27 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
 
 public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
     public int gestationtime;
-
+    private static final DataParameter<Boolean> IS_HUNGRY = EntityDataManager.<Boolean>createKey(MoCEntityDolphin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_EATEN = EntityDataManager.<Boolean>createKey(MoCEntityDolphin.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityDolphin(World world) {
         super(world);
         setSize(1.5F, 0.8F);
@@ -147,26 +152,24 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // byte isHungry 0 = false 1 = true
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // byte hasEaten 0 = false 1 = true
+        this.dataManager.register(IS_HUNGRY, Boolean.valueOf(false));
+        this.dataManager.register(HAS_EATEN, Boolean.valueOf(false));
     }
 
     public boolean getIsHungry() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_HUNGRY)).booleanValue();
     }
 
     public boolean getHasEaten() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
     }
 
     public void setIsHungry(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_HUNGRY, Boolean.valueOf(flag));
     }
 
     public void setHasEaten(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
     }
 
     //TODO
@@ -248,7 +251,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
     @Override
     protected Item getDropItem() {
-        return Items.fish;
+        return Items.FISH;
     }
 
     @Override
@@ -278,7 +281,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         }
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (itemstack.getItem() == Items.fish)) {
+        if ((itemstack != null) && (itemstack.getItem() == Items.FISH)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }

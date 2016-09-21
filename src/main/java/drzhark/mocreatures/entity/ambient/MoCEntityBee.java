@@ -63,21 +63,6 @@ public class MoCEntityBee extends MoCEntityInsect
     }
 
     @Override
-    protected String getDeathSound() {
-        return null;
-    }
-
-    @Override
-    protected String getHurtSound() {
-        return null;
-    }
-
-    @Override
-    protected String getLivingSound() {
-        return null;
-    }
-
-    @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
@@ -97,8 +82,8 @@ public class MoCEntityBee extends MoCEntityInsect
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
         return par1ItemStack != null
-                && (par1ItemStack.getItem() == Item.getItemFromBlock(Blocks.red_flower) || par1ItemStack.getItem() == Item
-                        .getItemFromBlock(Blocks.yellow_flower));
+                && (par1ItemStack.getItem() == Item.getItemFromBlock(Blocks.RED_FLOWER) || par1ItemStack.getItem() == Item
+                        .getItemFromBlock(Blocks.YELLOW_FLOWER));
     }
 
     @Override

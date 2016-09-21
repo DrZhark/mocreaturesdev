@@ -169,7 +169,7 @@ public class CMSUtils {
                 for (int j = 0; j < Biome.getBiomeGenArray().length; j++) {
                     if (Biome.getBiomeGenArray()[j] != null) {
                         Biome biome = Biome.getBiomeGenArray()[j];
-                        environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
+                        environment.envLog.logger.info("Found biome " + biome.getBiomeName() + " with spawn entries : ");
                         if (entitySpawnType.getBiomeSpawnList(biome.biomeID) == null) {
                             environment.envLog.logger.info("NONE!");
                             continue;
@@ -192,7 +192,7 @@ public class CMSUtils {
         for (Map.Entry<String, ArrayList<Biome>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
             CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
             for (Biome biome : defaultEntry.getValue()) {
-                CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
+                CustomSpawner.globalLog.logger.info("with biome " + biome.getBiomeName());
             }
             CustomSpawner.globalLog.logger.info("");
         }

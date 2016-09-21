@@ -27,6 +27,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
@@ -40,6 +43,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import com.google.common.base.Optional;
 
 public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntity {
 
@@ -49,6 +57,13 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     protected PathNavigate navigatorWater;
     protected PathNavigate navigatorFlyer;
 
+    private static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(EntityAnimal.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityAnimal.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(EntityAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityAnimal.class, DataSerializers.STRING);
+    
     public MoCEntityAmbient(World world) {
         super(world);
         setTamed(false);
@@ -93,73 +108,76 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte) 0)); // isTamed - 0 false 1 true
-        this.dataWatcher.addObject(17, String.valueOf("")); // displayName empty string by default
-        this.dataWatcher.addObject(18, Integer.valueOf(0)); // int ageTicks / "edad"
-        this.dataWatcher.addObject(19, Integer.valueOf(0)); // int type
-        this.dataWatcher.addObject(20, String.valueOf("")); //owners name
-        this.dataWatcher.addObject(21, Byte.valueOf((byte) 0)); // isAdult - 0 false 1 true
-
+        this.dataManager.register(TAMED, Boolean.valueOf(false));
+        this.dataManager.register(ADULT, Boolean.valueOf(false));
+        this.dataManager.register(TYPE, Integer.valueOf(0));
+        this.dataManager.register(AGE, Integer.valueOf(45));
+        this.dataManager.register(NAME_STR, "");
+        this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
     }
 
     @Override
     public void setType(int i) {
-        this.dataWatcher.updateObject(19, Integer.valueOf(i));
+        this.dataManager.set(TYPE, Integer.valueOf(i));
     }
 
     @Override
     public int getType() {
-        return this.dataWatcher.getWatchableObjectInt(19);
-    }
-
-    public void setDisplayName(boolean flag) {
-
+    	return ((Integer)this.dataManager.get(TYPE)).intValue();
     }
 
     @Override
     public boolean getIsAdult() {
-        return (this.dataWatcher.getWatchableObjectByte(21) == 1);
-    }
-
-    @Override
-    public boolean getIsTamed() {
-        return (this.dataWatcher.getWatchableObjectByte(16) == 1);
-    }
-
-    @Override
-    public String getPetName() {
-        return this.dataWatcher.getWatchableObjectString(17);
-    }
-
-    /**
-     * @return networked Entity "Age" in integer value, typical values are
-     *         0-100. Old float eDad was typically 0F-1.0F
-     */
-    @Override
-    public int getEdad() {
-        return this.dataWatcher.getWatchableObjectInt(18);
-    }
-
-    @Override
-    public void setEdad(int i) {
-        this.dataWatcher.updateObject(18, Integer.valueOf(i));
+    	return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
     }
 
     @Override
     public void setAdult(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(21, Byte.valueOf(input));
+    	this.dataManager.set(ADULT, Boolean.valueOf(flag));
+    }
+    
+    @Override
+    public boolean getIsTamed() {
+    	return ((Boolean)this.dataManager.get(TAMED)).booleanValue();
+    }
+    
+    @Override
+    public void setTamed(boolean flag) {
+    	this.dataManager.set(TAMED, Boolean.valueOf(flag));
+    }
+
+    @Override
+    public String getPetName() {
+    	return ((String)this.dataManager.get(NAME_STR)).toString();
+    }
+
+    @Override
+    public int getEdad() {
+    	return ((Integer)this.dataManager.get(AGE)).intValue();
+    }
+
+    @Nullable
+    public UUID getOwnerUniqueId()
+    {
+        return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+    }
+
+    public void setOwnerUniqueId(@Nullable UUID uniqueId)
+    {
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(uniqueId));
+    }
+    
+    @Override
+    public void setEdad(int i) {
+    	this.dataManager.set(AGE, Integer.valueOf(i));
     }
 
     @Override
     public void setPetName(String name) {
-        this.dataWatcher.updateObject(17, String.valueOf(name));
+    	this.dataManager.set(NAME_STR, String.valueOf(name));
     }
 
-    @Override
-    public void setTamed(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(16, Byte.valueOf(input));
+    public void setDisplayName(boolean flag) {
 
     }
 
@@ -395,8 +413,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     public boolean getCanSpawnHereLiving() {
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).size() == 0
-                && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
+                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
     }
 
     public boolean getCanSpawnHereAquatic() {
@@ -421,8 +439,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     public boolean getCanSpawnHereJungle() {
         if (this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty()
-                && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox())) {
+                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty()
+                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox())) {
             int var1 = MathHelper.floor_double(this.posX);
             int var2 = MathHelper.floor_double(this.getEntityBoundingBox().minY);
             int var3 = MathHelper.floor_double(this.posZ);

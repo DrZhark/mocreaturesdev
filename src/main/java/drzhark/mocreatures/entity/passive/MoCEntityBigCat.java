@@ -518,7 +518,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             setSitting(!getIsSitting());
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.fish)) {
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.FISH)) {
             this.setHealth(getMaxHealth());
             this.worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
             setIsHunting(false);
@@ -557,7 +557,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
         //TODO move to New AI
         if ((this.deathTime == 0) && getIsHunting() && !getIsSitting()) {
-            EntityItem entityitem = getClosestItem(this, 12D, Items.porkchop, Items.fish);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.porkchop, Items.FISH);
             if (entityitem != null) {
                 float f = entityitem.getDistanceToEntity(this);
                 if (f > 2.0F) {

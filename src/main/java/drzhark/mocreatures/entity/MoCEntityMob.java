@@ -155,8 +155,8 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     public boolean getCanSpawnHereLiving() {
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).size() == 0
-                && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
+                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
     }
 
     public boolean getCanSpawnHereCreature() {

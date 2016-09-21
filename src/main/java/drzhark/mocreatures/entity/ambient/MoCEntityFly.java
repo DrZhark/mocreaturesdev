@@ -55,7 +55,7 @@ public class MoCEntityFly extends MoCEntityInsect {
 
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && par1ItemStack.getItem() == Items.rotten_flesh;
+        return par1ItemStack != null && par1ItemStack.getItem() == Items.ROTTEN_FLESH;
     }
 
     @Override

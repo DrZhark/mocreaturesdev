@@ -1,6 +1,22 @@
 package drzhark.mocreatures.entity.aquatic;
 
+import java.util.List;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -9,24 +25,14 @@ import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
 
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     public int gestationtime;
 
     public static final String fishNames[] = {"Blue", "Orange", "Cyan", "Greeny", "Green", "Purple", "Yellow", "Striped", "Yellowy", "Red"};
-
+    private static final DataParameter<Boolean> HAS_EATEN = EntityDataManager.<Boolean>createKey(MoCEntityFishy.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityFishy(World world) {
         super(world);
         setSize(0.3F, 0.3F);
@@ -86,26 +92,22 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // byte hasEaten 0 = false 1 = true
+        this.dataManager.register(HAS_EATEN, Boolean.valueOf(false));
     }
 
     public boolean getHasEaten() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
     }
 
     public void setHasEaten(boolean flag) {
-        if (this.worldObj.isRemote) {
-            return;
-        }
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
     }
-
+    
     @Override
     protected void dropFewItems(boolean flag, int x) {
         int i = this.rand.nextInt(100);
         if (i < 70) {
-            entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.FISH, 1, 0), 0.0F);
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {

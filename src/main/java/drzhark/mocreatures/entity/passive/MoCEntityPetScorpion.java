@@ -363,7 +363,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
                 }
                 return MoCreatures.chitinFrost;
             case 5:
-                return Items.rotten_flesh;
+                return Items.ROTTEN_FLESH;
 
             default:
                 return Items.string;

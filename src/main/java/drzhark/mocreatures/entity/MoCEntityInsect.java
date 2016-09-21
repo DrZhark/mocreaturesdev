@@ -1,26 +1,31 @@
 package drzhark.mocreatures.entity;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityInsect extends MoCEntityAmbient {
 
     private int climbCounter;
     protected EntityAIWanderMoC2 wander;
 
+    private static final DataParameter<Boolean> IS_FLYING = EntityDataManager.<Boolean>createKey(MoCEntityInsect.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityInsect(World world) {
         super(world);
         setSize(0.2F, 0.2F);
@@ -37,7 +42,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(22, Byte.valueOf((byte) 0)); // isFlying - 0 false 1 true
+        this.dataManager.register(IS_FLYING, Boolean.valueOf(false));
     }
 
     @Override
@@ -51,12 +56,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     }
 
     public boolean getIsFlying() {
-        return (this.dataWatcher.getWatchableObjectByte(22) == 1);
+    	return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
     }
 
     public void setIsFlying(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(22, Byte.valueOf(input));
+    	this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
     }
 
     @Override
@@ -89,7 +93,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
             }
 
             if (isAttractedToLight() && this.rand.nextInt(50) == 0) {
-                int ai[] = MoCTools.ReturnNearestBlockCoord(this, Blocks.torch, 8D);
+                int ai[] = MoCTools.ReturnNearestBlockCoord(this, Blocks.TORCH, 8D);
                 if (ai[0] > -1000) {
                     this.getNavigator().tryMoveToXYZ(ai[0], ai[1], ai[2], 1.0D);//
                 }

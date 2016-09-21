@@ -498,7 +498,7 @@ public class EnvironmentSettings {
             if (biome == null) {
                 continue;
             }
-            String biomeName = biome.biomeName;
+            String biomeName = biome.getBiomeName();
             String biomeClass = biome.getClass().getName();
             BiomeData biomeData = new BiomeData(biome);
             Type[] types = BiomeDictionary.getTypesForBiome(biome);
@@ -591,7 +591,7 @@ public class EnvironmentSettings {
                 for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
                     BiomeModData biomeModData = modEntry.getValue();
                     if (biomeModData.hasBiome(biome)) {
-                        biomes.add(biomeModData.getModTag() + "|" + biome.biomeName);
+                        biomes.add(biomeModData.getModTag() + "|" + biome.getBiomeName());
                         break;
                     }
                 }
@@ -687,10 +687,10 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = modEntry.getValue();
                             if (biomeModData.hasBiome(entryBiomes.get(i))) {
                                 if (this.debug) {
-                                    this.envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName
+                                    this.envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).getBiomeName()
                                             + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());
                                 }
-                                biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
+                                biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).getBiomeName());
                                 entityData.addSpawnBiome(entryBiomes.get(i));
                             }
                         }

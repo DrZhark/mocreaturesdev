@@ -117,8 +117,8 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         BlockPos pos = new BlockPos(i, j, k);
         Block block = this.worldObj.getBlockState(pos.down()).getBlock();
         return ((MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && (this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).size() == 0)
-                && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.cobblestone) || (block == Blocks.planks)
+                && (this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0)
+                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.cobblestone) || (block == Blocks.planks)
                 || (block == Blocks.dirt) || (block == Blocks.stone) || (block == Blocks.grass)));
     }
 

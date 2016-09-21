@@ -669,7 +669,7 @@ public class MoCTools {
         if (Biome == null) {
             return null;
         } else {
-            return Biome.biomeName;
+            return Biome.getBiomeName();
         }
     }
 
@@ -771,7 +771,7 @@ public class MoCTools {
         entityitem10.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem10);
 
-        EntityItem entityitem12 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.red_flower, 6));
+        EntityItem entityitem12 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.RED_FLOWER, 6));
         entityitem12.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem12);
 

@@ -334,7 +334,7 @@ public final class CustomSpawner {
                                             CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
                                                     entitySpawnType.name(), world.getBiomeGenForCoords(new BlockPos(
                                                             (chunkcoordintpair.chunkXPos * 16) + 16, 0,
-                                                            (chunkcoordintpair.chunkZPos * 16) + 16)).biomeName, entityData
+                                                            (chunkcoordintpair.chunkZPos * 16) + 16)).getBiomeName(), entityData
                                                             .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
                                                             .floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft,
                                                     spawnlistentry);
@@ -531,7 +531,7 @@ public final class CustomSpawner {
                     if (spawnEntry.entityClass == entityData.getEntityClass()) {
                         if (debug) {
                             globalLog.logger.info("updateSpawnListEntry " + entityData.getEntityClass() + " to " + entityData.getFrequency() + ":"
-                                    + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).biomeName);
+                                    + entityData.getMinSpawn() + ":" + entityData.getMaxSpawn() + " in biome " + biomeList.get(i).getBiomeName());
                         }
                         spawnEntry.itemWeight = entityData.getFrequency();
                         spawnEntry.minGroupCount = entityData.getMinSpawn();
@@ -725,7 +725,7 @@ public final class CustomSpawner {
                                 CMSUtils.getEnvironment(world).envLog.logger.info("[WorldGen spawned " + entityliving.getName()
                                         + " at " + entityliving.getPosition() + " with CREATURE:" + spawnlistentry.itemWeight + ":"
                                         + spawnlistentry.minGroupCount + ":" + spawnlistentry.maxGroupCount + ":"
-                                        + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1Biome.biomeName
+                                        + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1Biome.getBiomeName()
                                         + "]");
                             }
                             creatureSpecificInit(entityliving, world, pos);

@@ -593,7 +593,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             if (flag) {
                 return MoCreatures.heartundead;
             }
-            return Items.rotten_flesh;
+            return Items.ROTTEN_FLESH;
         }
         if (this.getType() == 21 || this.getType() == 22) {
             return Items.ghast_tear;

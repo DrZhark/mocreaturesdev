@@ -309,7 +309,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
         //TODO move to AI
         if (MoCreatures.isServer() && getType() == 3 && (this.deathTime == 0) && getBearState() != 2) {
-            EntityItem entityitem = getClosestItem(this, 12D, Items.reeds, Items.sugar);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.REEDS, Items.sugar);
             if (entityitem != null) {
 
                 float f = entityitem.getDistanceToEntity(this);
@@ -333,7 +333,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             return false;
         }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && (getType() == 3) && ((itemstack.getItem() == MoCreatures.sugarlump) || (itemstack.getItem() == Items.reeds))) {
+        if ((itemstack != null) && (getType() == 3) && ((itemstack.getItem() == MoCreatures.sugarlump) || (itemstack.getItem() == Items.REEDS))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -395,7 +395,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             }
         } catch (Exception e) {
         }
-        if (currentbiome.biomeName.toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds")) {
+        if (currentbiome.getBiomeName().toLowerCase().contains("bamboo") || MoCTools.isNearBlockName(this, 12D, "tile.reeds")) {
             setType(3);//panda
             return true;
         }
@@ -435,12 +435,12 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.reeds;
+        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.REEDS;
     }
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.reeds;
+        return this.getType() == 3 && par1ItemStack != null && par1ItemStack.getItem() == Items.REEDS;
     }
 
     @Override

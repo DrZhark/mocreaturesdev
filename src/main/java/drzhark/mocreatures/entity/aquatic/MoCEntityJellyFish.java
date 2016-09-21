@@ -7,6 +7,9 @@ import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -14,7 +17,8 @@ import net.minecraft.world.World;
 public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
 
     private int poisoncounter;
-
+    private static final DataParameter<Boolean> GLOWS = EntityDataManager.<Boolean>createKey(MoCEntityJellyFish.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityJellyFish(World world) {
         super(world);
         setSize(0.3F, 0.5F);
@@ -39,18 +43,19 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // glow: 0 no; 1 yes
+        this.dataManager.register(GLOWS, Boolean.valueOf(false));
     }
 
     public void setGlowing(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(GLOWS, Boolean.valueOf(flag));
     }
 
     public boolean isGlowing() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+        return ((Boolean)this.dataManager.get(GLOWS)).booleanValue();
     }
 
+    
+    
     @Override
     public float getAIMoveSpeed() {
         return 0.02F;
@@ -110,7 +115,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     protected Item getDropItem() {
         boolean flag = this.rand.nextInt(2) == 0;
         if (flag) {
-            return Items.slime_ball;
+            return Items.SLIME_BALL;
         }
         return null;
     }

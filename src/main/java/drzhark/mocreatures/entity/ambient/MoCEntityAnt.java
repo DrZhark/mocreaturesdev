@@ -6,12 +6,18 @@ import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityAnt extends MoCEntityInsect {
 
+	private static final DataParameter<Boolean> FOUND_FOOD = EntityDataManager.<Boolean>createKey(MoCEntityAnt.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityAnt(World world) {
         super(world);
         this.texture = "ant.png";
@@ -21,7 +27,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // foundFood 0 = false, 1 = true
+        this.dataManager.register(FOUND_FOOD, Boolean.valueOf(false));
     }
 
     @Override
@@ -31,12 +37,11 @@ public class MoCEntityAnt extends MoCEntityInsect {
     }
 
     public boolean getHasFood() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(FOUND_FOOD)).booleanValue();
     }
 
     public void setHasFood(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(FOUND_FOOD, Boolean.valueOf(flag));
     }
 
     @Override

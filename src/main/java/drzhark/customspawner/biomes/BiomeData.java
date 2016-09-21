@@ -36,7 +36,7 @@ public class BiomeData {
     }
 
     public String getBiomeName() {
-        return this.biome.biomeName;
+        return this.biome.getBiomeName();
     }
 
     public Biome getBiome() {

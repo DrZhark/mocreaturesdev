@@ -304,7 +304,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             if (flag) {
                 return MoCreatures.heartundead;
             }
-            return Items.rotten_flesh;
+            return Items.ROTTEN_FLESH;
         }
 
         if (this.getType() == 21 || this.getType() == 22) {

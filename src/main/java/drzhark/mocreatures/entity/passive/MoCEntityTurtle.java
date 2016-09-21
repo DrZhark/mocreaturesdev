@@ -180,7 +180,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
                     setIsHiding(false);
                     if (!hasPath() && this.rand.nextInt(50) == 0) {
-                        EntityItem entityitem = getClosestItem(this, 10D, Items.melon, Items.reeds);
+                        EntityItem entityitem = getClosestItem(this, 10D, Items.melon, Items.REEDS);
                         if (entityitem != null) {
                             float f = entityitem.getDistanceToEntity(this);
                             if (f > 2.0F) {
@@ -385,7 +385,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && (par1ItemStack.getItem() == Items.reeds || par1ItemStack.getItem() == Items.melon);
+        return par1ItemStack != null && (par1ItemStack.getItem() == Items.REEDS || par1ItemStack.getItem() == Items.melon);
     }
 
     @Override

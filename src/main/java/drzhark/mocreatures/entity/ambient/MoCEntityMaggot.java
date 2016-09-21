@@ -29,7 +29,7 @@ public class MoCEntityMaggot extends MoCEntityAmbient {
 
     @Override
     protected Item getDropItem() {
-        return Items.slime_ball;
+        return Items.SLIME_BALL;
     }
 
     @Override

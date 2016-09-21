@@ -86,7 +86,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
     protected void dropFewItems(boolean flag, int x) {
         int i = this.rand.nextInt(100);
         if (i < 70) {
-            entityDropItem(new ItemStack(Items.fish, 1, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.FISH, 1, 0), 0.0F);
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
