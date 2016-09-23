@@ -33,7 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
@@ -571,11 +571,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
         if (this.getType() == 39) // pegasus
         {
-            return Items.feather;
+            return Items.FEATHER;
         }
         if (this.getType() == 40) // dark pegasus
         {
-            return Items.feather;
+            return Items.FEATHER;
         }
         if (this.getType() == 38 && flag && this.worldObj.provider.doesWaterVaporize()) // nightmare
         {

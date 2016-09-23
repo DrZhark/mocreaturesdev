@@ -304,7 +304,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
             return true;
         }
-        if ((itemstack != null) && (itemstack.getItem() == Items.cooked_fish) && getIsTamed() && getIsAdult()) {
+        if ((itemstack != null) && (itemstack.getItem() == Items.COOKED_FISH) && getIsTamed() && getIsAdult()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }

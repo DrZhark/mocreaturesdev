@@ -867,11 +867,11 @@ public class MoCreatures {
 
         GameRegistry.addSmelting(Items.egg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.paper, Items.feather, Items.redstone});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.paper, Items.FEATHER, Items.redstone});
 
         GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {scrollOfSale, Items.redstone});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.paper, Items.feather});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.paper, Items.FEATHER});
 
         GameRegistry.addShapelessRecipe(new ItemStack(Items.LEATHER, 1), new Object[] {animalHide});
 

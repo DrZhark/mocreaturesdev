@@ -94,7 +94,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     protected Item getDropItem() {
 
         if (this.rand.nextInt(2) == 0) {
-            return Items.porkchop;
+            return Items.PORKCHOP;
         }
 
         return MoCreatures.animalHide;

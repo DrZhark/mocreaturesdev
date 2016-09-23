@@ -125,7 +125,6 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     protected void entityInit() {
         super.entityInit();
         this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // has babies - 0 false 1 true
-        //this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isPicked - 0 false 1 true
         this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isSitting - 0 false 1 true
         this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isRideable - 0 false 1 true
 

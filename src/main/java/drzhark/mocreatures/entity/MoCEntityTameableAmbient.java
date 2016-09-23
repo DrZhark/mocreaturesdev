@@ -3,16 +3,22 @@ package drzhark.mocreatures.entity;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTameable {
 
+	private static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
+    
     public MoCEntityTameableAmbient(World world) {
         super(world);
     }
@@ -20,17 +26,17 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(30, -1); // PetId
+        this.dataManager.register(PET_ID, Integer.valueOf(-1));
     }
 
     @Override
     public int getOwnerPetId() {
-        return this.dataWatcher.getWatchableObjectInt(30);
+    	return ((Integer)this.dataManager.get(PET_ID)).intValue();
     }
 
     @Override
     public void setOwnerPetId(int i) {
-        this.dataWatcher.updateObject(30, i);
+    	this.dataManager.set(PET_ID, Integer.valueOf(i));
     }
 
     @Override
@@ -238,7 +244,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     }
 
     @Override
-    public boolean allowLeashing() {
+    public boolean canBeLeashedTo(EntityPlayer player) {
         return this.getIsTamed();
     }
 

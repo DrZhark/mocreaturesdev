@@ -33,7 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -89,7 +89,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(8.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(8.0D);
     }
 
     /**
@@ -100,7 +100,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
         this.setHealth(getMaxHealth());
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(calculateAttackDmg());
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(getAttackRange());
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(getAttackRange());
         if (getIsAdult()) {
             setEdad(getMaxEdad());
         }
@@ -413,7 +413,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
         //TODO move to New AI
         if ((this.deathTime == 0) && !isMovementCeased()) {
-            EntityItem entityitem = getClosestItem(this, 12D, Items.porkchop, Items.FISH);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.PORKCHOP, Items.FISH);
             if (entityitem != null) {
                 float f = entityitem.getDistanceToEntity(this);
                 if (f > 2.0F) {
@@ -651,7 +651,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             setSitting(!getIsSitting());
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.porkchop || itemstack.getItem() == Items.FISH)) {
+        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.PORKCHOP || itemstack.getItem() == Items.FISH)) {
             this.setHealth(getMaxHealth());
             this.worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
             setIsHunting(false);

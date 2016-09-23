@@ -1,12 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,8 +10,18 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 
 public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
 
@@ -26,7 +29,10 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     public float spin;
     public int spinInt;
     private boolean waterbound;
-
+    private static final DataParameter<Boolean> IS_RESTING = EntityDataManager.<Boolean>createKey(MoCEntityCrocodile.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> EATING_PREY = EntityDataManager.<Boolean>createKey(MoCEntityCrocodile.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_BITING = EntityDataManager.<Boolean>createKey(MoCEntityCrocodile.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityCrocodile(World world) {
         super(world);
         this.texture = "crocodile.png";
@@ -54,36 +60,33 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isResting - 0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // caughtPrey - 0 false 1 true
-        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isBiting - 0 false 1 true
+        this.dataManager.register(IS_RESTING, Boolean.valueOf(false));
+        this.dataManager.register(EATING_PREY, Boolean.valueOf(false));
+        this.dataManager.register(IS_BITING, Boolean.valueOf(false));
     }
 
     public boolean getIsBiting() {
-        return (this.dataWatcher.getWatchableObjectByte(25) == 1);
+    	return ((Boolean)this.dataManager.get(IS_BITING)).booleanValue();
     }
 
     public boolean getIsSitting() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(IS_RESTING)).booleanValue();
     }
 
     public boolean getHasCaughtPrey() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(EATING_PREY)).booleanValue();
     }
 
     public void setBiting(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(25, Byte.valueOf(input));
+    	this.dataManager.set(IS_BITING, Boolean.valueOf(flag));
     }
 
     public void setIsSitting(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(IS_RESTING, Boolean.valueOf(flag));
     }
 
     public void setHasCaughtPrey(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(EATING_PREY, Boolean.valueOf(flag));
     }
 
     @Override

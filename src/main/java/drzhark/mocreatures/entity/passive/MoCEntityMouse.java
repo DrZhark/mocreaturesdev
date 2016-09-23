@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -129,7 +129,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     protected Item getDropItem() {
-        return Items.wheat_seeds;
+        return Items.WHEAT_SEEDS;
     }
 
     @Override

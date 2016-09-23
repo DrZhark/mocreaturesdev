@@ -24,7 +24,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
         this.texture = "turkey.png";
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
-        this.tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.melon_seeds, false));
+        this.tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.MELON_SEEDS, false));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
@@ -73,7 +73,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
         if (flag) {
             return MoCreatures.rawTurkey;
         }
-        return Items.feather;
+        return Items.FEATHER;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.melon_seeds)) {
+        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.MELON_SEEDS)) {
             MoCTools.tameWithName(entityplayer, this);
         }
 
@@ -101,7 +101,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && par1ItemStack.getItem() == Items.pumpkin_seeds;
+        return par1ItemStack != null && par1ItemStack.getItem() == Items.PUMPKIN_SEEDS;
     }
 
     @Override

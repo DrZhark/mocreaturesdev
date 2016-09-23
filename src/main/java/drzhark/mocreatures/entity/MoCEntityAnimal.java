@@ -1314,7 +1314,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public boolean allowLeashing() {
+    public boolean canBeLeashedTo(EntityPlayer player) {
         return false;
     }
 

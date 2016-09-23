@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.passive;
 
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -15,13 +16,17 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -40,7 +45,9 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     private int jumpTimer;
     protected EntityAIWanderMoC2 wander;
     public static final String birdNames[] = {"Dove", "Crow", "Parrot", "Blue", "Canary", "Red"};
-
+    private static final DataParameter<Boolean> PRE_TAMED = EntityDataManager.<Boolean>createKey(MoCEntityBird.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_FLYING = EntityDataManager.<Boolean>createKey(MoCEntityBird.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityBird(World world) {
         super(world);
         setSize(0.4F, 0.3F);
@@ -107,26 +114,24 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // preTamed - 0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isFlying 0 false 1 true
+        this.dataManager.register(PRE_TAMED, Boolean.valueOf(false));
+        this.dataManager.register(IS_FLYING, Boolean.valueOf(false));
     }
 
     public boolean getPreTamed() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(PRE_TAMED)).booleanValue();
     }
 
     public void setPreTamed(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(PRE_TAMED, Boolean.valueOf(flag));
     }
 
     public boolean getIsFlying() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
     }
 
     public void setIsFlying(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
     }
 
     @Override
@@ -245,7 +250,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     protected Item getDropItem() {
-        return Items.feather;
+        return Items.FEATHER;
     }
 
     @Override
@@ -295,7 +300,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.getItem() == Items.wheat_seeds) {
+        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.getItem() == Items.WHEAT_SEEDS) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -390,10 +395,10 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
             //TODO move to new AI
             if (!this.fleeing) {
-                EntityItem entityitem = getClosestItem(this, 12D, Items.wheat_seeds, Items.melon_seeds);
+                EntityItem entityitem = getClosestItem(this, 12D, Items.WHEAT_SEEDS, Items.MELON_SEEDS);
                 if (entityitem != null) {
                     FlyToNextEntity(entityitem);
-                    EntityItem entityitem1 = getClosestItem(this, 1.0D, Items.wheat_seeds, Items.melon_seeds);
+                    EntityItem entityitem1 = getClosestItem(this, 1.0D, Items.WHEAT_SEEDS, Items.MELON_SEEDS);
                     if ((this.rand.nextInt(50) == 0) && (entityitem1 != null)) {
                         entityitem1.setDead();
                         setPreTamed(true);
@@ -504,7 +509,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && (par1ItemStack.getItem() == Items.wheat_seeds || par1ItemStack.getItem() == Items.melon_seeds);
+        return par1ItemStack != null && (par1ItemStack.getItem() == Items.WHEAT_SEEDS || par1ItemStack.getItem() == Items.MELON_SEEDS);
     }
 
     @Override

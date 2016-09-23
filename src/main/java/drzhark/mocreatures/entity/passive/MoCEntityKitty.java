@@ -30,7 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -517,7 +517,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return false;
         }
         if ((getKittyState() == 7) && (itemstack != null)
-                && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.cooked_fish))) {
+                && ((itemstack.getItem() == Items.cake) || (itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.COOKED_FISH))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -541,7 +541,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             this.itemAttackTarget = entityitem;
             return true;
         }
-        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.cooked_fish))) {
+        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.COOKED_FISH))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -645,7 +645,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if (!getIsHungry() || (this.rand.nextInt(10) != 0)) {
                         break;
                     }
-                    EntityItem entityitem = getClosestItem(this, 10D, Items.cooked_fish, Items.cooked_fish);
+                    EntityItem entityitem = getClosestItem(this, 10D, Items.COOKED_FISH, Items.COOKED_FISH);
                     if (entityitem == null) {
                         break;
                     }
