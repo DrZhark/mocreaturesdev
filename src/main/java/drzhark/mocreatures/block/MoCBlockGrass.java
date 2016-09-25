@@ -18,7 +18,7 @@ import java.util.Random;
 public class MoCBlockGrass extends MoCBlock {
 
     public MoCBlockGrass(String name) {
-        super(name, Material.grass);
+        super(name, Material.GRASS);
         setTickRandomly(true);
     }
 

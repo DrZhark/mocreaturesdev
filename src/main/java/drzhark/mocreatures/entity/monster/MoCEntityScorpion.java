@@ -1,13 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -21,17 +13,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityScorpion extends MoCEntityMob {
 
@@ -40,6 +43,9 @@ public class MoCEntityScorpion extends MoCEntityMob {
     public int mouthCounter;
     public int armCounter;
 
+    private static final DataParameter<Boolean> IS_PICKED = EntityDataManager.<Boolean>createKey(MoCEntityScorpion.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_BABIES = EntityDataManager.<Boolean>createKey(MoCEntityScorpion.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityScorpion(World world) {
         super(world);
         setSize(1.4F, 0.9F);
@@ -99,16 +105,16 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isPicked - 0 false 1 true
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // has babies - 0 false 1 true
+        this.dataManager.register(IS_PICKED, Boolean.valueOf(false));
+        this.dataManager.register(HAS_BABIES, Boolean.valueOf(false)); 
     }
 
     public boolean getHasBabies() {
-        return getIsAdult() && (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_BABIES)).booleanValue();
     }
 
     public boolean getIsPicked() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_PICKED)).booleanValue();
     }
 
     public boolean getIsPoisoning() {
@@ -116,13 +122,11 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     public void setHasBabies(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(HAS_BABIES, Boolean.valueOf(flag));
     }
 
     public void setPicked(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_PICKED, Boolean.valueOf(flag));
     }
 
     public void setPoisoning(boolean flag) {
@@ -242,13 +246,13 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 if (flag) {
                     MoCreatures.poisonPlayer((EntityPlayer) entityIn);
                 }
-                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.POISON, 70, 0));
             } else if (getType() == 4)// blue scorpions
             {
                 if (flag) {
                     MoCreatures.freezePlayer((EntityPlayer) entityIn);
                 }
-                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 70, 0));
 
             } else if (getType() == 3)// red scorpions
             {
@@ -319,7 +323,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     protected Item getDropItem() {
         if (!getIsAdult()) {
-            return Items.string;
+            return Items.STRING;
         }
 
         boolean flag = (this.rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
@@ -346,7 +350,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 }
                 return MoCreatures.chitinFrost;
             default:
-                return Items.string;
+                return Items.STRING;
         }
     }
 
@@ -466,11 +470,11 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         double dist = (0.2D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
         this.riddenByEntity.rotationYaw = this.rotationYaw;
     }
 }

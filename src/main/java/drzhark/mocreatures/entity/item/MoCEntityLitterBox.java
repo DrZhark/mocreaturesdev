@@ -1,8 +1,7 @@
 package drzhark.mocreatures.entity.item;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,17 +13,23 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 
 public class MoCEntityLitterBox extends EntityLiving {
 
     public int littertime;
-
+    private static final DataParameter<Boolean> PICKED_UP = EntityDataManager.<Boolean>createKey(MoCEntityLitterBox.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> USED_LITTER = EntityDataManager.<Boolean>createKey(MoCEntityLitterBox.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityLitterBox(World world) {
         super(world);
         setSize(1.0F, 0.3F);
@@ -43,32 +48,24 @@ public class MoCEntityLitterBox extends EntityLiving {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte) 0)); // pickedUp - 0 false 1 true
-        this.dataWatcher.addObject(17, Byte.valueOf((byte) 0)); // usedLitter - 0 false 1 true
+        this.dataManager.register(PICKED_UP, Boolean.valueOf(false));
+        this.dataManager.register(USED_LITTER, Boolean.valueOf(false));
     }
 
     public boolean getPickedUp() {
-        return (this.dataWatcher.getWatchableObjectByte(17) == 1);
+    	return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
     }
 
     public boolean getUsedLitter() {
-        return (this.dataWatcher.getWatchableObjectByte(16) == 1);
+    	return ((Boolean)this.dataManager.get(USED_LITTER)).booleanValue();
     }
 
     public void setPickedUp(boolean flag) {
-        if (this.worldObj.isRemote) {
-            return;
-        }
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(17, Byte.valueOf(input));
+    	this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
     }
 
     public void setUsedLitter(boolean flag) {
-        if (this.worldObj.isRemote) {
-            return;
-        }
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(16, Byte.valueOf(input));
+    	this.dataManager.set(USED_LITTER, Boolean.valueOf(flag));
     }
 
     public boolean attackEntityFrom(Entity entity, int i) {
@@ -140,8 +137,8 @@ public class MoCEntityLitterBox extends EntityLiving {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null)
                 && MoCreatures.isServer()
-                && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe)
-                        || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
+                && ((itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
+                        || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
             entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.litterbox));
             this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();

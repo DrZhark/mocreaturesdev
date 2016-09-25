@@ -68,7 +68,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
         if (this.rand.nextInt(10) == 0) {
             return MoCreatures.silversword;
         }
-        return Items.bone;
+        return Items.BONE;
 
     }
 

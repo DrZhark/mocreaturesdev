@@ -3,9 +3,12 @@ package drzhark.mocreatures.item;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class MoCItemEgg extends MoCItem {
@@ -22,7 +25,7 @@ public class MoCItemEgg extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
         itemstack.stackSize--;
         if (MoCreatures.isServer() && entityplayer.onGround) {
             int i = itemstack.getItemDamage();
@@ -36,7 +39,7 @@ public class MoCItemEgg extends MoCItem {
             entityegg.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             entityegg.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
         }
-        return itemstack;
+        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
     }
 
     @Override

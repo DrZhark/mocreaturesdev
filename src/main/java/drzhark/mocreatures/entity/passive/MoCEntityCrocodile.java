@@ -281,7 +281,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         if (!this.isBeingRidden()) {
             return;
         }
@@ -290,7 +290,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         double dist = getEdad() * 0.01F + this.riddenByEntity.width - 0.4D;
         double newPosX = this.posX - (dist * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
 
         if (this.spinInt > 40) {
             direction = -1;

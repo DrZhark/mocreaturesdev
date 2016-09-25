@@ -79,21 +79,9 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         return true;
     }
 
-    /*@Override
-    protected void entityInit() {
-        super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // byte IsPicked, 0 = false 1 = true
-    }*/
-
     public boolean getIsPicked() {
         return this.getRidingEntity() != null;
-        //return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }
-
-    /*public void setPicked(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
-    }*/
 
     @SuppressWarnings("unused")
     private boolean checkNearCats() {
@@ -118,8 +106,8 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         Block block = this.worldObj.getBlockState(pos.down()).getBlock();
         return ((MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
                 && (this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0)
-                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.cobblestone) || (block == Blocks.planks)
-                || (block == Blocks.dirt) || (block == Blocks.stone) || (block == Blocks.grass)));
+                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.COBBLESTONE) || (block == Blocks.PLANKS)
+                || (block == Blocks.DIRT) || (block == Blocks.STONE) || (block == Blocks.GRASS)));
     }
 
     @Override

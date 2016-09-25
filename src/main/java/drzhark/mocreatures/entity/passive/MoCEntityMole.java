@@ -10,8 +10,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -19,6 +23,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class MoCEntityMole extends MoCEntityTameableAnimal {
+
+	private static final DataParameter<Integer> MOLE_STATE = EntityDataManager.<Integer>createKey(MoCEntityMole.class, DataSerializers.VARINT);
 
     public MoCEntityMole(World world) {
         super(world);
@@ -43,7 +49,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // state - 0 outside / 1 digging / 2 underground / 3 pick-a-boo
+        this.dataManager.register(MOLE_STATE, Integer.valueOf(0)); // state - 0 outside / 1 digging / 2 underground / 3 pick-a-boo
 
     }
 
@@ -87,8 +93,8 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
      *
      * @return 0 outside / 1 digging / 2 underground / 3 pick-a-boo
      */
-    public byte getState() {
-        return this.dataWatcher.getWatchableObjectByte(23);
+    public int getState() {
+    	return ((Integer)this.dataManager.get(MOLE_STATE)).intValue();
     }
 
     /**
@@ -96,8 +102,8 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
      *
      * @param b 0 outside / 1 digging / 2 underground / 3 pick-a-boo
      */
-    public void setState(byte b) {
-        this.dataWatcher.updateObject(23, Byte.valueOf(b));
+    public void setState(int i) {
+    	this.dataManager.set(MOLE_STATE, Integer.valueOf(i));
     }
 
     @Override
@@ -141,30 +147,30 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
 
         if (MoCreatures.isServer()) {
             if (this.rand.nextInt(10) == 0 && getState() == 1) {
-                setState((byte) 2);
+                setState(2);
             }
 
             if (getState() != 2 && getState() != 1 && isOnDirt()) {
                 EntityLivingBase entityliving = getBoogey(4D);
                 if ((entityliving != null) && canEntityBeSeen(entityliving)) {
-                    setState((byte) 1);
+                    setState(1);
                     this.getNavigator().clearPathEntity();
                 }
             }
 
             //if underground and no enemies: pick a boo
             if (this.rand.nextInt(20) == 0 && getState() == 2 && (getBoogey(4D) == null)) {
-                setState((byte) 3);
+                setState(3);
                 this.getNavigator().clearPathEntity();
             }
 
             //if not on dirt, get out!
             if (getState() != 0 && !isOnDirt()) {
-                setState((byte) 0);
+                setState(0);
             }
 
             if (this.rand.nextInt(30) == 0 && getState() == 3) {
-                setState((byte) 2);
+                setState(2);
             }
 
             /*

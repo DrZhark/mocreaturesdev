@@ -1,8 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -18,19 +15,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 
 public class MoCEntityWerewolf extends MoCEntityMob {
 
     private boolean transforming;
     private int tcounter;
     private int textCounter;
-
+    private static final DataParameter<Boolean> IS_HUMAN = EntityDataManager.<Boolean>createKey(MoCEntityWerewolf.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_HUNCHED = EntityDataManager.<Boolean>createKey(MoCEntityWerewolf.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityWerewolf(World world) {
         super(world);
         setSize(0.9F, 1.6F);
@@ -55,8 +60,8 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isHumanForm - 0 false 1 true
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); //hunched
+        this.dataManager.register(IS_HUMAN, Boolean.valueOf(false));
+        this.dataManager.register(IS_HUNCHED, Boolean.valueOf(false));
     }
 
     @Override
@@ -120,21 +125,19 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     public boolean getIsHumanForm() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_HUMAN)).booleanValue();
     }
 
     public void setHumanForm(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_HUMAN, Boolean.valueOf(flag));
     }
 
     public boolean getIsHunched() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(IS_HUNCHED)).booleanValue();
     }
 
     public void setHunched(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(IS_HUNCHED, Boolean.valueOf(flag));
     }
 
     @Override
@@ -200,54 +203,54 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         if (getIsHumanForm()) {
             switch (i) {
                 case 0: // '\0'
-                    return Items.wooden_shovel;
+                    return Items.WOODEN_SHOVEL;
 
                 case 1: // '\001'
-                    return Items.wooden_axe;
+                    return Items.WOODEN_AXE;
 
                 case 2: // '\002'
-                    return Items.wooden_sword;
+                    return Items.WOODEN_SWORD;
 
                 case 3: // '\003'
-                    return Items.wooden_hoe;
+                    return Items.WOODEN_HOE;
 
                 case 4: // '\004'
-                    return Items.wooden_pickaxe;
+                    return Items.WOODEN_PICKAXE;
             }
-            return Items.stick;
+            return Items.STICK;
         }
         switch (i) {
             case 0: // '\0'
-                return Items.iron_hoe;
+                return Items.IRON_HOE;
 
             case 1: // '\001'
-                return Items.iron_shovel;
+                return Items.IRON_SHOVEL;
 
             case 2: // '\002'
-                return Items.iron_axe;
+                return Items.IRON_AXE;
 
             case 3: // '\003'
-                return Items.iron_pickaxe;
+                return Items.IRON_PICKAXE;
 
             case 4: // '\004'
-                return Items.iron_sword;
+                return Items.IRON_SWORD;
 
             case 5: // '\005'
-                return Items.stone_hoe;
+                return Items.STONE_HOE;
 
             case 6: // '\006'
-                return Items.stone_shovel;
+                return Items.STONE_SHOVEL;
 
             case 7: // '\007'
-                return Items.stone_axe;
+                return Items.STONE_AXE;
 
             case 8: // '\b'
-                return Items.stone_pickaxe;
+                return Items.STONE_PICKAXE;
 
             case 9: // '\t'
-                return Items.stone_sword;
+                return Items.STONE_SWORD;
         }
-        return Items.golden_apple;
+        return Items.GOLDEN_APPLE;
     }
 
     @Override

@@ -1,20 +1,11 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import drzhark.mocreatures.network.message.MoCMessageHeart;
+import java.util.List;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.Block.SoundType;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,15 +23,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.inventory.MoCAnimalChest;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
 
 public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
@@ -54,6 +57,11 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     private int tCounter;
     private float fTransparency;
     private boolean hasEaten;
+    private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_AMULET = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SITTING = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> GHOST = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CHESTED = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
 
     public MoCEntityNewBigCat(World world) {
         super(world);
@@ -134,69 +142,61 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(28, Byte.valueOf((byte) 0)); // hasAmulet  -  0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isSitting -  0 false 1 true
-        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isGhost -    0 false 1 true
-        this.dataWatcher.addObject(26, Byte.valueOf((byte) 0)); // isChested -  0 false 1 true
-        this.dataWatcher.addObject(27, Byte.valueOf((byte) 0)); // isRideable - 0 false 1 true
+        this.dataManager.register(RIDEABLE, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(SITTING, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(GHOST, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(HAS_AMULET, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(CHESTED, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
     }
 
     public boolean getHasEaten() {
         return this.hasEaten;
-        //return (this.dataWatcher.getWatchableObjectByte(23) == 1);
     }
 
     public boolean getHasAmulet() {
-        return (this.dataWatcher.getWatchableObjectByte(28) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_AMULET)).booleanValue();
     }
 
     @Override
     public boolean getIsSitting() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(SITTING)).booleanValue();
     }
 
     @Override
     public boolean getIsRideable() {
-        return (this.dataWatcher.getWatchableObjectByte(27) == 1);
+    	return ((Boolean)this.dataManager.get(RIDEABLE)).booleanValue();
     }
 
     public boolean getIsChested() {
-        return (this.dataWatcher.getWatchableObjectByte(26) == 1);
+    	return ((Boolean)this.dataManager.get(CHESTED)).booleanValue();
     }
 
     public boolean getIsGhost() {
-        return (this.dataWatcher.getWatchableObjectByte(25) == 1);
+    	return ((Boolean)this.dataManager.get(GHOST)).booleanValue();
     }
 
     public void setEaten(boolean flag) {
         this.hasEaten = flag;
-        //byte input = (byte) (flag ? 1 : 0);
-        //this.dataWatcher.updateObject(23, Byte.valueOf(input));
     }
 
     public void setHasAmulet(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(28, Byte.valueOf(input));
+    	this.dataManager.set(HAS_AMULET, Boolean.valueOf(flag));
     }
 
     public void setSitting(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(SITTING, Boolean.valueOf(flag));
     }
 
     public void setIsChested(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(26, Byte.valueOf(input));
+    	this.dataManager.set(CHESTED, Boolean.valueOf(flag));
     }
 
     public void setRideable(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(27, Byte.valueOf(input));
+    	this.dataManager.set(RIDEABLE, Boolean.valueOf(flag));
     }
 
     public void setIsGhost(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(25, Byte.valueOf(input));
+    	this.dataManager.set(GHOST, Boolean.valueOf(flag));
     }
 
     // Method used for receiving damage from another source
@@ -562,11 +562,11 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     }*/
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         double dist = getSizeFactor() * (0.1D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
     }
 
     @Override
@@ -660,7 +660,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         }
 
         if ((itemstack != null) && getIsTamed() && !getIsRideable() && (getEdad() > 80)
-                && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle)) {
+                && (itemstack.getItem() == Items.SADDLE || itemstack.getItem() == MoCreatures.horsesaddle)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -668,7 +668,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && !getIsChested() && (itemstack.getItem() == Item.getItemFromBlock(Blocks.chest))) {
+        if ((itemstack != null) && getIsTamed() && getIsAdult() && !getIsChested() && (itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -705,7 +705,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         if (isFlyer()) {
             return;
         }
-
         float i = (float) (Math.ceil(f - 3F) / 2F);
         if (MoCreatures.isServer() && (i > 0)) {
             i /= 2;
@@ -713,16 +712,18 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                 attackEntityFrom(DamageSource.fall, i);
             }
             if ((this.isBeingRidden()) && (i > 1F)) {
-                this.riddenByEntity.attackEntityFrom(DamageSource.fall, i);
+            	for (Entity entity : this.getRecursivePassengers())
+                {
+                    entity.attackEntityFrom(DamageSource.fall, (float)i);
+                }
             }
+            IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ));
+            Block block = iblockstate.getBlock();
 
-            Block block =
-                    this.worldObj.getBlockState(
-                            new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.20000000298023221D
-                                    - this.prevRotationPitch), MathHelper.floor_double(this.posZ))).getBlock();
-            if (block != Blocks.AIR) {
-                SoundType stepsound = block.stepSound;
-                this.worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getFrequency() * 0.75F);
+            if (iblockstate.getMaterial() != Material.AIR && !this.isSilent())
+            {
+                SoundType soundtype = block.getSoundType(iblockstate, worldObj, new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ), this);
+                this.worldObj.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, soundtype.getStepSound(), this.getSoundCategory(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
             }
         }
     }
@@ -775,7 +776,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
             if (getIsChested()) {
                 MoCTools.dropInventory(this, this.localchest);
-                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.chest, 1));
+                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.CHEST, 1));
                 setIsChested(false);
             }
         }

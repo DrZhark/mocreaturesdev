@@ -23,7 +23,7 @@ import java.util.Random;
 public class MoCBlockLeaf extends MoCBlock {
 
     public MoCBlockLeaf(String name) {
-        super(name, Material.leaves);
+        super(name, Material.LEAVES);
         setTickRandomly(true);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);

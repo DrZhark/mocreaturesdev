@@ -1,14 +1,10 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import drzhark.mocreatures.network.message.MoCMessageTwoBytes;
 import io.netty.buffer.ByteBuf;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -22,20 +18,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-
-import java.util.ArrayList;
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.network.message.MoCMessageTwoBytes;
 
 public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpawnData {
 
@@ -44,6 +48,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     private byte golemCubes[];
     private int dCounter = 0;
     private int sCounter;
+    private static final DataParameter<Integer> GOLEM_STATE = EntityDataManager.<Integer>createKey(MoCEntityGolem.class, DataSerializers.VARINT);
 
     public MoCEntityGolem(World world) {
         super(world);
@@ -81,15 +86,15 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     protected void entityInit() {
         super.entityInit();
         initGolemCubes();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // gState - 0 spawned / 1 summoning rocks /2 has enemy /3 half life (harder) /4 dying
+        this.dataManager.register(GOLEM_STATE, Integer.valueOf(0)); // 0 spawned / 1 summoning rocks /2 has enemy /3 half life (harder) /4 dying
     }
 
     public int getGolemState() {
-        return (this.dataWatcher.getWatchableObjectByte(23));
+    	return ((Integer)this.dataManager.get(GOLEM_STATE)).intValue();
     }
 
-    public void setGolemState(int b) {
-        this.dataWatcher.updateObject(23, Byte.valueOf((byte) b));
+    public void setGolemState(int i) {
+    	this.dataManager.set(GOLEM_STATE, Integer.valueOf(i));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package drzhark.mocreatures.item;
 
-import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -9,15 +8,17 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.Multimap;
 
 public class MoCItemWeapon extends MoCItem {
 
@@ -55,12 +56,12 @@ public class MoCItemWeapon extends MoCItem {
     }
 
     public float getStrVsBlock(ItemStack stack, Block block) {
-        if (block == Blocks.web) {
+        if (block == Blocks.WEB) {
             return 15.0F;
         } else {
             Material material = block.getMaterial();
-            return material != Material.plants && material != Material.vine && material != Material.coral && material != Material.leaves
-                    && material != Material.gourd ? 1.0F : 1.5F;
+            return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES
+                    && material != Material.GOURD ? 1.0F : 1.5F;
         }
     }
 
@@ -81,19 +82,19 @@ public class MoCItemWeapon extends MoCItem {
         int potionTime = 100;
         switch (this.specialWeaponType) {
             case 1: //poison
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.POISON, potionTime, 0));
                 break;
             case 2: //frost slowdown
-                target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, potionTime, 0));
                 break;
             case 3: //fire
                 target.setFire(10);
                 break;
             case 4: //confusion
-                target.addPotionEffect(new PotionEffect(Potion.confusion.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, potionTime, 0));
                 break;
             case 5: //blindness
-                target.addPotionEffect(new PotionEffect(Potion.blindness.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, potionTime, 0));
                 break;
             default:
                 break;
@@ -148,7 +149,7 @@ public class MoCItemWeapon extends MoCItem {
      */
     @Override
     public boolean canHarvestBlock(Block par1Block) {
-        return par1Block == Blocks.web;
+        return par1Block == Blocks.WEB;
     }
 
     /**

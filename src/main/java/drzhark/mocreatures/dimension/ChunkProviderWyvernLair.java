@@ -404,7 +404,7 @@ public class ChunkProviderWyvernLair implements IChunkProvider {
     private boolean portalDone = false;
 
     public void generateTower(World par1World, Random par2Random, int par3, int par4) {
-        WorldGenTower myTower = new WorldGenTower(Blocks.grass, Blocks.double_stone_slab, Blocks.lapis_ore);
+        WorldGenTower myTower = new WorldGenTower(Blocks.GRASS, Blocks.double_stone_slab, Blocks.lapis_ore);
         if (!this.towerDone) {
             int randPosX = par3 + par2Random.nextInt(16) + 8;
             int randPosZ = par4 + par2Random.nextInt(16) + 8;

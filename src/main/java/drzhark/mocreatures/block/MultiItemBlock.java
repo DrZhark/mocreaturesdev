@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 

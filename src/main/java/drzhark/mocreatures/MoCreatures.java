@@ -1,6 +1,53 @@
 package drzhark.mocreatures;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
+
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
 import com.mojang.authlib.GameProfile;
+
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
 import drzhark.mocreatures.block.MoCBlockLeaf;
@@ -104,53 +151,6 @@ import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.utils.MoCLog;
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityList.EntityEggInfo;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
 
 @Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION)
 public class MoCreatures {
@@ -760,20 +760,20 @@ public class MoCreatures {
         heartdarkness = new MoCItem("heartdarkness");
         heartfire = new MoCItem("heartfire");
         heartundead = new MoCItem("heartundead");
-        ostrichraw = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        ostrichraw = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
         ostrichcooked = new MoCItemFood("ostrichcooked", 6, 0.6F, false);
         unicornhorn = new MoCItem("unicornhorn");
 
         horsearmorcrystal = new MoCItem("horsearmorcrystal");
 
-        rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
         cookedTurkey = new MoCItemFood("turkeycooked", 8, 0.6F, false);
         animalHide = new MoCItem("hide");
         chestHide = new MoCItemArmor("hidechest", hideARMOR, 4, 1);
         helmetHide = new MoCItemArmor("hidehelmet", hideARMOR, 4, 0);
         legsHide = new MoCItemArmor("hidelegs", hideARMOR, 4, 2);
         bootsHide = new MoCItemArmor("hideboots", hideARMOR, 4, 3);
-        ratRaw = new MoCItemFood("ratraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        ratRaw = new MoCItemFood("ratraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
         ratCooked = new MoCItemFood("ratcooked", 4, 0.6F, false);
         ratBurger = new MoCItemFood("ratburger", 8, 0.6F, false);
 
@@ -824,7 +824,7 @@ public class MoCreatures {
         elephantHowdah = new MoCItem("elephanthowdah");
         mammothPlatform = new MoCItem("mammothplatform");
 
-        crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F);
+        crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
         crabcooked = new MoCItemFood("crabcooked", 6, 0.6F, false);
         silversword = new MoCItemSword("silversword", MoCreatures.SILVER);
 
@@ -867,15 +867,15 @@ public class MoCreatures {
 
         GameRegistry.addSmelting(Items.egg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.paper, Items.FEATHER, Items.redstone});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.paper, Items.FEATHER, Items.REDSTONE});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {scrollOfSale, Items.redstone});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {scrollOfSale, Items.REDSTONE});
 
         GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.paper, Items.FEATHER});
 
         GameRegistry.addShapelessRecipe(new ItemStack(Items.LEATHER, 1), new Object[] {animalHide});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(Blocks.wool, 1), new Object[] {fur});
+        GameRegistry.addShapelessRecipe(new ItemStack(Blocks.WOOL, 1), new Object[] {fur});
 
         GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordNether, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingNether, scorpStingNether,
                 scorpStingNether});
@@ -889,7 +889,7 @@ public class MoCreatures {
         GameRegistry.addShapelessRecipe(new ItemStack(scorpSwordDirt, 1), new Object[] {Items.DIAMOND_SWORD, scorpStingDirt, scorpStingDirt,
                 scorpStingDirt});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] {new ItemStack(turtleraw, 1), new ItemStack(Items.bowl, 1)});
+        GameRegistry.addShapelessRecipe(new ItemStack(turtlesoup, 1), new Object[] {new ItemStack(turtleraw, 1), new ItemStack(Items.BOWL, 1)});
 
         GameRegistry.addShapelessRecipe(new ItemStack(essencelight, 1), new Object[] {essenceundead, essencefire, essencedarkness});
 
@@ -910,23 +910,23 @@ public class MoCreatures {
                         Blocks.PLANKS});
 
         GameRegistry.addRecipe(new ItemStack(elephantChest, 1),
-                new Object[] {" W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0),
+                new Object[] {" W ", "CHC", " W ", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.WOOL, 1, 0),
                         Character.valueOf('C'), Blocks.CHEST});
 
         GameRegistry.addRecipe(new ItemStack(elephantHarness, 1),
-                new Object[] {"HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 0),
+                new Object[] {"HWH", "IWI", "HWH", Character.valueOf('H'), animalHide, Character.valueOf('W'), new ItemStack(Blocks.WOOL, 1, 0),
                         Character.valueOf('I'), Items.IRON_INGOT});
 
         GameRegistry.addRecipe(new ItemStack(elephantHowdah, 1),
-                new Object[] {"SRS", "RYR", "SRS", Character.valueOf('S'), Items.STICK, Character.valueOf('R'), new ItemStack(Blocks.wool, 1, 14),
-                        Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4)});
+                new Object[] {"SRS", "RYR", "SRS", Character.valueOf('S'), Items.STICK, Character.valueOf('R'), new ItemStack(Blocks.WOOL, 1, 14),
+                        Character.valueOf('Y'), new ItemStack(Blocks.WOOL, 1, 4)});
 
         GameRegistry.addRecipe(new ItemStack(elephantGarment, 1), new Object[] {"pyg", "RMR", "BYB", Character.valueOf('R'),
-                new ItemStack(Blocks.wool, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 4), Character.valueOf('B'),
-                new ItemStack(Blocks.wool, 1, 11), Character.valueOf('M'), medallion, Character.valueOf('p'), new ItemStack(Items.DYE, 1, 9),
+                new ItemStack(Blocks.WOOL, 1, 14), Character.valueOf('Y'), new ItemStack(Blocks.WOOL, 1, 4), Character.valueOf('B'),
+                new ItemStack(Blocks.WOOL, 1, 11), Character.valueOf('M'), medallion, Character.valueOf('p'), new ItemStack(Items.DYE, 1, 9),
                 Character.valueOf('y'), new ItemStack(Items.DYE, 1, 11), Character.valueOf('g'), new ItemStack(Items.DYE, 1, 10)});
 
-        //Items.dye.itemID
+        //Items.DYE.itemID
         GameRegistry.addRecipe(new ItemStack(ratBurger, 1),
                 new Object[] {"SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.BREAD, Character.valueOf('S'),
                         Items.PUMPKIN_SEEDS, Character.valueOf('G'), Items.WHEAT_SEEDS});
@@ -974,11 +974,11 @@ public class MoCreatures {
         GameRegistry.addRecipe(new ItemStack(horsearmorcrystal, 1), new Object[] {"  D", "CDC", "DCD", Character.valueOf('D'), Items.DIAMOND,
                 Character.valueOf('C'), Blocks.GLASS});
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 15) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmormetal, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotIron, Character.valueOf('Y'), new ItemStack(Blocks.WOOL, 1, 15) });
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 14) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmorgold, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.ingotGold, Character.valueOf('Y'), new ItemStack(Blocks.WOOL, 1, 14) });
 
-        //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Blocks.wool, 1, 11) });
+        //GameRegistry.addRecipe(new ItemStack(horsearmordiamond, 1), new Object[] { "  X", "XYX", "XXX", Character.valueOf('X'), Item.diamond, Character.valueOf('Y'), new ItemStack(Blocks.WOOL, 1, 11) });
 
         GameRegistry.addRecipe(new ItemStack(essencelight, 1),
                 new Object[] {"X", "Y", "Z", Character.valueOf('X'), essenceundead, Character.valueOf('Y'), essencefire, Character.valueOf('Z'),
@@ -1005,7 +1005,7 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsFur, 1), new Object[] {"X X", "X X", Character.valueOf('X'), fur});
 
-        //GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'),
+        //GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.STICK, Character.valueOf('X'),
         //        Items.iron_ingot,});
 
         GameRegistry.addRecipe(new ItemStack(petamulet, 1),
@@ -1096,7 +1096,7 @@ public class MoCreatures {
 
             GameRegistry.addRecipe(new ItemStack(kittybed[i], 1),
                     new Object[] {"###", "#X#", "Z  ", Character.valueOf('#'), Blocks.PLANKS, Character.valueOf('X'),
-                            new ItemStack(Blocks.wool, 1, i), Character.valueOf('Z'), Items.IRON_INGOT,});
+                            new ItemStack(Blocks.WOOL, 1, i), Character.valueOf('Z'), Items.IRON_INGOT,});
             String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             LanguageRegistry.addName(new ItemStack(kittybed[i], 1), (s + " Kitty Bed"));

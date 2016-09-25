@@ -33,7 +33,7 @@ public class MoCRenderTRock extends Render<Entity> {
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.bindTexture(TextureMap.locationBlocksTexture);
+        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         float lightLevel = entitytrock.getBrightness(partialTicks);
         blockrendererdispatcher.renderBlockBrightness(entitytrock.getState(), lightLevel);
         GlStateManager.popMatrix();
@@ -45,7 +45,7 @@ public class MoCRenderTRock extends Render<Entity> {
     }
 
     protected ResourceLocation getMyTexture(MoCEntityThrowableRock trock) {
-        return TextureMap.locationBlocksTexture;
+        return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 
     @Override

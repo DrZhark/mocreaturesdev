@@ -53,7 +53,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 
     @Override
     protected Item getDropItem() {
-        return Items.gunpowder;
+        return Items.GUNPOWDER;
     }
 
     @Override

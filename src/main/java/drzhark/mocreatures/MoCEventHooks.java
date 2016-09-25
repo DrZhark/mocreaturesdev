@@ -28,7 +28,7 @@ public class MoCEventHooks {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         // if overworld has been deleted or unloaded, reset our flag
-        if (event.world.provider.getDimensionType().getId() == 0) {
+        if (event.getWorld().provider.getDimensionType().getId() == 0) {
             MoCreatures.proxy.worldInitDone = false;
         }
     }
@@ -37,7 +37,7 @@ public class MoCEventHooks {
     public void onWorldLoad(WorldEvent.Load event) {
         if (DimensionManager.getWorld(0) != null && !MoCreatures.proxy.worldInitDone) // if overworld has loaded, use its mapstorage
         {
-            MoCPetMapData data = (MoCPetMapData) DimensionManager.getWorld(0).getMapStorage().loadData(MoCPetMapData.class, "mocreatures");
+            MoCPetMapData data = (MoCPetMapData) DimensionManager.getWorld(0).getMapStorage().getOrLoadData(MoCPetMapData.class, "mocreatures");
             if (data == null) {
                 data = new MoCPetMapData("mocreatures");
             }
@@ -48,7 +48,7 @@ public class MoCEventHooks {
             MoCreatures.proxy.worldInitDone = true;
         }
         // make sure doMobSpawning is on if CMS is not installed
-        GameRules gameRule = event.world.getGameRules();
+        GameRules gameRule = event.getWorld().getGameRules();
         if (gameRule != null && !MoCreatures.isCustomSpawnerLoaded) {
             gameRule.setOrCreateGameRule("doMobSpawning", "true");
         }
@@ -57,8 +57,8 @@ public class MoCEventHooks {
     @SubscribeEvent
     public void onLivingDeathEvent(LivingDeathEvent event) {
         if (MoCreatures.isServer()) {
-            if (IMoCTameable.class.isAssignableFrom(event.entityLiving.getClass())) {
-                IMoCTameable mocEntity = (IMoCTameable) event.entityLiving;
+            if (IMoCTameable.class.isAssignableFrom(event.getEntityLiving().getClass())) {
+                IMoCTameable mocEntity = (IMoCTameable) event.getEntityLiving();
                 if (mocEntity.getIsTamed() && mocEntity.getPetHealth() > 0 && !mocEntity.isRiderDisconnecting()) {
                     return;
                 }
@@ -77,28 +77,28 @@ public class MoCEventHooks {
         if (MoCreatures.proxy.forceDespawns && !MoCreatures.isCustomSpawnerLoaded) {
             // try to guess what we should ignore
             // Monsters
-            if ((IMob.class.isAssignableFrom(event.entityLiving.getClass()) || IRangedAttackMob.class.isAssignableFrom(event.entityLiving.getClass()))
-                    || event.entityLiving.isCreatureType(EnumCreatureType.MONSTER, false)) {
+            if ((IMob.class.isAssignableFrom(event.getEntityLiving().getClass()) || IRangedAttackMob.class.isAssignableFrom(event.getEntityLiving().getClass()))
+                    || event.getEntityLiving().isCreatureType(EnumCreatureType.MONSTER, false)) {
                 return;
             }
             // Tameable
-            if (event.entityLiving instanceof EntityTameable) {
-                if (((EntityTameable) event.entityLiving).isTamed()) {
+            if (event.getEntityLiving() instanceof EntityTameable) {
+                if (((EntityTameable) event.getEntityLiving()).isTamed()) {
                     return;
                 }
             }
             // Farm animals
-            if (event.entityLiving instanceof EntitySheep || event.entityLiving instanceof EntityPig || event.entityLiving instanceof EntityCow
-                    || event.entityLiving instanceof EntityChicken) {
+            if (event.getEntityLiving() instanceof EntitySheep || event.getEntityLiving() instanceof EntityPig || event.getEntityLiving() instanceof EntityCow
+                    || event.getEntityLiving() instanceof EntityChicken) {
                 // check lightlevel
-                if (isValidDespawnLightLevel(event.entity, event.world, MoCreatures.proxy.minDespawnLightLevel,
+                if (isValidDespawnLightLevel(event.getEntity(), event.getWorld(), MoCreatures.proxy.minDespawnLightLevel,
                         MoCreatures.proxy.maxDespawnLightLevel)) {
                     return;
                 }
             }
             // Others
             NBTTagCompound nbt = new NBTTagCompound();
-            event.entityLiving.writeToNBT(nbt);
+            event.getEntityLiving().writeToNBT(nbt);
             if (nbt != null) {
                 if (nbt.hasKey("Owner") && !nbt.getString("Owner").equals("")) {
                     return; // ignore
@@ -108,15 +108,15 @@ public class MoCEventHooks {
                 }
             }
             // Deny Rest
-            if (event.entityLiving.getAge() > 600) {
+            if (event.getEntityLiving().getAge() > 600) {
                 event.setResult(Result.ALLOW);
             }
 
             if (MoCreatures.proxy.debug) {
-                int x = MathHelper.floor_double(event.entity.posX);
-                int y = MathHelper.floor_double(event.entity.getEntityBoundingBox().minY);
-                int z = MathHelper.floor_double(event.entity.posZ);
-                MoCLog.logger.info("Forced Despawn of entity " + event.entityLiving + " at " + x + ", " + y + ", " + z
+                int x = MathHelper.floor_double(event.getEntity().posX);
+                int y = MathHelper.floor_double(event.getEntity().getEntityBoundingBox().minY);
+                int z = MathHelper.floor_double(event.getEntity().posZ);
+                MoCLog.logger.info("Forced Despawn of entity " + event.getEntityLiving() + " at " + x + ", " + y + ", " + z
                         + ". To prevent forced despawns, use /moc forceDespawns false.");
             }
         }

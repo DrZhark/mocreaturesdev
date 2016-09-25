@@ -1234,10 +1234,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public void setArmorType(byte i) {
+    public void setArmorType(int i) {
     }
 
-    public byte getArmorType() {
+    public int getArmorType() {
         return 0;
     }
 

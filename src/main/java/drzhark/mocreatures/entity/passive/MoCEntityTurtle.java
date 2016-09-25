@@ -1,10 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,16 +11,26 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 
 public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     private boolean isSwinging;
     private boolean twistright;
     private int flopcounter;
+    private static final DataParameter<Boolean> IS_UPSIDE_DOWN = EntityDataManager.<Boolean>createKey(MoCEntityTurtle.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_HIDING = EntityDataManager.<Boolean>createKey(MoCEntityTurtle.class, DataSerializers.BOOLEAN);
 
     public MoCEntityTurtle(World world) {
         super(world);
@@ -47,8 +52,8 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isUpsideDown - 0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isHiding - 0 false 1 true
+        this.dataManager.register(IS_UPSIDE_DOWN, Boolean.valueOf(false));; // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(IS_HIDING, Boolean.valueOf(false));; // rideable: 0 nothing, 1 saddle
     }
 
     @Override
@@ -76,23 +81,21 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     }
 
     public boolean getIsHiding() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_HIDING)).booleanValue();
     }
 
     public boolean getIsUpsideDown() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(IS_UPSIDE_DOWN)).booleanValue();
     }
-
+    
     public void setIsHiding(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_HIDING, Boolean.valueOf(flag));
     }
 
     public void setIsUpsideDown(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
         this.flopcounter = 0;
         this.swingProgress = 0.0F;
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+        this.dataManager.set(IS_UPSIDE_DOWN, Boolean.valueOf(flag));
     }
 
     @Override
@@ -180,7 +183,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
                     setIsHiding(false);
                     if (!hasPath() && this.rand.nextInt(50) == 0) {
-                        EntityItem entityitem = getClosestItem(this, 10D, Items.melon, Items.REEDS);
+                        EntityItem entityitem = getClosestItem(this, 10D, Items.MELON, Items.REEDS);
                         if (entityitem != null) {
                             float f = entityitem.getDistanceToEntity(this);
                             if (f > 2.0F) {
@@ -385,7 +388,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && (par1ItemStack.getItem() == Items.REEDS || par1ItemStack.getItem() == Items.melon);
+        return par1ItemStack != null && (par1ItemStack.getItem() == Items.REEDS || par1ItemStack.getItem() == Items.MELON);
     }
 
     @Override

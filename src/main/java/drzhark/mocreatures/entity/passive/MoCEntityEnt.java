@@ -107,7 +107,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             return;
         }
         if (i == 1) {
-            entityDropItem(new ItemStack(Items.stick, qty, 0), 0.0F);
+            entityDropItem(new ItemStack(Items.STICK, qty, 0), 0.0F);
             return;
 
         }
@@ -174,8 +174,8 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         Block blockUnderFeet = this.worldObj.getBlockState(pos.down()).getBlock();
         Block blockOnFeet = this.worldObj.getBlockState(pos).getBlock();
 
-        if (blockUnderFeet == Blocks.dirt) {
-            Block block = Blocks.grass;
+        if (blockUnderFeet == Blocks.DIRT) {
+            Block block = Blocks.GRASS;
             BlockEvent.BreakEvent event = null;
             if (!this.worldObj.isRemote) {
                 event =
@@ -189,7 +189,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             return false;
         }
 
-        if (blockUnderFeet == Blocks.grass && blockOnFeet == Blocks.AIR) {
+        if (blockUnderFeet == Blocks.GRASS && blockOnFeet == Blocks.AIR) {
             IBlockState iblockstate = getBlockStateToBePlanted();
             int plantChance = 3;
             if (iblockstate.getBlock() == Blocks.sapling) {

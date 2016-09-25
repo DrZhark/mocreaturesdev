@@ -1,15 +1,10 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityPlatform;
-import drzhark.mocreatures.inventory.MoCAnimalChest;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,18 +21,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.item.MoCEntityPlatform;
+import drzhark.mocreatures.inventory.MoCAnimalChest;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
@@ -55,6 +59,10 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public int earCounter;
     private byte tuskUses;
     private byte temper;
+    private static final DataParameter<Integer> TUSK_TYPE = EntityDataManager.<Integer>createKey(MoCEntityElephant.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> STORAGE_TYPE = EntityDataManager.<Integer>createKey(MoCEntityElephant.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> HARNESS_TYPE = EntityDataManager.<Integer>createKey(MoCEntityElephant.class, DataSerializers.VARINT);
+
 
     public MoCEntityElephant(World world) {
         super(world);
@@ -101,36 +109,35 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // tusks: 0 nothing, 1 wood, 2 iron, 3 diamond
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // storage: 0 nothing, 1 chest, 2 chests....
-        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // harness: 0 nothing, 1 harness, 2 cabin
-
+        this.dataManager.register(TUSK_TYPE, Integer.valueOf(0));// tusks: 0 nothing, 1 wood, 2 iron, 3 diamond
+        this.dataManager.register(STORAGE_TYPE, Integer.valueOf(0));// storage: 0 nothing, 1 chest, 2 chests....
+        this.dataManager.register(HARNESS_TYPE, Integer.valueOf(0));// harness: 0 nothing, 1 harness, 2 cabin
     }
 
-    public byte getTusks() {
-        return (this.dataWatcher.getWatchableObjectByte(23));
+    public int getTusks() {
+    	return ((Integer)this.dataManager.get(TUSK_TYPE)).intValue();
     }
 
-    public void setTusks(byte b) {
-        this.dataWatcher.updateObject(23, Byte.valueOf(b));
-    }
-
-    @Override
-    public byte getArmorType() {
-        return (this.dataWatcher.getWatchableObjectByte(25));
+    public void setTusks(int i) {
+    	this.dataManager.set(TUSK_TYPE, Integer.valueOf(i));
     }
 
     @Override
-    public void setArmorType(byte b) {
-        this.dataWatcher.updateObject(25, Byte.valueOf(b));
+    public int getArmorType() {
+    	return ((Integer)this.dataManager.get(HARNESS_TYPE)).intValue();
     }
 
-    public byte getStorage() {
-        return (this.dataWatcher.getWatchableObjectByte(24));
+    @Override
+    public void setArmorType(int i) {
+    	this.dataManager.set(HARNESS_TYPE, Integer.valueOf(i));
     }
 
-    public void setStorage(byte b) {
-        this.dataWatcher.updateObject(24, Byte.valueOf(b));
+    public int getStorage() {
+    	return ((Integer)this.dataManager.get(STORAGE_TYPE)).intValue();
+    }
+
+    public void setStorage(int i) {
+    	this.dataManager.set(STORAGE_TYPE, Integer.valueOf(i));
     }
 
     @Override
@@ -352,7 +359,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && !getIsTamed() && !getIsAdult() && itemstack.getItem() == Items.cake) {
+        if ((itemstack != null) && !getIsTamed() && !getIsAdult() && itemstack.getItem() == Items.CAKE) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -410,7 +417,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
         // third storage unit for small mammoths
         if ((itemstack != null) && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 2
-                && itemstack.getItem() == Item.getItemFromBlock(Blocks.chest)) {
+                && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -420,7 +427,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
         // fourth storage unit for small mammoths
         if ((itemstack != null) && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 3
-                && itemstack.getItem() == Item.getItemFromBlock(Blocks.chest)) {
+                && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -533,8 +540,8 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
         if ((itemstack != null)
                 && getTusks() > 0
-                && ((itemstack.getItem() == Items.diamond_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe)
-                        || (itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe))) {
+                && ((itemstack.getItem() == Items.diamond_pickaxe) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
+                        || (itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.golden_pickaxe))) {
             MoCTools.playCustomSound(this, "armoroff", this.worldObj);
             dropTusks();
             return true;
@@ -681,9 +688,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
-        setTusks(nbttagcompound.getByte("Tusks"));
-        setArmorType(nbttagcompound.getByte("Harness"));
-        setStorage(nbttagcompound.getByte("Storage"));
+        setTusks(nbttagcompound.getInteger("Tusks"));
+        setArmorType(nbttagcompound.getInteger("Harness"));
+        setStorage(nbttagcompound.getInteger("Storage"));
         this.tuskUses = nbttagcompound.getByte("TuskUses");
         if (getStorage() > 0) {
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);
@@ -736,9 +743,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setByte("Tusks", getTusks());
-        nbttagcompound.setByte("Harness", getArmorType());
-        nbttagcompound.setByte("Storage", getStorage());
+        nbttagcompound.setInteger("Tusks", getTusks());
+        nbttagcompound.setInteger("Harness", getArmorType());
+        nbttagcompound.setInteger("Storage", getStorage());
         nbttagcompound.setByte("TuskUses", this.tuskUses);
 
         if (getStorage() > 0 && this.localelephantchest != null) {
@@ -801,17 +808,12 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean isMyHealFood(ItemStack par1ItemStack) {
         return par1ItemStack != null
-                && (par1ItemStack.getItem() == Items.baked_potato || par1ItemStack.getItem() == Items.bread || par1ItemStack.getItem() == MoCreatures.haystack);
+                && (par1ItemStack.getItem() == Items.BAKED_POTATO || par1ItemStack.getItem() == Items.BREAD || par1ItemStack.getItem() == MoCreatures.haystack);
     }
 
     @Override
     public boolean isMovementCeased() {
         return (this.isBeingRidden()) || this.sitCounter != 0;
-    }
-
-    @Override
-    public void setType(int i) {
-        this.dataWatcher.updateObject(19, Integer.valueOf(i));
     }
 
     @Override
@@ -854,7 +856,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
 
         double dist = (1.0D);
         switch (getType()) {
@@ -876,7 +878,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         double newPosX = this.posX - (dist * Math.cos((MoCTools.realAngle(this.renderYawOffset - 90F)) / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.sin((MoCTools.realAngle(this.renderYawOffset - 90F)) / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
     }
 
     @Override
@@ -979,13 +981,13 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                     if (this.localelephantchest3 != null) {
                         MoCTools.dropInventory(this, this.localelephantchest3);
                     }
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.chest, 1));
+                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.CHEST, 1));
                 }
                 if (getStorage() >= 4) {
                     if (this.localelephantchest4 != null) {
                         MoCTools.dropInventory(this, this.localelephantchest4);
                     }
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.chest, 1));
+                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.CHEST, 1));
                 }
                 setStorage((byte) 0);
             }
@@ -1054,16 +1056,18 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 attackEntityFrom(DamageSource.fall, i);
             }
             if ((this.isBeingRidden()) && (i > 0)) {
-                this.riddenByEntity.attackEntityFrom(DamageSource.fall, i);
+            	for (Entity entity : this.getRecursivePassengers())
+                {
+                    entity.attackEntityFrom(DamageSource.fall, (float)i);
+                }
             }
+            IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ));
+            Block block = iblockstate.getBlock();
 
-            BlockPos pos =
-                    new BlockPos(this.posX, MathHelper.floor_double(this.posY - 0.20000000298023221D - this.prevRotationPitch),
-                            MathHelper.floor_double(this.posZ));
-            IBlockState blockstate = this.worldObj.getBlockState(pos);
-            if (!blockstate.getBlock().isAir(this.worldObj, pos)) {
-                Block.SoundType stepsound = blockstate.getBlock().stepSound;
-                this.worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getFrequency() * 0.75F);
+            if (iblockstate.getMaterial() != Material.AIR && !this.isSilent())
+            {
+                SoundType soundtype = block.getSoundType(iblockstate, worldObj, new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ), this);
+                this.worldObj.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, soundtype.getStepSound(), this.getSoundCategory(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
             }
         }
     }

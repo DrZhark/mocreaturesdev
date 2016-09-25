@@ -1,10 +1,13 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 
 public class MoCItemLitterBox extends MoCItem {
 
@@ -14,7 +17,7 @@ public class MoCItemLitterBox extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
 
         if (MoCreatures.isServer()) {
 
@@ -26,6 +29,6 @@ public class MoCItemLitterBox extends MoCItem {
             entitylitterbox.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             entitylitterbox.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
         }
-        return itemstack;
+        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
     }
 }

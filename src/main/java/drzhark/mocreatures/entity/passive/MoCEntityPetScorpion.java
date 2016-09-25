@@ -1,15 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -20,15 +10,28 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
@@ -38,6 +41,10 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     public int mouthCounter;
     public int armCounter;
     private int transformCounter;
+    private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityPetScorpion.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_BABIES = EntityDataManager.<Boolean>createKey(MoCEntityPetScorpion.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_SITTING = EntityDataManager.<Boolean>createKey(MoCEntityPetScorpion.class, DataSerializers.BOOLEAN);
+    
 
     public MoCEntityPetScorpion(World world) {
         super(world);
@@ -124,23 +131,26 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // has babies - 0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isSitting - 0 false 1 true
-        this.dataWatcher.addObject(25, Byte.valueOf((byte) 0)); // isRideable - 0 false 1 true
-
+        this.dataManager.register(HAS_BABIES, Boolean.valueOf(false));
+        this.dataManager.register(IS_SITTING, Boolean.valueOf(false));
+        this.dataManager.register(RIDEABLE, Boolean.valueOf(false));
+    }
+    
+    @Override
+    public void setRideable(boolean flag) {
+    	this.dataManager.set(RIDEABLE, Boolean.valueOf(flag));
     }
 
     @Override
     public boolean getIsRideable() {
-        return (this.dataWatcher.getWatchableObjectByte(25) == 1);
+    	return ((Boolean)this.dataManager.get(RIDEABLE)).booleanValue();
     }
-
+    
     public boolean getHasBabies() {
-        return getIsAdult() && (this.dataWatcher.getWatchableObjectByte(23) == 1);
+        return getIsAdult() && ((Boolean)this.dataManager.get(HAS_BABIES)).booleanValue();
     }
 
     public boolean getIsPicked() {
-        //return (this.dataWatcher.getWatchableObjectByte(24) == 1);
         return this.getRidingEntity() != null;
     }
 
@@ -150,28 +160,15 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
     @Override
     public boolean getIsSitting() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_SITTING)).booleanValue();
     }
 
     public void setSitting(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
-    }
-
-    @Override
-    public void setRideable(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(25, Byte.valueOf(input));
+    	this.dataManager.set(IS_SITTING, Boolean.valueOf(flag));
     }
 
     public void setHasBabies(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
-    }
-
-    public void setPicked2(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(HAS_BABIES, Boolean.valueOf(flag));
     }
 
     public void setPoisoning(boolean flag) {
@@ -280,13 +277,13 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
                 if (flag) {
                     MoCreatures.poisonPlayer((EntityPlayer) entityIn);
                 }
-                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 70, 0));
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.POISON, 70, 0));
             } else if (getType() == 4)// blue scorpions
             {
                 if (flag) {
                     MoCreatures.freezePlayer((EntityPlayer) entityIn);
                 }
-                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 70, 0));
+                ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 70, 0));
 
             } else if (getType() == 3)// red scorpions
             {
@@ -335,7 +332,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     @Override
     protected Item getDropItem() {
         if (!getIsAdult()) {
-            return Items.string;
+            return Items.STRING;
         }
 
         boolean flag = (this.rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
@@ -365,7 +362,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
                 return Items.ROTTEN_FLESH;
 
             default:
-                return Items.string;
+                return Items.STRING;
         }
     }
 
@@ -377,7 +374,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if ((itemstack != null) && getIsAdult() && !getIsRideable()
-                && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle)) {
+                && (itemstack.getItem() == Items.SADDLE || itemstack.getItem() == MoCreatures.horsesaddle)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -538,11 +535,11 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         double dist = (0.2D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
     }
 
     @Override

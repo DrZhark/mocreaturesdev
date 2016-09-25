@@ -1,12 +1,7 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -20,15 +15,20 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.passive.MoCEntityBear;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
 
 public class MoCEntityWWolf extends MoCEntityMob {
 
@@ -117,21 +117,6 @@ public class MoCEntityWWolf extends MoCEntityMob {
         return true;
     }
 
-    //TODO
-    /*protected Entity findPlayerToAttack() {
-        float f = getBrightness(1.0F);
-        if (f < 0.5F) {
-            double d = 16D;
-            return this.worldObj.getClosestPlayerToEntity(this, d);
-        }
-        if (this.rand.nextInt(80) == 0) {
-            EntityLivingBase entityliving = getClosestTarget(this, 10D);
-            return entityliving;
-        } else {
-            return null;
-        }
-    }*/
-
     @Override
     public boolean getCanSpawnHere() {
         return checkSpawningBiome()
@@ -148,7 +133,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
             Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.riddenByEntity)
                     || (entity1 == entity.getRidingEntity()) || (entity1 instanceof EntityPlayer) || (entity1 instanceof EntityMob)
-                    || (entity1 instanceof MoCEntityBigCat) || (entity1 instanceof MoCEntityBear) || (entity1 instanceof EntityCow)
+                    || (entity1 instanceof MoCEntityNewBigCat) || (entity1 instanceof MoCEntityBear) || (entity1 instanceof EntityCow)
                     || ((entity1 instanceof EntityWolf) && !(MoCreatures.proxy.attackWolves))
                     || ((entity1 instanceof MoCEntityHorse) && !(MoCreatures.proxy.attackHorses))) {
                 continue;
@@ -186,11 +171,11 @@ public class MoCEntityWWolf extends MoCEntityMob {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         double dist = (0.1D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
         this.riddenByEntity.rotationYaw = this.rotationYaw;
     }
 

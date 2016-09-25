@@ -1,10 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -12,13 +7,24 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 
 public class MoCEntityMiniGolem extends MoCEntityMob {
 
     public int tcounter;
     public MoCEntityThrowableRock tempRock;
+    private static final DataParameter<Boolean> ANGRY = EntityDataManager.<Boolean>createKey(MoCEntityMiniGolem.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_ROCK = EntityDataManager.<Boolean>createKey(MoCEntityMiniGolem.class, DataSerializers.BOOLEAN);
+    
 
     public MoCEntityMiniGolem(World world) {
         super(world);
@@ -41,26 +47,24 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // angry 0 = false, 1 = true
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // hasRock 0 = false, 1 = true        
+        this.dataManager.register(ANGRY, Boolean.valueOf(false));
+        this.dataManager.register(HAS_ROCK, Boolean.valueOf(false)); 
     }
 
     public boolean getIsAngry() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(ANGRY)).booleanValue();
     }
 
     public void setIsAngry(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(ANGRY, Boolean.valueOf(flag));
     }
 
     public boolean getHasRock() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_ROCK)).booleanValue();
     }
 
     public void setHasRock(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(HAS_ROCK, Boolean.valueOf(flag));
     }
 
     @Override

@@ -43,6 +43,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -113,7 +114,7 @@ public class MoCTools {
         if (!MoCreatures.isServer()) {
             return;
         }
-        dropCustomItem(entity, worldObj, new ItemStack(Blocks.chest, 1));
+        dropCustomItem(entity, worldObj, new ItemStack(Blocks.CHEST, 1));
     }
 
     /**
@@ -739,11 +740,11 @@ public class MoCTools {
         entityitem2.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem2);
 
-        EntityItem entityitem3 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.pumpkin, 6));
+        EntityItem entityitem3 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.PUMPKIN, 6));
         entityitem3.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem3);
 
-        EntityItem entityitem4 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.cobblestone, 64));
+        EntityItem entityitem4 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.COBBLESTONE, 64));
         entityitem4.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem4);
 
@@ -799,7 +800,7 @@ public class MoCTools {
         entityitem18.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem18);
 
-        EntityItem entityitem19 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.fire, 32));
+        EntityItem entityitem19 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.FIRE, 32));
         entityitem19.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem19);
 
@@ -816,7 +817,7 @@ public class MoCTools {
         worldObj.spawnEntityInWorld(entityitem22);
 
         EntityItem entityitem23 =
-                new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Item.getItemFromBlock(Blocks.wool), 6, 15));
+                new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 6, 15));
         entityitem23.setPickupDelay(10);
         worldObj.spawnEntityInWorld(entityitem23);
 
@@ -990,7 +991,7 @@ public class MoCTools {
                                         (WorldServer) entity.worldObj, MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
-                        entity.worldObj.setBlockState(chunkposition1, Blocks.fire.getDefaultState(), 3);
+                        entity.worldObj.setBlockState(chunkposition1, Blocks.FIRE.getDefaultState(), 3);
                     }
                 }
             }
@@ -1068,7 +1069,7 @@ public class MoCTools {
         if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsCave && mystack[1] != null
                 && mystack[1].getItem() == MoCreatures.scorpLegsCave && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateCave
                 && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetCave) {
-            player.addPotionEffect(new PotionEffect(Potion.nightVision.id, 300, 0));
+            player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
             return;
         }
 
@@ -1076,7 +1077,7 @@ public class MoCTools {
         if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsNether && mystack[1] != null
                 && mystack[1].getItem() == MoCreatures.scorpLegsNether && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateNether
                 && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetNether) {
-            player.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 300, 0));
+            player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0));
             return;
         }
 
@@ -1084,7 +1085,7 @@ public class MoCTools {
         if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsFrost && mystack[1] != null
                 && mystack[1].getItem() == MoCreatures.scorpLegsFrost && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateFrost
                 && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetFrost) {
-            player.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 300, 0));
+            player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0));
             return;
         }
 
@@ -1092,7 +1093,7 @@ public class MoCTools {
         if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsDirt && mystack[1] != null
                 && mystack[1].getItem() == MoCreatures.scorpLegsDirt && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateDirt
                 && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetDirt) {
-            player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 70, 0));
+            player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 70, 0));
             return;
         }
     }
@@ -1639,7 +1640,7 @@ public class MoCTools {
                 //don't poison players on boats
             } else {
                 MoCreatures.poisonPlayer(entityplayertarget);
-                entityplayertarget.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 0));
+                entityplayertarget.addPotionEffect(new PotionEffect(MobEffects.POISON, 120, 0));
                 return true;
             }
         }
@@ -1746,7 +1747,7 @@ public class MoCTools {
      * @return
      */
     public static boolean isItemEdible(Item item1) {
-        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.wheat || item1 == Items.sugar || item1 == Items.cake
+        return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.WHEAT || item1 == Items.sugar || item1 == Items.CAKE
                 || item1 == Items.egg;
     }
 

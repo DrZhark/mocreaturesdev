@@ -1,9 +1,7 @@
 package drzhark.mocreatures.entity.item;
 
-import drzhark.mocreatures.MoCConstants;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.monster.MoCEntityGolem;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -12,10 +10,14 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-
-import java.util.List;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 
 public class MoCEntityThrowableRock extends Entity {
 
@@ -24,6 +26,9 @@ public class MoCEntityThrowableRock extends Entity {
     private double oPosX;
     private double oPosY;
     private double oPosZ;
+    private static final DataParameter<Integer> ROCK_STATE = EntityDataManager.<Integer>createKey(MoCEntityThrowableRock.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> MASTERS_ID = EntityDataManager.<Integer>createKey(MoCEntityThrowableRock.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> BEHAVIOUR_TYPE = EntityDataManager.<Integer>createKey(MoCEntityThrowableRock.class, DataSerializers.VARINT);
 
     public MoCEntityThrowableRock(World par1World) {
         super(par1World);
@@ -44,35 +49,34 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     public void setState(IBlockState state) {
-        this.dataWatcher.updateObject(23, Short.valueOf((short) (Block.getStateId(state) & 65535)));
+        this.dataManager.set(ROCK_STATE, (Block.getStateId(state) & 65535));
     }
 
     public IBlockState getState() {
-        return Block.getStateById(this.dataWatcher.getWatchableObjectShort(23) & 65535);
+    	return Block.getStateById(((Integer)this.dataManager.get(ROCK_STATE)).intValue() & 65535);
     }
 
     public void setMasterID(int i) {
-        this.dataWatcher.updateObject(22, Integer.valueOf(i));
+    	this.dataManager.set(MASTERS_ID, Integer.valueOf(i));
     }
 
     public int getMasterID() {
-        return this.dataWatcher.getWatchableObjectInt(22);
+    	return ((Integer)this.dataManager.get(MASTERS_ID)).intValue();
     }
 
     public void setBehavior(int i) {
-        this.dataWatcher.updateObject(21, Integer.valueOf(i));
+    	this.dataManager.set(BEHAVIOUR_TYPE, Integer.valueOf(i));
     }
 
     public int getBehavior() {
-        return this.dataWatcher.getWatchableObjectInt(21);
+    	return ((Integer)this.dataManager.get(BEHAVIOUR_TYPE)).intValue();
     }
 
     @Override
     protected void entityInit() {
-        this.dataWatcher.addObject(21, Integer.valueOf(0)); //behaviorType
-        this.dataWatcher.addObject(22, Integer.valueOf(0)); //masterID
-        this.dataWatcher.addObject(23, new Short((short) 0)); //tRock State
-
+    	this.dataManager.register(BEHAVIOUR_TYPE, Integer.valueOf(0));
+    	this.dataManager.register(ROCK_STATE, Integer.valueOf(0));
+    	this.dataManager.register(MASTERS_ID, Integer.valueOf(0));
     }
 
     @Override
@@ -262,7 +266,7 @@ public class MoCEntityThrowableRock extends Entity {
         if (this.getState() != null) {
             return this.getState().getBlock();
         }
-        return Blocks.stone;
+        return Blocks.STONE;
     }
 
     private Entity getMaster() {

@@ -1,5 +1,23 @@
 package drzhark.mocreatures.entity.passive;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
@@ -10,21 +28,6 @@ import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
@@ -32,7 +35,8 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     public int tailCounter;
     public int tongueCounter;
     public int mouthCounter;
-
+    private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityKomodo.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityKomodo(World world) {
         super(world);
         setSize(1.6F, 0.5F);
@@ -69,18 +73,17 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // rideable: 0 nothing, 1 saddle
+        this.dataManager.register(RIDEABLE, Boolean.valueOf(false));; // rideable: 0 nothing, 1 saddle
     }
 
     @Override
     public void setRideable(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(RIDEABLE, Boolean.valueOf(flag));
     }
 
     @Override
     public boolean getIsRideable() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(RIDEABLE)).booleanValue();
     }
 
     @Override
@@ -200,7 +203,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
         if ((itemstack != null) && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
-                && (itemstack.getItem() == Items.saddle || itemstack.getItem() == MoCreatures.horsesaddle)) {
+                && (itemstack.getItem() == Items.SADDLE || itemstack.getItem() == MoCreatures.horsesaddle)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -338,7 +341,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         if (entityIn instanceof EntityPlayer) {
             MoCreatures.poisonPlayer((EntityPlayer) entityIn);
         }
-        ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(Potion.poison.id, 150, 0));
+        ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(MobEffects.POISON, 150, 0));
         super.applyEnchantments(entityLivingBaseIn, entityIn);
     }
 

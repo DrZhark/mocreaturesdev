@@ -20,6 +20,6 @@ public class MoCItemTurtleSoup extends MoCItemFood {
     @Override
     public ItemStack onItemUseFinish(ItemStack itemstack, World world, EntityPlayer entityplayer) {
         super.onItemUseFinish(itemstack, world, entityplayer);
-        return new ItemStack(Items.bowl);
+        return new ItemStack(Items.BOWL);
     }
 }

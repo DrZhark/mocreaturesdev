@@ -401,7 +401,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         int j = MathHelper.floor_double(getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
-        return this.worldObj.getBlockState(pos.down()).getBlock() == Blocks.grass && this.worldObj.getLight(pos) > 8;
+        return this.worldObj.getBlockState(pos.down()).getBlock() == Blocks.GRASS && this.worldObj.getLight(pos) > 8;
     }
 
     public boolean getCanSpawnHereCreature() {
@@ -452,7 +452,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
             BlockPos pos = new BlockPos(var1, var2, var3);
             Block block = this.worldObj.getBlockState(pos.down()).getBlock();
 
-            if (block == Blocks.grass || block == Blocks.leaves || (block != null && block.isLeaves(this.worldObj, pos.down()))) {
+            if (block == Blocks.GRASS || block == Blocks.leaves || (block != null && block.isLeaves(this.worldObj, pos.down()))) {
                 return true;
             }
         }
@@ -882,7 +882,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         return 0F;
     }
 
-    @Override
+    /*@Override
     public String getOwnerName() {
         return this.dataWatcher.getWatchableObjectString(20);
     }
@@ -890,7 +890,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public void setOwner(String par1Str) {
         this.dataWatcher.updateObject(20, par1Str);
-    }
+    }*/
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
@@ -945,7 +945,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     @Override
-    public void setArmorType(byte i) {
+    public void setArmorType(int i) {
     }
 
     @Override

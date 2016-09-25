@@ -21,7 +21,7 @@ import java.util.Random;
 public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
 
     public MoCBlockTallGrass(String name) {
-        super(name, Material.vine);
+        super(name, Material.VINE);
         float var3 = 0.4F;
         this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 0.8F, 0.5F + var3);
         this.setCreativeTab(MoCreatures.tabMoC);
@@ -60,7 +60,7 @@ public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
 
     @Override
     protected boolean canPlaceBlockOn(Block block) {
-        return block == Blocks.grass || block == Blocks.dirt || block == Blocks.farmland || block instanceof MoCBlockDirt
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.farmland || block instanceof MoCBlockDirt
                 || block instanceof MoCBlockGrass;
     }
 

@@ -1,11 +1,5 @@
 package drzhark.mocreatures.entity.passive;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,14 +9,22 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 
 public class MoCEntityGoat extends MoCEntityTameableAnimal {
 
@@ -39,9 +41,9 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     private int tailcount; // 90 to -45
     private int earcount; // 20 to 40 default = 30
     private int eatcount;
-
-    //private float moveSpeed;
-
+    private static final DataParameter<Boolean> IS_CHARGING = EntityDataManager.<Boolean>createKey(MoCEntityGoat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_UPSET = EntityDataManager.<Boolean>createKey(MoCEntityGoat.class, DataSerializers.BOOLEAN);
+    
     public MoCEntityGoat(World world) {
         super(world);
         setSize(0.8F, 1F);
@@ -67,26 +69,24 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(23, Byte.valueOf((byte) 0)); // isCharging - 0 false 1 true
-        this.dataWatcher.addObject(24, Byte.valueOf((byte) 0)); // isUpset - 0 false 1 true
+        this.dataManager.register(IS_CHARGING, Boolean.valueOf(false));
+        this.dataManager.register(IS_UPSET, Boolean.valueOf(false));
     }
 
     public boolean getUpset() {
-        return (this.dataWatcher.getWatchableObjectByte(24) == 1);
+    	return ((Boolean)this.dataManager.get(IS_UPSET)).booleanValue();
     }
 
     public boolean getCharging() {
-        return (this.dataWatcher.getWatchableObjectByte(23) == 1);
+    	return ((Boolean)this.dataManager.get(IS_CHARGING)).booleanValue();
     }
 
     public void setUpset(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(24, Byte.valueOf(input));
+    	this.dataManager.set(IS_UPSET, Boolean.valueOf(flag));
     }
 
     public void setCharging(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(23, Byte.valueOf(input));
+    	this.dataManager.set(IS_CHARGING, Boolean.valueOf(flag));
     }
 
     @Override
@@ -164,8 +164,8 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             this.motionY = 0.5D;
         }
 
-        if (isPotionActive(Potion.jump)) {
-            this.motionY += (getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+        if (isPotionActive(MobEffects.JUMP_BOOST)) {
+            this.motionY += (getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1F;
         }
         if (isSprinting()) {
             float f = this.rotationYaw * 0.01745329F;
@@ -379,7 +379,6 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         return this.eating;
     }
 
-    @Override
     public void setEating(boolean flag) {
         this.eating = flag;
     }

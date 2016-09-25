@@ -100,9 +100,9 @@ public class MoCEntityPlatform extends Entity {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         if (this.isBeingRidden()) {
-            this.riddenByEntity.setPosition(this.posX, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ);
+            passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ);
             this.riddenByEntity.rotationYaw = this.rotationYaw;
         }
     }

@@ -148,7 +148,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             label0: for (int j2 = i1; j2 < l1; j2++) {
                 BlockPos pos = new BlockPos(i2, j, j2);
                 IBlockState blockstate = this.worldObj.getBlockState(pos);
-                if (blockstate.getBlock().isAir(this.worldObj, pos) || (blockstate.getBlock().getMaterial() != Material.wood)) {
+                if (blockstate.getBlock().isAir(this.worldObj, pos) || (blockstate.getBlock().getMaterial() != Material.WOOD)) {
                     continue;
                 }
                 int l2 = j;
@@ -209,7 +209,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @SuppressWarnings("unused")
     private boolean FlyToNextTree() {
-        int ai[] = ReturnNearestMaterialCoord(this, Material.leaves, Double.valueOf(20D));
+        int ai[] = ReturnNearestMaterialCoord(this, Material.LEAVES, Double.valueOf(20D));
         int ai1[] = FindTreeTop(ai[0], ai[1], ai[2]);
         if (ai1[1] != 0) {
             int i = ai1[0];

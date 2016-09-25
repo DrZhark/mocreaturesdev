@@ -13,7 +13,7 @@ import java.util.List;
 public class MoCBlockPlanks extends MoCBlock {
 
     public MoCBlockPlanks(String name) {
-        super(name, Material.wood);
+        super(name, Material.WOOD);
     }
 
     @SideOnly(Side.CLIENT)

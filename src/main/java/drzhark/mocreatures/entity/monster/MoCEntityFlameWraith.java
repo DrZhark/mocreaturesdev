@@ -32,7 +32,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
 
     @Override
     protected Item getDropItem() {
-        return Items.redstone;
+        return Items.REDSTONE;
     }
 
     @Override

@@ -129,7 +129,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         } else if (getType() < 5) {
             boolean flag = (this.rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
             if (!flag) {
-                return Item.getItemFromBlock(Blocks.fire);
+                return Item.getItemFromBlock(Blocks.FIRE);
             }
             return MoCreatures.heartfire;
         }

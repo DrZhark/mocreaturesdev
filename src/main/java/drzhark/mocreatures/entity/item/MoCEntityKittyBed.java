@@ -5,11 +5,15 @@ import drzhark.mocreatures.MoCreatures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -19,7 +23,11 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     public float milklevel;
     public String bedColor;
-
+    private static final DataParameter<Boolean> HAS_MILK = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_FOOD = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> PICKED_UP = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> SHEET_COLOR = EntityDataManager.<Integer>createKey(MoCEntityKittyBed.class, DataSerializers.VARINT);
+    
     public MoCEntityKittyBed(World world) {
         super(world);
         setSize(1.0F, 0.3F);
@@ -50,45 +58,42 @@ public class MoCEntityKittyBed extends EntityLiving {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte) 0)); // hasMilk - 0 false 1 true
-        this.dataWatcher.addObject(17, Byte.valueOf((byte) 0)); // pickedUp - 0 false 1 true
-        this.dataWatcher.addObject(18, Integer.valueOf(0)); // sheetColor int
-        this.dataWatcher.addObject(19, Byte.valueOf((byte) 0)); // hasFood - 0 false 1 true
+        this.dataManager.register(HAS_MILK, Boolean.valueOf(false));
+        this.dataManager.register(HAS_FOOD, Boolean.valueOf(false));
+        this.dataManager.register(PICKED_UP, Boolean.valueOf(false));
+        this.dataManager.register(SHEET_COLOR, Integer.valueOf(0));
     }
 
     public boolean getHasFood() {
-        return (this.dataWatcher.getWatchableObjectByte(19) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_FOOD)).booleanValue();
     }
 
     public boolean getHasMilk() {
-        return (this.dataWatcher.getWatchableObjectByte(16) == 1);
+    	return ((Boolean)this.dataManager.get(HAS_MILK)).booleanValue();
     }
 
     public boolean getPickedUp() {
-        return (this.dataWatcher.getWatchableObjectByte(17) == 1);
+    	return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
     }
 
     public int getSheetColor() {
-        return this.dataWatcher.getWatchableObjectInt(18);
+    	return ((Integer)this.dataManager.get(SHEET_COLOR)).intValue();
     }
 
     public void setHasFood(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(19, Byte.valueOf(input));
+    	this.dataManager.set(HAS_FOOD, Boolean.valueOf(flag));
     }
 
     public void setHasMilk(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(16, Byte.valueOf(input));
+    	this.dataManager.set(HAS_MILK, Boolean.valueOf(flag));
     }
 
     public void setPickedUp(boolean flag) {
-        byte input = (byte) (flag ? 1 : 0);
-        this.dataWatcher.updateObject(17, Byte.valueOf(input));
+    	this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
     }
 
     public void setSheetColor(int i) {
-        this.dataWatcher.updateObject(18, Integer.valueOf(i));
+    	this.dataManager.set(SHEET_COLOR, Integer.valueOf(i));
         this.bedColor = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
     }
 
@@ -182,8 +187,8 @@ public class MoCEntityKittyBed extends EntityLiving {
         }
         if (MoCreatures.isServer()
                 && (itemstack != null)
-                && ((itemstack.getItem() == Items.stone_pickaxe) || (itemstack.getItem() == Items.wooden_pickaxe)
-                        || (itemstack.getItem() == Items.iron_pickaxe) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
+                && ((itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
+                        || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.GOLDEN_PICKAXE) || (itemstack.getItem() == Items.DIAMOND_PICKAXE))) {
             entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[getSheetColor()], 1));
             this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();

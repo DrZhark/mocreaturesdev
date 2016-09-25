@@ -16,7 +16,7 @@ import java.util.Random;
 public class MoCBlockLog extends MoCBlock {
 
     public MoCBlockLog(String name) {
-        super(name, Material.wood);
+        super(name, Material.WOOD);
     }
 
     /**

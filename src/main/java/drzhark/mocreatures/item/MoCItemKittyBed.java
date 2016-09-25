@@ -1,10 +1,13 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 
 public class MoCItemKittyBed extends MoCItem {
 
@@ -20,7 +23,7 @@ public class MoCItemKittyBed extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
         if (MoCreatures.isServer()) {
             MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, this.sheetType);
             entitykittybed.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
@@ -32,6 +35,6 @@ public class MoCItemKittyBed extends MoCItem {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
         }
-        return itemstack;
+        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
     }
 }

@@ -36,7 +36,7 @@ public class BiomeGenWyvernLair extends Biome {
         this.maxHeight = 1.5F;
         this.getBiomeName() = "WyvernBiome";
         this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog.getDefaultState(), MoCreatures.mocLeaf.getDefaultState(), 2, 30, 10);
-        this.worldGenShrub = new WorldGenShrub(Blocks.dirt.getDefaultState(), Blocks.AIR.getDefaultState());
+        this.worldGenShrub = new WorldGenShrub(Blocks.DIRT.getDefaultState(), Blocks.AIR.getDefaultState());
         this.theBiomeDecorator = new BiomeWyvernDecorator();
     }
 

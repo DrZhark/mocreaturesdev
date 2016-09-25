@@ -1,5 +1,18 @@
 package drzhark.mocreatures.item;
 
+import java.util.List;
+
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -10,17 +23,6 @@ import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.utils.MoCLog;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class MoCItemPetAmulet extends MoCItem {
 
@@ -46,8 +48,8 @@ public class MoCItemPetAmulet extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
-        double dist = 1D;
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
+    double dist = 1D;
         double newPosY = entityplayer.posY;
         double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
@@ -62,7 +64,7 @@ public class MoCItemPetAmulet extends MoCItem {
             initAndReadNBT(itemstack);
             if (this.spawnClass.isEmpty())// || creatureType == 0)
             {
-                return itemstack;
+            	return new ActionResult(EnumActionResult.SUCCESS, itemstack);
             }
             try {
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
@@ -109,7 +111,7 @@ public class MoCItemPetAmulet extends MoCItem {
                             break;
                     }
                 }
-                EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, worldObj);
+                EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, world);
                 if (tempLiving != null && tempLiving instanceof IMoCEntity) {
                     IMoCTameable storedCreature = (IMoCTameable) tempLiving;
                     ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);
@@ -133,7 +135,7 @@ public class MoCItemPetAmulet extends MoCItem {
                     if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getName())) && MoCreatures.instance.mapData != null) {
                         MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerName);
                         MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getName());
-                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getName());
+                        EntityPlayer epOwner = world.getPlayerEntityByName(entityplayer.getName());
                         int maxCount = MoCreatures.proxy.maxTamed;
                         if (MoCTools.isThisPlayerAnOP(epOwner)) {
                             maxCount = MoCreatures.proxy.maxOPTamed;
@@ -176,7 +178,7 @@ public class MoCItemPetAmulet extends MoCItem {
             }
         }
 
-        return itemstack;
+        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {

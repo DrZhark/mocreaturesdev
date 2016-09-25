@@ -41,7 +41,7 @@ public interface IMoCEntity {
 
     public void setOwner(String username);
 
-    public void setArmorType(byte i);
+    public void setArmorType(int i);
 
     public int getType();
 

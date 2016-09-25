@@ -523,7 +523,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public void setArmorType(byte i) {
+    public void setArmorType(int i) {
     }
 
     public byte getArmorType() {

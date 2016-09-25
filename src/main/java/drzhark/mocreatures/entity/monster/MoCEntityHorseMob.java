@@ -298,7 +298,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         }
         if (this.getType() == 26)//skely
         {
-            return Items.bone;
+            return Items.BONE;
         }
         if ((this.getType() == 23 || this.getType() == 24 || this.getType() == 25)) {
             if (flag) {
@@ -308,7 +308,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         }
 
         if (this.getType() == 21 || this.getType() == 22) {
-            return Items.ghast_tear;
+            return Items.GHAST_TEAR;
         }
 
         return Items.LEATHER;
@@ -385,11 +385,11 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     }
 
     @Override
-    public void updateRiderPosition() {
+    public void updatePassenger(Entity passenger) {
         double dist = (0.4D);
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
-        this.riddenByEntity.setPosition(newPosX, this.posY + getMountedYOffset() + this.riddenByEntity.getYOffset(), newPosZ);
+        passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
         this.riddenByEntity.rotationYaw = this.rotationYaw;
     }
 }

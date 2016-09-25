@@ -731,7 +731,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
-    public void setArmorType(byte i) {
+    public void setArmorType(int i) {
     }
 
     @Override

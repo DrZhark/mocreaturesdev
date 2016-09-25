@@ -1,15 +1,16 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import drzhark.mocreatures.MoCreatures;
 
 public class MoCItemSword extends ItemSword {
 
@@ -53,19 +54,19 @@ public class MoCItemSword extends ItemSword {
         int potionTime = 100;
         switch (this.specialWeaponType) {
             case 1: //poison
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.POISON, potionTime, 0));
                 break;
             case 2: //frost slowdown
-                target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, potionTime, 0));
                 break;
             case 3: //fire
                 target.setFire(10);
                 break;
             case 4: //confusion
-                target.addPotionEffect(new PotionEffect(Potion.confusion.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, potionTime, 0));
                 break;
             case 5: //blindness
-                target.addPotionEffect(new PotionEffect(Potion.blindness.id, potionTime, 0));
+                target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, potionTime, 0));
                 break;
             default:
                 break;

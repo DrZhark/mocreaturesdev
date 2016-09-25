@@ -153,7 +153,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && (itemstack.getItem() == Items.golden_carrot) && !getHasEaten()) {
+        if ((itemstack != null) && (itemstack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -164,7 +164,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
         /*
          * if (itemstack != null && this.getIsTamed() && itemstack.getItem() ==
-         * Items.golden_carrot) { if (--itemstack.stackSize == 0) {
+         * Items.GOLDEN_CARROT) { if (--itemstack.stackSize == 0) {
          * entityplayer.
          * inventory.setInventorySlotContents(entityplayer.inventory
          * .currentItem, null); } setHasEaten(true);

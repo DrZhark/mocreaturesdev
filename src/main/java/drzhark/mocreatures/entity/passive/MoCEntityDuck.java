@@ -99,4 +99,16 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     protected Item getDropItem() {
         return Items.FEATHER;
     }
+
+	@Override
+	public String getOwnerName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setOwner(String username) {
+		// TODO Auto-generated method stub
+		
+	}
 }
