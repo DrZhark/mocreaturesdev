@@ -1,7 +1,5 @@
 package drzhark.mocreatures.entity.ai;
 
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,12 +8,16 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+
 import org.apache.commons.lang3.StringUtils;
+
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 
 public abstract class EntitiAITargetMoC extends EntityAIBase {
 
@@ -80,7 +82,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
         if (team != null && team1 == team) {
             return false;
         } else {
-            if (attacker instanceof IEntityOwnable && StringUtils.isNotEmpty(((IEntityOwnable) attacker).getOwnerId())) {
+            if (attacker instanceof IEntityOwnable && StringUtils.isNotEmpty((((IEntityOwnable) attacker).getOwnerId()).toString())) {
                 if (target instanceof IEntityOwnable && ((IEntityOwnable) attacker).getOwnerId().equals(((IEntityOwnable) target).getOwnerId())) {
                     return false;
                 }
@@ -195,13 +197,13 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
      */
     private boolean canEasilyReach(EntityLivingBase p_75295_1_) {
         this.targetSearchDelay = 10 + this.taskOwner.getRNG().nextInt(5);
-        PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(p_75295_1_);
+        Path path = this.taskOwner.getNavigator().getPathToEntityLiving(p_75295_1_);
 
-        if (pathentity == null) {
+        if (path == null) {
             //System.out.println("couldn't find path");
             return false;
         } else {
-            PathPoint pathpoint = pathentity.getFinalPathPoint();
+            PathPoint pathpoint = path.getFinalPathPoint();
 
             if (pathpoint == null) {
                 return false;

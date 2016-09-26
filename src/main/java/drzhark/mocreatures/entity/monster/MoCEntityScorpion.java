@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -60,7 +61,11 @@ public class MoCEntityScorpion extends MoCEntityMob {
                 setHasBabies(false);
             }
         }
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(7, new EntityAIFleeSun(this, 1.0D));
@@ -68,7 +73,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         this.tasks.addTask(6, new EntityAILeapAtTarget(this, 0.4F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

@@ -491,7 +491,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     protected void getPathOrWalkableBlock(Entity entity, float f) {
-        PathEntity pathentity = this.navigator.getPathToPos(entity.getPosition());
+        Path path = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 12F)) {
             int i = MathHelper.floor_double(entity.posX) - 2;
             int j = MathHelper.floor_double(entity.posZ) - 2;

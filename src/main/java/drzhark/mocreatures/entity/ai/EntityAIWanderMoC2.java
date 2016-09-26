@@ -1,14 +1,14 @@
 package drzhark.mocreatures.entity.ai;
 
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 
 public class EntityAIWanderMoC2 extends EntityAIBase {
 
@@ -55,7 +55,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
             }
         }
 
-        Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
+        Vec3d vec3 = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
 
         if (vec3 != null && this.entity instanceof IMoCEntity && this.entity.getNavigator() instanceof PathNavigateFlyer) {
             int distToFloor = MoCTools.distanceToFloor(this.entity);
@@ -85,7 +85,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
      */
     @Override
     public boolean continueExecuting() {
-        return !this.entity.getNavigator().noPath() && this.entity.riddenByEntity == null;
+        return !this.entity.getNavigator().noPath() && !entity.isBeingRidden();
     }
 
     /**

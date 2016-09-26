@@ -7,6 +7,9 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.pathfinding.NodeProcessor;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.MathHelper;
 
 public class EntityAIMoverHelperMoC extends EntityMoveHelper {
@@ -21,7 +24,6 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
     @Override
     public void onUpdateMoveHelper() {
         boolean isFlyer = ((IMoCEntity) theCreature).isFlyer();
-        //boolean isFlying = ((IMoCEntity) theCreature).getIsFlying();
         boolean isSwimmer = this.theCreature.isInWater(); //TODO && theCreature.isSwimmer()
 
         if (!isFlyer && !isSwimmer) {
@@ -32,7 +34,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         /*
          * Flying specific movement code
          */
-        if (isFlyer && theCreature.riddenByEntity == null) {
+        if (isFlyer && !theCreature.isBeingRidden()) {
             this.flyingMovementUpdate();
         }
 
@@ -43,14 +45,14 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             this.swimmerMovementUpdate();
         }
 
-        if (this.update && !this.theCreature.getNavigator().noPath()) {
-            double d0 = this.posX - this.theCreature.posX;
+        if (this.action == EntityMoveHelper.Action.MOVE_TO && !this.theCreature.getNavigator().noPath()) {
+        	double d0 = this.posX - this.theCreature.posX;
             double d1 = this.posY - this.theCreature.posY;
-            //double distanceToY = d1;
             double d2 = this.posZ - this.theCreature.posZ;
             double d3 = d0 * d0 + d1 * d1 + d2 * d2;
             d3 = MathHelper.sqrt_double(d3);
             if (d3 < 0.5) {
+            	this.entity.setMoveForward(0.0F);
                 this.theCreature.getNavigator().clearPathEntity();
                 return;
             }
@@ -71,7 +73,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             this.theCreature.motionY += (double) this.theCreature.getAIMoveSpeed() * d1 * 1.5D;
         }
     }
-
+    
     /**
      * Makes flying creatures reach the proper flying height
      */

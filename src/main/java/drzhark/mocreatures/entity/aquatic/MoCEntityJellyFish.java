@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.aquatic;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
@@ -23,9 +24,13 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
         super(world);
         setSize(0.3F, 0.5F);
         setEdad(50 + (this.rand.nextInt(50)));
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.5D, 120));
     }
 
+    @Override
+    protected void initEntityAI() {
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.5D, 120));
+    }
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

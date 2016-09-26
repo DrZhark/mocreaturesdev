@@ -52,9 +52,9 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         } else {
             setAdult(true);
         }
-        
     }
-
+ 
+    @Override
     protected void initEntityAI() {
     	this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));

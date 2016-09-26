@@ -21,7 +21,6 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
         setSize(1.5F, 1.5F);
         this.isImmuneToFire = true;
         this.burningTime = 30;
-
     }
 
     @Override

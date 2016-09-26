@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -26,6 +28,7 @@ import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 
@@ -45,11 +48,13 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             setAdult(false);
         }
         setSize(0.5F, 0.5F);
-
         this.bunnyReproduceTickerA = this.rand.nextInt(64);
         this.bunnyReproduceTickerB = 0;
+    }
 
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
@@ -57,7 +62,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

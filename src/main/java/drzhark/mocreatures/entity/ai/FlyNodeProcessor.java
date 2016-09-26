@@ -1,92 +1,94 @@
 package drzhark.mocreatures.entity.ai;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.pathfinding.NodeProcessor;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.pathfinder.NodeProcessor;
 
 public class FlyNodeProcessor extends NodeProcessor {
 
-    public void initProcessor(IBlockAccess iblockaccessIn, Entity entityIn) {
-        super.initProcessor(iblockaccessIn, entityIn);
-    }
-
-    /**
-     * This method is called when all nodes have been processed and PathEntity is created.
-     * {@link net.minecraft.world.pathfinder.WalkNodeProcessor WalkNodeProcessor} uses this to change its field {@link
-     * net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater avoidsWater}
-     */
-    public void postProcess() {
-        super.postProcess();
-    }
-
-    /**
-     * Returns given entity's position as PathPoint
-     */
-    public PathPoint getPathPointTo(Entity entityIn) {
-        return this.openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX),
-                MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
+	public PathPoint getStart()
+    {
+        return this.openPoint(MathHelper.floor_double(this.entity.getEntityBoundingBox().minX), MathHelper.floor_double(this.entity.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(this.entity.getEntityBoundingBox().minZ));
     }
 
     /**
      * Returns PathPoint for given coordinates
-     *  
-     * @param entityIn entity which size will be used to center position
-     * @param x target x coordinate
-     * @param y target y coordinate
-     * @param target z coordinate
      */
-    public PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double target) {
-        return this.openPoint(MathHelper.floor_double(x - (double) (entityIn.width / 2.0F)), MathHelper.floor_double(y + 0.5D),
-                MathHelper.floor_double(target - (double) (entityIn.width / 2.0F)));
+    public PathPoint getPathPointToCoords(double x, double y, double z)
+    {
+        return this.openPoint(MathHelper.floor_double(x - (double)(this.entity.width / 2.0F)), MathHelper.floor_double(y + 0.5D), MathHelper.floor_double(z - (double)(this.entity.width / 2.0F)));
     }
 
-    public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
+
+    public int findPathOptions(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance)
+    {
         int i = 0;
-        EnumFacing[] aenumfacing = EnumFacing.values();
-        int j = aenumfacing.length;
 
-        for (int k = 0; k < j; ++k) {
-            EnumFacing enumfacing = aenumfacing[k];
-            PathPoint pathpoint2 =
-                    this.getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(),
-                            currentPoint.yCoord + enumfacing.getFrontOffsetY(), currentPoint.zCoord + enumfacing.getFrontOffsetZ());
+        for (EnumFacing enumfacing : EnumFacing.values())
+        {
+            PathPoint pathpoint = this.getSafePoint(currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(), currentPoint.zCoord + enumfacing.getFrontOffsetZ());
 
-            if (pathpoint2 != null && !pathpoint2.visited && pathpoint2.distanceTo(targetPoint) < maxDistance) {
-                pathOptions[i++] = pathpoint2;
+            if (pathpoint != null && !pathpoint.visited && pathpoint.distanceTo(targetPoint) < maxDistance)
+            {
+                pathOptions[i++] = pathpoint;
             }
         }
 
         return i;
     }
 
-    /**
-     * Returns a point that the entity can safely move to
-     */
-    private PathPoint getSafePoint(Entity entityIn, int x, int y, int z) {
-        int l = this.func_176186_b(entityIn, x, y, z);
-        return l == -1 ? this.openPoint(x, y, z) : null;
+    @Nullable
+    private PathPoint getSafePoint(int p_186328_1_, int p_186328_2_, int p_186328_3_)
+    {
+        PathNodeType pathnodetype = this.isFree(p_186328_1_, p_186328_2_, p_186328_3_);
+        return pathnodetype == PathNodeType.OPEN ? this.openPoint(p_186328_1_, p_186328_2_, p_186328_3_) : null;
     }
 
-    private int func_176186_b(Entity entityIn, int x, int y, int z) {
-        for (int l = x; l < x + this.entitySizeX; ++l) {
-            for (int i1 = y; i1 < y + this.entitySizeY; ++i1) {
-                for (int j1 = z; j1 < z + this.entitySizeZ; ++j1) {
-                    BlockPos blockpos = new BlockPos(l, i1, j1);
-                    Block block = this.blockaccess.getBlockState(blockpos).getBlock();
+    
+    private PathNodeType isFree(int p_186327_1_, int p_186327_2_, int p_186327_3_)
+    {
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-                    if (block.getMaterial() != Material.AIR) {
-                        return 0;
+        for (int i = p_186327_1_; i < p_186327_1_ + this.entitySizeX; ++i)
+        {
+            for (int j = p_186327_2_; j < p_186327_2_ + this.entitySizeY; ++j)
+            {
+                for (int k = p_186327_3_; k < p_186327_3_ + this.entitySizeZ; ++k)
+                {
+                    IBlockState iblockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos.setPos(i, j, k));
+
+                    if (iblockstate.getMaterial() != Material.AIR)
+                    {
+                        return PathNodeType.BLOCKED;
                     }
                 }
             }
         }
 
-        return -1;
+        return PathNodeType.OPEN;
     }
+    
+    @Override
+    public PathNodeType getPathNodeType(IBlockAccess blockaccessIn, int x, int y, int z, EntityLiving entitylivingIn, int xSize, int ySize, int zSize, boolean canBreakDoorsIn, boolean canEnterDoorsIn)
+    {
+        return PathNodeType.OPEN;
+    }
+
+    @Override
+    public PathNodeType getPathNodeType(IBlockAccess x, int y, int z, int p_186330_4_)
+    {
+        return PathNodeType.OPEN;
+    }
+    
 }

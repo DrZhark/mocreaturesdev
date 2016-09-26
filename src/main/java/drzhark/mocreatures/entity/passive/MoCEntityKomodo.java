@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
@@ -50,7 +52,10 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         } else {
             setEdad(90 + this.rand.nextInt(20));
         }
-        //this.tasks.addTask(1, new EntityAISwimming(this));
+    }
+    
+    @Override
+    protected void initEntityAI() {
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.1D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.1D, 4D));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0D, true));
@@ -58,9 +63,8 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
-
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

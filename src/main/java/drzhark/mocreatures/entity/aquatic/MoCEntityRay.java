@@ -2,7 +2,10 @@ package drzhark.mocreatures.entity.aquatic;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
+import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -10,9 +13,13 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
 
     public MoCEntityRay(World world) {
         super(world);
-        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
 
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D, 80));
+    }
+    
     public boolean isPoisoning() {
         return false;
     }

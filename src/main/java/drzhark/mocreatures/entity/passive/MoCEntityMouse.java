@@ -27,13 +27,17 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     public MoCEntityMouse(World world) {
         super(world);
         setSize(0.3F, 0.3F);
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
         this.tasks.addTask(2, new EntityAIPanic(this, 1.4D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

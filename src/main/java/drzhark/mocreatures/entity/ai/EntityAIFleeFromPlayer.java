@@ -1,11 +1,11 @@
 package drzhark.mocreatures.entity.ai;
 
-import drzhark.mocreatures.entity.IMoCEntity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
+import drzhark.mocreatures.entity.IMoCEntity;
 
 public class EntityAIFleeFromPlayer extends EntityAIBase {
 
@@ -38,7 +38,7 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
         if (!this.IsNearPlayer(this.distance)) {
             return false;
         } else {
-            Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.theEntityCreature, 5, 4);
+            Vec3d vec3 = RandomPositionGenerator.findRandomTarget(this.theEntityCreature, 5, 4);
 
             if (vec3 == null) {
                 return false;

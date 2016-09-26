@@ -33,7 +33,11 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         } else {
             setAdult(true);
         }
-        this.tasks.addTask(1, new EntityAISwimming(this));
+    }
+    
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
         this.tasks.addTask(3, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0D, true));
@@ -41,7 +45,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

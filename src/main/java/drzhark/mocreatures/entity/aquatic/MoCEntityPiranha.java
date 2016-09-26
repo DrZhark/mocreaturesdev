@@ -3,6 +3,8 @@ package drzhark.mocreatures.entity.aquatic;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -20,16 +22,15 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
 
     public MoCEntityPiranha(World world) {
         super(world);
-        //setSize(0.3F, 0.3F);
-        //setEdad(70 + this.rand.nextInt(30));
-        this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, true));
-        //this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 30));
-        //this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
-        this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 1));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
-
     }
 
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 1));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
+    }
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

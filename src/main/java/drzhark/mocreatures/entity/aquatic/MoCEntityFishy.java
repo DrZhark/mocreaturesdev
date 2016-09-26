@@ -37,6 +37,10 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
+    }
+
+    @Override
+    protected void initEntityAI() {
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.3D));
         this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
@@ -46,7 +50,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

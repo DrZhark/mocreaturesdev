@@ -467,7 +467,7 @@ public class MoCTools {
 
     public static void MoveCreatureToXYZ(EntityCreature movingEntity, int x, int y, int z, float f) {
         //TODO works?
-        PathEntity pathentity = movingEntity.getNavigator().getPathToXYZ(x, y, z);
+        Path path = movingEntity.getNavigator().getPathToXYZ(x, y, z);
         if (pathentity != null) {
             movingEntity.getNavigator().setPath(pathentity, f);
         }
@@ -1588,7 +1588,7 @@ public class MoCTools {
     }
 
     public static void getPathToEntity(EntityLiving creatureToMove, Entity entityTarget, float f) {
-        PathEntity pathentity = creatureToMove.getNavigator().getPathToEntityLiving(entityTarget);
+        Path path = creatureToMove.getNavigator().getPathToEntityLiving(entityTarget);
         if (pathentity != null && f < 12F) {
             creatureToMove.getNavigator().setPath(pathentity, 1.0D); //TODO check if 1.0D is proper speed.
         }

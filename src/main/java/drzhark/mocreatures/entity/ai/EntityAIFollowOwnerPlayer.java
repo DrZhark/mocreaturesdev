@@ -2,6 +2,8 @@ package drzhark.mocreatures.entity.ai;
 
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -96,32 +98,38 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         //((PathNavigateGround) this.thePet.getNavigator()).setAvoidsWater(true); //TODO
     }
 
-    /**
-     * Updates the task
-     */
-    @Override
-    public void updateTask() {
-        this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, this.thePet.getVerticalFaceSpeed());
+    private boolean isEmptyBlock(BlockPos pos)
+    {
+        IBlockState iblockstate = this.theWorld.getBlockState(pos);
+        return iblockstate.getMaterial() == Material.AIR ? true : !iblockstate.isFullCube();
+    }
+    
+    public void updateTask()
+    {
+        this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float)this.thePet.getVerticalFaceSpeed());
 
         if (!((IMoCEntity) this.thePet).getIsSitting()) {
-            if (--this.delayCounter <= 0) {
+            if (--this.delayCounter <= 0)
+            {
                 this.delayCounter = 10;
 
-                if (!this.petPathfinder.tryMoveToEntityLiving(this.theOwner, this.speed)) {
-                    if (!this.thePet.getLeashed()) {
-                        if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D) {
+                if (!this.petPathfinder.tryMoveToEntityLiving(this.theOwner, this.speed))
+                {
+                    if (!this.thePet.getLeashed())
+                    {
+                        if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
+                        {
                             int i = MathHelper.floor_double(this.theOwner.posX) - 2;
                             int j = MathHelper.floor_double(this.theOwner.posZ) - 2;
                             int k = MathHelper.floor_double(this.theOwner.getEntityBoundingBox().minY);
 
-                            for (int l = 0; l <= 4; ++l) {
-                                for (int i1 = 0; i1 <= 4; ++i1) {
-                                    if ((l < 1 || i1 < 1 || l > 3 || i1 > 3)
-                                            && World.doesBlockHaveSolidTopSurface(this.theWorld, new BlockPos(i + l, k - 1, j + i1))
-                                            && !this.theWorld.getBlockState(new BlockPos(i + l, k, j + i1)).getBlock().isFullCube()
-                                            && !this.theWorld.getBlockState(new BlockPos(i + l, k + 1, j + i1)).getBlock().isFullCube()) {
-                                        this.thePet.setLocationAndAngles(i + l + 0.5F, k, j + i1 + 0.5F, this.thePet.rotationYaw,
-                                                this.thePet.rotationPitch);
+                            for (int l = 0; l <= 4; ++l)
+                            {
+                                for (int i1 = 0; i1 <= 4; ++i1)
+                                {
+                                    if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.theWorld.getBlockState(new BlockPos(i + l, k - 1, j + i1)).isFullyOpaque() && this.isEmptyBlock(new BlockPos(i + l, k, j + i1)) && this.isEmptyBlock(new BlockPos(i + l, k + 1, j + i1)))
+                                    {
+                                        this.thePet.setLocationAndAngles((double)((float)(i + l) + 0.5F), (double)k, (double)((float)(j + i1) + 0.5F), this.thePet.rotationYaw, this.thePet.rotationPitch);
                                         this.petPathfinder.clearPathEntity();
                                         return;
                                     }

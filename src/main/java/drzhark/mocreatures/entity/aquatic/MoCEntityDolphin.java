@@ -34,9 +34,12 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         super(world);
         setSize(1.5F, 0.8F);
         setEdad(60 + this.rand.nextInt(100));
-        this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
-        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
+    }
 
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
+        this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
     }
 
     @Override

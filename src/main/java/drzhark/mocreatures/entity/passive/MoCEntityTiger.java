@@ -14,7 +14,6 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
 
     public MoCEntityTiger(World world) {
         super(world);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

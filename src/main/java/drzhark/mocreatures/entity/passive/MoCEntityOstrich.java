@@ -32,6 +32,9 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
@@ -68,7 +71,10 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         this.eggCounter = this.rand.nextInt(1000) + 1000;
         this.stepHeight = 1.0F;
         this.canLayEggs = false;
-        
+    }
+    
+    @Override
+    protected void initEntityAI() {
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
@@ -489,7 +495,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 //look for and protect eggs and move close
                 MoCEntityEgg myEgg = (MoCEntityEgg) getBoogey(8D);
                 if ((myEgg != null) && (MoCTools.getSqDistanceTo(myEgg, this.posX, this.posY, this.posZ) > 4D)) {
-                    PathEntity pathentity = this.navigator.getPathToPos(myEgg.getPosition());
+                    Path path = this.navigator.getPathToPos(myEgg.getPosition());
                     this.navigator.setPath(pathentity, 16F);
                 }
                 if (myEgg == null) //didn't find egg

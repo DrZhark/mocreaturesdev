@@ -61,8 +61,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         this.stepHeight = 1.0F;
     }
     
-    protected void initEntityAI()
-    {
+    @Override
+    protected void initEntityAI() {
     	this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 

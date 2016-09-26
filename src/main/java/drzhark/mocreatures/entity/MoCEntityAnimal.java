@@ -533,7 +533,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     public void getMyOwnPath(Entity entity, float f) {
-        PathEntity pathentity = this.getNavigator().getPathToEntityLiving(entity);
+        Path path = this.getNavigator().getPathToEntityLiving(entity);
         if (pathentity != null) {
             this.getNavigator().setPath(pathentity, 1D);
         }
@@ -570,7 +570,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     protected void getPathOrWalkableBlock(Entity entity, float f) {
-        PathEntity pathentity = this.navigator.getPathToPos(entity.getPosition());
+        Path path = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 8F)) {
             int i = MathHelper.floor_double(entity.posX) - 2;
             int j = MathHelper.floor_double(entity.posZ) - 2;

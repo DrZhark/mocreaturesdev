@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -37,12 +38,16 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         super(world);
         setSize(1.4F, 7F);
         this.stepHeight = 2F;
-        this.tasks.addTask(1, new EntityAISwimming(this));
+    }
+    
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -156,7 +161,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             if (entity instanceof EntityAnimal && entity.width < 0.6F && entity.height < 0.6F) {
                 EntityAnimal entityanimal = (EntityAnimal) entity;
                 if (entityanimal.getAttackTarget() == null && !MoCTools.isTamed(entityanimal)) {
-                    PathEntity pathentity = entityanimal.getNavigator().getPathToEntityLiving(this);
+                    Path path = entityanimal.getNavigator().getPathToEntityLiving(this);
                     entityanimal.setAttackTarget(this);
                     entityanimal.getNavigator().setPath(pathentity, 1D);
                     j++;

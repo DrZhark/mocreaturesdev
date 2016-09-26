@@ -38,7 +38,11 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public MoCEntityWWolf(World world) {
         super(world);
         setSize(0.9F, 1.3F);
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+    
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));

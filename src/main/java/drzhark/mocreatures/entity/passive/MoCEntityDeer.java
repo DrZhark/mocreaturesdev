@@ -1,17 +1,23 @@
 package drzhark.mocreatures.entity.passive;
 
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -27,15 +33,17 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
         setSize(0.9F, 1.3F);
         setAdult(true);
         setTamed(false);
-        this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+    
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
-
             public boolean apply(Entity entity) {
                 return !(entity instanceof MoCEntityDeer) && (entity.height > 0.8F || entity.width > 0.8F);
             }
         }, 6.0F, this.getMyAISpeed(), this.getMyAISpeed() * 1.2D));
         this.tasks.addTask(2, new EntityAIPanic(this, this.getMyAISpeed() * 1.2D));
-        //this.tasks.addTask(3, new EntityAIFollowHerd(this, getMyAISpeed(), 6D, 20D, 5));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, getMyAISpeed()));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, getMyAISpeed()));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));

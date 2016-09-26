@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.ambient;
 
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
@@ -25,7 +26,11 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         super(world);
         setSize(0.3F, 0.3F);
         setEdad(50 + this.rand.nextInt(50));
-        this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
+    }
+
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(1, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
@@ -35,7 +40,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

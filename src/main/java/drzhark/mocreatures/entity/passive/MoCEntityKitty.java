@@ -64,15 +64,18 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         this.kittytimer = 0;
         this.madtimer = this.rand.nextInt(5);
         this.foundTree = false;
-        
+    }
+
+    @Override
+    protected void initEntityAI() {
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));    
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -1008,7 +1011,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         if (!this.foundTree || (this.rand.nextInt(10) != 0)) {
                             break;
                         }
-                        PathEntity pathentity = this.navigator.getPathToXYZ(this.treeCoord[0], this.treeCoord[1], this.treeCoord[2]);
+                        Path path = this.navigator.getPathToXYZ(this.treeCoord[0], this.treeCoord[1], this.treeCoord[2]);
 
                         if (pathentity != null) {
                             this.navigator.setPath(pathentity, 24F);

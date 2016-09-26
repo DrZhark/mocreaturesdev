@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAILeapAtTarget;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -28,11 +30,15 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.texture = "wraith.png";
         setSize(1.5F, 1.5F);
         this.isImmuneToFire = false;
-        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
+    }
+
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -42,10 +48,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }
 
-    /*    public boolean d2() {
-            return super.getCanSpawnHere();
-        }*/
-
+    
     @Override
     protected String getDeathSound() {
         return "mocreatures:wraithdying";

@@ -21,11 +21,15 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         this.texture = "shark.png";
         setSize(1.7F, 0.8F);
         setEdad(60 + this.rand.nextInt(100));
-        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
+    }
+
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-
+    
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
