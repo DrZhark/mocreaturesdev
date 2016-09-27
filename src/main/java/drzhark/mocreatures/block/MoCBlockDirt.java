@@ -1,6 +1,7 @@
 package drzhark.mocreatures.block;
 
 import drzhark.mocreatures.MoCreatures;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -13,8 +14,9 @@ import java.util.List;
 public class MoCBlockDirt extends MoCBlock {
 
     public MoCBlockDirt(String name) {
-        super(name, Material.ground);
+        super(name, Material.GROUND);
         setTickRandomly(true);
+        this.setSoundType(SoundType.GROUND);
     }
 
     @SideOnly(Side.CLIENT)

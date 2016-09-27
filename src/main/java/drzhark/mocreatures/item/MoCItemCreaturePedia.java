@@ -10,6 +10,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -51,12 +54,12 @@ public class MoCItemCreaturePedia extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
-        if (!worldObj.isRemote) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
+        if (!world.isRemote) {
             double dist = 5D;
             double d1 = -1D;
             EntityLivingBase entityliving = null;
-            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.getEntityBoundingBox().expand(dist, dist, dist));
+            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.getEntityBoundingBox().expand(dist, dist, dist));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity1 = list.get(i);
                 if (entity1 == null || !(entity1 instanceof EntityLivingBase)) {
@@ -76,25 +79,25 @@ public class MoCItemCreaturePedia extends MoCItem {
             }
 
             if (entityliving == null) {
-                return itemstack;
+                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
             }
 
             if (entityliving instanceof MoCEntityHorse) {
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/horse.png");
-                return itemstack;
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
             }
 
             if (entityliving instanceof MoCEntityTurtle) {
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/turtle.png");
-                return itemstack;
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
             }
 
             if (entityliving instanceof MoCEntityBunny) {
                 MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/bunny.png");
-                return itemstack;
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
             }
         }
 
-        return itemstack;
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
     }
 }

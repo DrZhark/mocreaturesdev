@@ -1,7 +1,9 @@
 package drzhark.mocreatures.entity.ai;
 
-import java.util.List;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityAquatic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -9,11 +11,7 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.Vec3d;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityAquatic;
+import java.util.List;
 
 public class EntityAIFleeFromEntityMoC extends EntityAIBase {
 

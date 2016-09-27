@@ -2,7 +2,7 @@ package drzhark.mocreatures.network.message;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

@@ -10,8 +10,12 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -53,7 +57,7 @@ public class ItemOgreHammer extends MoCItem {
      * pressed. Args: itemStack, world, entityPlayer
      */
     @Override
-    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
         double coordY = entityplayer.posY + entityplayer.getEyeHeight();
         double coordZ = entityplayer.posZ;
         double coordX = entityplayer.posX;
@@ -79,7 +83,7 @@ public class ItemOgreHammer extends MoCItem {
                                 * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
                 pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
                 if (entityplayer.worldObj.getBlockState(pos).getBlock() != Blocks.AIR) {
-                    return par1ItemStack;
+                    return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
                 }
 
                 int blockInfo[] = obtainBlockAndMetadataFromBelt(entityplayer, true);
@@ -87,16 +91,16 @@ public class ItemOgreHammer extends MoCItem {
                     if (MoCreatures.isServer()) {
                         Block block = Block.getBlockById(blockInfo[0]);
                         entityplayer.worldObj.setBlockState(pos, block.getDefaultState(), 3);
-                        entityplayer.worldObj.playSoundEffect((float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
-                                block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
+                        entityplayer.worldObj.playSound(entityplayer, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
+                                block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (block.getSoundType().getVolume() + 1.0F) / 2.0F, block.getSoundType().getPitch() * 0.8F);
                     }
                     MoCreatures.proxy.hammerFX(entityplayer);
-                    entityplayer.setItemInUse(par1ItemStack, 200);
+                    //entityplayer.setItemInUse(itemstack, 200);
                 }
-                return par1ItemStack;
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
             }
         }
-        return par1ItemStack;
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
     }
 
     /**
@@ -129,8 +133,7 @@ public class ItemOgreHammer extends MoCItem {
     }
 
     @Override
-    public boolean
-            onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return false;
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        return EnumActionResult.FAIL;
     }
 }

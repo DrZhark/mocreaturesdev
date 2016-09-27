@@ -2,7 +2,6 @@ package drzhark.mocreatures.entity.monster;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -11,14 +10,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIFleeSun;
-import net.minecraft.entity.ai.EntityAILeapAtTarget;
-import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -41,7 +39,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -127,18 +125,18 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mob.skeleton.death";
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_SKELETON_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mob.skeleton.hurt";
+    protected SoundEvent getHurtSound() {
+        return SoundEvents.ENTITY_SKELETON_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mob.skeleton.say";
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_SKELETON_AMBIENT;
     }
 
     /**
@@ -151,7 +149,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
 
     @Override
     protected void playStepSound(BlockPos pos, Block block) {
-        this.playSound("mob.skeleton.step", 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_SKELETON_STEP, 0.15F, 1.0F);
     }
 
     @Override

@@ -2,12 +2,13 @@ package drzhark.mocreatures.entity.item;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,9 +16,12 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityKittyBed extends EntityLiving {
 
@@ -27,7 +31,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     private static final DataParameter<Boolean> HAS_FOOD = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> PICKED_UP = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> SHEET_COLOR = EntityDataManager.<Integer>createKey(MoCEntityKittyBed.class, DataSerializers.VARINT);
-    
+
     public MoCEntityKittyBed(World world) {
         super(world);
         setSize(1.0F, 0.3F);
@@ -123,27 +127,12 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public boolean canEntityBeSeen(Entity entity) {
-        return this.worldObj.rayTraceBlocks(new Vec3(this.posX, this.posY + getEyeHeight(), this.posZ),
-                new Vec3(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
+        return this.worldObj.rayTraceBlocks(new Vec3d(this.posX, this.posY + getEyeHeight(), this.posZ),
+                new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
     }
 
     @Override
     public void fall(float f, float f1) {
-    }
-
-    @Override
-    protected String getDeathSound() {
-        return null;
-    }
-
-    @Override
-    protected String getHurtSound() {
-        return null;
-    }
-
-    @Override
-    protected String getLivingSound() {
-        return null;
     }
 
     @Override
@@ -167,44 +156,43 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.getItem() == Items.MILK_BUCKET)) {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.BUCKET, 1));
-            this.worldObj.playSoundAtEntity(this, "mocreatures:pouringmilk", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if ((stack != null) && MoCreatures.isServer() && (stack.getItem() == Items.MILK_BUCKET)) {
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.BUCKET, 1));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGMILK);
             setHasMilk(true);
             setHasFood(false);
             return true;
         }
-        if ((itemstack != null) && MoCreatures.isServer() && !getHasFood() && (itemstack.getItem() == MoCreatures.petfood)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && MoCreatures.isServer() && !getHasFood() && (stack.getItem() == MoCreatures.petfood)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            this.worldObj.playSoundAtEntity(this, "mocreatures:pouringfood", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGFOOD);
             setHasMilk(false);
             setHasFood(true);
             return true;
         }
         if (MoCreatures.isServer()
-                && (itemstack != null)
-                && ((itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
-                        || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.GOLDEN_PICKAXE) || (itemstack.getItem() == Items.DIAMOND_PICKAXE))) {
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[getSheetColor()], 1));
-            this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
+                && (stack != null)
+                && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+                        || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
+            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[getSheetColor()], 1));
+            this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
         } else {
-            this.rotationYaw = entityplayer.rotationYaw;
+            this.rotationYaw = player.rotationYaw;
             if (this.getRidingEntity() == null) {
                 if (MoCreatures.isServer()) {
-                    mountEntity(entityplayer);
+                    this.startRiding(player);
                 }
             } else {
                 if (MoCreatures.isServer()) {
-                    this.mountEntity(null);
+                    this.dismountRidingEntity();
                 }
             }
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             return true;
         }
     }

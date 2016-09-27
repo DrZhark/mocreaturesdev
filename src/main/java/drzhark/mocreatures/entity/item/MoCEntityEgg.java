@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.item;
 
-import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
@@ -18,10 +17,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class MoCEntityEgg extends EntityLiving {
@@ -66,21 +66,6 @@ public class MoCEntityEgg extends EntityLiving {
     }
 
     @Override
-    protected String getDeathSound() {
-        return null;
-    }
-
-    @Override
-    protected String getHurtSound() {
-        return null;
-    }
-
-    @Override
-    protected String getLivingSound() {
-        return null;
-    }
-
-    @Override
     protected float getSoundVolume() {
         return 0.4F;
     }
@@ -103,7 +88,7 @@ public class MoCEntityEgg extends EntityLiving {
             i = 31;
         }
         if ((this.lCounter > 10) && entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.mocegg, 1, i))) {
-            this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
+            this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             if (!this.worldObj.isRemote) {
                 entityplayer.onItemPickup(this, 1);
 
@@ -209,7 +194,7 @@ public class MoCEntityEgg extends EntityLiving {
                             MoCTools.tameWithName(entityplayer, entityspawn);
                         }
                     }
-                    this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                    MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     setDead();
                 }
             }
@@ -322,7 +307,7 @@ public class MoCEntityEgg extends EntityLiving {
                             MoCTools.tameWithName(entityplayer, entityspawn);
                         }
                     }
-                    this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                    MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     setDead();
                 }
             }
@@ -332,7 +317,7 @@ public class MoCEntityEgg extends EntityLiving {
     private void NotifyEggHatching() {
         EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 24D);
         if (entityplayer != null) {
-            entityplayer.addChatMessage(new ChatComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature located @ "
+            entityplayer.addChatMessage(new TextComponentTranslation("Egg hatching soon! KEEP WATCH! The hatched creature located @ "
                     + (int) this.posX + ", " + (int) this.posY + ", " + (int) this.posZ + " will be lost if you leave area"));
         }
     }

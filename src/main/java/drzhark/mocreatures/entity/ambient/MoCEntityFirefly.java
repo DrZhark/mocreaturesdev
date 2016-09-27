@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -22,7 +23,7 @@ public class MoCEntityFirefly extends MoCEntityInsect {
         if (MoCreatures.isServer()) {
             EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
             if (ep != null && getIsFlying() && --this.soundCount == -1) {
-                MoCTools.playCustomSound(this, "cricketfly", this.worldObj);
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_CRICKET_FLY);
                 this.soundCount = 20;
             }
 

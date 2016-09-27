@@ -1,7 +1,7 @@
 package drzhark.mocreatures;
 
 import drzhark.customspawner.utils.CMSUtils;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -24,6 +24,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MoCDespawner {
@@ -37,12 +38,14 @@ public class MoCDespawner {
     public MoCDespawner() {
         this.biomeList = new ArrayList<Biome>();
         try {
-            for (Biome Biome : Biome.getBiomeGenArray()) {
-                if (Biome == null) {
+        	Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+            while (iterator.hasNext()) {
+            	Biome biome = iterator.next();
+                if (biome == null) {
                     continue;
                 }
 
-                this.biomeList.add(Biome);
+                this.biomeList.add(biome);
             }
 
             this.vanillaClassList = new ArrayList<Class<? extends EntityLiving>>();

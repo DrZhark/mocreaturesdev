@@ -1,5 +1,10 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -21,12 +26,10 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 
 public class MoCEntityWerewolf extends MoCEntityMob {
 
@@ -52,7 +55,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -161,7 +164,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         Entity entity = damagesource.getEntity();
         if (!getIsHumanForm() && (entity != null) && (entity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) entity;
-            ItemStack itemstack = entityplayer.getCurrentEquippedItem();
+            ItemStack itemstack = entityplayer.getHeldItemMainhand();
             if (itemstack != null) {
                 i = 1F;
                 if (itemstack.getItem() == MoCreatures.silversword) {
@@ -190,15 +193,6 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     @Override
     public boolean shouldAttackPlayers() {
         return !getIsHumanForm() && super.shouldAttackPlayers();
-    }
-
-    @Override
-    protected String getDeathSound() {
-        if (getIsHumanForm()) {
-            return "mocreatures:werehumandying";
-        } else {
-            return "mocreatures:werewolfdying";
-        }
     }
 
     @Override
@@ -258,22 +252,31 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getDeathSound() {
         if (getIsHumanForm()) {
-            if (!this.transforming)
-                return "mocreatures:werehumanhurt";
-            return null;
+            return MoCSoundEvents.ENTITY_WEREWOLF_DEATH_HUMAN;
         } else {
-            return "mocreatures:werewolfhurt";
+            return MoCSoundEvents.ENTITY_WEREWOLF_DEATH;
         }
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getHurtSound() {
         if (getIsHumanForm()) {
-            return "mocreatures:werehumangrunt";
+            if (!this.transforming)
+                return MoCSoundEvents.ENTITY_WEREWOLF_HURT_HUMAN;
+            return null;
         } else {
-            return "mocreatures:werewolfgrunt";
+            return MoCSoundEvents.ENTITY_WEREWOLF_HURT;
+        }
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if (getIsHumanForm()) {
+            return MoCSoundEvents.ENTITY_WEREWOLF_AMBIENT_HUMAN;
+        } else {
+            return MoCSoundEvents.ENTITY_WEREWOLF_AMBIENT;
         }
     }
 
@@ -328,8 +331,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                     this.posX -= 0.3D;
                 }
                 if (this.tcounter == 10) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:weretransform", 1.0F,
-                            ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_WEREWOLF_TRANSFORM);
                 }
                 if (this.tcounter > 30) {
                     Transform();

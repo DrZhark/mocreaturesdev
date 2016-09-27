@@ -1,20 +1,33 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -22,18 +35,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+
+import javax.annotation.Nullable;
 
 /**
  * Biome - specific Forest Desert plains Swamp Jungle Tundra Taiga Extreme Hills
@@ -78,7 +81,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -162,8 +165,8 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
         if (!getIsTamed()) {
@@ -179,20 +182,20 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
          * //System.out.println("player has a mouse"); }
          */
 
-        this.rotationYaw = entityplayer.rotationYaw;
+        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
         } else {
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             if (MoCreatures.isServer()) {
-                this.mountEntity(null);
+                this.dismountEntity();
             }
         }
-        this.motionX = entityplayer.motionX * 5D;
-        this.motionY = (entityplayer.motionY / 2D) + 0.5D;
-        this.motionZ = entityplayer.motionZ * 5D;
+        this.motionX = player.motionX * 5D;
+        this.motionY = (player.motionY / 2D) + 0.5D;
+        this.motionZ = player.motionZ * 5D;
 
         return true;
     }
@@ -302,8 +305,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
                 setfRattle(getfRattle() + 0.2F);
                 if (getfRattle() == 1.0F) {
                     // TODO synchronize
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:snakerattle", 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SNAKE_RATTLE);
                 }
                 if (getfRattle() > 8.0F) {
                     setfRattle(0.0F);
@@ -350,8 +352,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
                 setfMouth(0.3F);
 
                 if (this.bodyswing < 0F) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:snakesnap", 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SNAKE_SNAP);
                     this.bodyswing = 2.5F;
                     setfMouth(0.0F);
                     setBiting(false);
@@ -381,8 +382,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             // hiss
             if (this.hissCounter % 25 == 0) {
                 setfMouth(0.3F);
-                this.worldObj
-                        .playSoundAtEntity(this, "mocreatures:snakeupset", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SNAKE_ANGRY);
             }
             if (this.hissCounter % 35 == 0) {
                 setfMouth(0.0F);
@@ -453,7 +453,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
                 /*if (entityplayer1.isBeingRidden()
                         && (entityplayer1.riddenByEntity instanceof MoCEntityMouse || entityplayer1.riddenByEntity instanceof MoCEntityBird)) {
-                    Path path = this.navigator.getPathToEntityLiving(entityplayer1);
+                    PathEntity pathentity = this.navigator.getPathToEntityLiving(entityplayer1);
                     this.navigator.setPath(pathentity, 16F);
                     setPissed(false);
                     this.hissCounter = 0;
@@ -514,8 +514,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if ((entity != this) && entity instanceof EntityLivingBase && (super.shouldAttackPlayers())) {
@@ -547,7 +546,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     @Override
     protected void playStepSound(BlockPos pos, Block par4) {
         if (isInsideOfMaterial(Material.WATER)) {
-            this.worldObj.playSoundAtEntity(this, "mocreatures:snakeswim", 1.0F, 1.0F);
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SNAKE_SWIM);
         }
         // TODO - add sound for slither
         /*
@@ -557,18 +556,18 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:snakedying";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_SNAKE_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:snakehurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_SNAKE_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:snakehiss";
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_SNAKE_AMBIENT;
     }
 
     @Override

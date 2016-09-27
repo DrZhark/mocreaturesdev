@@ -22,11 +22,12 @@ public class WorldGenWyvernGrass extends WorldGenerator {
 
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
-        Block block;
+        IBlockState blockstate;
 
         do {
-            block = worldIn.getBlockState(position).getBlock();
-            if (!block.isAir(worldIn, position) && !block.isLeaves(worldIn, position))
+            blockstate = worldIn.getBlockState(position);
+            Block block = blockstate.getBlock();
+            if (!block.isAir(blockstate, worldIn, position) && !block.isLeaves(blockstate, worldIn, position))
                 break;
             position = position.down();
         } while (position.getY() > 0);

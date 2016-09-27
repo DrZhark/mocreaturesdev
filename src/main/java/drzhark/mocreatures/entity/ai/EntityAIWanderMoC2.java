@@ -1,14 +1,14 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 
 public class EntityAIWanderMoC2 extends EntityAIBase {
 

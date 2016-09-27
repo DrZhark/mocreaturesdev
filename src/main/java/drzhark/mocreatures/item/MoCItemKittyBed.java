@@ -1,13 +1,13 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 
 public class MoCItemKittyBed extends MoCItem {
 

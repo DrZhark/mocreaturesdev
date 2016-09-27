@@ -6,8 +6,8 @@ import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -36,7 +36,7 @@ public class MoCRenderCrocodile extends RenderLiving<MoCEntityCrocodile> {
         this.croc.swimming = entitycrocodile.isSwimming();
         this.croc.resting = entitycrocodile.getIsSitting();
         if (entitycrocodile.isSpinning()) {
-            spinCroc(entitycrocodile, (EntityLiving) entitycrocodile.riddenByEntity);
+            spinCroc(entitycrocodile, (EntityLiving) entitycrocodile.getRidingEntity());
         }
         stretch(entitycrocodile);
         if (entitycrocodile.getIsSitting()) {

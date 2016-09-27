@@ -33,7 +33,7 @@ public class MoCRenderKitty extends MoCRenderMoC<MoCEntityKitty> {
         if (entitykitty.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entitykitty.getDistanceToEntity(this.renderManager.livingPlayer);
+            float f4 = entitykitty.getDistanceToEntity(this.renderManager.renderViewEntity);
             if (f4 < 12F) {
                 float f5 = 0.2F;
                 if (this.pussy1.isSitting) {
@@ -56,11 +56,11 @@ public class MoCRenderKitty extends MoCRenderMoC<MoCEntityKitty> {
                     float f9 = 0.0F;
                     float f11 = 1.0F / k;
                     float f12 = 1.0F / k;
-                    tessellator.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION);
-                    tessellator.getWorldRenderer().pos(l, i + k, f9).tex(0.0D, k * f12).endVertex();
-                    tessellator.getWorldRenderer().pos(l + k, i + k, f9).tex(k * f11, k * f12).endVertex();
-                    tessellator.getWorldRenderer().pos(l + k, i, f9).tex(k * f11, 0.0D).endVertex();
-                    tessellator.getWorldRenderer().pos(l, i, f9).tex(0.0D, 0.0D).endVertex();
+                    tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION);
+                    tessellator.getBuffer().pos(l, i + k, f9).tex(0.0D, k * f12).endVertex();
+                    tessellator.getBuffer().pos(l + k, i + k, f9).tex(k * f11, k * f12).endVertex();
+                    tessellator.getBuffer().pos(l + k, i, f9).tex(k * f11, 0.0D).endVertex();
+                    tessellator.getBuffer().pos(l, i, f9).tex(0.0D, 0.0D).endVertex();
                     tessellator.draw();
                 }
 

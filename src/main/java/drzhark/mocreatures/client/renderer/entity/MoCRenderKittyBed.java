@@ -1,17 +1,14 @@
 package drzhark.mocreatures.client.renderer.entity;
 
-import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.client.model.MoCModelKittyBed;
 import drzhark.mocreatures.client.model.MoCModelKittyBed2;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)

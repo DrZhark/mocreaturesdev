@@ -1,22 +1,6 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import java.util.List;
-
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -25,6 +9,21 @@ import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
+import java.util.List;
 
 public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
@@ -50,7 +49,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -176,7 +175,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                     MoCEntityFishy entityfishy1 = new MoCEntityFishy(this.worldObj);
                     entityfishy1.setPosition(this.posX, this.posY, this.posZ);
                     this.worldObj.spawnEntityInWorld(entityfishy1);
-                    this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                    MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     setHasEaten(false);
                     entityfishy.setHasEaten(false);
                     this.gestationtime = 0;

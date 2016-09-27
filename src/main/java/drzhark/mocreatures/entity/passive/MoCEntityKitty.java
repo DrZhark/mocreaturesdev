@@ -1,9 +1,20 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCEntity;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
+import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,29 +27,26 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
-import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
@@ -73,9 +81,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));    
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -243,7 +251,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     private void changeKittyState(int i) {
         setKittyState(i);
         if (MoCreatures.isServer()) {
-            mountEntity(null);
+            this.dismountEntity();
         }
         setSitting(false);
         this.kittytimer = 0;
@@ -309,15 +317,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
 
         return entityliving;
-    }
-
-    @Override
-    protected String getDeathSound() {
-        if (getKittyState() == 10) {
-            return "mocreatures:kittendying";
-        } else {
-            return "mocreatures:kittydying";
-        }
     }
 
     @Override
@@ -390,11 +389,56 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getDeathSound() {
         if (getKittyState() == 10) {
-            return "mocreatures:kittenhurt";
+            return MoCSoundEvents.ENTITY_KITTY_DEATH_BABY;
         } else {
-            return "mocreatures:kittyhurt";
+            return MoCSoundEvents.ENTITY_KITTY_DEATH;
+        }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound() {
+        if (getKittyState() == 10) {
+            return MoCSoundEvents.ENTITY_KITTY_HURT_BABY;
+        } else {
+            return MoCSoundEvents.ENTITY_KITTY_HURT;
+        }
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if (getKittyState() == 4) {
+            if (this.getRidingEntity() != null) {
+                MoCEntityKittyBed entitykittybed = (MoCEntityKittyBed) this.getRidingEntity();
+                if ((entitykittybed != null) && !entitykittybed.getHasMilk()) {
+                    return MoCSoundEvents.ENTITY_KITTY_DRINKING;
+                }
+                if ((entitykittybed != null) && !entitykittybed.getHasFood()) {
+                    return MoCSoundEvents.ENTITY_KITTY_EATING;
+                }
+            }
+            return null;
+        }
+        if (getKittyState() == 6) {
+            return MoCSoundEvents.ENTITY_KITTY_LITTER;
+        }
+        if (getKittyState() == 3) {
+            return MoCSoundEvents.ENTITY_KITTY_HUNGRY;
+        }
+        if (getKittyState() == 10) {
+            return MoCSoundEvents.ENTITY_KITTY_AMBIENT_BABY;
+        }
+        if (getKittyState() == 13) {
+            return MoCSoundEvents.ENTITY_KITTY_ANGRY;
+        }
+        if (getKittyState() == 17) {
+            return MoCSoundEvents.ENTITY_KITTY_TRAPPED;
+        }
+        if ((getKittyState() == 18) || (getKittyState() == 12)) {
+            return MoCSoundEvents.ENTITY_KITTY_PURR;
+        } else {
+            return MoCSoundEvents.ENTITY_KITTY_AMBIENT;
         }
     }
 
@@ -434,42 +478,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getLivingSound() {
-        if (getKittyState() == 4) {
-            if (this.getRidingEntity() != null) {
-                MoCEntityKittyBed entitykittybed = (MoCEntityKittyBed) this.getRidingEntity();
-                if ((entitykittybed != null) && !entitykittybed.getHasMilk()) {
-                    return "mocreatures:kittyeatingm";
-                }
-                if ((entitykittybed != null) && !entitykittybed.getHasFood()) {
-                    return "mocreatures:kittyeatingf";
-                }
-            }
-            return null;
-        }
-        if (getKittyState() == 6) {
-            return "mocreatures:kittylitter";
-        }
-        if (getKittyState() == 3) {
-            return "mocreatures:kittyfood";
-        }
-        if (getKittyState() == 10) {
-            return "mocreatures:kittengrunt";
-        }
-        if (getKittyState() == 13) {
-            return "mocreatures:kittyupset";
-        }
-        if (getKittyState() == 17) {
-            return "mocreatures:kittytrapped";
-        }
-        if ((getKittyState() == 18) || (getKittyState() == 12)) {
-            return "mocreatures:kittypurr";
-        } else {
-            return "mocreatures:kittygrunt";
-        }
-    }
-
-    @Override
     public double getYOffset() {
         if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
             if (getKittyState() == 10) {
@@ -499,20 +507,17 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        //Ownership code
-        //if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("") && !entityplayer.getName().equals(getOwnerName())) { return true; }
 
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((getKittyState() == 2) && (itemstack != null) && (itemstack.getItem() == MoCreatures.medallion)) {
+        if ((getKittyState() == 2) && (stack != null) && (stack.getItem() == MoCreatures.medallion)) {
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
-            if (getIsTamed() && --itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if (getIsTamed() && --stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             if (getIsTamed()) {
                 changeKittyState(3);
@@ -521,19 +526,19 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             }
             return false;
         }
-        if ((getKittyState() == 7) && (itemstack != null)
-                && ((itemstack.getItem() == Items.CAKE) || (itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.COOKED_FISH))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((getKittyState() == 7) && (stack != null)
+                && ((stack.getItem() == Items.CAKE) || (stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            this.worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_EATING);
             this.setHealth(getMaxHealth());
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && (itemstack != null) && (itemstack.getItem() == MoCreatures.woolball) && MoCreatures.isServer()) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((getKittyState() == 11) && (stack != null) && (stack.getItem() == MoCreatures.woolball) && MoCreatures.isServer()) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             setKittyState(8);
             EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY + 1.0D, this.posZ, new ItemStack(MoCreatures.woolball, 1));
@@ -546,45 +551,45 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             this.itemAttackTarget = entityitem;
             return true;
         }
-        if ((getKittyState() == 13) && (itemstack != null) && ((itemstack.getItem() == Items.FISH) || (itemstack.getItem() == Items.COOKED_FISH))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((getKittyState() == 13) && (stack != null) && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            this.worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_EATING);
             this.setHealth(getMaxHealth());
             changeKittyState(7);
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && ((itemstack.getItem() == MoCreatures.medallion) || (itemstack.getItem() == Items.book))) {
+        if ((stack != null) && (getKittyState() > 2) && ((stack.getItem() == MoCreatures.medallion) || (stack.getItem() == Items.BOOK))) {
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
 
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && pickable() && (itemstack.getItem() == Items.LEAD)) {
+        if ((stack != null) && (getKittyState() > 2) && pickable() && (stack.getItem() == Items.LEAD)) {
             changeKittyState(14);
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
             return true;
         }
-        if ((itemstack != null) && (getKittyState() > 2) && whipeable() && (itemstack.getItem() == MoCreatures.whip)) {
+        if ((stack != null) && (getKittyState() > 2) && whipeable() && (stack.getItem() == MoCreatures.whip)) {
             setSitting(!getIsSitting());
             return true;
         }
-        if ((itemstack == null) && (getKittyState() == 10) && (this.getRidingEntity() != null)) {
-            this.getRidingEntity() = null;
+        if ((stack == null) && (getKittyState() == 10) && (this.getRidingEntity() != null)) {
+            this.dismountEntity();
             return true;
         }
-        if ((itemstack == null) && (getKittyState() > 2) && pickable()) {
+        if ((stack == null) && (getKittyState() > 2) && pickable()) {
             changeKittyState(15);
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
             return true;
         }
-        if ((itemstack == null) && (getKittyState() == 15)) {
+        if ((stack == null) && (getKittyState() == 15)) {
             changeKittyState(7);
             return true;
         }
@@ -660,8 +665,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     }
                     if ((f < 2.0F) && (entityitem != null) && (this.deathTime == 0)) {
                         entityitem.setDead();
-                        this.worldObj.playSoundAtEntity(this, "mocreatures:kittyeatingf", 1.0F,
-                                1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_EATING);
                         setHungry(false);
                         setKittyState(2);
                     }
@@ -700,7 +704,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     }
                     if (f5 < 2.0F) {
                         changeKittyState(4);
-                        mountEntity(entitykittybed);
+                        this.startRiding(entitykittybed);
                         setSitting(true);
                     }
                     break;
@@ -741,7 +745,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     }
                     if (f6 < 2.0F) {
                         changeKittyState(6);
-                        mountEntity(entitylitterbox);
+                        this.startRiding(entitylitterbox);
                     }
                     break;
 
@@ -750,8 +754,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if (this.kittytimer <= 300) {
                         break;
                     }
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:kittypoo", 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_LITTER);
                     MoCEntityLitterBox entitylitterbox1 = (MoCEntityLitterBox) this.getRidingEntity();
                     if (entitylitterbox1 != null) {
                         entitylitterbox1.setUsedLitter(true);
@@ -996,8 +999,8 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                                     if (i1 >= 20) {
                                         break;
                                     }
-                                    Block block = this.worldObj.getBlockState(new BlockPos(ai[0], ai[1] + i1, ai[2])).getBlock();
-                                    if ((block.getMaterial() == Material.LEAVES)) {
+                                    IBlockState blockstate = this.worldObj.getBlockState(new BlockPos(ai[0], ai[1] + i1, ai[2]));
+                                    if ((blockstate.getMaterial() == Material.LEAVES)) {
                                         this.foundTree = true;
                                         this.treeCoord[0] = ai[0];
                                         this.treeCoord[1] = ai[1];
@@ -1011,7 +1014,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         if (!this.foundTree || (this.rand.nextInt(10) != 0)) {
                             break;
                         }
-                        Path path = this.navigator.getPathToXYZ(this.treeCoord[0], this.treeCoord[1], this.treeCoord[2]);
+                        Path pathentity = this.navigator.getPathToXYZ(this.treeCoord[0], this.treeCoord[1], this.treeCoord[2]);
 
                         if (pathentity != null) {
                             this.navigator.setPath(pathentity, 24F);
@@ -1108,7 +1111,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     }
                     if (f11 < 2.0F) {
                         changeKittyState(20);
-                        mountEntity(entitykittybed2);
+                        this.startRiding(entitykittybed2);
                     }
                     break;
 
@@ -1132,8 +1135,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         entitykitty1.setType(babytype);
                         entitykitty1.setPosition(this.posX, this.posY, this.posZ);
                         this.worldObj.spawnEntityInWorld(entitykitty1);
-                        this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F,
-                                ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                        MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                         entitykitty1.setAdult(false);
                         entitykitty1.changeKittyState(10);
                         // attackEntityFrom(DamageSource.generic, 1); blood - workaround to fix

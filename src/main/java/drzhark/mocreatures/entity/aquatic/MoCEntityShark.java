@@ -29,7 +29,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -48,7 +48,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if (entity != this && entity instanceof EntityLivingBase) {

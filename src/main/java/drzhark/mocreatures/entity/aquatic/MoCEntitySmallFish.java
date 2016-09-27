@@ -1,17 +1,13 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +36,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

@@ -2,12 +2,13 @@ package drzhark.mocreatures.block;
 
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -20,11 +21,12 @@ import java.util.Random;
 
 public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
 
+	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.8D, 0.9D);
+
     public MoCBlockTallGrass(String name) {
         super(name, Material.VINE);
-        float var3 = 0.4F;
-        this.setBlockBounds(0.5F - var3, 0.0F, 0.5F - var3, 0.5F + var3, 0.8F, 0.5F + var3);
         this.setCreativeTab(MoCreatures.tabMoC);
+        this.setSoundType(SoundType.PLANT);
     }
 
     public MoCBlockTallGrass(String name, boolean lighted) {
@@ -32,6 +34,11 @@ public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
         if (lighted) {
             this.setLightLevel(0.8F);
         }
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB;
     }
 
     /**
@@ -56,12 +63,6 @@ public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
         for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
             subItems.add(new ItemStack(this, 1, ix));
         }
-    }
-
-    @Override
-    protected boolean canPlaceBlockOn(Block block) {
-        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.farmland || block instanceof MoCBlockDirt
-                || block instanceof MoCBlockGrass;
     }
 
     @Override

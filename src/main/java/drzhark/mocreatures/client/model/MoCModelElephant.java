@@ -113,7 +113,7 @@ public class MoCModelElephant extends ModelBase {
     private int tailCounter;
     private int earCounter;
     private int trunkCounter;
-    byte tusks;
+    int tusks;
 
     public MoCModelElephant() {
         this.textureWidth = 128;
@@ -582,8 +582,8 @@ public class MoCModelElephant extends ModelBase {
         this.tailCounter = elephant.tailCounter;
         this.earCounter = elephant.earCounter;
         this.trunkCounter = elephant.trunkCounter;
-        byte harness = elephant.getArmorType();
-        byte storage = elephant.getStorage();
+        int harness = elephant.getArmorType();
+        int storage = elephant.getStorage();
         this.isSitting = (elephant.sitCounter != 0);
         //boolean moveTail = (elephant.tailCounter != 0);
 

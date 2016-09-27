@@ -5,14 +5,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,11 +32,6 @@ public class MoCBlock extends Block {
     @Override
     public int damageDropped(IBlockState state) {
         return ((EnumType) state.getValue(VARIANT)).getMetadata();
-    }
-
-    @Override
-    public boolean isLeaves(IBlockAccess world, BlockPos pos) {
-        return this.getUnlocalizedName().contains("leaves");
     }
 
     @Override
@@ -64,8 +57,8 @@ public class MoCBlock extends Block {
     }
 
     @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] {VARIANT});
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {VARIANT});
     }
 
     public static enum EnumType implements IStringSerializable {

@@ -1,36 +1,39 @@
 package drzhark.mocreatures.entity.passive;
 
-import java.util.List;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
@@ -62,7 +65,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -136,74 +139,77 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:rabbitdeath";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_RABBIT_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:rabbithurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_RABBIT_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return null;
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_RABBIT_AMBIENT;
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-
-        if ((itemstack != null) && (itemstack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             setHasEaten(true);
-            MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             return true;
         }
 
         /*
-         * if (itemstack != null && this.getIsTamed() && itemstack.getItem() ==
-         * Items.GOLDEN_CARROT) { if (--itemstack.stackSize == 0) {
-         * entityplayer.
-         * inventory.setInventorySlotContents(entityplayer.inventory
-         * .currentItem, null); } setHasEaten(true);
-         * MoCTools.playCustomSound(this, "eating", worldObj); if
-         * (MoCreatures.isServer()) { MoCEntityBunny baby = new
-         * MoCEntityBunny(worldObj); baby.setPosition(posX, posY, posZ);
-         * worldObj.spawnEntityInWorld(baby); worldObj.playSoundAtEntity(this,
-         * "mob.chickenplop", 1.0F, ((rand.nextFloat() - rand.nextFloat()) *
-         * 0.2F) + 1.0F); baby.setAdult(false); baby.setType(this.getType());
-         * baby.setOwner(this.getOwnerName()); baby.setTamed(true);
-         * baby.setAdult(false); MoCTools.tameWithName(entityplayer, baby); }
-         * return true; }
-         */
+        if (stack != null && this.getIsTamed() && stack.getItem() == Items.GOLDEN_CARROT) { 
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null); 
+            } 
+            setHasEaten(true);
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
+            if (MoCreatures.isServer()) {
+                MoCEntityBunny baby = new MoCEntityBunny(this.worldObj);
+                baby.setPosition(posX, posY, posZ);
+                this.worldObj.spawnEntityInWorld(baby);
+                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
+                baby.setAdult(false);
+                baby.setType(this.getType());
+                baby.setOwnerId(this.getOwnerId());
+                baby.setTamed(true);
+                baby.setAdult(false);
+                MoCTools.tameWithName(player, baby);
+            }
+            return true;
+        }*/
 
-        this.rotationYaw = entityplayer.rotationYaw;
+        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
             // This is required since the server will send a Packet39AttachEntity which informs the client to mount
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
 
             if (MoCreatures.isServer() && !getIsTamed()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
         } else {
-            this.worldObj.playSoundAtEntity(this, "mocreatures:rabbitlift", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_RABBIT_LIFT);
             if (MoCreatures.isServer()) {
-                this.mountEntity(null);
+                this.dismountEntity();
             }
         }
 
-        this.motionX = entityplayer.motionX * 5D;
-        this.motionY = (entityplayer.motionY / 2D) + 0.5D;
-        this.motionZ = entityplayer.motionZ * 5D;
+        this.motionX = player.motionX * 5D;
+        this.motionY = (player.motionY / 2D) + 0.5D;
+        this.motionZ = player.motionZ * 5D;
 
         return true;
     }
@@ -251,7 +257,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                     }
                     entitybunny1.setType(babytype);
                     this.worldObj.spawnEntityInWorld(entitybunny1);
-                    this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                    MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     proceed();
                     entitybunny.proceed();
                     break;
@@ -265,16 +271,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         this.bunnyReproduceTickerB = 0;
         this.bunnyReproduceTickerA = this.rand.nextInt(64);
     }
-
-    /*@Override
-    public boolean updateMount() {
-        return true;
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return true;
-    }*/
 
     @Override
     public int nameYOffset() {

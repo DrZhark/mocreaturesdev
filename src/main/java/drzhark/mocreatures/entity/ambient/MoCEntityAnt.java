@@ -3,15 +3,9 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -85,7 +79,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
             if (!this.isBeingRidden()) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 2D);
                 if (entityitem != null && entityitem.getRidingEntity() == null) {
-                    entityitem.mountEntity(this);
+                    entityitem.startRiding(this);
                     return;
 
                 }

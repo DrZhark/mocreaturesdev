@@ -25,14 +25,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
@@ -45,8 +45,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Optional;
-
 public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IEntityAdditionalSpawnData
 {
 
@@ -58,16 +56,13 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected PathNavigate navigatorFlyer;
     protected EntityAIWanderMoC2 wander;
 
-    private static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(EntityCreature.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityCreature.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(EntityCreature.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityCreature.class, DataSerializers.STRING);
     
     public MoCEntityMob(World world) {
         super(world);
-        setTamed(false);
         this.texture = "blank.jpg";
         this.moveHelper = new EntityAIMoverHelperMoC(this);
         this.navigatorWater = new PathNavigateSwimmer(this, world);
@@ -110,12 +105,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(TAMED, Boolean.valueOf(false));
         this.dataManager.register(ADULT, Boolean.valueOf(false));
         this.dataManager.register(TYPE, Integer.valueOf(0));
         this.dataManager.register(AGE, Integer.valueOf(45));
         this.dataManager.register(NAME_STR, "");
-        this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
     }
 
     @Override
@@ -140,12 +133,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     
     @Override
     public boolean getIsTamed() {
-    	return ((Boolean)this.dataManager.get(TAMED)).booleanValue();
-    }
-    
-    @Override
-    public void setTamed(boolean flag) {
-    	this.dataManager.set(TAMED, Boolean.valueOf(flag));
+        return false;
     }
 
     @Override
@@ -159,16 +147,23 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Nullable
-    public UUID getOwnerUniqueId()
+    public UUID getOwnerId()
     {
-        return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+        return null;
     }
 
-    public void setOwnerUniqueId(@Nullable UUID uniqueId)
-    {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(uniqueId));
+    public void setOwnerUniqueId(@Nullable UUID uniqueId) {
     }
-    
+
+    @Override
+    public int getOwnerPetId() {
+        return 0;
+    }
+
+    @Override
+    public void setOwnerPetId(int petId) {
+    }
+
     @Override
     public void setEdad(int i) {
     	this.dataManager.set(AGE, Integer.valueOf(i));
@@ -320,7 +315,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound = MoCTools.getEntityData(this);
-        nbttagcompound.setBoolean("Tamed", getIsTamed());
         nbttagcompound.setBoolean("Adult", getIsAdult());
         nbttagcompound.setInteger("Edad", getEdad());
         nbttagcompound.setString("Name", getPetName());
@@ -332,7 +326,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
         nbttagcompound = MoCTools.getEntityData(this);
-        setTamed(nbttagcompound.getBoolean("Tamed"));
         setAdult(nbttagcompound.getBoolean("Adult"));
         setEdad(nbttagcompound.getInteger("Edad"));
         setPetName(nbttagcompound.getString("Name"));
@@ -368,7 +361,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public void moveEntityWithHeadingFlyer(float strafe, float forward) {
         if (this.isServerWorld()) {
 
-            this.moveFlying(strafe, forward, 0.1F);
+            this.moveRelative(strafe, forward, 0.1F);
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.8999999761581421D;
             this.motionY *= 0.8999999761581421D;
@@ -381,12 +374,12 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public void moveEntityWithHeadingAquatic(float strafe, float forward) {
         if (this.isServerWorld()) {
             if (this.isInWater()) {
-                if (this.riddenByEntity instanceof EntityLivingBase) {
+                if (this.getRidingEntity() instanceof EntityLivingBase) {
                     //this.moveEntityWithRider(strafe, forward);
                     return;
                 }
 
-                this.moveFlying(strafe, forward, 0.1F);
+                this.moveRelative(strafe, forward, 0.1F);
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 this.motionX *= 0.8999999761581421D;
                 this.motionY *= 0.8999999761581421D;
@@ -429,17 +422,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 && (getPetName() != null && !getPetName().equals("") && (!this.isBeingRidden()) && (this.getRidingEntity() == null));
     }
 
-    /*@Override
-    public boolean updateMount() {
-        return false;
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return false;
-    }*/
-
-    protected Vec3 findPossibleShelter() {
+    protected Vec3d findPossibleShelter() {
         Random var1 = this.getRNG();
 
         for (int var2 = 0; var2 < 10; ++var2) {
@@ -449,7 +432,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             BlockPos pos = new BlockPos(var3, var4, var5);
 
             if (!this.worldObj.canBlockSeeSky(pos) && this.getBlockPathWeight(pos) < 0.0F) {
-                return new Vec3(var3, var4, var5);
+                return new Vec3d(var3, var4, var5);
             }
         }
 
@@ -491,7 +474,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     protected void getPathOrWalkableBlock(Entity entity, float f) {
-        Path path = this.navigator.getPathToPos(entity.getPosition());
+        Path pathentity = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 12F)) {
             int i = MathHelper.floor_double(entity.posX) - 2;
             int j = MathHelper.floor_double(entity.posZ) - 2;
@@ -499,9 +482,9 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
             for (int l = 0; l <= 4; l++) {
                 for (int i1 = 0; i1 <= 4; i1++) {
                     if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3))
-                            && this.worldObj.getBlockState(new BlockPos(i + l, k - 1, j + i1)).getBlock().isNormalCube()
-                            && !this.worldObj.getBlockState(new BlockPos(i + l, k, j + i1)).getBlock().isNormalCube()
-                            && !this.worldObj.getBlockState(new BlockPos(i + l, k + 1, j + i1)).getBlock().isNormalCube()) {
+                            && this.worldObj.getBlockState(new BlockPos(i + l, k - 1, j + i1)).isNormalCube()
+                            && !this.worldObj.getBlockState(new BlockPos(i + l, k, j + i1)).isNormalCube()
+                            && !this.worldObj.getBlockState(new BlockPos(i + l, k + 1, j + i1)).isNormalCube()) {
                         setLocationAndAngles((i + l) + 0.5F, k, (j + i1) + 0.5F, this.rotationYaw, this.rotationPitch);
                         return;
                     }
@@ -514,19 +497,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public String getOwnerName() {
-        return "";
-    }
-
-    @Override
-    public void setOwner(String par1Str) {
-    }
-
-    @Override
     public void setArmorType(int i) {
     }
 
-    public byte getArmorType() {
+    public int getArmorType() {
         return 0;
     }
 

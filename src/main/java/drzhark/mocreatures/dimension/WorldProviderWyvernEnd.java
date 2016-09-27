@@ -3,9 +3,10 @@ package drzhark.mocreatures.dimension;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProviderSurface;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,8 +18,8 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      * creates a new world chunk manager for WorldProvider
      */
     @Override
-    public void registerWorldChunkManager() {
-        this.worldChunkMgr = new WorldChunkManagerWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
+    protected void createBiomeProvider() {
+        this.biomeProvider = new BiomeProviderWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
         setDimension(MoCreatures.WyvernLairDimensionID);
         setCustomSky();
     }
@@ -27,8 +28,8 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      * Returns a new chunk provider which generates chunks for this world
      */
     @Override
-    public IChunkProvider createChunkGenerator() {
-        return new ChunkProviderWyvernLair(this.worldObj, this.worldObj.getSeed());
+    public IChunkGenerator createChunkGenerator() {
+        return new ChunkGeneratorWyvernLair(this.worldObj, false, this.worldObj.getSeed());
     }
 
     private void setCustomSky() {
@@ -52,7 +53,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
     /**
      * Return Vec3D with biome specific fog color
      */
-    public Vec3 getFogColor(float par1, float par2) {
+    public Vec3d getFogColor(float par1, float par2) {
         float var4 = MathHelper.cos(par1 * (float) Math.PI * 2.0F) * 2.0F + 0.5F;
 
         if (var4 < 0.0F) {
@@ -70,7 +71,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
         var5 *= var4 * 0.0F + 0.15F;
         var6 *= var4 * 0.0F + 0.15F;
         var7 *= var4 * 0.0F + 0.15F;
-        return new Vec3(var5, var6, var7);
+        return new Vec3d(var5, var6, var7);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
     @Override
     public boolean canCoordinateBeSpawn(int par1, int par2) {
         BlockPos pos = this.worldObj.getTopSolidOrLiquidBlock(new BlockPos(par1, 0, par2));
-        return this.worldObj.getBlockState(pos).getBlock().getMaterial().blocksMovement();
+        return this.worldObj.getBlockState(pos).getMaterial().blocksMovement();
     }
 
     /**
@@ -154,22 +155,19 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
         return true;
     }
 
-    /**
-     * Returns the dimension's name, e.g. "The End", "Nether", or "Overworld".
-     */
     @Override
-    public String getDimensionName() {
-        return "Wyvern Lair";
+    public DimensionType getDimensionType() {
+        return MoCreatures.WYVERN_LAIR;
     }
 
     public String getSunTexture() {
         return "/mocreatures.twinsuns.png";
     }
 
-    @Override
+    /*@Override
     public String getSaveFolder() {
         return "MoCWyvernLair";
-    }
+    }*/
 
     @Override
     public double getMovementFactor() {

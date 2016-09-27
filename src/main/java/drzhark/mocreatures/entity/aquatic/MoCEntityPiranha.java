@@ -3,8 +3,6 @@ package drzhark.mocreatures.entity.aquatic;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -30,7 +28,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 1));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -64,7 +62,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         if (super.attackEntityFrom(damagesource, i) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
             Entity entity = damagesource.getEntity();
             if (entity instanceof EntityLivingBase) {
-                if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+                if (this.isRidingOrBeingRiddenBy(entity)) {
                     return true;
                 }
                 if (entity != this) {

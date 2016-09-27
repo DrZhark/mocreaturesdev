@@ -15,10 +15,11 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class MoCEntityBoar extends MoCEntityAnimal {
@@ -45,7 +46,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -77,7 +78,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && getIsAdult()) {
@@ -105,18 +106,18 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mob.pig.say";
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_PIG_AMBIENT;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mob.pig.say";
+    protected SoundEvent getHurtSound() {
+        return SoundEvents.ENTITY_PIG_HURT;
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mob.pig.death";
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_PIG_DEATH;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCreatures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,10 +8,8 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import drzhark.mocreatures.MoCreatures;
 
 public class MoCItemSword extends ItemSword {
 

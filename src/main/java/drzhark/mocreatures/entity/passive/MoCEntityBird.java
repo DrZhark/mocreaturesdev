@@ -1,13 +1,13 @@
 package drzhark.mocreatures.entity.passive;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -16,22 +16,25 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.AxisAlignedBB
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityBird extends MoCEntityTameableAnimal {
 
@@ -148,7 +151,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             label0: for (int j2 = i1; j2 < l1; j2++) {
                 BlockPos pos = new BlockPos(i2, j, j2);
                 IBlockState blockstate = this.worldObj.getBlockState(pos);
-                if (blockstate.getBlock().isAir(this.worldObj, pos) || (blockstate.getBlock().getMaterial() != Material.WOOD)) {
+                if (blockstate.getBlock().isAir(blockstate, this.worldObj, pos) || (blockstate.getMaterial() != Material.WOOD)) {
                     continue;
                 }
                 int l2 = j;
@@ -158,7 +161,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
                     }
                     BlockPos pos1 = new BlockPos(i2, l2, j2);
                     IBlockState blockstate1 = this.worldObj.getBlockState(pos1);
-                    if (blockstate1.getBlock().isAir(this.worldObj, pos1)) {
+                    if (blockstate1.getBlock().isAir(blockstate1, this.worldObj, pos1)) {
                         return (new int[] {i2, l2 + 2, j2});
                     }
                     l2++;
@@ -244,38 +247,38 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:birddying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return Items.FEATHER;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:birdhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_BIRD_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_BIRD_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
         if (getType() == 1) {
-            return "mocreatures:birdwhite";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_WHITE;
         }
         if (getType() == 2) {
-            return "mocreatures:birdblack";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_BLACK;
         }
         if (getType() == 3) {
-            return "mocreatures:birdgreen";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_GREEN;
         }
         if (getType() == 4) {
-            return "mocreatures:birdblue";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_BLUE;
         }
         if (getType() == 5) {
-            return "mocreatures:birdyellow";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_YELLOW;
         } else {
-            return "mocreatures:birdred";
+            return MoCSoundEvents.ENTITY_BIRD_AMBIENT_RED;
         }
     }
 
@@ -293,19 +296,17 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if (itemstack != null && getPreTamed() && !getIsTamed() && itemstack.getItem() == Items.WHEAT_SEEDS) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (stack != null && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
             return true;
         }
@@ -314,21 +315,21 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             return false;
         }
 
-        this.rotationYaw = entityplayer.rotationYaw;
+        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
             //setPicked(true);
         } else {
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             if (MoCreatures.isServer()) {
-                this.mountEntity(null);
+                this.dismountEntity();
             }
         }
-        this.motionX = entityplayer.motionX * 5D;
-        this.motionY = (entityplayer.motionY / 2D) + 0.5D;
-        this.motionZ = entityplayer.motionZ * 5D;
+        this.motionX = player.motionX * 5D;
+        this.motionY = (player.motionY / 2D) + 0.5D;
+        this.motionZ = player.motionZ * 5D;
         return true;
     }
 
@@ -452,8 +453,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
                 for (int i2 = i1; i2 < j1; i2++) {
                     BlockPos pos = new BlockPos(k1, l1, i2);
                     IBlockState blockstate = this.worldObj.getBlockState(pos);
-                    if (blockstate.getBlock() != null && !blockstate.getBlock().isAir(this.worldObj, pos)
-                            && blockstate.getBlock().getMaterial() == material) {
+                    if (blockstate.getBlock() != null && !blockstate.getBlock().isAir(blockstate, this.worldObj, pos)
+                            && blockstate.getMaterial() == material) {
                         return (new int[] {k1, l1, i2});
                     }
                 }

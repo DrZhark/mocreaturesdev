@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class EntityAIFollowOwnerPlayer extends EntityAIBase {
 
     private EntityLiving thePet;
@@ -46,11 +48,9 @@ public class EntityAIFollowOwnerPlayer extends EntityAIBase {
         if (((IMoCEntity) this.thePet).getIsSitting()) {
             return false;
         }
-        //if (!(this.thePet.getNavigator() instanceof PathNavigateGround)) {
-        //    return false;
-        //}
-        String OwnerName = ((IMoCTameable) this.thePet).getOwnerName();
-        if (OwnerName == null || OwnerName.equals("")) {
+
+        UUID ownerUniqueId = ((IMoCTameable) this.thePet).getOwnerId();
+        if (ownerUniqueId == null) {
             return false;
         }
 

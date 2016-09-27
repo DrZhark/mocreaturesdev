@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.ambient;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAmbient;
@@ -40,7 +39,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
         this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

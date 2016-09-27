@@ -35,7 +35,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
         if (entityMoC.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f5 = ((Entity) entityMoC).getDistanceToEntity(this.renderManager.livingPlayer);
+            float f5 = ((Entity) entityMoC).getDistanceToEntity(this.renderManager.renderViewEntity);
             if (f5 < 16F) {
                 String s = "";
                 s = (new StringBuilder()).append(s).append(entityMoC.getPetName()).toString();
@@ -54,20 +54,20 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
                     if (!flag) {
                         yOff += 8;
                     }
-                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    tessellator1.getBuffer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     // might break SSP
                     float f8 = ((EntityLiving) entityMoC).getHealth();
                     float f9 = ((EntityLiving) entityMoC).getMaxHealth();
                     float f10 = f8 / f9;
                     float f11 = 40F * f10;
-                    tessellator1.getWorldRenderer().pos(-20F + f11, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(-20F + f11, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(20D, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(20D, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(-20D, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(-20D, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(f11 - 20F, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
-                    tessellator1.getWorldRenderer().pos(f11 - 20F, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(-20F + f11, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(-20F + f11, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(20D, -6 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(20D, -10 + yOff, 0.0D).color(0.7F, 0.0F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(-20D, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(-20D, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(f11 - 20F, -6 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
+                    tessellator1.getBuffer().pos(f11 - 20F, -10 + yOff, 0.0D).color(0.0F, 0.7F, 0.0F, 1.0F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                 }
@@ -77,12 +77,12 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
                     GL11.glEnable(3042 /* GL_BLEND */);
                     GL11.glBlendFunc(770, 771);
                     GL11.glDisable(3553 /* GL_TEXTURE_2D */);
-                    tessellator1.getWorldRenderer().begin(7, DefaultVertexFormats.POSITION_COLOR);
+                    tessellator1.getBuffer().begin(7, DefaultVertexFormats.POSITION_COLOR);
                     int i = fontrenderer.getStringWidth(s) / 2;
-                    tessellator1.getWorldRenderer().pos(-i - 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    tessellator1.getWorldRenderer().pos(-i - 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    tessellator1.getWorldRenderer().pos(i + 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                    tessellator1.getWorldRenderer().pos(i + 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getBuffer().pos(-i - 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getBuffer().pos(-i - 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getBuffer().pos(i + 1, 8 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+                    tessellator1.getBuffer().pos(i + 1, -1 + yOff, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
                     tessellator1.draw();
                     GL11.glEnable(3553 /* GL_TEXTURE_2D */);
                     fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, yOff, 0x20ffffff);

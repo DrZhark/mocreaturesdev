@@ -1,26 +1,22 @@
 package drzhark.mocreatures.entity.passive;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class MoCEntityDeer extends MoCEntityTameableAnimal {
@@ -98,26 +94,26 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:deerdying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return MoCreatures.fur;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:deerhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_DEER_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_DEER_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
         if (!getIsAdult()) {
-            return "mocreatures:deerbgrunt";
+            return MoCSoundEvents.ENTITY_DEER_AMBIENT_BABY;
         } else {
-            return "mocreatures:deerfgrunt";
+            return MoCSoundEvents.ENTITY_DEER_AMBIENT;
         }
     }
 

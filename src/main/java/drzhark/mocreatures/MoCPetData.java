@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.UUID;
 
 public class MoCPetData {
 
@@ -16,18 +17,18 @@ public class MoCPetData {
     private NBTTagList tamedList = new NBTTagList();
     private BitSet IDMap = new BitSet(Long.SIZE << 4);
     @SuppressWarnings("unused")
-    private final String ownerName;
+    private final UUID ownerUniqueId;
     private ArrayList<Integer> usedPetIds = new ArrayList<Integer>();
 
     public MoCPetData(IMoCTameable pet) {
         this.ownerData.setTag("TamedList", this.tamedList);
-        this.ownerName = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getName();
+        this.ownerUniqueId = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().thePlayer.getUniqueID();
     }
 
-    public MoCPetData(NBTTagCompound nbt, String owner) {
+    public MoCPetData(NBTTagCompound nbt, UUID owner) {
         this.ownerData = nbt;
         this.tamedList = nbt.getTagList("TamedList", 10);
-        this.ownerName = owner;
+        this.ownerUniqueId = owner;
         this.loadPetDataMap(nbt.getCompoundTag("PetIdData"));
     }
 

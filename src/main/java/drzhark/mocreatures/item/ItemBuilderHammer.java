@@ -10,8 +10,12 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -53,51 +57,51 @@ public class ItemBuilderHammer extends MoCItem {
      * pressed. Args: itemStack, world, entityPlayer
      */
     @Override
-    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer) {
-        double coordY = entityplayer.posY + entityplayer.getEyeHeight();
-        double coordZ = entityplayer.posZ;
-        double coordX = entityplayer.posX;
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand) {
+        double coordY = player.posY + player.getEyeHeight();
+        double coordZ = player.posZ;
+        double coordX = player.posX;
 
         for (int x = 3; x < 128; x++) {
-            double newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * x;
+            double newPosY = coordY - Math.cos((player.rotationPitch - 90F) / 57.29578F) * x;
             double newPosX =
-                    coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                            * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * x);
+                    coordX + Math.cos((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                            * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
             double newPosZ =
-                    coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                            * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * x);
+                    coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                            * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
             BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-            IBlockState blockstate = entityplayer.worldObj.getBlockState(pos);
+            IBlockState blockstate = player.worldObj.getBlockState(pos);
 
             if (blockstate.getBlock() != Blocks.AIR) {
 
-                newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1);
+                newPosY = coordY - Math.cos((player.rotationPitch - 90F) / 57.29578F) * (x - 1);
                 newPosX =
-                        coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                                * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
+                        coordX + Math.cos((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                                * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
                 newPosZ =
-                        coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                                * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
+                        coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                                * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
                 pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-                if (!entityplayer.worldObj.isAirBlock(pos)) {
-                    return par1ItemStack;
+                if (!player.worldObj.isAirBlock(pos)) {
+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
                 }
 
-                int blockInfo[] = obtainBlockAndMetadataFromBelt(entityplayer, true);
+                int blockInfo[] = obtainBlockAndMetadataFromBelt(player, true);
                 if (blockInfo[0] != 0) {
                     if (MoCreatures.isServer()) {
                         Block block = Block.getBlockById(blockInfo[0]);
-                        entityplayer.worldObj.setBlockState(pos, block.getDefaultState(), 3);
-                        entityplayer.worldObj.playSoundEffect((float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
-                                block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
+                        player.worldObj.setBlockState(pos, block.getDefaultState(), 3);
+                        player.worldObj.playSound(player, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
+                                block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (block.getSoundType().getVolume() + 1.0F) / 2.0F, block.getSoundType().getPitch() * 0.8F);
                     }
-                    MoCreatures.proxy.hammerFX(entityplayer);
-                    entityplayer.setItemInUse(par1ItemStack, 200);
+                    MoCreatures.proxy.hammerFX(player);
+                    //entityplayer.setItemInUse(par1ItemStack, 200);
                 }
-                return par1ItemStack;
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
         }
-        return par1ItemStack;
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 
     /**
@@ -130,8 +134,8 @@ public class ItemBuilderHammer extends MoCItem {
     }
 
     @Override
-    public boolean
-            onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return false;
+    public EnumActionResult
+            onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return EnumActionResult.FAIL;
     }
 }

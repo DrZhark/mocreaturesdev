@@ -104,7 +104,7 @@ public class MoCMessageHandler {
                 Entity var3 = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.targetEntityId);
 
                 if (var2 != null) {
-                    ((Entity) var2).mountEntity(var3);
+                    ((Entity) var2).startRiding(var3);
                 }
                 return;
             } else if (this.message instanceof MoCMessageExplode) {

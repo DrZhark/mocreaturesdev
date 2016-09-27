@@ -5,6 +5,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -13,14 +14,20 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityMouse extends MoCEntityAnimal {
 
@@ -37,7 +44,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -115,23 +122,23 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:micedying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return Items.WHEAT_SEEDS;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:micehurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_MOUSE_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:micegrunt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_MOUSE_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_MOUSE_AMBIENT;
     }
 
     @Override
@@ -152,23 +159,23 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        this.rotationYaw = entityplayer.rotationYaw;
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
             //setPicked(true);
         } else {
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             //setPicked(false);
             if (MoCreatures.isServer()) {
-                this.mountEntity(null);
+                this.dismountEntity();
             }
         }
-        this.motionX = entityplayer.motionX * 5D;
-        this.motionY = (entityplayer.motionY / 2D) + 0.5D;
-        this.motionZ = entityplayer.motionZ * 5D;
+        this.motionX = player.motionX * 5D;
+        this.motionY = (player.motionY / 2D) + 0.5D;
+        this.motionZ = player.motionZ * 5D;
 
         return true;
     }

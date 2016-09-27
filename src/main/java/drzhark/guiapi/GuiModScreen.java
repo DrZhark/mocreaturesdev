@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.init.SoundEvents;
 
 /**
  * GuiModScreen is the minecraft screen subclass that controls and renders TWL.
@@ -49,7 +49,7 @@ public class GuiModScreen extends GuiScreen {
      */
     public static void clicksound() {
         Minecraft m = ModSettings.getMcinst();
-        m.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+        m.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     /**

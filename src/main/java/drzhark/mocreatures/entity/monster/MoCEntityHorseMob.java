@@ -4,6 +4,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,10 +14,11 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityHorseMob extends MoCEntityMob {
@@ -40,7 +42,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -138,25 +140,25 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     }
 
     @Override
-    protected String getDeathSound() {
+    protected SoundEvent getDeathSound() {
         openMouth();
-        return "mocreatures:horsedyingundead";
+        return MoCSoundEvents.ENTITY_HORSE_DEATH_UNDEAD;
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getHurtSound() {
         openMouth();
         stand();
-        return "mocreatures:horsehurtundead";
+        return MoCSoundEvents.ENTITY_HORSE_HURT_UNDEAD;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         openMouth();
         if (this.rand.nextInt(10) == 0) {
             stand();
         }
-        return "mocreatures:horsegruntundead";
+        return MoCSoundEvents.ENTITY_HORSE_AMBIENT_UNDEAD;
     }
 
     public boolean isOnAir() {
@@ -326,7 +328,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             stand();
         }
         openMouth();
-        MoCTools.playCustomSound(this, "horsemad", this.worldObj);
+        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_HORSE_MAD);
         return super.attackEntityAsMob(entityIn);
     }
 
@@ -393,6 +395,6 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
         passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
-        this.riddenByEntity.rotationYaw = this.rotationYaw;
+        passenger.rotationYaw = this.rotationYaw;
     }
 }

@@ -7,6 +7,7 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class MoCEntityBee extends MoCEntityInsect
@@ -34,7 +36,7 @@ public class MoCEntityBee extends MoCEntityInsect
             if (getIsFlying() && --this.soundCount == -1) {
                 EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
                 if (ep != null) {
-                    MoCTools.playCustomSound(this, getMySound(), this.worldObj);
+                    MoCTools.playCustomSound(this, getMySound());
                     this.soundCount = 20;
                 }
             }
@@ -45,11 +47,11 @@ public class MoCEntityBee extends MoCEntityInsect
         }
     }
 
-    private String getMySound() {
+    private SoundEvent getMySound() {
         if (getAttackTarget() != null) {
-            return "beeupset";
+            return MoCSoundEvents.ENTITY_BEE_UPSET;
         }
-        return "bee";
+        return MoCSoundEvents.ENTITY_BEE_AMBIENT;
     }
 
     @Override

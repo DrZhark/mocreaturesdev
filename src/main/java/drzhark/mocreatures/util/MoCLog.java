@@ -1,4 +1,4 @@
-package drzhark.mocreatures.utils;
+package drzhark.mocreatures.util;
 
 import org.apache.logging.log4j.LogManager;
 

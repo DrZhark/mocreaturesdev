@@ -15,14 +15,14 @@ public class EntityAITools {
     }
 
     protected static EntityPlayer getIMoCTameableOwner(IMoCTameable pet) {
-        if (pet.getOwnerName() == null || pet.getOwnerName().equals("")) {
+        if (pet.getOwnerId() == null) {
             return null;
         }
 
         for (int i = 0; i < ((EntityLiving) pet).worldObj.playerEntities.size(); ++i) {
             EntityPlayer entityplayer = (EntityPlayer) ((EntityLiving) pet).worldObj.playerEntities.get(i);
 
-            if (pet.getOwnerName().equals(entityplayer.getName())) {
+            if (pet.getOwnerId().equals(entityplayer.getUniqueID())) {
                 return entityplayer;
             }
         }

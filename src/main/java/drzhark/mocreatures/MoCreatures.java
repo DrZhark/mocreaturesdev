@@ -1,53 +1,6 @@
 package drzhark.mocreatures;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityList.EntityEggInfo;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.mojang.authlib.GameProfile;
-
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
 import drzhark.mocreatures.block.MoCBlockLeaf;
@@ -150,7 +103,55 @@ import drzhark.mocreatures.item.MoCItemTurtleSoup;
 import drzhark.mocreatures.item.MoCItemWeapon;
 import drzhark.mocreatures.item.MoCItemWhip;
 import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
+import drzhark.mocreatures.util.MoCSoundEvents;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.BiomeProperties;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
 
 @Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION)
 public class MoCreatures {
@@ -160,7 +161,7 @@ public class MoCreatures {
 
     @SidedProxy(clientSide = "drzhark.mocreatures.client.MoCClientProxy", serverSide = "drzhark.mocreatures.MoCProxy")
     public static MoCProxy proxy;
-    public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.creativeTabArray.length, "MoCreaturesTab");
+    public static final CreativeTabs tabMoC = new MoCCreativeTabs(CreativeTabs.CREATIVE_TAB_ARRAY.length, "MoCreaturesTab");
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
     public static GameProfile MOCFAKEPLAYER = new GameProfile(UUID.fromString("6E379B45-1111-2222-3333-2FE1A88BCD66"), "[MoCreatures]");
@@ -187,14 +188,14 @@ public class MoCreatures {
     public static Item staffTeleport;
     public static Item builderHammer;
 
-    static ArmorMaterial scorpARMOR = EnumHelper.addArmorMaterial("crocARMOR", "crocARMOR", 15, new int[] {2, 6, 5, 2}, 12);
-    static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", "furARMOR", 15, new int[] {2, 6, 5, 2}, 12);
-    static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", "hideARMOR", 15, new int[] {2, 6, 5, 2}, 12);
-    static ArmorMaterial scorpdARMOR = EnumHelper.addArmorMaterial("scorpdARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 12);
-    static ArmorMaterial scorpfARMOR = EnumHelper.addArmorMaterial("scorpfARMOR", "scorpdARMOR", 18, new int[] {2, 7, 6, 2}, 12);
-    static ArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", "scorpdARMOR", 20, new int[] {3, 7, 6, 3}, 15);
-    static ArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 12);
-    static ArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 15);
+    static ArmorMaterial scorpARMOR = EnumHelper.addArmorMaterial("crocARMOR", "crocARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", "furARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", "hideARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial scorpdARMOR = EnumHelper.addArmorMaterial("scorpdARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial scorpfARMOR = EnumHelper.addArmorMaterial("scorpfARMOR", "scorpdARMOR", 18, new int[] {2, 7, 6, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial scorpnARMOR = EnumHelper.addArmorMaterial("scorpnARMOR", "scorpdARMOR", 20, new int[] {3, 7, 6, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial scorpcARMOR = EnumHelper.addArmorMaterial("scorpcARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
+    static ArmorMaterial silverARMOR = EnumHelper.addArmorMaterial("silverARMOR", "scorpdARMOR", 15, new int[] {2, 6, 5, 2}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
     static ToolMaterial SILVER = EnumHelper.addToolMaterial("SILVER", 0, 250, 6.0F, 4, 15);
 
     public static Item horsesaddle;
@@ -363,17 +364,18 @@ public class MoCreatures {
         this.AddRecipes();
         proxy.registerRenderers();
         proxy.registerRenderInformation();
-        DimensionManager.registerProviderType(WyvernLairDimensionID, WorldProviderWyvernEnd.class, true);
+        DimensionType dimType = DimensionType.register("Wyvern Lair", "_wyvern_lair", WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
+        DimensionManager.registerDimension(WyvernLairDimensionID, dimType);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         isCustomSpawnerLoaded = Loader.isModLoaded("CustomSpawner");
         //ForgeChunkManager.setForcedChunkLoadingCallback(instance, new MoCloadCallback());
-        DimensionManager.registerDimension(WyvernLairDimensionID, WyvernLairDimensionID);
         // ***MUST REGISTER BIOMES AT THIS POINT TO MAKE SURE OUR ENTITIES GET ALL BIOMES FROM DICTIONARY****
-        MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(MoCreatures.proxy.WyvernBiomeID);
+        MoCreatures.WyvernLairBiome = new BiomeGenWyvernLair(new BiomeProperties("WyvernLair").setBaseHeight(0.3F).setHeightVariation(1.5F));
         BiomeDictionary.registerBiomeType(WyvernLairBiome, Type.FOREST, Type.END);
+        Biome.registerBiome(MoCreatures.proxy.WyvernBiomeID, "WyvernBiome", WyvernLairBiome);
         BiomeDictionary.registerAllBiomes();
         registerEntities();
     }
@@ -385,7 +387,7 @@ public class MoCreatures {
         event.registerServerCommand(new CommandMoCTP());
         event.registerServerCommand(new CommandMoCPets());
         if (isServer()) {
-            if (MinecraftServer.getServer().isDedicatedServer()) {
+            if (FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
                 event.registerServerCommand(new CommandMoCSpawn());
             }
         }
@@ -681,9 +683,7 @@ public class MoCreatures {
         if (proxy.debug) {
             MoCLog.logger.info("registerEntity " + entityClass + " with Mod ID " + MoCEntityID);
         }
-        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true);
-        EntityList.idToClassMapping.put(Integer.valueOf(MoCEntityID), entityClass);
-        EntityList.entityEggs.put(Integer.valueOf(MoCEntityID), new EntityEggInfo(MoCEntityID, eggColor, eggDotsColor));
+        EntityRegistry.registerModEntity(entityClass, entityName, MoCEntityID, instance, 128, 1, true, eggColor, eggDotsColor);
         MoCEntityID += 1;
     }
 
@@ -695,7 +695,7 @@ public class MoCreatures {
     protected void InitItems() {
         WyvernLairDimensionID = proxy.WyvernDimension;//17
 
-        recordshuffle = new MoCItemRecord("recordshuffle");
+        recordshuffle = new MoCItemRecord("recordshuffle", MoCSoundEvents.ITEM_RECORD_SHUFFLING);
         horsesaddle = new MoCItemHorseSaddle("horsesaddle");
 
         sharkteeth = new MoCItem("sharkteeth");
@@ -718,10 +718,10 @@ public class MoCreatures {
         builderHammer = new ItemBuilderHammer("builderhammer");
 
         hideCroc = new MoCItem("reptilehide");
-        plateCroc = new MoCItemArmor("reptileplate", scorpARMOR, 4, 1);
-        helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, 0);
-        legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, 2);
-        bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, 3);
+        plateCroc = new MoCItemArmor("reptileplate", scorpARMOR, 4, EntityEquipmentSlot.CHEST);
+        helmetCroc = new MoCItemArmor("reptilehelmet", scorpARMOR, 4, EntityEquipmentSlot.HEAD);
+        legsCroc = new MoCItemArmor("reptilelegs", scorpARMOR, 4, EntityEquipmentSlot.LEGS);
+        bootsCroc = new MoCItemArmor("reptileboots", scorpARMOR, 4, EntityEquipmentSlot.FEET);
         fur = new MoCItem("fur");
         omelet = new MoCItemFood("omelet", 4, 0.6F, false);
         turtleraw = new MoCItemFood("turtleraw", 2, 0.3F, false);
@@ -752,28 +752,28 @@ public class MoCreatures {
         petamulet = new MoCItemPetAmulet("petamulet", 1);
         petamuletfull = new MoCItemPetAmulet("petamuletfull", 1);
 
-        chestFur = new MoCItemArmor("furchest", furARMOR, 4, 1);
-        helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, 0);
-        legsFur = new MoCItemArmor("furlegs", furARMOR, 4, 2);
-        bootsFur = new MoCItemArmor("furboots", furARMOR, 4, 3);
+        chestFur = new MoCItemArmor("furchest", furARMOR, 4, EntityEquipmentSlot.CHEST);
+        helmetFur = new MoCItemArmor("furhelmet", furARMOR, 4, EntityEquipmentSlot.HEAD);
+        legsFur = new MoCItemArmor("furlegs", furARMOR, 4, EntityEquipmentSlot.LEGS);
+        bootsFur = new MoCItemArmor("furboots", furARMOR, 4, EntityEquipmentSlot.FEET);
 
         heartdarkness = new MoCItem("heartdarkness");
         heartfire = new MoCItem("heartfire");
         heartundead = new MoCItem("heartundead");
-        ostrichraw = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
+        ostrichraw = new MoCItemFood("ostrichraw", 2, 0.3F, false).setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F);
         ostrichcooked = new MoCItemFood("ostrichcooked", 6, 0.6F, false);
         unicornhorn = new MoCItem("unicornhorn");
 
         horsearmorcrystal = new MoCItem("horsearmorcrystal");
 
-        rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
+        rawTurkey = new MoCItemFood("turkeyraw", 3, 0.3F, false).setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F);
         cookedTurkey = new MoCItemFood("turkeycooked", 8, 0.6F, false);
         animalHide = new MoCItem("hide");
-        chestHide = new MoCItemArmor("hidechest", hideARMOR, 4, 1);
-        helmetHide = new MoCItemArmor("hidehelmet", hideARMOR, 4, 0);
-        legsHide = new MoCItemArmor("hidelegs", hideARMOR, 4, 2);
-        bootsHide = new MoCItemArmor("hideboots", hideARMOR, 4, 3);
-        ratRaw = new MoCItemFood("ratraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
+        chestHide = new MoCItemArmor("hidechest", hideARMOR, 4, EntityEquipmentSlot.CHEST);
+        helmetHide = new MoCItemArmor("hidehelmet", hideARMOR, 4, EntityEquipmentSlot.HEAD);
+        legsHide = new MoCItemArmor("hidelegs", hideARMOR, 4, EntityEquipmentSlot.LEGS);
+        bootsHide = new MoCItemArmor("hideboots", hideARMOR, 4, EntityEquipmentSlot.FEET);
+        ratRaw = new MoCItemFood("ratraw", 2, 0.3F, false).setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F);
         ratCooked = new MoCItemFood("ratcooked", 4, 0.6F, false);
         ratBurger = new MoCItemFood("ratburger", 8, 0.6F, false);
 
@@ -787,25 +787,25 @@ public class MoCreatures {
         scorpSwordNether = new MoCItemSword("scorpswordnether", ToolMaterial.IRON, 3, false);
         scorpSwordDirt = new MoCItemSword("scorpsworddirt", ToolMaterial.IRON, 1, false);
 
-        scorpPlateDirt = new MoCItemArmor("scorpplatedirt", scorpARMOR, 4, 1);
-        scorpHelmetDirt = new MoCItemArmor("scorphelmetdirt", scorpARMOR, 4, 0);
-        scorpLegsDirt = new MoCItemArmor("scorplegsdirt", scorpARMOR, 4, 2);
-        scorpBootsDirt = new MoCItemArmor("scorpbootsdirt", scorpARMOR, 4, 3);
+        scorpPlateDirt = new MoCItemArmor("scorpplatedirt", scorpARMOR, 4, EntityEquipmentSlot.CHEST);
+        scorpHelmetDirt = new MoCItemArmor("scorphelmetdirt", scorpARMOR, 4, EntityEquipmentSlot.HEAD);
+        scorpLegsDirt = new MoCItemArmor("scorplegsdirt", scorpARMOR, 4, EntityEquipmentSlot.LEGS);
+        scorpBootsDirt = new MoCItemArmor("scorpbootsdirt", scorpARMOR, 4, EntityEquipmentSlot.FEET);
 
-        scorpPlateFrost = new MoCItemArmor("scorpplatefrost", scorpARMOR, 4, 1);
-        scorpHelmetFrost = new MoCItemArmor("scorphelmetfrost", scorpARMOR, 4, 0);
-        scorpLegsFrost = new MoCItemArmor("scorplegsfrost", scorpARMOR, 4, 2);
-        scorpBootsFrost = new MoCItemArmor("scorpbootsfrost", scorpARMOR, 4, 3);
+        scorpPlateFrost = new MoCItemArmor("scorpplatefrost", scorpARMOR, 4, EntityEquipmentSlot.CHEST);
+        scorpHelmetFrost = new MoCItemArmor("scorphelmetfrost", scorpARMOR, 4, EntityEquipmentSlot.HEAD);
+        scorpLegsFrost = new MoCItemArmor("scorplegsfrost", scorpARMOR, 4, EntityEquipmentSlot.LEGS);
+        scorpBootsFrost = new MoCItemArmor("scorpbootsfrost", scorpARMOR, 4, EntityEquipmentSlot.FEET);
 
-        scorpPlateCave = new MoCItemArmor("scorpplatecave", scorpARMOR, 4, 1);
-        scorpHelmetCave = new MoCItemArmor("scorphelmetcave", scorpARMOR, 4, 0);
-        scorpLegsCave = new MoCItemArmor("scorplegscave", scorpARMOR, 4, 2);
-        scorpBootsCave = new MoCItemArmor("scorpbootscave", scorpARMOR, 4, 3);
+        scorpPlateCave = new MoCItemArmor("scorpplatecave", scorpARMOR, 4, EntityEquipmentSlot.CHEST);
+        scorpHelmetCave = new MoCItemArmor("scorphelmetcave", scorpARMOR, 4, EntityEquipmentSlot.HEAD);
+        scorpLegsCave = new MoCItemArmor("scorplegscave", scorpARMOR, 4, EntityEquipmentSlot.LEGS);
+        scorpBootsCave = new MoCItemArmor("scorpbootscave", scorpARMOR, 4, EntityEquipmentSlot.FEET);
 
-        scorpPlateNether = new MoCItemArmor("scorpplatenether", scorpARMOR, 4, 1);
-        scorpHelmetNether = new MoCItemArmor("scorphelmetnether", scorpARMOR, 4, 0);
-        scorpLegsNether = new MoCItemArmor("scorplegsnether", scorpARMOR, 4, 2);
-        scorpBootsNether = new MoCItemArmor("scorpbootsnether", scorpARMOR, 4, 3);
+        scorpPlateNether = new MoCItemArmor("scorpplatenether", scorpARMOR, 4, EntityEquipmentSlot.CHEST);
+        scorpHelmetNether = new MoCItemArmor("scorphelmetnether", scorpARMOR, 4, EntityEquipmentSlot.HEAD);
+        scorpLegsNether = new MoCItemArmor("scorplegsnether", scorpARMOR, 4, EntityEquipmentSlot.LEGS);
+        scorpBootsNether = new MoCItemArmor("scorpbootsnether", scorpARMOR, 4, EntityEquipmentSlot.FEET);
 
         scorpStingCave = new MoCItemWeapon("scorpstingcave", ToolMaterial.GOLD, 4, true);
         scorpStingFrost = new MoCItemWeapon("scorpstingfrost", ToolMaterial.GOLD, 2, true);
@@ -817,14 +817,14 @@ public class MoCreatures {
 
         tusksWood = new MoCItemWeapon("tuskswood", ToolMaterial.WOOD);
         tusksIron = new MoCItemWeapon("tusksiron", ToolMaterial.IRON);
-        tusksDiamond = new MoCItemWeapon("tusksdiamond", ToolMaterial.EMERALD);
+        tusksDiamond = new MoCItemWeapon("tusksdiamond", ToolMaterial.DIAMOND);
         elephantHarness = new MoCItem("elephantharness");
         elephantChest = new MoCItem("elephantchest");
         elephantGarment = new MoCItem("elephantgarment");
         elephantHowdah = new MoCItem("elephanthowdah");
         mammothPlatform = new MoCItem("mammothplatform");
 
-        crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(MobEffects.HUNGER, 30, 0, 0.8F);
+        crabraw = new MoCItemFood("crabraw", 2, 0.3F, false).setPotionEffect(new PotionEffect(MobEffects.HUNGER, 30, 0), 0.8F);
         crabcooked = new MoCItemFood("crabcooked", 6, 0.6F, false);
         silversword = new MoCItemSword("silversword", MoCreatures.SILVER);
 
@@ -836,14 +836,14 @@ public class MoCreatures {
         scrollOfOwner = new MoCItem("scrollofowner");
 
         //new blocks
-        mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F).setStepSound(Block.soundTypeStone);
-        mocGrass = new MoCBlockGrass("MoCGrass").setHardness(0.5F).setStepSound(Block.soundTypeGrass);
-        mocDirt = new MoCBlockDirt("MoCDirt").setHardness(0.6F).setStepSound(Block.soundTypeGravel);
+        mocStone = new MoCBlockRock("MoCStone").setHardness(1.5F).setResistance(10.0F);
+        mocGrass = new MoCBlockGrass("MoCGrass").setHardness(0.5F);
+        mocDirt = new MoCBlockDirt("MoCDirt").setHardness(0.6F);
         //non terrain generator blocks
-        mocLeaf = new MoCBlockLeaf("MoCLeaves").setHardness(0.2F).setLightOpacity(1).setStepSound(Block.soundTypeGrass);
-        mocLog = new MoCBlockLog("MoCLog").setHardness(2.0F).setStepSound(Block.soundTypeWood);
-        mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F).setStepSound(Block.soundTypeGrass);
-        mocPlank = new MoCBlockPlanks("MoCWoodPlank").setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood);
+        mocLeaf = new MoCBlockLeaf("MoCLeaves").setHardness(0.2F).setLightOpacity(1);
+        mocLog = new MoCBlockLog("MoCLog").setHardness(2.0F);
+        mocTallGrass = new MoCBlockTallGrass("MoCTallGrass", true).setHardness(0.0F);
+        mocPlank = new MoCBlockPlanks("MoCWoodPlank").setHardness(2.0F).setResistance(5.0F);
 
         //wyvern lair block harvest settings
         mocDirt.setHarvestLevel("shovel", 0, mocDirt.getDefaultState());
@@ -865,13 +865,13 @@ public class MoCreatures {
 
         GameRegistry.addSmelting(MoCreatures.mocegg, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addSmelting(Items.egg, new ItemStack(MoCreatures.omelet, 1), 0F);
+        GameRegistry.addSmelting(Items.EGG, new ItemStack(MoCreatures.omelet, 1), 0F);
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.paper, Items.FEATHER, Items.REDSTONE});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {Items.PAPER, Items.FEATHER, Items.REDSTONE});
 
         GameRegistry.addShapelessRecipe(new ItemStack(scrollFreedom, 1), new Object[] {scrollOfSale, Items.REDSTONE});
 
-        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.paper, Items.FEATHER});
+        GameRegistry.addShapelessRecipe(new ItemStack(scrollOfSale, 1), new Object[] {Items.PAPER, Items.FEATHER});
 
         GameRegistry.addShapelessRecipe(new ItemStack(Items.LEATHER, 1), new Object[] {animalHide});
 
@@ -906,7 +906,7 @@ public class MoCreatures {
                 new Object[] {"X  ", "XR ", "XXX", Character.valueOf('X'), Items.DIAMOND, Character.valueOf('R'), Items.LEAD});
 
         GameRegistry.addRecipe(new ItemStack(mammothPlatform, 1),
-                new Object[] {"WRW", "PPP", "WRW", Character.valueOf('W'), Blocks.log, Character.valueOf('R'), Items.LEAD, Character.valueOf('P'),
+                new Object[] {"WRW", "PPP", "WRW", Character.valueOf('W'), Blocks.LOG, Character.valueOf('R'), Items.LEAD, Character.valueOf('P'),
                         Blocks.PLANKS});
 
         GameRegistry.addRecipe(new ItemStack(elephantChest, 1),
@@ -926,7 +926,7 @@ public class MoCreatures {
                 new ItemStack(Blocks.WOOL, 1, 11), Character.valueOf('M'), medallion, Character.valueOf('p'), new ItemStack(Items.DYE, 1, 9),
                 Character.valueOf('y'), new ItemStack(Items.DYE, 1, 11), Character.valueOf('g'), new ItemStack(Items.DYE, 1, 10)});
 
-        //Items.DYE.itemID
+        //Items.dye.itemID
         GameRegistry.addRecipe(new ItemStack(ratBurger, 1),
                 new Object[] {"SB ", "GRG", " B ", Character.valueOf('R'), ratCooked, Character.valueOf('B'), Items.BREAD, Character.valueOf('S'),
                         Items.PUMPKIN_SEEDS, Character.valueOf('G'), Items.WHEAT_SEEDS});
@@ -1005,7 +1005,7 @@ public class MoCreatures {
 
         GameRegistry.addRecipe(new ItemStack(bootsFur, 1), new Object[] {"X X", "X X", Character.valueOf('X'), fur});
 
-        //GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.STICK, Character.valueOf('X'),
+        //GameRegistry.addRecipe(new ItemStack(key, 1), new Object[] {"  #", " # ", "X  ", Character.valueOf('#'), Items.stick, Character.valueOf('X'),
         //        Items.iron_ingot,});
 
         GameRegistry.addRecipe(new ItemStack(petamulet, 1),
@@ -1099,7 +1099,7 @@ public class MoCreatures {
                             new ItemStack(Blocks.WOOL, 1, i), Character.valueOf('Z'), Items.IRON_INGOT,});
             String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
-            LanguageRegistry.addName(new ItemStack(kittybed[i], 1), (s + " Kitty Bed"));
+            //LanguageRegistry.addName(new ItemStack(kittybed[i], 1), (s + " Kitty Bed"));
         }
 
         for (int i = 0; i < multiBlockNames.size(); i++) {

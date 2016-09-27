@@ -19,12 +19,12 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.BiomeDictionary;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -135,7 +135,10 @@ public class CMSUtils {
             }
             // initialize environment settings - fixes Mystcraft spawning
             EnvironmentSettings environment = CustomSpawner.environmentMap.get(worldProviderClass);
-            CMSUtils.copyVanillaSpawnLists();
+            if (CustomSpawner.debug) {
+                CustomSpawner.globalLog.logger.info("Copying spawn list data from all biomes...");
+            }
+            CustomSpawner.copyVanillaSpawnData();
             environment.initializeBiomes();
             environment.initializeEntities();
             environment.updateSettings(); // refresh settings
@@ -166,18 +169,17 @@ public class CMSUtils {
                     continue;
                 }
                 environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
-                for (int j = 0; j < Biome.getBiomeGenArray().length; j++) {
-                    if (Biome.getBiomeGenArray()[j] != null) {
-                        Biome biome = Biome.getBiomeGenArray()[j];
-                        environment.envLog.logger.info("Found biome " + biome.getBiomeName() + " with spawn entries : ");
-                        if (entitySpawnType.getBiomeSpawnList(biome.biomeID) == null) {
-                            environment.envLog.logger.info("NONE!");
-                            continue;
-                        }
-                        for (SpawnListEntry spawn : entitySpawnType.getBiomeSpawnList(biome.biomeID)) {
-                            environment.envLog.logger.info("[SpawnListEntry]" + spawn.entityClass + " - " + spawn.itemWeight + ":"
-                                    + spawn.minGroupCount + ":" + spawn.maxGroupCount);
-                        }
+                Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+                while (iterator.hasNext()) {
+                	Biome biome = iterator.next();
+                    environment.envLog.logger.info("Found biome " + biome.getBiomeName() + " with spawn entries : ");
+                    if (entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome)) == null) {
+                        environment.envLog.logger.info("NONE!");
+                        continue;
+                    }
+                    for (SpawnListEntry spawn : entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome))) {
+                        environment.envLog.logger.info("[SpawnListEntry]" + spawn.entityClass + " - " + spawn.itemWeight + ":"
+                                + spawn.minGroupCount + ":" + spawn.maxGroupCount);
                     }
                 }
             }
@@ -269,28 +271,7 @@ public class CMSUtils {
         return sortedMap;
     }
 
-    public static void copyVanillaSpawnLists() {
-        // SAFEST POINT TO COPY VANILLA SPAWN LISTS //
-        List<Biome> biomeList = new ArrayList<Biome>();
-        for (int j = 0; j < Biome.getBiomeGenArray().length; j++) {
-            if (Biome.getBiomeGenArray()[j] != null) {
-                biomeList.add(Biome.getBiomeGenArray()[j]);
-            }
-        }
-
-        if (biomeList.size() > 0) {
-            Biome[] allBiomes = new Biome[biomeList.size()];
-            allBiomes = biomeList.toArray(allBiomes);
-            // used for generating default entity biome groups and settings.
-            // the defaults will only generate if a biomegroup category is not found for an entity
-            if (CustomSpawner.debug) {
-                CustomSpawner.globalLog.logger.info("Copying spawn list data from all biomes...");
-            }
-            CustomSpawner.copyVanillaSpawnData(allBiomes);
-        }
-    }
-
-    public static void registerAllBiomes() {
+    /*public static void registerAllBiomes() {
         for (int i = 0; i < Biome.getBiomeGenArray().length; i++) {
             if (Biome.getBiomeGenArray()[i] != null) {
                 if (!BiomeDictionary.isBiomeRegistered(Biome.getBiomeGenArray()[i])) {
@@ -298,5 +279,5 @@ public class CMSUtils {
                 }
             }
         }
-    }
+    }*/
 }

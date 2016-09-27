@@ -1,5 +1,12 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -7,7 +14,6 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -17,18 +23,13 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityGoat extends MoCEntityTameableAnimal {
 
@@ -61,9 +62,9 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         this.tasks.addTask(4, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));    
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -275,8 +276,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
                         return;
                     }
                     if ((f < 2.0F) && (entityitem != null) && (this.deathTime == 0) && this.rand.nextInt(50) == 0) {
-                        this.worldObj.playSoundAtEntity(this, "mocreatures:goateating", 1.0F,
-                                1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_EATING);
                         setEating(true);
 
                         entityitem.setDead();
@@ -332,7 +332,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         this.attacking = 30;
         if (entityIn instanceof MoCEntityGoat) {
             MoCTools.bigsmack(this, entityIn, 0.4F);
-            MoCTools.playCustomSound(this, "goatsmack", worldObj);
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_SMACK);
             if (this.rand.nextInt(3) == 0) {
                 calm();
                 ((MoCEntityGoat) entityIn).calm();
@@ -411,7 +411,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         if (getSwingLeg()) {
             this.movecount += 5;
             if (this.movecount == 30) {
-                this.worldObj.playSoundAtEntity(this, "mocreatures:goatdigg", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_DIGG);
             }
 
             if (this.movecount > 100) {
@@ -441,8 +441,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             if (this.eatcount == 2) {
                 EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 3D);
                 if (entityplayer1 != null) {
-                    this.worldObj.playSoundAtEntity(this, "mocreatures:goateating", 1.0F,
-                            1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_EATING);
                 }
             }
             if (this.eatcount > 25) {
@@ -509,39 +508,38 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if (itemstack != null && itemstack.getItem() == Items.BUCKET) {
+
+        if (stack != null && stack.getItem() == Items.BUCKET) {
             if (getType() > 4) {
                 setUpset(true);
-                setAttackTarget(entityplayer);
+                setAttackTarget(player);
                 return false;
             }
             if (getType() == 1) {
                 return false;
             }
 
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.MILK_BUCKET));
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.MILK_BUCKET));
             return true;
         }
 
         if (getIsTamed()) {
-            if ((itemstack != null) && (MoCTools.isItemEdible(itemstack.getItem()))) {
-                if (--itemstack.stackSize == 0) {
-                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            if ((stack != null) && (MoCTools.isItemEdible(stack.getItem()))) {
+                if (--stack.stackSize == 0) {
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 }
                 this.setHealth(getMaxHealth());
-                this.worldObj
-                        .playSoundAtEntity(this, "mocreatures:goateating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_EATING);
                 return true;
             }
         }
 
-        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && MoCTools.isItemEdible(itemstack.getItem())) {
-            if (MoCTools.tameWithName(entityplayer, this)) {
+        if (MoCreatures.isServer() && !getIsTamed() && (stack != null) && MoCTools.isItemEdible(stack.getItem())) {
+            if (MoCTools.tameWithName(player, this)) {
                 return true;
             }
         }
@@ -567,26 +565,26 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:goathurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_GOAT_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         setBleating(true);
         if (getType() == 1) {
-            return "mocreatures:goatkid";
+            return MoCSoundEvents.ENTITY_GOAT_AMBIENT_BABY;
         }
         if (getType() > 2 && getType() < 5) {
-            return "mocreatures:goatfemale";
+            return MoCSoundEvents.ENTITY_GOAT_AMBIENT_FEMALE;
         }
 
-        return "mocreatures:goatgrunt";
+        return MoCSoundEvents.ENTITY_GOAT_AMBIENT;
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:goatdying";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_GOAT_DEATH;
     }
 
     @Override

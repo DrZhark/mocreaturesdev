@@ -1,10 +1,20 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,19 +27,12 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
@@ -64,7 +67,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -96,22 +99,21 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
+    protected SoundEvent getDeathSound() {
         openmouth();
-
-        return "mocreatures:snakedying";//"komododying";
+        return MoCSoundEvents.ENTITY_SNAKE_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getHurtSound() {
         openmouth();
-        return "mocreatures:snakehurt";//"komodohurt";
+        return MoCSoundEvents.ENTITY_SNAKE_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         openmouth();
-        return "mocreatures:snakehiss";//"komodo";
+        return MoCSoundEvents.ENTITY_SNAKE_AMBIENT;
     }
 
     @Override
@@ -200,27 +202,26 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
 
-        if ((itemstack != null) && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
-                && (itemstack.getItem() == Items.SADDLE || itemstack.getItem() == MoCreatures.horsesaddle)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
+                && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCreatures.horsesaddle)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             setRideable(true);
             return true;
         }
 
         if (getIsRideable() && getIsTamed() && getEdad() > 90 && (!this.isBeingRidden())) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
 
             if (MoCreatures.isServer() && (!this.isBeingRidden())) {
-                entityplayer.mountEntity(this);
+                player.startRiding(this);
             }
 
             return true;
@@ -285,7 +286,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
                 return false;
             }
 
-            if ((this.isBeingRidden()) && (entity == this.riddenByEntity)) {
+            if ((this.isBeingRidden()) && (entity == this.getRidingEntity())) {
                 return false;
             }
 

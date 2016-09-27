@@ -1,19 +1,25 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -21,12 +27,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
 
 public class MoCEntityManticore extends MoCEntityMob {
 
@@ -48,7 +48,7 @@ public class MoCEntityManticore extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -152,7 +152,7 @@ public class MoCEntityManticore extends MoCEntityMob {
         double newPosX = this.posX + (dist * Math.sin(this.renderYawOffset / 57.29578F));
         double newPosZ = this.posZ - (dist * Math.cos(this.renderYawOffset / 57.29578F));
         passenger.setPosition(newPosX, this.posY + getMountedYOffset() + passenger.getYOffset(), newPosZ);
-        this.riddenByEntity.rotationYaw = this.rotationYaw;
+        passenger.rotationYaw = this.rotationYaw;
     }
 
     @Override
@@ -243,15 +243,14 @@ public class MoCEntityManticore extends MoCEntityMob {
             }*/
             if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
                 //System.out.println("playing sound");
-                MoCTools.playCustomSound(this, "wingflap", this.worldObj);
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_WINGFLAP);
             }
         }
 
         if (getIsPoisoning()) {
             this.poisontimer++;
             if (this.poisontimer == 1) {
-                this.worldObj.playSoundAtEntity(this, "mocreatures:scorpionsting", 1.0F,
-                        1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SCORPION_STING);
             }
             if (this.poisontimer > 50) {
                 this.poisontimer = 0;
@@ -361,35 +360,35 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     @Override
-    protected String getDeathSound() {
+    protected SoundEvent getDeathSound() {
         openMouth();
-        return "mocreatures:liondeath";
+        return MoCSoundEvents.ENTITY_LION_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getHurtSound() {
         openMouth();
-        return "mocreatures:lionhurt";
+        return MoCSoundEvents.ENTITY_LION_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         openMouth();
-        return "mocreatures:liongrunt";
+        return MoCSoundEvents.ENTITY_LION_AMBIENT;
     }
 
     /*@Override
-    protected String getDeathSound() {
+    protected SoundEvent getDeathSound() {
         return "mocreatures:manticoredying";
     }
 
     @Override
-    protected String getHurtSound() {
+    protected SoundEvent getHurtSound() {
         return "mocreatures:manticorehurt";
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         return "mocreatures:manticore";
     }*/
 

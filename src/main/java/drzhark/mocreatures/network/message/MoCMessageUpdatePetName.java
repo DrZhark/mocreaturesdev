@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMessageUpdatePetName, IMessage> {
 
@@ -49,18 +50,18 @@ public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMes
     public IMessage onMessage(MoCMessageUpdatePetName message, MessageContext ctx) {
         Entity pet = null;
         List<Entity> entList = ctx.getServerHandler().playerEntity.worldObj.loadedEntityList;
-        String ownerName = "";
+        UUID ownerUniqueId = null;
 
         for (Entity ent : entList) {
             if (ent.getEntityId() == message.entityId && ent instanceof IMoCTameable) {
                 ((IMoCEntity) ent).setPetName(message.name);
-                ownerName = ((IMoCEntity) ent).getOwnerName();
+                ownerUniqueId = ((IMoCEntity) ent).getOwnerId();
                 pet = ent;
                 break;
             }
         }
         // update petdata
-        MoCPetData petData = MoCreatures.instance.mapData.getPetData(ownerName);
+        MoCPetData petData = MoCreatures.instance.mapData.getPetData(ownerUniqueId);
         if (petData != null && pet != null && ((IMoCTameable) pet).getOwnerPetId() != -1) {
             int id = ((IMoCTameable) pet).getOwnerPetId();
             NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);

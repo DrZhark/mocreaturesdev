@@ -1,9 +1,13 @@
 package drzhark.mocreatures.entity;
 
+import com.google.common.base.Optional;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -14,15 +18,22 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTameable {
+import java.util.UUID;
 
-	private static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
-    
+import javax.annotation.Nullable;
+
+public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTameable, IEntityOwnable {
+
+    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAnimal.class, DataSerializers.VARINT);
+    protected static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAnimal.class, DataSerializers.BOOLEAN);
+
     public MoCEntityTameableAnimal(World world) {
         super(world);
     }
@@ -30,7 +41,9 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     protected void entityInit() {
         super.entityInit();
+        this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
         this.dataManager.register(PET_ID, Integer.valueOf(-1));
+        this.dataManager.register(TAMED, Boolean.valueOf(false));
     }
 
     @Override
@@ -43,51 +56,98 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     	this.dataManager.set(PET_ID, Integer.valueOf(i));
     }
 
-    @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+    @Nullable
+    public UUID getOwnerId() {
+        return this.dataManager.get(OWNER_UNIQUE_ID).orNull();
+    }
 
+    public void setOwnerId(@Nullable UUID uniqueId) {
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(uniqueId));
+    }
+
+    @Override
+    public void setTamed(boolean flag) {
+        this.dataManager.set(TAMED, flag);
+    }
+
+    @Override
+    public boolean getIsTamed() {
+        return this.dataManager.get(TAMED).booleanValue();
+    }
+
+    @Nullable
+    public EntityLivingBase getOwner() {
+        try
+        {
+            UUID uuid = this.getOwnerId();
+            return uuid == null ? null : this.worldObj.getPlayerEntityByUUID(uuid);
+        }
+        catch (IllegalArgumentException var2)
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damagesource, float i) {
+        Entity entity = damagesource.getEntity();
+        if ((this.isBeingRidden() && entity == this.getRidingEntity()) || (this.getRidingEntity() != null && entity == this.getRidingEntity())) {
+            return false;
+        }
+
+        //this avoids damage done by Players to a tamed creature that is not theirs
+        if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null && entity != null
+                && entity instanceof EntityPlayer && !((EntityPlayer) entity).getName().equals(this.getOwnerId())
+                && !MoCTools.isThisPlayerAnOP((EntityPlayer) entity)) {
+            return false;
+        }
+
+        return super.attackEntityFrom(damagesource, i);
+    }
+
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         //before ownership check
-        if ((itemstack != null) && getIsTamed() && ((itemstack.getItem() == MoCreatures.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
-                && MoCTools.isThisPlayerAnOP(entityplayer)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsTamed() && ((stack.getItem() == MoCreatures.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
+                && MoCTools.isThisPlayerAnOP(player)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             if (MoCreatures.isServer()) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
-                this.setOwner("");
+                this.setOwnerId(null);
             }
             return true;
         }
         //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
-                && !entityplayer.getName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+        if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
+                && !player.getUniqueID().equals(this.getOwnerId()) && !MoCTools.isThisPlayerAnOP((player))) {
             return true;
         }
 
         //changes name
-        if (MoCreatures.isServer() && itemstack != null && getIsTamed()
-                && (itemstack.getItem() == MoCreatures.medallion || itemstack.getItem() == Items.book || itemstack.getItem() == Items.name_tag)) {
-            if (MoCTools.tameWithName(entityplayer, this)) {
+        if (MoCreatures.isServer() && stack != null && getIsTamed()
+                && (stack.getItem() == MoCreatures.medallion || stack.getItem() == Items.BOOK || stack.getItem() == Items.NAME_TAG)) {
+            if (MoCTools.tameWithName(player, this)) {
                 return true;
             }
             return false;
         }
 
         //sets it free, untamed
-        if ((itemstack != null) && getIsTamed() && ((itemstack.getItem() == MoCreatures.scrollFreedom))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsTamed() && ((stack.getItem() == MoCreatures.scrollFreedom))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             if (MoCreatures.isServer()) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
-                this.setOwner("");
+                this.setOwnerId(null);
                 this.setPetName("");
                 this.dropMyStuff();
                 this.setTamed(false);
@@ -97,25 +157,25 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         }
 
         //removes owner, any other player can claim it by renaming it
-        if ((itemstack != null) && getIsTamed() && ((itemstack.getItem() == MoCreatures.scrollOfSale))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsTamed() && ((stack.getItem() == MoCreatures.scrollOfSale))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             if (MoCreatures.isServer()) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
                 }
-                this.setOwner("");
+                this.setOwnerId(null);
             }
             return true;
         }
 
         //stores in petAmulet
-        if (itemstack != null && itemstack.getItem() == MoCreatures.petamulet && itemstack.getItemDamage() == 0 && this.canBeTrappedInNet()) {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (stack != null && stack.getItem() == MoCreatures.petamulet && stack.getItemDamage() == 0 && this.canBeTrappedInNet()) {
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             if (MoCreatures.isServer()) {
-                MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+                MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
                 if (petData != null) {
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
@@ -127,7 +187,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == Items.shears)) {
+        if ((stack != null) && getIsTamed() && (stack.getItem() == Items.SHEARS)) {
             if (MoCreatures.isServer()) {
                 dropMyStuff();
             }
@@ -136,28 +196,19 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         }
 
         //heals
-        if ((itemstack != null) && getIsTamed() && (this.getHealth() != this.getMaxHealth()) && isMyHealFood(itemstack)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsTamed() && (this.getHealth() != this.getMaxHealth()) && isMyHealFood(stack)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            this.worldObj.playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             if (MoCreatures.isServer()) {
                 this.setHealth(getMaxHealth());
             }
             return true;
         }
 
-        return super.interact(entityplayer);
+        return super.processInteract(player, hand, stack);
     }
-
-    /*
-     * @Override public void onDeath(DamageSource damagesource) { if
-     * (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required since
-     * getInteger will always return 0 if no key is found {
-     * MoCreatures.instance.mapData.removeOwnerPet(this,
-     * this.getOwnerPetId());//this.getOwnerPetId()); }
-     * super.onDeath(damagesource); }
-     */
 
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
@@ -166,12 +217,6 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
             return;
         }
-        /*
-         * if (MoCreatures.isServer() && this.getOwnerPetId() != -1) // required
-         * since getInteger will always return 0 if no key is found {
-         * MoCreatures.instance.mapData.removeOwnerPet(this,
-         * this.getOwnerPetId()); }
-         */
         super.setDead();
     }
 
@@ -208,6 +253,10 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
         super.writeEntityToNBT(nbttagcompound);
+        nbttagcompound.setBoolean("Tamed", getIsTamed());
+        if (this.getOwnerId() != null) {
+            nbttagcompound.setUniqueId("OwnerUUID", this.getOwnerId());
+        }
         if (getOwnerPetId() != -1) {
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
         }
@@ -219,11 +268,13 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
+        setTamed(nbttagcompound.getBoolean("Tamed"));
+        this.setOwnerId(nbttagcompound.getUniqueId("OwnerUUID"));
         if (nbttagcompound.hasKey("PetId")) {
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
         }
         if (this.getIsTamed() && nbttagcompound.hasKey("PetId")) {
-            MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerName());
+            MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
             if (petData != null) {
                 NBTTagList tag = petData.getOwnerRootNBT().getTagList("TamedList", 10);
                 for (int i = 0; i < tag.tagCount(); i++) {
@@ -299,8 +350,8 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
         if (entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
-            if (MoCreatures.proxy.enableOwnership && getOwnerName() != null && !getOwnerName().equals("")
-                    && !entityplayer.getName().equals(getOwnerName()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+            if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
+                    && !entityplayer.getName().equals(this.getOwnerId()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
                 return;
             }
         }

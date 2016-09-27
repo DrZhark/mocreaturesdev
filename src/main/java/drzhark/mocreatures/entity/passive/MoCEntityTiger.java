@@ -7,13 +7,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityTiger extends MoCEntityNewBigCat {
 
     public MoCEntityTiger(World world) {
         super(world);
+        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -49,17 +53,16 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && getIsTamed() && getType() == 2 && (itemstack.getItem() == MoCreatures.essencelight)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
+
+        if ((stack != null) && getIsTamed() && getType() == 2 && (stack.getItem() == MoCreatures.essencelight)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
             setType(3);
             return true;
@@ -79,11 +82,11 @@ public class MoCEntityTiger extends MoCEntityNewBigCat {
         }*/
 
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
             setSitting(false);
             if (MoCreatures.isServer()) {
-                entityplayer.mountEntity(this);
+                player.startRiding(this);
             }
             return true;
         }

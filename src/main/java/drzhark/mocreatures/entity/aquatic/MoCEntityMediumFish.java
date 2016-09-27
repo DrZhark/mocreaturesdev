@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
@@ -36,7 +35,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
         }, 2.0F, 0.6D, 1.5D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 50));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();

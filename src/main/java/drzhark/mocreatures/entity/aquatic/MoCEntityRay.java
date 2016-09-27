@@ -2,12 +2,13 @@ package drzhark.mocreatures.entity.aquatic;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
-import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityRay extends MoCEntityTameableAquatic {
 
@@ -25,17 +26,17 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
         if (!this.isBeingRidden() && getType() == 1) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
-            entityplayer.posY = this.posY;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
+            player.posY = this.posY;
             if (MoCreatures.isServer()) {
-                entityplayer.mountEntity(this);
+                player.startRiding(this);
             }
             return true;
         }

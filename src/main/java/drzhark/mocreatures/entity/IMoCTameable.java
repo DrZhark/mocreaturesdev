@@ -2,6 +2,10 @@ package drzhark.mocreatures.entity;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 public interface IMoCTameable {
 
     boolean isRiderDisconnecting();
@@ -10,7 +14,7 @@ public interface IMoCTameable {
 
     void playTameEffect(boolean par1);
 
-    String getOwnerName();
+    UUID getOwnerId();
 
     String getPetName();
 
@@ -34,7 +38,7 @@ public interface IMoCTameable {
 
     void setType(int creatureType);
 
-    void setOwner(String username);
+    void setOwnerId(@Nullable UUID uuid);
 
     void setEdad(int edad);
 

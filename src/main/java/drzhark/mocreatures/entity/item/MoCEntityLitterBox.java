@@ -1,7 +1,8 @@
 package drzhark.mocreatures.entity.item;
 
-import java.util.List;
-
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -10,6 +11,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,19 +19,21 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityLitterBox extends EntityLiving {
 
     public int littertime;
     private static final DataParameter<Boolean> PICKED_UP = EntityDataManager.<Boolean>createKey(MoCEntityLitterBox.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> USED_LITTER = EntityDataManager.<Boolean>createKey(MoCEntityLitterBox.class, DataSerializers.BOOLEAN);
-    
+
     public MoCEntityLitterBox(World world) {
         super(world);
         setSize(1.0F, 0.3F);
@@ -97,21 +101,6 @@ public class MoCEntityLitterBox extends EntityLiving {
     }
 
     @Override
-    protected String getDeathSound() {
-        return null;
-    }
-
-    @Override
-    protected String getHurtSound() {
-        return null;
-    }
-
-    @Override
-    protected String getLivingSound() {
-        return null;
-    }
-
-    @Override
     protected float getSoundVolume() {
         return 0.0F;
     }
@@ -133,37 +122,36 @@ public class MoCEntityLitterBox extends EntityLiving {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null)
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if ((stack != null)
                 && MoCreatures.isServer()
-                && ((itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
-                        || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.golden_pickaxe) || (itemstack.getItem() == Items.diamond_pickaxe))) {
-            entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.litterbox));
-            this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
+                && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+                        || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
+            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.litterbox));
+            this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
         }
 
-        if ((itemstack != null) && MoCreatures.isServer() && (itemstack.getItem() == Item.getItemFromBlock(Blocks.sand))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && MoCreatures.isServer() && (stack.getItem() == Item.getItemFromBlock(Blocks.SAND))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             setUsedLitter(false);
             this.littertime = 0;
             return true;
         } else {
-            this.rotationYaw = entityplayer.rotationYaw;
+            this.rotationYaw = player.rotationYaw;
             if (this.getRidingEntity() == null) {
                 if (MoCreatures.isServer()) {
-                    mountEntity(entityplayer);
+                    this.startRiding(player);
                 }
             } else {
                 if (MoCreatures.isServer()) {
-                    this.mountEntity(null);
+                    this.dismountRidingEntity();
                 }
             }
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             return true;
         }
     }

@@ -3,24 +3,23 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityTurkey extends MoCEntityTameableAnimal {
 
@@ -38,7 +37,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -63,18 +62,18 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:turkeyhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_TURKEY_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:turkeyhurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_TURKEY_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:turkey";
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_TURKEY_AMBIENT;
     }
 
     @Override
@@ -87,15 +86,13 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-
-        if (MoCreatures.isServer() && !getIsTamed() && (itemstack != null) && (itemstack.getItem() == Items.MELON_SEEDS)) {
-            MoCTools.tameWithName(entityplayer, this);
+        if (MoCreatures.isServer() && !getIsTamed() && (stack != null) && (stack.getItem() == Items.MELON_SEEDS)) {
+            MoCTools.tameWithName(player, this);
         }
 
         return true;

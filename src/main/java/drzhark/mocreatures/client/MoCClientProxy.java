@@ -1,25 +1,5 @@
 package drzhark.mocreatures.client;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ListBox;
 import de.matthiasmann.twl.Widget;
@@ -49,8 +29,6 @@ import drzhark.mocreatures.client.gui.helpers.MoCSettings;
 import drzhark.mocreatures.client.model.MoCModelAnt;
 import drzhark.mocreatures.client.model.MoCModelBear;
 import drzhark.mocreatures.client.model.MoCModelBee;
-import drzhark.mocreatures.client.model.MoCModelBigCat1;
-import drzhark.mocreatures.client.model.MoCModelBigCat2;
 import drzhark.mocreatures.client.model.MoCModelBird;
 import drzhark.mocreatures.client.model.MoCModelBoar;
 import drzhark.mocreatures.client.model.MoCModelBunny;
@@ -180,7 +158,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
@@ -210,7 +187,27 @@ import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageInstaSpawn;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class MoCClientProxy extends MoCProxy {
 

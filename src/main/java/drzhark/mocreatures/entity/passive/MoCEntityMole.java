@@ -3,28 +3,24 @@ package drzhark.mocreatures.entity.passive;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class MoCEntityMole extends MoCEntityTameableAnimal {
@@ -42,7 +38,6 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
         this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
-    
 
     @Override
     protected void applyEntityAttributes() {
@@ -237,7 +232,6 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
 
     @Override
     public void onDeath(DamageSource damagesource) {
-        //System.out.println(this + " is dying with health of " + this.func_110143_aJ() + " and State of " + getState());
         super.onDeath(damagesource);
     }
 
@@ -255,17 +249,17 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:rabbitdeath";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_RABBIT_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:rabbithurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_RABBIT_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         return null;
     }
 }

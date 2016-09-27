@@ -1,6 +1,7 @@
 package drzhark.mocreatures.block;
 
 import drzhark.mocreatures.MoCreatures;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -13,8 +14,9 @@ import java.util.List;
 public class MoCBlockRock extends MoCBlock {
 
     public MoCBlockRock(String name) {
-        super(name, Material.rock);
+        super(name, Material.ROCK);
         setTickRandomly(true);
+        this.setSoundType(SoundType.STONE);
     }
 
     @SideOnly(Side.CLIENT)

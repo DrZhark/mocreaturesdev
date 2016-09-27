@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -194,7 +195,7 @@ public class EnvironmentSettings {
     }
 
     public void initializeEntities() {
-        for (Map.Entry<Class<? extends Entity>, String> entry : EntityList.classToStringMapping.entrySet()) {
+        for (Map.Entry<Class<? extends Entity>, String> entry : EntityList.CLASS_TO_NAME.entrySet()) {
             Class<? extends Entity> clazz = entry.getKey();
             if (this.classToEntityMapping.get(clazz) == null) { // don't process if it already exists
                 registerEntity(clazz);
@@ -221,7 +222,7 @@ public class EnvironmentSettings {
             return null;
         }
 
-        String entityName = (String) EntityList.classToStringMapping.get(clazz);
+        String entityName = (String) EntityList.CLASS_TO_NAME.get(clazz);
 
         if (this.debug) {
             this.envLog.logger.info("Starting registration for " + entityName);
@@ -493,8 +494,9 @@ public class EnvironmentSettings {
     }
 
     public void initializeBiomes() {
-        for (int i = 0; i < Biome.getBiomeGenArray().length; i++) {
-            Biome biome = Biome.getBiomeGenArray()[i];
+    	Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+        while (iterator.hasNext()) {
+            Biome biome = iterator.next();
             if (biome == null) {
                 continue;
             }
@@ -504,7 +506,7 @@ public class EnvironmentSettings {
             Type[] types = BiomeDictionary.getTypesForBiome(biome);
             biomeData.setTypes(types);
             if (this.debug) {
-                this.envLog.logger.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + biome.biomeID
+                this.envLog.logger.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + Biome.getIdForBiome(biome)
                         + " with types " + types);
             }
             boolean found = false;
@@ -583,7 +585,6 @@ public class EnvironmentSettings {
     }
 
     public void initDefaultGroups() {
-        CMSUtils.registerAllBiomes();
         // scan all biome mods for biome dictionary groups
         for (BiomeDictionary.Type type : BiomeDictionary.Type.values()) {
             List<String> biomes = new ArrayList<String>();

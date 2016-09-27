@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,9 +20,12 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
 
@@ -65,7 +69,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if (entity != this && this.isNotScared() && entity instanceof EntityLivingBase && super.shouldAttackPlayers()) {
@@ -78,11 +82,11 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer entityplayer, EnumHand hand, @Nullable ItemStack itemstack) {
+        if (super.processInteract(entityplayer, hand, itemstack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
         if ((itemstack != null) && (MoCTools.isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
         {
             if (--itemstack.stackSize == 0) {
@@ -104,23 +108,23 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:raccoondying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return MoCreatures.fur;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:raccoonhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_RACCOON_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:raccoongrunt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_RACCOON_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_RACCOON_AMBIENT;
     }
 
     @Override

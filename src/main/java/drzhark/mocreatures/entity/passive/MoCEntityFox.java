@@ -9,6 +9,7 @@ import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,15 +20,18 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityFox extends MoCEntityTameableAnimal {
 
@@ -55,7 +59,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -98,7 +102,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if (entity != this && this.isNotScared() && entity instanceof EntityLivingBase && super.shouldAttackPlayers()) {
@@ -112,18 +116,18 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && ((itemstack.getItem() == MoCreatures.rawTurkey))) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+
+        if ((stack != null) && ((stack.getItem() == MoCreatures.rawTurkey))) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
 
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
             this.setHealth(getMaxHealth());
 
@@ -157,23 +161,23 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:foxdying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return MoCreatures.fur;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:foxhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_FOX_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:foxcall";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_FOX_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_FOX_AMBIENT;
     }
 
     @Override

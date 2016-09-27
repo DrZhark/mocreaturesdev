@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,8 +14,8 @@ public class MoCItemRecord extends ItemRecord {
 
     public static ResourceLocation RECORD_SHUFFLE_RESOURCE = new ResourceLocation("mocreatures", "shuffling");
 
-    public MoCItemRecord(String name) {
-        super(name);
+    public MoCItemRecord(String name, SoundEvent soundEvent) {
+        super(name, soundEvent);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
         GameRegistry.registerItem(this, name);
@@ -28,7 +29,7 @@ public class MoCItemRecord extends ItemRecord {
      * Return the title for this record.
      */
     public String getRecordTitle() {
-        return "MoC - " + this.recordName;
+        return "MoC - " + this.getRecordNameLocal();
     }
 
     @Override

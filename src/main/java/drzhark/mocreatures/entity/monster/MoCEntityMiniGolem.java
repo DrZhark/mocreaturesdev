@@ -1,5 +1,11 @@
 package drzhark.mocreatures.entity.monster;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -10,13 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 
 public class MoCEntityMiniGolem extends MoCEntityMob {
 
@@ -39,7 +41,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -156,22 +158,22 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
      */
     @Override
     protected void playStepSound(BlockPos pos, Block block) {
-        this.playSound("mocreatures:minigolemwalk", 1.0F, 1.0F);
+        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOLEM_WALK);
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:golemgrunt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_GOLEM_DYING;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:golemgrunt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_GOLEM_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return null;
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_GOLEM_AMBIENT;
     }
 
     @Override

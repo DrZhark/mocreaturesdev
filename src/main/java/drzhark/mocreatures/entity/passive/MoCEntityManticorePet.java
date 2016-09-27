@@ -4,8 +4,12 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityManticorePet extends MoCEntityNewBigCat {
 
@@ -49,9 +53,8 @@ public class MoCEntityManticorePet extends MoCEntityNewBigCat {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
@@ -65,11 +68,11 @@ public class MoCEntityManticorePet extends MoCEntityNewBigCat {
         }
         */
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
             setSitting(false);
             if (MoCreatures.isServer()) {
-                entityplayer.mountEntity(this);
+                player.startRiding(this);
             }
             return true;
         }

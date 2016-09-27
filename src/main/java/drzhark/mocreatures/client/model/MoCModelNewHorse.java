@@ -366,14 +366,14 @@ public class MoCModelNewHorse extends ModelBase {
         //boolean chested = entityhorse.getChestedHorse();
         boolean eating = entityhorse.getIsSitting();
         //boolean flyer = entityhorse.isFlyer();
-        boolean standing = (entityhorse.standCounter != 0 && entityhorse.riddenByEntity == null);
+        boolean standing = (entityhorse.standCounter != 0 && entityhorse.getRidingEntity() == null);
         boolean openMouth = (entityhorse.mouthCounter != 0);
         boolean moveTail = (entityhorse.tailCounter != 0);
 
         boolean rider = (entityhorse.isBeingRidden());
         boolean floating = (entityhorse.isGhost() || (entityhorse.isFlyer() && entityhorse.isOnAir()));
-        //                || (entityhorse.riddenByEntity == null && !entityhorse.onGround)
-        //                || (entityhorse.isBeingRidden() && !entityhorse.riddenByEntity.onGround));
+        //                || (entityhorse.getRidingEntity() == null && !entityhorse.onGround)
+        //                || (entityhorse.isBeingRidden() && !entityhorse.getRidingEntity().onGround));
         setRotationAngles(f, f1, f2, f3, f4, f5, eating, rider, floating, standing, saddled, moveTail, wings, flapwings, shuffling, type);
 
         if (!entityhorse.isGhost() && vanishingInt == 0) {

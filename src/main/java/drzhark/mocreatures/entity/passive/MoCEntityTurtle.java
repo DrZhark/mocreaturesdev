@@ -1,16 +1,20 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,14 +22,13 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
@@ -48,7 +51,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 0.8D, 50));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -122,8 +125,8 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
@@ -133,19 +136,19 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                 return true;
             }
             if (this.getRidingEntity() == null) {
-                this.rotationYaw = entityplayer.rotationYaw;
+                this.rotationYaw = player.rotationYaw;
                 // TODO change sound
-                this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                 if (MoCreatures.isServer()) {
-                    mountEntity(entityplayer);
+                    this.startRiding(player);
                 }
             } else {
                 if (MoCreatures.isServer()) {
-                    this.mountEntity(null);
+                    this.dismountEntity();
                 }
-                this.motionX = entityplayer.motionX * 5D;
-                this.motionY = (entityplayer.motionY / 2D) + 0.2D;
-                this.motionZ = entityplayer.motionZ * 5D;
+                this.motionX = player.motionX * 5D;
+                this.motionY = (player.motionY / 2D) + 0.2D;
+                this.motionZ = player.motionZ * 5D;
             }
             return true;
         }
@@ -180,8 +183,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                 EntityLivingBase entityliving = getBoogey(4D);
                 if ((entityliving != null) && canEntityBeSeen(entityliving)) {
                     if (!getIsHiding() && !isInWater()) {
-                        this.worldObj.playSoundAtEntity(this, "mocreatures:turtlehissing", 1.0F,
-                                1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_TURTLE_ANGRY);
                         setIsHiding(true);
                     }
 
@@ -198,9 +200,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                             }
                             if ((f < 2.0F) && (entityitem != null) && (this.deathTime == 0)) {
                                 entityitem.setDead();
-                                this.worldObj.playSoundAtEntity(this, "mocreatures:turtleeating", 1.0F,
-                                        1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
-
+                                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_TURTLE_EATING);
                                 EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 24D);
                                 if (entityplayer != null) {
                                     MoCTools.tameWithName(entityplayer, this);
@@ -294,7 +294,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
             } else if (this.swingProgress > 9.0F && flag) {
                 setSwinging(false);
-                this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                 setIsUpsideDown(false);
             }
         }
@@ -333,18 +333,18 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:turtlehurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_TURTLE_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:turtlegrunt";
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_TURTLE_AMBIENT;
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:turtledying";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_TURTLE_DEATH;
     }
 
     @Override

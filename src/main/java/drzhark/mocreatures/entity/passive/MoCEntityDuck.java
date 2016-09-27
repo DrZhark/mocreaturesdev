@@ -1,13 +1,9 @@
 package drzhark.mocreatures.entity.passive;
 
-import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import net.minecraft.entity.Entity;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -15,6 +11,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
@@ -40,7 +37,7 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -49,18 +46,18 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:duckhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_DUCK_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:duckhurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_DUCK_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:duck";
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_DUCK_AMBIENT;
     }
 
     @Override
@@ -108,16 +105,4 @@ public class MoCEntityDuck extends MoCEntityAnimal//EntityChicken
     protected Item getDropItem() {
         return Items.FEATHER;
     }
-
-	@Override
-	public String getOwnerName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setOwner(String username) {
-		// TODO Auto-generated method stub
-		
-	}
 }

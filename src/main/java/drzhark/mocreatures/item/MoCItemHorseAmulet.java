@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import com.mojang.authlib.GameProfile;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -8,16 +9,22 @@ import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MoCItemHorseAmulet extends MoCItem {
 
@@ -30,7 +37,7 @@ public class MoCItemHorseAmulet extends MoCItem {
     private boolean rideable;
     private byte armor;
     private boolean adult;
-    private String ownerName;
+    private UUID ownerUniqueId;
     private int PetId;
 
     public MoCItemHorseAmulet(String name) {
@@ -41,15 +48,15 @@ public class MoCItemHorseAmulet extends MoCItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World worldObj, EntityPlayer entityplayer) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand) {
         if (++this.ageCounter < 2) {
-            return itemstack;
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
         }
 
         //int i = itemstack.getItemDamage();
 
         if (MoCreatures.isServer()) {
-            initAndReadNBT(itemstack);
+            initAndReadNBT(stack);
         }
 
         /*if (this.spawnClass == 21 || this.spawnClass == 0) // horses or old amulets
@@ -72,18 +79,18 @@ public class MoCItemHorseAmulet extends MoCItem {
         if (this.spawnClass != 0) {//(i != 0) {
 
             double dist = 3D;
-            double newPosY = entityplayer.posY;
-            double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-            double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
+            double newPosY = player.posY;
+            double newPosX = player.posX - (dist * Math.cos((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
+            double newPosZ = player.posZ - (dist * Math.sin((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
 
             if (MoCreatures.isServer()) {
                 try {
                     MoCEntityTameableAnimal storedCreature;
                     if (this.spawnClass == 100) { //ghost wyvern
-                        storedCreature = new MoCEntityWyvern(worldObj);
+                        storedCreature = new MoCEntityWyvern(worldIn);
                     } else {
 
-                        storedCreature = new MoCEntityHorse(worldObj);
+                        storedCreature = new MoCEntityHorse(worldIn);
                     }
 
                     storedCreature.setPosition(newPosX, newPosY, newPosZ);
@@ -96,16 +103,16 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setAdult(this.adult);
                     storedCreature.setArmorType(this.armor);
                     storedCreature.setOwnerPetId(this.PetId);
-                    storedCreature.setOwner(entityplayer.getName());
+                    storedCreature.setOwnerId(player.getUniqueID());
                     if (this.spawnClass == 100) {
                         ((MoCEntityWyvern) storedCreature).setIsGhost(true);
                     }
 
                     //if the player using the amulet is different than the original owner
-                    if (this.ownerName != "" && !(this.ownerName.equals(entityplayer.getName())) && MoCreatures.instance.mapData != null) {
-                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerName);
-                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getName());
-                        EntityPlayer epOwner = worldObj.getPlayerEntityByName(entityplayer.getName());
+                    if (!(this.ownerUniqueId.equals(player.getUniqueID())) && MoCreatures.instance.mapData != null) {
+                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerUniqueId);
+                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(player.getUniqueID());
+                        EntityPlayer epOwner = worldIn.getPlayerEntityByName(player.getName());
                         int maxCount = MoCreatures.proxy.maxTamed;
                         if (MoCTools.isThisPlayerAnOP(epOwner)) {
                             maxCount = MoCreatures.proxy.maxOPTamed;
@@ -133,25 +140,25 @@ public class MoCItemHorseAmulet extends MoCItem {
                         }
                     }
 
-                    if (entityplayer.worldObj.spawnEntityInWorld(storedCreature)) {
+                    if (player.worldObj.spawnEntityInWorld(storedCreature)) {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(storedCreature.getEntityId()), new TargetPoint(
-                                entityplayer.worldObj.provider.getDimensionType().getId(), entityplayer.posX, entityplayer.posY, entityplayer.posZ, 64));
-                        MoCTools.playCustomSound(storedCreature, "appearmagic", worldObj);
+                                player.worldObj.provider.getDimensionType().getId(), player.posX, player.posY, player.posZ, 64));
+                        MoCTools.playCustomSound(storedCreature, MoCSoundEvents.ENTITY_GENERIC_MAGIC_APPEAR);
                         //gives an empty amulet
                         if (this.spawnClass == 100 || this.creatureType == 21 || this.creatureType == 22) {
-                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
                                     MoCreatures.amuletghost, 1, 0));
                         } else if (this.creatureType == 26 || this.creatureType == 27 || this.creatureType == 28) {
-                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.amuletbone,
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(MoCreatures.amuletbone,
                                     1, 0));
                         } else if ((this.creatureType > 47 && this.creatureType < 60)) {
-                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
                                     MoCreatures.amuletfairy, 1, 0));
                         } else if (this.creatureType == 39 || this.creatureType == 40) {
-                            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
                                     MoCreatures.amuletpegasus, 1, 0));
                         }
-                        MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerName());
+                        MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerId());
                         if (petData != null) {
                             petData.setInAmulet(storedCreature.getOwnerPetId(), false);
                         }
@@ -163,7 +170,7 @@ public class MoCItemHorseAmulet extends MoCItem {
             this.ageCounter = 0;
         }
 
-        return itemstack;
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -176,7 +183,7 @@ public class MoCItemHorseAmulet extends MoCItem {
         this.rideable = nbt.getBoolean("Rideable");
         this.armor = nbt.getByte("Armor");
         this.adult = nbt.getBoolean("Adult");
-        this.ownerName = nbt.getString("OwnerName");
+        this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
@@ -189,7 +196,7 @@ public class MoCItemHorseAmulet extends MoCItem {
         nbt.setBoolean("Rideable", this.rideable);
         nbt.setByte("Armor", this.armor);
         nbt.setBoolean("Adult", this.adult);
-        nbt.setString("OwnerName", this.ownerName);
+        nbt.setUniqueId("OwnerUUID", this.ownerUniqueId);
     }
 
     @SideOnly(Side.CLIENT)
@@ -200,15 +207,18 @@ public class MoCItemHorseAmulet extends MoCItem {
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
         initAndReadNBT(par1ItemStack);
         if (this.spawnClass == 100) {
-            par3List.add(EnumChatFormatting.AQUA + "Wyvern");
+            par3List.add(TextFormatting.AQUA + "Wyvern");
         } else if (this.spawnClass != 0) {
-            par3List.add(EnumChatFormatting.AQUA + "WildHorse");
+            par3List.add(TextFormatting.AQUA + "WildHorse");
         }
         if (this.name != "") {
-            par3List.add(EnumChatFormatting.BLUE + this.name);
+            par3List.add(TextFormatting.BLUE + this.name);
         }
-        if (this.ownerName != "") {
-            par3List.add(EnumChatFormatting.DARK_BLUE + "Owned by " + this.ownerName);
+        if (this.ownerUniqueId != null) {
+            GameProfile profile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(this.ownerUniqueId);
+            if (profile != null) {
+                par3List.add(TextFormatting.DARK_BLUE + "Owned by " + profile.getName());
+            }
         }
     }
 

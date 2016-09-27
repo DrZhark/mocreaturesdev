@@ -5,16 +5,16 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAILeapAtTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -38,7 +38,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -48,36 +48,30 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     }
 
-    
-    @Override
-    protected String getDeathSound() {
-        return "mocreatures:wraithdying";
-    }
-
     @Override
     protected Item getDropItem() {
         return Items.GUNPOWDER;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:wraithhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_WRAITH_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:wraith";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_WRAITH_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_WRAITH_AMBIENT;
     }
 
     @Override
     public boolean isFlyer() {
         return true;
     }
-
-    /*@Override
-    public float getMoveSpeed() {
-        return 1.3F;
-    }*/
 
     @Override
     public boolean canBePushed() {

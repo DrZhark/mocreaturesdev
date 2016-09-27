@@ -1,7 +1,7 @@
 package drzhark.mocreatures.block;
 
 import drzhark.mocreatures.MoCreatures;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 public class MoCBlockLeaf extends MoCBlock {
 
     public MoCBlockLeaf(String name) {
@@ -27,15 +29,16 @@ public class MoCBlockLeaf extends MoCBlock {
         setTickRandomly(true);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
+        this.setSoundType(SoundType.PLANT);
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isLeaves(IBlockAccess world, BlockPos pos) {
+    public boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
         return true;
     }
 
@@ -45,12 +48,12 @@ public class MoCBlockLeaf extends MoCBlock {
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te) {
-        if (!worldIn.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.shears) {
-            player.addStat(StatList.mineBlockStatArray[Block.getIdFromBlock(this)], 1);
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+        if (!worldIn.isRemote && stack != null && stack.getItem() == Items.SHEARS) {
+            player.addStat(StatList.getBlockStats(this), 1);
             spawnAsEntity(worldIn, pos, new ItemStack(MoCreatures.mocLeaf, 1, 0)); // TODO - l & 3));
         } else {
-            super.harvestBlock(worldIn, player, pos, state, te);
+            super.harvestBlock(worldIn, player, pos, state, te, stack);
         }
     }
 

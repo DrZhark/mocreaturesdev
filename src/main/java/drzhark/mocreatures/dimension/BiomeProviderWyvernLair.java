@@ -3,13 +3,13 @@ package drzhark.mocreatures.dimension;
 import drzhark.mocreatures.MoCreatures;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.WorldChunkManager;
+import net.minecraft.world.biome.BiomeProvider;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class WorldChunkManagerWyvernLair extends WorldChunkManager {
+public class BiomeProviderWyvernLair extends BiomeProvider {
 
     /** The biome generator object. */
     private Biome biomeGenerator = MoCreatures.WyvernLairBiome;;
@@ -18,7 +18,7 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
     /** The rainfall in the world */
     private float rainfall;
 
-    public WorldChunkManagerWyvernLair(Biome par1Biome, float par2, float par3) {
+    public BiomeProviderWyvernLair(Biome par1Biome, float par2, float par3) {
         this.biomeGenerator = par1Biome;
         this.hellTemperature = par2;
         this.rainfall = par3;
@@ -49,20 +49,6 @@ public class WorldChunkManagerWyvernLair extends WorldChunkManager {
         }
 
         Arrays.fill(par1ArrayOfFloat, 0, xSize * zSize, this.hellTemperature);
-        return par1ArrayOfFloat;
-    }
-
-    /**
-     * Returns a list of rainfall values for the specified blocks. Args:
-     * listToReuse, x, z, width, length.
-     */
-    @Override
-    public float[] getRainfall(float[] par1ArrayOfFloat, int xStart, int zStart, int xSize, int zSize) {
-        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < xSize * zSize) {
-            par1ArrayOfFloat = new float[xSize * zSize];
-        }
-
-        Arrays.fill(par1ArrayOfFloat, 0, xSize * zSize, this.rainfall);
         return par1ArrayOfFloat;
     }
 

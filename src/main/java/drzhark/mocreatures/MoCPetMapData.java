@@ -1,5 +1,6 @@
 package drzhark.mocreatures;
 
+import com.google.common.collect.Maps;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -15,11 +16,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.UUID;
 
 public class MoCPetMapData extends WorldSavedData {
 
-    private Map<String, MoCPetData> petMap = new TreeMap<String, MoCPetData>(String.CASE_INSENSITIVE_ORDER);
+    private Map<UUID, MoCPetData> petMap = Maps.newHashMap();
 
     public MoCPetMapData(String par1Str) {
         super(par1Str);
@@ -29,18 +30,18 @@ public class MoCPetMapData extends WorldSavedData {
     /**
      * Get a list of pets.
      */
-    public MoCPetData getPetData(String owner) {
-        return this.petMap.get(owner);
+    public MoCPetData getPetData(UUID ownerUniqueId) {
+        return this.petMap.get(ownerUniqueId);
     }
 
-    public Map<String, MoCPetData> getPetMap() {
+    public Map<UUID, MoCPetData> getPetMap() {
         return this.petMap;
     }
 
     public boolean removeOwnerPet(IMoCTameable pet, int petId) {
-        if (this.petMap.get(pet.getOwnerName()) != null) // required since getInteger will always return 0 if no key is found
+        if (this.petMap.get(pet.getOwnerId()) != null) // required since getInteger will always return 0 if no key is found
         {
-            if (this.petMap.get(pet.getOwnerName()).removePet(petId)) {
+            if (this.petMap.get(pet.getOwnerId()).removePet(petId)) {
                 this.markDirty();
                 pet.setOwnerPetId(-1);
                 return true;
@@ -51,8 +52,8 @@ public class MoCPetMapData extends WorldSavedData {
 
     public void updateOwnerPet(IMoCTameable pet) {
         this.markDirty();
-        if (pet.getOwnerPetId() == -1 || this.petMap.get(pet.getOwnerName()) == null) {
-            String owner = MoCreatures.isServer() ? pet.getOwnerName() : Minecraft.getMinecraft().thePlayer.getName();
+        if (pet.getOwnerPetId() == -1 || this.petMap.get(pet.getOwnerId()) == null) {
+            UUID owner = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().thePlayer.getUniqueID();
             MoCPetData petData = null;
             int id = -1;
             if (this.petMap.containsKey(owner)) {
@@ -67,7 +68,7 @@ public class MoCPetMapData extends WorldSavedData {
             pet.setOwnerPetId(id);
         } else {
             // update pet data
-            String owner = pet.getOwnerName();
+            UUID owner = pet.getOwnerId();
             MoCPetData petData = this.getPetData(owner);
             NBTTagCompound rootNBT = petData.getOwnerRootNBT();
             NBTTagList tag = rootNBT.getTagList("TamedList", 10);
@@ -102,7 +103,7 @@ public class MoCPetMapData extends WorldSavedData {
         return nbttaglist;
     }
 
-    public boolean isExistingPet(String owner, IMoCTameable pet) {
+    public boolean isExistingPet(UUID owner, IMoCTameable pet) {
         MoCPetData petData = MoCreatures.instance.mapData.getPetData(owner);
         if (petData != null) {
             NBTTagList tag = petData.getTamedList();
@@ -149,9 +150,10 @@ public class MoCPetMapData extends WorldSavedData {
         while (iterator.hasNext()) {
             String s = (String) iterator.next();
             NBTTagCompound nbt = (NBTTagCompound) par1NBTTagCompound.getTag(s);
+            UUID ownerUniqueId = UUID.fromString(s);
 
-            if (!this.petMap.containsKey(s)) {
-                this.petMap.put(s, new MoCPetData(nbt, s));
+            if (!this.petMap.containsKey(ownerUniqueId)) {
+                this.petMap.put(ownerUniqueId, new MoCPetData(nbt, ownerUniqueId));
             }
         }
     }
@@ -159,11 +161,13 @@ public class MoCPetMapData extends WorldSavedData {
     /**
      * write data to NBTTagCompound from this MapDataBase, similar to Entities
      * and TileEntities
+     * @return 
      */
     @Override
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-        for (Map.Entry<String, MoCPetData> ownerEntry : this.petMap.entrySet()) {
-            par1NBTTagCompound.setTag(ownerEntry.getKey(), ownerEntry.getValue().getOwnerRootNBT());
+    public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound) {
+        for (Map.Entry<UUID, MoCPetData> ownerEntry : this.petMap.entrySet()) {
+            par1NBTTagCompound.setTag(ownerEntry.getKey().toString(), ownerEntry.getValue().getOwnerRootNBT());
         }
+        return par1NBTTagCompound;
     }
 }

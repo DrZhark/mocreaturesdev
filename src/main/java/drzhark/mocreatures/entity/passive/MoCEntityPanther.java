@@ -7,8 +7,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityPanther extends MoCEntityNewBigCat {
 
@@ -45,12 +48,11 @@ public class MoCEntityPanther extends MoCEntityNewBigCat {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer entityplayer, EnumHand hand, @Nullable ItemStack itemstack) {
+        if (super.processInteract(entityplayer, hand, itemstack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
         if ((itemstack != null) && getIsTamed() && getType() == 1 && (itemstack.getItem() == MoCreatures.essencedarkness)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
@@ -65,7 +67,7 @@ public class MoCEntityPanther extends MoCEntityNewBigCat {
             entityplayer.rotationPitch = this.rotationPitch;
             setSitting(false);
             if (MoCreatures.isServer()) {
-                entityplayer.mountEntity(this);
+                entityplayer.startRiding(this);
             }
             return true;
         }

@@ -21,11 +21,11 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderEnd;
@@ -87,7 +87,7 @@ public final class CustomSpawner {
 
     private static List<Biome> biomeList;
 
-    private final Set<ChunkCoordIntPair> eligibleChunksForSpawning = Sets.<ChunkCoordIntPair>newHashSet();
+    private final Set<ChunkPos> eligibleChunksForSpawning = Sets.<ChunkPos>newHashSet();
 
     static {
         entityTypes.put("UNDEFINED", null);
@@ -141,10 +141,12 @@ public final class CustomSpawner {
         for (EnvironmentSettings environment : environmentMap.values()) {
             environment.readConfigValues();
         }
-        CMSUtils.registerAllBiomes();
+
         biomeList = new ArrayList<Biome>();
         try {
-            for (Biome biome : Biome.getBiomeGenArray()) {
+        	Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+            while (iterator.hasNext()) {
+            	Biome biome = iterator.next();
                 if (biome == null) {
                     continue;
                 }
@@ -194,7 +196,7 @@ public final class CustomSpawner {
              EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(entity.getClass());
              int x = MathHelper.floor_double(entity.posX);
              int z = MathHelper.floor_double(entity.posZ);
-             ChunkCoordIntPair chunkcoord = new ChunkCoordIntPair(x >> 4, z >> 4);
+             ChunkPos chunkcoord = new ChunkPos(x >> 4, z >> 4);
              if (this.eligibleChunksForSpawning.contains(chunkcoord)) {
                  if (entityData != null && entityData.getLivingSpawnType() == entitySpawnType) {
                      count++;
@@ -217,19 +219,19 @@ public final class CustomSpawner {
                 int x = MathHelper.floor_double(entityplayer.posX / 16.0D);
                 int z = MathHelper.floor_double(entityplayer.posZ / 16.0D);
                 byte chunkSpawnRadius = (byte) mobSpawnRange;
-                byte serverViewDistance = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getViewDistance();
+                byte serverViewDistance = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getViewDistance();
                 chunkSpawnRadius = chunkSpawnRadius > serverViewDistance ? serverViewDistance : chunkSpawnRadius;
                 chunkSpawnRadius = chunkSpawnRadius > 8 ? 8 : chunkSpawnRadius;
 
                 for (int var8 = -chunkSpawnRadius; var8 <= chunkSpawnRadius; ++var8) {
                     for (int var9 = -chunkSpawnRadius; var9 <= chunkSpawnRadius; ++var9) {
                         boolean flag = var8 == -chunkSpawnRadius || var8 == chunkSpawnRadius || var9 == -chunkSpawnRadius || var9 == chunkSpawnRadius;
-                        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(var8 + x, var9 + z);
+                        ChunkPos ChunkPos = new ChunkPos(var8 + x, var9 + z);
 
-                        if (!this.eligibleChunksForSpawning.contains(chunkcoordintpair)) {
+                        if (!this.eligibleChunksForSpawning.contains(ChunkPos)) {
                             ++i;
-                            if (!flag && world.getWorldBorder().contains(chunkcoordintpair)) {
-                                this.eligibleChunksForSpawning.add(chunkcoordintpair);
+                            if (!flag && world.getWorldBorder().contains(ChunkPos)) {
+                                this.eligibleChunksForSpawning.add(ChunkPos);
                             }
                         }
                     }
@@ -257,22 +259,22 @@ public final class CustomSpawner {
             return countTotal;
         }
 
-        Iterator<ChunkCoordIntPair> iterator1 = this.eligibleChunksForSpawning.iterator();
-        ArrayList<ChunkCoordIntPair> tmp = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
+        Iterator<ChunkPos> iterator1 = this.eligibleChunksForSpawning.iterator();
+        ArrayList<ChunkPos> tmp = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
         Collections.shuffle(tmp);
         iterator1 = tmp.iterator();
         int moblimit = limit * i / 256 - mobcnt + 1;
 
         label108: while (iterator1.hasNext() && moblimit > 0) {
-            ChunkCoordIntPair chunkcoordintpair = iterator1.next();
-            BlockPos chunkpos = getRandomSpawningPointInChunk(world, chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+            ChunkPos ChunkPos = iterator1.next();
+            BlockPos chunkpos = getRandomSpawningPointInChunk(world, ChunkPos.chunkXPos, ChunkPos.chunkZPos);
             int posX = chunkpos.getX();
             int posY = chunkpos.getY();
             int posZ = chunkpos.getZ();
 
             BlockPos pos = new BlockPos(posX, posY, posZ);
-            if (!world.getBlockState(pos).getBlock().isNormalCube()
-                    && world.getBlockState(pos).getBlock().getMaterial() == entitySpawnType.getLivingMaterial()) {
+            if (!world.getBlockState(pos).isNormalCube()
+                    && world.getBlockState(pos).getMaterial() == entitySpawnType.getLivingMaterial()) {
                 int spawnedMob = 0;
                 int spawnCount = 0;
 
@@ -333,8 +335,8 @@ public final class CustomSpawner {
                                             // changed check from maxSpawnedInChunk to maxGroupCount.
                                             CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
                                                     entitySpawnType.name(), world.getBiomeGenForCoords(new BlockPos(
-                                                            (chunkcoordintpair.chunkXPos * 16) + 16, 0,
-                                                            (chunkcoordintpair.chunkZPos * 16) + 16)).getBiomeName(), entityData
+                                                            (ChunkPos.chunkXPos * 16) + 16, 0,
+                                                            (ChunkPos.chunkZPos * 16) + 16)).getBiomeName(), entityData
                                                             .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
                                                             .floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft,
                                                     spawnlistentry);
@@ -438,7 +440,7 @@ public final class CustomSpawner {
                 continue;
             }
 
-            ArrayList<SpawnListEntry> spawnList = entitySpawnType.getBiomeSpawnList(biome.biomeID);
+            ArrayList<SpawnListEntry> spawnList = entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome));
             if (spawnList != null) {
                 boolean flag = false;
                 // check to see if spawn entry already exists
@@ -456,8 +458,8 @@ public final class CustomSpawner {
                     spawnList.add(new SpawnListEntry(class1, i, j, k));
                 }
             } else {
-                entitySpawnType.addBiomeSpawnList(biome.biomeID);
-                entitySpawnType.getBiomeSpawnList(biome.biomeID).add(new SpawnListEntry(class1, i, j, k));
+                entitySpawnType.addBiomeSpawnList(Biome.getIdForBiome(biome));
+                entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome)).add(new SpawnListEntry(class1, i, j, k));
             }
         }
 
@@ -474,7 +476,7 @@ public final class CustomSpawner {
         }
 
         for (Biome biome : biomes) {
-            ArrayList<SpawnListEntry> spawnList = entitySpawnType.getBiomeSpawnList(biome.biomeID);
+            ArrayList<SpawnListEntry> spawnList = entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome));
 
             if (spawnList != null) {
                 Iterator<SpawnListEntry> iterator = spawnList.iterator();
@@ -489,21 +491,18 @@ public final class CustomSpawner {
         }
     }
 
-    public static void copyVanillaSpawnData(Biome aBiome[]) {
-        if (aBiome == null) {
-            aBiome = new Biome[biomeList.size()];
-            aBiome = biomeList.toArray(aBiome);
-        }
-
-        for (Biome biome : aBiome) {
+    public static void copyVanillaSpawnData() {
+    	Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+        while (iterator.hasNext()) {
+        	Biome biome = iterator.next();
             for (EnumCreatureType enumcreaturetype : entityTypes.values()) {
                 if (enumcreaturetype == null) {
                     continue;
                 }
 
-                for (Iterator<SpawnListEntry> iterator = biome.getSpawnableList(enumcreaturetype).iterator(); iterator.hasNext();) {
-                    if (iterator != null) {
-                        SpawnListEntry spawnlistentry = iterator.next();
+                for (Iterator<SpawnListEntry> spawnIterator = biome.getSpawnableList(enumcreaturetype).iterator(); spawnIterator.hasNext();) {
+                    if (spawnIterator != null) {
+                        SpawnListEntry spawnlistentry = spawnIterator.next();
                         if (entityDefaultSpawnBiomes.containsKey(spawnlistentry.entityClass.getName())) { // add biome to existing list
                             if (!entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).contains(biome)) {
                                 entityDefaultSpawnBiomes.get(spawnlistentry.entityClass.getName()).add(biome);
@@ -516,7 +515,7 @@ public final class CustomSpawner {
                                 defaultSpawnListEntryMap.put(spawnlistentry.entityClass.getName(), spawnlistentry);
                             }
                         }
-                        iterator.remove();
+                        spawnIterator.remove();
                     }
                 }
             }
@@ -525,7 +524,7 @@ public final class CustomSpawner {
 
     public void updateSpawnListEntry(EntityData entityData) {
         for (int i = 0; i < biomeList.size(); i++) {
-            ArrayList<SpawnListEntry> spawnList = entityData.getLivingSpawnType().getBiomeSpawnList(biomeList.get(i).biomeID);
+            ArrayList<SpawnListEntry> spawnList = entityData.getLivingSpawnType().getBiomeSpawnList(Biome.getIdForBiome(biomeList.get(i)));
             if (spawnList != null) {
                 for (SpawnListEntry spawnEntry : spawnList) {
                     if (spawnEntry.entityClass == entityData.getEntityClass()) {
@@ -579,36 +578,36 @@ public final class CustomSpawner {
         }
 
         if (entitySpawnType.getLivingMaterial() == Material.WATER) {
-            return world.getBlockState(pos).getBlock().getMaterial().isLiquid()
-                    && world.getBlockState(pos.down()).getBlock().getMaterial().isLiquid()
-                    && !world.getBlockState(pos.up()).getBlock().isNormalCube();
+            return world.getBlockState(pos).getMaterial().isLiquid()
+                    && world.getBlockState(pos.down()).getMaterial().isLiquid()
+                    && !world.getBlockState(pos.up()).isNormalCube();
         } else {
-            Block block = world.getBlockState(pos).getBlock();
+            IBlockState blockstate = world.getBlockState(pos);
             BlockPos blockpos = pos.down();
-            Block block1 = world.getBlockState(blockpos).getBlock();
+            IBlockState blockstate1 = world.getBlockState(blockpos);
             EntityLiving.SpawnPlacementType spawnPlacementType = EntitySpawnPlacementRegistry.getPlacementForEntity(spawnListEntry.entityClass);
             if (spawnPlacementType == null) {
-                if (!canCreatureSpawn(block1, world, blockpos)) {
+                if (!canCreatureSpawn(blockstate1, world, blockpos)) {
                     return false;
                 }
-            } else if (!block1.canCreatureSpawn(world, blockpos, spawnPlacementType)) {
+            } else if (!blockstate1.getBlock().canCreatureSpawn(blockstate1, world, blockpos, spawnPlacementType)) {
                 return false;
             }
 
-            boolean flag = block1 != Blocks.BEDROCK && block1 != Blocks.BARRIER;
-            boolean result = flag && !block.isNormalCube() && !block.getMaterial().isLiquid() && !world.getBlockState(pos.up()).getBlock().isNormalCube();
+            boolean flag = blockstate1.getBlock() != Blocks.BEDROCK && blockstate1.getBlock() != Blocks.BARRIER;
+            boolean result = flag && !blockstate.isNormalCube() && !blockstate.getMaterial().isLiquid() && !world.getBlockState(pos.up()).isNormalCube();
             return result;
         }
     }
 
-    public static boolean canCreatureSpawn(Block block, World world, BlockPos pos) {
-        IBlockState state = world.getBlockState(pos);
-        if (block instanceof BlockSlab) {
-            return (block.isFullBlock() || state.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP);
+    public static boolean canCreatureSpawn(IBlockState blockstate, World world, BlockPos pos) {
+        Block block = blockstate.getBlock();
+    	if (block instanceof BlockSlab) {
+            return (blockstate.isFullBlock() || blockstate.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP);
         } else if (block instanceof BlockStairs) {
-            return state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP;
+            return blockstate.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP;
         }
-        return block.isSideSolid(world, pos, EnumFacing.UP);
+        return blockstate.isSideSolid(world, pos, EnumFacing.UP);
     }
 
     public final int countEntities(Class <? extends EntityLiving>  class1, World worldObj) {
@@ -645,11 +644,11 @@ public final class CustomSpawner {
      * that can spawn at the given XYZ location, based on biomes.
      */
     public List<SpawnListEntry> getPossibleCustomCreatures(World worldObj, EntitySpawnType entitySpawnType, int pX, int pY, int pZ) {
-        Biome Biome = worldObj.getBiomeGenForCoords(new BlockPos(pX, 0, pZ));
-        if (Biome == null) {
+        Biome biome = worldObj.getBiomeGenForCoords(new BlockPos(pX, 0, pZ));
+        if (biome == null) {
             return null;
         } else {
-            return entitySpawnType.getBiomeSpawnList(Biome.biomeID);
+            return entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome));
         }
     }
 

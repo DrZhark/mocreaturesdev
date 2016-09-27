@@ -1,5 +1,6 @@
 package drzhark.mocreatures.client;
 
+import drzhark.mocreatures.MoCProxy;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.entity.Entity;
@@ -8,7 +9,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import drzhark.mocreatures.MoCProxy;
 
 @SideOnly(Side.CLIENT)
 public class MoCEntityFXUndead extends Particle {

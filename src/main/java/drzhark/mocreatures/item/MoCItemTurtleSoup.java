@@ -1,9 +1,11 @@
 package drzhark.mocreatures.item;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class MoCItemTurtleSoup extends MoCItemFood {
 
@@ -18,8 +20,9 @@ public class MoCItemTurtleSoup extends MoCItemFood {
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack itemstack, World world, EntityPlayer entityplayer) {
-        super.onItemUseFinish(itemstack, world, entityplayer);
+    @Nullable
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+        super.onItemUseFinish(stack, worldIn, entityLiving);
         return new ItemStack(Items.BOWL);
     }
 }

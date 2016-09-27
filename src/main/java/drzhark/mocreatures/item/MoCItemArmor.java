@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -7,25 +8,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MoCItemArmor extends ItemArmor {
 
-    public MoCItemArmor(String name, ArmorMaterial enumarmormaterial, int j, int k) {
-        super(enumarmormaterial, j, k);
+    public MoCItemArmor(String name, ItemArmor.ArmorMaterial materialIn, int renderIndex, EntityEquipmentSlot equipmentSlotIn) {
+        super(materialIn, renderIndex, equipmentSlotIn);
         this.setCreativeTab(MoCreatures.tabMoC);
         this.setUnlocalizedName(name);
-        GameRegistry.registerItem(this, name);
+        GameRegistry.register(this, new ResourceLocation(MoCConstants.MOD_ID, name));
         if (!MoCreatures.isServer())
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                    .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
+                    .register(this, 0, new ModelResourceLocation("mocreatures:" + materialIn.getName(), "inventory"));
     }
 
     @Override
-    public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String layer) {
+    public String getArmorTexture(ItemStack itemstack, Entity entity, EntityEquipmentSlot slot, String type) {
         String tempArmorTexture = "croc_1.png";
         ;
         if ((itemstack.getItem() == MoCreatures.helmetCroc) || (itemstack.getItem() == MoCreatures.plateCroc)
@@ -97,8 +100,8 @@ public class MoCItemArmor extends ItemArmor {
      */
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
-        if (world.rand.nextInt(50) == 0 && player.getCurrentArmor(3) != null) {
-            ItemStack myStack = player.getCurrentArmor(3);
+        if (world.rand.nextInt(50) == 0 && player.getItemStackFromSlot(EntityEquipmentSlot.FEET) != null) {
+            ItemStack myStack = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
             if (myStack != null && myStack.getItem() instanceof MoCItemArmor) {
                 MoCTools.updatePlayerArmorEffects(player);
             }

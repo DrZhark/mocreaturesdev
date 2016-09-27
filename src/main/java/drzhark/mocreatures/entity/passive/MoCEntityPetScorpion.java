@@ -1,5 +1,16 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.entity.item.MoCEntityEgg;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -11,6 +22,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,20 +31,13 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityEgg;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
@@ -67,7 +72,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAIHunt(this, EntityAnimal.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -222,7 +227,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         }
 
         if (MoCreatures.isServer() && (this.armCounter == 10 || this.armCounter == 40)) {
-            this.worldObj.playSoundAtEntity(this, "mocreatures:scorpionclaw", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SCORPION_CLAW);
         }
 
         if (this.armCounter != 0 && this.armCounter++ > 24) {
@@ -232,8 +237,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         if (getIsPoisoning()) {
             this.poisontimer++;
             if (this.poisontimer == 1) {
-                this.worldObj.playSoundAtEntity(this, "mocreatures:scorpionsting", 1.0F,
-                        1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SCORPION_STING);
             }
             if (this.poisontimer > 50) {
                 this.poisontimer = 0;
@@ -243,7 +247,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
         if (this.transformCounter > 0) {
             if (this.transformCounter == 40) {
-                MoCTools.playCustomSound(this, "transform", this.worldObj);
+                MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_TRANSFORM);
             }
 
             if (++this.transformCounter > 100) {
@@ -315,23 +319,23 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:scorpiondying";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_SCORPION_DEATH;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:scorpionhurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_SCORPION_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getAmbientSound() {
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
                     new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
 
-        return "mocreatures:scorpiongrunt";
+        return MoCSoundEvents.ENTITY_SCORPION_AMBIENT;
     }
 
     @Override
@@ -372,48 +376,47 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
 
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if ((itemstack != null) && getIsAdult() && !getIsRideable()
-                && (itemstack.getItem() == Items.SADDLE || itemstack.getItem() == MoCreatures.horsesaddle)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if ((stack != null) && getIsAdult() && !getIsRideable()
+                && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCreatures.horsesaddle)) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             setRideable(true);
             return true;
         }
 
-        if ((itemstack != null) && (itemstack.getItem() == MoCreatures.whip) && getIsTamed() && (!this.isBeingRidden())) {
+        if ((stack != null) && (stack.getItem() == MoCreatures.whip) && getIsTamed() && (!this.isBeingRidden())) {
             setSitting(!getIsSitting());
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essenceundead) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
+        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essenceundead) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
             transform(5);
             return true;
         }
 
-        if ((itemstack != null) && this.getIsTamed() && itemstack.getItem() == MoCreatures.essencedarkness) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
+        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essencedarkness) {
+            if (--stack.stackSize == 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer()) {
                 int i = getType() + 40;
                 MoCEntityEgg entityegg = new MoCEntityEgg(this.worldObj, i);
-                entityegg.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
-                entityplayer.worldObj.spawnEntityInWorld(entityegg);
+                entityegg.setPosition(player.posX, player.posY, player.posZ);
+                player.worldObj.spawnEntityInWorld(entityegg);
                 entityegg.motionY += this.worldObj.rand.nextFloat() * 0.05F;
                 entityegg.motionX += (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.3F;
                 entityegg.motionZ += (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.3F;
@@ -421,30 +424,29 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             return true;
         }
         if (this.getRidingEntity() == null && getEdad() < 60 && !getIsAdult()) {
-            this.rotationYaw = entityplayer.rotationYaw;
+            this.rotationYaw = player.rotationYaw;
             if (MoCreatures.isServer()) {
-                mountEntity(entityplayer);
+                this.startRiding(player);
             }
 
             if (MoCreatures.isServer() && !getIsTamed()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
         } else if (this.getRidingEntity() != null && getIsPicked()) {
-            this.worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F) + 1.0F);
+            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             if (MoCreatures.isServer()) {
-                this.mountEntity(null);
+                this.dismountEntity();
             }
-            this.motionX = entityplayer.motionX * 5D;
-            this.motionY = (entityplayer.motionY / 2D) + 0.5D;
-            this.motionZ = entityplayer.motionZ * 5D;
+            this.motionX = player.motionX * 5D;
+            this.motionY = (player.motionY / 2D) + 0.5D;
+            this.motionZ = player.motionZ * 5D;
         }
 
         if (getIsRideable() && getIsTamed() && getIsAdult() && (!this.isBeingRidden())) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
-            setEating(false);
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
             if (MoCreatures.isServer()) {
-                entityplayer.mountEntity(this);
+                player.startRiding(this);
             }
 
             return true;

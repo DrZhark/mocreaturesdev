@@ -1,5 +1,8 @@
 package drzhark.mocreatures.entity.ambient;
 
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityAmbient;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
@@ -9,9 +12,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityAmbient;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 
 public class MoCEntitySnail extends MoCEntityAmbient {
 

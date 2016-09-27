@@ -16,8 +16,8 @@ public class MoCModelWraith extends ModelBiped {
     public MoCModelWraith() {
         //TODO 4.1 FIX
         super(12F, 0.0F, 64, 32);
-        this.heldItemLeft = 0;
-        this.heldItemRight = 0;
+        this.leftArmPose = ModelBiped.ArmPose.EMPTY;
+        this.rightArmPose = ModelBiped.ArmPose.EMPTY;
         this.isSneak = false;
         this.bipedHead = new ModelRenderer(this, 0, 40);
         this.bipedHead.addBox(-4F, -8F, -4F, 1, 1, 1, 0.0F);

@@ -73,10 +73,9 @@ public class MoCEntityPlatform extends Entity {
             return;
         }
 
-        if (this.isBeingRidden() && this.riddenByEntity instanceof EntityPlayer && ((EntityPlayer) this.riddenByEntity).isSneaking()
+        if (this.isBeingRidden() && this.getRidingEntity() instanceof EntityPlayer && ((EntityPlayer) this.getRidingEntity()).isSneaking()
                 && ++this.mountCount > 10) {
-            this.riddenByEntity.mountEntity(null);
-            this.riddenByEntity = null;
+            this.dismountRidingEntity();
             this.setDead();
 
         }
@@ -103,7 +102,7 @@ public class MoCEntityPlatform extends Entity {
     public void updatePassenger(Entity passenger) {
         if (this.isBeingRidden()) {
             passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ);
-            this.riddenByEntity.rotationYaw = this.rotationYaw;
+            passenger.rotationYaw = this.rotationYaw;
         }
     }
 

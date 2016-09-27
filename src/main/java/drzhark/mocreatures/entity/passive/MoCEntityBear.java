@@ -1,5 +1,17 @@
 package drzhark.mocreatures.entity.passive;
 
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
+import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
+import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
+import drzhark.mocreatures.entity.ai.EntityAIHunt;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
+import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageAnimation;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,7 +28,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -24,17 +38,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
-import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
-import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
-import drzhark.mocreatures.entity.ai.EntityAIHunt;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.network.MoCMessageHandler;
-import drzhark.mocreatures.network.message.MoCMessageAnimation;
+
+import javax.annotation.Nullable;
 
 public class MoCEntityBear extends MoCEntityTameableAnimal {
 
@@ -242,7 +247,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if (entity != this && entity instanceof EntityLivingBase && super.shouldAttackPlayers() && this.getType() != 3) {
@@ -313,7 +318,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
         //TODO move to AI
         if (MoCreatures.isServer() && getType() == 3 && (this.deathTime == 0) && getBearState() != 2) {
-            EntityItem entityitem = getClosestItem(this, 12D, Items.REEDS, Items.sugar);
+            EntityItem entityitem = getClosestItem(this, 12D, Items.REEDS, Items.SUGAR);
             if (entityitem != null) {
 
                 float f = entityitem.getDistanceToEntity(this);
@@ -322,8 +327,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
                 }
                 if ((f < 2.0F) && (entityitem != null) && (this.deathTime == 0)) {
                     entityitem.setDead();
-                    this.worldObj
-                            .playSoundAtEntity(this, "mocreatures:eating", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+                    MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
                     this.setHealth(getMaxHealth());
                 }
 
@@ -332,18 +336,19 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean interact(EntityPlayer entityplayer) {
-        if (super.interact(entityplayer)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+
+        ItemStack itemstack = player.inventory.getCurrentItem();
         if ((itemstack != null) && (getType() == 3) && ((itemstack.getItem() == MoCreatures.sugarlump) || (itemstack.getItem() == Items.REEDS))) {
             if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
 
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
 
             this.setHealth(getMaxHealth());
@@ -363,25 +368,25 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:beardying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return MoCreatures.animalHide;
     }
 
     @Override
-    protected String getHurtSound() {
-        openMouth();
-        return "mocreatures:bearhurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_BEAR_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
+    protected SoundEvent getHurtSound() {
         openMouth();
-        return "mocreatures:beargrunt";
+        return MoCSoundEvents.ENTITY_BEAR_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        openMouth();
+        return MoCSoundEvents.ENTITY_BEAR_AMBIENT;
     }
 
     @Override
@@ -434,7 +439,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
     private void eatingAnimal() {
         openMouth();
-        MoCTools.playCustomSound(this, "mocreatures:eating", this.worldObj);
+        MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
     }
 
     @Override

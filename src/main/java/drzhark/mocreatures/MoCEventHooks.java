@@ -2,7 +2,7 @@ package drzhark.mocreatures;
 
 import drzhark.customspawner.utils.CMSUtils;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;

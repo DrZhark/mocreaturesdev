@@ -44,7 +44,7 @@ public class BiomeData {
     }
 
     public int getBiomeID() {
-        return this.biome.biomeID;
+        return Biome.getIdForBiome(this.biome);
     }
 
     public String getTag() {

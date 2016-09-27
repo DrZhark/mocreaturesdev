@@ -60,7 +60,7 @@ public class WorldGenTower extends WorldGenerator {
 
             for (int Nx = x - 3; Nx < x + 4; Nx++) {
                 for (int Nz = z - 3; Nz < z + 4; Nz++) {
-                    world.setBlockState(new BlockPos(Nx, y - 1, Nz), Blocks.flowing_lava.getDefaultState(), t);
+                    world.setBlockState(new BlockPos(Nx, y - 1, Nz), Blocks.FLOWING_LAVA.getDefaultState(), t);
                 }
             }
 

@@ -1,11 +1,9 @@
 package drzhark.mocreatures.entity.ambient;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
-import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -29,7 +27,7 @@ public class MoCEntityRoach extends MoCEntityInsect
             }
         }, 6.0F, 0.8D, 1.3D));
     }
-    
+
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();

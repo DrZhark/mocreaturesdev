@@ -7,6 +7,7 @@ import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import drzhark.mocreatures.network.message.MoCMessageExplode;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,10 +18,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -46,7 +48,7 @@ public class MoCEntityOgre extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -102,7 +104,7 @@ public class MoCEntityOgre extends MoCEntityMob {
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
             Entity entity = damagesource.getEntity();
-            if ((this.riddenByEntity == entity) || (this.getRidingEntity() == entity)) {
+            if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
             if ((entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0) && entity instanceof EntityLivingBase) {
@@ -122,14 +124,14 @@ public class MoCEntityOgre extends MoCEntityMob {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:ogredying";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_OGRE_DEATH;
     }
 
     @Override
     protected Item getDropItem() {
         if (getType() < 3) {
-            return Item.getItemFromBlock(Blocks.obsidian);
+            return Item.getItemFromBlock(Blocks.OBSIDIAN);
         } else if (getType() < 5) {
             boolean flag = (this.rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
             if (!flag) {
@@ -137,17 +139,17 @@ public class MoCEntityOgre extends MoCEntityMob {
             }
             return MoCreatures.heartfire;
         }
-        return Items.diamond;
+        return Items.DIAMOND;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:ogrehurt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_OGRE_HURT;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:ogre";
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_OGRE_AMBIENT;
     }
 
     public boolean isFireStarter() {

@@ -1,5 +1,7 @@
 package drzhark.mocreatures.entity.ai;
 
+import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,11 +15,6 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import org.apache.commons.lang3.StringUtils;
-
-import drzhark.mocreatures.entity.MoCEntityAnimal;
-import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 
 public abstract class EntitiAITargetMoC extends EntityAIBase {
 
@@ -82,7 +79,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
         if (team != null && team1 == team) {
             return false;
         } else {
-            if (attacker instanceof IEntityOwnable && StringUtils.isNotEmpty((((IEntityOwnable) attacker).getOwnerId()).toString())) {
+            if (attacker instanceof IEntityOwnable && ((IEntityOwnable) attacker).getOwnerId() != null) {
                 if (target instanceof IEntityOwnable && ((IEntityOwnable) attacker).getOwnerId().equals(((IEntityOwnable) target).getOwnerId())) {
                     return false;
                 }

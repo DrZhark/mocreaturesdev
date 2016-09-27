@@ -10,7 +10,7 @@ import drzhark.mocreatures.MoCEntityData;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.configuration.MoCProperty;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

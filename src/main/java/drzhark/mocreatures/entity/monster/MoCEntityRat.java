@@ -1,8 +1,9 @@
 package drzhark.mocreatures.entity.monster;
 
-import java.util.Iterator;
-import java.util.List;
-
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.MoCEntityMob;
+import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,11 +14,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.MoCEntityMob;
-import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class MoCEntityRat extends MoCEntityMob {
 
@@ -33,7 +35,7 @@ public class MoCEntityRat extends MoCEntityMob {
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
-    
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -85,7 +87,7 @@ public class MoCEntityRat extends MoCEntityMob {
             if (MoCreatures.isServer()) {
                 List<MoCEntityRat> list =
                         this.worldObj.getEntitiesWithinAABB(MoCEntityRat.class,
-                                AxisAlignedBB.fromBounds(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D)
+                                new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D)
                                         .expand(16D, 4D, 16D));
                 Iterator<MoCEntityRat> iterator = list.iterator();
                 do {
@@ -117,23 +119,23 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    protected String getDeathSound() {
-        return "mocreatures:ratdying";
-    }
-
-    @Override
     protected Item getDropItem() {
         return MoCreatures.ratRaw;
     }
 
     @Override
-    protected String getHurtSound() {
-        return "mocreatures:rathurt";
+    protected SoundEvent getDeathSound() {
+        return MoCSoundEvents.ENTITY_RAT_DEATH;
     }
 
     @Override
-    protected String getLivingSound() {
-        return "mocreatures:ratgrunt";
+    protected SoundEvent getHurtSound() {
+        return MoCSoundEvents.ENTITY_RAT_HURT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return MoCSoundEvents.ENTITY_RAT_AMBIENT;
     }
 
     @Override

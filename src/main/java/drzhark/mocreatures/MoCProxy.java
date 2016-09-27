@@ -6,7 +6,7 @@ import drzhark.mocreatures.configuration.MoCProperty;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.utils.MoCLog;
+import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

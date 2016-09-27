@@ -1,20 +1,21 @@
 package drzhark.mocreatures.command;
 
 import drzhark.mocreatures.MoCPetData;
+import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,44 +57,47 @@ public class CommandMoCTP extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender par1ICommandSender, String[] charArray) {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         int petId = 0;
-        if (charArray == null || charArray.length == 0) {
-            par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "Error" + EnumChatFormatting.WHITE
+        if (args == null || args.length == 0) {
+            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Error" + TextFormatting.WHITE
                     + ": You must enter a valid entity ID."));
             return;
         }
+        if (!(sender instanceof EntityPlayer)) {
+            return;
+        }
         try {
-            petId = Integer.parseInt(charArray[0]);
+            petId = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
             petId = -1;
         }
-        String playername = par1ICommandSender.getName();
-        EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerByUsername(playername);
+        String playername = sender.getName();
+        EntityPlayer player = (EntityPlayer) sender;//FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUsername(playername);
         // search for tamed entity in mocreatures.dat
-        MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(playername);
+        MoCPetData ownerPetData = MoCreatures.instance.mapData.getPetData(player.getUniqueID());
         if (player != null & ownerPetData != null) {
             for (int i = 0; i < ownerPetData.getTamedList().tagCount(); i++) {
                 NBTTagCompound nbt = ownerPetData.getTamedList().getCompoundTagAt(i);
                 if (nbt.hasKey("PetId") && nbt.getInteger("PetId") == petId) {
                     String petName = nbt.getString("Name");
                     WorldServer world = DimensionManager.getWorld(nbt.getInteger("Dimension"));
-                    if (!teleportLoadedPet(world, player, petId, petName, par1ICommandSender)) {
+                    if (!teleportLoadedPet(world, player, petId, petName, sender)) {
                         double posX = nbt.getTagList("Pos", 6).getDoubleAt(0);
                         double posY = nbt.getTagList("Pos", 6).getDoubleAt(1);
                         double posZ = nbt.getTagList("Pos", 6).getDoubleAt(2);
                         int x = MathHelper.floor_double(posX);
                         int y = MathHelper.floor_double(posY);
                         int z = MathHelper.floor_double(posZ);
-                        par1ICommandSender.addChatMessage(new ChatComponentTranslation("Found unloaded pet " + EnumChatFormatting.GREEN
-                                + nbt.getString("id") + EnumChatFormatting.WHITE + " with name " + EnumChatFormatting.AQUA + nbt.getString("Name")
-                                + EnumChatFormatting.WHITE + " at location " + EnumChatFormatting.LIGHT_PURPLE + x + EnumChatFormatting.WHITE + ", "
-                                + EnumChatFormatting.LIGHT_PURPLE + y + EnumChatFormatting.WHITE + ", " + EnumChatFormatting.LIGHT_PURPLE + z
-                                + EnumChatFormatting.WHITE + " with Pet ID " + EnumChatFormatting.BLUE + nbt.getInteger("PetId")));
-                        boolean result = teleportLoadedPet(world, player, petId, petName, par1ICommandSender); // attempt to TP again
+                        sender.addChatMessage(new TextComponentTranslation("Found unloaded pet " + TextFormatting.GREEN
+                                + nbt.getString("id") + TextFormatting.WHITE + " with name " + TextFormatting.AQUA + nbt.getString("Name")
+                                + TextFormatting.WHITE + " at location " + TextFormatting.LIGHT_PURPLE + x + TextFormatting.WHITE + ", "
+                                + TextFormatting.LIGHT_PURPLE + y + TextFormatting.WHITE + ", " + TextFormatting.LIGHT_PURPLE + z
+                                + TextFormatting.WHITE + " with Pet ID " + TextFormatting.BLUE + nbt.getInteger("PetId")));
+                        boolean result = teleportLoadedPet(world, player, petId, petName, sender); // attempt to TP again
                         if (!result) {
-                            par1ICommandSender.addChatMessage(new ChatComponentTranslation("Unable to transfer entity ID " + EnumChatFormatting.GREEN
-                                    + petId + EnumChatFormatting.WHITE + ". It may only be transferred to " + EnumChatFormatting.AQUA
+                            sender.addChatMessage(new TextComponentTranslation("Unable to transfer entity ID " + TextFormatting.GREEN
+                                    + petId + TextFormatting.WHITE + ". It may only be transferred to " + TextFormatting.AQUA
                                     + player.getName()));
                         }
                     }
@@ -101,7 +105,7 @@ public class CommandMoCTP extends CommandBase {
                 }
             }
         } else {
-            par1ICommandSender.addChatMessage(new ChatComponentTranslation("Tamed entity could not be located."));
+            sender.addChatMessage(new TextComponentTranslation("Tamed entity could not be located."));
         }
     }
 
@@ -114,7 +118,7 @@ public class CommandMoCTP extends CommandBase {
         return CommandMoCTP.commands;
     }
 
-    public boolean teleportLoadedPet(WorldServer world, EntityPlayerMP player, int petId, String petName, ICommandSender par1ICommandSender) {
+    public boolean teleportLoadedPet(WorldServer world, EntityPlayer player, int petId, String petName, ICommandSender par1ICommandSender) {
         for (int j = 0; j < world.loadedEntityList.size(); j++) {
             Entity entity = (Entity) world.loadedEntityList.get(j);
             // search for entities that are MoCEntityAnimal's
@@ -134,21 +138,21 @@ public class CommandMoCTP extends CommandBase {
                         {
                             Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
                             if (newEntity != null) {
-                                newEntity.copyDataFromOld(entity); // transfer all existing data to our new entity
+                                MoCTools.copyDataFromOld(newEntity, entity); // transfer all existing data to our new entity
                                 newEntity.setPosition(player.posX, player.posY, player.posZ);
                                 DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
                             }
-                            if (entity.riddenByEntity == null) {
+                            if (entity.getRidingEntity() == null) {
                                 entity.isDead = true;
                             } else // dismount players
                             {
-                                entity.riddenByEntity.mountEntity(null);
+                                entity.getRidingEntity().dismountRidingEntity();
                                 entity.isDead = true;
                             }
                             world.resetUpdateEntityTick();
                             DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                         }
-                        par1ICommandSender.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + name + EnumChatFormatting.WHITE
+                        par1ICommandSender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
                                 + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", "
                                 + Math.round(player.posZ) + " in dimension " + player.dimension));
                         return true;
@@ -160,9 +164,9 @@ public class CommandMoCTP extends CommandBase {
     }
 
     public void sendCommandHelp(ICommandSender sender) {
-        sender.addChatMessage(new ChatComponentTranslation("\u00a72Listing MoCreatures commands"));
+        sender.addChatMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++) {
-            sender.addChatMessage(new ChatComponentTranslation(commands.get(i)));
+            sender.addChatMessage(new TextComponentTranslation(commands.get(i)));
         }
     }
 }
