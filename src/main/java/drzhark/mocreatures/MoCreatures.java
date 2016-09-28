@@ -165,6 +165,7 @@ public class MoCreatures {
     public MoCPetMapData mapData;
     public static boolean isCustomSpawnerLoaded = false;
     public static GameProfile MOCFAKEPLAYER = new GameProfile(UUID.fromString("6E379B45-1111-2222-3333-2FE1A88BCD66"), "[MoCreatures]");
+    public static DimensionType WYVERN_LAIR;
 
     /**
      * ITEMS
@@ -364,8 +365,8 @@ public class MoCreatures {
         this.AddRecipes();
         proxy.registerRenderers();
         proxy.registerRenderInformation();
-        DimensionType dimType = DimensionType.register("Wyvern Lair", "_wyvern_lair", WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
-        DimensionManager.registerDimension(WyvernLairDimensionID, dimType);
+        WYVERN_LAIR = DimensionType.register("Wyvern Lair", "_wyvern_lair", WyvernLairDimensionID, WorldProviderWyvernEnd.class, false);
+        DimensionManager.registerDimension(WyvernLairDimensionID, WYVERN_LAIR);
     }
 
     @EventHandler

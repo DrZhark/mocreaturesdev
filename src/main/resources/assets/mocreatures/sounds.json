@@ -1,1073 +1,1101 @@
 {
 	"appear" : {
 		"category" : "neutral",
-		"sounds" : [
-			"name": "mocreatures:appear"
-		]
+		"sounds" : [ "mocreatures:appear" ]
 	},
 	"appearmagic" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:appearmagic"
+			"mocreatures:appearmagic"
 		]
 	},
 	"armoroff" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:armoroff"
+			"mocreatures:armoroff"
 		]
 	},
 	"armorput" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:armorput"
+			"mocreatures:armorput"
 		]
 	},
 	"beardeath" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:beardeath"
+			"mocreatures:beardeath"
 		]
 	},
 	"beargrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:beargrunt1",
-			"name": "mocreatures:beargrunt2",
-			"name": "mocreatures:beargrunt3",
-			"name": "mocreatures:beargrunt4",
-			"name": "mocreatures:beargrunt5"
+			"mocreatures:beargrunt1",
+			"mocreatures:beargrunt2",
+			"mocreatures:beargrunt3",
+			"mocreatures:beargrunt4",
+			"mocreatures:beargrunt5"
 		]
 	},
 	"bearhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:bearhurt1",
-			"name": "mocreatures:bearhurt2"
+			"mocreatures:bearhurt1",
+			"mocreatures:bearhurt2"
 		]
 	},
 	"bee" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:bee1",
-			"name": "mocreatures:bee2",
-			"name": "mocreatures:bee3"
+			"mocreatures:bee1",
+			"mocreatures:bee2",
+			"mocreatures:bee3"
 		]
 	},
 	"beeupset" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:beeupset"
+			"mocreatures:beeupset"
 		]
 	},
 	"birdblack" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdblack1",
-			"name": "mocreatures:birdblack2",
-			"name": "mocreatures:birdblack3"
+			"mocreatures:birdblack1",
+			"mocreatures:birdblack2",
+			"mocreatures:birdblack3"
 		]
 	},
 	"birdblue" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdblue1",
-			"name": "mocreatures:birdblue2",
-			"name": "mocreatures:birdblue3",
-			"name": "mocreatures:birdblue4"
+			"mocreatures:birdblue1",
+			"mocreatures:birdblue2",
+			"mocreatures:birdblue3",
+			"mocreatures:birdblue4"
 		]
 	},
 	"birdgreen" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdgreen1",
-			"name": "mocreatures:birdgreen2",
-			"name": "mocreatures:birdgreen3"
+			"mocreatures:birdgreen1",
+			"mocreatures:birdgreen2",
+			"mocreatures:birdgreen3"
 		]
 	},
 	"birdred" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdred1",
-			"name": "mocreatures:birdred2",
-			"name": "mocreatures:birdred3",
-			"name": "mocreatures:birdred4",
-			"name": "mocreatures:birdred5"
+			"mocreatures:birdred1",
+			"mocreatures:birdred2",
+			"mocreatures:birdred3",
+			"mocreatures:birdred4",
+			"mocreatures:birdred5"
 		]
 	},
 	"birdwhite" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdwhite"
+			"mocreatures:birdwhite"
 		]
 	},
 	"birdyellow" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:birdyellow1",
-			"name": "mocreatures:birdyellow2",
-			"name": "mocreatures:birdyellow3",
-			"name": "mocreatures:birdyellow4",
-			"name": "mocreatures:birdyellow5"
+			"mocreatures:birdyellow1",
+			"mocreatures:birdyellow2",
+			"mocreatures:birdyellow3",
+			"mocreatures:birdyellow4",
+			"mocreatures:birdyellow5"
 		]
 	},
 	"cricket" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cricket"
+			"mocreatures:cricket"
 		]
 	},
 	"cricketfly" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cricketfly"
+			"mocreatures:cricketfly"
 		]
 	},
 	"crocdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:crocdying"
+			"mocreatures:crocdying"
 		]
 	},
 	"crocgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:crocgrunt1",
-			"name": "mocreatures:crocgrunt2",
-			"name": "mocreatures:crocgrunt3"
+			"mocreatures:crocgrunt1",
+			"mocreatures:crocgrunt2",
+			"mocreatures:crocgrunt3"
+		]
+	},
+	"crochurt" : {
+		"category" : "neutral",
+		"sounds" : [
+			"mocreatures:crochurt1",
+			"mocreatures:crochurt2",
+			"mocreatures:crochurt3"
 		]
 	},
 	"crocjawsnap" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:crocjawsnap1",
-			"name": "mocreatures:crocjawsnap2"
+			"mocreatures:crocjawsnap1",
+			"mocreatures:crocjawsnap2"
 		]
 	},
 	"crocresting" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:crocresting1",
-			"name": "mocreatures:crocresting2"
+			"mocreatures:crocresting1",
+			"mocreatures:crocresting2"
 		]
 	},
 	"crocroll" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:crocroll"
+			"mocreatures:crocroll"
 		]
 	},
 	"cub" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cub"
+			"mocreatures:cub"
 		]
 	},
 	"cubdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cubdying"
+			"mocreatures:cubdying"
 		]
 	},
 	"cubgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cubgrunt1",
-			"name": "mocreatures:cubgrunt2",
-			"name": "mocreatures:cubgrunt3",
-			"name": "mocreatures:cubgrunt4",
-			"name": "mocreatures:cubgrunt5"
+			"mocreatures:cubgrunt1",
+			"mocreatures:cubgrunt2",
+			"mocreatures:cubgrunt3",
+			"mocreatures:cubgrunt4",
+			"mocreatures:cubgrunt5"
 		]
 	},
 	"cubhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:cubhurt1",
-			"name": "mocreatures:cubhurt2",
-			"name": "mocreatures:cubhurt3"
+			"mocreatures:cubhurt1",
+			"mocreatures:cubhurt2",
+			"mocreatures:cubhurt3"
 		]
 	},
 	"deerbgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:deerbgrunt"
+			"mocreatures:deerbgrunt"
 		]
 	},
 	"deerdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:deerdying"
+			"mocreatures:deerdying"
 		]
 	},
 	"deerfgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:deerfgrunt"
+			"mocreatures:deerfgrunt"
+		]
+	},
+	"deerhurt" : {
+		"category" : "neutral",
+		"sounds" : [
+			"mocreatures:deerhurt"
 		]
 	},
 	"destroy" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:destroy"
+			"mocreatures:destroy"
 		]
 	},
 	"dolphin" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:dolphin1",
-			"name": "mocreatures:dolphin2",
-			"name": "mocreatures:dolphin3",
-			"name": "mocreatures:dolphin4",
-			"name": "mocreatures:dolphin5",
-			"name": "mocreatures:dolphin6"
+			"mocreatures:dolphin1",
+			"mocreatures:dolphin2",
+			"mocreatures:dolphin3",
+			"mocreatures:dolphin4",
+			"mocreatures:dolphin5",
+			"mocreatures:dolphin6"
 		]
 	},
 	"dolphindying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:dolphindying1",
-			"name": "mocreatures:dolphindying2",
-			"name": "mocreatures:dolphindying3"
+			"mocreatures:dolphindying1",
+			"mocreatures:dolphindying2",
+			"mocreatures:dolphindying3"
 		]
 	},
 	"dolphinhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:dolphinhurt1",
-			"name": "mocreatures:dolphinhurt2"
+			"mocreatures:dolphinhurt1",
+			"mocreatures:dolphinhurt2"
 		]
 	},
 	"dolphinupset" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:dolphinupset"
+			"mocreatures:dolphinupset"
 		]
 	},
 	"donkeydying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:donkeydying"
+			"mocreatures:donkeydying"
 		]
 	},
 	"donkeygrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:donkeygrunt1",
-			"name": "mocreatures:donkeygrunt2"
+			"mocreatures:donkeygrunt1",
+			"mocreatures:donkeygrunt2"
 		]
 	},
 	"donkeyhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:donkeyhurt"
+			"mocreatures:donkeyhurt"
 		]
 	},
 	"dragonfly" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:dragonfly"
+			"mocreatures:dragonfly"
 		]
 	},
 	"drinking" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:drinking"
+			"mocreatures:drinking"
 		]
 	},
 	"duck" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:duck1",
-			"name": "mocreatures:duck2",
-			"name": "mocreatures:duck3"
+			"mocreatures:duck1",
+			"mocreatures:duck2",
+			"mocreatures:duck3"
 		]
 	},
 	"duckhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:duckhurt1",
-			"name": "mocreatures:duckhurt2"
+			"mocreatures:duckhurt1",
+			"mocreatures:duckhurt2"
 		]
 	},
 	"duckplop" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:duckplop"
+			"mocreatures:duckplop"
 		]
 	},
 	"eating" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:eating"
+			"mocreatures:eating"
 		]
 	},
 	"elephantcalf" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:elephantcalf1",
-			"name": "mocreatures:elephantcalf2"
+			"mocreatures:elephantcalf1",
+			"mocreatures:elephantcalf2"
+		]
+	},
+	"elephantdying" : {
+		"category" : "neutral",
+		"sounds" : [
+			"mocreatures:elephantdying"
 		]
 	},
 	"elephantgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:elephantgrunt1",
-			"name": "mocreatures:elephantgrunt2",
-			"name": "mocreatures:elephantgrunt3",
-			"name": "mocreatures:elephantgrunt4",
-			"name": "mocreatures:elephantgrunt5",
-			"name": "mocreatures:elephantgrunt6",
-			"name": "mocreatures:elephantgrunt7",
-			"name": "mocreatures:elephantgrunt8"
+			"mocreatures:elephantgrunt1",
+			"mocreatures:elephantgrunt2",
+			"mocreatures:elephantgrunt3",
+			"mocreatures:elephantgrunt4",
+			"mocreatures:elephantgrunt5",
+			"mocreatures:elephantgrunt6",
+			"mocreatures:elephantgrunt7",
+			"mocreatures:elephantgrunt8"
 		]
 	},
 	"elephanthurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:elephanthurt1",
-			"name": "mocreatures:elephanthurt2"
+			"mocreatures:elephanthurt1",
+			"mocreatures:elephanthurt2"
 		]
 	},
 	"firefly" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:firefly"
+			"mocreatures:firefly"
 		]
 	},
 	"fly" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:fly"
+			"mocreatures:fly"
 		]
 	},
 	"foxcall" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:foxcall1",
-			"name": "mocreatures:foxcall2",
-			"name": "mocreatures:foxcall3",
-			"name": "mocreatures:foxcall4",
-			"name": "mocreatures:foxcall5"
+			"mocreatures:foxcall1",
+			"mocreatures:foxcall2",
+			"mocreatures:foxcall3",
+			"mocreatures:foxcall4",
+			"mocreatures:foxcall5"
 		]
 	},
 	"foxdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:foxdying"
+			"mocreatures:foxdying"
 		]
 	},
 	"foxhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:foxhurt1",
-			"name": "mocreatures:foxhurt2"
+			"mocreatures:foxhurt1",
+			"mocreatures:foxhurt2"
 		]
 	},
 	"goatdigg" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatdigg"
+			"mocreatures:goatdigg"
 		]
 	},
 	"goatdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatdying"
+			"mocreatures:goatdying"
 		]
 	},
 	"goateating" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goateating"
+			"mocreatures:goateating"
 		]
 	},
 	"goatfemale" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatfemale"
+			"mocreatures:goatfemale"
 		]
 	},
 	"goatgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatgrunt"
+			"mocreatures:goatgrunt"
 		]
 	},
 	"goathurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goathurt"
+			"mocreatures:goathurt"
 		]
 	},
 	"goatkid" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatkid"
+			"mocreatures:goatkid"
 		]
 	},
 	"goatsmack" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:goatsmack"
+			"mocreatures:goatsmack"
 		]
 	},
 	"golemattach" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemattach"
+			"mocreatures:golemattach"
 		]
 	},
 	"golemdying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemdying"
+			"mocreatures:golemdying"
 		]
 	},
 	"golemexplode" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemexplode"
+			"mocreatures:golemexplode"
 		]
 	},
 	"golemgrunt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemgrunt1",
-			"name": "mocreatures:golemgrunt2"
+			"mocreatures:golemgrunt1",
+			"mocreatures:golemgrunt2"
 		]
 	},
 	"golemhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemhurt"
+			"mocreatures:golemhurt"
 		]
 	},
 	"golemshoot" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemshoot1",
-			"name": "mocreatures:golemshoot2"
+			"mocreatures:golemshoot1",
+			"mocreatures:golemshoot2"
 		]
 	},
 	"golemwalk" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:golemwalk"
+			"mocreatures:golemwalk"
 		]
 	},
 	"horsedying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsedying"
+			"mocreatures:horsedying"
 		]
 	},
 	"horsedyingghost" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsedyingghost"
+			"mocreatures:horsedyingghost"
 		]
 	},
 	"horsedyingundead" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsedyingundead"
+			"mocreatures:horsedyingundead"
 		]
 	},
 	"horsegrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsegrunt1",
-			"name": "mocreatures:horsegrunt2",
-			"name": "mocreatures:horsegrunt3"
+			"mocreatures:horsegrunt1",
+			"mocreatures:horsegrunt2",
+			"mocreatures:horsegrunt3"
 		]
 	},
 	"horsegruntghost" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsegruntghost1",
-			"name": "mocreatures:horsegruntghost2",
-			"name": "mocreatures:horsegruntghost3"
+			"mocreatures:horsegruntghost1",
+			"mocreatures:horsegruntghost2",
+			"mocreatures:horsegruntghost3"
 		]
 	},
 	"horsegruntundead" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsegruntundead1",
-			"name": "mocreatures:horsegruntundead2"
+			"mocreatures:horsegruntundead1",
+			"mocreatures:horsegruntundead2"
 		]
 	},
 	"horsehurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsehurt1",
-			"name": "mocreatures:horsehurt2"
+			"mocreatures:horsehurt1",
+			"mocreatures:horsehurt2"
 		]
 	},
 	"horsehurtghost" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsehurtghost"
+			"mocreatures:horsehurtghost"
 		]
 	},
 	"horsehurtundead" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsehurtundead"
+			"mocreatures:horsehurtundead"
 		]
 	},
 	"horsemad" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsemad"
+			"mocreatures:horsemad"
 		]
 	},
 	"horsemadghost" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsemadghost"
+			"mocreatures:horsemadghost"
 		]
 	},
 	"horsemadundead" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:horsemadundead"
+			"mocreatures:horsemadundead"
 		]
 	},
 	"kittendying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittendying"
+			"mocreatures:kittendying"
 		]
 	},
 	"kittengrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittengrunt"
+			"mocreatures:kittengrunt"
 		]
 	},
 	"kittenhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittenhurt1",
-			"name": "mocreatures:kittenhurt2"
+			"mocreatures:kittenhurt1",
+			"mocreatures:kittenhurt2"
 		]
 	},
 	"kittydying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittydying1",
-			"name": "mocreatures:kittydying2"
+			"mocreatures:kittydying1",
+			"mocreatures:kittydying2"
 		]
 	},
 	"kittyeatingf" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittyeatingf"
+			"mocreatures:kittyeatingf"
 		]
 	},
 	"kittyeatingm" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittyeatingm"
+			"mocreatures:kittyeatingm"
 		]
 	},
 	"kittyfood" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittyfood1",
-			"name": "mocreatures:kittyfood2",
-			"name": "mocreatures:kittyfood3",
-			"name": "mocreatures:kittyfood4"
+			"mocreatures:kittyfood1",
+			"mocreatures:kittyfood2",
+			"mocreatures:kittyfood3",
+			"mocreatures:kittyfood4"
 		]
 	},
 	"kittygrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittygrunt1",
-			"name": "mocreatures:kittygrunt2"
+			"mocreatures:kittygrunt1",
+			"mocreatures:kittygrunt2"
 		]
 	},
 	"kittyhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittyhurt1",
-			"name": "mocreatures:kittyhurt2",
-			"name": "mocreatures:kittyhurt3"
+			"mocreatures:kittyhurt1",
+			"mocreatures:kittyhurt2",
+			"mocreatures:kittyhurt3"
 		]
 	},
 	"kittypurr" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittypurr1",
-			"name": "mocreatures:kittypurr2"
+			"mocreatures:kittypurr1",
+			"mocreatures:kittypurr2"
 		]
 	},
 	"kittytrapped" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittytrapped"
+			"mocreatures:kittytrapped"
 		]
 	},
 	"kittyupset" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:kittyupset1",
-			"name": "mocreatures:kittyupset2",
-			"name": "mocreatures:kittyupset3"
+			"mocreatures:kittyupset1",
+			"mocreatures:kittyupset2",
+			"mocreatures:kittyupset3"
 		]
 	},
 	"liondeath" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:liondeath"
+			"mocreatures:liondeath"
 		]
 	},
 	"liongrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:liongrunt1",
-			"name": "mocreatures:liongrunt2",
-			"name": "mocreatures:liongrunt3"
+			"mocreatures:liongrunt1",
+			"mocreatures:liongrunt2",
+			"mocreatures:liongrunt3"
 		]
 	},
 	"lionhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:lionhurt1",
-			"name": "mocreatures:lionhurt2",
-			"name": "mocreatures:lionhurt3",
-			"name": "mocreatures:lionhurt4"
+			"mocreatures:lionhurt1",
+			"mocreatures:lionhurt2",
+			"mocreatures:lionhurt3",
+			"mocreatures:lionhurt4"
 		]
 	},
 	"micedying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:micedying1",
-			"name": "mocreatures:micedying2"
+			"mocreatures:micedying1",
+			"mocreatures:micedying2"
 		]
 	},
 	"micegrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:micegrunt1",
-			"name": "mocreatures:micegrunt2",
-			"name": "mocreatures:micegrunt3"
+			"mocreatures:micegrunt1",
+			"mocreatures:micegrunt2",
+			"mocreatures:micegrunt3"
+		]
+	},
+	"micehurt" : {
+		"category" : "neutral",
+		"sounds" : [
+			"mocreatures:micehurt1",
+			"mocreatures:micehurt2",
+			"mocreatures:micehurt3"
 		]
 	},
 	"ogre" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:ogre1",
-			"name": "mocreatures:ogre2",
-			"name": "mocreatures:ogre3"
+			"mocreatures:ogre1",
+			"mocreatures:ogre2",
+			"mocreatures:ogre3"
 		]
 	},
 	"ogredying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:ogredying"
+			"mocreatures:ogredying"
 		]
 	},
 	"ogrehurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:ogrehurt"
+			"mocreatures:ogrehurt"
 		]
 	},
 	"ostrichchick" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ostrichchick"
+			"mocreatures:ostrichchick"
 		]
 	},
 	"ostrichdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ostrichdying"
+			"mocreatures:ostrichdying"
 		]
 	},
 	"ostrichgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ostrichgrunt1",
-			"name": "mocreatures:ostrichgrunt2"
+			"mocreatures:ostrichgrunt1",
+			"mocreatures:ostrichgrunt2"
 		]
 	},
 	"ostrichhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ostrichhurt1",
-			"name": "mocreatures:ostrichhurt2"
+			"mocreatures:ostrichhurt1",
+			"mocreatures:ostrichhurt2"
 		]
 	},
 	"pegasus" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:pegasus"
+			"mocreatures:pegasus"
 		]
 	},
 	"pouringfood" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:pouringfood"
+			"mocreatures:pouringfood"
 		]
 	},
 	"pouringmilk" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:pouringmilk"
+			"mocreatures:pouringmilk"
 		]
 	},
 	"rabbitdeath" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:rabbitdeath"
+			"mocreatures:rabbitdeath"
 		]
 	},
 	"rabbithurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:rabbithurt1",
-			"name": "mocreatures:rabbithurt2"
+			"mocreatures:rabbithurt1",
+			"mocreatures:rabbithurt2"
 		]
 	},
 	"rabbitland" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:rabbitland"
+			"mocreatures:rabbitland"
 		]
 	},
 	"rabbitlift" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:rabbitlift"
+			"mocreatures:rabbitlift"
 		]
 	},
 	"raccoondying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:raccoondying"
+			"mocreatures:raccoondying"
 		]
 	},
 	"raccoongrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:raccoongrunt1",
-			"name": "mocreatures:raccoongrunt2",
-			"name": "mocreatures:raccoongrunt3",
-			"name": "mocreatures:raccoongrunt4"
+			"mocreatures:raccoongrunt1",
+			"mocreatures:raccoongrunt2",
+			"mocreatures:raccoongrunt3",
+			"mocreatures:raccoongrunt4"
 		]
 	},
 	"raccoonhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:raccoonhurt1",
-			"name": "mocreatures:raccoonhurt2"
+			"mocreatures:raccoonhurt1",
+			"mocreatures:raccoonhurt2"
 		]
 	},
 	"ratdying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ratdying"
+			"mocreatures:ratdying"
 		]
 	},
 	"ratgrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:ratgrunt1",
-			"name": "mocreatures:ratgrunt2",
-			"name": "mocreatures:ratgrunt3",
-			"name": "mocreatures:ratgrunt4"
+			"mocreatures:ratgrunt1",
+			"mocreatures:ratgrunt2",
+			"mocreatures:ratgrunt3",
+			"mocreatures:ratgrunt4"
 		]
 	},
 	"rathurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:rathurt1",
-			"name": "mocreatures:rathurt2"
+			"mocreatures:rathurt1",
+			"mocreatures:rathurt2"
 		]
 	},
 	"roping" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:roping"
+			"mocreatures:roping"
 		]
 	},
 	"scorpionclaw" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:scorpionclaw"
+			"mocreatures:scorpionclaw"
 		]
 	},
 	"scorpiondying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:scorpiondying"
+			"mocreatures:scorpiondying"
 		]
 	},
 	"scorpiongrunt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:scorpiongrunt1",
-			"name": "mocreatures:scorpiongrunt2",
-			"name": "mocreatures:scorpiongrunt3",
-			"name": "mocreatures:scorpiongrunt4"
+			"mocreatures:scorpiongrunt1",
+			"mocreatures:scorpiongrunt2",
+			"mocreatures:scorpiongrunt3",
+			"mocreatures:scorpiongrunt4"
 		]
 	},
 	"scorpionhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:scorpionhurt"
+			"mocreatures:scorpionhurt"
 		]
 	},
 	"scorpionsting" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:scorpionsting1",
-			"name": "mocreatures:scorpionsting2"
+			"mocreatures:scorpionsting1",
+			"mocreatures:scorpionsting2"
 		]
 	},
 	"shuffling" : {
 		"category" : "music",
 		"sounds" : [
-			"name": "mocreatures:music/shuffling",
-			"stream": true
+		    {
+			    "name" : "mocreatures:music/shuffling",
+			    "stream": true
+			}
 		]
 	},
 	"snakedying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakedying"
+			"mocreatures:snakedying"
 		]
 	},
 	"snakehiss" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakehiss1",
-			"name": "mocreatures:snakehiss2"
+			"mocreatures:snakehiss1",
+			"mocreatures:snakehiss2"
 		]
 	},
 	"snakehurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakehurt"
+			"mocreatures:snakehurt"
 		]
 	},
 	"snakerattle" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakerattle1",
-			"name": "mocreatures:snakerattle2"
+			"mocreatures:snakerattle1",
+			"mocreatures:snakerattle2"
 		]
 	},
 	"snakesnap" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakesnap"
+			"mocreatures:snakesnap"
 		]
 	},
 	"snakeswim" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakeswim"
+			"mocreatures:snakeswim"
 		]
 	},
 	"snakeupset" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:snakeupset1",
-			"name": "mocreatures:snakeupset2"
+			"mocreatures:snakeupset1",
+			"mocreatures:snakeupset2"
 		]
 	},
 	"transform" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:transform"
+			"mocreatures:transform"
 		]
 	},
 	"turkey" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:turkey1",
-			"name": "mocreatures:turkey2"
+			"mocreatures:turkey1",
+			"mocreatures:turkey2"
 		]
 	},
 	"turkeyhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:turkeyhurt"
+			"mocreatures:turkeyhurt"
 		]
 	},
 	"turtledying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:turtledying"
+			"mocreatures:turtledying"
 		]
 	},
 	"turtlehissing" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:turtlehissing"
+			"mocreatures:turtlehissing"
 		]
 	},
 	"turtlehurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:turtlehurt"
+			"mocreatures:turtlehurt"
 		]
 	},
 	"vanish" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:vanish"
+			"mocreatures:vanish"
 		]
 	},
 	"werehumandying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:werehumandying1",
-			"name": "mocreatures:werehumandying2"
+			"mocreatures:werehumandying1",
+			"mocreatures:werehumandying2"
 		]
 	},
 	"werehumanhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:werehumanhurt1",
-			"name": "mocreatures:werehumanhurt2"
+			"mocreatures:werehumanhurt1",
+			"mocreatures:werehumanhurt2"
 		]
 	},
 	"weretransform" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:weretransform1",
-			"name": "mocreatures:weretransform2",
-			"name": "mocreatures:weretransform3"
+			"mocreatures:weretransform1",
+			"mocreatures:weretransform2",
+			"mocreatures:weretransform3"
 		]
 	},
 	"werewolfdying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:werewolfdying1",
-			"name": "mocreatures:werewolfdying2"
+			"mocreatures:werewolfdying1",
+			"mocreatures:werewolfdying2"
 		]
 	},
 	"werewolfgrunt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:werewolfgrunt1",
-			"name": "mocreatures:werewolfgrunt2",
-			"name": "mocreatures:werewolfgrunt3",
-			"name": "mocreatures:werewolfgrunt4"
+			"mocreatures:werewolfgrunt1",
+			"mocreatures:werewolfgrunt2",
+			"mocreatures:werewolfgrunt3",
+			"mocreatures:werewolfgrunt4"
 		]
 	},
 	"werewolfhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:werewolfhurt1",
-			"name": "mocreatures:werewolfhurt2"
+			"mocreatures:werewolfhurt1",
+			"mocreatures:werewolfhurt2"
 		]
 	},
 	"whip" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:whip"
+			"mocreatures:whip"
 		]
 	},
 	"wingflap" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wingflap"
+			"mocreatures:wingflap"
 		]
 	},
 	"wolfdeath" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wolfdeath"
+			"mocreatures:wolfdeath"
 		]
 	},
 	"wolfgrunt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wolfgrunt1",
-			"name": "mocreatures:wolfgrunt2",
-			"name": "mocreatures:wolfgrunt3"
+			"mocreatures:wolfgrunt1",
+			"mocreatures:wolfgrunt2",
+			"mocreatures:wolfgrunt3"
 		]
 	},
 	"wolfhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wolfhurt1",
-			"name": "mocreatures:wolfhurt2"
+			"mocreatures:wolfhurt1",
+			"mocreatures:wolfhurt2"
 		]
 	},
 	"wraith" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wraith1",
-			"name": "mocreatures:wraith2",
-			"name": "mocreatures:wraith3"
+			"mocreatures:wraith1",
+			"mocreatures:wraith2",
+			"mocreatures:wraith3"
 		]
 	},
 	"wraithdying" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wraithdying1",
-			"name": "mocreatures:wraithdying2"
+			"mocreatures:wraithdying1",
+			"mocreatures:wraithdying2"
 		]
 	},
 	"wraithhurt" : {
 		"category" : "hostile",
 		"sounds" : [
-			"name": "mocreatures:wraithhurt1",
-			"name": "mocreatures:wraithhurt2"
+			"mocreatures:wraithhurt1",
+			"mocreatures:wraithhurt2"
 		]
 	},
 	"wyverndying" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wyverndying"
+			"mocreatures:wyverndying"
 		]
 	},
 	"wyverngrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wyverngrunt1",
-			"name": "mocreatures:wyverngrunt2",
-			"name": "mocreatures:wyverngrunt3",
-			"name": "mocreatures:wyverngrunt4",
-			"name": "mocreatures:wyverngrunt5"
+			"mocreatures:wyverngrunt1",
+			"mocreatures:wyverngrunt2",
+			"mocreatures:wyverngrunt3",
+			"mocreatures:wyverngrunt4",
+			"mocreatures:wyverngrunt5"
 		]
 	},
 	"wyvernhurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wyvernhurt1",
-			"name": "mocreatures:wyvernhurt2"
+			"mocreatures:wyvernhurt1",
+			"mocreatures:wyvernhurt2"
 		]
 	},
 	"wyvernpoisoning" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wyvernpoisoning"
+			"mocreatures:wyvernpoisoning"
 		]
 	},
 	"wyvernwingflap" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:wyvernwingflap"
+			"mocreatures:wyvernwingflap"
 		]
 	},
 	"zebragrunt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:zebragrunt1",
-			"name": "mocreatures:zebragrunt2"
+			"mocreatures:zebragrunt1",
+			"mocreatures:zebragrunt2"
 		]
 	},
 	"zebrahurt" : {
 		"category" : "neutral",
 		"sounds" : [
-			"name": "mocreatures:zebrahurt"
+			"mocreatures:zebrahurt"
 		]
 	}
 }
