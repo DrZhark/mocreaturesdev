@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 public class BiomeProviderWyvernLair extends BiomeProvider {
 
     /** The biome generator object. */
@@ -36,7 +38,7 @@ public class BiomeProviderWyvernLair extends BiomeProvider {
      */
     @Override
     public Biome[] getBiomesForGeneration(Biome[] biomes, int xStart, int zStart, int xSize, int zSize) {
-        return getBiomeGenAt(biomes, xStart, zStart, xSize, zSize, true);
+        return getBiomes(biomes, xStart, zStart, xSize, zSize, true);
     }
 
     /**
@@ -58,8 +60,8 @@ public class BiomeProviderWyvernLair extends BiomeProvider {
      * x, z, width, depth
      */
     @Override
-    public Biome[] loadBlockGeneratorData(Biome[] biomes, int xStart, int zStart, int xSize, int zSize) {
-        return getBiomeGenAt(biomes, xStart, zStart, xSize, zSize, true);
+    public Biome[] getBiomes(@Nullable Biome[] biomes, int xStart, int zStart, int xSize, int zSize) {
+        return getBiomes(biomes, xStart, zStart, xSize, zSize, true);
     }
 
     /**
@@ -68,7 +70,7 @@ public class BiomeProviderWyvernLair extends BiomeProvider {
      * infinite loop in BiomeCacheBlock)
      */
     @Override
-    public Biome[] getBiomeGenAt(Biome[] biomes, int xStart, int zStart, int xSize, int zSize, boolean par6) {
+    public Biome[] getBiomes(@Nullable Biome[] biomes, int xStart, int zStart, int xSize, int zSize, boolean par6) {
         if (biomes == null || biomes.length < xSize * zSize) {
             biomes = new Biome[xSize * zSize];
         }

@@ -46,9 +46,9 @@ public class EventHooks {
         for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
             if (entitySpawnType.getChunkSpawnChance() > 0) {
                 List<SpawnListEntry> customSpawnList =
-                        entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(event.getWorld().getBiomeGenForCoords(new BlockPos(x, 0, z))));
+                        entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(event.getWorld().getBiome(new BlockPos(x, 0, z))));
                 if (customSpawnList != null) {
-                    CustomSpawner.performWorldGenSpawning(entitySpawnType, event.getWorld(), event.getWorld().getBiomeGenForCoords(new BlockPos(x, 0, z)),
+                    CustomSpawner.performWorldGenSpawning(entitySpawnType, event.getWorld(), event.getWorld().getBiome(new BlockPos(x, 0, z)),
                             par1 + 8, par2 + 8, 16, 16, event.getRand(), customSpawnList, environment.worldGenCreatureSpawning);
                 }
             }

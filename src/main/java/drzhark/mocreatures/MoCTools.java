@@ -649,7 +649,7 @@ public class MoCTools {
             return null;
         }
 
-        Biome Biome = biomeProvider.getBiomeGenerator(pos);
+        Biome Biome = biomeProvider.getBiome(pos);
         //TODO works?
 
         if (Biome == null) {
@@ -664,7 +664,7 @@ public class MoCTools {
         if (biomeProvider == null) {
             return null;
         }
-        Biome Biome = biomeProvider.getBiomeGenerator(pos);
+        Biome Biome = biomeProvider.getBiome(pos);
         if (Biome == null) {
             return null;
         } else {

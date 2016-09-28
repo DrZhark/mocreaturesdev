@@ -334,7 +334,7 @@ public final class CustomSpawner {
                                             creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ));
                                             // changed check from maxSpawnedInChunk to maxGroupCount.
                                             CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
-                                                    entitySpawnType.name(), world.getBiomeGenForCoords(new BlockPos(
+                                                    entitySpawnType.name(), world.getBiome(new BlockPos(
                                                             (ChunkPos.chunkXPos * 16) + 16, 0,
                                                             (ChunkPos.chunkZPos * 16) + 16)).getBiomeName(), entityData
                                                             .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
@@ -644,7 +644,7 @@ public final class CustomSpawner {
      * that can spawn at the given XYZ location, based on biomes.
      */
     public List<SpawnListEntry> getPossibleCustomCreatures(World worldObj, EntitySpawnType entitySpawnType, int pX, int pY, int pZ) {
-        Biome biome = worldObj.getBiomeGenForCoords(new BlockPos(pX, 0, pZ));
+        Biome biome = worldObj.getBiome(new BlockPos(pX, 0, pZ));
         if (biome == null) {
             return null;
         } else {

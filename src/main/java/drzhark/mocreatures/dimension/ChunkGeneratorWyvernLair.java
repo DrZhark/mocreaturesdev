@@ -198,9 +198,9 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
         this.chunkX = x; this.chunkZ = z;
         this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
-        this.biomesForGeneration = this.worldObj.getBiomeProvider().loadBlockGeneratorData(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        this.setBlocksInChunk(x, z, chunkprimer);
+        this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
         this.buildSurfaces(chunkprimer);
+        this.setBlocksInChunk(x, z, chunkprimer);
 
         Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
@@ -348,7 +348,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
         int var4 = x * 16;
         int var5 = z * 16;
         BlockPos blockpos = new BlockPos(var4 + 16, 0, var5 + 16);
-        Biome var6 = this.worldObj.getBiomeGenForCoords(blockpos);
+        Biome var6 = this.worldObj.getBiome(blockpos);
         boolean var11 = false;
 
         int var12;
@@ -412,7 +412,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 
     public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
     {
-        return this.worldObj.getBiomeGenForCoords(pos).getSpawnableList(creatureType);
+        return this.worldObj.getBiome(pos).getSpawnableList(creatureType);
     }
 
     @Nullable
