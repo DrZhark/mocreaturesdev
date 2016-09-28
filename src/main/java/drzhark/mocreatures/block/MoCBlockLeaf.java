@@ -51,7 +51,7 @@ public class MoCBlockLeaf extends MoCBlock {
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
         if (!worldIn.isRemote && stack != null && stack.getItem() == Items.SHEARS) {
             player.addStat(StatList.getBlockStats(this), 1);
-            spawnAsEntity(worldIn, pos, new ItemStack(MoCreatures.mocLeaf, 1, 0)); // TODO - l & 3));
+            spawnAsEntity(worldIn, pos, new ItemStack(MoCreatures.mocLeaf, 1, 0));
         } else {
             super.harvestBlock(worldIn, player, pos, state, te, stack);
         }

@@ -41,7 +41,7 @@ public class MoCBlockBush extends BlockBush {
         int i = aenumtype.length;
 
         for (int j = 0; j < i; ++j) {
-            EnumType enumtype = aenumtype[j];
+        	MoCBlockBush.EnumType enumtype = aenumtype[j];
             list.add(new ItemStack(itemIn, 1, enumtype.getMetadata()));
         }
     }

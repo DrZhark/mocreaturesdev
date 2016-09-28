@@ -6,6 +6,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -67,18 +68,29 @@ public class MoCBlockTallGrass extends MoCBlockBush implements IShearable {
 
     @Override
     public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos) {
-        return false;
+        return true;
     }
 
     @Override
     public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
-        return null;
+    	return new java.util.ArrayList<ItemStack>(java.util.Arrays.asList(new ItemStack(MoCreatures.mocTallGrass)));
     }
 
     @Override
     public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state) {
         Block soil = worldIn.getBlockState(pos.down()).getBlock();
-        return soil == MoCreatures.mocGrass || soil == MoCreatures.mocDirt;
+        return soil == MoCreatures.mocGrass || soil == MoCreatures.mocDirt || soil == Blocks.GRASS 
+        		|| soil == Blocks.DIRT || soil == Blocks.FARMLAND;
     }
 
+    @Override
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
+    {
+        IBlockState soil = worldIn.getBlockState(pos.down());
+        Block tempblock = soil.getBlock();
+        if (tempblock instanceof MoCBlockDirt || tempblock instanceof MoCBlockGrass){
+        	return true;
+        }
+        return super.canPlaceBlockAt(worldIn, pos) && soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, this);
+    }
 }

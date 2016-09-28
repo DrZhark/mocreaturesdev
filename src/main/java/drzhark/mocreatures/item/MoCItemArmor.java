@@ -24,13 +24,12 @@ public class MoCItemArmor extends ItemArmor {
         GameRegistry.register(this, new ResourceLocation(MoCConstants.MOD_ID, name));
         if (!MoCreatures.isServer())
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                    .register(this, 0, new ModelResourceLocation("mocreatures:" + materialIn.getName(), "inventory"));
+                    .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
     }
 
     @Override
     public String getArmorTexture(ItemStack itemstack, Entity entity, EntityEquipmentSlot slot, String type) {
         String tempArmorTexture = "croc_1.png";
-        ;
         if ((itemstack.getItem() == MoCreatures.helmetCroc) || (itemstack.getItem() == MoCreatures.plateCroc)
                 || (itemstack.getItem() == MoCreatures.bootsCroc)) {
             tempArmorTexture = "croc_1.png";
@@ -45,7 +44,6 @@ public class MoCItemArmor extends ItemArmor {
         }
         if (itemstack.getItem() == MoCreatures.legsFur) {
             tempArmorTexture = "fur_2.png";
-            ;
         }
 
         if ((itemstack.getItem() == MoCreatures.helmetHide) || (itemstack.getItem() == MoCreatures.chestHide)

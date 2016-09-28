@@ -28,6 +28,8 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     /** RNG. */
     private final Random rand;
     protected static final IBlockState WYVERN_STONE = MoCreatures.mocStone.getDefaultState();
+    protected static final IBlockState WYVERN_DIRT = MoCreatures.mocDirt.getDefaultState();
+    protected static final IBlockState WYVERN_GRASS = MoCreatures.mocGrass.getDefaultState();
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     private NoiseGeneratorOctaves lperlinNoise1;
     private NoiseGeneratorOctaves lperlinNoise2;
@@ -150,14 +152,47 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     public void buildSurfaces(ChunkPrimer primer)
     {
         if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(this, this.chunkX, this.chunkZ, primer, this.worldObj)) return;
-        for (int i = 0; i < 16; ++i)
+        for (int i = 0; i < 16; ++i) {
+            for (int j = 0; j < 16; ++j) {
+                byte b0 = 5;
+                int k = -1;
+                
+                IBlockState iblockstateTopBlock = WYVERN_GRASS;
+                IBlockState iblockstateFillerBlock = WYVERN_DIRT;
+
+                for (int l = 127; l >= 0; --l) {
+                    IBlockState iblockstate2 = primer.getBlockState(i, l, j);
+
+                    if (iblockstate2.getMaterial() == Material.AIR)
+                    {
+                        k = -1;
+                    }else if (iblockstate2.getBlock() == WYVERN_STONE.getBlock()) 
+                    {
+                        if (k == -1) 
+                        {
+                            k = b0;
+                            if (l >= 0) 
+                            {
+                                primer.setBlockState(i, l, j, iblockstateTopBlock);
+                            } else {
+                            	primer.setBlockState(i, l, j, iblockstateFillerBlock);
+                            }
+                        } else if (k > 0) {
+                            --k;
+                            primer.setBlockState(i, l, j, iblockstateFillerBlock);
+                        }
+                    }
+                }
+            }
+        }
+        /*for (int i = 0; i < 16; ++i)
         {
             for (int j = 0; j < 16; ++j)
             {
                 int k = 1;
                 int l = -1;
-                IBlockState iblockstate = WYVERN_STONE;
-                IBlockState iblockstate1 = WYVERN_STONE;
+                IBlockState iblockstateTopBlock = WYVERN_DIRT;
+                IBlockState iblockstateFillerBlock = WYVERN_STONE;
 
                 for (int i1 = 127; i1 >= 0; --i1)
                 {
@@ -175,22 +210,22 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 
                             if (i1 >= 0)
                             {
-                                primer.setBlockState(i, i1, j, iblockstate);
+                                primer.setBlockState(i, i1, j, iblockstateTopBlock);
                             }
                             else
                             {
-                                primer.setBlockState(i, i1, j, iblockstate1);
+                                primer.setBlockState(i, i1, j, iblockstateFillerBlock);
                             }
                         }
                         else if (l > 0)
                         {
                             --l;
-                            primer.setBlockState(i, i1, j, iblockstate1);
+                            primer.setBlockState(i, i1, j, iblockstateFillerBlock);
                         }
                     }
                 }
             }
-        }
+        }*/
     }
 
     public Chunk provideChunk(int x, int z)
@@ -199,9 +234,9 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
         this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        this.buildSurfaces(chunkprimer);
         this.setBlocksInChunk(x, z, chunkprimer);
-
+        this.buildSurfaces(chunkprimer);
+        
         Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 
