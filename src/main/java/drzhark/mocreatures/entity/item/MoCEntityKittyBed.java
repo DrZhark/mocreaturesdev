@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 public class MoCEntityKittyBed extends EntityLiving {
 
     public float milklevel;
-    public String bedColor;
     private static final DataParameter<Boolean> HAS_MILK = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> HAS_FOOD = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> PICKED_UP = EntityDataManager.<Boolean>createKey(MoCEntityKittyBed.class, DataSerializers.BOOLEAN);
@@ -50,7 +49,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     public ResourceLocation getTexture() {
-        return MoCreatures.proxy.getTexture("kittybeda.png");
+        return MoCreatures.proxy.getTexture("fullkittybed.png");
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     public void setSheetColor(int i) {
     	this.dataManager.set(SHEET_COLOR, Integer.valueOf(i));
-        this.bedColor = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
+        //this.bedColor = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
     }
 
     public boolean attackEntityFrom(Entity entity, int i) {
@@ -177,7 +176,7 @@ public class MoCEntityKittyBed extends EntityLiving {
                 && (stack != null)
                 && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
                         || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
-            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[getSheetColor()], 1));
+            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[Math.abs(getSheetColor() - 15)], 1));
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
@@ -224,7 +223,6 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        nbttagcompound = MoCTools.getEntityData(this);
         setHasMilk(nbttagcompound.getBoolean("HasMilk"));
         setSheetColor(nbttagcompound.getInteger("SheetColour"));
         setHasFood(nbttagcompound.getBoolean("HasFood"));
@@ -233,7 +231,6 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        nbttagcompound = MoCTools.getEntityData(this);
         nbttagcompound.setBoolean("HasMilk", getHasMilk());
         nbttagcompound.setInteger("SheetColour", getSheetColor());
         nbttagcompound.setBoolean("HasFood", getHasFood());

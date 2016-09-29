@@ -3,6 +3,7 @@ package drzhark.mocreatures.item;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
+import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
@@ -127,6 +128,18 @@ public class MoCItemWhip extends MoCItem {
                     //makes elephants charge
                     if (entityelephant.isBeingRidden() && entityelephant.sprintCounter == 0) {
                         entityelephant.sprintCounter = 1;
+                    }
+                }
+                
+                if (entity instanceof MoCEntityBear) {
+                    MoCEntityBear entitybear = (MoCEntityBear) entity;
+
+                    if (entitybear.getIsTamed()) {
+                       if (entitybear.getBearState() == 0) {
+                               entitybear.setBearState(2);
+                           }else {
+                               entitybear.setBearState(0);
+                           }
                     }
                 }
             }

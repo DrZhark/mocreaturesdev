@@ -40,8 +40,6 @@ import java.util.List;
 
 public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEntity {
 
-    private static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityAnimal.class, DataSerializers.STRING);
-    
     public MoCEntityAmbient(World world) {
         super(world);
     }
@@ -79,10 +77,6 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(ADULT, Boolean.valueOf(false));
-        this.dataManager.register(TYPE, Integer.valueOf(0));
-        this.dataManager.register(AGE, Integer.valueOf(45));
-        this.dataManager.register(NAME_STR, "");
     }
 
     @Override
@@ -286,7 +280,7 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     public void getMyOwnPath(Entity entity, float f) {
         Path pathentity = this.getNavigator().getPathToEntityLiving(entity);
         if (pathentity != null) {
-            this.getNavigator().setPath(pathentity, 1D);//TODO is 1D adequate speed?
+            this.getNavigator().setPath(pathentity, 1D);
         }
     }
 
@@ -309,8 +303,7 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
                     }
                     float f = getDistanceToEntity(entity);
                     if ((f < 2.0F) && (this.rand.nextInt(10) == 0)) {
-                        //TODO 4FIX
-                        //attackEntityFrom(DamageSource.causeMobDamage((EntityLiving) entity),((EntityMob) entity).attackStrength);
+                        
                     }
                 }
             }
@@ -543,8 +536,6 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
                 }
             }
             if ((this.isBeingRidden()) && getIsTamed()) {
-                // TODO
-                //getEntityBoundingBox().maxY = this.getRidingEntity().getEntityBoundingBox().maxY;
                 if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir())) {
                     this.motionX += this.getRidingEntity().motionX * getCustomSpeed();
                     this.motionZ += this.getRidingEntity().motionZ * getCustomSpeed();
@@ -801,8 +792,8 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
 
         ItemStack itemstack1 = entityplayer1.inventory.getCurrentItem();
         if (itemstack1 != null && isMyFavoriteFood(itemstack1)) {
-            this.getNavigator().tryMoveToEntityLiving(entityplayer1, 1D); //TODO check if 1D is adequate
-        }
+            this.getNavigator().tryMoveToEntityLiving(entityplayer1, 1D); 
+            }
     }
 
     public boolean isOnAir() {
@@ -964,7 +955,7 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     @Override

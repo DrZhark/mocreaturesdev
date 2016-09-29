@@ -224,36 +224,7 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             return false;
         }
     }
-
-    //TODO
-    /*@Override
-    protected Entity findPlayerToAttack() {
-        if (this.roper != null && this.roper instanceof EntityPlayer) {
-            return getMastersEnemy((EntityPlayer) this.roper, 12D);
-        }
-
-        this.worldObj.getDifficulty();
-        if (this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && MoCreatures.isHuntingEnabled()) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, getAttackRange());
-            if (!getIsTamed() && (entityplayer != null) && getIsAdult() && getIsHungry()) {
-                if ((getType() == 1) || (getType() == 5) || (getType() == 7)) {
-                    setHungry(false);
-                    return entityplayer;
-                }
-                if (this.rand.nextInt(30) == 0) {
-                    setHungry(false);
-                    return entityplayer;
-                }
-            }
-            if ((this.rand.nextInt(80) == 0) && getIsHungry()) {
-                EntityLivingBase entityliving = getClosestTarget(this, getAttackRange());
-                setHungry(false);
-                return entityliving;
-            }
-        }
-        return null;
-    }*/
-
+    
     @Override
     protected SoundEvent getDeathSound() {
         openMouth();
@@ -289,24 +260,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         }
     }
 
-    /*public EntityCreature getMastersEnemy(EntityPlayer entityplayer, double d) {
-        double d1 = -1D;
-        EntityCreature entitycreature = null;
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entityplayer, getEntityBoundingBox().expand(d, 4D, d));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
-            if (!(entity instanceof EntityCreature) || (entity == this)) {
-                continue;
-            }
-            EntityCreature entitycreature1 = (EntityCreature) entity;
-            if ((entitycreature1 != null) && (entitycreature1.getAttackTarget() == entityplayer)) {
-                return entitycreature1;
-            }
-        }
-
-        return entitycreature;
-    }*/
-
     /**
      * Checks if bigcat is sitting.
      */
@@ -328,7 +281,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             }
         }
         super.onDeath(damagesource);
-
     }
 
     public void spawnGhost() {
@@ -386,6 +338,10 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
                 }
             }
 
+            if (!getIsGhost() && getEdad() <10)
+            {
+            	this.setDead();
+            }
             /*if (getHasEaten() && rand.nextInt(300) == 0)
             {
                 setEaten(false);
@@ -416,7 +372,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
             this.setHealth(getHealth() + 1);
         }
 
-        //TODO move to New AI
         if ((this.deathTime == 0) && !isMovementCeased()) {
             EntityItem entityitem = getClosestItem(this, 12D, Items.PORKCHOP, Items.FISH);
             if (entityitem != null) {
@@ -546,24 +501,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     public boolean isReadyToHunt() {
         return getIsAdult() && !this.isMovementCeased();
     }
-
-    /*@Override
-    public boolean canAttackTarget(EntityLivingBase entity) {
-        if (entity instanceof MoCEntityNewBigCat) {
-            if (!this.getIsAdult()) {
-                return false;
-            }
-
-            MoCEntityNewBigCat entitybigcat = (MoCEntityNewBigCat) entity;
-            if ((this.getIsTamed() && entitybigcat.getIsTamed()) || (entitybigcat.getType() == 7)
-                    || ((this.getType() != 2) && (this.getType() == entitybigcat.getType()))
-                    || ((this.getType() == 2) && (entitybigcat.getType() == 1))) {
-                return false;
-            }
-            return true;
-        }
-        return entity.height <= 1.5D && entity.width <= 1.5D;
-    }*/
 
     @Override
     public void updatePassenger(Entity passenger) {
@@ -817,8 +754,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         return (int) (((0.445D * this.getEdad()) + 15D) * -1);
     }
 }
-
-//TODO
 
 //would be nice
 //lying down

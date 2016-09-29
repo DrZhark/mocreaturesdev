@@ -87,13 +87,25 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
             return "Panther";
         }
+        if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
+            return "Tiger";
+        }
+        if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
+            return "Lion";
+        }
         return "Leopard";
     }
 
     @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return 3; //jaglion
+            return 3; //panthard
+        }
+        if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
+            return 4; //leoger
+        }
+        if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
+            return 4; //liard
         }
         return this.getType();
     }
@@ -101,7 +113,9 @@ public class MoCEntityLeopard extends MoCEntityNewBigCat {
     @Override
     public boolean compatibleMate(Entity mate) {
         return (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == this.getType())
-                || (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1);
+                || (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1)
+                || (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1)
+                || (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2);
     }
 
     @Override
