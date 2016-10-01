@@ -51,7 +51,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
+public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     public int mouthCounter;
     public int tailCounter;
@@ -63,13 +63,13 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     private int tCounter;
     private float fTransparency;
     private boolean hasEaten;
-    private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> HAS_AMULET = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> SITTING = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> GHOST = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> CHESTED = EntityDataManager.<Boolean>createKey(MoCEntityNewBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_AMULET = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SITTING = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> GHOST = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> CHESTED = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
 
-    public MoCEntityNewBigCat(World world) {
+    public MoCEntityBigCat(World world) {
         super(world);
         setEdad(45);
         setSize(1.4F, 1.3F);
@@ -260,14 +260,6 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
         }
     }
 
-    /**
-     * Checks if bigcat is sitting.
-     */
-    @Override
-    public boolean isMovementCeased() {
-        return getIsSitting();
-    }
-
     @Override
     public void onDeath(DamageSource damagesource) {
         if (MoCreatures.isServer()) {
@@ -286,8 +278,8 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     public void spawnGhost() {
         try {
             EntityLiving templiving = MoCTools.spawnListByNameClass(this.getClazzString(), this.worldObj);
-            if (templiving != null && templiving instanceof MoCEntityNewBigCat) {
-                MoCEntityNewBigCat ghost = (MoCEntityNewBigCat) templiving;
+            if (templiving != null && templiving instanceof MoCEntityBigCat) {
+                MoCEntityBigCat ghost = (MoCEntityBigCat) templiving;
                 ghost.setPosition(this.posX, this.posY, this.posZ);
                 this.worldObj.spawnEntityInWorld(ghost);
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_MAGIC_APPEAR);
@@ -460,8 +452,8 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
 
             this.setEaten(false);
             this.gestationtime = 0;
-            ((MoCEntityNewBigCat) mate).setEaten(false);
-            ((MoCEntityNewBigCat) mate).gestationtime = 0;
+            ((MoCEntityBigCat) mate).setEaten(false);
+            ((MoCEntityBigCat) mate).gestationtime = 0;
             break;
         }
     }
@@ -752,6 +744,11 @@ public class MoCEntityNewBigCat extends MoCEntityTameableAnimal {
     @Override
     public int nameYOffset() {
         return (int) (((0.445D * this.getEdad()) + 15D) * -1);
+    }
+    
+    @Override
+    public boolean rideableEntity() {
+        return true;
     }
 }
 

@@ -1,6 +1,6 @@
 package drzhark.mocreatures.client.model;
 
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -544,7 +544,7 @@ public class MoCModelNewBigCat extends ModelBase {
     }
 
     public void updateAnimationModifiers(Entity entity) {
-        MoCEntityNewBigCat bigcat = (MoCEntityNewBigCat) entity;
+        MoCEntityBigCat bigcat = (MoCEntityBigCat) entity;
         this.isFlyer = bigcat.isFlyer();
         this.isSaddled = bigcat.getIsRideable();
         this.flapwings = (bigcat.wingFlapCounter != 0);
@@ -565,7 +565,7 @@ public class MoCModelNewBigCat extends ModelBase {
     }
 
     public float updateGhostTransparency(Entity entity) {
-        MoCEntityNewBigCat bigcat = (MoCEntityNewBigCat) entity;
+        MoCEntityBigCat bigcat = (MoCEntityBigCat) entity;
         return bigcat.tFloat();
     }
 

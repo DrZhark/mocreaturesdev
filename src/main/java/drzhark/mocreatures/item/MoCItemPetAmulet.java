@@ -7,7 +7,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.util.MoCLog;
@@ -127,8 +127,8 @@ public class MoCItemPetAmulet extends MoCItem {
                     ((EntityLiving) storedCreature).setHealth(this.health);
                     storedCreature.setEdad(this.edad);
                     storedCreature.setAdult(this.adult);
-                    if (storedCreature instanceof MoCEntityNewBigCat) {
-                        ((MoCEntityNewBigCat) storedCreature).setHasAmulet(true);
+                    if (storedCreature instanceof MoCEntityBigCat) {
+                        ((MoCEntityBigCat) storedCreature).setHasAmulet(true);
                     }
                     // special case for kitty
                     if (this.spawnClass.equalsIgnoreCase("Kitty")) {

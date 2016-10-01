@@ -10,7 +10,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -256,7 +256,7 @@ public class MoCTools {
                 myClass = MoCEntityManticorePet.class;
             } else if (entityData == null && eName.contains("BigCat")) // since we don't add this to our map, we need to check for it manually
             {
-                myClass = MoCEntityNewBigCat.class;
+                myClass = MoCEntityBigCat.class;
             } else {
                 myClass = entityData.getEntityClass();
             }

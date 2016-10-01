@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityManticorePet extends MoCEntityNewBigCat {
+public class MoCEntityManticorePet extends MoCEntityBigCat {
 
     public MoCEntityManticorePet(World world) {
         super(world);

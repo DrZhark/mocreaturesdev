@@ -18,7 +18,7 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityLeopard extends MoCEntityNewBigCat {
+public class MoCEntityLeopard extends MoCEntityBigCat {
 
     public MoCEntityLeopard(World world) {
         super(world);

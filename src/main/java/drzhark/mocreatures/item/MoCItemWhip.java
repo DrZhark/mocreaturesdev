@@ -7,7 +7,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityNewBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
@@ -66,8 +66,8 @@ public class MoCItemWhip extends MoCItem {
                     }
                 }
 
-                if (entity instanceof MoCEntityNewBigCat) {
-                    MoCEntityNewBigCat entitybigcat = (MoCEntityNewBigCat) entity;
+                if (entity instanceof MoCEntityBigCat) {
+                    MoCEntityBigCat entitybigcat = (MoCEntityBigCat) entity;
                     if (entitybigcat.getIsTamed()) {
                         entitybigcat.setSitting(!entitybigcat.getIsSitting());
                         i1++;

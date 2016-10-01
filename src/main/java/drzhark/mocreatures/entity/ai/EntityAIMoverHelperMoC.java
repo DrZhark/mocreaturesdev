@@ -56,7 +56,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             //System.out.println("distance to objective = " + d3 + "objective: X = " + this.posX + ", Y = " + this.posY + ", Z = " + this.posZ);
             d1 /= d3;
             float f = (float) (Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-            this.theCreature.rotationYaw = this.limitAngle(this.theCreature.rotationYaw, f, 30.0F);
+            //this.theCreature.rotationYaw = this.limitAngle(this.theCreature.rotationYaw, f, 30.0F);
             this.theCreature.renderYawOffset = this.theCreature.rotationYaw;
             float f1 = (float) (this.speed * this.theCreature.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
             this.theCreature.setAIMoveSpeed(this.theCreature.getAIMoveSpeed() + (f1 - this.theCreature.getAIMoveSpeed()) * 0.125F);

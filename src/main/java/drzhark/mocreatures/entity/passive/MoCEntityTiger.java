@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityTiger extends MoCEntityNewBigCat {
+public class MoCEntityTiger extends MoCEntityBigCat {
 
     public MoCEntityTiger(World world) {
         super(world);

@@ -3,6 +3,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
 import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
+import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -22,6 +23,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,6 +45,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity {
 
@@ -276,7 +281,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return entityliving;
     }
 
-    //TODO
     public boolean entitiesToIgnore(Entity entity) {
         return ((!(entity instanceof EntityLiving)) || (entity instanceof EntityMob) || (entity instanceof EntityPlayer)
                 || (entity instanceof MoCEntityKittyBed) || (entity instanceof MoCEntityLitterBox)
@@ -321,10 +325,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 Riding();
             }
 
-            /*if (forceUpdates() && this.rand.nextInt(500) == 0) {
-                MoCTools.forceDataSync(this);
-            }*/
-
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
             }
@@ -355,7 +355,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
         }
 
-        this.resetInLove(); //TODO Test!
+        this.resetInLove(); 
         super.onLivingUpdate();
     }
 
@@ -668,9 +668,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      */
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
-        if (this.isServerWorld()) {
-            if (this.isBeingRidden() && this.getRidingEntity() instanceof EntityLivingBase) {
-                this.moveEntityWithRider(strafe, forward); //riding movement
+
+            if (this.isBeingRidden() && !(this instanceof MoCEntityAnt)) {
+            	EntityLivingBase passenger = (EntityLivingBase)this.getControllingPassenger();
+            	if (passenger != null)this.moveEntityWithRider(strafe, forward, passenger); //riding movement
                 return;
             }
             if ((this.isAmphibian() && isInWater()) || (this.isFlyer() && getIsFlying())) { //amphibian in water movement
@@ -686,10 +687,68 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             {
                 super.moveEntityWithHeading(strafe, forward);
             }
-        } else {
-            super.moveEntityWithHeading(strafe, forward);
-        }
+        
     }
+    
+    /**
+     * Moves the entity based on the specified heading.
+     */
+    public void moveEntityWithHeadingOriginal(float strafe, float forward)
+    {
+        if (this.isBeingRidden())//&& this.isHorseSaddled())
+        {
+            EntityLivingBase entitylivingbase = (EntityLivingBase)this.getControllingPassenger();
+            this.rotationYaw = entitylivingbase.rotationYaw;
+            this.prevRotationYaw = this.rotationYaw;
+            this.rotationPitch = entitylivingbase.rotationPitch * 0.5F;
+            this.setRotation(this.rotationYaw, this.rotationPitch);
+            this.renderYawOffset = this.rotationYaw;
+            this.rotationYawHead = this.renderYawOffset;
+            strafe = entitylivingbase.moveStrafing * 0.5F;
+            forward = entitylivingbase.moveForward;
+
+            if (forward <= 0.0F)
+            {
+                forward *= 0.25F;
+                //this.gallopTime = 0;
+            }
+
+            
+            this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
+
+            
+                this.setAIMoveSpeed((float)this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
+            super.moveEntityWithHeading(strafe, forward);
+            
+            /*else if (entitylivingbase instanceof EntityPlayer)
+            {
+                this.motionX = 0.0D;
+                this.motionY = 0.0D;
+                this.motionZ = 0.0D;
+            }*/
+
+            
+
+            this.prevLimbSwingAmount = this.limbSwingAmount;
+            double d1 = this.posX - this.prevPosX;
+            double d0 = this.posZ - this.prevPosZ;
+            float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
+
+            if (f2 > 1.0F)
+            {
+                f2 = 1.0F;
+            }
+
+            this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
+            this.limbSwing += this.limbSwingAmount;
+        }
+        else
+        {
+            this.jumpMovementFactor = 0.02F;
+            super.moveEntityWithHeading(strafe, forward);
+    }
+    }
+
 
     public void moveEntityWithHeadingBypassRider(float strafe, float forward) {
         super.moveEntityWithHeading(strafe, forward);
@@ -699,23 +758,25 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      ** Riding Code
      * @param strafe
      * @param forward
+     * @param passenger 
      */
-    public void moveEntityWithRider(float strafe, float forward) {
-        if (this.isBeingRidden() && !getIsTamed() && this.getRidingEntity() instanceof EntityLivingBase) {
+    public void moveEntityWithRider(float strafe, float forward, EntityLivingBase passenger) {
+        if (this.isBeingRidden() && !getIsTamed()) {
             this.moveEntityWithRiderUntamed(strafe, forward);
             return;
         }
-
         boolean flySelfPropelled = selfPropelledFlyer() && isOnAir(); //like the black ostrich
         boolean flyingMount = isFlyer() && (this.isBeingRidden()) && getIsTamed() && !this.onGround && isOnAir();
-        this.prevRotationYaw = this.rotationYaw = this.getRidingEntity().rotationYaw;
-        this.rotationPitch = this.getRidingEntity().rotationPitch * 0.5F;
-        this.setRotation(this.rotationYaw, this.rotationPitch);
-        this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
 
+        this.rotationYaw = passenger.rotationYaw;
+        this.prevRotationYaw = this.rotationYaw;
+        this.rotationPitch = passenger.rotationPitch * 0.5F;
+        this.setRotation(this.rotationYaw, this.rotationPitch);
+        this.renderYawOffset = this.rotationYaw;
+        this.rotationYawHead = this.renderYawOffset;
         if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir())) {
-            strafe = (float) (((EntityLivingBase) this.getRidingEntity()).moveStrafing * 0.5F * this.getCustomSpeed());
-            forward = (float) (((EntityLivingBase) this.getRidingEntity()).moveForward * this.getCustomSpeed());
+            strafe = (float) (passenger.moveStrafing * 0.5F * this.getCustomSpeed());
+            forward = (float) (passenger.moveForward * this.getCustomSpeed());
         }
 
         if (this.jumpPending && (isFlyer())) {
@@ -739,8 +800,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             this.divePending = false;
             this.motionY -= 0.3D;
         }
-
-        if (MoCreatures.isServer()) {
             if (flyingMount) {
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 this.moveRelative(strafe, forward, this.flyerFriction() / 10F);
@@ -751,15 +810,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             } else {
                 this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
                 super.moveEntityWithHeading(strafe, forward);
-            }
-        }
 
+        }
         if (this.onGround) {
             setIsJumping(false);
             this.divePending = false;
             this.jumpPending = false;
         }
-
     }
 
     public void moveEntityWithRiderUntamed(float strafe, float forward) {
@@ -909,134 +966,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return -80;
     }
 
-    /**
-    * adds a following behavior to animals with a rope
-    */
-    /*@Override
-    protected void updateEntityActionState() {
-        if (getIsTamed() && (!this.isBeingRidden()) && (this.roper != null)) {
-            float f = this.roper.getDistanceToEntity(this);
-            if (f > 3F) {
-                getPathOrWalkableBlock(this.roper, f);
-            }
-        }
-
-        if (!isFlyingAlone()) {
-            super.updateEntityActionState();
-            return;
-        }
-
-        hasAttacked = false;
-        float f = 16F;
-        if (this.entityLivingToAttack == null) {
-            this.entityLivingToAttack = findPlayerToAttack();
-            if (this.entityLivingToAttack != null) {
-                this.entitypath = this.worldObj.getPathEntityToEntity(this, this.entityLivingToAttack, f, true, false, false, true);
-            }
-        }
-        // prevent tamed animals attacking other tamed animals
-        else if (!this.entityLivingToAttack.isEntityAlive() || MoCTools.isTamed(this.entityLivingToAttack) || !MoCreatures.proxy.enableHunters) //((entityLivingToAttack instanceof IMoCTameable) && ((IMoCTameable)entityLivingToAttack).getIsTamed() && this.getIsTamed()))
-        {
-            this.entityLivingToAttack = null;
-        } else {
-            float f1 = this.entityLivingToAttack.getDistanceToEntity(this);
-            if (canEntityBeSeen(this.entityLivingToAttack)) {
-                attackEntity(this.entityLivingToAttack, f1);
-            }
-        }
-        if (!hasAttacked && (this.entityLivingToAttack != null) && ((this.entitypath == null) || (this.rand.nextInt(10) == 0))) {
-            // entitypath = worldObj.getPathToEntity(this, entityLivingToAttack, f);
-            this.entitypath = this.worldObj.getPathEntityToEntity(this, this.entityLivingToAttack, f, true, false, false, true);
-        } else if (((this.entitypath == null) && (this.rand.nextInt(80) == 0)) || (this.rand.nextInt(80) == 0)) {
-            boolean flag = false;
-            int j = -1;
-            int k = -1;
-            int l = -1;
-            float f2 = -99999F;
-            for (int i1 = 0; i1 < 10; i1++) {
-                int j1 = MathHelper.floor_double((this.posX + this.rand.nextInt(13)) - 6D);
-                int k1 = MathHelper.floor_double((this.posY + this.rand.nextInt(7)) - 3D);
-                int l1 = MathHelper.floor_double((this.posZ + this.rand.nextInt(13)) - 6D);
-                float f3 = getBlockPathWeight(j1, k1, l1);
-                if (f3 > f2) {
-                    f2 = f3;
-                    j = j1;
-                    k = k1;
-                    l = l1;
-                    flag = true;
-                }
-            }
-
-            if (flag) {
-                this.entitypath = this.worldObj.getEntityPathToXYZ(this, j, k, l, 10F, true, false, false, true);
-            }
-        }
-        int i = MathHelper.floor_double(getEntityBoundingBox().minY);
-        boolean flag1 = handleWaterMovement();
-        boolean flag2 = handleLavaMovement();
-        this.rotationPitch = 0.0F;
-        if ((this.entitypath == null) || (this.rand.nextInt(100) == 0)) {
-            super.updateEntityActionState();
-            this.entitypath = null;
-            return;
-        }
-        Vec3 vec3d = this.entitypath.getPosition(this); //client
-
-        //Vec3D vec3d = entitypath.getPosition(this); //server
-        for (double d = this.width * 2.0F; (vec3d != null) && (vec3d.squareDistanceTo(this.posX, vec3d.yCoord, this.posZ) < (d * d));) {
-            this.entitypath.incrementPathIndex();
-            if (this.entitypath.isFinished()) {
-                vec3d = null;
-                this.entitypath = null;
-            } else {
-                //vec3d = entitypath.getPosition(this); //server
-                //TODO 4FIX test!
-                vec3d = this.entitypath.getPosition(this);
-            }
-        }
-
-        this.isJumping = false;
-        if (vec3d != null) {
-            double d1 = vec3d.xCoord - this.posX;
-            double d2 = vec3d.zCoord - this.posZ;
-            double d3 = vec3d.yCoord - i;
-            float f4 = (float) ((Math.atan2(d2, d1) * 180D) / 3.1415927410125728D) - 90F;
-            float f5 = f4 - this.rotationYaw;
-            this.moveForward = (float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue();
-            for (; f5 < -180F; f5 += 360F) {
-            }
-            for (; f5 >= 180F; f5 -= 360F) {
-            }
-            if (f5 > 30F) {
-                f5 = 30F;
-            }
-            if (f5 < -30F) {
-                f5 = -30F;
-            }
-            this.rotationYaw += f5;
-            if (hasAttacked && (this.entityLivingToAttack != null)) {
-                double d4 = entityLivingToAttack.posX - this.posX;
-                double d5 = entityLivingToAttack.posZ - this.posZ;
-                float f6 = this.rotationYaw;
-                this.rotationYaw = (float) ((Math.atan2(d5, d4) * 180D) / 3.1415927410125728D) - 90F;
-                float f7 = (((f6 - this.rotationYaw) + 90F) * 3.141593F) / 180F;
-                this.moveStrafing = -MathHelper.sin(f7) * this.moveForward * 1.0F;
-                this.moveForward = MathHelper.cos(f7) * this.moveForward * 1.0F;
-            }
-            if (d3 > 0.0D) {
-                this.isJumping = true;
-            }
-        }
-        if (this.entityLivingToAttack != null) {
-            faceEntity(this.entityLivingToAttack, 30F, 30F);
-        }
-        if (this.isCollidedHorizontally) {
-            this.isJumping = true;
-        }
-        if ((this.rand.nextFloat() < 0.8F) && (flag1 || flag2)) {
-            this.isJumping = true;
-        }
-    }*/
 
     /**
      * fixes bug with entities following a player carrying wheat
@@ -1107,7 +1036,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return false;
     }
 
-    //TODO MOVE TO NEW AI
     @SuppressWarnings("unused")
     private void followPlayer() {
         EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 24D);
@@ -1117,7 +1045,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
         ItemStack itemstack1 = entityplayer1.inventory.getCurrentItem();
         if (itemstack1 != null && isMyFavoriteFood(itemstack1)) {
-            this.getNavigator().tryMoveToEntityLiving(entityplayer1, 1D); //TODO check if 1D is adequate
+            this.getNavigator().tryMoveToEntityLiving(entityplayer1, 1D); 
         }
     }
 
@@ -1302,7 +1230,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean shouldAttackPlayers() {
-        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); 
     }
 
     @Override
@@ -1402,5 +1330,15 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         } else {
             return false;
         }
+    }
+    
+    /**
+     * For vehicles, the first passenger is generally considered the controller and "drives" the vehicle. For example,
+     * Pigs, Horses, and Boats are generally "steered" by the controlling passenger.
+     */
+    @Nullable
+    public Entity getControllingPassenger()
+    {
+        return this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
     }
 }
