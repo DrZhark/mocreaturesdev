@@ -1,5 +1,8 @@
 package drzhark.mocreatures.client.model;
 
+import org.lwjgl.opengl.GL11;
+
+import drzhark.mocreatures.entity.aquatic.MoCEntityMediumFish;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -111,6 +114,12 @@ public class MoCModelMediumFish extends ModelBase {
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         setRotationAngles(f, f1, f2, f3, f4, f5);
+        MoCEntityMediumFish mediumFish = (MoCEntityMediumFish)entity;
+        float yOffset = mediumFish.getAdjustedYOffset();
+        float xOffset = mediumFish.getAdjustedXOffset();
+        float zOffset = mediumFish.getAdjustedZOffset();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(xOffset, yOffset, zOffset);
         this.Head.render(f5);
         this.LowerHead.render(f5);
         this.Nose.render(f5);
@@ -127,6 +136,7 @@ public class MoCModelMediumFish extends ModelBase {
         this.LowerFin.render(f5);
         this.RightLowerFin.render(f5);
         this.LeftLowerFin.render(f5);
+        GL11.glPopMatrix();
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {

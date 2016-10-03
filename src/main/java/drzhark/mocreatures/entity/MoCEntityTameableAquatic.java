@@ -72,6 +72,11 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         this.dataManager.set(TAMED, flag);
     }
 
+    @Override
+    public boolean getIsTamed() {
+        return this.dataManager.get(TAMED).booleanValue();
+    }
+    
     @Nullable
     public EntityLivingBase getOwner() {
         try

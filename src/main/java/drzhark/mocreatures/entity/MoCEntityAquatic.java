@@ -46,7 +46,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     protected boolean divePending;
     protected boolean jumpPending;
     protected boolean isEntityJumping;
-    private int outOfWater;
+    protected int outOfWater;
     private boolean diving;
     private int divingCount;
     private int mountCount;
@@ -421,7 +421,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 this.updateDivingDepth = false;
             }
 
-            if (isMovementCeased()) {
+            if (isMovementCeased() || rand.nextInt(200) == 0) {
                 this.getNavigator().clearPathEntity();
             }
 
@@ -461,42 +461,25 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             }
         }
 
-        // TODO
-        /*
-        if (isNotScared() && fleeingTick > 0) {
-            fleeingTick = 0;
-        }*/
-
         this.moveSpeed = getMoveSpeed();
 
         if (isSwimming()) {
             //floating();
             this.outOfWater = 0;
-            this.setAir(300);
+            this.setAir(800);
         } else {
-            if (this.isBeingRidden()) {
-                if (this.getRidingEntity().isSneaking()) {
-                    this.getRidingEntity().dismountRidingEntity();
-                }
-            }
-
             this.outOfWater++;
-            if (this.outOfWater > 10) {
+            this.motionY -= 0.1D;
+            if (this.outOfWater > 20) {
                 this.getNavigator().clearPathEntity();
             }
-            if (this.outOfWater > 100 && (this.outOfWater % 20) == 0) {
+            if (this.outOfWater > 300 && (this.outOfWater % 40) == 0) {
                 this.motionY += 0.3D;
                 this.motionX = (float) (Math.random() * 0.2D - 0.1D);
                 this.motionZ = (float) (Math.random() * 0.2D - 0.1D);
                 attackEntityFrom(DamageSource.drown, 1);
             }
         }
-
-        // TODO
-        /*if (!hasPath() && !this.isBeingRidden() && !isMovementCeased() && getAttackTarget() == null) {
-            updateWanderPath();
-        }*/
-
         if (!this.diving) {
             if (!this.isBeingRidden() && getAttackTarget() == null && !this.navigator.noPath() && this.rand.nextInt(500) == 0) {
                 this.diving = true;
@@ -782,7 +765,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
     @Override
     public boolean shouldAttackPlayers() {
-        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     /**
@@ -790,13 +773,12 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
      */
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
-        if (this.isServerWorld()) {
             if (this.isInWater()) {
-                if (this.getRidingEntity() instanceof EntityLivingBase) {
-                    this.moveEntityWithRider(strafe, forward);
+                if (this.isBeingRidden()) {
+                	EntityLivingBase passenger = (EntityLivingBase)this.getControllingPassenger();
+                	if (passenger != null)this.moveEntityWithRider(strafe, forward, passenger); //riding movement
                     return;
                 }
-
                 this.moveRelative(strafe, forward, 0.1F);
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 this.motionX *= 0.8999999761581421D;
@@ -809,10 +791,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             } else {
                 super.moveEntityWithHeading(strafe, forward);
             }
-        } else {
-            super.moveEntityWithHeading(strafe, forward);
-        }
-
     }
 
     /**
@@ -820,53 +798,50 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
      * @param strafe
      * @param forward
      */
-    public void moveEntityWithRider(float strafe, float forward) {
-        //Buckles rider if out of water
-        if ((this.isBeingRidden()) && !getIsTamed() && !isSwimming()) {
-            this.getRidingEntity().dismountRidingEntity();
-            return;
-        }
-
-        if (this.isBeingRidden() && !getIsTamed() && this.getRidingEntity() instanceof EntityLivingBase) {
-            this.moveEntityWithRiderUntamed(strafe, forward);
-            return;
-        }
-
-        if ((this.isBeingRidden()) && getIsTamed() && this.getRidingEntity() instanceof EntityLivingBase)// && isSwimming())
+    public void moveEntityWithRider(float strafe, float forward, EntityLivingBase passenger) {
+    	if (passenger == null)
         {
-            this.prevRotationYaw = this.rotationYaw = this.getRidingEntity().rotationYaw;
-            this.rotationPitch = this.getRidingEntity().rotationPitch * 0.5F;
+        	return;
+        }
+        //Buckles rider if out of water
+        if (this.isBeingRidden() && !getIsTamed() && !isSwimming()) {
+            this.removePassengers();
+            return;
+        }
+
+        if (this.isBeingRidden() && !getIsTamed() && passenger instanceof EntityLivingBase) {
+        	this.moveEntityWithRiderUntamed(strafe, forward, passenger);
+            return;
+        }
+
+        if ((this.isBeingRidden()) && getIsTamed() && passenger instanceof EntityLivingBase) {   	
+            this.prevRotationYaw = this.rotationYaw = passenger.rotationYaw;
+            this.rotationPitch = passenger.rotationPitch * 0.5F;
             this.setRotation(this.rotationYaw, this.rotationPitch);
             this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-            strafe = ((EntityLivingBase) this.getRidingEntity()).moveStrafing * 0.35F;
-            forward = ((EntityLivingBase) this.getRidingEntity()).moveForward * (float) (this.getCustomSpeed() / 5D);
-
+            strafe = passenger.moveStrafing * 0.35F;
+            forward = passenger.moveForward * (float) (this.getCustomSpeed() / 5D);
             if (this.jumpPending) {
                 if (this.isSwimming()) {
                     this.motionY += getCustomJump();
                 }
                 this.jumpPending = false;
             }
-
             //So it doesn't sink on its own
             if (this.motionY < 0D && isSwimming()) {
                 this.motionY = 0D;
             }
-
             if (this.divePending) {
                 this.divePending = false;
                 this.motionY -= 0.3D;
             }
-
-            if (MoCreatures.isServer()) {
                 this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
                 super.moveEntityWithHeading(strafe, forward);
                 this.moveRelative(strafe, forward, 0.1F);
             }
         }
-    }
 
-    public void moveEntityWithRiderUntamed(float strafe, float forward) {
+    public void moveEntityWithRiderUntamed(float strafe, float forward, EntityLivingBase passenger) {
         //Riding behaviour if untamed
         if ((this.isBeingRidden()) && !getIsTamed()) {
             if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
@@ -882,9 +857,9 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 moveEntity(this.motionX, this.motionY, this.motionZ);
             }
             if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-                this.getRidingEntity().motionY += 0.9D;
-                this.getRidingEntity().motionZ -= 0.3D;
-                this.getRidingEntity().dismountRidingEntity();
+            	passenger.motionY += 0.9D;
+            	passenger.motionZ -= 0.3D;
+            	passenger.dismountRidingEntity();
             }
             if (this.onGround) {
                 setIsJumping(false);
@@ -1079,5 +1054,15 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         } else {
             return false;
         }
+    }
+    
+    /**
+     * For vehicles, the first passenger is generally considered the controller and "drives" the vehicle. For example,
+     * Pigs, Horses, and Boats are generally "steered" by the controlling passenger.
+     */
+    @Nullable
+    public Entity getControllingPassenger()
+    {
+        return this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
     }
 }

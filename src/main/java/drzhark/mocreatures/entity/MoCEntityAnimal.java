@@ -690,66 +690,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         
     }
     
-    /**
-     * Moves the entity based on the specified heading.
-     */
-    public void moveEntityWithHeadingOriginal(float strafe, float forward)
-    {
-        if (this.isBeingRidden())//&& this.isHorseSaddled())
-        {
-            EntityLivingBase entitylivingbase = (EntityLivingBase)this.getControllingPassenger();
-            this.rotationYaw = entitylivingbase.rotationYaw;
-            this.prevRotationYaw = this.rotationYaw;
-            this.rotationPitch = entitylivingbase.rotationPitch * 0.5F;
-            this.setRotation(this.rotationYaw, this.rotationPitch);
-            this.renderYawOffset = this.rotationYaw;
-            this.rotationYawHead = this.renderYawOffset;
-            strafe = entitylivingbase.moveStrafing * 0.5F;
-            forward = entitylivingbase.moveForward;
-
-            if (forward <= 0.0F)
-            {
-                forward *= 0.25F;
-                //this.gallopTime = 0;
-            }
-
-            
-            this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-
-            
-                this.setAIMoveSpeed((float)this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
-            super.moveEntityWithHeading(strafe, forward);
-            
-            /*else if (entitylivingbase instanceof EntityPlayer)
-            {
-                this.motionX = 0.0D;
-                this.motionY = 0.0D;
-                this.motionZ = 0.0D;
-            }*/
-
-            
-
-            this.prevLimbSwingAmount = this.limbSwingAmount;
-            double d1 = this.posX - this.prevPosX;
-            double d0 = this.posZ - this.prevPosZ;
-            float f2 = MathHelper.sqrt_double(d1 * d1 + d0 * d0) * 4.0F;
-
-            if (f2 > 1.0F)
-            {
-                f2 = 1.0F;
-            }
-
-            this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
-            this.limbSwing += this.limbSwingAmount;
-        }
-        else
-        {
-            this.jumpMovementFactor = 0.02F;
-            super.moveEntityWithHeading(strafe, forward);
-    }
-    }
-
-
     public void moveEntityWithHeadingBypassRider(float strafe, float forward) {
         super.moveEntityWithHeading(strafe, forward);
     }
@@ -761,13 +701,16 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * @param passenger 
      */
     public void moveEntityWithRider(float strafe, float forward, EntityLivingBase passenger) {
+    	if (passenger == null)
+        {
+        	return;
+        }
         if (this.isBeingRidden() && !getIsTamed()) {
-            this.moveEntityWithRiderUntamed(strafe, forward);
+            this.moveEntityWithRiderUntamed(strafe, forward, passenger);
             return;
         }
         boolean flySelfPropelled = selfPropelledFlyer() && isOnAir(); //like the black ostrich
         boolean flyingMount = isFlyer() && (this.isBeingRidden()) && getIsTamed() && !this.onGround && isOnAir();
-
         this.rotationYaw = passenger.rotationYaw;
         this.prevRotationYaw = this.rotationYaw;
         this.rotationPitch = passenger.rotationPitch * 0.5F;
@@ -819,7 +762,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         }
     }
 
-    public void moveEntityWithRiderUntamed(float strafe, float forward) {
+    public void moveEntityWithRiderUntamed(float strafe, float forward, EntityLivingBase passenger) {
         //Riding behaviour if untamed
         if ((this.isBeingRidden()) && !getIsTamed()) {
             if ((this.rand.nextInt(5) == 0) && !getIsJumping() && this.jumpPending) {
@@ -835,9 +778,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 moveEntity(this.motionX, this.motionY, this.motionZ);
             }
             if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-                this.getRidingEntity().motionY += 0.9D;
-                this.getRidingEntity().motionZ -= 0.3D;
-                this.getRidingEntity().dismountRidingEntity();
+            	passenger.motionY += 0.9D;
+            	passenger.motionZ -= 0.3D;
+            	passenger.dismountRidingEntity();
             }
             if (this.onGround) {
                 setIsJumping(false);
@@ -1230,7 +1173,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean shouldAttackPlayers() {
-        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); 
+        return !getIsTamed() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     @Override

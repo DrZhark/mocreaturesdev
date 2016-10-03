@@ -1621,7 +1621,7 @@ public class MoCTools {
     public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater) {
         EntityPlayer entityplayertarget = poisoner.worldObj.getClosestPlayerToEntity(poisoner, 2D);
         if (entityplayertarget != null && ((needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater)
-                && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F) {
+                && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F && !entityplayertarget.capabilities.disableDamage) {
             if (entityplayertarget.getRidingEntity() != null && entityplayertarget.getRidingEntity() instanceof EntityBoat) {
                 //don't poison players on boats
             } else {

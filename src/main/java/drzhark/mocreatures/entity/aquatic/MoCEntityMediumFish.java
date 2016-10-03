@@ -101,9 +101,9 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     @Override
     public float getAdjustedYOffset() {
         if (!this.isInsideOfMaterial(Material.WATER)) {
-            return -0.1F;
+            return 1F;
         }
-        return 0.7F;
+        return 0.5F;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     @Override
     public float rollRotationOffset() {
-        if (!isInWater()) {
+        if (!isInWater() && this.onGround) {
             return -90F;
         }
         return 0F;
@@ -135,13 +135,16 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedZOffset() {
+    	if (!isInWater()) {
+            return 0.2F;
+        }
         return 0F;
     }
 
     @Override
     public float getAdjustedXOffset() {
         if (!isInWater()) {
-            return -0.8F;
+            return 0F;
         }
         return 0F;
     }

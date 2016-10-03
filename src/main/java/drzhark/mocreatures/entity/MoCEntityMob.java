@@ -555,7 +555,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;// && this.worldObj.getWorldInfo().isCreative(); //TODO also creative
+        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     @Override

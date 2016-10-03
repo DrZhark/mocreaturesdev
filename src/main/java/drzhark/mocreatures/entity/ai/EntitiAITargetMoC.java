@@ -87,7 +87,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
                 if (target == ((IEntityOwnable) attacker).getOwner()) {
                     return false;
                 }
-            } else if (target instanceof EntityPlayer && !includeInvincibles && ((EntityPlayer) target).capabilities.disableDamage) {
+            } else if (target instanceof EntityPlayer && includeInvincibles && ((EntityPlayer) target).capabilities.disableDamage) {
                 return false;
             }
 
