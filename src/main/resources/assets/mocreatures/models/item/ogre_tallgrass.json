@@ -1,7 +1,7 @@
 {
     "parent": "mocreatures:block/ogre_tallgrass",
     "display": {
-        "thirdperson": {
+        "third_person": {
             "rotation": [
                 10,
                 -45,

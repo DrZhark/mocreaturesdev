@@ -1,7 +1,7 @@
 {
     "parent": "mocreatures:block/ogre_stone",
     "display": {
-        "thirdperson": {
+        "third_person": {
             "rotation": [
                 10,
                 -45,

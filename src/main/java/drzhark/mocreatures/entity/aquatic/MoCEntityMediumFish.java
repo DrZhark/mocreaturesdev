@@ -143,9 +143,6 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedXOffset() {
-        if (!isInWater()) {
-            return 0F;
-        }
         return 0F;
     }
 

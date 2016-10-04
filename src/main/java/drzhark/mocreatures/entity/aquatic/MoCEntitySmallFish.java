@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
@@ -123,7 +124,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     @Override
     public float getAdjustedYOffset() {
         if (!this.isInWater()) {
-            return -0.1F;
+            return 0.5F;
         }
         return 0.3F;
     }
@@ -157,9 +158,6 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedXOffset() {
-        if (!this.isInWater()) {
-            return -0.6F;
-        }
         return 0F;
     }
 
@@ -196,5 +194,13 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     @Override
     public boolean isNotScared() {
         return getIsTamed();
+    }
+    
+    @Override
+    public float getAdjustedZOffset() {
+    	if (!isInWater()) {
+            return 0.1F;
+        }
+        return 0F;
     }
 }

@@ -22,7 +22,7 @@ public class MoCKeyHandler {
     private ModSettingScreen localScreen;
     //static KeyBinding jumpBinding = new KeyBinding("jumpBind", Keyboard.KEY_F);
     //static KeyBinding jumpBinding = new KeyBinding("MoCreatures Jump", MoCClientProxy.mc.gameSettings.keyBindJump.getKeyCode(), "key.categories.movement");
-    static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_F, "key.categories.movement");
+    static KeyBinding diveBinding = new KeyBinding("MoCreatures Dive", Keyboard.KEY_Z, "key.categories.movement");
     static KeyBinding guiBinding = new KeyBinding("MoCreatures GUI", Keyboard.KEY_F8, "key.categories.misc");
 
     //static KeyBinding dismountBinding = new KeyBinding("MoCreatures Dismount", Keyboard.KEY_F);

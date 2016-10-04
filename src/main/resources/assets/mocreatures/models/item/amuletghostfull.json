@@ -1,11 +1,11 @@
 {
-    "parent": "builtin/generated",
+    "parent": "item/generated",
     "textures": {
         "layer1": "mocreatures:items/amuletghostfull",
         "layer0": "mocreatures:items/amuletghostfull"
     },
     "display": {
-        "thirdperson": {
+        "third_person": {
             "rotation": [
                 -90,
                 0,
@@ -22,7 +22,7 @@
                 0.55
             ]
         },
-        "firstperson": {
+        "first_person": {
             "rotation": [
                 0,
                 -135,

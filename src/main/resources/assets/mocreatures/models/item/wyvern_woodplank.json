@@ -1,7 +1,7 @@
 {
     "parent": "mocreatures:block/wyvern_woodplank",
     "display": {
-        "thirdperson": {
+        "third_person": {
             "rotation": [
                 10,
                 -45,
