@@ -55,13 +55,17 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
             }
         }
 
-        Vec3d vec3 = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);
+        Vec3d vec3 = RandomPositionGeneratorMoCFlyer.findRandomTarget(this.entity, 10, 12);
 
         if (vec3 != null && this.entity instanceof IMoCEntity && this.entity.getNavigator() instanceof PathNavigateFlyer) {
             int distToFloor = MoCTools.distanceToFloor(this.entity);
             int finalYHeight = distToFloor + MathHelper.floor_double(vec3.yCoord - this.entity.posY);
-            if ((finalYHeight > ((IMoCEntity) this.entity).maxFlyingHeight()) || (finalYHeight < ((IMoCEntity) this.entity).minFlyingHeight())) {
-                //System.out.println("vector height bigger than max flying height");
+            if ((finalYHeight < ((IMoCEntity) this.entity).minFlyingHeight())) {
+                //System.out.println("vector height " + finalYHeight + " smaller than min flying height " + ((IMoCEntity) this.entity).minFlyingHeight());
+                return false;
+            }
+            if ((finalYHeight > ((IMoCEntity) this.entity).maxFlyingHeight())){
+                //System.out.println("vector height " + finalYHeight + " bigger than max flying height " + ((IMoCEntity) this.entity).maxFlyingHeight());
                 return false;
             }
 
