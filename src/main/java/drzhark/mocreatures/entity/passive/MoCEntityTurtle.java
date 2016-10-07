@@ -136,19 +136,8 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                 return true;
             }
             if (this.getRidingEntity() == null) {
-                this.rotationYaw = player.rotationYaw;
-                // TODO change sound
-                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-                if (MoCreatures.isServer()) {
                     this.startRiding(player);
-                }
-            } else {
-                if (MoCreatures.isServer()) {
-                    this.dismountEntity();
-                }
-                this.motionX = player.motionX * 5D;
-                this.motionY = (player.motionY / 2D) + 0.2D;
-                this.motionZ = player.motionZ * 5D;
+                this.rotationYaw = player.rotationYaw;
             }
             return true;
         }
@@ -439,5 +428,11 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     @Override
     public int getMaxEdad() {
         return 120;
+    }
+    
+    @Override
+    public boolean canRidePlayer()
+    {
+    	return true;
     }
 }

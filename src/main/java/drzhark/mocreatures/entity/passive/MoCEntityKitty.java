@@ -569,24 +569,17 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
         if ((stack != null) && (getKittyState() > 2) && pickable() && (stack.getItem() == Items.LEAD)) {
             changeKittyState(14);
-            if (MoCreatures.isServer()) {
                 this.startRiding(player);
-            }
             return true;
         }
         if ((stack != null) && (getKittyState() > 2) && whipeable() && (stack.getItem() == MoCreatures.whip)) {
             setSitting(!getIsSitting());
             return true;
         }
-        if ((stack == null) && (getKittyState() == 10) && (this.getRidingEntity() != null)) {
-            this.dismountEntity();
-            return true;
-        }
+        
         if ((stack == null) && (getKittyState() > 2) && pickable()) {
             changeKittyState(15);
-            if (MoCreatures.isServer()) {
                 this.startRiding(player);
-            }
             return true;
         }
         if ((stack == null) && (getKittyState() == 15)) {
@@ -638,6 +631,8 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                 setHungry(true);
             }
 
+            if (this.isRiding()) MoCTools.dismountSneakingPlayer(this);
+            
             label0: switch (getKittyState()) {
                 case -1:
                     break;

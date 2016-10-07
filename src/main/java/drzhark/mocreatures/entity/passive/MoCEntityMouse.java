@@ -94,16 +94,6 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         return this.getRidingEntity() != null;
     }
 
-    @SuppressWarnings("unused")
-    private boolean checkNearCats() {
-        return true;
-    }
-
-    @SuppressWarnings("unused")
-    private boolean checkNearRock() {
-        return true;
-    }
-
     public boolean climbing() {
         return !this.onGround && isOnLadder();
     }
@@ -160,23 +150,10 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
-            if (MoCreatures.isServer()) {
                 this.startRiding(player);
+            this.rotationYaw = player.rotationYaw;
             }
-            //setPicked(true);
-        } else {
-            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-            //setPicked(false);
-            if (MoCreatures.isServer()) {
-                this.dismountEntity();
-            }
-        }
-        this.motionX = player.motionX * 5D;
-        this.motionY = (player.motionY / 2D) + 0.5D;
-        this.motionZ = player.motionZ * 5D;
-
         return true;
     }
 
@@ -191,9 +168,16 @@ public class MoCEntityMouse extends MoCEntityAnimal {
         if (!this.onGround && (this.getRidingEntity() != null)) {
             this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
+        
     }
 
     public boolean upsideDown() {
         return getIsPicked();
+    }
+    
+    @Override
+    public boolean canRidePlayer()
+    {
+    	return true;
     }
 }

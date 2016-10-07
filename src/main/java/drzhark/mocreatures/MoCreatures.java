@@ -40,7 +40,6 @@ import drzhark.mocreatures.entity.aquatic.MoCEntityStingRay;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
-import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.monster.MoCEntityFlameWraith;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
@@ -454,7 +453,6 @@ public class MoCreatures {
         registerEntity(MoCEntityThrowableRock.class, "TRock");
         registerEntity(MoCEntityGolem.class, "BigGolem", 16711680, 16622);
         registerEntity(MoCEntityPetScorpion.class, "PetScorpion");
-        registerEntity(MoCEntityPlatform.class, "MoCPlatform");
         registerEntity(MoCEntityElephant.class, "Elephant", 14772545, 23423);
         registerEntity(MoCEntityKomodo.class, "KomodoDragon", 16711680, 23423);
         registerEntity(MoCEntityWyvern.class, "Wyvern", 14772545, 65407);

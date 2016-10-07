@@ -173,31 +173,10 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
             return false;
         }
 
-        //ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        //TODO
-        //this doesn't work yet, make the player feed the mouse to this snake
-        /*
-         * if (entityplayer.isBeingRidden() &&
-         * entityplayer.riddenByEntity instanceof MoCEntityMouse) {
-         * //System.out.println("player has a mouse"); }
-         */
-
-        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
-            if (MoCreatures.isServer()) {
                 this.startRiding(player);
-            }
-        } else {
-            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-            if (MoCreatures.isServer()) {
-                this.dismountEntity();
-            }
-        }
-        this.motionX = player.motionX * 5D;
-        this.motionY = (player.motionY / 2D) + 0.5D;
-        this.motionZ = player.motionZ * 5D;
-
-        return true;
+            this.rotationYaw = player.rotationYaw;
+        }return true;
     }
 
     @Override
@@ -686,21 +665,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         return true;
     }
 
-    /*@Override
-    public float getAIMoveSpeed()
+    @Override
+    public boolean canRidePlayer()
     {
-        if (isInWater())
-        {
-            return 0.08F;
-        }
-        return 0.12F;
-    }*/
-
-    /* @Override
-     protected double minDivingDepth()
-     {
-         return ((double)getEdad() + 8D)/340D;
-     }
+    	return true;
+    }
 
      @Override
      protected double maxDivingDepth()

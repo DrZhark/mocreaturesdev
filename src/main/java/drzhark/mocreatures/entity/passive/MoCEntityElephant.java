@@ -5,7 +5,6 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.entity.item.MoCEntityPlatform;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
@@ -245,29 +244,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             }
 
-            if (this.isBeingRidden() && this.getRidingEntity() instanceof EntityPlayer) {
-                if (this.sitCounter != 0 && getArmorType() >= 3 && !secondRider()) {
-                    List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(2D, 2D, 2D));
-                    for (int i = 0; i < list.size(); i++) {
-                        Entity entity1 = list.get(i);
-
-                        if (!(entity1 instanceof EntityPlayer) || entity1 == this.getRidingEntity()) {
-                            continue;
-                        }
-
-                        if (((EntityPlayer) entity1).isSneaking()) {
-                            mountSecondPlayer(entity1);
-                        }
-
-                    }
-                }
-
-            }
-
-            if (!this.isBeingRidden() && this.rand.nextInt(100) == 0) {
-                destroyPlatforms();
-            }
-
         } else //client only animation counters
         {
             if (this.tailCounter > 0 && ++this.tailCounter > 8) {
@@ -303,17 +279,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
     }
 
-    private boolean secondRider() {
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = list.get(i);
-            if ((entity1 instanceof MoCEntityPlatform) && (entity1.isBeingRidden())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Checks if the tusks sets need to break or not (wood = 59, stone = 131,
      * iron = 250, diamond = 1561, gold = 32)
@@ -326,19 +291,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 || (this.getTusks() == 3 && this.tuskUses > 1000)) {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_TURTLE_HURT);
             setTusks((byte) 0);
-        }
-    }
-
-    /**
-     * Destroys dummy entity platforms used for second rider
-     */
-    private void destroyPlatforms() {
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(3D, 3D, 3D));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = (Entity) list.get(i);
-            if ((entity1 instanceof MoCEntityPlatform)) {
-                entity1.setDead();
-            }
         }
     }
 
@@ -586,17 +538,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (getStorage() > 3 && this.localelephantchest4 == null) {
             this.localelephantchest4 = new MoCAnimalChest("ElephantChest", 9);
         }
-    }
-
-    /**
-     * Used to mount a second player on the elephant
-     */
-    private void mountSecondPlayer(Entity entity) {
-        double yOff = 2.0D;
-        MoCEntityPlatform platform = new MoCEntityPlatform(this.worldObj, this.getEntityId(), yOff, 1.25D);
-        platform.setPosition(this.posX, this.posY + yOff, this.posZ);
-        this.worldObj.spawnEntityInWorld(platform);
-        entity.startRiding(platform);
     }
 
     /**
@@ -968,7 +909,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public void dropMyStuff() {
         if (MoCreatures.isServer()) {
             dropTusks();
-            destroyPlatforms();
             //dropSaddle(this, worldObj);
             if (getStorage() > 0) {
                 if (getStorage() > 0) {

@@ -355,6 +355,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
         }
 
+        if (this.canRidePlayer() && this.isRiding()) MoCTools.dismountSneakingPlayer(this);
         this.resetInLove(); 
         super.onLivingUpdate();
     }
@@ -1283,5 +1284,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     public Entity getControllingPassenger()
     {
         return this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
+    }
+    
+    /***
+     * Used to select Animals that can 'ride' the player. Like mice, snakes, turtles, birds
+     * @return
+     */
+    public boolean canRidePlayer()
+    {
+    	return false;
     }
 }

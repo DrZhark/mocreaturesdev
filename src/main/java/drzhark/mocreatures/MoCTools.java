@@ -46,6 +46,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -1766,4 +1767,19 @@ public class MoCTools {
         nbttagcompound.removeTag("Dimension");
         source.readFromNBT(nbttagcompound);
     }
+
+	public static boolean dismountSneakingPlayer(EntityLiving entity) {
+		if (!entity.isRiding()) return false;
+		Entity entityRidden = entity.getRidingEntity();
+		if (entityRidden instanceof EntityLivingBase && ((EntityLivingBase)entityRidden).isSneaking()) {
+			entity.dismountRidingEntity();
+			double dist = (-1.5D);
+	        double newPosX = entityRidden.posX + (dist * Math.sin(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
+	        double newPosZ = entityRidden.posZ - (dist * Math.cos(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
+	        entity.setPosition(newPosX, entityRidden.posY + 2D, newPosZ);
+	        MoCTools.playCustomSound(entity, SoundEvents.ENTITY_CHICKEN_EGG);
+            return true;
+		}
+		return false;
+	}
 }

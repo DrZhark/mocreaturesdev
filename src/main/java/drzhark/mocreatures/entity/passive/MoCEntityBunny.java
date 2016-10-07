@@ -167,50 +167,10 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             return true;
         }
-
-        /*
-        if (stack != null && this.getIsTamed() && stack.getItem() == Items.GOLDEN_CARROT) { 
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null); 
-            } 
-            setHasEaten(true);
-            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
-            if (MoCreatures.isServer()) {
-                MoCEntityBunny baby = new MoCEntityBunny(this.worldObj);
-                baby.setPosition(posX, posY, posZ);
-                this.worldObj.spawnEntityInWorld(baby);
-                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-                baby.setAdult(false);
-                baby.setType(this.getType());
-                baby.setOwnerId(this.getOwnerId());
-                baby.setTamed(true);
-                baby.setAdult(false);
-                MoCTools.tameWithName(player, baby);
-            }
-            return true;
-        }*/
-
-        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
-            // This is required since the server will send a Packet39AttachEntity which informs the client to mount
-            if (MoCreatures.isServer()) {
                 this.startRiding(player);
+            this.rotationYaw = player.rotationYaw;
             }
-
-            if (MoCreatures.isServer() && !getIsTamed()) {
-                MoCTools.tameWithName(player, this);
-            }
-        } else {
-            MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_RABBIT_LIFT);
-            if (MoCreatures.isServer()) {
-                this.dismountEntity();
-            }
-        }
-
-        this.motionX = player.motionX * 5D;
-        this.motionY = (player.motionY / 2D) + 0.5D;
-        this.motionZ = player.motionZ * 5D;
-
         return true;
     }
 
@@ -313,5 +273,11 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     @Override
     public float getAdjustedYOffset() {
         return 0.2F;
+    }
+    
+    @Override
+    public boolean canRidePlayer()
+    {
+    	return true;
     }
 }

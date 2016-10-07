@@ -314,22 +314,10 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         if (!getIsTamed()) {
             return false;
         }
-
-        this.rotationYaw = player.rotationYaw;
         if (this.getRidingEntity() == null) {
-            if (MoCreatures.isServer()) {
+        	this.rotationYaw = player.rotationYaw;
                 this.startRiding(player);
             }
-            //setPicked(true);
-        } else {
-            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-            if (MoCreatures.isServer()) {
-                this.dismountEntity();
-            }
-        }
-        this.motionX = player.motionX * 5D;
-        this.motionY = (player.motionY / 2D) + 0.5D;
-        this.motionZ = player.motionZ * 5D;
         return true;
     }
 
@@ -492,20 +480,9 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         }
     }
 
-    /*@Override
-    public boolean updateMount() {
-        return getIsTamed();
-    }*/
-
-    /*@Override
-    public boolean forceUpdates() {
-        return getIsTamed();
-    }*/
-
     @Override
     public int nameYOffset() {
         return -40;
-
     }
 
     @Override
@@ -533,5 +510,11 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     @Override
     public int minFlyingHeight() {
         return 2;
+    }
+    
+    @Override
+    public boolean canRidePlayer()
+    {
+    	return true;
     }
 }
