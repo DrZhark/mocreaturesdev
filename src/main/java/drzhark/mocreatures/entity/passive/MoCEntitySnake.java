@@ -174,7 +174,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         }
 
         if (this.getRidingEntity() == null) {
-                this.startRiding(player);
+            this.startRiding(player);
             this.rotationYaw = player.rotationYaw;
         }return true;
     }
@@ -675,5 +675,5 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
      protected double maxDivingDepth()
      {
          return 1D * (this.getEdad()/100D);
-     }*/
+     }
 }

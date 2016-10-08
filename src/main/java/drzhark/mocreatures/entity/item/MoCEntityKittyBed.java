@@ -156,14 +156,14 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if ((stack != null) && MoCreatures.isServer() && (stack.getItem() == Items.MILK_BUCKET)) {
+        if ((stack != null) && (stack.getItem() == Items.MILK_BUCKET)) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.BUCKET, 1));
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGMILK);
             setHasMilk(true);
             setHasFood(false);
             return true;
         }
-        if ((stack != null) && MoCreatures.isServer() && !getHasFood() && (stack.getItem() == MoCreatures.petfood)) {
+        if ((stack != null) && !getHasFood() && (stack.getItem() == MoCreatures.petfood)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -172,27 +172,17 @@ public class MoCEntityKittyBed extends EntityLiving {
             setHasFood(true);
             return true;
         }
-        if (MoCreatures.isServer()
-                && (stack != null)
-                && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+        if ((stack != null) && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
                         || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
             player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[Math.abs(getSheetColor() - 15)], 1));
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
         } else {
-            this.rotationYaw = player.rotationYaw;
             if (this.getRidingEntity() == null) {
-                if (MoCreatures.isServer()) {
-                    this.startRiding(player);
-                }
-            } else {
-                if (MoCreatures.isServer()) {
-                    this.dismountRidingEntity();
-                }
-            }
-            MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
-            return true;
+            	this.rotationYaw = player.rotationYaw;
+                this.startRiding(player);
+            }return true;
         }
     }
 
@@ -219,6 +209,7 @@ public class MoCEntityKittyBed extends EntityLiving {
                 setHasFood(false);
             }
         }
+        if (this.isRiding()) MoCTools.dismountSneakingPlayer(this);
     }
 
     @Override
