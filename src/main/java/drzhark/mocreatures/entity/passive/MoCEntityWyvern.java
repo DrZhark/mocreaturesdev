@@ -494,13 +494,13 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if ((stack != null) && this.getIsGhost() && this.getIsTamed() && stack.getItem() == MoCreatures.amuletghost) {
 
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
                 if (petData != null) {
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
                 this.dropMyStuff();
-                MoCTools.dropAmulet(this, 3);
+                MoCTools.dropAmulet(this, 3, player);
                 this.isDead = true;
             }
 
@@ -516,7 +516,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
 
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 int i = getType() + 49;
                 MoCEntityEgg entityegg = new MoCEntityEgg(this.worldObj, i);
                 entityegg.setPosition(player.posX, player.posY, player.posZ);

@@ -30,7 +30,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
     public void doRenderMoC(T entity, double d, double d1, double d2, float f, float f1) {
         super.doRender(entity, d, d1, d2, f, f1);
         IMoCEntity entityMoC = (IMoCEntity) entity;
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getPetName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityMoC.getPetName().isEmpty());
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         if (entityMoC.renderName()) {
             float f2 = 1.6F;

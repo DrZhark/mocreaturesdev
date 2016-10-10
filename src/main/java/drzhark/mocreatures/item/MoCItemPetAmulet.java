@@ -64,7 +64,7 @@ public class MoCItemPetAmulet extends MoCItem {
         }
 
         //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
-        if (MoCreatures.isServer()) {
+        if (!world.isRemote && hand == EnumHand.MAIN_HAND) {
             initAndReadNBT(itemstack);
             if (this.spawnClass.isEmpty())// || creatureType == 0)
             {
@@ -193,7 +193,16 @@ public class MoCItemPetAmulet extends MoCItem {
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getString("SpawnClass");
         this.adult = nbt.getBoolean("Adult");
-        this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
+        String s = "";
+        if (nbt.hasKey("OwnerUUID", 8))
+        {
+            s = nbt.getString("OwnerUUID");
+        }
+        if (!s.isEmpty())
+        {
+            this.ownerUniqueId = (UUID.fromString(s));
+        }
+        //this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
@@ -204,7 +213,9 @@ public class MoCItemPetAmulet extends MoCItem {
         nbt.setString("Name", this.name);
         nbt.setString("SpawnClass", this.spawnClass);
         nbt.setBoolean("Adult", this.adult);
-        nbt.setUniqueId("OwnerUUID", this.ownerUniqueId);
+        if (this.ownerUniqueId != null) {
+            nbt.setString("OwnerUUID", ownerUniqueId.toString());
+        }
     }
 
     @SideOnly(Side.CLIENT)

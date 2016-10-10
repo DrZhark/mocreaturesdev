@@ -78,6 +78,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class MoCTools {
 
@@ -1441,9 +1442,10 @@ public class MoCTools {
 
     /**
      * Drops a new amulet/fishnet with the stored information of the entity
+     * @param player 
      */
-    public static void dropAmulet(IMoCEntity entity, int amuletType) {
-        if (MoCreatures.isServer()) {
+    public static void dropAmulet(IMoCEntity entity, int amuletType, EntityPlayer player) {
+        if (!(((Entity)entity).worldObj.isRemote)) {
             ItemStack stack = new ItemStack(MoCreatures.fishnetfull, 1, 0);
             if (amuletType == 2) {
                 stack = new ItemStack(MoCreatures.petamuletfull, 1, 0);
@@ -1455,7 +1457,6 @@ public class MoCTools {
                 stack.setTagCompound(new NBTTagCompound());
             }
             NBTTagCompound nbtt = stack.getTagCompound();
-
             try {
                 String petClass = entity.getClass().getSimpleName().replace("MoCEntity", "");
                 if (petClass.equalsIgnoreCase("Horse")) {
@@ -1468,18 +1469,24 @@ public class MoCTools {
                 } else {
                     nbtt.setString("SpawnClass", petClass);
                 }
+                if ((entity.getOwnerId()) == null)
+                {
+                	nbtt.setString("OwnerUUID", player.getUniqueID().toString());
+                }
+                else
+                {
+                	nbtt.setString("OwnerUUID", entity.getOwnerId().toString());
+                }
                 nbtt.setFloat("Health", ((EntityLiving) entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getPetName());
                 nbtt.setInteger("CreatureType", entity.getType());
-                nbtt.setUniqueId("Owner", entity.getOwnerId());
                 nbtt.setBoolean("Adult", entity.getIsAdult());
                 nbtt.setInteger("PetId", entity.getOwnerPetId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            EntityPlayer epOwner = ((EntityLivingBase) entity).worldObj.getPlayerEntityByUUID(entity.getOwnerId());
+            EntityPlayer epOwner = (player.worldObj.getPlayerEntityByUUID(nbtt.getUniqueId("Owner")));
             if (epOwner != null) {
                 epOwner.inventory.addItemStackToInventory(stack);
             } else {

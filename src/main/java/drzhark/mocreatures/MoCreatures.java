@@ -708,6 +708,7 @@ public class MoCreatures {
 
         for (int i = 0; i < 16; i++) {
             String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
+            if (s.equalsIgnoreCase("lightBlue")) s = "light_blue";
             kittybed[i] = new MoCItemKittyBed("kittybed_" + s, i);
         }
         litterbox = new MoCItemLitterBox("kittylitter");
@@ -1159,6 +1160,7 @@ public class MoCreatures {
     }
 
     public static boolean isServer() {
+    	//return (FMLCommonHandler.instance().getSide().isServer());//
         return (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER);
     }
 }

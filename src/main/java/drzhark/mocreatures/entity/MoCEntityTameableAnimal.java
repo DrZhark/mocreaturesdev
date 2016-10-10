@@ -58,7 +58,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
 
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UNIQUE_ID).orNull();
+    	return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
     }
 
     public void setOwnerId(@Nullable UUID uniqueId) {
@@ -113,7 +113,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -129,7 +129,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         }
 
         //changes name
-        if (MoCreatures.isServer() && stack != null && getIsTamed()
+        if (!this.worldObj.isRemote && stack != null && getIsTamed()
                 && (stack.getItem() == MoCreatures.medallion || stack.getItem() == Items.BOOK || stack.getItem() == Items.NAME_TAG)) {
             if (MoCTools.tameWithName(player, this)) {
                 return true;
@@ -142,7 +142,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -161,7 +161,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -174,13 +174,13 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         //stores in petAmulet
         if (stack != null && stack.getItem() == MoCreatures.petamulet && stack.getItemDamage() == 0 && this.canBeTrappedInNet()) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
                 if (petData != null) {
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
                 this.dropMyStuff();
-                MoCTools.dropAmulet(this, 2);
+                MoCTools.dropAmulet(this, 2, player);
                 this.isDead = true;
             }
 
@@ -188,7 +188,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         }
 
         if ((stack != null) && getIsTamed() && (stack.getItem() == Items.SHEARS)) {
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 dropMyStuff();
             }
 
@@ -201,7 +201,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 this.setHealth(getMaxHealth());
             }
             return true;
@@ -214,7 +214,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public void setDead() {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
+        if (!this.worldObj.isRemote && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
             return;
         }
         super.setDead();
@@ -255,7 +255,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         if (this.getOwnerId() != null) {
-            nbttagcompound.setUniqueId("OwnerUUID", this.getOwnerId());
+            nbttagcompound.setString("OwnerUUID", this.getOwnerId().toString());
         }
         if (getOwnerPetId() != -1) {
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
@@ -269,7 +269,15 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
         setTamed(nbttagcompound.getBoolean("Tamed"));
-        this.setOwnerId(nbttagcompound.getUniqueId("OwnerUUID"));
+        String s = "";
+        if (nbttagcompound.hasKey("OwnerUUID", 8))
+        {
+            s = nbttagcompound.getString("OwnerUUID");
+        }
+        if (!s.isEmpty())
+        {
+            this.setOwnerId(UUID.fromString(s));
+        }
         if (nbttagcompound.hasKey("PetId")) {
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
         }

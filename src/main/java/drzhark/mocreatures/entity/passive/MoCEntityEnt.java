@@ -201,7 +201,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             if (iblockstate.getBlock() == Blocks.SAPLING) {
                 plantChance = 10;
             }
-            boolean cantPlant = false;
+            //boolean cantPlant = false;
             // check perms first
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
@@ -209,15 +209,16 @@ public class MoCEntityEnt extends MoCEntityAnimal {
                     int yCoord = MathHelper.floor_double(this.posY);
                     int zCoord = MathHelper.floor_double(this.posZ + z);
                     BlockPos pos1 = new BlockPos(xCoord, yCoord, zCoord);
-                    BlockEvent.BreakEvent event = null;
-                    if (!this.worldObj.isRemote) {
-                        event =
-                                new BlockEvent.BreakEvent(this.worldObj, pos1, iblockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
-                                        MoCreatures.MOCFAKEPLAYER));
-                    }
-                    cantPlant = (event != null && event.isCanceled());
+                    //BlockEvent.BreakEvent event = null;
+                    //if (!this.worldObj.isRemote) {
+                    //    event =
+                    //            new BlockEvent.BreakEvent(this.worldObj, pos1, iblockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
+                    //                    MoCreatures.MOCFAKEPLAYER));
+                    //}
+                    //cantPlant = (event != null && event.isCanceled());
                     Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
-                    if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
+                    //if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
+                    if (this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
                         this.worldObj.setBlockState(pos1, iblockstate, 3);
                     }
                 }

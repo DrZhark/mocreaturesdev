@@ -166,7 +166,14 @@ public class MoCPetMapData extends WorldSavedData {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound) {
         for (Map.Entry<UUID, MoCPetData> ownerEntry : this.petMap.entrySet()) {
+    		try {
+            if (this.petMap.entrySet() != null && ownerEntry.getKey()!= null) 
+            {
             par1NBTTagCompound.setTag(ownerEntry.getKey().toString(), ownerEntry.getValue().getOwnerRootNBT());
+        }
+            } catch (Exception e) {
+    			e.printStackTrace();
+            }
         }
         return par1NBTTagCompound;
     }

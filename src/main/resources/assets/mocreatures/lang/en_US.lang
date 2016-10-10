@@ -1,4 +1,4 @@
-itemGroup.mocreaturesTab=mocreatures
+itemGroup.MoCreaturesTab=Mo'Creatures
 
 tile.MoCGrass.wyvern_lair.name=WyvernLair Grass
 tile.MoCGrass.ogre_lair.name=OgreLair Grass
@@ -36,6 +36,7 @@ item.elephantchest.name=Elephant Chest
 item.elephantgarment.name=Elephant Garment
 item.elephantharness.name=Elephant Harness
 item.elephanthowdah.name=Elephant Howdah
+item.mammothplatform.name=Mammoth Platform
 item.essencedarkness.name=Essence of Darkness
 item.essencefire.name=Essence of Fire
 item.essencelight.name=Essence of Light
@@ -69,7 +70,7 @@ item.kittybed_orange.name=Orange Kitty Bed
 item.kittybed_brown.name=Brown Kitty Bed
 item.kittybed_purple.name=Purple Kitty Bed
 item.kittybed_magenta.name=Magenta Kitty Bed
-item.kittybed_lightBlue.name=LightBlue Kitty Bed
+item.kittybed_light_blue.name=Light Blue Kitty Bed
 item.kittybed_yellow.name=Yellow Kitty Bed
 item.kittybed_lime.name=Lime Kitty Bed
 item.kittybed_pink.name=Pink Kitty Bed

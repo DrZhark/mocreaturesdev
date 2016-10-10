@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mocreatures:items/bowlfish9"
+        "layer0": "mocreatures:items/kittybed_light_blue"
     },
     "display": {
         "third_person": {

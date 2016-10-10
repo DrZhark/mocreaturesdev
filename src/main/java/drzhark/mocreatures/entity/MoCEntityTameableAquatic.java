@@ -29,7 +29,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTameable, IEntityOwnable {
+public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTameable {
 
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAquatic.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAquatic.class, DataSerializers.VARINT);
@@ -59,7 +59,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UNIQUE_ID).orNull();
+    	return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
     }
 
     public void setOwnerId(@Nullable UUID uniqueId)
@@ -190,15 +190,15 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
         //stores in fishnet
         if (stack != null && stack.getItem() == MoCreatures.fishnet && stack.getItemDamage() == 0 && this.canBeTrappedInNet()) {
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
                 if (petData != null) {
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
             }
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            if (MoCreatures.isServer()) {
-                MoCTools.dropAmulet(this, 1);
+            if (!this.worldObj.isRemote) {
+                MoCTools.dropAmulet(this, 1, player);
                 this.isDead = true;
             }
 
@@ -243,7 +243,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         if (this.getOwnerId() != null) {
-            nbttagcompound.setUniqueId("OwnerUUID", this.getOwnerId());
+            nbttagcompound.setString("OwnerUUID", this.getOwnerId().toString());
         }
         if (getOwnerPetId() != -1) {
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
@@ -257,7 +257,15 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
         setTamed(nbttagcompound.getBoolean("Tamed"));
-        this.setOwnerId(nbttagcompound.getUniqueId("OwnerUUID"));
+        String s = "";
+        if (nbttagcompound.hasKey("OwnerUUID", 8))
+        {
+            s = nbttagcompound.getString("OwnerUUID");
+        }
+        if (!s.isEmpty())
+        {
+            this.setOwnerId(UUID.fromString(s));
+        }
         if (nbttagcompound.hasKey("PetId")) {
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
         }

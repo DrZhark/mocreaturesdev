@@ -75,7 +75,6 @@ public class MoCEntityLion extends MoCEntityBigCat {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
         if ((stack != null) && getIsTamed() && (getType() == 2 || getType() == 4 || getType() == 7)
                 && (stack.getItem() == MoCreatures.essencelight)) {
             if (--stack.stackSize == 0) {

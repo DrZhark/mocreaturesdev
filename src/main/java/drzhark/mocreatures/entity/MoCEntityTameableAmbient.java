@@ -28,7 +28,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTameable, IEntityOwnable {
+public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTameable {
 
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAmbient.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAmbient.class, DataSerializers.VARINT);
@@ -68,7 +68,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
 
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UNIQUE_ID).orNull();
+    	return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
     }
 
     public void setOwnerId(@Nullable UUID uniqueId)
@@ -182,7 +182,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 this.setHealth(getMaxHealth());
             }
             return true;
@@ -191,12 +191,12 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         //stores in fishnet
         if (stack.getItem() == MoCreatures.fishnet && stack.getItemDamage() == 0 && this.canBeTrappedInNet()) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            if (MoCreatures.isServer()) {
+            if (!this.worldObj.isRemote) {
                 MoCPetData petData = MoCreatures.instance.mapData.getPetData(this.getOwnerId());
                 if (petData != null) {
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
-                MoCTools.dropAmulet(this, 1);
+                MoCTools.dropAmulet(this, 1, player);
                 this.isDead = true;
             }
 
@@ -261,7 +261,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         super.writeEntityToNBT(nbttagcompound);
         nbttagcompound.setBoolean("Tamed", getIsTamed());
         if (this.getOwnerId() != null) {
-            nbttagcompound.setUniqueId("OwnerUUID", this.getOwnerId());
+            nbttagcompound.setString("OwnerUUID", this.getOwnerId().toString());
         }
         if (getOwnerPetId() != -1) {
             nbttagcompound.setInteger("PetId", this.getOwnerPetId());
@@ -275,7 +275,15 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
         super.readEntityFromNBT(nbttagcompound);
         setTamed(nbttagcompound.getBoolean("Tamed"));
-        this.setOwnerId(nbttagcompound.getUniqueId("OwnerUUID"));
+        String s = "";
+        if (nbttagcompound.hasKey("OwnerUUID", 8))
+        {
+            s = nbttagcompound.getString("OwnerUUID");
+        }
+        if (!s.isEmpty())
+        {
+            this.setOwnerId(UUID.fromString(s));
+        }
         if (nbttagcompound.hasKey("PetId")) {
             setOwnerPetId(nbttagcompound.getInteger("PetId"));
         }
