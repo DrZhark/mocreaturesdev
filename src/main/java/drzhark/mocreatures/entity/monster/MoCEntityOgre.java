@@ -38,7 +38,6 @@ public class MoCEntityOgre extends MoCEntityMob {
     public MoCEntityOgre(World world) {
         super(world);
         setSize(1.9F, 3F);
-        this.isImmuneToFire = false;
     }
 
     @Override
@@ -52,52 +51,20 @@ public class MoCEntityOgre extends MoCEntityMob {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(calculateMaxHealth());
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
     }
 
     @Override
     public void selectType() {
-        if (this.worldObj.provider.doesWaterVaporize()) {
-            setType(this.rand.nextInt(2) + 3);
-            this.isImmuneToFire = true;
-
-        } else {
-            if (getType() == 0) {
-                int fOgreChance = MoCreatures.proxy.fireOgreChance;
-                int cOgreChance = MoCreatures.proxy.caveOgreChance;
-                int j = this.rand.nextInt(100);
-
-                if (canCaveOgreSpawn() && (j >= (100 - cOgreChance))) {
-                    setType(this.rand.nextInt(2) + 5);
-                } else if (j >= (100 - fOgreChance)) {
-                    setType(this.rand.nextInt(2) + 3);
-                    this.isImmuneToFire = true;
-                } else {
-                    setType(this.rand.nextInt(2) + 1);
-                }
-            }
+    	if (getType() == 0) {
+        	setType(this.rand.nextInt(2) + 1);
         }
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getType() > 4 ? 50.0D : 35.0D);
-        this.setHealth(getMaxHealth());
     }
 
-    @Override
-    public ResourceLocation getTexture() {
-        switch (getType()) {
-            case 1:
-            case 2:
-                return MoCreatures.proxy.getTexture("ogregreen.png");
-            case 3:
-            case 4:
-                return MoCreatures.proxy.getTexture("ogrered.png");
-            case 5:
-            case 6:
-                return MoCreatures.proxy.getTexture("ogreblue.png");
-            default:
-                return MoCreatures.proxy.getTexture("ogregreen.png");
-        }
+    public float calculateMaxHealth() {
+        return 35F;
     }
 
     @Override
@@ -129,20 +96,6 @@ public class MoCEntityOgre extends MoCEntityMob {
     }
 
     @Override
-    protected Item getDropItem() {
-        if (getType() < 3) {
-            return Item.getItemFromBlock(Blocks.OBSIDIAN);
-        } else if (getType() < 5) {
-            boolean flag = (this.rand.nextInt(100) < MoCreatures.proxy.rareItemDropChance);
-            if (!flag) {
-                return Item.getItemFromBlock(Blocks.FIRE);
-            }
-            return MoCreatures.heartfire;
-        }
-        return Items.DIAMOND;
-    }
-
-    @Override
     protected SoundEvent getHurtSound() {
         return MoCSoundEvents.ENTITY_OGRE_HURT;
     }
@@ -153,10 +106,6 @@ public class MoCEntityOgre extends MoCEntityMob {
     }
 
     public boolean isFireStarter() {
-        if (getType() == 3 || getType() == 4) {
-            this.isImmuneToFire = true;
-            return true;
-        }
         return false;
     }
 
@@ -165,15 +114,7 @@ public class MoCEntityOgre extends MoCEntityMob {
      * @return
      */
     public float getDestroyForce() {
-        int t = getType();
-        if (t < 3) //green
-        {
-            return MoCreatures.proxy.ogreStrength;
-        } else if (t < 5) //red
-        {
-            return MoCreatures.proxy.fireOgreStrength;
-        }
-        return MoCreatures.proxy.caveOgreStrength;
+        return MoCreatures.proxy.ogreStrength;
     }
 
     public int getAttackRange() {
@@ -213,7 +154,7 @@ public class MoCEntityOgre extends MoCEntityMob {
     /**
      * Starts counter to perform the DestroyBlast and synchronizes animations with clients
      */
-    private void startDestroyBlast() {
+    protected void startDestroyBlast() {
         this.smashCounter = 1;
         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
                 new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
@@ -231,13 +172,13 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     protected boolean isHarmedByDaylight() {
-        return this.getType() > 2;
+        return false;
     }
 
     /**
      * Starts attack counters and synchronizes animations with clients
      */
-    private void startArmSwingAttack() {
+    protected void startArmSwingAttack() {
         if (MoCreatures.isServer()) {
             if (this.smashCounter != 0)
                 return;
@@ -268,7 +209,7 @@ public class MoCEntityOgre extends MoCEntityMob {
     }
 
     public int getMovingHead() {
-        if (getType() == 1 || getType() == 3 || getType() == 5) //single headed ogre
+        if (getType() == 1) //single headed ogre
         {
             return 1;
         }
@@ -277,11 +218,6 @@ public class MoCEntityOgre extends MoCEntityMob {
             this.movingHead = this.rand.nextInt(2) + 2; //randomly changes the focus head, returns 2 or 3
         }
         return this.movingHead;
-    }
-
-    private boolean canCaveOgreSpawn() {
-        return (!this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper
-                .floor_double(this.posZ)))) && (this.posY < 50D);
     }
 
     @Override

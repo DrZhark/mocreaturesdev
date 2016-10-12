@@ -182,7 +182,7 @@ public class MoCEntityEgg extends EntityLiving {
                         }
                     }
 
-                    else if (getEggType() >= 70 && getEggType() < (80 + MoCEntityMediumFish.fishNames.length)) // mediumfish
+                    else if (getEggType() >= 70 && getEggType() < (70 + MoCEntityMediumFish.fishNames.length)) // mediumfish
                     {
                         MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(this.worldObj);
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);

@@ -1,6 +1,7 @@
 package drzhark.mocreatures.item;
 
 import com.mojang.authlib.GameProfile;
+
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -215,9 +216,13 @@ public class MoCItemHorseAmulet extends MoCItem {
             par3List.add(TextFormatting.BLUE + this.name);
         }
         if (this.ownerUniqueId != null) {
-            GameProfile profile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(this.ownerUniqueId);
-            if (profile != null) {
-                par3List.add(TextFormatting.DARK_BLUE + "Owned by " + profile.getName());
+        	try{
+        		GameProfile profile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(this.ownerUniqueId);
+                if (profile != null) {
+                    par3List.add(TextFormatting.DARK_BLUE + "Owned by " + profile.getName());
+                }	
+        	} catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

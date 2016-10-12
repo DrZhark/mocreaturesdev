@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
@@ -220,22 +221,6 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public float getAdjustedYOffset() {
-        if (!this.isInsideOfMaterial(Material.WATER)) {
-            return -0.1F;
-        }
-        return 0.0F;
-    }
-
-    @Override
-    public float getAdjustedXOffset() {
-        if (!this.isInsideOfMaterial(Material.WATER)) {
-            return -0.2F;
-        }
-        return 0F;
-    }
-
-    @Override
     protected boolean isFisheable() {
         return !getIsTamed();
     }
@@ -268,5 +253,26 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     @Override
     public float getSizeFactor() {
         return getEdad() * 0.01F;
+    }
+    
+    @Override
+    public float getAdjustedZOffset() {
+        return 0F;
+    }
+
+    @Override
+    public float getAdjustedXOffset() {
+    	if (!isInWater()) {
+            return -0.1F;
+        }
+        return 0F;
+    }
+    
+    @Override
+    public float getAdjustedYOffset() {
+        if (!this.isInsideOfMaterial(Material.WATER)) {
+            return 0.2F;
+        }
+        return -0.5F;
     }
 }

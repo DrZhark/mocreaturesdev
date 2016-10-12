@@ -2653,12 +2653,11 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         if (getIsChested()) {
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);
             this.localchest = new MoCAnimalChest("HorseChest", getInventorySize());
-
             for (int i = 0; i < nbttaglist.tagCount(); i++) {
-                ItemStack itemstack = this.localchest.getStackInSlot(i);
-
-                if (itemstack != null) {
-                    this.localchest.setInventorySlotContents(i, itemstack.copy());
+                NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+                int j = nbttagcompound1.getByte("Slot") & 0xff;
+                if ((j >= 0) && j < this.localchest.getSizeInventory()) {
+                    this.localchest.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
                 }
             }
         }

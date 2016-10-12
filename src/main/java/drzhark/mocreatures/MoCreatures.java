@@ -1,6 +1,7 @@
 package drzhark.mocreatures;
 
 import com.mojang.authlib.GameProfile;
+
 import drzhark.mocreatures.block.MoCBlockDirt;
 import drzhark.mocreatures.block.MoCBlockGrass;
 import drzhark.mocreatures.block.MoCBlockLeaf;
@@ -28,12 +29,22 @@ import drzhark.mocreatures.entity.ambient.MoCEntityFly;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
 import drzhark.mocreatures.entity.ambient.MoCEntityRoach;
 import drzhark.mocreatures.entity.ambient.MoCEntitySnail;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAnchovy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAngelFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAngler;
+import drzhark.mocreatures.entity.aquatic.MoCEntityBass;
+import drzhark.mocreatures.entity.aquatic.MoCEntityClownFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityCod;
 import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityGoldFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityHippoTang;
 import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityManderin;
 import drzhark.mocreatures.entity.aquatic.MoCEntityMantaRay;
 import drzhark.mocreatures.entity.aquatic.MoCEntityMediumFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityPiranha;
+import drzhark.mocreatures.entity.aquatic.MoCEntitySalmon;
 import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
 import drzhark.mocreatures.entity.aquatic.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityStingRay;
@@ -41,8 +52,11 @@ import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import drzhark.mocreatures.entity.monster.MoCEntityCaveOgre;
+import drzhark.mocreatures.entity.monster.MoCEntityFireOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityFlameWraith;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
+import drzhark.mocreatures.entity.monster.MoCEntityGreenOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityHellRat;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
 import drzhark.mocreatures.entity.monster.MoCEntityManticore;
@@ -56,6 +70,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
+import drzhark.mocreatures.entity.passive.MoCEntityBlackBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
@@ -65,17 +80,26 @@ import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityEnt;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 import drzhark.mocreatures.entity.passive.MoCEntityGoat;
+import drzhark.mocreatures.entity.passive.MoCEntityGrizzlyBear;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
+import drzhark.mocreatures.entity.passive.MoCEntityLeoger;
 import drzhark.mocreatures.entity.passive.MoCEntityLeopard;
+import drzhark.mocreatures.entity.passive.MoCEntityLiard;
+import drzhark.mocreatures.entity.passive.MoCEntityLiger;
 import drzhark.mocreatures.entity.passive.MoCEntityLion;
+import drzhark.mocreatures.entity.passive.MoCEntityLither;
 import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityMole;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPandaBear;
+import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
 import drzhark.mocreatures.entity.passive.MoCEntityPanther;
+import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityPolarBear;
 import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTiger;
@@ -206,14 +230,11 @@ public class MoCreatures {
     public static Item mocegg;
     public static Item bigcatclaw;
     public static Item whip;
-    //public static Item horsearmorgold;
-    //public static Item horsearmordiamond;
     public static Item staffunicorn;
     public static Item medallion;
     public static Item[] kittybed = new Item[16];
     public static Item litterbox;
     public static Item woolball;
-    //public static Item rope;
     public static Item petfood;
     public static Item staffdiamond;
     public static Item hideCroc;
@@ -221,19 +242,6 @@ public class MoCreatures {
     public static Item helmetCroc;
     public static Item legsCroc;
     public static Item bootsCroc;
-    /*public static Item fishbowl_e;
-    public static Item fishbowl_w;
-    public static Item fishbowl_1;
-    public static Item fishbowl_2;
-    public static Item fishbowl_3;
-    public static Item fishbowl_4;
-    public static Item fishbowl_5;
-    public static Item fishbowl_6;
-    public static Item fishbowl_7;
-    public static Item fishbowl_8;
-    public static Item fishbowl_9;
-    public static Item fishbowl_10;
-    */
     public static Item fur;
     public static Item omelet;
     public static Item turtleraw;
@@ -246,7 +254,6 @@ public class MoCreatures {
     public static Item sharksword;
     public static Item silversword;
 
-    //public static Item key;
     public static Item essencedarkness;
     public static Item essencefire;
     public static Item essenceundead;
@@ -415,9 +422,15 @@ public class MoCreatures {
         registerEntity(MoCEntityTurkey.class, "Turkey", 14020607, 16711680);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHorse.class, "WildHorse", 12623485, 15656192);//, 0x2600, 0x052500);
         registerEntity(MoCEntityHorseMob.class, "HorseMob", 16711680, 9320590);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityOgre.class, "Ogre", 16711680, 65407);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityGreenOgre.class, "GreenOgre", 16711680, 65407);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityFireOgre.class, "FireOgre", 16711680, 9320595);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityCaveOgre.class, "CaveOgre", 16711680, 33023);//, 0x2600, 0x052500);
         registerEntity(MoCEntityBoar.class, "Boar", 14772545, 9141102);//, 0x2600, 0x052500);
-        registerEntity(MoCEntityBear.class, "Bear", 14772545, 1);//, 0x2600, 0x052500);
+        //registerEntity(MoCEntityBear.class, "Bear", 14772545, 1);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityPandaBear.class, "PandaBear", 10, 9141102);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityBlackBear.class, "BlackBear", 10, 1);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityGrizzlyBear.class, "GrizzlyBear", 13749760, 1);//, 0x2600, 0x052500);
+        registerEntity(MoCEntityPolarBear.class, "PolarBear", 9141102, 9141102);//, 0x2600, 0x052500);
         registerEntity(MoCEntityDuck.class, "Duck", 14772545, 15656192);//, 0x2600, 0x052500);
         //registerEntity(MoCEntityBigCat.class, "BigCat");//, 0x2600, 0x052500);
         registerEntity(MoCEntityDeer.class, "Deer", 14772545, 33023);//, 0x2600, 0x052500);
@@ -436,7 +449,6 @@ public class MoCreatures {
         registerEntity(MoCEntityHellRat.class, "HellRat", 16711680, 14772545);//, 0x2600, 0x052500);
         registerEntity(MoCEntityScorpion.class, "Scorpion", 16711680, 6053069);//, 0x2600, 0x052500);
         registerEntity(MoCEntityCrocodile.class, "Crocodile", 16711680, 65407);//, 0x2600, 0x052500);
-        //registerEntity(MoCEntityRay.class, "Ray", 33023, 9141102);//14772545, 9141102);
         registerEntity(MoCEntityMantaRay.class, "MantaRay", 33023, 9141102);//14772545, 9141102);
         registerEntity(MoCEntityStingRay.class, "StingRay", 33023, 6053069);//14772545, 9141102);
         registerEntity(MoCEntityJellyFish.class, "JellyFish", 33023, 14772545);//, 0x2600, 0x052500);
@@ -463,8 +475,16 @@ public class MoCreatures {
         registerEntity(MoCEntityMiniGolem.class, "MiniGolem", 16711680, 13749760);
         registerEntity(MoCEntitySilverSkeleton.class, "SilverSkeleton", 16711680, 33023);
         registerEntity(MoCEntityAnt.class, "Ant", 65407, 12623485);
-        registerEntity(MoCEntityMediumFish.class, "MediumFish", 33023, 16622);
-        registerEntity(MoCEntitySmallFish.class, "SmallFish", 33023, 65407);
+        registerEntity(MoCEntityCod.class, "Cod", 33023, 16622);
+        registerEntity(MoCEntitySalmon.class, "Salmon", 33023, 12623485);
+        registerEntity(MoCEntityBass.class, "Bass", 33023, 2372490);
+        registerEntity(MoCEntityAngler.class, "Angler", 14020607, 10);
+        registerEntity(MoCEntityAngelFish.class, "AngelFish", 14020607, 7434694);
+        registerEntity(MoCEntityClownFish.class, "ClownFish", 14020607, 14772545);
+        registerEntity(MoCEntityGoldFish.class, "GoldFish", 14020607, 15656192);
+        registerEntity(MoCEntityHippoTang.class, "HippoTang", 14020607, 2037680);
+        registerEntity(MoCEntityManderin.class, "Manderin", 14020607, 12623485);
+        registerEntity(MoCEntityAnchovy.class, "Anchovy", 14020607, 205);
         registerEntity(MoCEntityPiranha.class, "Piranha", 33023, 16711680);
         registerEntity(MoCEntityEnt.class, "Ent", 12623485, 16711680);
         registerEntity(MoCEntityMole.class, "Mole", 14020607, 16711680);
@@ -474,6 +494,12 @@ public class MoCreatures {
         registerEntity(MoCEntityLeopard.class, "Leopard", 13749760, 10);
         registerEntity(MoCEntityPanther.class, "Panther", 10, 205);
         registerEntity(MoCEntityManticorePet.class, "ManticorePet");
+        registerEntity(MoCEntityLiger.class, "Liger", 15313474, 12623485);
+        registerEntity(MoCEntityLiard.class, "Liard", 15313474, 13749760);
+        registerEntity(MoCEntityLither.class, "Lither", 15313474, 14772545);
+        registerEntity(MoCEntityPanthard.class, "Panthard", 10, 13749760);
+        registerEntity(MoCEntityPanthger.class, "Panthger", 10, 14772545);
+        registerEntity(MoCEntityLeoger.class, "Leoger", 14772545, 14772545);
 
         /**
          * fucsia 16711680 orange curuba 14772545 gris claro 9141102 gris medio
@@ -511,8 +537,14 @@ public class MoCreatures {
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.JUNGLE, Type.PLAINS, Type.SWAMP))));
 
         // creatures
-        mocEntityMap.put("Bear", new MoCEntityData("Bear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBear.class, 6, 1, 2),
-                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SNOWY))));
+        mocEntityMap.put("BlackBear", new MoCEntityData("BlackBear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBlackBear.class, 6, 1, 3),
+                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS))));
+        mocEntityMap.put("GrizzlyBear", new MoCEntityData("GrizzlyBear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityGrizzlyBear.class, 6, 1, 2),
+                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS))));
+        mocEntityMap.put("PolarBear", new MoCEntityData("PolarBear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityPolarBear.class, 6, 1, 2),
+                new ArrayList<Type>(Arrays.asList(Type.SNOWY))));
+        mocEntityMap.put("PandaBear", new MoCEntityData("PandaBear", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityPandaBear.class, 6, 1, 3),
+                new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.MESA, Type.PLAINS))));
         mocEntityMap.put("Bird", new MoCEntityData("Bird", 4, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBird.class, 15, 2, 3),
                 new ArrayList<Type>(Arrays.asList(Type.FOREST, Type.HILLS, Type.JUNGLE, Type.MESA, Type.MOUNTAIN, Type.PLAINS))));
         mocEntityMap.put("Boar", new MoCEntityData("Boar", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityBoar.class, 8, 2, 2),
@@ -567,14 +599,18 @@ public class MoCreatures {
         mocEntityMap.put("Wyvern", new MoCEntityData("Wyvern", 3, EnumCreatureType.CREATURE, new SpawnListEntry(MoCEntityWyvern.class, 8, 1, 3),
                 new ArrayList<Type>()));
         // water creatures
+        mocEntityMap.put("Bass", new MoCEntityData("Bass", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(
+                MoCEntityBass.class, 10, 1, 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
+        mocEntityMap.put("Cod", new MoCEntityData("Cod", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(
+                MoCEntityCod.class, 10, 1, 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("Dolphin", new MoCEntityData("Dolphin", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityDolphin.class, 6, 2,
                 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("Fishy", new MoCEntityData("Fishy", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityFishy.class, 12, 1, 6),
                 new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("JellyFish", new MoCEntityData("JellyFish", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityJellyFish.class,
                 8, 1, 4), new ArrayList<Type>(Arrays.asList(Type.WATER, Type.OCEAN, Type.RIVER))));
-        mocEntityMap.put("MediumFish", new MoCEntityData("MediumFish", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(
-                MoCEntityMediumFish.class, 10, 1, 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
+        mocEntityMap.put("Salmon", new MoCEntityData("Salmon", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(
+                MoCEntitySalmon.class, 10, 1, 4), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("Piranha", new MoCEntityData("Piranha", 4, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityPiranha.class, 4, 1,
                 3), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
         mocEntityMap.put("MantaRay", new MoCEntityData("MantaRay", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityMantaRay.class,
@@ -583,8 +619,21 @@ public class MoCreatures {
                 10, 1, 2), new ArrayList<Type>(Arrays.asList(Type.SWAMP, Type.WATER, Type.RIVER))));
         mocEntityMap.put("Shark", new MoCEntityData("Shark", 3, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityShark.class, 6, 1, 2),
                 new ArrayList<Type>(Arrays.asList(Type.WATER, Type.OCEAN, Type.RIVER))));
-        mocEntityMap.put("SmallFish", new MoCEntityData("SmallFish", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntitySmallFish.class,
+        mocEntityMap.put("Anchovy", new MoCEntityData("Anchovy", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityAnchovy.class,
                 12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
+        mocEntityMap.put("AngelFish", new MoCEntityData("AngelFish", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityAngelFish.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN, Type.RIVER))));
+        mocEntityMap.put("Angler", new MoCEntityData("Angler", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityAngler.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN))));
+        mocEntityMap.put("ClownFish", new MoCEntityData("ClownFish", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityClownFish.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN))));
+        mocEntityMap.put("GoldFish", new MoCEntityData("GoldFish", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityGoldFish.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.RIVER))));
+        mocEntityMap.put("HippoTang", new MoCEntityData("HippoTang", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityHippoTang.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN))));
+        mocEntityMap.put("Manderin", new MoCEntityData("Manderin", 6, EnumCreatureType.WATER_CREATURE, new SpawnListEntry(MoCEntityManderin.class,
+                12, 1, 6), new ArrayList<Type>(Arrays.asList(Type.BEACH, Type.SWAMP, Type.WATER, Type.OCEAN))));
+        
         // monsters
         mocEntityMap.put(
                 "BigGolem",
@@ -609,9 +658,19 @@ public class MoCreatures {
                         Arrays.asList(Type.SANDY, Type.FOREST, Type.SNOWY, Type.JUNGLE, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
                                 Type.WASTELAND))));
         mocEntityMap.put(
-                "Ogre",
-                new MoCEntityData("Ogre", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityOgre.class, 8, 1, 2), new ArrayList<Type>(Arrays.asList(
-                        Type.SANDY, Type.FOREST, Type.SNOWY, Type.JUNGLE, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.NETHER, Type.PLAINS, Type.SWAMP,
+                "GreenOgre",
+                new MoCEntityData("GreenOgre", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityGreenOgre.class, 8, 1, 2), new ArrayList<Type>(Arrays.asList(
+                        Type.SANDY, Type.FOREST, Type.JUNGLE, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
+                        Type.WASTELAND, Type.DEAD, Type.SPOOKY))));
+        mocEntityMap.put(
+                "FireOgre",
+                new MoCEntityData("FireOgre", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityFireOgre.class, 6, 1, 2), new ArrayList<Type>(Arrays.asList(
+                        Type.SANDY, Type.FOREST, Type.JUNGLE, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.NETHER, Type.PLAINS, Type.SWAMP,
+                        Type.WASTELAND, Type.DEAD, Type.SPOOKY))));
+        mocEntityMap.put(
+                "CaveOgre",
+                new MoCEntityData("CaveOgre", 3, EnumCreatureType.MONSTER, new SpawnListEntry(MoCEntityCaveOgre.class, 5, 1, 2), new ArrayList<Type>(Arrays.asList(
+                        Type.SANDY, Type.FOREST, Type.SNOWY, Type.JUNGLE, Type.HILLS, Type.MESA, Type.MOUNTAIN, Type.PLAINS, Type.SWAMP,
                         Type.WASTELAND, Type.DEAD, Type.SPOOKY))));
         mocEntityMap.put(
                 "Rat",
@@ -1161,6 +1220,6 @@ public class MoCreatures {
 
     public static boolean isServer() {
     	//return (FMLCommonHandler.instance().getSide().isServer());//
-        return (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER);
+    	return (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER);
     }
 }

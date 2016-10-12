@@ -1,17 +1,22 @@
 package drzhark.mocreatures.entity;
 
 import com.google.common.base.Optional;
+
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.network.MoCMessageHandler;
+import drzhark.mocreatures.network.message.MoCMessageHeart;
 import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -22,9 +27,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -34,7 +41,9 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAquatic.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAquatic.class, DataSerializers.VARINT);
     protected static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAquatic.class, DataSerializers.BOOLEAN);
-
+    private boolean hasEaten;
+    private int gestationtime;
+    
     public MoCEntityTameableAquatic(World world) {
         super(world);
     }
@@ -378,8 +387,135 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
                 + this.rand.nextFloat() * this.height, this.posZ + this.rand.nextFloat() * this.width * 2.0F - this.width, var2, var4, var6);
     }
 
+    /**
+     * ready to start breeding
+     */
+    @Override
+    public boolean readytoBreed() {
+        return !this.isBeingRidden() && this.getRidingEntity() == null && this.getIsTamed() && this.getHasEaten() && this.getIsAdult();
+    }
+
+    @Override
+	public String getOffspringClazz(IMoCTameable mate) {
+        return "";
+    }
+
 	@Override
-	public boolean readytoBreed() {
-		return false;
+    public int getOffspringTypeInt(IMoCTameable mate) {
+        return 0;
+    }
+
+	@Override
+    public boolean compatibleMate(Entity mate) {
+        return mate instanceof IMoCTameable;
+    }
+	
+	@Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        //breeding code
+        if (MoCreatures.isServer() && readytoBreed() && this.rand.nextInt(100) == 0) {
+        	doBreeding();
+        }
+	}
+    
+	/**
+	 * Breeding code
+	 */
+    protected void doBreeding() {
+        int i = 0;
+
+        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
+        for (int j = 0; j < list.size(); j++) {
+            Entity entity = (Entity) list.get(j);
+            if (compatibleMate(entity)) {
+                i++;
+            }
+        }
+
+        if (i > 1) {
+            return;
+        }
+
+        List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+        for (int k = 0; k < list1.size(); k++) {
+            Entity mate = (Entity) list1.get(k);
+            if (!(compatibleMate(mate)) || (mate == this)) {
+                continue;
+            }
+
+            if (!this.readytoBreed()) {
+                return;
+            }
+
+            if (!((IMoCTameable) mate).readytoBreed()) {
+                return;
+            }
+
+            setGestationTime(getGestationTime()+1);
+            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
+                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+
+            if (getGestationTime() <= 50) {
+                continue;
+            }
+
+            try {
+
+                String offspringClass = this.getOffspringClazz((IMoCTameable) mate);
+
+                EntityLiving offspring = MoCTools.spawnListByNameClass(offspringClass, this.worldObj);
+                if (offspring != null && offspring instanceof IMoCTameable) {
+                    IMoCTameable baby = (IMoCTameable) offspring;
+                    ((EntityLiving) baby).setPosition(this.posX, this.posY, this.posZ);
+                    this.worldObj.spawnEntityInWorld((EntityLiving) baby);
+                    baby.setAdult(false);
+                    baby.setEdad(35);
+                    baby.setTamed(true);
+                    baby.setOwnerId(this.getOwnerId());
+                    baby.setType(getOffspringTypeInt((IMoCTameable) mate));
+
+                    EntityPlayer entityplayer = this.worldObj.getPlayerEntityByUUID(this.getOwnerId());
+                    if (entityplayer != null) {
+                        MoCTools.tameWithName(entityplayer, baby);
+                    }
+                }
+                MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
+
+            } catch (Exception e) {
+            }
+
+            this.setHasEaten(false);
+            this.setGestationTime(0);
+            ((IMoCTameable) mate).setHasEaten(false);
+            ((IMoCTameable) mate).setGestationTime(0);
+            break;
+        }
+    }
+
+	@Override
+	public void setHasEaten(boolean flag) {
+		hasEaten = flag;
+	}
+
+	/**
+	 * used to determine if the entity has eaten and is ready to breed
+	 */
+	@Override
+	public boolean getHasEaten() {
+		return hasEaten;
+	}
+
+	@Override
+	public void setGestationTime(int time) {
+		gestationtime = time;
+	}
+
+	/**
+	 * returns breeding timer
+	 */
+	@Override
+	public int getGestationTime() {
+		return gestationtime;
 	}
 }

@@ -21,7 +21,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
     @Override
     public void onUpdateMoveHelper() {
         boolean isFlyer = ((IMoCEntity) theCreature).isFlyer();
-        boolean isSwimmer = this.theCreature.isInWater(); //TODO && theCreature.isSwimmer()
+        boolean isSwimmer = this.theCreature.isInWater(); 
         float fLimitAngle = 90F;
         if (!isFlyer && !isSwimmer) {
             super.onUpdateMoveHelper();
@@ -42,7 +42,6 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             this.swimmerMovementUpdate();
             fLimitAngle = 30F;
         }
-
         if (this.action == EntityMoveHelper.Action.MOVE_TO && !this.theCreature.getNavigator().noPath()) {
         	double d0 = this.posX - this.theCreature.posX;
             double d1 = this.posY - this.theCreature.posY;

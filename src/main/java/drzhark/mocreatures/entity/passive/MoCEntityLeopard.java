@@ -85,13 +85,13 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return "Panther";
+            return "Pantard";//"Panther";
         }
         if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
-            return "Tiger";
+            return "Leoger";//"Tiger";
         }
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return "Lion";
+            return "Liard";//"Lion";
         }
         return "Leopard";
     }
@@ -99,13 +99,13 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
     @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return 3; //panthard
+            return 1;//3; //panthard
         }
         if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
-            return 4; //leoger
+            return 1;//4; //leoger
         }
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return 4; //liard
+            return 1;//4; //liard
         }
         return this.getType();
     }

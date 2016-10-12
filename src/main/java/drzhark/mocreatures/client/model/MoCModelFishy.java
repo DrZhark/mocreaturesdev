@@ -7,6 +7,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.lwjgl.opengl.GL11;
+
+import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+
 @SideOnly(Side.CLIENT)
 public class MoCModelFishy extends ModelBase {
 
@@ -31,8 +35,15 @@ public class MoCModelFishy extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5);
+        MoCEntityFishy smallFish = (MoCEntityFishy)entity;
+        float yOffset = smallFish.getAdjustedYOffset();
+        float xOffset = smallFish.getAdjustedXOffset();
+        float zOffset = smallFish.getAdjustedZOffset();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(xOffset, yOffset, zOffset);
         this.Body.render(f5);
         this.Tail.render(f5);
+        GL11.glPopMatrix();
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {

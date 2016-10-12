@@ -674,7 +674,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 }
             }
         }
-
         if (getStorage() >= 4) {
             NBTTagList nbttaglist = nbttagcompound.getTagList("Items4", 10);
             this.localelephantchest4 = new MoCAnimalChest("ElephantChest", 9);

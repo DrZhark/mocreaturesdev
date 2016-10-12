@@ -1446,9 +1446,9 @@ public class MoCTools {
      */
     public static void dropAmulet(IMoCEntity entity, int amuletType, EntityPlayer player) {
         if (!(((Entity)entity).worldObj.isRemote)) {
-            ItemStack stack = new ItemStack(MoCreatures.fishnetfull, 1, 0);
+    	    ItemStack stack = new ItemStack(MoCreatures.fishnetfull, 1, 0);
             if (amuletType == 2) {
-                stack = new ItemStack(MoCreatures.petamuletfull, 1, 0);
+            	stack = new ItemStack(MoCreatures.petamuletfull, 1, 0);
             }
             if (amuletType == 3) {
                 stack = new ItemStack(MoCreatures.amuletghostfull, 1, 0);
@@ -1743,6 +1743,13 @@ public class MoCTools {
     public static boolean isItemEdible(Item item1) {
         return (item1 instanceof ItemFood) || (item1 instanceof ItemSeeds) || item1 == Items.WHEAT || item1 == Items.SUGAR || item1 == Items.CAKE
                 || item1 == Items.EGG;
+    }
+    
+    public static boolean isItemEdibleforCarnivores(Item item1) {
+        return item1 == Items.BEEF || item1 == Items.CHICKEN || item1 == Items.COOKED_BEEF 
+        		|| item1 == Items.COOKED_CHICKEN || item1 == Items.COOKED_FISH || item1 == Items.RABBIT
+        		|| item1 == Items.COOKED_MUTTON || item1 == Items.COOKED_PORKCHOP || item1 == Items.MUTTON
+        		|| item1 == Items.COOKED_RABBIT || item1 == Items.FISH || item1 == Items.PORKCHOP;
     }
 
     public static NBTTagCompound getEntityData(Entity entity) {

@@ -33,7 +33,15 @@ public class MoCModelBear extends ModelBase {
     ModelRenderer LegRL2;
     ModelRenderer LegRL3;
     ModelRenderer MouthOpen;
-
+	public ModelRenderer Saddle;
+	public ModelRenderer SaddleBack;
+	public ModelRenderer SaddleFront;
+	public ModelRenderer Bag;
+	public ModelRenderer SaddleSitted;
+	public ModelRenderer SaddleBackSitted;
+	public ModelRenderer SaddleFrontSitted;
+	public ModelRenderer BagSitted;
+	
     ModelRenderer BHead;
     ModelRenderer BSnout;
     ModelRenderer BMouth;
@@ -84,7 +92,7 @@ public class MoCModelBear extends ModelBase {
     private float attackSwing;
 
     public MoCModelBear() {
-        this.textureWidth = 64;
+        this.textureWidth = 128;
         this.textureHeight = 128;
 
         this.Head = new ModelRenderer(this, 19, 0);
@@ -410,6 +418,45 @@ public class MoCModelBear extends ModelBase {
         this.CLegRR3.addBox(-2F, 0F, -3F, 4, 2, 5);
         this.CLegRR3.setRotationPoint(-5.5F, 22F, -6F);
         setRotation(this.CLegRR3, -1.375609F, 0F, -0.3490659F);
+        
+        Saddle = new ModelRenderer(this, 36, 114);
+		Saddle.addBox(-4F, -0.5F, -3F, 8, 2, 6, 0F);
+		Saddle.setRotationPoint(0F, 4F, -2F);
+		
+		SaddleBack = new ModelRenderer(this, 20, 108);
+		SaddleBack.addBox(-4F, -0.2F, 2.9F, 8, 2, 4, 0F);
+		SaddleBack.setRotationPoint(0F, 4F, -2F);
+		SaddleBack.rotateAngleX = 0.10088F;
+		
+		SaddleFront = new ModelRenderer(this, 36, 122);
+		SaddleFront.addBox(-2.5F, -1F, -3F, 5, 2, 3, 0F);
+		SaddleFront.setRotationPoint(0F, 4F, -2F);
+		SaddleFront.rotateAngleX = -0.1850049F;
+		
+		Bag = new ModelRenderer(this, 0, 114);
+		Bag.addBox(-5F, -3F, -2.5F, 10, 2, 5, 0F);
+		Bag.setRotationPoint(0F, 7F, 7F);
+		Bag.rotateAngleX = -0.4363323F;
+		
+		BagSitted = new ModelRenderer(this, 0, 114);
+		BagSitted.addBox(-5F, -3F, -2.5F, 10, 2, 5, 0F);
+		BagSitted.setRotationPoint(0F, 17F, 8F);
+		BagSitted.rotateAngleX = -1.570796F;
+		
+		SaddleSitted = new ModelRenderer(this, 36, 114);
+		SaddleSitted.addBox(-4F, -0.5F, -3F, 8, 2, 6, 0F);
+		SaddleSitted.setRotationPoint(0F, 7.5F, 6.5F);
+		SaddleSitted.rotateAngleX = -0.9686577F;
+		
+		SaddleBackSitted = new ModelRenderer(this, 20, 108);
+		SaddleBackSitted.addBox(-4F, -0.3F, 2.9F, 8, 2, 4, 0F);
+		SaddleBackSitted.setRotationPoint(0F, 7.5F, 6.5F);
+		SaddleBackSitted.rotateAngleX = -0.9162979F;
+
+		SaddleFrontSitted = new ModelRenderer(this, 36, 122);
+		SaddleFrontSitted.addBox(-2.5F, -1F, -3F, 5, 2, 3, 0F);
+		SaddleFrontSitted.setRotationPoint(0F, 7.5F, 6.5F);
+		SaddleFrontSitted.rotateAngleX = -1.151917F;
     }
 
     @Override
@@ -419,14 +466,25 @@ public class MoCModelBear extends ModelBase {
         boolean openMouth = (entitybear.mouthCounter != 0);
         this.attackSwing = entitybear.getAttackSwing();
         setRotationAngles(f, f1, f2, f3, f4, f5);
-
-        if (bearstate == 0) {
+        boolean chested = entitybear.getIsChested();
+        boolean saddled = entitybear.getIsRideable();
+        
+        if (bearstate == 0) { //in fours
             if (openMouth) {
                 this.MouthOpen.render(f5);
             } else {
                 this.Mouth.render(f5);
             }
-
+            if (saddled)
+            {
+            	Saddle.render(f5);
+            	SaddleBack.render(f5);
+            	SaddleFront.render(f5);
+            }
+            if (chested)
+            {
+            	Bag.render(f5);
+            }
             this.LegFR1.render(f5);
             this.Neck.render(f5);
             this.LEar.render(f5);
@@ -474,13 +532,22 @@ public class MoCModelBear extends ModelBase {
             this.BLegRR1.render(f5);
             this.BLegRR2.render(f5);
             this.BLegRR3.render(f5);
-        } else if (bearstate == 2) {
+        } else if (bearstate == 2) { //sited
             if (openMouth) {
                 this.CMouthOpen.render(f5);
             } else {
                 this.CMouth.render(f5);
             }
-
+            if (saddled)
+            {
+            	SaddleSitted.render(f5);
+            	SaddleBackSitted.render(f5);
+            	SaddleFrontSitted.render(f5);
+            }
+            if (chested)
+            {
+            	BagSitted.render(f5);
+            }
             this.CHead.render(f5);
             this.CSnout.render(f5);
             this.CLEar.render(f5);
@@ -512,9 +579,6 @@ public class MoCModelBear extends ModelBase {
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
-        //float RLegXRot = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
-        //float LLegXRot = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
-
         float LLegRotX = MathHelper.cos(f * 0.6662F) * 0.8F * f1;
         float RLegRotX = MathHelper.cos((f * 0.6662F) + 3.141593F) * 0.8F * f1;
         float XAngle = (f4 / 57.29578F);

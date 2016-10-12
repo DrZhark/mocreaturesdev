@@ -89,7 +89,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 79), 0.0F);
+                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getEggNumber()), 0.0F);
             }
         }
     }
@@ -100,12 +100,6 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
         if ((MoCreatures.isServer())) {
 
-            /*if (!isNotScared() && this.rand.nextInt(5) == 0 && !getIsTamed()) {
-                EntityLivingBase entityliving = getBoogey(8D);
-                if (entityliving != null && entityliving.isInsideOfMaterial(Material.WATER)) {
-                    MoCTools.runLikeHell(this, entityliving);
-                }
-            }*/
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());
             }
@@ -203,4 +197,8 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         }
         return 0F;
     }
+    
+    protected int getEggNumber() {
+		return 80;
+	}
 }

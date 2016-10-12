@@ -487,14 +487,14 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         double var14 = MathHelper.sqrt_double(var4 * var4 + var8 * var8);
         float var12 = (float) (Math.atan2(var8, var4) * 180.0D / Math.PI) - 90.0F;
         float var13 = (float) (-(Math.atan2(var6, var14) * 180.0D / Math.PI));
-        this.rotationPitch = -this.updateRotation(this.rotationPitch, var13, f);
-        this.rotationYaw = this.updateRotation(this.rotationYaw, var12, f);
+        this.rotationPitch = -this.updateRotation2(this.rotationPitch, var13, f);
+        this.rotationYaw = this.updateRotation2(this.rotationYaw, var12, f);
     }
 
     /**
      * Arguments: current rotation, intended rotation, max increment.
      */
-    private float updateRotation(float par1, float par2, float par3) {
+    private float updateRotation2(float par1, float par2, float par3) {
         float var4;
 
         for (var4 = par2 - par1; var4 < -180.0F; var4 += 360.0F) {

@@ -51,21 +51,6 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public ResourceLocation getTexture() {
-        switch (getType()) {
-            case 1:
-                return MoCreatures.proxy.getTexture("mediumfish_salmon.png");
-            case 2:
-                return MoCreatures.proxy.getTexture("mediumfish_cod.png");
-            case 3:
-                return MoCreatures.proxy.getTexture("mediumfish_bass.png");
-            default:
-                return MoCreatures.proxy.getTexture("mediumfish_salmon.png");
-        }
-
-    }
-
-    @Override
     protected void dropFewItems(boolean flag, int x) {
         int i = this.rand.nextInt(100);
         if (i < 70) {
@@ -73,12 +58,16 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 69), 0.0F);
+                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getEggNumber()), 0.0F);
             }
         }
     }
 
-    @Override
+    protected int getEggNumber() {
+		return 70;
+	}
+
+	@Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 

@@ -41,9 +41,9 @@ public class MoCEntityTiger extends MoCEntityBigCat {
                 return MoCreatures.proxy.getTexture("BCwhiteTiger.png");
             case 3:
                 return MoCreatures.proxy.getTexture("BCwhiteTiger.png"); //winged tiger
-            case 4:
+            /*case 4:
             	return MoCreatures.proxy.getTexture("BCleoger.png"); // Tiger x Leopard
-            default:
+            */default:
                 return MoCreatures.proxy.getTexture("BCtiger.png");
         }
     }
@@ -58,8 +58,8 @@ public class MoCEntityTiger extends MoCEntityBigCat {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((stack != null) && getIsTamed() && getType() == 2 && (stack.getItem() == MoCreatures.essencelight)) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && getIsTamed() && getType() == 2 && (stack.getItem() == MoCreatures.essencelight)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -84,10 +84,13 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return "Lion";
+            return "Liger";
         }
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return "Panther";
+            return "Panthger";
+        }
+        if (mate instanceof MoCEntityLeopard && ((MoCEntityPanther) mate).getType() == 1) {
+            return "Leoger";
         }
         return "Tiger";
     }
@@ -100,13 +103,13 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
-            return 4; //liger
+            return 1;//4; //liger
         }
         if (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
-            return 4; //leoger
+            return 1;//4; //leoger
         }
         if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return 4; //panthger
+            return 1;//4; //panthger
         }
         return this.getType();
     }
@@ -166,6 +169,6 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     
     @Override
     public float getMoveSpeed() {
-            return 1.6F;
+            return 1.5F;
     }
 }

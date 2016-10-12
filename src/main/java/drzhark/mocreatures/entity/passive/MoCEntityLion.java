@@ -43,19 +43,19 @@ public class MoCEntityLion extends MoCEntityBigCat {
                 return MoCreatures.proxy.getTexture("BCmaleLion.png");//lion
             case 3:
                 return MoCreatures.proxy.getTexture("BCmaleLion.png");//winged lion
-            case 4:
+            /*case 4:
                 return MoCreatures.proxy.getTexture("BCliger.png");//liger
             case 5:
                 return MoCreatures.proxy.getTexture("BCliger.png");//winged liger
-            case 6:
+            */case 6:
                 return MoCreatures.proxy.getTexture("BCwhiteLion.png");//female white
             case 7:
                 return MoCreatures.proxy.getTexture("BCwhiteLion.png");//male white
             case 8:
                 return MoCreatures.proxy.getTexture("BCwhiteLion.png");//winged male white
-            case 9:
+            /*case 9:
                 return MoCreatures.proxy.getTexture("BCliard.png");// Male Lion X leopard
-            default:
+            */default:
                 return MoCreatures.proxy.getTexture("BCfemaleLion.png");
         }
     }
@@ -75,7 +75,8 @@ public class MoCEntityLion extends MoCEntityBigCat {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-        if ((stack != null) && getIsTamed() && (getType() == 2 || getType() == 4 || getType() == 7)
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && getIsTamed() && (getType() == 2 || getType() == 7)
                 && (stack.getItem() == MoCreatures.essencelight)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
@@ -100,8 +101,14 @@ public class MoCEntityLion extends MoCEntityBigCat {
 
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
-    	if (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return "Panther";
+    	if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
+            return "Liger";//return 4; //liger"
+        }
+        if (getType() == 2 && mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
+            return "Liard";//return 9; //liard
+        }
+        if (getType() == 2 && mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
+            return "Lither";//return 5; //lither
         }
         return "Lion";
     }
@@ -115,13 +122,13 @@ public class MoCEntityLion extends MoCEntityBigCat {
     public int getOffspringTypeInt(IMoCTameable mate) {
         int x = 0;
         if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
-            return 4; //liger
+            return 1;//4; //liger
         }
         if (getType() == 2 && mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
-            return 9; //liard
+            return 1;//9; //liard
         }
         if (getType() == 2 && mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
-            return 5; //lither
+            return 1;//5; //lither
         }
         if (mate instanceof MoCEntityLion) {
             int lionMateType = ((MoCEntityLion) mate).getType();
@@ -194,9 +201,9 @@ public class MoCEntityLion extends MoCEntityBigCat {
     @Override
     public double getAttackRange() {
         if (this.getType() == 1 || this.getType() == 6) {
-            return 8D;
+            return 12D;
         }
-        return 4D;
+        return 8D;
     }
 
     @Override
@@ -206,9 +213,6 @@ public class MoCEntityLion extends MoCEntityBigCat {
         }
         if (getType() == 9) {
             return 100;
-        }
-        if (getType() >= 4) {
-            return 135;
         }
         return 120;
     }

@@ -1,5 +1,6 @@
 package drzhark.mocreatures.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.UUID;
@@ -53,4 +54,18 @@ public interface IMoCTameable {
     void spawnHeart();
 
     boolean readytoBreed();
+    
+    String getOffspringClazz(IMoCTameable mate);
+
+    int getOffspringTypeInt(IMoCTameable mate); 
+
+    boolean compatibleMate(Entity mate);
+    
+    void setHasEaten(boolean flag);
+    
+    boolean getHasEaten();
+    
+    void setGestationTime(int time);
+    
+    int getGestationTime();
 }

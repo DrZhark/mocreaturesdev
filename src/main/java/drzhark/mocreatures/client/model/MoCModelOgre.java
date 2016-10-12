@@ -599,7 +599,7 @@ public class MoCModelOgre extends ModelBase {
 
         setRotationAngles(f, f1, f2, f3, f4, f5);
 
-        if (type == 1 || type == 3 || type == 5) {
+        if (type == 1) {
             this.Head.render(f5);
             this.Brow.render(f5);
             this.NoseBridge.render(f5);
@@ -741,31 +741,6 @@ public class MoCModelOgre extends ModelBase {
             this.RgtShoulder.rotateAngleX = LLegXRot;
             this.RgtHand.rotateAngleX = 0F;
         }
-
-        /*if (leftAttack == 0) {
-            this.LftShoulder.rotateAngleZ = (MathHelper.cos(f2 * 0.09F) * 0.05F) - 0.05F;
-            this.LftShoulder.rotateAngleX = RLegXRot;
-            this.LftHand.rotateAngleX = 0F;
-        } else {
-            float armMov = -(MathHelper.cos((leftAttack) * 0.18F) * 3F);
-            //float armMov = (MathHelper.cos((leftAttack) * 0.18F) * 2F);
-            this.LftShoulder.rotateAngleX = +armMov;
-            this.LftHand.rotateAngleX = (-45F / this.radianF);
-        }
-
-        //rightArm
-        if (rightAttack == 0) //not smashing, regular arm mov
-        {
-            this.RgtShoulder.rotateAngleZ = -(MathHelper.cos(f2 * 0.09F) * 0.05F) + 0.05F;
-            this.RgtShoulder.rotateAngleX = LLegXRot;
-            this.RgtHand.rotateAngleX = 0F;
-        } else //smashing
-        {
-            float armMov = -(MathHelper.cos((rightAttack) * 0.18F) * 3F);
-            //float armMov = (MathHelper.cos((rightAttack) * 0.18F) * 2F);
-            this.RgtShoulder.rotateAngleX = +armMov;
-            this.RgtHand.rotateAngleX = (-45F / this.radianF);
-        }*/
 
         if (headMoving == 2) {
             this.Head2.rotateAngleX = hRotX;
