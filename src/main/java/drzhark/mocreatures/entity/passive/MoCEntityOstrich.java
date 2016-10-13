@@ -549,8 +549,8 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if (getIsTamed() && (getType() > 1) && (stack != null) && !getIsRideable()
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if (getIsTamed() && onMainHand && (getType() > 1) && (stack != null) && !getIsRideable()
                 && (stack.getItem() == MoCreatures.horsesaddle || stack.getItem() == Items.SADDLE)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
@@ -560,7 +560,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (!getIsTamed() && stack != null && getType() == 2 && stack.getItem() == Items.MELON_SEEDS) {
+        if (!getIsTamed() && onMainHand && stack != null && getType() == 2 && stack.getItem() == Items.MELON_SEEDS) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -577,7 +577,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencedarkness) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencedarkness) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -592,7 +592,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essenceundead) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essenceundead) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -607,7 +607,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencelight) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencelight) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -622,7 +622,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencefire) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getType() > 1 && stack.getItem() == MoCreatures.essencefire) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -636,7 +636,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_DRINKING);
             return true;
         }
-        if (getIsTamed() && getIsChested() && (getType() > 1) && stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.WOOL)) {
+        if (getIsTamed() && onMainHand && getIsChested() && (getType() > 1) && stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.WOOL)) {
             int colorInt = (stack.getItemDamage());
             if (colorInt == 0) {
                 colorInt = 16;
@@ -650,7 +650,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && (getType() > 1) && getIsTamed() && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
+        if ((stack != null) && onMainHand && (getType() > 1) && getIsTamed() && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -677,7 +677,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (getIsTamed() && (getType() > 1) && stack != null) {
+        if (getIsTamed() && onMainHand && (getType() > 1) && stack != null) {
 
             Item item = stack.getItem();
             if (item instanceof ItemArmor) {

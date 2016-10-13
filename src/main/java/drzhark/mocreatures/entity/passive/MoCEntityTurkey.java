@@ -9,6 +9,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITempt;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -90,8 +91,8 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if (MoCreatures.isServer() && !getIsTamed() && (stack != null) && (stack.getItem() == Items.MELON_SEEDS)) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if (MoCreatures.isServer() && onMainHand && !getIsTamed() && (stack != null) && (stack.getItem() == Items.MELON_SEEDS)) {
             MoCTools.tameWithName(player, this);
         }
 

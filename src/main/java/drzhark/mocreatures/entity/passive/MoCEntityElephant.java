@@ -317,8 +317,8 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (super.processInteract(entityplayer, hand, itemstack)) {
             return false;
         }
-
-        if ((itemstack != null) && !getIsTamed() && !getIsAdult() && itemstack.getItem() == Items.CAKE) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((itemstack != null) && onMainHand && !getIsTamed() && !getIsAdult() && itemstack.getItem() == Items.CAKE) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -331,7 +331,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && !getIsTamed() && !getIsAdult() && itemstack.getItem() == MoCreatures.sugarlump) {
+        if ((itemstack != null) && onMainHand &&!getIsTamed() && !getIsAdult() && itemstack.getItem() == MoCreatures.sugarlump) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -345,7 +345,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() == 0 && itemstack.getItem() == MoCreatures.elephantHarness) {
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 0 && itemstack.getItem() == MoCreatures.elephantHarness) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -354,7 +354,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 0
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 0
                 && itemstack.getItem() == MoCreatures.elephantChest) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -365,7 +365,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
         // second storage unit
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 1
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 1
                 && itemstack.getItem() == MoCreatures.elephantChest) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -375,7 +375,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
         // third storage unit for small mammoths
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 2
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 2
                 && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -385,7 +385,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
         // fourth storage unit for small mammoths
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 3
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 3
                 && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -396,7 +396,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a garment to an indian elephant with an harness will make it pretty
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 2
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 2
                 && itemstack.getItem() == MoCreatures.elephantGarment) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -408,7 +408,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a howdah to a pretty indian elephant with a garment will attach the howdah
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() == 2 && getType() == 5
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 2 && getType() == 5
                 && itemstack.getItem() == MoCreatures.elephantHowdah) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -419,7 +419,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a platform to a ? mammoth with harness will attach the platform
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 4
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 4
                 && itemstack.getItem() == MoCreatures.mammothPlatform) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
@@ -429,7 +429,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksWood) {
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksWood) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -440,7 +440,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksIron) {
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksIron) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -451,7 +451,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((itemstack != null) && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksDiamond) {
+        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksDiamond) {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
@@ -498,7 +498,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         }
         if ((itemstack != null)
-                && getTusks() > 0
+                && onMainHand && getTusks() > 0 
                 && ((itemstack.getItem() == Items.DIAMOND_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
                         || (itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.GOLDEN_PICKAXE))) {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);

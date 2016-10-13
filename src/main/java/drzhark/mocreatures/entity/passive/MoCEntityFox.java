@@ -120,8 +120,8 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((stack != null) && ((stack.getItem() == MoCreatures.rawTurkey))) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && ((stack.getItem() == MoCreatures.rawTurkey))) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }

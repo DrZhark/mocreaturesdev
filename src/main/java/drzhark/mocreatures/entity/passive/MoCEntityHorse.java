@@ -1401,8 +1401,8 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         if (this.getType() == 60 && !getIsTamed() && isZebraRunning()) {
             return false;
         }
-
-        if ((stack != null) && !getIsRideable() && stack.getItem() == Items.SADDLE) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && !getIsRideable() && stack.getItem() == Items.SADDLE) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -1410,7 +1410,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == Items.IRON_HORSE_ARMOR && isArmored()) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == Items.IRON_HORSE_ARMOR && isArmored()) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -1423,7 +1423,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == Items.GOLDEN_HORSE_ARMOR && isArmored()) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == Items.GOLDEN_HORSE_ARMOR && isArmored()) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -1435,7 +1435,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == Items.DIAMOND_HORSE_ARMOR && isArmored()) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == Items.DIAMOND_HORSE_ARMOR && isArmored()) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -1447,7 +1447,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.horsearmorcrystal && isMagicHorse()) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.horsearmorcrystal && isMagicHorse()) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -1460,7 +1460,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
 
         // transform to undead, or heal undead horse
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essenceundead) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essenceundead) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -1495,7 +1495,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
 
         // to transform to nightmares: only pure breeds
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essencefire) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essencefire) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -1518,7 +1518,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
 
         // transform to dark pegasus
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essencedarkness) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essencedarkness) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -1545,7 +1545,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essencelight) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essencelight) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -1579,7 +1579,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.isAmuletHorse() && this.getIsTamed()) {
+        if ((stack != null) && onMainHand && this.isAmuletHorse() && this.getIsTamed()) {
             if ((this.getType() == 26 || this.getType() == 27 || this.getType() == 28) && stack.getItem() == MoCreatures.amuletbone) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 vanishHorse();
@@ -1606,7 +1606,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
         }
 
-        if ((stack != null) && (stack.getItem() == Items.DYE) && this.getType() == 50) {
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.DYE) && this.getType() == 50) {
 
             int colorInt = stack.getItemDamage();
             switch (colorInt) {
@@ -1666,7 +1666,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
 
         // zebra easter egg
-        if ((stack != null)
+        if ((stack != null) && onMainHand
                 && (this.getType() == 60)
                 && ((stack.getItem() == Items.RECORD_11) || (stack.getItem() == Items.RECORD_13) || (stack.getItem() == Items.RECORD_CAT)
                         || (stack.getItem() == Items.RECORD_CHIRP) || (stack.getItem() == Items.RECORD_FAR)
@@ -1681,7 +1681,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             eatingHorse();
             return true;
         }
-        if ((stack != null) && (stack.getItem() == Items.WHEAT) && !isMagicHorse() && !isUndead()) {
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.WHEAT) && !isMagicHorse() && !isUndead()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -1701,7 +1701,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && (stack.getItem() == MoCreatures.sugarlump) && !isMagicHorse() && !isUndead()) {
+        if ((stack != null) && onMainHand && (stack.getItem() == MoCreatures.sugarlump) && !isMagicHorse() && !isUndead()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -1721,7 +1721,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && (stack.getItem() == Items.BREAD) && !isMagicHorse() && !isUndead()) {
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.BREAD) && !isMagicHorse() && !isUndead()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -1741,7 +1741,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && ((stack.getItem() == Items.APPLE) || (stack.getItem() == Items.GOLDEN_APPLE)) && !isMagicHorse()
+        if ((stack != null) && onMainHand && ((stack.getItem() == Items.APPLE) || (stack.getItem() == Items.GOLDEN_APPLE)) && !isMagicHorse()
                 && !isUndead()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
@@ -1760,7 +1760,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && getIsTamed() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) && (isBagger())) {
+        if ((stack != null) && onMainHand && getIsTamed() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) && (isBagger())) {
             if (getIsChested()) {
                 return false;
             }
@@ -1773,7 +1773,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
             return true;
         }
-        if ((stack != null) && getIsTamed() && (stack.getItem() == MoCreatures.haystack)) {
+        if ((stack != null) && onMainHand && getIsTamed() && (stack.getItem() == MoCreatures.haystack)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -1803,7 +1803,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
         }
 
-        if ((stack != null)
+        if ((stack != null) && onMainHand
                 && ((stack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) || (stack.getItem() == Items.MUSHROOM_STEW)
                         || (stack.getItem() == Items.CAKE) || (stack.getItem() == Items.GOLDEN_CARROT))) {
             if (!getIsAdult() || isMagicHorse() || isUndead()) {

@@ -268,8 +268,8 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((stack != null) && (stack.getItem() == Items.FISH)) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.FISH)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -292,7 +292,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
             return true;
         }
-        if ((stack != null) && (stack.getItem() == Items.COOKED_FISH) && getIsTamed() && getIsAdult()) {
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.COOKED_FISH) && getIsTamed() && getIsAdult()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }

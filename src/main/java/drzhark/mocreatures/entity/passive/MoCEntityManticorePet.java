@@ -57,16 +57,6 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        /*ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if (itemstack != null && (itemstack.getItem() == MoCreatures.essencefire))
-        {
-            setType(getType()+1);
-            if (getType() >4) setType(1);
-            setEdad(getMaxEdad()-1);
-            return true;
-        }
-        */
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;

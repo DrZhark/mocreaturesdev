@@ -512,7 +512,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (stack != null && stack.getItem() == Items.BUCKET) {
             if (getType() > 4) {
                 setUpset(true);
@@ -527,18 +527,16 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (getIsTamed()) {
-            if ((stack != null) && (MoCTools.isItemEdible(stack.getItem()))) {
+        if (getIsTamed() && onMainHand && (stack != null) && (MoCTools.isItemEdible(stack.getItem()))) {
                 if (--stack.stackSize == 0) {
                     player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
                 }
                 this.setHealth(getMaxHealth());
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GOAT_EATING);
                 return true;
-            }
         }
 
-        if (MoCreatures.isServer() && !getIsTamed() && (stack != null) && MoCTools.isItemEdible(stack.getItem())) {
+        if (MoCreatures.isServer() && onMainHand && !getIsTamed() && (stack != null) && MoCTools.isItemEdible(stack.getItem())) {
             if (MoCTools.tameWithName(player, this)) {
                 return true;
             }

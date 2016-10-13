@@ -511,8 +511,8 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((getKittyState() == 2) && (stack != null) && (stack.getItem() == MoCreatures.medallion)) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((getKittyState() == 2) && onMainHand && (stack != null) && (stack.getItem() == MoCreatures.medallion)) {
             if (MoCreatures.isServer()) {
                 MoCTools.tameWithName(player, this);
             }
@@ -526,7 +526,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             }
             return false;
         }
-        if ((getKittyState() == 7) && (stack != null)
+        if ((getKittyState() == 7) && onMainHand && (stack != null)
                 && ((stack.getItem() == Items.CAKE) || (stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
@@ -536,7 +536,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && (stack != null) && (stack.getItem() == MoCreatures.woolball) && MoCreatures.isServer()) {
+        if ((getKittyState() == 11) && onMainHand && (stack != null) && (stack.getItem() == MoCreatures.woolball) && MoCreatures.isServer()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -551,7 +551,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             this.itemAttackTarget = entityitem;
             return true;
         }
-        if ((getKittyState() == 13) && (stack != null) && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
+        if ((getKittyState() == 13) && onMainHand && (stack != null) && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }

@@ -415,13 +415,13 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((stack != null) && (stack.getItem() == MoCreatures.whip) && getIsTamed() && (!this.isBeingRidden())) {
             setSitting(!getIsSitting());
             return true;
         }
 
-        if ((stack != null) && !getIsRideable() && getEdad() > 90 && this.getIsTamed()
+        if ((stack != null) && onMainHand && !getIsRideable() && getEdad() > 90 && this.getIsTamed()
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCreatures.horsesaddle)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
@@ -430,7 +430,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.IRON_HORSE_ARMOR) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.IRON_HORSE_ARMOR) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -443,7 +443,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.GOLDEN_HORSE_ARMOR) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.GOLDEN_HORSE_ARMOR) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -455,7 +455,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.DIAMOND_HORSE_ARMOR) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && getEdad() > 90 && stack.getItem() == Items.DIAMOND_HORSE_ARMOR) {
             if (getArmorType() == 0) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_ON);
             }
@@ -467,7 +467,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && getIsTamed() && getEdad() > 90 && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
+        if ((stack != null) && onMainHand && getIsTamed() && getEdad() > 90 && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -491,7 +491,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsGhost() && this.getIsTamed() && stack.getItem() == MoCreatures.amuletghost) {
+        if ((stack != null) && onMainHand && this.getIsGhost() && this.getIsTamed() && stack.getItem() == MoCreatures.amuletghost) {
 
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             if (!this.worldObj.isRemote) {
@@ -508,7 +508,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
         }
 
-        if ((stack != null) && !this.getIsGhost() && (stack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90
+        if ((stack != null) && onMainHand && !this.getIsGhost() && (stack.getItem() == MoCreatures.essencelight) && getIsTamed() && getEdad() > 90
                 && getType() < 5) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
@@ -528,7 +528,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+        if ((stack != null) && onMainHand && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (stack.getItem() == MoCreatures.essenceundead) && getIsTamed()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
@@ -542,7 +542,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+        if ((stack != null) && onMainHand && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (stack.getItem() == MoCreatures.essencelight) && getIsTamed()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
@@ -556,7 +556,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
+        if ((stack != null) && onMainHand && this.transformCounter == 0 && !this.getIsGhost() && getType() == 5
                 && (stack.getItem() == MoCreatures.essencedarkness) && getIsTamed()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));

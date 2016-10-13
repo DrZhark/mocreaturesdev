@@ -86,8 +86,8 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
         if (super.processInteract(entityplayer, hand, itemstack)) {
             return false;
         }
-
-        if ((itemstack != null) && (MoCTools.isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((itemstack != null) && onMainHand && (MoCTools.isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
         {
             if (--itemstack.stackSize == 0) {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);

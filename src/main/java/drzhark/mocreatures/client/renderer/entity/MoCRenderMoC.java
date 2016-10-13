@@ -109,6 +109,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
     @Override
     protected void preRenderCallback(T entityliving, float f) {
         IMoCEntity mocreature = (IMoCEntity) entityliving;
+        super.preRenderCallback(entityliving, f);
         //adjustOffsets is not working well
         //adjustOffsets(mocreature.getAdjustedXOffset(), mocreature.getAdjustedYOffset(), mocreature.getAdjustedZOffset());
         adjustPitch(mocreature);

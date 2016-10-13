@@ -300,8 +300,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if (stack != null && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if (stack != null && onMainHand && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -316,8 +316,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         }
         if (this.getRidingEntity() == null) {
         	this.rotationYaw = player.rotationYaw;
-                this.startRiding(player);
-            }
+            this.startRiding(player);
+        }
         return true;
     }
 

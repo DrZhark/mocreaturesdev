@@ -158,8 +158,8 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((stack != null) && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
@@ -168,12 +168,12 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             return true;
         }
         if (this.getRidingEntity() == null) {
-                this.startRiding(player);
+            this.startRiding(player);
             this.rotationYaw = player.rotationYaw;
             if (MoCreatures.isServer() && !getIsTamed()) {
                 MoCTools.tameWithName(player, this);
             }
-            }
+        }
         return true;
     }
 

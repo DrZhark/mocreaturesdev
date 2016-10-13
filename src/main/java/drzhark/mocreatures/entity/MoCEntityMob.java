@@ -422,7 +422,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                 && (getPetName() != null && !getPetName().equals("") && (!this.isBeingRidden()) && (this.getRidingEntity() == null));
     }
 
-    protected Vec3d findPossibleShelter() {
+    /*protected Vec3d findPossibleShelter() {
         Random var1 = this.getRNG();
 
         for (int var2 = 0; var2 < 10; ++var2) {
@@ -437,7 +437,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         }
 
         return null;
-    }
+    }*/
 
     @Override
     public void makeEntityJump() {
@@ -473,7 +473,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         return 0F;
     }
 
-    protected void getPathOrWalkableBlock(Entity entity, float f) {
+    /*protected void getPathOrWalkableBlock(Entity entity, float f) {
         Path pathentity = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 12F)) {
             int i = MathHelper.floor_double(entity.posX) - 2;
@@ -494,7 +494,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         } else {
             this.navigator.setPath(pathentity, 16F);
         }
-    }
+    }*/
 
     @Override
     public void setArmorType(int i) {
@@ -609,7 +609,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         return false;
     }
 
-    //TODO add a timer / deactivate flying behaviour 
     @Override
     public boolean getIsFlying() {
         return isFlyer();

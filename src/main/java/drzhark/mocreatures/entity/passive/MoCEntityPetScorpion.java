@@ -380,8 +380,8 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand, stack)) {
             return false;
         }
-
-        if ((stack != null) && getIsAdult() && !getIsRideable()
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if ((stack != null) && onMainHand && getIsAdult() && !getIsRideable()
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCreatures.horsesaddle)) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
@@ -395,7 +395,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essenceundead) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essenceundead) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
@@ -405,7 +405,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if ((stack != null) && this.getIsTamed() && stack.getItem() == MoCreatures.essencedarkness) {
+        if ((stack != null) && onMainHand && this.getIsTamed() && stack.getItem() == MoCreatures.essencedarkness) {
             if (--stack.stackSize == 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
