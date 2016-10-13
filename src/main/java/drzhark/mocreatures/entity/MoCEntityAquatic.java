@@ -631,9 +631,8 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
         if (isNotScared()) {
             Entity tempEntity = this.getAttackTarget();
-            boolean flag = super.attackEntityFrom(damagesource, i);
             setAttackTarget((EntityLivingBase) tempEntity);
-            return flag;
+            return super.attackEntityFrom(damagesource, i);
         }
 
         return super.attackEntityFrom(damagesource, i);
@@ -788,6 +787,18 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 if (this.getAttackTarget() == null) {
                     this.motionY -= 0.005D;
                 }
+                this.prevLimbSwingAmount = this.limbSwingAmount;
+                double d2 = this.posX - this.prevPosX;
+                double d3 = this.posZ - this.prevPosZ;
+                float f7 = MathHelper.sqrt_double(d2 * d2 + d3 * d3) * 4.0F;
+
+                if (f7 > 1.0F)
+                {
+                    f7 = 1.0F;
+                }
+
+                this.limbSwingAmount += (f7 - this.limbSwingAmount) * 0.4F;
+                this.limbSwing += this.limbSwingAmount;
             } else {
                 super.moveEntityWithHeading(strafe, forward);
             }
