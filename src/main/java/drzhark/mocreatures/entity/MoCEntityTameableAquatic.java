@@ -41,6 +41,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAquatic.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAquatic.class, DataSerializers.VARINT);
     protected static final DataParameter<Boolean> IS_TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAquatic.class, DataSerializers.BOOLEAN);
+    
     private boolean hasEaten;
     private int gestationtime;
     
@@ -83,15 +84,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
     @Override
     public boolean getIsTamed() {
-    	boolean flag = false; //fixes weird error on MP Servers java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Boolean
-    	try{
-    		flag = (((Boolean)this.dataManager.get(IS_TAMED)).booleanValue());
-            
-    	}catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return flag;
+    	return (((Boolean)this.dataManager.get(IS_TAMED)).booleanValue());
     }
     
     @Nullable

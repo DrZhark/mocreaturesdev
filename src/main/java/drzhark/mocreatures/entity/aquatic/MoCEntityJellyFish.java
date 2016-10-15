@@ -55,7 +55,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     public boolean isGlowing() {
-        return ((Boolean)this.dataManager.get(GLOWS)).booleanValue();
+    	return (((Boolean)this.dataManager.get(GLOWS)).booleanValue());
     }
 
     

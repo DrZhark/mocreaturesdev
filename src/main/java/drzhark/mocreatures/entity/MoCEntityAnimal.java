@@ -66,14 +66,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     private double divingDepth;
     private boolean randomAttributesUpdated; //used to update divingDepth on world load 
 
-    protected static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityAnimal.class, DataSerializers.BOOLEAN);
-    protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
-    protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityAnimal.class, DataSerializers.VARINT);
-    protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityAnimal.class, DataSerializers.STRING);
+    protected static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(MoCEntityAnimal.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(MoCEntityAnimal.class, DataSerializers.VARINT);
+    protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(MoCEntityAnimal.class, DataSerializers.VARINT);
+    protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(MoCEntityAnimal.class, DataSerializers.STRING);
 
     public MoCEntityAnimal(World world) {
         super(world);
-        setAdult(true);
         this.riderIsDisconnecting = false;
         this.isTameable = false;
         this.texture = "blank.jpg";
@@ -786,13 +785,13 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (this.onGround) {
                 setIsJumping(false);
             }
-            if (MoCreatures.isServer() && this instanceof IMoCTameable) {
+            if (MoCreatures.isServer() && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
                 int chance = (getMaxTemper() - getTemper());
                 if (chance <= 0) {
                     chance = 1;
                 }
                 if (this.rand.nextInt(chance * 8) == 0) {
-                    MoCTools.tameWithName((EntityPlayer) this.getRidingEntity(), (IMoCTameable) this);
+                    MoCTools.tameWithName((EntityPlayer) passenger, (IMoCTameable) this);
                 }
 
             }

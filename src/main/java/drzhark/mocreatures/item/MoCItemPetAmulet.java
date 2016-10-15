@@ -75,7 +75,7 @@ public class MoCItemPetAmulet extends MoCItem {
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
                     this.spawnClass = "WildHorse";
                 }
-                if (this.spawnClass.equalsIgnoreCase("BigCat")) {
+                /*if (this.spawnClass.equalsIgnoreCase("BigCat")) {
                     switch (this.creatureType) {
                         case 1:
                             this.spawnClass = "Lion";
@@ -105,7 +105,7 @@ public class MoCItemPetAmulet extends MoCItem {
                             this.creatureType = 2;
                             break;
                     }
-                }
+                }*/
                 if (this.spawnClass.equalsIgnoreCase("Ray")) {
                     switch (this.creatureType) {
                         case 1:

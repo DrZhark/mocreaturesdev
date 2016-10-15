@@ -11,6 +11,7 @@ import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -166,11 +167,11 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     public boolean getIsHungry() {
-    	return ((Boolean)this.dataManager.get(IS_HUNGRY)).booleanValue();
+    	return (((Boolean)this.dataManager.get(IS_HUNGRY)).booleanValue());
     }
 
     public boolean getHasEaten() {
-    	return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
+    	return (((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue());
     }
 
     public void setIsHungry(boolean flag) {
@@ -328,7 +329,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             }*/
 
             //TODO
-            /*if ((!this.isBeingRidden()) && (this.deathTime == 0) && (!getIsTamed() || getIsHungry())) {
+            if ((!this.isBeingRidden()) && (this.deathTime == 0) && (!getIsTamed() || getIsHungry())) {
                 EntityItem entityitem = getClosestFish(this, 12D);
                 if (entityitem != null) {
                     MoveToNextEntity(entityitem);
@@ -343,7 +344,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
                         this.setHealth(getMaxHealth());
                     }
                 }
-            }*/
+            }
             if (!ReadyforParenting(this)) {
                 return;
             }
@@ -404,7 +405,8 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     }
 
     public boolean ReadyforParenting(MoCEntityDolphin entitydolphin) {
-        return (entitydolphin.getRidingEntity() == null) && (entitydolphin.getRidingEntity() == null) && entitydolphin.getIsTamed()
+        EntityLivingBase passenger = (EntityLivingBase)this.getControllingPassenger();
+    	return (entitydolphin.getRidingEntity() == null) && (passenger == null) && entitydolphin.getIsTamed()
                 && entitydolphin.getHasEaten() && entitydolphin.getIsAdult();
     }
 
@@ -463,6 +465,6 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
     @Override
     public double getMountedYOffset() {
-        return this.getEdad() * 0.01F * (this.height * 0.5D);
+        return this.getEdad() * 0.01F * (this.height * 0.3D);
     }
 }

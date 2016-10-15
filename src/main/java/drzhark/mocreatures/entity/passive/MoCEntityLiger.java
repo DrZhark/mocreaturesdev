@@ -115,4 +115,9 @@ public class MoCEntityLiger extends MoCEntityBigCat {
         }
         return entity.height < 2F && entity.width < 2F;
     }
+    
+    @Override
+    public boolean isFlyer() {
+        return this.getType() == 2;
+    }
 }

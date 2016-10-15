@@ -56,10 +56,10 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected PathNavigate navigatorFlyer;
     protected EntityAIWanderMoC2 wander;
 
-    private static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityCreature.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityCreature.class, DataSerializers.STRING);
+    protected static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityCreature.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
+    protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
+    protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityCreature.class, DataSerializers.STRING);
     
     public MoCEntityMob(World world) {
         super(world);
@@ -371,31 +371,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         }
     }
 
-    public void moveEntityWithHeadingAquatic(float strafe, float forward) {
-        if (this.isServerWorld()) {
-            if (this.isInWater()) {
-                if (this.getRidingEntity() instanceof EntityLivingBase) {
-                    //this.moveEntityWithRider(strafe, forward);
-                    return;
-                }
 
-                this.moveRelative(strafe, forward, 0.1F);
-                this.moveEntity(this.motionX, this.motionY, this.motionZ);
-                this.motionX *= 0.8999999761581421D;
-                this.motionY *= 0.8999999761581421D;
-                this.motionZ *= 0.8999999761581421D;
-
-                if (this.getAttackTarget() == null) {
-                    this.motionY -= 0.005D;
-                }
-            } else {
-                super.moveEntityWithHeading(strafe, forward);
-            }
-        } else {
-            super.moveEntityWithHeading(strafe, forward);
-        }
-
-    }
 
     /**
      * Used to synchronize the attack animation between server and client

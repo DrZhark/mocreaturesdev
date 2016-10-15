@@ -11,6 +11,12 @@ import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityLiger;
+import drzhark.mocreatures.entity.passive.MoCEntityLeoger;
+import drzhark.mocreatures.entity.passive.MoCEntityLiard;
+import drzhark.mocreatures.entity.passive.MoCEntityLither;
+import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
+import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -253,13 +259,36 @@ public class MoCTools {
             Class<? extends EntityLiving> myClass = null;
             if (entityData == null && eName.contains("PetScorpion")) { // since we don't add this to our map, we need to check for it manually
                 myClass = MoCEntityPetScorpion.class;
-            } else if (entityData == null && eName.contains("ManticorePet")) // since we don't add this to our map, we need to check for it manually
+            } 
+            else if (entityData == null && eName.contains("ManticorePet")) // since we don't add this to our map, we need to check for it manually
             {
                 myClass = MoCEntityManticorePet.class;
-            } else if (entityData == null && eName.contains("BigCat")) // since we don't add this to our map, we need to check for it manually
+            } 
+            else if (entityData == null && eName.contains("Liger")) // since we don't add this to our map, we need to check for it manually
             {
-                myClass = MoCEntityBigCat.class;
-            } else {
+                myClass = MoCEntityLiger.class;
+            } 
+            else if (entityData == null && eName.contains("Leoger")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityLeoger.class;
+            } 
+            else if (entityData == null && eName.contains("Liard")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityLiard.class;
+            } 
+            else if (entityData == null && eName.contains("Lither")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityLither.class;
+            } 
+            else if (entityData == null && eName.contains("Panthard")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityPanthard.class;
+            } 
+            else if (entityData == null && eName.contains("Panthger")) // since we don't add this to our map, we need to check for it manually
+            {
+                myClass = MoCEntityPanthger.class;
+            } 
+            else {
                 myClass = entityData.getEntityClass();
             }
             entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});

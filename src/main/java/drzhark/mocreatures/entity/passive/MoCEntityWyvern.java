@@ -70,7 +70,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     public MoCEntityWyvern(World world) {
         super(world);
-        setSize(1.9F, 1.7F); //TODO
+        setSize(1.9F, 1.7F);
         setAdult(false);
         setTamed(false);
         this.stepHeight = 1.0F;
@@ -298,6 +298,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                     new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.transformType = tType;
+        this.transformCounter = 1;
     }
 
     @Override

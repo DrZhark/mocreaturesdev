@@ -57,12 +57,12 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     protected PathNavigate navigatorWater;
     private boolean updateDivingDepth = false;
     private double divingDepth;
+    protected int temper;
 
-    private static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(EntityCreature.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(EntityCreature.class, DataSerializers.STRING);
-    private static final DataParameter<Integer> TEMPER = EntityDataManager.<Integer>createKey(EntityCreature.class, DataSerializers.VARINT);
+    protected static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(MoCEntityAquatic.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(MoCEntityAquatic.class, DataSerializers.VARINT);
+    protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(MoCEntityAquatic.class, DataSerializers.VARINT);
+    protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(MoCEntityAquatic.class, DataSerializers.STRING);
     
     public MoCEntityAquatic(World world) {
         super(world);
@@ -105,7 +105,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         this.dataManager.register(TYPE, Integer.valueOf(0));
         this.dataManager.register(AGE, Integer.valueOf(45));
         this.dataManager.register(NAME_STR, "");
-        this.dataManager.register(TEMPER, Integer.valueOf(50));
     }
 
     @Override
@@ -158,13 +157,12 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     	this.dataManager.set(NAME_STR, String.valueOf(name));
     }
 
-    
     public int getTemper() {
-    	return ((Integer)this.dataManager.get(TEMPER)).intValue();
+        return this.temper;
     }
 
     public void setTemper(int i) {
-    	this.dataManager.set(TEMPER, Integer.valueOf(i));    
+        this.temper = i;
     }
 
     /**
@@ -864,10 +862,10 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 this.motionX += this.rand.nextDouble() / 30D;
                 this.motionZ += this.rand.nextDouble() / 10D;
             }
-            if (MoCreatures.isServer()) {
+            //if (MoCreatures.isServer()) {
                 moveEntity(this.motionX, this.motionY, this.motionZ);
-            }
-            if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
+            //}
+            if (MoCreatures.isServer() && this.rand.nextInt(100) == 0) {
             	passenger.motionY += 0.9D;
             	passenger.motionZ -= 0.3D;
             	passenger.dismountRidingEntity();
@@ -875,13 +873,13 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             if (this.onGround) {
                 setIsJumping(false);
             }
-            if (MoCreatures.isServer() && this instanceof IMoCTameable) {
+            if (MoCreatures.isServer() && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
                 int chance = (getMaxTemper() - getTemper());
                 if (chance <= 0) {
                     chance = 1;
                 }
                 if (this.rand.nextInt(chance * 8) == 0) {
-                    MoCTools.tameWithName((EntityPlayer) this.getRidingEntity(), (IMoCTameable) this);
+                    MoCTools.tameWithName((EntityPlayer) passenger, (IMoCTameable) this);
                 }
 
             }
