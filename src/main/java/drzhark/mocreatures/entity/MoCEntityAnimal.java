@@ -328,7 +328,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
             }
-
+            if (getEdad() == 0) setEdad(getMaxEdad() - 10); //fixes tiny creatures spawned by error
             if (!getIsAdult() && (this.rand.nextInt(300) == 0) && getEdad() < getMaxEdad()) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= getMaxEdad()) {

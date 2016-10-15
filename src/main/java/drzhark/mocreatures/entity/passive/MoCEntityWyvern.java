@@ -359,7 +359,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
                 }
             }
 
-            if (getIsGhost() && getEdad() < 10 && this.rand.nextInt(5) == 0) {
+            if (getIsGhost() && getEdad() > 0 && getEdad() < 10 && this.rand.nextInt(5) == 0) {
                 setEdad(getEdad() + 1);
                 if (getEdad() == 9) {
                     setEdad(140);

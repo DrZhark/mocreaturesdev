@@ -23,7 +23,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
     @Override
     public void doRender(MoCEntityShark entityshark, double d, double d1, double d2, float f, float f1) {
         super.doRender(entityshark, d, d1, d2, f, f1);
-        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityshark.getPetName()).isEmpty();
+        boolean flag = MoCreatures.proxy.getDisplayPetName() && !(entityshark.getPetName().isEmpty());
         boolean flag1 = MoCreatures.proxy.getDisplayPetHealth();
         if (entityshark.renderName()) {
             float f2 = 1.6F;

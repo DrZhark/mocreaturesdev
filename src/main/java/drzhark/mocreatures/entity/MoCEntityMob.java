@@ -268,7 +268,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
                     }
                 }
             }
-
+            if (getEdad() == 0) setEdad(getMaxEdad() - 10); //fixes tiny creatures spawned by error
             if (!getIsAdult() && (this.rand.nextInt(300) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= getMaxEdad()) {

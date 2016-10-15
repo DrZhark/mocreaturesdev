@@ -1,19 +1,17 @@
-[{
-
+{
+  "modListVersion": 2,
+  "modList": [{
   "modid": "mocreatures",
   "name": "DrZhark's Mo'Creatures Mod",
 "description": "This mod adds many more creatures to Minecraft.  Authored by DrZhark, coding, AI, animations: DrZhark.  Models, textures: BlockDaddy, DrZhark.  SMP coding: Bloodshot, DrZhark",
 "mcversion": "1.10.2",
-"version": "10.0.0",
+	"version": "10.0.3",
   "url": "http://www.mocreatures.org",
   "updateUrl": "",
 "authorList": [ "DrZhark", "BloodShot", "BlockDaddy" ],
-"credits": "",
-  "logoFile": "/moclogo.png",
+	"logoFile": "assets/moclogo.png",
 "screenshots": [], 
-"parent":"", 
-  "dependencies": [
-     "customspawner"
-  ]
-
-}]
+	"dependencies": ["CustomSpawner"],
+	"useDependencyInformation": true
+  }]
+}

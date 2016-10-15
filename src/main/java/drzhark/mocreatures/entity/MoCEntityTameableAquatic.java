@@ -40,7 +40,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAquatic.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAquatic.class, DataSerializers.VARINT);
-    protected static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAquatic.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Boolean> IS_TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAquatic.class, DataSerializers.BOOLEAN);
     private boolean hasEaten;
     private int gestationtime;
     
@@ -53,12 +53,12 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         super.entityInit();
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
         this.dataManager.register(PET_ID, Integer.valueOf(-1));
-        this.dataManager.register(TAMED, Boolean.valueOf(false));
+        this.dataManager.register(IS_TAMED, Boolean.valueOf(false));
     }
 
     @Override
     public int getOwnerPetId() {
-    	return this.dataManager.get(PET_ID).intValue();
+    	return ((Integer)this.dataManager.get(PET_ID)).intValue();
     }
 
     @Override
@@ -78,12 +78,20 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
     @Override
     public void setTamed(boolean flag) {
-        this.dataManager.set(TAMED, flag);
+        this.dataManager.set(IS_TAMED, flag);
     }
 
     @Override
     public boolean getIsTamed() {
-        return this.dataManager.get(TAMED).booleanValue();
+    	boolean flag = false; //fixes weird error on MP Servers java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Boolean
+    	try{
+    		flag = (((Boolean)this.dataManager.get(IS_TAMED)).booleanValue());
+            
+    	}catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    	return flag;
     }
     
     @Nullable

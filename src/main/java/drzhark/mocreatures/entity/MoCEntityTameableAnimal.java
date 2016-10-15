@@ -81,7 +81,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
 
     @Override
     public boolean getIsTamed() {
-        return this.dataManager.get(TAMED).booleanValue();
+        return ((Boolean)this.dataManager.get(TAMED)).booleanValue();
     }
 
     @Nullable

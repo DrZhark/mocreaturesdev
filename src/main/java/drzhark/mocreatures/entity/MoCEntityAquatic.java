@@ -398,7 +398,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                     this.mountCount = 0;
                 }
             }
-
+            if (getEdad() == 0) setEdad(getMaxEdad() - 10); //fixes tiny creatures spawned by error
             if (!getIsAdult() && (this.rand.nextInt(300) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= getMaxEdad()) {

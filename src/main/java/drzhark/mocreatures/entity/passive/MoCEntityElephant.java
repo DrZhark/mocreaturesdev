@@ -213,7 +213,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void onLivingUpdate() {
-
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
             if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.isBeingRidden()) && rand.nextInt(15) == 0) {
