@@ -516,18 +516,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         setType(nbttagcompound.getInteger("TypeInt"));
     }
 
-    /**
-     * fixes dewspawning tamed creatures
-     */
-    @Override
-    public boolean isEntityInsideOpaqueBlock() {
-        if (getIsTamed()) {
-            return false;
-        }
-
-        return super.isEntityInsideOpaqueBlock();
-    }
-
     public void setDisplayName(boolean flag) {
     }
 

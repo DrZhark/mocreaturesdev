@@ -419,7 +419,19 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         	doBreeding();
         }
 	}
-    
+
+    /**
+     * fixes despawning tamed creatures
+     */
+    @Override
+    public boolean isEntityInsideOpaqueBlock() {
+        if (this.getIsTamed()) {
+            return false;
+        }
+
+        return super.isEntityInsideOpaqueBlock();
+    }
+
 	/**
 	 * Breeding code
 	 */
