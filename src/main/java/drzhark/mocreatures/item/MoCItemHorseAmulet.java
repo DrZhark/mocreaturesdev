@@ -1,7 +1,5 @@
 package drzhark.mocreatures.item;
 
-import com.mojang.authlib.GameProfile;
-
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -19,7 +17,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,6 +36,7 @@ public class MoCItemHorseAmulet extends MoCItem {
     private byte armor;
     private boolean adult;
     private UUID ownerUniqueId;
+    private String ownerName;
     private int PetId;
 
     public MoCItemHorseAmulet(String name) {
@@ -105,6 +103,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     storedCreature.setArmorType(this.armor);
                     storedCreature.setOwnerPetId(this.PetId);
                     storedCreature.setOwnerId(player.getUniqueID());
+                    this.ownerName = player.getName();
                     if (this.spawnClass == 100) {
                         ((MoCEntityWyvern) storedCreature).setIsGhost(true);
                     }
@@ -184,11 +183,14 @@ public class MoCItemHorseAmulet extends MoCItem {
         this.rideable = nbt.getBoolean("Rideable");
         this.armor = nbt.getByte("Armor");
         this.adult = nbt.getBoolean("Adult");
-        this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
+        this.ownerName = nbt.getString("OwnerName");
+        if (nbt.hasUniqueId("OwnerUUID")) {
+            this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
+        }
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("PetID", this.PetId);
+        nbt.setInteger("PetId", this.PetId);
         nbt.setInteger("CreatureType", this.creatureType);
         nbt.setFloat("Health", this.health);
         nbt.setInteger("Edad", this.edad);
@@ -197,7 +199,10 @@ public class MoCItemHorseAmulet extends MoCItem {
         nbt.setBoolean("Rideable", this.rideable);
         nbt.setByte("Armor", this.armor);
         nbt.setBoolean("Adult", this.adult);
-        nbt.setUniqueId("OwnerUUID", this.ownerUniqueId);
+        nbt.setString("OwnerName", this.ownerName);
+        if (this.ownerUniqueId != null) {
+            nbt.setUniqueId("OwnerUUID", ownerUniqueId);
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -215,15 +220,8 @@ public class MoCItemHorseAmulet extends MoCItem {
         if (this.name != "") {
             par3List.add(TextFormatting.BLUE + this.name);
         }
-        if (this.ownerUniqueId != null) {
-        	try{
-        		GameProfile profile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(this.ownerUniqueId);
-                if (profile != null) {
-                    par3List.add(TextFormatting.DARK_BLUE + "Owned by " + profile.getName());
-                }	
-        	} catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (this.ownerName != "") {
+            par3List.add(TextFormatting.DARK_BLUE + "Owned by " + this.ownerName);
         }
     }
 
