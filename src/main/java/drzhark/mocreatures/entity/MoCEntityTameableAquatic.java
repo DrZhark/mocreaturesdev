@@ -423,6 +423,9 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     /**
      * fixes despawning tamed creatures
      */
+    // Disabled due to odd DataManager ClassCastException issues
+    // TODO: This check can actually be moved to forge events.
+    /*
     @Override
     public boolean isEntityInsideOpaqueBlock() {
         if (this.getIsTamed()) {
@@ -430,7 +433,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
 
         return super.isEntityInsideOpaqueBlock();
-    }
+    }*/
 
 	/**
 	 * Breeding code

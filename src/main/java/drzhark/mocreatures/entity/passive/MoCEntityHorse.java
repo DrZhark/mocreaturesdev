@@ -89,6 +89,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityHorse.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> CHESTED = EntityDataManager.<Boolean>createKey(MoCEntityHorse.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SITTING = EntityDataManager.<Boolean>createKey(MoCEntityHorse.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> BRED = EntityDataManager.<Boolean>createKey(MoCEntityHorse.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> ARMOR_TYPE = EntityDataManager.<Integer>createKey(MoCEntityHorse.class, DataSerializers.VARINT);
 
     public MoCEntityHorse(World world) {
@@ -132,43 +133,52 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         this.dataManager.register(RIDEABLE, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
         this.dataManager.register(SITTING, Boolean.valueOf(false)); // rideable: 0 nothing, 1 saddle
         this.dataManager.register(CHESTED, Boolean.valueOf(false));
+        this.dataManager.register(BRED, Boolean.valueOf(false));
         this.dataManager.register(ARMOR_TYPE, Integer.valueOf(0));
     }
 
     @Override
     public int getArmorType() {
-    	return ((Integer)this.dataManager.get(ARMOR_TYPE)).intValue();
+        return ((Integer)this.dataManager.get(ARMOR_TYPE)).intValue();
     }
 
     public boolean getIsChested() {
-    	return ((Boolean)this.dataManager.get(CHESTED)).booleanValue();
+        return ((Boolean)this.dataManager.get(CHESTED)).booleanValue();
     }
     
     @Override
     public boolean getIsSitting() {
-    	return ((Boolean)this.dataManager.get(SITTING)).booleanValue();
+        return ((Boolean)this.dataManager.get(SITTING)).booleanValue();
+    }
+
+    public boolean getHasBred() {
+        return ((Boolean)this.dataManager.get(BRED)).booleanValue();
+    }
+
+    public void setBred(boolean flag) {
+        this.dataManager.set(BRED, Boolean.valueOf(flag));
     }
 
     @Override
     public boolean getIsRideable() {
-    	return ((Boolean)this.dataManager.get(RIDEABLE)).booleanValue();
+        return ((Boolean)this.dataManager.get(RIDEABLE)).booleanValue();
     }
     @Override
     public void setRideable(boolean flag) {
-    	this.dataManager.set(RIDEABLE, Boolean.valueOf(flag));
+        this.dataManager.set(RIDEABLE, Boolean.valueOf(flag));
     }
     
     @Override
     public void setArmorType(int i) {
-    	this.dataManager.set(ARMOR_TYPE, Integer.valueOf(i));
+        this.dataManager.set(ARMOR_TYPE, Integer.valueOf(i));
     }
 
     public void setIsChested(boolean flag) {
-    	this.dataManager.set(CHESTED, Boolean.valueOf(flag));
+        this.dataManager.set(CHESTED, Boolean.valueOf(flag));
     }
 
     public void setSitting(boolean flag) {
-    	this.dataManager.set(SITTING, Boolean.valueOf(flag));
+        this.dataManager.set(SITTING, Boolean.valueOf(flag));
     }
     
     @Override
@@ -2195,7 +2205,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             /**
              * foal following mommy!
              */
-            /*if (!getIsAdult() && (this.rand.nextInt(200) == 0)) {
+            if (!getIsAdult() && (this.rand.nextInt(200) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= 100) {
                     setAdult(true);
@@ -2205,7 +2215,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
                         mommy.setBred(false);
                     }
                 }
-            }*/
+            }
 
             /**
              * Buckling
@@ -2303,6 +2313,26 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             }
         }
 
+    }
+
+    protected MoCEntityHorse getClosestMommy(Entity entity, double d) {
+        double d1 = -1D;
+        MoCEntityHorse entityliving = null;
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getCollisionBoundingBox().expand(d, d, d));
+        for (int i = 0; i < list.size(); i++) {
+            Entity entity1 = (Entity) list.get(i);
+            if ((!(entity1 instanceof MoCEntityHorse)) || ((entity1 instanceof MoCEntityHorse) && !((MoCEntityHorse) entity1).getHasBred())) {
+                continue;
+            }
+
+            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1))) {
+                d1 = d2;
+                entityliving = (MoCEntityHorse) entity1;
+            }
+        }
+
+        return entityliving;
     }
 
     /**
@@ -2622,7 +2652,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         nbttagcompound.setBoolean("EatingHaystack", getIsSitting());
         nbttagcompound.setBoolean("ChestedHorse", getIsChested());
         nbttagcompound.setBoolean("HasReproduced", getHasReproduced());
-        //nbttagcompound.setBoolean("Bred", getHasBred());
+        nbttagcompound.setBoolean("Bred", getHasBred());
         nbttagcompound.setInteger("ArmorType", getArmorType());
 
         if (getIsChested() && this.localchest != null) {
@@ -2646,7 +2676,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         super.readEntityFromNBT(nbttagcompound);
         setRideable(nbttagcompound.getBoolean("Saddle"));
         setSitting(nbttagcompound.getBoolean("EatingHaystack"));
-        //setBred(nbttagcompound.getBoolean("Bred"));
+        setBred(nbttagcompound.getBoolean("Bred"));
         setIsChested(nbttagcompound.getBoolean("ChestedHorse"));
         setReproduced(nbttagcompound.getBoolean("HasReproduced"));
         setArmorType((byte) nbttagcompound.getInteger("ArmorType"));

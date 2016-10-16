@@ -327,7 +327,15 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             /*if (!getIsHungry() && (this.rand.nextInt(100) == 0)) {
                 setIsHungry(true);
             }*/
-
+            // fixes growth
+            if (!getIsAdult() && (rand.nextInt(50) == 0))
+            {
+                setEdad(getEdad() + 1);
+                if (getEdad() >= 150)
+                {
+                    setAdult(true);
+                }
+            }
             //TODO
             if ((!this.isBeingRidden()) && (this.deathTime == 0) && (!getIsTamed() || getIsHungry())) {
                 EntityItem entityitem = getClosestFish(this, 12D);
