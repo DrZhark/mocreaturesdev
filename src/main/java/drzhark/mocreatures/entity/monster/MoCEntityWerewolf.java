@@ -177,8 +177,8 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                         i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 3F;
                     }
                 } else if (itemstack.getItem() instanceof ItemTool) {
-                    String toolMaterial = ((ItemSword) itemstack.getItem()).getToolMaterialName();
-                    String toolName = ((ItemSword) itemstack.getItem()).getUnlocalizedName();
+                    String toolMaterial = ((ItemTool) itemstack.getItem()).getToolMaterialName();
+                    String toolName = ((ItemTool) itemstack.getItem()).getUnlocalizedName();
                     if (toolMaterial.toLowerCase().contains("silver") || toolName.toLowerCase().contains("silver")) {
                         i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 2F;
                     }
