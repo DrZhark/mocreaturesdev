@@ -887,10 +887,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public void setArmorType(int i) {
     }
 
-    @Override
-    public void dismountEntity() {
-    }
-
     /**
      * Finds and entity described in entitiesToInclude at d distance
      *

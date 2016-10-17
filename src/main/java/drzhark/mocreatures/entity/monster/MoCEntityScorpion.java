@@ -299,7 +299,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         if (MoCreatures.isServer() && getIsAdult() && getHasBabies()) {
             int k = this.rand.nextInt(5);
             for (int i = 0; i < k; i++) {
-                MoCEntityScorpion entityscorpy = new MoCEntityScorpion(this.worldObj);
+                MoCEntityPetScorpion entityscorpy = new MoCEntityPetScorpion(this.worldObj);
                 entityscorpy.setPosition(this.posX, this.posY, this.posZ);
                 entityscorpy.setAdult(false);
                 entityscorpy.setEdad(20);
@@ -447,30 +447,6 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean isNotScared() {
         return getIsAdult() || this.getEdad() > 70;
-    }
-
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
-            return true;
-        }
-
-        if (MoCreatures.isServer() && this.getRidingEntity() == null && !getIsAdult() && getEdad() < 60) {
-            MoCEntityPetScorpion entitypetscorpy = new MoCEntityPetScorpion(this.worldObj);
-            entitypetscorpy.setPosition(this.posX, this.posY, this.posZ);
-            entitypetscorpy.setAdult(false);
-            entitypetscorpy.setEdad(this.getEdad());
-            entitypetscorpy.setType(getType());
-            this.worldObj.spawnEntityInWorld(entitypetscorpy);
-            entitypetscorpy.rotationYaw = player.rotationYaw;
-            entitypetscorpy.startRiding(player);
-            MoCTools.tameWithName(player, entitypetscorpy);
-            //entitypetscorpy.setPicked(true);
-            this.setDead();
-            return true;
-
-        }
-        return false;
     }
 
     @Override

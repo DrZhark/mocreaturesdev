@@ -655,13 +655,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
-    public void dismountEntity() {
-        if (MoCreatures.isServer() && this.isBeingRidden()) {
-            this.getRidingEntity().dismountRidingEntity();
-        }
-    }
-
-    @Override
     public float pitchRotationOffset() {
         return 0F;
     }

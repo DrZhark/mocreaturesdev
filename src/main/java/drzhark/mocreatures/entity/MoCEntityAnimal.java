@@ -1070,13 +1070,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
         return 0;
     }
 
-    @Override
-    public void dismountEntity() {
-        if (MoCreatures.isServer() && this.isBeingRidden()) {
-            this.getRidingEntity().dismountRidingEntity();
-        }
-    }
-
     /**
      * Drops armor if the animal has one
      */

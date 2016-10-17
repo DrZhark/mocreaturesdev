@@ -477,10 +477,6 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public void dismountEntity() {
-    }
-
-    @Override
     public float pitchRotationOffset() {
         return 0F;
     }

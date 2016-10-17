@@ -49,8 +49,6 @@ public interface IMoCEntity {
 
     void setType(int i);
 
-    void dismountEntity();
-
     float rollRotationOffset();
 
     float pitchRotationOffset();

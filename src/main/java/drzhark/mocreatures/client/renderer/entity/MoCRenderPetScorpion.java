@@ -31,7 +31,7 @@ public class MoCRenderPetScorpion extends MoCRenderMoC<MoCEntityPetScorpion> {
         }
         if (!entityscorpion.getIsAdult()) {
             stretch(entityscorpion);
-            if (entityscorpion.getIsPicked()) {
+            if (entityscorpion.getRidingEntity() != null) {
                 upsideDown(entityscorpion);
             }
         } else {

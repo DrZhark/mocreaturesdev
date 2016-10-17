@@ -250,8 +250,8 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     private void changeKittyState(int i) {
         setKittyState(i);
-        if (MoCreatures.isServer()) {
-            this.dismountEntity();
+        if (!this.worldObj.isRemote) {
+            this.dismountRidingEntity();
         }
         setSitting(false);
         this.kittytimer = 0;
