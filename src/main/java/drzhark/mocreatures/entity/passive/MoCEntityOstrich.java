@@ -547,7 +547,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (getIsTamed() && onMainHand && (getType() > 1) && (stack != null) && !getIsRideable()

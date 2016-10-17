@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -28,6 +29,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.Path;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -37,11 +39,22 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.UUID;
 
-public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEntity {
+public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntity {
+
+    protected static final DataParameter<Boolean> ADULT = EntityDataManager.<Boolean>createKey(MoCEntityAmbient.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(MoCEntityAmbient.class, DataSerializers.VARINT);
+    protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(MoCEntityAmbient.class, DataSerializers.VARINT);
+    protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(MoCEntityAmbient.class, DataSerializers.STRING);
+
+    protected String texture;
+    protected boolean riderIsDisconnecting;
+    protected PathNavigate navigatorFlyer;
 
     public MoCEntityAmbient(World world) {
         super(world);
+        this.navigatorFlyer = new PathNavigateFlyer(this, world);
     }
 
     @Override
@@ -77,50 +90,78 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     @Override
     protected void entityInit() {
         super.entityInit();
+        this.dataManager.register(ADULT, false);
+        this.dataManager.register(TYPE, 0);
+        this.dataManager.register(AGE, 45);
+        this.dataManager.register(NAME_STR, "");
     }
 
     @Override
     public void setType(int i) {
-        this.dataManager.set(TYPE, Integer.valueOf(i));
+        this.dataManager.set(TYPE, i);
     }
 
     @Override
     public int getType() {
-    	return ((Integer)this.dataManager.get(TYPE)).intValue();
+    	return this.dataManager.get(TYPE);
+    }
+
+    public void setDisplayName(boolean flag) {
+    }
+
+    @Override
+    public boolean renderName() {
+        return MoCreatures.proxy.getDisplayPetName()
+                && (getPetName() != null && !getPetName().equals("") && (!this.isBeingRidden()) && (this.getRidingEntity() == null));
     }
 
     @Override
     public boolean getIsAdult() {
-    	return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
+    	return this.dataManager.get(ADULT);
     }
 
     @Override
     public void setAdult(boolean flag) {
-    	this.dataManager.set(ADULT, Boolean.valueOf(flag));
+    	this.dataManager.set(ADULT, flag);
     }
 
     @Override
     public String getPetName() {
-    	return ((String)this.dataManager.get(NAME_STR)).toString();
-    }
-
-    @Override
-    public int getEdad() {
-        return ((Integer)this.dataManager.get(AGE)).intValue();
-    }
-    
-    @Override
-    public void setEdad(int i) {
-    	this.dataManager.set(AGE, Integer.valueOf(i));
+        return this.dataManager.get(NAME_STR);
     }
 
     @Override
     public void setPetName(String name) {
-    	this.dataManager.set(NAME_STR, String.valueOf(name));
+    	this.dataManager.set(NAME_STR, name);
     }
 
-    public void setDisplayName(boolean flag) {
+    @Override
+    public int getEdad() {
+        return this.dataManager.get(AGE);
+    }
 
+    @Override
+    public void setEdad(int i) {
+    	this.dataManager.set(AGE, i);
+    }
+
+    @Override
+    public boolean getIsTamed() {
+        return false;
+    }
+
+    @Override
+    public int getOwnerPetId() {
+        return 0;
+    }
+
+    @Override
+    public void setOwnerPetId(int petId) {
+    }
+
+    @Override
+    public UUID getOwnerId() {
+        return null;
     }
 
     @Override
@@ -140,6 +181,26 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     @Override
     public boolean checkSpawningBiome() {
         return true;
+    }
+
+    protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
+        double d1 = -1D;
+        EntityLivingBase entityliving = null;
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        for (int i = 0; i < list.size(); i++) {
+            Entity entity1 = list.get(i);
+
+            if (entitiesToIgnore(entity1)) {
+                continue;
+            }
+            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
+                d1 = d2;
+                entityliving = (EntityLivingBase) entity1;
+            }
+        }
+
+        return entityliving;
     }
 
     @Override
@@ -700,12 +761,6 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     }
 
     @Override
-    public boolean renderName() {
-        return MoCreatures.proxy.getDisplayPetName()
-                && (getPetName() != null && !getPetName().equals("") && (!this.isBeingRidden()) && (this.getRidingEntity() == null));
-    }
-
-    @Override
     public int nameYOffset() {
         return -80;
     }
@@ -720,7 +775,7 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     public void repelMobs(Entity entity1, Double dist, World worldObj) {
         List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
-            Entity entity = (Entity) list.get(i);
+            Entity entity = list.get(i);
             if (!(entity instanceof EntityMob)) {
                 continue;
             }
@@ -817,25 +872,6 @@ public abstract class MoCEntityAmbient extends MoCEntityAnimal implements IMoCEn
     }
 
     public void setRideable(boolean b) {
-    }
-
-    protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
-        double d1 = -1D;
-        EntityLivingBase entityliving = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity1 = list.get(i);
-
-            if (entitiesToIgnore(entity1)) {
-                continue;
-            }
-            double d2 = entity1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
-            if (((d < 0.0D) || (d2 < (d * d))) && ((d1 == -1D) || (d2 < d1)) && ((EntityLivingBase) entity1).canEntityBeSeen(entity)) {
-                d1 = d2;
-                entityliving = (EntityLivingBase) entity1;
-            }
-        }
-        return entityliving;
     }
 
     public boolean entitiesToIgnore(Entity entity) {

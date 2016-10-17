@@ -195,8 +195,14 @@ public class EnvironmentSettings {
     }
 
     public void initializeEntities() {
-        for (Map.Entry<Class<? extends Entity>, String> entry : EntityList.CLASS_TO_NAME.entrySet()) {
-            Class<? extends Entity> clazz = entry.getKey();
+        // There seems to be a race condition with EntityDataManager registration when entity list is not sorted
+        // To avoid these issues, the entity list will now be sorted to guarantee the order is the same every time
+        TreeMap< String, Class <? extends Entity >> sortedMap = new TreeMap< String, Class <? extends Entity >>(String.CASE_INSENSITIVE_ORDER);
+        for (Map.Entry<String, Class<? extends Entity>> entry : EntityList.NAME_TO_CLASS.entrySet()) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<String, Class<? extends Entity>> entry : sortedMap.entrySet()) {
+            Class<? extends Entity> clazz = entry.getValue();
             if (this.classToEntityMapping.get(clazz) == null) { // don't process if it already exists
                 registerEntity(clazz);
             } else {

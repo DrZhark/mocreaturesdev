@@ -55,7 +55,7 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
             player.rotationYaw = this.rotationYaw;

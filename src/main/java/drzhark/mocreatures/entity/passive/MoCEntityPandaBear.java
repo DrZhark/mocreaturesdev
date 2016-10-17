@@ -85,7 +85,7 @@ public class MoCEntityPandaBear extends MoCEntityBear{
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         ItemStack itemstack = player.inventory.getCurrentItem();

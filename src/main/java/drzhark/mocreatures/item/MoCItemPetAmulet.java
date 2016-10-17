@@ -52,7 +52,7 @@ public class MoCItemPetAmulet extends MoCItem {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
-    double dist = 1D;
+        double dist = 1D;
         double newPosY = entityplayer.posY;
         double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));

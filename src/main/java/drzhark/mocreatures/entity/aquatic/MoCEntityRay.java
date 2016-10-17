@@ -28,7 +28,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
 
         if (!this.isBeingRidden() && getType() == 1) {

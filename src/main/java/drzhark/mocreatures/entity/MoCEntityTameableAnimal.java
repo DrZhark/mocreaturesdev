@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -37,9 +36,10 @@ import javax.annotation.Nullable;
 
 public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTameable, IEntityOwnable {
 
-    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAnimal.class, DataSerializers.VARINT);
-    protected static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAnimal.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAnimal.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAnimal.class, DataSerializers.BOOLEAN);
+
     private boolean hasEaten;
     private int gestationtime;
     
@@ -51,23 +51,23 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     protected void entityInit() {
         super.entityInit();
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.<UUID>absent());
-        this.dataManager.register(PET_ID, Integer.valueOf(-1));
-        this.dataManager.register(TAMED, Boolean.valueOf(false));
+        this.dataManager.register(PET_ID, -1);
+        this.dataManager.register(TAMED, false);
     }
 
     @Override
     public int getOwnerPetId() {
-    	return ((Integer)this.dataManager.get(PET_ID)).intValue();
+        return this.dataManager.get(PET_ID);
     }
 
     @Override
     public void setOwnerPetId(int i) {
-    	this.dataManager.set(PET_ID, Integer.valueOf(i));
+        this.dataManager.set(PET_ID, i);
     }
 
     @Nullable
     public UUID getOwnerId() {
-    	return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+        return this.dataManager.get(OWNER_UNIQUE_ID).orNull();
     }
 
     public void setOwnerId(@Nullable UUID uniqueId) {
@@ -75,13 +75,13 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     }
     
     @Override
-    public void setTamed(boolean flag) {
-        this.dataManager.set(TAMED, flag);
+    public void setTamed(boolean tamed) {
+        this.dataManager.set(TAMED, tamed);
     }
 
     @Override
     public boolean getIsTamed() {
-        return ((Boolean)this.dataManager.get(TAMED)).booleanValue();
+        return this.dataManager.get(TAMED);
     }
 
     @Nullable
@@ -426,9 +426,9 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     protected void doBreeding() {
         int i = 0;
 
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
         for (int j = 0; j < list.size(); j++) {
-            Entity entity = (Entity) list.get(j);
+            Entity entity = list.get(j);
             if (compatibleMate(entity)) {
                 i++;
             }
@@ -438,9 +438,9 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             return;
         }
 
-        List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+        List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
         for (int k = 0; k < list1.size(); k++) {
-            Entity mate = (Entity) list1.get(k);
+            Entity mate = list1.get(k);
             if (!(compatibleMate(mate)) || (mate == this)) {
                 continue;
             }

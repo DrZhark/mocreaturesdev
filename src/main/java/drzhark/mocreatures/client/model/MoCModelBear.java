@@ -11,6 +11,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MoCModelBear extends ModelBase {
 
+    public ModelRenderer Saddle;
+    public ModelRenderer SaddleBack;
+    public ModelRenderer SaddleFront;
+    public ModelRenderer Bag;
+    public ModelRenderer SaddleSitted;
+    public ModelRenderer SaddleBackSitted;
+    public ModelRenderer SaddleFrontSitted;
+    public ModelRenderer BagSitted;
+
     ModelRenderer Tail;
     ModelRenderer Mouth;
     ModelRenderer LegFR1;
@@ -33,15 +42,7 @@ public class MoCModelBear extends ModelBase {
     ModelRenderer LegRL2;
     ModelRenderer LegRL3;
     ModelRenderer MouthOpen;
-	public ModelRenderer Saddle;
-	public ModelRenderer SaddleBack;
-	public ModelRenderer SaddleFront;
-	public ModelRenderer Bag;
-	public ModelRenderer SaddleSitted;
-	public ModelRenderer SaddleBackSitted;
-	public ModelRenderer SaddleFrontSitted;
-	public ModelRenderer BagSitted;
-	
+
     ModelRenderer BHead;
     ModelRenderer BSnout;
     ModelRenderer BMouth;

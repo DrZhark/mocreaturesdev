@@ -1406,7 +1406,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         if (this.getType() == 60 && !getIsTamed() && isZebraRunning()) {
             return false;
@@ -2318,7 +2318,10 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     protected MoCEntityHorse getClosestMommy(Entity entity, double d) {
         double d1 = -1D;
         MoCEntityHorse entityliving = null;
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getCollisionBoundingBox().expand(d, d, d));
+        if (entity == null || entity.getCollisionBoundingBox() == null) {
+            return null;
+        }
+        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getCollisionBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = (Entity) list.get(i);
             if ((!(entity1 instanceof MoCEntityHorse)) || ((entity1 instanceof MoCEntityHorse) && !((MoCEntityHorse) entity1).getHasBred())) {

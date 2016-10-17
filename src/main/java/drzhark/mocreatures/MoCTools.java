@@ -1509,10 +1509,8 @@ public class MoCTools {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            EntityPlayer epOwner = (player.worldObj.getPlayerEntityByUUID(nbtt.getUniqueId("Owner")));
-            if (epOwner != null) {
-                epOwner.inventory.addItemStackToInventory(stack);
-            } else {
+
+            if (!player.inventory.addItemStackToInventory(stack)) {
                 EntityItem entityitem =
                         new EntityItem(((EntityLivingBase) entity).worldObj, ((EntityLivingBase) entity).posX, ((EntityLivingBase) entity).posY,
                                 ((EntityLivingBase) entity).posZ, stack);

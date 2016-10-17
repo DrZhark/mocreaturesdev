@@ -63,7 +63,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     protected static final DataParameter<Integer> TYPE = EntityDataManager.<Integer>createKey(MoCEntityAquatic.class, DataSerializers.VARINT);
     protected static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(MoCEntityAquatic.class, DataSerializers.VARINT);
     protected static final DataParameter<String> NAME_STR = EntityDataManager.<String>createKey(MoCEntityAquatic.class, DataSerializers.STRING);
-    
+
     public MoCEntityAquatic(World world) {
         super(world);
         this.outOfWater = 0;
@@ -101,45 +101,29 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(ADULT, Boolean.valueOf(false));
-        this.dataManager.register(TYPE, Integer.valueOf(0));
-        this.dataManager.register(AGE, Integer.valueOf(45));
+        this.dataManager.register(ADULT, false);
+        this.dataManager.register(TYPE, 0);
+        this.dataManager.register(AGE, 45);
         this.dataManager.register(NAME_STR, "");
     }
 
     @Override
     public void setType(int i) {
-        this.dataManager.set(TYPE, Integer.valueOf(i));
+        this.dataManager.set(TYPE, i);
     }
 
     @Override
     public int getType() {
-    	return ((Integer)this.dataManager.get(TYPE)).intValue();
+    	return this.dataManager.get(TYPE);
     }
 
     @Override
-    public boolean getIsAdult() {
-    	return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
+    public int getOwnerPetId() {
+        return -1;
     }
 
     @Override
-    public void setAdult(boolean flag) {
-    	this.dataManager.set(ADULT, Boolean.valueOf(flag));
-    }
-    
-    @Override
-    public boolean getIsTamed() {
-        return false;
-    }
-
-    @Override
-    public String getPetName() {
-    	return ((String)this.dataManager.get(NAME_STR)).toString();
-    }
-
-    @Override
-    public int getEdad() {
-    	return ((Integer)this.dataManager.get(AGE)).intValue();
+    public void setOwnerPetId(int i) {
     }
 
     @Nullable
@@ -148,13 +132,38 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
+    public boolean getIsTamed() {
+        return false;
+    }
+
+    @Override
+    public boolean getIsAdult() {
+        return this.dataManager.get(ADULT);
+    }
+
+    @Override
+    public void setAdult(boolean flag) {
+        this.dataManager.set(ADULT, flag);
+    }
+
+    @Override
+    public String getPetName() {
+        return this.dataManager.get(NAME_STR);
+    }
+
+    @Override
+    public int getEdad() {
+        return this.dataManager.get(AGE);
+    }
+
+    @Override
     public void setEdad(int i) {
-    	this.dataManager.set(AGE, Integer.valueOf(i));
+        this.dataManager.set(AGE, i);
     }
 
     @Override
     public void setPetName(String name) {
-    	this.dataManager.set(NAME_STR, String.valueOf(name));
+        this.dataManager.set(NAME_STR, name);
     }
 
     public int getTemper() {
