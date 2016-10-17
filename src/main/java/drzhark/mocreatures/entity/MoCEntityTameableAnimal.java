@@ -36,10 +36,9 @@ import javax.annotation.Nullable;
 
 public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTameable, IEntityOwnable {
 
-    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAnimal.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAnimal.class, DataSerializers.BOOLEAN);
-
+    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.<Optional<UUID>>createKey(MoCEntityTameableAnimal.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<Integer> PET_ID = EntityDataManager.<Integer>createKey(MoCEntityTameableAnimal.class, DataSerializers.VARINT);
+    protected static final DataParameter<Boolean> TAMED = EntityDataManager.<Boolean>createKey(MoCEntityTameableAnimal.class, DataSerializers.BOOLEAN);
     private boolean hasEaten;
     private int gestationtime;
     
