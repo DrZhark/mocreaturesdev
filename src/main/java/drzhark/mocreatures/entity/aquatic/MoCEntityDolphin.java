@@ -267,7 +267,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((stack != null) && onMainHand && (stack.getItem() == Items.FISH)) {
@@ -327,7 +327,15 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             /*if (!getIsHungry() && (this.rand.nextInt(100) == 0)) {
                 setIsHungry(true);
             }*/
-
+            // fixes growth
+            if (!getIsAdult() && (rand.nextInt(50) == 0))
+            {
+                setEdad(getEdad() + 1);
+                if (getEdad() >= 150)
+                {
+                    setAdult(true);
+                }
+            }
             //TODO
             if ((!this.isBeingRidden()) && (this.deathTime == 0) && (!getIsTamed() || getIsHungry())) {
                 EntityItem entityitem = getClosestFish(this, 12D);

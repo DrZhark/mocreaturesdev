@@ -73,7 +73,7 @@ public class MoCEntityLion extends MoCEntityBigCat {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((stack != null) && onMainHand && getIsTamed() && (getType() == 2 || getType() == 7)

@@ -452,7 +452,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
 
         if (MoCreatures.isServer() && this.getRidingEntity() == null && !getIsAdult() && getEdad() < 60) {

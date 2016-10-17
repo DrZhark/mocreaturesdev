@@ -509,7 +509,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         if (super.processInteract(player, hand, stack)) {
-            return false;
+            return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((getKittyState() == 2) && onMainHand && (stack != null) && (stack.getItem() == MoCreatures.medallion)) {

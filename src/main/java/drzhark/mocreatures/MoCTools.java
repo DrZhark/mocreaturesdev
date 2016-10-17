@@ -1441,6 +1441,7 @@ public class MoCTools {
                 stack.setTagCompound(new NBTTagCompound());
             }
             NBTTagCompound nbtt = stack.getTagCompound();
+            EntityPlayer epOwner = entity.worldObj.getPlayerEntityByUUID(entity.getOwnerId());
 
             try {
                 nbtt.setInteger("SpawnClass", 21);
@@ -1451,12 +1452,11 @@ public class MoCTools {
                 nbtt.setInteger("Armor", entity.getArmorType());
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setBoolean("Adult", entity.getIsAdult());
-                nbtt.setUniqueId("Owner", entity.getOwnerId());
+                nbtt.setString("OwnerName", epOwner != null ? epOwner.getName() : "");
+                nbtt.setUniqueId("OwnerUUID", entity.getOwnerId());
                 nbtt.setInteger("PetId", entity.getOwnerPetId());
             } catch (Exception e) {
             }
-
-            EntityPlayer epOwner = entity.worldObj.getPlayerEntityByUUID(entity.getOwnerId());
 
             if (epOwner != null && epOwner.inventory.getFirstEmptyStack() != -1) // don't attempt to set if player inventory is full
             {
@@ -1498,14 +1498,8 @@ public class MoCTools {
                 } else {
                     nbtt.setString("SpawnClass", petClass);
                 }
-                if ((entity.getOwnerId()) == null)
-                {
-                	nbtt.setString("OwnerUUID", player.getUniqueID().toString());
-                }
-                else
-                {
-                	nbtt.setString("OwnerUUID", entity.getOwnerId().toString());
-                }
+
+                nbtt.setUniqueId("OwnerUUID", player.getUniqueID());
                 nbtt.setFloat("Health", ((EntityLiving) entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getPetName());
@@ -1515,10 +1509,8 @@ public class MoCTools {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            EntityPlayer epOwner = (player.worldObj.getPlayerEntityByUUID(nbtt.getUniqueId("Owner")));
-            if (epOwner != null) {
-                epOwner.inventory.addItemStackToInventory(stack);
-            } else {
+
+            if (!player.inventory.addItemStackToInventory(stack)) {
                 EntityItem entityitem =
                         new EntityItem(((EntityLivingBase) entity).worldObj, ((EntityLivingBase) entity).posX, ((EntityLivingBase) entity).posY,
                                 ((EntityLivingBase) entity).posZ, stack);

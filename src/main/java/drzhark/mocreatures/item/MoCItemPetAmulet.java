@@ -1,7 +1,5 @@
 package drzhark.mocreatures.item;
 
-import com.mojang.authlib.GameProfile;
-
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -21,7 +19,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,6 +33,7 @@ public class MoCItemPetAmulet extends MoCItem {
     private int edad;
     private int creatureType;
     private String spawnClass;
+    private String ownerName;
     private UUID ownerUniqueId;
     private int amuletType;
     private boolean adult;
@@ -54,7 +52,7 @@ public class MoCItemPetAmulet extends MoCItem {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
-    double dist = 1D;
+        double dist = 1D;
         double newPosY = entityplayer.posY;
         double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
@@ -125,6 +123,7 @@ public class MoCItemPetAmulet extends MoCItem {
                     storedCreature.setPetName(this.name);
                     storedCreature.setOwnerPetId(this.PetId);
                     storedCreature.setOwnerId(entityplayer.getUniqueID());
+                    this.ownerName = entityplayer.getName();
                     ((EntityLiving) storedCreature).setHealth(this.health);
                     storedCreature.setEdad(this.edad);
                     storedCreature.setAdult(this.adult);
@@ -194,16 +193,10 @@ public class MoCItemPetAmulet extends MoCItem {
         this.name = nbt.getString("Name");
         this.spawnClass = nbt.getString("SpawnClass");
         this.adult = nbt.getBoolean("Adult");
-        String s = "";
-        if (nbt.hasKey("OwnerUUID", 8))
-        {
-            s = nbt.getString("OwnerUUID");
+        this.ownerName = nbt.getString("OwnerName");
+        if (nbt.hasUniqueId("OwnerUUID")) {
+            this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
         }
-        if (!s.isEmpty())
-        {
-            this.ownerUniqueId = (UUID.fromString(s));
-        }
-        //this.ownerUniqueId = nbt.getUniqueId("OwnerUUID");
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
@@ -214,8 +207,9 @@ public class MoCItemPetAmulet extends MoCItem {
         nbt.setString("Name", this.name);
         nbt.setString("SpawnClass", this.spawnClass);
         nbt.setBoolean("Adult", this.adult);
+        nbt.setString("OwnerName", this.ownerName);
         if (this.ownerUniqueId != null) {
-            nbt.setString("OwnerUUID", ownerUniqueId.toString());
+            nbt.setUniqueId("OwnerUUID", ownerUniqueId);
         }
     }
 
@@ -232,15 +226,8 @@ public class MoCItemPetAmulet extends MoCItem {
         if (this.name != "") {
             par3List.add(TextFormatting.BLUE + this.name);
         }
-        if (this.ownerUniqueId != null) {
-        	try{
-        		GameProfile profile = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerProfileCache().getProfileByUUID(this.ownerUniqueId);
-                if (profile != null) {
-                    par3List.add(TextFormatting.DARK_BLUE + "Owned by " + profile.getName());
-                }	
-        	} catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (this.ownerName != "") {
+            par3List.add(TextFormatting.DARK_BLUE + "Owned by " + this.ownerName);
         }
     }
 

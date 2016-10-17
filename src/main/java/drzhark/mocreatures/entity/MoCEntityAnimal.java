@@ -1,9 +1,9 @@
 package drzhark.mocreatures.entity;
+
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIMoverHelperMoC;
 import drzhark.mocreatures.entity.ai.PathNavigateFlyer;
-import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
@@ -23,8 +23,6 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -116,20 +114,20 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(ADULT, Boolean.valueOf(false));
-        this.dataManager.register(TYPE, Integer.valueOf(0));
-        this.dataManager.register(AGE, Integer.valueOf(45));
+        this.dataManager.register(ADULT, false);
+        this.dataManager.register(TYPE, 0);
+        this.dataManager.register(AGE, 45);
         this.dataManager.register(NAME_STR, "");
     }
 
     @Override
     public void setType(int i) {
-        this.dataManager.set(TYPE, Integer.valueOf(i));
+        this.dataManager.set(TYPE, i);
     }
 
     @Override
     public int getType() {
-    	return ((Integer)this.dataManager.get(TYPE)).intValue();
+        return this.dataManager.get(TYPE);
     }
 
     public void setDisplayName(boolean flag) {
@@ -143,22 +141,32 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public boolean getIsAdult() {
-    	return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
+        return this.dataManager.get(ADULT);
     }
 
     @Override
     public void setAdult(boolean flag) {
-    	this.dataManager.set(ADULT, Boolean.valueOf(flag));
+        this.dataManager.set(ADULT, flag);
     }
 
     @Override
     public String getPetName() {
-        return ((String)this.dataManager.get(NAME_STR)).toString();
+        return this.dataManager.get(NAME_STR);
+    }
+
+    @Override
+    public void setPetName(String name) {
+        this.dataManager.set(NAME_STR, name);
     }
 
     @Override
     public int getEdad() {
-    	return ((Integer)this.dataManager.get(AGE)).intValue();
+        return this.dataManager.get(AGE);
+    }
+
+    @Override
+    public void setEdad(int i) {
+        this.dataManager.set(AGE, i);
     }
 
     @Override
@@ -182,17 +190,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     public boolean getIsJumping() {
         return this.isEntityJumping;
-
-    }
-
-    @Override
-    public void setEdad(int i) {
-    	this.dataManager.set(AGE, Integer.valueOf(i));
-    }
-
-    @Override
-    public void setPetName(String name) {
-    	this.dataManager.set(NAME_STR, String.valueOf(name));
     }
 
     public void setIsJumping(boolean flag) {
@@ -669,9 +666,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
 
-            if (this.isBeingRidden() && !(this instanceof MoCEntityAnt)) {
-            	EntityLivingBase passenger = (EntityLivingBase)this.getControllingPassenger();
-            	if (passenger != null)this.moveEntityWithRider(strafe, forward, passenger); //riding movement
+            if (this.isBeingRidden()) {
+                EntityLivingBase passenger = (EntityLivingBase)this.getControllingPassenger();
+                if (passenger != null)this.moveEntityWithRider(strafe, forward, passenger); //riding movement
                 return;
             }
             if ((this.isAmphibian() && isInWater()) || (this.isFlyer() && getIsFlying())) { //amphibian in water movement
@@ -701,9 +698,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      * @param passenger 
      */
     public void moveEntityWithRider(float strafe, float forward, EntityLivingBase passenger) {
-    	if (passenger == null)
+        if (passenger == null)
         {
-        	return;
+            return;
         }
         if (this.isBeingRidden() && !getIsTamed()) {
             this.moveEntityWithRiderUntamed(strafe, forward, passenger);
@@ -778,9 +775,9 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 moveEntity(this.motionX, this.motionY, this.motionZ);
             }
             if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-            	passenger.motionY += 0.9D;
-            	passenger.motionZ -= 0.3D;
-            	passenger.dismountRidingEntity();
+                passenger.motionY += 0.9D;
+                passenger.motionZ -= 0.3D;
+                passenger.dismountRidingEntity();
             }
             if (this.onGround) {
                 setIsJumping(false);
@@ -1291,6 +1288,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
      */
     public boolean canRidePlayer()
     {
-    	return false;
+        return false;
     }
 }
