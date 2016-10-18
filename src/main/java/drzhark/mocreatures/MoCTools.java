@@ -1077,10 +1077,10 @@ public class MoCTools {
 
     public static void updatePlayerArmorEffects(EntityPlayer player) {
         ItemStack mystack[] = new ItemStack[4];
-        mystack[0] = player.inventory.armorItemInSlot(0); //boots
-        mystack[1] = player.inventory.armorItemInSlot(1); //legs
-        mystack[2] = player.inventory.armorItemInSlot(2); //plate
-        mystack[3] = player.inventory.armorItemInSlot(3); //helmet
+        mystack[0] = player.inventory.armorInventory[0]; //boots
+        mystack[1] = player.inventory.armorInventory[1]; //legs
+        mystack[2] = player.inventory.armorInventory[2]; //plate
+        mystack[3] = player.inventory.armorInventory[3]; //helmet
 
         //full scorpion cave armor set, enable night vision
         if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsCave && mystack[1] != null
