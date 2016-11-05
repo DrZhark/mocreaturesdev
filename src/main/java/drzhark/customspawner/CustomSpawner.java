@@ -196,8 +196,8 @@ public final class CustomSpawner {
              EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(entity.getClass());
              int x = MathHelper.floor_double(entity.posX);
              int z = MathHelper.floor_double(entity.posZ);
-             ChunkPos chunkcoord = new ChunkPos(x >> 4, z >> 4);
-             if (this.eligibleChunksForSpawning.contains(chunkcoord)) {
+             Chunk chunk = world.getChunkProvider().getLoadedChunk(x >> 4, z >> 4);
+             if (chunk != null && !chunk.isEmpty() && !chunk.unloaded && this.eligibleChunksForSpawning.contains(chunk.getChunkCoordIntPair())) {
                  if (entityData != null && entityData.getLivingSpawnType() == entitySpawnType) {
                      count++;
                  }
@@ -209,7 +209,6 @@ public final class CustomSpawner {
 
     public final int doCustomSpawning(WorldServer world, EntitySpawnType entitySpawnType, int mobSpawnRange, boolean enforceMaxSpawnLimits) {
         this.eligibleChunksForSpawning.clear();
-        int i = 0;
         Iterator<EntityPlayer> iterator = world.playerEntities.iterator();
 
         while (iterator.hasNext()) {
@@ -226,12 +225,10 @@ public final class CustomSpawner {
                 for (int var8 = -chunkSpawnRadius; var8 <= chunkSpawnRadius; ++var8) {
                     for (int var9 = -chunkSpawnRadius; var9 <= chunkSpawnRadius; ++var9) {
                         boolean flag = var8 == -chunkSpawnRadius || var8 == chunkSpawnRadius || var9 == -chunkSpawnRadius || var9 == chunkSpawnRadius;
-                        ChunkPos ChunkPos = new ChunkPos(var8 + x, var9 + z);
-
-                        if (!this.eligibleChunksForSpawning.contains(ChunkPos)) {
-                            ++i;
-                            if (!flag && world.getWorldBorder().contains(ChunkPos)) {
-                                this.eligibleChunksForSpawning.add(ChunkPos);
+                        Chunk chunk = world.getChunkProvider().getLoadedChunk(var8 + x, var9 + z);
+                        if (chunk != null && !chunk.isEmpty() && !chunk.unloaded && !this.eligibleChunksForSpawning.contains(chunk.getChunkCoordIntPair())) {
+                            if (!flag && world.getWorldBorder().contains(chunk.getChunkCoordIntPair())) {
+                                this.eligibleChunksForSpawning.add(chunk.getChunkCoordIntPair());
                             }
                         }
                     }
@@ -249,8 +246,8 @@ public final class CustomSpawner {
         }
 
         int mobcnt = countEntities(world, entitySpawnType);
-        int maxcnt = getMax(entitySpawnType) * i / MOB_COUNT_DIV;
-        int spawnsLeft = maxcnt - (countEntities(world, entitySpawnType));
+        int maxcnt = getMax(entitySpawnType) * this.eligibleChunksForSpawning.size() / 289;
+        int spawnsLeft = maxcnt - mobcnt;
         if (mobcnt > maxcnt) {
             if (CMSUtils.getEnvironment(world).debug) {
                 CMSUtils.getEnvironment(world).envLog.logger.info("[" + entitySpawnType.name().toUpperCase() + "]Unable to spawn, Total count "
@@ -263,7 +260,7 @@ public final class CustomSpawner {
         ArrayList<ChunkPos> tmp = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
         Collections.shuffle(tmp);
         iterator1 = tmp.iterator();
-        int moblimit = limit * i / 256 - mobcnt + 1;
+        int moblimit = (limit * this.eligibleChunksForSpawning.size() / 256) - mobcnt + 1;
 
         label108: while (iterator1.hasNext() && moblimit > 0) {
             ChunkPos ChunkPos = iterator1.next();
