@@ -55,7 +55,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public MoCAnimalChest localelephantchest2;
     public MoCAnimalChest localelephantchest3;
     public MoCAnimalChest localelephantchest4;
-    public MoCAnimalChest emptyelephantchest;
     public ItemStack localstack;
     boolean hasPlatform;
     public int tailCounter;
@@ -465,9 +464,8 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             initChest();
             if (getStorage() == 1) {
                 if (MoCreatures.isServer()) {
-                    InventoryLargeChest singleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.emptyelephantchest);
                     if (MoCreatures.isServer()) {
-                        entityplayer.displayGUIChest(singleChest);
+                        entityplayer.displayGUIChest(this.localelephantchest);
                     }
                 }
                 return true;
@@ -520,10 +518,6 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     private void initChest() {
-        if (getStorage() > 0 && this.emptyelephantchest == null) {
-            this.emptyelephantchest = new MoCAnimalChest("ElephantChest", 0);
-        }
-
         if (getStorage() > 0 && this.localelephantchest == null) {
             this.localelephantchest = new MoCAnimalChest("ElephantChest", 18);
         }

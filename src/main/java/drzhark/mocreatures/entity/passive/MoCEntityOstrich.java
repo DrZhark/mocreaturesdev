@@ -22,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -57,7 +56,6 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     public boolean canLayEggs;
 
     public MoCAnimalChest localchest;
-    public MoCAnimalChest emptychest;
     public ItemStack localstack;
     private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityOstrich.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> EGG_WATCH = EntityDataManager.<Boolean>createKey(MoCEntityOstrich.class, DataSerializers.BOOLEAN);
@@ -666,13 +664,8 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("OstrichChest", 9);
             }
-            if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("OstrichChest", 0);
-            }
             if (MoCreatures.isServer()) {
-
-                InventoryLargeChest singleChest = new InventoryLargeChest("OstrichChest", this.localchest, this.emptychest);
-                player.displayGUIChest(singleChest);
+                player.displayGUIChest(this.localchest);
             }
             return true;
         }

@@ -15,6 +15,7 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
 
     public MoCEntityManticorePet(World world) {
         super(world);
+        this.chestName = "ManticoreChest";
     }
 
     @Override

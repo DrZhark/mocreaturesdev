@@ -26,7 +26,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,7 +46,6 @@ import javax.annotation.Nullable;
 public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     public MoCAnimalChest localchest;
-    public MoCAnimalChest emptychest;
     public ItemStack localstack;
     public int mouthCounter;
     public int wingFlapCounter;
@@ -481,13 +479,8 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("WyvernChest", 9);
             }
-            if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("WyvernChest", 0);
-            }
             if (MoCreatures.isServer()) {
-
-                InventoryLargeChest singleChest = new InventoryLargeChest("WyvernChest", this.localchest, this.emptychest);
-                player.displayGUIChest(singleChest);
+                player.displayGUIChest(this.localchest);
             }
             return true;
         }

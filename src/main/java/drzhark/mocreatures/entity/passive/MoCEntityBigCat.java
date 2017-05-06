@@ -2,7 +2,6 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
@@ -12,7 +11,6 @@ import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import drzhark.mocreatures.network.message.MoCMessageHeart;
 import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -24,15 +22,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,8 +43,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 public class MoCEntityBigCat extends MoCEntityTameableAnimal {
@@ -58,8 +51,8 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     public int tailCounter;
     public int wingFlapCounter;
     public MoCAnimalChest localchest;
-    public MoCAnimalChest emptychest;
     public ItemStack localstack;
+    protected String chestName = "BigCatChest";
     private int tCounter;
     private float fTransparency;
     private static final DataParameter<Boolean> RIDEABLE = EntityDataManager.<Boolean>createKey(MoCEntityBigCat.class, DataSerializers.BOOLEAN);
@@ -522,14 +515,10 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
         if (getIsChested() && player.isSneaking()) {
             if (this.localchest == null) {
-                this.localchest = new MoCAnimalChest("BigCatChest", 18);
-            }
-            if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("BigCatChest", 0);
+                this.localchest = new MoCAnimalChest(this.chestName, 18);
             }
             if (MoCreatures.isServer()) {
-               InventoryLargeChest singleChest = new InventoryLargeChest("BigCatChest", this.localchest, this.emptychest);
-                player.displayGUIChest(singleChest);
+                player.displayGUIChest(this.localchest);
             }
             return true;
         }

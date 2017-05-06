@@ -51,7 +51,6 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     private static final DataParameter<Boolean> CHESTED = EntityDataManager.<Boolean>createKey(MoCEntityBear.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> GHOST = EntityDataManager.<Boolean>createKey(MoCEntityBear.class, DataSerializers.BOOLEAN);
     public MoCAnimalChest localchest;
-    public MoCAnimalChest emptychest;
     public ItemStack localstack;
     
     public MoCEntityBear(World world) {
@@ -384,12 +383,8 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("BigBearChest", 18);
             }
-            if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("BigBearChest", 0);
-            }
             if (MoCreatures.isServer()) {
-               InventoryLargeChest singleChest = new InventoryLargeChest("BigBearChest", this.localchest, this.emptychest);
-                player.displayGUIChest(singleChest);
+               player.displayGUIChest(this.localchest);
             }
             return true;
         }

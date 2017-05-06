@@ -31,7 +31,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,7 +72,6 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
     private float transFloat = 0.2F;
 
     public MoCAnimalChest localchest;
-    public MoCAnimalChest emptychest;
     public boolean eatenpumpkin;
     private boolean hasReproduced;
     private int nightmareInt;
@@ -1801,13 +1799,9 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("HorseChest", getInventorySize());// , new
             }
-            if (this.emptychest == null) {
-                this.emptychest = new MoCAnimalChest("HorseChest", 0);
-            }
             // only open this chest on server side
             if (MoCreatures.isServer()) {
-                InventoryLargeChest singleChest = new InventoryLargeChest("HorseChest", this.localchest, this.emptychest);
-                player.displayGUIChest(singleChest);
+                player.displayGUIChest(this.localchest);
             }
             return true;
 
