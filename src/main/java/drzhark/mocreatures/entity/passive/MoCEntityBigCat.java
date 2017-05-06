@@ -383,6 +383,10 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
     }
 
     public void wingFlap() {
+        if (this.worldObj.isRemote) {
+            return;
+        }
+
         if (this.wingFlapCounter == 0) {
             this.wingFlapCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),

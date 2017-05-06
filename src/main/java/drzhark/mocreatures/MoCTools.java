@@ -10,7 +10,6 @@ import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityLiger;
 import drzhark.mocreatures.entity.passive.MoCEntityLeoger;
 import drzhark.mocreatures.entity.passive.MoCEntityLiard;
@@ -84,7 +83,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 public class MoCTools {
 
@@ -691,16 +689,7 @@ public class MoCTools {
     }
 
     public static Biome Biomekind(World world, BlockPos pos) {
-        BiomeProvider biomeProvider = world.getBiomeProvider();
-        if (biomeProvider == null) {
-            return null;
-        }
-        Biome Biome = biomeProvider.getBiome(pos);
-        if (Biome == null) {
-            return null;
-        } else {
-            return Biome;
-        }
+        return world.getBiome(pos);
     }
 
     public static void destroyDrops(Entity entity, double d) {

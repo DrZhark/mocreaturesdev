@@ -75,7 +75,7 @@ public class CommandMoCPets extends CommandBase {
                 Entity entity = (Entity) world.loadedEntityList.get(j);
                 if (IMoCTameable.class.isAssignableFrom(entity.getClass())) {
                     IMoCTameable mocreature = (IMoCTameable) entity;
-                    if (mocreature.getOwnerId().equals(playername)) {
+                    if (mocreature.getOwnerId() != null && mocreature.getOwnerId().equals(playername)) {
                         loadedCount++;
                         foundIds.add(mocreature.getOwnerPetId());
                         tamedlist.add(TextFormatting.WHITE + "Found pet with " + TextFormatting.DARK_AQUA + "Type" + TextFormatting.WHITE

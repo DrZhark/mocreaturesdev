@@ -466,7 +466,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (getStorage() == 1) {
                 if (MoCreatures.isServer()) {
                     InventoryLargeChest singleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.emptyelephantchest);
-                    entityplayer.displayGUIChest(singleChest);
+                    if (MoCreatures.isServer()) {
+                        entityplayer.displayGUIChest(singleChest);
+                    }
                 }
                 return true;
             }

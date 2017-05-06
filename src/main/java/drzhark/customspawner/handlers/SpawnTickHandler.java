@@ -24,8 +24,7 @@ public class SpawnTickHandler {
 
                 if (worldObj.playerEntities.size() > 0) {
                     spawnAmount =
-                            CustomSpawner.INSTANCE.doCustomSpawning(worldObj, entitySpawnType, entitySpawnType.getMobSpawnRange(),
-                                    entitySpawnType.getHardSpawnLimit());
+                            CustomSpawner.INSTANCE.doCustomSpawning(worldObj, entitySpawnType, entitySpawnType.getMobSpawnRange());
                     if (CustomSpawner.debug) {
                         environment.envLog.logger.info("[" + environment.name() + "]" + "CustomSpawner Spawned " + spawnAmount + entitySpawnType.getEnumCreatureType());
                     }

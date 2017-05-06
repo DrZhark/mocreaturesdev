@@ -221,8 +221,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
     public void setDead() {
-        // Server check required to prevent tamed entities from being duplicated on client-side
-        if (!this.worldObj.isRemote && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
+        if (!this.worldObj.isRemote && getIsTamed() && getHealth() > 0) {
             return;
         }
         super.setDead();

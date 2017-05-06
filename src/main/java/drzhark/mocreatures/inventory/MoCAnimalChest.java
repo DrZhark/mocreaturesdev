@@ -57,7 +57,7 @@ public class MoCAnimalChest extends InventoryBasic implements ILockableContainer
 
     @Override
     public String getGuiID() {
-        return null;
+        return "";
     }
 
     @Override
@@ -71,6 +71,6 @@ public class MoCAnimalChest extends InventoryBasic implements ILockableContainer
 
     @Override
     public LockCode getLockCode() {
-        return null;
+        return LockCode.EMPTY_CODE;
     }
 }

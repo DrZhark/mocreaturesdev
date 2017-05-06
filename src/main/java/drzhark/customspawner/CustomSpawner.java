@@ -35,6 +35,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
@@ -67,7 +68,6 @@ public final class CustomSpawner {
 
     @Instance(CMSConstants.MOD_ID)
     public static CustomSpawner INSTANCE;
-    private static final int MOB_COUNT_DIV = (int)Math.pow(17.0D, 2.0D);
 
     public static boolean forceDespawns = false;
     public static boolean debug = false;
@@ -176,12 +176,11 @@ public final class CustomSpawner {
         CMSUtils.dumpDefaultSpawnList();
     }
 
-    protected static BlockPos getRandomSpawningPointInChunk(World worldObj, int par1, int par2) {
-        Chunk chunk = worldObj.getChunkFromChunkCoords(par1, par2);
-        int i = par1 * 16 + worldObj.rand.nextInt(16);
-        int j = worldObj.rand.nextInt(chunk == null ? worldObj.getActualHeight() : chunk.getTopFilledSegment() + 16 - 1);
-        int k = par2 * 16 + worldObj.rand.nextInt(16);
-        return new BlockPos(i, j, k);
+    protected static BlockPos getRandomSpawningPointInChunk(Chunk chunk, World worldObj) {
+        int x = chunk.xPosition * 16 + worldObj.rand.nextInt(16);
+        int y = worldObj.rand.nextInt(chunk == null ? worldObj.getActualHeight() : chunk.getTopFilledSegment() + 16 - 1);
+        int z = chunk.zPosition * 16 + worldObj.rand.nextInt(16);
+        return new BlockPos(x, y, z);
     }
 
     /**
@@ -196,7 +195,7 @@ public final class CustomSpawner {
              EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(entity.getClass());
              int x = MathHelper.floor_double(entity.posX);
              int z = MathHelper.floor_double(entity.posZ);
-             Chunk chunk = world.getChunkProvider().getLoadedChunk(x >> 4, z >> 4);
+             Chunk chunk = getLoadedChunkWithoutMarkingActive(world.getChunkProvider(), x >> 4, z >> 4);
              if (chunk != null && !chunk.isEmpty() && !chunk.unloaded && this.eligibleChunksForSpawning.contains(chunk.getChunkCoordIntPair())) {
                  if (entityData != null && entityData.getLivingSpawnType() == entitySpawnType) {
                      count++;
@@ -207,9 +206,17 @@ public final class CustomSpawner {
          return count;
     }
 
-    public final int doCustomSpawning(WorldServer world, EntitySpawnType entitySpawnType, int mobSpawnRange, boolean enforceMaxSpawnLimits) {
+    public final int doCustomSpawning(WorldServer world, EntitySpawnType entitySpawnType, int mobSpawnRange) {
         this.eligibleChunksForSpawning.clear();
         Iterator<EntityPlayer> iterator = world.playerEntities.iterator();
+        byte chunkSpawnRadius = (byte) mobSpawnRange;
+        byte serverViewDistance = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getViewDistance();
+        chunkSpawnRadius = chunkSpawnRadius > serverViewDistance ? serverViewDistance : chunkSpawnRadius;
+        chunkSpawnRadius = chunkSpawnRadius > 8 ? 8 : chunkSpawnRadius;
+        // Vanilla uses a div count of 289 (17x17) which assumes the view distance is 8.
+        // Since we allow for custom ranges, we need to adjust the div count based on the 
+        // mob spawn range set by server.
+        final int MOB_SPAWN_COUNT_DIV = (2 * chunkSpawnRadius + 1)*(2 * chunkSpawnRadius + 1);
 
         while (iterator.hasNext()) {
             EntityPlayer entityplayer = (EntityPlayer)iterator.next();
@@ -217,15 +224,11 @@ public final class CustomSpawner {
             if (!entityplayer.isSpectator()) {
                 int x = MathHelper.floor_double(entityplayer.posX / 16.0D);
                 int z = MathHelper.floor_double(entityplayer.posZ / 16.0D);
-                byte chunkSpawnRadius = (byte) mobSpawnRange;
-                byte serverViewDistance = (byte) FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getViewDistance();
-                chunkSpawnRadius = chunkSpawnRadius > serverViewDistance ? serverViewDistance : chunkSpawnRadius;
-                chunkSpawnRadius = chunkSpawnRadius > 8 ? 8 : chunkSpawnRadius;
 
                 for (int var8 = -chunkSpawnRadius; var8 <= chunkSpawnRadius; ++var8) {
                     for (int var9 = -chunkSpawnRadius; var9 <= chunkSpawnRadius; ++var9) {
                         boolean flag = var8 == -chunkSpawnRadius || var8 == chunkSpawnRadius || var9 == -chunkSpawnRadius || var9 == chunkSpawnRadius;
-                        Chunk chunk = world.getChunkProvider().getLoadedChunk(var8 + x, var9 + z);
+                        Chunk chunk = getLoadedChunkWithoutMarkingActive(world.getChunkProvider(), var8 + x, var9 + z);
                         if (chunk != null && !chunk.isEmpty() && !chunk.unloaded && !this.eligibleChunksForSpawning.contains(chunk.getChunkCoordIntPair())) {
                             if (!flag && world.getWorldBorder().contains(chunk.getChunkCoordIntPair())) {
                                 this.eligibleChunksForSpawning.add(chunk.getChunkCoordIntPair());
@@ -246,7 +249,7 @@ public final class CustomSpawner {
         }
 
         int mobcnt = countEntities(world, entitySpawnType);
-        int maxcnt = getMax(entitySpawnType) * this.eligibleChunksForSpawning.size() / 289;
+        int maxcnt = getMax(entitySpawnType) * this.eligibleChunksForSpawning.size() / MOB_SPAWN_COUNT_DIV;
         int spawnsLeft = maxcnt - mobcnt;
         if (mobcnt > maxcnt) {
             if (CMSUtils.getEnvironment(world).debug) {
@@ -260,18 +263,22 @@ public final class CustomSpawner {
         ArrayList<ChunkPos> tmp = com.google.common.collect.Lists.newArrayList(this.eligibleChunksForSpawning);
         Collections.shuffle(tmp);
         iterator1 = tmp.iterator();
-        int moblimit = (limit * this.eligibleChunksForSpawning.size() / 256) - mobcnt + 1;
+        int moblimit = maxcnt - mobcnt + 1;
 
         label108: while (iterator1.hasNext() && moblimit > 0) {
-            ChunkPos ChunkPos = iterator1.next();
-            BlockPos chunkpos = getRandomSpawningPointInChunk(world, ChunkPos.chunkXPos, ChunkPos.chunkZPos);
+            ChunkPos chunkPos = iterator1.next();
+            final Chunk chunk = getLoadedChunkWithoutMarkingActive(world.getChunkProvider(), chunkPos.chunkXPos, chunkPos.chunkZPos);
+            if (chunk == null || chunk.unloaded) {
+                continue;
+            }
+            BlockPos chunkpos = getRandomSpawningPointInChunk(chunk, world);
             int posX = chunkpos.getX();
             int posY = chunkpos.getY();
             int posZ = chunkpos.getZ();
 
             BlockPos pos = new BlockPos(posX, posY, posZ);
-            if (!world.getBlockState(pos).isNormalCube()
-                    && world.getBlockState(pos).getMaterial() == entitySpawnType.getLivingMaterial()) {
+            if (!getBlockStateWithoutMarkingActive(world, pos).isNormalCube()
+                    && getBlockStateWithoutMarkingActive(world, pos).getMaterial() == entitySpawnType.getLivingMaterial()) {
                 int spawnedMob = 0;
                 int spawnCount = 0;
 
@@ -281,6 +288,7 @@ public final class CustomSpawner {
                     int tempZ = posZ;
                     byte var20 = 6;
                     SpawnListEntry spawnlistentry = null;
+                    IEntityLivingData entityLivingData = null;
                     int spawnAttempt = 0;
 
                     while (true) {
@@ -328,12 +336,12 @@ public final class CustomSpawner {
                                         if (validLightLevel && (canEntitySpawn || underGroundSpawn)) {
                                             ++spawnedMob;
                                             world.spawnEntityInWorld(entityliving);
-                                            creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ));
+                                            entityLivingData = creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ), entityLivingData);
                                             // changed check from maxSpawnedInChunk to maxGroupCount.
                                             CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
                                                     entitySpawnType.name(), world.getBiome(new BlockPos(
-                                                            (ChunkPos.chunkXPos * 16) + 16, 0,
-                                                            (ChunkPos.chunkZPos * 16) + 16)).getBiomeName(), entityData
+                                                            (chunkPos.chunkXPos * 16) + 16, 0,
+                                                            (chunkPos.chunkZPos * 16) + 16)).getBiomeName(), entityData
                                                             .getEntityName(), MathHelper.floor_double(spawnX), MathHelper
                                                             .floor_double(spawnY), MathHelper.floor_double(spawnZ), spawnsLeft,
                                                     spawnlistentry);
@@ -341,11 +349,10 @@ public final class CustomSpawner {
                                             if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving)) {
                                                 continue label108;
                                             }
-                                            if (enforceMaxSpawnLimits) {
-                                                moblimit--;
-                                                if (moblimit <= 0) { // If we're past limit, stop spawn
-                                                    continue label108;
-                                                }
+
+                                            moblimit--;
+                                            if (moblimit <= 0) { // If we're past limit, stop spawn
+                                                continue label108;
                                             }
                                         } else {
                                             if (CMSUtils.getEnvironment(world).debug) {
@@ -558,7 +565,7 @@ public final class CustomSpawner {
      * Returns whether or not the specified creature type can spawn at the
      * specified location.
      */
-    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, SpawnListEntry spawnListEntry, World world, BlockPos pos) {
+    public static boolean canCreatureTypeSpawnAtLocation(EntitySpawnType entitySpawnType, SpawnListEntry spawnListEntry, WorldServer world, BlockPos pos) {
         if (!world.getWorldBorder().contains(pos)) {
             return false;
         }
@@ -575,13 +582,13 @@ public final class CustomSpawner {
         }
 
         if (entitySpawnType.getLivingMaterial() == Material.WATER) {
-            return world.getBlockState(pos).getMaterial().isLiquid()
-                    && world.getBlockState(pos.down()).getMaterial().isLiquid()
-                    && !world.getBlockState(pos.up()).isNormalCube();
+            return getBlockStateWithoutMarkingActive(world, pos).getMaterial().isLiquid()
+                    && getBlockStateWithoutMarkingActive(world, pos.down()).getMaterial().isLiquid()
+                    && !getBlockStateWithoutMarkingActive(world, pos.up()).isNormalCube();
         } else {
-            IBlockState blockstate = world.getBlockState(pos);
+            IBlockState blockstate = getBlockStateWithoutMarkingActive(world, pos);
             BlockPos blockpos = pos.down();
-            IBlockState blockstate1 = world.getBlockState(blockpos);
+            IBlockState blockstate1 = getBlockStateWithoutMarkingActive(world, blockpos);
             EntityLiving.SpawnPlacementType spawnPlacementType = EntitySpawnPlacementRegistry.getPlacementForEntity(spawnListEntry.entityClass);
             if (spawnPlacementType == null) {
                 if (!canCreatureSpawn(blockstate1, world, blockpos)) {
@@ -592,7 +599,7 @@ public final class CustomSpawner {
             }
 
             boolean flag = blockstate1.getBlock() != Blocks.BEDROCK && blockstate1.getBlock() != Blocks.BARRIER;
-            boolean result = flag && !blockstate.isNormalCube() && !blockstate.getMaterial().isLiquid() && !world.getBlockState(pos.up()).isNormalCube();
+            boolean result = flag && !blockstate.isNormalCube() && !blockstate.getMaterial().isLiquid() && !getBlockStateWithoutMarkingActive(world, pos.up()).isNormalCube();
             return result;
         }
     }
@@ -653,13 +660,12 @@ public final class CustomSpawner {
      * determines if a skeleton spawns on a spider, and if a sheep is a
      * different color
      */
-    private static IEntityLivingData creatureSpecificInit(EntityLiving par0EntityLiving, World par1World, BlockPos pos) {
-        IEntityLivingData entitylivingdata = null;
-        if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, pos.getX(), pos.getY(), pos.getZ())) {
-            entitylivingdata =
-                    par0EntityLiving.onInitialSpawn(par1World.getDifficultyForLocation(new BlockPos(par0EntityLiving)), entitylivingdata);
+    private static IEntityLivingData creatureSpecificInit(EntityLiving entityLiving, World world, BlockPos pos, IEntityLivingData entityLivingData) {
+        if (!ForgeEventFactory.doSpecialSpawn(entityLiving, world, pos.getX(), pos.getY(), pos.getZ())) {
+            entityLivingData =
+                    entityLiving.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entityLiving)), entityLivingData);
         }
-        return entitylivingdata;
+        return entityLivingData;
     }
 
     /**
@@ -667,7 +673,7 @@ public final class CustomSpawner {
      */
     public static void performWorldGenSpawning(EntitySpawnType entitySpawnType, World world, Biome par1Biome, int par2, int par3,
             int par4, int par5, Random par6Random, List<SpawnListEntry> customSpawnList, boolean worldGenCreatureSpawning) {
-        if (!worldGenCreatureSpawning || customSpawnList.isEmpty()) {
+        if (!worldGenCreatureSpawning || customSpawnList.isEmpty() || entitySpawnType.getSpawnCap() <= 0) {
             return;
         }
 
@@ -690,14 +696,19 @@ public final class CustomSpawner {
             int k1 = par3 + par6Random.nextInt(par5);
             int l1 = j1;
             int i2 = k1;
+            IEntityLivingData entityLivingData = null;
             EntityData entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
             for (int j2 = 0; j2 < i1; ++j2) {
                 boolean flag = false;
 
                 for (int k2 = 0; !flag && k2 < 4; ++k2) {
+                    final Chunk chunk = getLoadedChunkWithoutMarkingActive((ChunkProviderServer) world.getChunkProvider(), j1 >> 4, k1 >> 4);
+                    if (chunk == null || chunk.unloaded) {
+                        continue;
+                    }
                     BlockPos blockpos = world.getTopSolidOrLiquidBlock(new BlockPos(j1, 0, k1));
 
-                    if (canCreatureTypeSpawnAtLocation(entityData.getLivingSpawnType(), spawnlistentry, world, blockpos)) {
+                    if (canCreatureTypeSpawnAtLocation(entityData.getLivingSpawnType(), spawnlistentry, (WorldServer) world, blockpos)) {
 
                         EntityLiving entityliving;
 
@@ -724,7 +735,7 @@ public final class CustomSpawner {
                                         + ForgeEventFactory.getMaxSpawnPackSize(entityliving) + " in biome " + par1Biome.getBiomeName()
                                         + "]");
                             }
-                            creatureSpecificInit(entityliving, world, pos);
+                            entityLivingData = creatureSpecificInit(entityliving, world, pos, entityLivingData);
                             flag = true;
                         }
                     }
@@ -738,5 +749,23 @@ public final class CustomSpawner {
                 }
             }
         }
+    }
+
+    public static IBlockState getBlockStateWithoutMarkingActive(WorldServer world, BlockPos pos)
+    {
+        final Chunk chunk = getLoadedChunkWithoutMarkingActive(world.getChunkProvider(), pos.getX() >> 4, pos.getZ() >> 4);
+        if (chunk == null || chunk.unloaded || pos.getY() < 0 || pos.getY() >= 256)
+        {
+            return Blocks.AIR.getDefaultState();
+        }
+
+        return chunk.getBlockState(pos);
+    }
+
+    public static Chunk getLoadedChunkWithoutMarkingActive(ChunkProviderServer chunkProviderServer, int x, int z)
+    {
+        long i = ChunkPos.chunkXZ2Int(x, z);
+        Chunk chunk = chunkProviderServer.id2ChunkMap.get(i);
+        return chunk;
     }
 }

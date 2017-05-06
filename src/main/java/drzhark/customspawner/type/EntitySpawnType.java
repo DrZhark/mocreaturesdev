@@ -16,7 +16,6 @@ public class EntitySpawnType {
     private int spawnTickRate = 400;
     private int spawnCap = 15;
     private float chunkSpawnChance = 0.0f;
-    private boolean hardSpawnLimit;
     private Material livingMaterial = Material.AIR;
     private boolean enabled = true;
     @SuppressWarnings("unused")
@@ -48,26 +47,26 @@ public class EntitySpawnType {
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap) {
-        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.AIR, null, false, true);
+        this(environment, type, spawnTickRate, spawnCap, 0.0F, Material.AIR, null, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, Material livingMaterial) {
-        this(environment, type, spawnTickRate, spawnCap, 0.0F, livingMaterial, null, false, true);
+        this(environment, type, spawnTickRate, spawnCap, 0.0F, livingMaterial, null, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, float chunkSpawnChance, Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, true);
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String type, int spawnTickRate, int spawnCap, int minY, int maxY, float chunkSpawnChance,
             Boolean shouldSeeSky) {
-        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, false, true);
+        this(environment, type, spawnTickRate, spawnCap, chunkSpawnChance, Material.AIR, shouldSeeSky, true);
         this.minSpawnHeight = minY;
         this.maxSpawnHeight = maxY;
     }
 
     public EntitySpawnType(EnvironmentSettings environment, String spawnType, int spawnTickRate, int spawnCap, float chunkSpawnChance,
-            Material livingMaterial, Boolean shouldSeeSky, boolean hardSpawnLimit, boolean enabled) {
+            Material livingMaterial, Boolean shouldSeeSky, boolean enabled) {
         this.entitySpawnType = spawnType;
         this.environment = environment;
         this.spawnTickRate = spawnTickRate;
@@ -76,7 +75,6 @@ public class EntitySpawnType {
         if (shouldSeeSky != null) {
             this.shouldSeeSky = new Boolean(shouldSeeSky);
         }
-        this.hardSpawnLimit = hardSpawnLimit;
         this.livingMaterial = livingMaterial;
         this.enabled = enabled;
     }
@@ -127,10 +125,6 @@ public class EntitySpawnType {
 
     public void setMobSpawnRange(int radius) {
         this.mobSpawnRange = radius;
-    }
-
-    public boolean getHardSpawnLimit() {
-        return this.hardSpawnLimit;
     }
 
     public Material getLivingMaterial() {

@@ -44,7 +44,7 @@ public class EventHooks {
         CMSUtils.addWorldEnvironment(event.getWorld().provider.getClass()); // make sure world environment has been created
         EnvironmentSettings environment = CMSUtils.getEnvironment(event.getWorld());
         for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
-            if (entitySpawnType.getChunkSpawnChance() > 0) {
+            if (entitySpawnType.getChunkSpawnChance() > 0 && entitySpawnType.getSpawnCap() > 0) {
                 List<SpawnListEntry> customSpawnList =
                         entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(event.getWorld().getBiome(new BlockPos(x, 0, z))));
                 if (customSpawnList != null) {
