@@ -1,12 +1,14 @@
 package drzhark.mocreatures.entity.ai;
 
-import java.util.Random;
-import javax.annotation.Nullable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Random;
+
+import javax.annotation.Nullable;
 
 public class RandomPositionGeneratorMoCFlyer
 {
@@ -75,7 +77,7 @@ public class RandomPositionGeneratorMoCFlyer
 
         if (entitycreatureIn.hasHome())
         {
-            double d0 = entitycreatureIn.getHomePosition().distanceSq((double)MathHelper.floor_double(entitycreatureIn.posX), (double)MathHelper.floor_double(entitycreatureIn.posY), (double)MathHelper.floor_double(entitycreatureIn.posZ)) + 4.0D;
+            double d0 = entitycreatureIn.getHomePosition().distanceSq((double)MathHelper.floor(entitycreatureIn.posX), (double)MathHelper.floor(entitycreatureIn.posY), (double)MathHelper.floor(entitycreatureIn.posZ)) + 4.0D;
             double d1 = (double)(entitycreatureIn.getMaximumHomeDistance() + (float)xz);
             flag1 = d0 < d1 * d1;
         }
@@ -90,7 +92,7 @@ public class RandomPositionGeneratorMoCFlyer
             int k1 = random.nextInt(2 * y + 1) - y;
             int i1 = random.nextInt(2 * xz + 1) - xz;
 
-            if (targetVec3 == null || (double)l * targetVec3.xCoord + (double)i1 * targetVec3.zCoord >= 0.0D)
+            if (targetVec3 == null || (double)l * targetVec3.x + (double)i1 * targetVec3.z >= 0.0D)
             {
                 if (entitycreatureIn.hasHome() && xz > 1)
                 {

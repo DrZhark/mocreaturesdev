@@ -5,7 +5,7 @@ import net.minecraft.world.biome.BiomeDecorator;
 public class BiomeWyvernDecorator extends BiomeDecorator {
 
     public BiomeWyvernDecorator() {
-        this.generateLakes = true;
+        this.generateFalls = true;
         this.grassPerChunk = 1;
         this.flowersPerChunk = -999;
         this.mushroomsPerChunk = 20;

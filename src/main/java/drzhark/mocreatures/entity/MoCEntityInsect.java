@@ -56,11 +56,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
     }
 
     public boolean getIsFlying() {
-    	return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
+        return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
     }
 
     public void setIsFlying(boolean flag) {
-    	this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
+        this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
     }
 
     @Override
@@ -70,11 +70,11 @@ public class MoCEntityInsect extends MoCEntityAmbient {
         if (MoCreatures.isServer()) {
             if (!getIsFlying() && isOnLadder() && !this.onGround) {
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                        new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             }
 
             if (isFlyer() && !getIsFlying() && this.rand.nextInt(getFlyingFreq()) == 0) {
-                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity1 = list.get(i);
                     if (!(entity1 instanceof EntityLivingBase)) {

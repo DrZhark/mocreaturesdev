@@ -6,11 +6,11 @@ import net.minecraft.entity.ai.EntityAIPanic;
 
 public class EntityAIPanicMoC extends EntityAIPanic {
 
-    private EntityCreature theEntityCreature;
+    private EntityCreature entityCreature;
 
     public EntityAIPanicMoC(EntityCreature creature, double speedIn) {
         super(creature, speedIn);
-        this.theEntityCreature = creature;
+        this.entityCreature = creature;
     }
 
     /**
@@ -18,7 +18,7 @@ public class EntityAIPanicMoC extends EntityAIPanic {
      */
     @Override
     public boolean shouldExecute() {
-        if (this.theEntityCreature instanceof IMoCEntity && ((IMoCEntity) this.theEntityCreature).isNotScared()) {
+        if (this.entityCreature instanceof IMoCEntity && ((IMoCEntity) this.entityCreature).isNotScared()) {
             return false;
         }
         return super.shouldExecute();

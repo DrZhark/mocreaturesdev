@@ -1,6 +1,6 @@
 {
     "parent": "block/leaves",
     "textures": {
-        "all": "mocreatures:blocks/leaves_WyvernLair"
+        "all": "mocreatures:blocks/leaves_wyvern_lair"
     }
 }

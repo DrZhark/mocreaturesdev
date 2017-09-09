@@ -1,9 +1,9 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,7 +25,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D, 30));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
@@ -46,8 +46,8 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (super.attackEntityFrom(damagesource, i) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-            Entity entity = damagesource.getEntity();
+        if (super.attackEntityFrom(damagesource, i) && (this.world.getDifficulty().getDifficultyId() > 0)) {
+            Entity entity = damagesource.getTrueSource();
             if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
@@ -68,19 +68,19 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
         if (i < 90) {
             int j = this.rand.nextInt(3) + 1;
             for (int l = 0; l < j; l++) {
-                entityDropItem(new ItemStack(MoCreatures.sharkteeth, 1, 0), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.sharkteeth, 1, 0), 0.0F);
             }
-        } else if ((this.worldObj.getDifficulty().getDifficultyId() > 0) && (getEdad() > 150)) {
+        } else if ((this.world.getDifficulty().getDifficultyId() > 0) && (getEdad() > 150)) {
             int k = this.rand.nextInt(3);
             for (int i1 = 0; i1 < k; i1++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, 11), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.mocegg, 1, 11), 0.0F);
             }
         }
     }
 
     /*protected Entity findPlayerToAttack() {
-        if ((this.worldObj.getDifficulty().getDifficultyId() > 0) && (getEdad() >= 100)) {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16D);
+        if ((this.world.getDifficulty().getDifficultyId() > 0) && (getEdad() >= 100)) {
+            EntityPlayer entityplayer = this.world.getClosestPlayerToEntity(this, 16D);
             if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) {
                 return entityplayer;
             }
@@ -91,7 +91,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     /* public EntityLivingBase FindTarget(Entity entity, double d) {
          double d1 = -1D;
          EntityLivingBase entityliving = null;
-         List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+         List list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
          for (int i = 0; i < list.size(); i++) {
              Entity entity1 = (Entity) list.get(i);
              if (!(entity1 instanceof EntityLivingBase) || (entity1 instanceof MoCEntityAquatic) || (entity1 instanceof MoCEntityEgg)
@@ -112,7 +112,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             if (!getIsAdult() && (this.rand.nextInt(50) == 0)) {
                 setEdad(getEdad() + 1);
                 if (getEdad() >= 200) {
@@ -124,7 +124,7 @@ public class MoCEntityShark extends MoCEntityTameableAquatic {
 
     @Override
     public void setDead() {
-        if (!this.worldObj.isRemote && getIsTamed() && (getHealth() > 0)) {
+        if (!this.world.isRemote && getIsTamed() && (getHealth() > 0)) {
             return;
         } else {
             super.setDead();

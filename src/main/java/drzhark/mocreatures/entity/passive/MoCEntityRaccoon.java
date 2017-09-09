@@ -9,7 +9,8 @@ import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,8 +25,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
 
@@ -68,7 +67,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
@@ -82,19 +81,21 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityplayer, EnumHand hand, @Nullable ItemStack itemstack) {
-        if (super.processInteract(entityplayer, hand, itemstack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return false;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((itemstack != null) && onMainHand && (MoCTools.isItemEdible(itemstack.getItem()))) //((itemstack.getItem() == MoCreatures.rawTurkey.itemID)))
+        if (!stack.isEmpty() && onMainHand && (MoCTools.isItemEdible(stack.getItem()))) //((itemstack.getItem() == MoCItems.rawTurkey.itemID)))
         {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
             if (MoCreatures.isServer()) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
             this.setHealth(getMaxHealth());
 
@@ -109,7 +110,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.fur;
+        return MoCItems.fur;
     }
 
     @Override
@@ -118,7 +119,7 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_RACCOON_HURT;
     }
 

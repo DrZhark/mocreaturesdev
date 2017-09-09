@@ -56,7 +56,7 @@ public class MoCRenderKitty extends MoCRenderMoC<MoCEntityKitty> {
                     float f9 = 0.0F;
                     float f11 = 1.0F / k;
                     float f12 = 1.0F / k;
-                    tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION);
+                    tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
                     tessellator.getBuffer().pos(l, i + k, f9).tex(0.0D, k * f12).endVertex();
                     tessellator.getBuffer().pos(l + k, i + k, f9).tex(k * f11, k * f12).endVertex();
                     tessellator.getBuffer().pos(l + k, i, f9).tex(k * f11, 0.0D).endVertex();
@@ -85,7 +85,7 @@ public class MoCRenderKitty extends MoCRenderMoC<MoCEntityKitty> {
     protected void onMaBack(MoCEntityKitty entitykitty) {
         GL11.glRotatef(90F, 0.0F, 0.0F, -1F);
 
-        if (!entitykitty.worldObj.isRemote && (entitykitty.getRidingEntity() != null)) {
+        if (!entitykitty.world.isRemote && (entitykitty.getRidingEntity() != null)) {
             GL11.glTranslatef(-1.5F, 0.2F, -0.2F);
         } else {
             GL11.glTranslatef(0.1F, 0.2F, -0.2F);

@@ -1,18 +1,12 @@
 package drzhark.mocreatures.block;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBlocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
 import java.util.Random;
 
 public class MoCBlockGrass extends MoCBlock {
@@ -26,7 +20,7 @@ public class MoCBlockGrass extends MoCBlock {
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
         if (!worldIn.isRemote) {
             if (worldIn.getLightFromNeighbors(pos.up()) < 4 && worldIn.getBlockState(pos.up()).getLightOpacity(worldIn, pos.up()) > 2) {
-                worldIn.setBlockState(pos, MoCreatures.mocDirt.getDefaultState());
+                worldIn.setBlockState(pos, MoCBlocks.mocDirt.getDefaultState());
             } else {
                 if (worldIn.getLightFromNeighbors(pos.up()) >= 9) {
                     for (int i = 0; i < 4; ++i) {
@@ -34,21 +28,13 @@ public class MoCBlockGrass extends MoCBlock {
                         IBlockState blockstate = worldIn.getBlockState(blockpos1.up());
                         IBlockState iblockstate1 = worldIn.getBlockState(blockpos1);
 
-                        if (iblockstate1.getBlock() == MoCreatures.mocDirt && worldIn.getLightFromNeighbors(blockpos1.up()) >= 4
+                        if (iblockstate1.getBlock() == MoCBlocks.mocDirt && worldIn.getLightFromNeighbors(blockpos1.up()) >= 4
                                 && blockstate.getLightOpacity(worldIn, blockpos1.up()) <= 2) {
-                            worldIn.setBlockState(blockpos1, MoCreatures.mocGrass.getDefaultState());
+                            worldIn.setBlockState(blockpos1, MoCBlocks.mocGrass.getDefaultState());
                         }
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
-        for (int ix = 0; ix < MoCreatures.multiBlockNames.size(); ix++) {
-            subItems.add(new ItemStack(item, 1, ix));
         }
     }
 }

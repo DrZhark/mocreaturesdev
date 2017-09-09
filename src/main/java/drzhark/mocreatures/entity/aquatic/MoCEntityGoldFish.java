@@ -6,17 +6,17 @@ import net.minecraft.world.World;
 
 public class MoCEntityGoldFish extends MoCEntitySmallFish{
 
-	public MoCEntityGoldFish(World world) {
-		super(world);
-	}
-	
-	@Override
+    public MoCEntityGoldFish(World world) {
+        super(world);
+    }
+    
+    @Override
     public ResourceLocation getTexture() {
-		return MoCreatures.proxy.getTexture("smallfish_goldfish.png");
+        return MoCreatures.proxy.getTexture("smallfish_goldfish.png");
     }
 
-	@Override
-	protected int getEggNumber() {
-		return 84;
-	}
+    @Override
+    protected int getEggNumber() {
+        return 84;
+    }
 }

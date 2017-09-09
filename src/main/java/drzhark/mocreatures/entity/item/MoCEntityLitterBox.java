@@ -3,8 +3,10 @@ package drzhark.mocreatures.entity.item;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
@@ -25,8 +27,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityLitterBox extends EntityLiving {
 
@@ -57,19 +57,19 @@ public class MoCEntityLitterBox extends EntityLiving {
     }
 
     public boolean getPickedUp() {
-    	return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
+        return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
     }
 
     public boolean getUsedLitter() {
-    	return ((Boolean)this.dataManager.get(USED_LITTER)).booleanValue();
+        return ((Boolean)this.dataManager.get(USED_LITTER)).booleanValue();
     }
 
     public void setPickedUp(boolean flag) {
-    	this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
+        this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
     }
 
     public void setUsedLitter(boolean flag) {
-    	this.dataManager.set(USED_LITTER, Boolean.valueOf(flag));
+        this.dataManager.set(USED_LITTER, Boolean.valueOf(flag));
     }
 
     public boolean attackEntityFrom(Entity entity, int i) {
@@ -108,7 +108,7 @@ public class MoCEntityLitterBox extends EntityLiving {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.worldObj.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.world.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().player)
         {
             setPickedUp(true);
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
@@ -122,35 +122,37 @@ public class MoCEntityLitterBox extends EntityLiving {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if ((stack != null) && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (!stack.isEmpty() && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
                         || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
-            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.litterbox));
+            player.inventory.addItemStackToInventory(new ItemStack(MoCItems.litterbox));
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
         }
 
-        if ((stack != null) && (stack.getItem() == Item.getItemFromBlock(Blocks.SAND))) {
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && (stack.getItem() == Item.getItemFromBlock(Blocks.SAND))) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             setUsedLitter(false);
             this.littertime = 0;
             return true;
         } else {
             if (this.getRidingEntity() == null) {
-            	this.rotationYaw = player.rotationYaw;
+                this.rotationYaw = player.rotationYaw;
                 this.startRiding(player);
             }return true;
         }
     }
 
     @Override
-    public void moveEntity(double d, double d1, double d2) {
+    public void move(MoverType type, double d, double d1, double d2) {
         if ((this.getRidingEntity() != null) || !this.onGround || !MoCreatures.proxy.staticLitter) {
-            if (!this.worldObj.isRemote) {
-                super.moveEntity(d, d1, d2);
+            if (!this.world.isRemote) {
+                super.move(type, d, d1, d2);
             }
         }
     }
@@ -163,8 +165,8 @@ public class MoCEntityLitterBox extends EntityLiving {
         }
         if (getUsedLitter() && MoCreatures.isServer()) {
             this.littertime++;
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 4D, 12D));
+            this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 4D, 12D));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity = list.get(i);
                 if (!(entity instanceof EntityMob)) {

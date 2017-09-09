@@ -51,11 +51,11 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     }
 
     public void setGlowing(boolean flag) {
-    	this.dataManager.set(GLOWS, Boolean.valueOf(flag));
+        this.dataManager.set(GLOWS, Boolean.valueOf(flag));
     }
 
     public boolean isGlowing() {
-    	return (((Boolean)this.dataManager.get(GLOWS)).booleanValue());
+        return (((Boolean)this.dataManager.get(GLOWS)).booleanValue());
     }
 
     
@@ -104,7 +104,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
         if (MoCreatures.isServer()) {
 
             if (this.rand.nextInt(200) == 0) {
-                setGlowing(!this.worldObj.isDaytime());
+                setGlowing(!this.world.isDaytime());
             }
 
             if (!getIsTamed() && ++this.poisoncounter > 250 && (this.shouldAttackPlayers()) && this.rand.nextInt(30) == 0) {

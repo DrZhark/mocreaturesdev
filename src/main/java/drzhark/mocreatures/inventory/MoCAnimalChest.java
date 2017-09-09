@@ -23,7 +23,7 @@ public class MoCAnimalChest extends InventoryBasic implements ILockableContainer
         int var2;
 
         for (var2 = 0; var2 < this.getSizeInventory(); ++var2) {
-            this.setInventorySlotContents(var2, (ItemStack) null);
+            this.setInventorySlotContents(var2, ItemStack.EMPTY);
         }
 
         for (var2 = 0; var2 < par1NBTTagList.tagCount(); ++var2) {
@@ -31,7 +31,7 @@ public class MoCAnimalChest extends InventoryBasic implements ILockableContainer
             int var4 = var3.getByte("Slot") & 255;
 
             if (var4 >= 0 && var4 < this.getSizeInventory()) {
-                this.setInventorySlotContents(var4, ItemStack.loadItemStackFromNBT(var3));
+                this.setInventorySlotContents(var4, new ItemStack(var3));
             }
         }
     }

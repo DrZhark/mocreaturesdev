@@ -6,7 +6,6 @@ import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -44,13 +43,13 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
         }
 
         if (!this.mustUpdate) {
-            if (this.entity.getAge() >= 100) {
+            if (this.entity.getIdleTime() >= 100) {
                 //System.out.println("exiting path finder !mustUpdate + Age > 100" + this.entity);
                 return false;
             }
 
             if (this.entity.getRNG().nextInt(this.executionChance) != 0) {
-                //System.out.println(this.entity + "exiting due executionChance, age = " + this.entity.getAge() + ", executionChance = " + this.executionChance );
+                //System.out.println(this.entity + "exiting due executionChance, age = " + this.entity.getIdleTime() + ", executionChance = " + this.executionChance );
                 return false;
             }
         }
@@ -59,7 +58,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
 
         if (vec3 != null && this.entity instanceof IMoCEntity && this.entity.getNavigator() instanceof PathNavigateFlyer) {
             int distToFloor = MoCTools.distanceToFloor(this.entity);
-            int finalYHeight = distToFloor + MathHelper.floor_double(vec3.yCoord - this.entity.posY);
+            int finalYHeight = distToFloor + MathHelper.floor(vec3.y - this.entity.posY);
             if ((finalYHeight < ((IMoCEntity) this.entity).minFlyingHeight())) {
                 //System.out.println("vector height " + finalYHeight + " smaller than min flying height " + ((IMoCEntity) this.entity).minFlyingHeight());
                 return false;
@@ -75,10 +74,10 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
             //System.out.println("exiting path finder null Vec3");
             return false;
         } else {
-            //System.out.println("found vector " + vec3.xCoord + ", " +  vec3.yCoord + ", " + vec3.zCoord);
-            this.xPosition = vec3.xCoord;
-            this.yPosition = vec3.yCoord;
-            this.zPosition = vec3.zCoord;
+            //System.out.println("found vector " + vec3.x + ", " +  vec3.y + ", " + vec3.z);
+            this.xPosition = vec3.x;
+            this.yPosition = vec3.y;
+            this.zPosition = vec3.z;
             this.mustUpdate = false;
             return true;
         }
@@ -88,7 +87,7 @@ public class EntityAIWanderMoC2 extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.entity.getNavigator().noPath() && !entity.isBeingRidden();
     }
 

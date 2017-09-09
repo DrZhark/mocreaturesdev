@@ -34,12 +34,12 @@ public class CommandMoCTP extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "moctp";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -52,7 +52,7 @@ public class CommandMoCTP extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender par1ICommandSender) {
+    public String getUsage(ICommandSender par1ICommandSender) {
         return "commands.moctp.usage";
     }
 
@@ -60,7 +60,7 @@ public class CommandMoCTP extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         int petId = 0;
         if (args == null || args.length == 0) {
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Error" + TextFormatting.WHITE
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Error" + TextFormatting.WHITE
                     + ": You must enter a valid entity ID."));
             return;
         }
@@ -86,17 +86,17 @@ public class CommandMoCTP extends CommandBase {
                         double posX = nbt.getTagList("Pos", 6).getDoubleAt(0);
                         double posY = nbt.getTagList("Pos", 6).getDoubleAt(1);
                         double posZ = nbt.getTagList("Pos", 6).getDoubleAt(2);
-                        int x = MathHelper.floor_double(posX);
-                        int y = MathHelper.floor_double(posY);
-                        int z = MathHelper.floor_double(posZ);
-                        sender.addChatMessage(new TextComponentTranslation("Found unloaded pet " + TextFormatting.GREEN
+                        int x = MathHelper.floor(posX);
+                        int y = MathHelper.floor(posY);
+                        int z = MathHelper.floor(posZ);
+                        sender.sendMessage(new TextComponentTranslation("Found unloaded pet " + TextFormatting.GREEN
                                 + nbt.getString("id") + TextFormatting.WHITE + " with name " + TextFormatting.AQUA + nbt.getString("Name")
                                 + TextFormatting.WHITE + " at location " + TextFormatting.LIGHT_PURPLE + x + TextFormatting.WHITE + ", "
                                 + TextFormatting.LIGHT_PURPLE + y + TextFormatting.WHITE + ", " + TextFormatting.LIGHT_PURPLE + z
                                 + TextFormatting.WHITE + " with Pet ID " + TextFormatting.BLUE + nbt.getInteger("PetId")));
                         boolean result = teleportLoadedPet(world, player, petId, petName, sender); // attempt to TP again
                         if (!result) {
-                            sender.addChatMessage(new TextComponentTranslation("Unable to transfer entity ID " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Unable to transfer entity ID " + TextFormatting.GREEN
                                     + petId + TextFormatting.WHITE + ". It may only be transferred to " + TextFormatting.AQUA
                                     + player.getName()));
                         }
@@ -105,7 +105,7 @@ public class CommandMoCTP extends CommandBase {
                 }
             }
         } else {
-            sender.addChatMessage(new TextComponentTranslation("Tamed entity could not be located."));
+            sender.sendMessage(new TextComponentTranslation("Tamed entity could not be located."));
         }
     }
 
@@ -134,13 +134,13 @@ public class CommandMoCTP extends CommandBase {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);
-                        } else if (!player.worldObj.isRemote)// transfer entity to player dimension
+                        } else if (!player.world.isRemote)// transfer entity to player dimension
                         {
-                            Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
+                            Entity newEntity = EntityList.newEntity(entity.getClass(), player.world);
                             if (newEntity != null) {
                                 MoCTools.copyDataFromOld(newEntity, entity); // transfer all existing data to our new entity
                                 newEntity.setPosition(player.posX, player.posY, player.posZ);
-                                DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
+                                DimensionManager.getWorld(player.dimension).spawnEntity(newEntity);
                             }
                             if (entity.getRidingEntity() == null) {
                                 entity.isDead = true;
@@ -152,7 +152,7 @@ public class CommandMoCTP extends CommandBase {
                             world.resetUpdateEntityTick();
                             DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                         }
-                        par1ICommandSender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
+                        par1ICommandSender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
                                 + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", "
                                 + Math.round(player.posZ) + " in dimension " + player.dimension));
                         return true;
@@ -164,9 +164,9 @@ public class CommandMoCTP extends CommandBase {
     }
 
     public void sendCommandHelp(ICommandSender sender) {
-        sender.addChatMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
+        sender.sendMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++) {
-            sender.addChatMessage(new TextComponentTranslation(commands.get(i)));
+            sender.sendMessage(new TextComponentTranslation(commands.get(i)));
         }
     }
 }

@@ -4,12 +4,9 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityManticorePet extends MoCEntityBigCat {
 
@@ -54,8 +51,8 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (super.processInteract(player, hand)) {
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
@@ -73,11 +70,6 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
 
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
-        return "";
-    }
-
-    @Override
-    public String getClazzString() {
         return "";
     }
 

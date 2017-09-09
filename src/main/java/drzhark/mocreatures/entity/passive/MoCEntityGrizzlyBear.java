@@ -1,80 +1,80 @@
 package drzhark.mocreatures.entity.passive;
 
-import javax.annotation.Nullable;
-
+import drzhark.mocreatures.MoCTools;
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCEntityGrizzlyBear extends MoCEntityBear{
 
-	public MoCEntityGrizzlyBear(World world) {
-		super(world);
-	}
-	
-	@Override
+    public MoCEntityGrizzlyBear(World world) {
+        super(world);
+    }
+    
+    @Override
     public void selectType() {
         if (getType() == 0) {
-        	setType(1);
+            setType(1);
         }
         super.selectType();
     }
-	
-	@Override
+    
+    @Override
     public ResourceLocation getTexture() {
-		return MoCreatures.proxy.getTexture("bearbrowm.png");
+        return MoCreatures.proxy.getTexture("bearbrowm.png");
     }
 
-	@Override
-	public float getBearSize() {
-		return 1.2F;
+    @Override
+    public float getBearSize() {
+        return 1.2F;
     }
-	
-	@Override
+    
+    @Override
     public int getMaxEdad() {
-		return 120;
-	}
-	
-	@Override
-	public float calculateMaxHealth() {
-		return 40;
+        return 120;
     }
-	
-	public double getAttackRange() {
+    
+    @Override
+    public float calculateMaxHealth() {
+        return 40;
+    }
+    
+    public double getAttackRange() {
         int factor = 1;
-        if (this.worldObj.getDifficulty().getDifficultyId() > 1) {
+        if (this.world.getDifficulty().getDifficultyId() > 1) {
             factor = 2;
         }
         return 6D * factor;
     }
-	
-	@Override
-	public int getAttackStrength() {
-        int factor = (this.worldObj.getDifficulty().getDifficultyId());
+    
+    @Override
+    public int getAttackStrength() {
+        int factor = (this.world.getDifficulty().getDifficultyId());
         return 3 * factor;
     }
-	
-	@Override
+    
+    @Override
     public boolean shouldAttackPlayers() {
-        return (this.getBrightness(1.0F) < 0.4F) && super.shouldAttackPlayers();
+        return (this.getBrightness() < 0.4F) && super.shouldAttackPlayers();
     }
-	
-	@Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        ItemStack itemstack = player.inventory.getCurrentItem();
-        if ((itemstack != null) && onMainHand && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(itemstack.getItem())) {
-            if (--itemstack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(stack.getItem())) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
             if (!getIsTamed() && MoCreatures.isServer()) {
@@ -89,7 +89,7 @@ public class MoCEntityGrizzlyBear extends MoCEntityBear{
 
             return true;
         }
-        if ((itemstack != null) && getIsTamed() && (itemstack.getItem() == MoCreatures.whip)) {
+        if (!stack.isEmpty() && getIsTamed() && (stack.getItem() == MoCItems.whip)) {
             if (getBearState() == 0) {
                 setBearState(2);
             }else {
@@ -109,18 +109,18 @@ public class MoCEntityGrizzlyBear extends MoCEntityBear{
         
         return false;
     }
-	
-	@Override
-	public String getOffspringClazz(IMoCTameable mate) {
+    
+    @Override
+    public String getOffspringClazz(IMoCTameable mate) {
         return "GrizzlyBear";
     }
 
-	@Override
+    @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         return 1;
     }
 
-	@Override
+    @Override
     public boolean compatibleMate(Entity mate) {
         return mate instanceof MoCEntityGrizzlyBear;
     }

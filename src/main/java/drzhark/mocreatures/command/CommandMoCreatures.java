@@ -112,12 +112,12 @@ public class CommandMoCreatures extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "mocreatures";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -130,7 +130,7 @@ public class CommandMoCreatures extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender par1ICommandSender) {
+    public String getUsage(ICommandSender par1ICommandSender) {
         return "commands.mocreatures.usage";
     }
 
@@ -223,11 +223,11 @@ public class CommandMoCreatures extends CommandBase {
                 }
                 if (tamedlist.size() > 0) {
                     sendPageHelp(sender, (byte) 10, tamedlist, args, "Listing tamed pets");
-                    sender.addChatMessage(new TextComponentTranslation("Loaded tamed count : " + TextFormatting.AQUA + loadedCount
+                    sender.sendMessage(new TextComponentTranslation("Loaded tamed count : " + TextFormatting.AQUA + loadedCount
                             + TextFormatting.WHITE + ", Unloaded count : " + TextFormatting.AQUA + unloadedCount + TextFormatting.WHITE
                             + ", Total count : " + TextFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
                 } else {
-                    sender.addChatMessage(new TextComponentTranslation("Player " + TextFormatting.GREEN + playername
+                    sender.sendMessage(new TextComponentTranslation("Player " + TextFormatting.GREEN + playername
                             + TextFormatting.WHITE + " does not have any tamed animals."));
                 }
             } else if (command.equalsIgnoreCase("tamed") || command.equalsIgnoreCase("tame") && !par2.equals("")) {
@@ -286,7 +286,7 @@ public class CommandMoCreatures extends CommandBase {
                 }
                 //}
                 sendPageHelp(sender, (byte) 10, tamedlist, args, "Listing tamed pets");
-                sender.addChatMessage(new TextComponentTranslation("Loaded tamed count : "
+                sender.sendMessage(new TextComponentTranslation("Loaded tamed count : "
                         + TextFormatting.AQUA
                         + loadedCount
                         + TextFormatting.WHITE
@@ -318,7 +318,7 @@ public class CommandMoCreatures extends CommandBase {
                             double posX = nbt.getTagList("Pos", 10).getDoubleAt(0);
                             double posY = nbt.getTagList("Pos", 10).getDoubleAt(1);
                             double posZ = nbt.getTagList("Pos", 10).getDoubleAt(2);
-                            sender.addChatMessage(new TextComponentTranslation("Found unloaded pet " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Found unloaded pet " + TextFormatting.GREEN
                                     + nbt.getString("id") + TextFormatting.WHITE + " with name " + TextFormatting.AQUA
                                     + nbt.getString("Name") + TextFormatting.WHITE + " at location " + TextFormatting.LIGHT_PURPLE
                                     + Math.round(posX) + TextFormatting.WHITE + ", " + TextFormatting.LIGHT_PURPLE + Math.round(posY)
@@ -326,7 +326,7 @@ public class CommandMoCreatures extends CommandBase {
                                     + " with Pet ID " + TextFormatting.BLUE + nbt.getInteger("PetId")));
                             boolean result = teleportLoadedPet(world, player, petId, petName, sender); // attempt to TP again
                             if (!result) {
-                                sender.addChatMessage(new TextComponentTranslation("Unable to transfer entity ID "
+                                sender.sendMessage(new TextComponentTranslation("Unable to transfer entity ID "
                                         + TextFormatting.GREEN + petId + TextFormatting.WHITE + ". It may only be transferred to "
                                         + TextFormatting.AQUA + player.getName()));
                             }
@@ -335,20 +335,20 @@ public class CommandMoCreatures extends CommandBase {
                     }
                 }
             } else {
-                sender.addChatMessage(new TextComponentTranslation("Tamed entity could not be located."));
+                sender.sendMessage(new TextComponentTranslation("Tamed entity could not be located."));
             }
         } else if (command.equalsIgnoreCase("tamedcount")) {
             String playername = par2;
-            List<EntityPlayerMP> players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList();
+            List<EntityPlayerMP> players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
             for (int i = 0; i < players.size(); i++) {
                 EntityPlayerMP player = (EntityPlayerMP) players.get(i);
                 if (player.getName().equalsIgnoreCase(playername)) {
                     int tamedCount = MoCTools.numberTamedByPlayer(player);
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + playername
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + playername
                             + "'s recorded tamed count is " + TextFormatting.AQUA + tamedCount));
                 }
             }
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Could not find player "
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Could not find player "
                     + TextFormatting.GREEN + playername + TextFormatting.RED
                     + ". Please verify the player is online and/or name was entered correctly."));
         }
@@ -361,7 +361,7 @@ public class CommandMoCreatures extends CommandBase {
             if (entityData != null) {
                 if (command.equalsIgnoreCase("frequency")) {
                     if (par3 == null) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " frequency is " + TextFormatting.AQUA + entityData.getFrequency()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -370,7 +370,7 @@ public class CommandMoCreatures extends CommandBase {
                             MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "frequency");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " frequency to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -379,7 +379,7 @@ public class CommandMoCreatures extends CommandBase {
                     }
                 } else if (command.equalsIgnoreCase("min") || command.equalsIgnoreCase("minspawn")) {
                     if (par3 == null) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " minGroupSpawn is " + TextFormatting.AQUA + entityData.getMinSpawn()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -388,7 +388,7 @@ public class CommandMoCreatures extends CommandBase {
                             MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "minspawn");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " minGroupSpawn to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -397,7 +397,7 @@ public class CommandMoCreatures extends CommandBase {
                     }
                 } else if (command.equalsIgnoreCase("max") || command.equalsIgnoreCase("maxspawn")) {
                     if (par3 == null) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " maxGroupSpawn is " + TextFormatting.AQUA + entityData.getMaxSpawn()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -406,7 +406,7 @@ public class CommandMoCreatures extends CommandBase {
                             MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxspawn");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " maxGroupSpawn to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -415,7 +415,7 @@ public class CommandMoCreatures extends CommandBase {
                     }
                 } else if (command.equalsIgnoreCase("chunk") || command.equalsIgnoreCase("maxchunk")) {
                     if (par3 == null) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " maxInChunk is " + TextFormatting.AQUA + entityData.getMaxInChunk()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -424,7 +424,7 @@ public class CommandMoCreatures extends CommandBase {
                             MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "maxchunk");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " maxInChunk to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -433,7 +433,7 @@ public class CommandMoCreatures extends CommandBase {
                     }
                 } else if (command.equalsIgnoreCase("canspawn")) {
                     if (par3 == null) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " canSpawn is " + TextFormatting.AQUA + entityData.getCanSpawn()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -442,7 +442,7 @@ public class CommandMoCreatures extends CommandBase {
                             MoCProperty prop = MoCreatures.proxy.mocEntityConfig.get(entityData.getEntityName(), "canspawn");
                             prop.set(par3);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " canSpawn to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -469,7 +469,7 @@ public class CommandMoCreatures extends CommandBase {
                         continue;
                     }
                     if (par2.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + propEntry.getKey()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + propEntry.getKey()
                                 + TextFormatting.WHITE + " is " + TextFormatting.AQUA + propValue));
                         break OUTER;
                     }
@@ -496,7 +496,7 @@ public class CommandMoCreatures extends CommandBase {
                         if (par2.equalsIgnoreCase("true") || par2.equalsIgnoreCase("false")) {
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         }
                     } else if (propEntry.getValue().getType() == MoCProperty.Type.INTEGER) {
@@ -504,10 +504,10 @@ public class CommandMoCreatures extends CommandBase {
                             Integer.parseInt(par2);
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         } catch (NumberFormatException ex) {
-                            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                                     + "Invalid value entered. Please enter a valid number."));
                         }
 
@@ -516,10 +516,10 @@ public class CommandMoCreatures extends CommandBase {
                             Double.parseDouble(par2);
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         } catch (NumberFormatException ex) {
-                            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                                     + "Invalid value entered. Please enter a valid number."));
                         }
                     }
@@ -543,12 +543,12 @@ public class CommandMoCreatures extends CommandBase {
             }
 
             int k = Math.min((j + 1) * b0, list.size());
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing MoCreatures help page "
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing MoCreatures help page "
                     + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---"));
 
             for (int l = j * b0; l < k; ++l) {
                 String commandToSend = list.get(l);
-                sender.addChatMessage(new TextComponentTranslation(commandToSend));
+                sender.sendMessage(new TextComponentTranslation(commandToSend));
             }
         }
         // END HELP COMMAND
@@ -584,13 +584,13 @@ public class CommandMoCreatures extends CommandBase {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);
-                        } else if (!player.worldObj.isRemote)// transfer entity to player dimension
+                        } else if (!player.world.isRemote)// transfer entity to player dimension
                         {
-                            Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
+                            Entity newEntity = EntityList.newEntity(entity.getClass(), player.world);
                             if (newEntity != null) {
                                 MoCTools.copyDataFromOld(newEntity, entity); // transfer all existing data to our new entity
                                 newEntity.setPosition(player.posX, player.posY, player.posZ);
-                                DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
+                                DimensionManager.getWorld(player.dimension).spawnEntity(newEntity);
                             }
                             if (entity.getRidingEntity() == null) {
                                 entity.isDead = true;
@@ -602,7 +602,7 @@ public class CommandMoCreatures extends CommandBase {
                             world.resetUpdateEntityTick();
                             DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                         }
-                        par1ICommandSender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
+                        par1ICommandSender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
                                 + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", "
                                 + Math.round(player.posZ) + " in dimension " + player.dimension));
                         return true;
@@ -614,9 +614,9 @@ public class CommandMoCreatures extends CommandBase {
     }
 
     public void sendCommandHelp(ICommandSender sender) {
-        sender.addChatMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
+        sender.sendMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++) {
-            sender.addChatMessage(new TextComponentTranslation(commands.get(i)));
+            sender.sendMessage(new TextComponentTranslation(commands.get(i)));
         }
     }
 
@@ -633,12 +633,12 @@ public class CommandMoCreatures extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + title + " (pg " + TextFormatting.WHITE
+        sender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + title + " (pg " + TextFormatting.WHITE
                 + Integer.valueOf(j + 1) + TextFormatting.DARK_GREEN + "/" + TextFormatting.WHITE + Integer.valueOf(x + 1) + ")"));
 
         for (int l = j * pagelimit; l < k; ++l) {
             String tamedInfo = list.get(l);
-            sender.addChatMessage(new TextComponentTranslation(tamedInfo));
+            sender.sendMessage(new TextComponentTranslation(tamedInfo));
         }
     }
 }

@@ -3,6 +3,7 @@ package drzhark.mocreatures.entity.aquatic;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ai.EntityAIFollowHerd;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,7 +25,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(4, new EntityAIFollowHerd(this, 0.6D, 4D, 20D, 1));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
@@ -48,8 +49,8 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
     }
 
     /* protected Entity findPlayerToAttack() {
-         if ((this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-             EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 12D);
+         if ((this.world.getDifficulty().getDifficultyId() > 0)) {
+             EntityPlayer entityplayer = this.world.getClosestPlayerToEntity(this, 12D);
              if ((entityplayer != null) && entityplayer.isInWater() && !getIsTamed()) {
                  return entityplayer;
              }
@@ -59,8 +60,8 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (super.attackEntityFrom(damagesource, i) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
-            Entity entity = damagesource.getEntity();
+        if (super.attackEntityFrom(damagesource, i) && (this.world.getDifficulty().getDifficultyId() > 0)) {
+            Entity entity = damagesource.getTrueSource();
             if (entity instanceof EntityLivingBase) {
                 if (this.isRidingOrBeingRiddenBy(entity)) {
                     return true;
@@ -89,7 +90,7 @@ public class MoCEntityPiranha extends MoCEntitySmallFish {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, 90), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.mocegg, 1, 90), 0.0F);
             }
         }
     }

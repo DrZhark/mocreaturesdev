@@ -1,15 +1,13 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCreatures;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MoCItemSword extends ItemSword {
 
@@ -22,12 +20,9 @@ public class MoCItemSword extends ItemSword {
 
     public MoCItemSword(String name, int meta, Item.ToolMaterial material) {
         super(material);
-        GameRegistry.registerItem(this, name);
         this.setCreativeTab(MoCreatures.tabMoC);
+        this.setRegistryName(MoCConstants.MOD_ID, name);
         this.setUnlocalizedName(name);
-        if (!MoCreatures.isServer())
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                    .register(this, meta, new ModelResourceLocation("mocreatures:" + name, "inventory"));
     }
 
     public MoCItemSword(String name, Item.ToolMaterial material, int damageType, boolean fragile) {

@@ -12,10 +12,12 @@ import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHealth;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
@@ -114,17 +116,17 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public int getType() {
-    	return ((Integer)this.dataManager.get(TYPE)).intValue();
+        return ((Integer)this.dataManager.get(TYPE)).intValue();
     }
 
     @Override
     public boolean getIsAdult() {
-    	return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
+        return ((Boolean)this.dataManager.get(ADULT)).booleanValue();
     }
 
     @Override
     public void setAdult(boolean flag) {
-    	this.dataManager.set(ADULT, Boolean.valueOf(flag));
+        this.dataManager.set(ADULT, Boolean.valueOf(flag));
     }
     
     @Override
@@ -134,12 +136,12 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public String getPetName() {
-    	return ((String)this.dataManager.get(NAME_STR)).toString();
+        return ((String)this.dataManager.get(NAME_STR)).toString();
     }
 
     @Override
     public int getEdad() {
-    	return ((Integer)this.dataManager.get(AGE)).intValue();
+        return ((Integer)this.dataManager.get(AGE)).intValue();
     }
 
     @Nullable
@@ -162,24 +164,24 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public void setEdad(int i) {
-    	this.dataManager.set(AGE, Integer.valueOf(i));
+        this.dataManager.set(AGE, Integer.valueOf(i));
     }
 
     @Override
     public void setPetName(String name) {
-    	this.dataManager.set(NAME_STR, String.valueOf(name));
+        this.dataManager.set(NAME_STR, String.valueOf(name));
     }
 
     public boolean getCanSpawnHereLiving() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
-                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
+        return this.world.checkNoEntityCollision(this.getEntityBoundingBox())
+                && this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
+                && !this.world.containsAnyLiquid(this.getEntityBoundingBox());
     }
 
     public boolean getCanSpawnHereCreature() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         return getBlockPathWeight(new BlockPos(i, j, k)) >= 0.0F;
     }
 
@@ -189,19 +191,19 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     public boolean getCanSpawnHereMob() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
-        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, pos) > this.rand.nextInt(32)) {
+        if (this.world.getLightFor(EnumSkyBlock.SKY, pos) > this.rand.nextInt(32)) {
             return false;
         }
-        int l = this.worldObj.getLightFromNeighbors(pos);
-        if (this.worldObj.isThundering()) {
-            int i1 = this.worldObj.getSkylightSubtracted();
-            this.worldObj.setSkylightSubtracted(10);
-            l = this.worldObj.getLightFromNeighbors(pos);
-            this.worldObj.setSkylightSubtracted(i1);
+        int l = this.world.getLightFromNeighbors(pos);
+        if (this.world.isThundering()) {
+            int i1 = this.world.getSkylightSubtracted();
+            this.world.setSkylightSubtracted(10);
+            l = this.world.getLightFromNeighbors(pos);
+            this.world.setSkylightSubtracted(i1);
         }
         return l <= this.rand.nextInt(8);
     }
@@ -210,7 +212,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
 
@@ -251,15 +253,15 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
             if (getIsTamed() && this.rand.nextInt(200) == 0) {
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
-                        this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                        this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             }
 
             if (this.isHarmedByDaylight()) {
-                if (this.worldObj.isDaytime()) {
-                    float var1 = this.getBrightness(1.0F);
+                if (this.world.isDaytime()) {
+                    float var1 = this.getBrightness();
                     if (var1 > 0.5F
-                            && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                    MathHelper.floor_double(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
+                            && this.world.canBlockSeeSky(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY),
+                                    MathHelper.floor(this.posZ))) && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F) {
                         this.setFire(8);
                     }
                 }
@@ -293,7 +295,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (MoCreatures.isServer() && getIsTamed()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
-                    this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                    this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -346,24 +348,24 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     }
 
     @Override
-    public void moveEntityWithHeading(float strafe, float forward) {
+    public void travel(float strafe, float vertical, float forward) {
         if (!isFlyer()) {
-            super.moveEntityWithHeading(strafe, forward);
+            super.travel(strafe, vertical, forward);
             return;
         }
-        this.moveEntityWithHeadingFlyer(strafe, forward);
+        this.moveEntityWithHeadingFlyer(strafe, vertical, forward);
     }
 
-    public void moveEntityWithHeadingFlyer(float strafe, float forward) {
+    public void moveEntityWithHeadingFlyer(float strafe, float vertical, float forward) {
         if (this.isServerWorld()) {
 
-            this.moveRelative(strafe, forward, 0.1F);
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.moveRelative(strafe, vertical, forward, 0.1F);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.8999999761581421D;
             this.motionY *= 0.8999999761581421D;
             this.motionZ *= 0.8999999761581421D;
         } else {
-            super.moveEntityWithHeading(strafe, forward);
+            super.travel(strafe, vertical, forward);
         }
     }
 
@@ -398,12 +400,12 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         Random var1 = this.getRNG();
 
         for (int var2 = 0; var2 < 10; ++var2) {
-            int var3 = MathHelper.floor_double(this.posX + var1.nextInt(20) - 10.0D);
-            int var4 = MathHelper.floor_double(this.getEntityBoundingBox().minY + var1.nextInt(6) - 3.0D);
-            int var5 = MathHelper.floor_double(this.posZ + var1.nextInt(20) - 10.0D);
+            int var3 = MathHelper.floor(this.posX + var1.nextInt(20) - 10.0D);
+            int var4 = MathHelper.floor(this.getEntityBoundingBox().minY + var1.nextInt(6) - 3.0D);
+            int var5 = MathHelper.floor(this.posZ + var1.nextInt(20) - 10.0D);
             BlockPos pos = new BlockPos(var3, var4, var5);
 
-            if (!this.worldObj.canBlockSeeSky(pos) && this.getBlockPathWeight(pos) < 0.0F) {
+            if (!this.world.canBlockSeeSky(pos) && this.getBlockPathWeight(pos) < 0.0F) {
                 return new Vec3d(var3, var4, var5);
             }
         }
@@ -448,15 +450,15 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     /*protected void getPathOrWalkableBlock(Entity entity, float f) {
         Path pathentity = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 12F)) {
-            int i = MathHelper.floor_double(entity.posX) - 2;
-            int j = MathHelper.floor_double(entity.posZ) - 2;
-            int k = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
+            int i = MathHelper.floor(entity.posX) - 2;
+            int j = MathHelper.floor(entity.posZ) - 2;
+            int k = MathHelper.floor(entity.getEntityBoundingBox().minY);
             for (int l = 0; l <= 4; l++) {
                 for (int i1 = 0; i1 <= 4; i1++) {
                     if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3))
-                            && this.worldObj.getBlockState(new BlockPos(i + l, k - 1, j + i1)).isNormalCube()
-                            && !this.worldObj.getBlockState(new BlockPos(i + l, k, j + i1)).isNormalCube()
-                            && !this.worldObj.getBlockState(new BlockPos(i + l, k + 1, j + i1)).isNormalCube()) {
+                            && this.world.getBlockState(new BlockPos(i + l, k - 1, j + i1)).isNormalCube()
+                            && !this.world.getBlockState(new BlockPos(i + l, k, j + i1)).isNormalCube()
+                            && !this.world.getBlockState(new BlockPos(i + l, k + 1, j + i1)).isNormalCube()) {
                         setLocationAndAngles((i + l) + 0.5F, k, (j + i1) + 0.5F, this.rotationYaw, this.rotationPitch);
                         return;
                     }
@@ -523,7 +525,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
+        return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     @Override
@@ -596,5 +598,15 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String getClazzString() {
+        return EntityList.getEntityString(this);
+    }
+
+    @Override
+    public boolean getIsGhost() {
+        return false;
     }
 }

@@ -4,7 +4,7 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -43,7 +43,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(6, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
@@ -79,13 +79,13 @@ public class MoCEntityEnt extends MoCEntityAnimal {
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (damagesource.getEntity() != null && damagesource.getEntity() instanceof EntityPlayer) {
-            EntityPlayer ep = (EntityPlayer) damagesource.getEntity();
+        if (damagesource.getTrueSource() != null && damagesource.getTrueSource() instanceof EntityPlayer) {
+            EntityPlayer ep = (EntityPlayer) damagesource.getTrueSource();
             ItemStack currentItem = ep.inventory.getCurrentItem();
             if (currentItem != null) {
                 Item itemheld = currentItem.getItem();
                 if (itemheld != null && itemheld instanceof ItemAxe) {
-                    this.worldObj.getDifficulty();
+                    this.world.getDifficulty();
                     if (super.shouldAttackPlayers()) {
                         setAttackTarget(ep);
 
@@ -126,7 +126,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_ENT_HURT;
     }
 
@@ -154,7 +154,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
      * Makes small creatures follow the Ent
      */
     private void atractCritter() {
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(8D, 3D, 8D));
         int n = this.rand.nextInt(3) + 1;
         int j = 0;
         for (int k = 0; k < list.size(); k++) {
@@ -176,20 +176,20 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     }
 
     private boolean plantOnFertileGround() {
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-        Block blockUnderFeet = this.worldObj.getBlockState(pos.down()).getBlock();
-        Block blockOnFeet = this.worldObj.getBlockState(pos).getBlock();
+        BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper.floor(this.posZ));
+        Block blockUnderFeet = this.world.getBlockState(pos.down()).getBlock();
+        Block blockOnFeet = this.world.getBlockState(pos).getBlock();
 
         if (blockUnderFeet == Blocks.DIRT) {
             Block block = Blocks.GRASS;
             BlockEvent.BreakEvent event = null;
-            if (!this.worldObj.isRemote) {
+            if (!this.world.isRemote) {
                 event =
-                        new BlockEvent.BreakEvent(this.worldObj, pos, block.getDefaultState(), FakePlayerFactory.get((WorldServer) this.worldObj,
+                        new BlockEvent.BreakEvent(this.world, pos, block.getDefaultState(), FakePlayerFactory.get((WorldServer) this.world,
                                 MoCreatures.MOCFAKEPLAYER));
             }
             if (event != null && !event.isCanceled()) {
-                this.worldObj.setBlockState(pos.down(), block.getDefaultState(), 3);
+                this.world.setBlockState(pos.down(), block.getDefaultState(), 3);
                 return true;
             }
             return false;
@@ -205,21 +205,18 @@ public class MoCEntityEnt extends MoCEntityAnimal {
             // check perms first
             for (int x = -1; x < 2; x++) {
                 for (int z = -1; z < 2; z++) {
-                    int xCoord = MathHelper.floor_double(this.posX + x);
-                    int yCoord = MathHelper.floor_double(this.posY);
-                    int zCoord = MathHelper.floor_double(this.posZ + z);
-                    BlockPos pos1 = new BlockPos(xCoord, yCoord, zCoord);
+                    BlockPos pos1 = new BlockPos(MathHelper.floor(this.posX + x), MathHelper.floor(this.posY), MathHelper.floor(this.posZ + z));
                     //BlockEvent.BreakEvent event = null;
-                    //if (!this.worldObj.isRemote) {
+                    //if (!this.world.isRemote) {
                     //    event =
-                    //            new BlockEvent.BreakEvent(this.worldObj, pos1, iblockstate, FakePlayerFactory.get((WorldServer) this.worldObj,
+                    //            new BlockEvent.BreakEvent(this.world, pos1, iblockstate, FakePlayerFactory.get((WorldServer) this.world,
                     //                    MoCreatures.MOCFAKEPLAYER));
                     //}
                     //cantPlant = (event != null && event.isCanceled());
-                    Block blockToPlant = this.worldObj.getBlockState(pos1).getBlock();
+                    Block blockToPlant = this.world.getBlockState(pos1).getBlock();
                     //if (!cantPlant && this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
                     if (this.rand.nextInt(plantChance) == 0 && blockToPlant == Blocks.AIR) {
-                        this.worldObj.setBlockState(pos1, iblockstate, 3);
+                        this.world.setBlockState(pos1, iblockstate, 3);
                     }
                 }
             }
@@ -298,7 +295,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
         if (this.attackTime <= 0 && (f < 2.5D) && (entity.getEntityBoundingBox().maxY > getEntityBoundingBox().minY)
                 && (entity.getEntityBoundingBox().minY < getEntityBoundingBox().maxY)) {
             attackTime = 200;
-            this.worldObj.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+            this.world.playSoundAtEntity(this, "mocreatures:goatsmack", 1.0F, 1.0F + ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), 3);
             MoCTools.bigsmack(this, entity, 2F);
         }

@@ -214,7 +214,7 @@ public class WidgetItem2DRender extends Widget {
                 //Yes, this IS stuff to work around 'bad' mods :D
                 setDrawing(Tessellator.getInstance(), false);
             }
-            WidgetItem2DRender.itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRendererObj, stack, x, y, null);
+            WidgetItem2DRender.itemRenderer.renderItemOverlayIntoGUI(minecraft.fontRenderer, stack, x, y, null);
             if (isDrawing(Tessellator.getInstance())) {
                 //Yes, this IS stuff to work around 'bad' mods :D
                 setDrawing(Tessellator.getInstance(), false);

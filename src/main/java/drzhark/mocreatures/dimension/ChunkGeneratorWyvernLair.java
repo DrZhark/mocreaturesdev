@@ -1,6 +1,6 @@
 package drzhark.mocreatures.dimension;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBlocks;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
 import net.minecraft.world.gen.feature.WorldGenEndIsland;
@@ -27,9 +27,9 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 {
     /** RNG. */
     private final Random rand;
-    protected static final IBlockState WYVERN_STONE = MoCreatures.mocStone.getDefaultState();
-    protected static final IBlockState WYVERN_DIRT = MoCreatures.mocDirt.getDefaultState();
-    protected static final IBlockState WYVERN_GRASS = MoCreatures.mocGrass.getDefaultState();
+    protected static final IBlockState WYVERN_STONE = MoCBlocks.mocStone.getDefaultState();
+    protected static final IBlockState WYVERN_DIRT = MoCBlocks.mocDirt.getDefaultState();
+    protected static final IBlockState WYVERN_GRASS = MoCBlocks.mocGrass.getDefaultState();
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     private NoiseGeneratorOctaves lperlinNoise1;
     private NoiseGeneratorOctaves lperlinNoise2;
@@ -39,7 +39,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     /** A NoiseGeneratorOctaves used in generating terrain */
     public NoiseGeneratorOctaves noiseGen6;
     /** Reference to the World object. */
-    private final World worldObj;
+    private final World world;
     /** are map structures going to be generated (e.g. strongholds) */
     private final boolean mapFeaturesEnabled;
     //private final MapGenEndCity endCityGen = new MapGenEndCity(this);
@@ -55,9 +55,9 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     private int chunkX = 0;
     private int chunkZ = 0;
 
-    public ChunkGeneratorWyvernLair(World worldObjIn, boolean mapFeaturesEnabledIn, long seed)
+    public ChunkGeneratorWyvernLair(World worldIn, boolean mapFeaturesEnabledIn, long seed)
     {
-        this.worldObj = worldObjIn;
+        this.world = worldIn;
         this.mapFeaturesEnabled = mapFeaturesEnabledIn;
         this.rand = new Random(seed);
         this.lperlinNoise1 = new NoiseGeneratorOctaves(this.rand, 16);
@@ -69,7 +69,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 
         net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextEnd ctx =
                 new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextEnd(lperlinNoise1, lperlinNoise2, perlinNoise1, noiseGen5, noiseGen6, islandNoise);
-        ctx = net.minecraftforge.event.terraingen.TerrainGen.getModdedNoiseGenerators(worldObjIn, this.rand, ctx);
+        ctx = net.minecraftforge.event.terraingen.TerrainGen.getModdedNoiseGenerators(worldIn, this.rand, ctx);
         this.lperlinNoise1 = ctx.getLPerlin1();
         this.lperlinNoise2 = ctx.getLPerlin2();
         this.perlinNoise1 = ctx.getPerlin();
@@ -151,7 +151,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 
     public void buildSurfaces(ChunkPrimer primer)
     {
-        if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(this, this.chunkX, this.chunkZ, primer, this.worldObj)) return;
+        if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(this, this.chunkX, this.chunkZ, primer, this.world)) return;
         for (int i = 0; i < 16; ++i) {
             for (int j = 0; j < 16; ++j) {
                 byte b0 = 5;
@@ -175,7 +175,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
                             {
                                 primer.setBlockState(i, l, j, iblockstateTopBlock);
                             } else {
-                            	primer.setBlockState(i, l, j, iblockstateFillerBlock);
+                                primer.setBlockState(i, l, j, iblockstateFillerBlock);
                             }
                         } else if (k > 0) {
                             --k;
@@ -185,59 +185,19 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
                 }
             }
         }
-        /*for (int i = 0; i < 16; ++i)
-        {
-            for (int j = 0; j < 16; ++j)
-            {
-                int k = 1;
-                int l = -1;
-                IBlockState iblockstateTopBlock = WYVERN_DIRT;
-                IBlockState iblockstateFillerBlock = WYVERN_STONE;
-
-                for (int i1 = 127; i1 >= 0; --i1)
-                {
-                    IBlockState iblockstate2 = primer.getBlockState(i, i1, j);
-
-                    if (iblockstate2.getMaterial() == Material.AIR)
-                    {
-                        l = -1;
-                    }
-                    else if (iblockstate2.getBlock() == WYVERN_STONE)
-                    {
-                        if (l == -1)
-                        {
-                            l = 1;
-
-                            if (i1 >= 0)
-                            {
-                                primer.setBlockState(i, i1, j, iblockstateTopBlock);
-                            }
-                            else
-                            {
-                                primer.setBlockState(i, i1, j, iblockstateFillerBlock);
-                            }
-                        }
-                        else if (l > 0)
-                        {
-                            --l;
-                            primer.setBlockState(i, i1, j, iblockstateFillerBlock);
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
-    public Chunk provideChunk(int x, int z)
+    @Override
+    public Chunk generateChunk(int x, int z)
     {
         this.chunkX = x; this.chunkZ = z;
         this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
-        this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+        this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
         this.setBlocksInChunk(x, z, chunkprimer);
         this.buildSurfaces(chunkprimer);
         
-        Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
+        Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 
         for (int i = 0; i < abyte.length; ++i)
@@ -253,7 +213,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     {
         float f = (float)(p_185960_1_ * 2 + p_185960_3_);
         float f1 = (float)(p_185960_2_ * 2 + p_185960_4_);
-        float f2 = 100.0F - MathHelper.sqrt_float(f * f + f1 * f1) * 8.0F;
+        float f2 = 100.0F - MathHelper.sqrt(f * f + f1 * f1) * 8.0F;
 
         if (f2 > 80.0F)
         {
@@ -277,7 +237,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
                     float f3 = (MathHelper.abs((float)k) * 3439.0F + MathHelper.abs((float)l) * 147.0F) % 13.0F + 9.0F;
                     f = (float)(p_185960_3_ - i * 2);
                     f1 = (float)(p_185960_4_ - j * 2);
-                    float f4 = 100.0F - MathHelper.sqrt_float(f * f + f1 * f1) * f3;
+                    float f4 = 100.0F - MathHelper.sqrt(f * f + f1 * f1) * f3;
 
                     if (f4 > 80.0F)
                     {
@@ -354,7 +314,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
                     if (j1 > p_185963_6_ / 2 - k1)
                     {
                         double d6 = (double)((float)(j1 - (p_185963_6_ / 2 - k1)) / 64.0F);
-                        d6 = MathHelper.clamp_double(d6, 0.0D, 1.0D);
+                        d6 = MathHelper.clamp(d6, 0.0D, 1.0D);
                         d4 = d4 * (1.0D - d6) + -3000.0D * d6;
                     }
 
@@ -378,12 +338,12 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
     public void populate(int x, int z)
     {
         BlockFalling.fallInstantly = true;
-        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, this.rand, x, z, false);
+        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.world, this.rand, x, z, false);
 
         int var4 = x * 16;
         int var5 = z * 16;
         BlockPos blockpos = new BlockPos(var4 + 16, 0, var5 + 16);
-        Biome var6 = this.worldObj.getBiome(blockpos);
+        Biome var6 = this.world.getBiome(blockpos);
         boolean var11 = false;
 
         int var12;
@@ -394,7 +354,7 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
             var12 = var4 + this.rand.nextInt(16) + 8;
             var13 = this.rand.nextInt(128);
             var14 = var5 + this.rand.nextInt(16) + 8;
-            (new WorldGenLakes(Blocks.WATER)).generate(this.worldObj, this.rand, new BlockPos(var12, var13, var14));
+            (new WorldGenLakes(Blocks.WATER)).generate(this.world, this.rand, new BlockPos(var12, var13, var14));
         }
 
         if (!var11 && this.rand.nextInt(8) == 0) {
@@ -403,17 +363,17 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
             var14 = var5 + this.rand.nextInt(16) + 8;
 
             if (var13 < 63 || this.rand.nextInt(10) == 0) {
-                (new WorldGenLakes(Blocks.LAVA)).generate(this.worldObj, this.rand, new BlockPos(var12, var13, var14));
+                (new WorldGenLakes(Blocks.LAVA)).generate(this.world, this.rand, new BlockPos(var12, var13, var14));
             }
         }
 
-        var6.decorate(this.worldObj, this.rand, new BlockPos(var4, 0, var5));
+        var6.decorate(this.world, this.rand, new BlockPos(var4, 0, var5));
 
         if (x == 0 && z == 0 && !this.portalDone) {
-            createPortal(this.worldObj, this.rand);
+            createPortal(this.world, this.rand);
         }
 
-        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.worldObj, this.rand, x, z, false);
+        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.rand, x, z, false);
         BlockFalling.fallInstantly = false;
     }
 
@@ -447,15 +407,20 @@ public class ChunkGeneratorWyvernLair implements IChunkGenerator
 
     public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
     {
-        return this.worldObj.getBiome(pos).getSpawnableList(creatureType);
+        return this.world.getBiome(pos).getSpawnableList(creatureType);
     }
 
-    @Nullable
-    public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position)
-    {
+    @Override
+    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
         return null;
     }
 
+    @Override
+    public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
+        return false;
+    }
+
+    @Override
     public void recreateStructures(Chunk chunkIn, int x, int z)
     {
     }

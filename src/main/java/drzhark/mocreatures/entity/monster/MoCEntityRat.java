@@ -3,7 +3,8 @@ package drzhark.mocreatures.entity.monster;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -30,7 +31,7 @@ public class MoCEntityRat extends MoCEntityMob {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -80,13 +81,13 @@ public class MoCEntityRat extends MoCEntityMob {
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        Entity entity = damagesource.getEntity();
+        Entity entity = damagesource.getTrueSource();
 
         if (entity != null && entity instanceof EntityLivingBase) {
             setAttackTarget((EntityLivingBase) entity);
             if (MoCreatures.isServer()) {
                 List<MoCEntityRat> list =
-                        this.worldObj.getEntitiesWithinAABB(MoCEntityRat.class,
+                        this.world.getEntitiesWithinAABB(MoCEntityRat.class,
                                 new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX + 1.0D, this.posY + 1.0D, this.posZ + 1.0D)
                                         .expand(16D, 4D, 16D));
                 Iterator<MoCEntityRat> iterator = list.iterator();
@@ -112,7 +113,7 @@ public class MoCEntityRat extends MoCEntityMob {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if ((this.rand.nextInt(100) == 0) && (this.getBrightness(1.0F) > 0.5F)) {
+        if ((this.rand.nextInt(100) == 0) && (this.getBrightness() > 0.5F)) {
             setAttackTarget(null);
             return;
         }
@@ -120,7 +121,7 @@ public class MoCEntityRat extends MoCEntityMob {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.ratRaw;
+        return MoCItems.ratRaw;
     }
 
     @Override
@@ -129,7 +130,7 @@ public class MoCEntityRat extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_RAT_HURT;
     }
 
@@ -145,6 +146,6 @@ public class MoCEntityRat extends MoCEntityMob {
 
     @Override
     public boolean shouldAttackPlayers() {
-        return (this.getBrightness(1.0F) < 0.5F) && super.shouldAttackPlayers();
+        return (this.getBrightness() < 0.5F) && super.shouldAttackPlayers();
     }
 }

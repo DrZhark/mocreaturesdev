@@ -1,17 +1,13 @@
 package drzhark.mocreatures.entity.passive;
 
-import javax.annotation.Nullable;
-
+import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.entity.IMoCTameable;
 
 public class MoCEntityLiard extends MoCEntityBigCat {
 
@@ -22,7 +18,7 @@ public class MoCEntityLiard extends MoCEntityBigCat {
     @Override
     public void selectType() {
         if (getType() == 0) {
-        	setType(1);
+            setType(1);
     }
         super.selectType();
     }
@@ -33,8 +29,8 @@ public class MoCEntityLiard extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (super.processInteract(player, hand)) {
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
@@ -82,11 +78,6 @@ public class MoCEntityLiard extends MoCEntityBigCat {
     @Override
     public int getMaxEdad() {
         return 100;
-    }
-
-    @Override
-    public String getClazzString() {
-        return "Liard";
     }
 
     @Override

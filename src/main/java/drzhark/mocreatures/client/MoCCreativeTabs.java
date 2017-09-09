@@ -1,8 +1,8 @@
 package drzhark.mocreatures.client;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -14,7 +14,7 @@ public class MoCCreativeTabs extends CreativeTabs {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Item getTabIconItem() {
-        return MoCreatures.amuletfairyfull;
+    public ItemStack getTabIconItem() {
+        return new ItemStack(MoCItems.amuletfairyfull, 1);
     }
 }

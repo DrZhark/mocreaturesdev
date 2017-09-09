@@ -1,8 +1,9 @@
 package drzhark.customspawner.biomes;
 
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+
+import java.util.Set;
 
 public class BiomeData {
 
@@ -10,7 +11,7 @@ public class BiomeData {
     private boolean defined;
     private Biome biome;
     private String tag;
-    private BiomeDictionary.Type[] types;
+    private Set<Type> types;
 
     public BiomeData(Biome biome) {
         this.clazz = biome.getClass();
@@ -18,25 +19,12 @@ public class BiomeData {
         this.defined = false;
     }
 
-    public BiomeData(Biome biome, String tag) {
-        this.clazz = biome.getClass();
-        this.biome = biome;
-        this.defined = false;
-        this.tag = tag;
-    }
-
-    public BiomeData(Biome biome, boolean flag) {
-        this.clazz = biome.getClass();
-        this.biome = biome;
-        this.defined = flag;
-    }
-
     public Class<? extends Biome> getBiomeClass() {
         return this.clazz;
     }
 
     public String getBiomeName() {
-        return this.biome.getBiomeName();
+        return this.biome.biomeName;
     }
 
     public Biome getBiome() {
@@ -59,11 +47,11 @@ public class BiomeData {
         this.defined = flag;
     }
 
-    public void setTypes(Type[] types) {
+    public void setTypes(Set<Type> types) {
         this.types = types;
     }
 
-    public Type[] getTypes() {
+    public Set<Type> getTypes() {
         return this.types;
     }
 

@@ -22,7 +22,7 @@ public class MoCPetData {
 
     public MoCPetData(IMoCTameable pet) {
         this.ownerData.setTag("TamedList", this.tamedList);
-        this.ownerUniqueId = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().thePlayer.getUniqueID();
+        this.ownerUniqueId = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().player.getUniqueID();
     }
 
     public MoCPetData(NBTTagCompound nbt, UUID owner) {
@@ -42,7 +42,7 @@ public class MoCPetData {
             petData.setInteger("ChunkX", coords.getX());
             petData.setInteger("ChunkY", coords.getY());
             petData.setInteger("ChunkZ", coords.getZ());
-            petData.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionType().getId());
+            petData.setInteger("Dimension", ((Entity) pet).world.provider.getDimensionType().getId());
             this.tamedList.appendTag(petData);
             this.ownerData.setTag("PetIdData", savePetDataMap());
             return id;

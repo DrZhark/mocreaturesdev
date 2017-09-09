@@ -108,36 +108,36 @@ public class MoCEventHooks {
                 }
             }
             // Deny Rest
-            if (event.getEntityLiving().getAge() > 600) {
+            if (event.getEntityLiving().getIdleTime() > 600) {
                 event.setResult(Result.ALLOW);
             }
 
             if (MoCreatures.proxy.debug) {
-                int x = MathHelper.floor_double(event.getEntity().posX);
-                int y = MathHelper.floor_double(event.getEntity().getEntityBoundingBox().minY);
-                int z = MathHelper.floor_double(event.getEntity().posZ);
+                int x = MathHelper.floor(event.getEntity().posX);
+                int y = MathHelper.floor(event.getEntity().getEntityBoundingBox().minY);
+                int z = MathHelper.floor(event.getEntity().posZ);
                 MoCLog.logger.info("Forced Despawn of entity " + event.getEntityLiving() + " at " + x + ", " + y + ", " + z
                         + ". To prevent forced despawns, use /moc forceDespawns false.");
             }
         }
     }
 
-    private boolean isValidDespawnLightLevel(Entity entity, World worldObj, int minDespawnLightLevel, int maxDespawnLightLevel) {
-        int x = MathHelper.floor_double(entity.posX);
-        int y = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
-        int z = MathHelper.floor_double(entity.posZ);
+    private boolean isValidDespawnLightLevel(Entity entity, World world, int minDespawnLightLevel, int maxDespawnLightLevel) {
+        int x = MathHelper.floor(entity.posX);
+        int y = MathHelper.floor(entity.getEntityBoundingBox().minY);
+        int z = MathHelper.floor(entity.posZ);
         int blockLightLevel = 0;
         if (y >= 0) {
             if (y >= 256) {
                 y = 255;
             }
-            blockLightLevel = CMSUtils.getLightFromNeighbors(worldObj.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
+            blockLightLevel = CMSUtils.getLightFromNeighbors(world.getChunkFromChunkCoords(x >> 4, z >> 4), x & 15, y, z & 15);
         }
         if (blockLightLevel < minDespawnLightLevel && maxDespawnLightLevel != -1) {
-            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel + " under minimum threshold of " + minDespawnLightLevel + " in dimension " + worldObj.provider.getDimensionType().getId() + " at coords " + x + ", " + y + ", " + z);
+            //if (debug) CMSUtils.getEnvironment(world).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel + " under minimum threshold of " + minDespawnLightLevel + " in dimension " + world.provider.getDimensionType().getId() + " at coords " + x + ", " + y + ", " + z);
             return false;
         } else if (blockLightLevel > maxDespawnLightLevel && maxDespawnLightLevel != -1) {
-            //if (debug) CMSUtils.getEnvironment(worldObj).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel + " over maximum threshold of " + maxDespawnLightLevel + " in dimension " + worldObj.provider.getDimensionType().getId() + " at coords " + x + ", " + y + ", " + z);
+            //if (debug) CMSUtils.getEnvironment(world).envLog.logger.info("Denied spawn! for " + entity.getName() + blockLightLevel + " over maximum threshold of " + maxDespawnLightLevel + " in dimension " + world.provider.getDimensionType().getId() + " at coords " + x + ", " + y + ", " + z);
             return false;
         }
         return true;

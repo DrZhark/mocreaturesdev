@@ -4,7 +4,8 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -37,7 +38,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -53,7 +54,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
     @Override
     public void selectType() {
-        if (this.worldObj.provider.doesWaterVaporize()) {
+        if (this.world.provider.doesWaterVaporize()) {
             setType(38);
             this.isImmuneToFire = true;
         } else {
@@ -146,7 +147,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         openMouth();
         stand();
         return MoCSoundEvents.ENTITY_HORSE_HURT_UNDEAD;
@@ -162,8 +163,8 @@ public class MoCEntityHorseMob extends MoCEntityMob {
     }
 
     public boolean isOnAir() {
-        return this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.2D), MathHelper
-                .floor_double(this.posZ)));
+        return this.world.isAirBlock(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY - 0.2D), MathHelper
+                .floor(this.posZ)));
     }
 
     @Override
@@ -244,7 +245,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
             if (!this.isBeingRidden() && this.rand.nextInt(100) == 0) {
                 MoCTools.findMobRider(this);
-                /*List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                /*List list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity = (Entity) list.get(i);
                     if (!(entity instanceof EntityMob)) {
@@ -290,16 +291,16 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
         if (flag && (this.getType() == 36 || (this.getType() >= 50 && this.getType() < 60))) //unicorn
         {
-            return MoCreatures.unicornhorn;
+            return MoCItems.unicornhorn;
         }
 
-        if (this.getType() == 38 && flag && this.worldObj.provider.doesWaterVaporize()) //nightmare
+        if (this.getType() == 38 && flag && this.world.provider.doesWaterVaporize()) //nightmare
         {
-            return MoCreatures.heartfire;
+            return MoCItems.heartfire;
         }
         if (this.getType() == 32 && flag) //bat horse
         {
-            return MoCreatures.heartdarkness;
+            return MoCItems.heartdarkness;
         }
         if (this.getType() == 26)//skely
         {
@@ -307,7 +308,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         }
         if ((this.getType() == 23 || this.getType() == 24 || this.getType() == 25)) {
             if (flag) {
-                return MoCreatures.heartundead;
+                return MoCItems.heartundead;
             }
             return Items.ROTTEN_FLESH;
         }
@@ -337,7 +338,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
         super.onDeath(damagesource);
 
         if ((this.getType() == 23) || (this.getType() == 24) || (this.getType() == 25)) {
-            MoCTools.spawnSlimes(this.worldObj, this);
+            MoCTools.spawnSlimes(this.world, this);
         }
 
     }
@@ -349,7 +350,7 @@ public class MoCEntityHorseMob extends MoCEntityMob {
 
     @Override
     public boolean getCanSpawnHere() {
-        if (this.posY < 50D && !this.worldObj.provider.doesWaterVaporize()) {
+        if (this.posY < 50D && !this.world.provider.doesWaterVaporize()) {
             setType(32);
         }
         return super.getCanSpawnHere();

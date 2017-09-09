@@ -6,17 +6,17 @@ import net.minecraft.world.World;
 
 public class MoCEntityManderin extends MoCEntitySmallFish{
 
-	public MoCEntityManderin(World world) {
-		super(world);
-	}
-	
-	@Override
+    public MoCEntityManderin(World world) {
+        super(world);
+    }
+    
+    @Override
     public ResourceLocation getTexture() {
-		return MoCreatures.proxy.getTexture("smallfish_manderin.png");
+        return MoCreatures.proxy.getTexture("smallfish_manderin.png");
     }
 
-	@Override
-	protected int getEggNumber() {
-		return 86;
-	}
+    @Override
+    protected int getEggNumber() {
+        return 86;
+    }
 }

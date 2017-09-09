@@ -2,7 +2,7 @@ package drzhark.mocreatures.client;
 
 import drzhark.mocreatures.MoCProxy;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -31,7 +31,7 @@ public class MoCEntityFXUndead extends Particle {
      */
     @Override
     public int getFXLayer() {
-        if (this.isCollided) {
+        if (this.onGround) {
             return 1;
         }
         return 2;
@@ -47,13 +47,13 @@ public class MoCEntityFXUndead extends Particle {
         this.prevPosZ = this.posZ;
 
         this.motionY -= 0.03D;
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(this.motionX, this.motionY, this.motionZ);
 
         this.motionX *= 0.8D;
         this.motionY *= 0.5D;
         this.motionZ *= 0.8D;
 
-        if (this.isCollided) {
+        if (this.onGround) {
             this.motionX *= 0.7D;
             this.motionZ *= 0.7D;
         }
@@ -64,14 +64,14 @@ public class MoCEntityFXUndead extends Particle {
     }
 
     private String getCurrentTexture() {
-        if (this.isCollided) {
+        if (this.onGround) {
             return "fxundead1.png";
         }
         return "fxundead2.png";
     }
 
     @Override
-    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation("mocreatures", MoCProxy.MISC_TEXTURE
                 + getCurrentTexture()));
         float sizeFactor = 0.1F * this.particleScale;

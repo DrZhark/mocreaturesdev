@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -34,22 +35,20 @@ public class MoCMessageUpdatePetName implements IMessage, IMessageHandler<MoCMes
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        buffer.writeInt(this.name.length());
-        buffer.writeBytes(this.name.getBytes());
-        buffer.writeInt(this.entityId);
+        ByteBufUtils.writeUTF8String(buffer, this.name);
+        ByteBufUtils.writeVarInt(buffer, this.entityId, 5);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        int nameLength = buffer.readInt();
-        this.name = new String(buffer.readBytes(nameLength).array());
-        this.entityId = buffer.readInt();
+        this.name = ByteBufUtils.readUTF8String(buffer);
+        this.entityId = ByteBufUtils.readVarInt(buffer, 5);
     }
 
     @Override
     public IMessage onMessage(MoCMessageUpdatePetName message, MessageContext ctx) {
         Entity pet = null;
-        List<Entity> entList = ctx.getServerHandler().playerEntity.worldObj.loadedEntityList;
+        List<Entity> entList = ctx.getServerHandler().player.world.loadedEntityList;
         UUID ownerUniqueId = null;
 
         for (Entity ent : entList) {

@@ -43,7 +43,7 @@ public class MoCKeyHandler {
             keyPressed = Keyboard.getEventKey();
         }
 
-        EntityPlayer ep = MoCClientProxy.mc.thePlayer;
+        EntityPlayer ep = MoCClientProxy.mc.player;
         if (ep == null) {
             return;
         }

@@ -6,7 +6,6 @@ import drzhark.mocreatures.entity.IMoCTameable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -15,8 +14,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityLeopard extends MoCEntityBigCat {
 
@@ -35,14 +32,14 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
 
     @Override
     public boolean checkSpawningBiome() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+            if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
                 setType(2); //snow leopard
                 return true;
             }
@@ -65,8 +62,8 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (super.processInteract(player, hand)) {
             return true;
         }
 
@@ -136,11 +133,6 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
     @Override
     public int getMaxEdad() {
         return 95;
-    }
-
-    @Override
-    public String getClazzString() {
-        return "Leopard";
     }
 
     @Override

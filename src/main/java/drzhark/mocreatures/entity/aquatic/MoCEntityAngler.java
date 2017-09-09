@@ -6,17 +6,17 @@ import net.minecraft.world.World;
 
 public class MoCEntityAngler extends MoCEntitySmallFish{
 
-	public MoCEntityAngler(World world) {
-		super(world);
-	}
-	
-	@Override
+    public MoCEntityAngler(World world) {
+        super(world);
+    }
+    
+    @Override
     public ResourceLocation getTexture() {
-		return MoCreatures.proxy.getTexture("smallfish_angler.png");
+        return MoCreatures.proxy.getTexture("smallfish_angler.png");
     }
 
-	@Override
-	protected int getEggNumber() {
-		return 82;
-	}
+    @Override
+    protected int getEggNumber() {
+        return 82;
+    }
 }

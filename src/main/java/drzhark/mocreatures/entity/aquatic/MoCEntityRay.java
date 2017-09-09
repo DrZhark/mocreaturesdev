@@ -4,11 +4,8 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityRay extends MoCEntityTameableAquatic {
 
@@ -18,7 +15,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D, 80));
+        this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D, 80));
     }
     
     public boolean isPoisoning() {
@@ -26,8 +23,8 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (super.processInteract(player, hand)) {
             return true;
         }
 

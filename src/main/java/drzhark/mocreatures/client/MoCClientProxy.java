@@ -84,7 +84,6 @@ import drzhark.mocreatures.client.model.MoCModelWereHuman;
 import drzhark.mocreatures.client.model.MoCModelWolf;
 import drzhark.mocreatures.client.model.MoCModelWraith;
 import drzhark.mocreatures.client.model.MoCModelWyvern;
-import drzhark.mocreatures.client.renderer.entity.MoCRenderBear;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderBird;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderBunny;
 import drzhark.mocreatures.client.renderer.entity.MoCRenderButterfly;
@@ -118,48 +117,47 @@ import drzhark.mocreatures.client.renderer.entity.MoCRenderWraith;
 import drzhark.mocreatures.client.renderer.texture.MoCTextures;
 import drzhark.mocreatures.configuration.MoCConfiguration;
 import drzhark.mocreatures.entity.IMoCEntity;
-import drzhark.mocreatures.entity.aquatic.MoCEntityAnchovy;
-import drzhark.mocreatures.entity.aquatic.MoCEntityAngelFish;
-import drzhark.mocreatures.entity.aquatic.MoCEntityAngler;
 import drzhark.mocreatures.entity.ambient.MoCEntityAnt;
-import drzhark.mocreatures.entity.aquatic.MoCEntityBass;
 import drzhark.mocreatures.entity.ambient.MoCEntityBee;
 import drzhark.mocreatures.entity.ambient.MoCEntityButterfly;
-import drzhark.mocreatures.entity.aquatic.MoCEntityClownFish;
-import drzhark.mocreatures.entity.aquatic.MoCEntityCod;
 import drzhark.mocreatures.entity.ambient.MoCEntityCrab;
 import drzhark.mocreatures.entity.ambient.MoCEntityCricket;
 import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.ambient.MoCEntityFirefly;
 import drzhark.mocreatures.entity.ambient.MoCEntityFly;
-import drzhark.mocreatures.entity.aquatic.MoCEntityGoldFish;
-import drzhark.mocreatures.entity.aquatic.MoCEntityHippoTang;
 import drzhark.mocreatures.entity.ambient.MoCEntityMaggot;
-import drzhark.mocreatures.entity.aquatic.MoCEntityManderin;
 import drzhark.mocreatures.entity.ambient.MoCEntityRoach;
 import drzhark.mocreatures.entity.ambient.MoCEntitySnail;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAnchovy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAngelFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityAngler;
+import drzhark.mocreatures.entity.aquatic.MoCEntityBass;
+import drzhark.mocreatures.entity.aquatic.MoCEntityClownFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityCod;
 import drzhark.mocreatures.entity.aquatic.MoCEntityDolphin;
 import drzhark.mocreatures.entity.aquatic.MoCEntityFishy;
+import drzhark.mocreatures.entity.aquatic.MoCEntityGoldFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityHippoTang;
 import drzhark.mocreatures.entity.aquatic.MoCEntityJellyFish;
+import drzhark.mocreatures.entity.aquatic.MoCEntityManderin;
 import drzhark.mocreatures.entity.aquatic.MoCEntityMantaRay;
 import drzhark.mocreatures.entity.aquatic.MoCEntityPiranha;
 import drzhark.mocreatures.entity.aquatic.MoCEntitySalmon;
 import drzhark.mocreatures.entity.aquatic.MoCEntityShark;
-import drzhark.mocreatures.entity.aquatic.MoCEntitySmallFish;
 import drzhark.mocreatures.entity.aquatic.MoCEntityStingRay;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
+import drzhark.mocreatures.entity.monster.MoCEntityCaveOgre;
+import drzhark.mocreatures.entity.monster.MoCEntityFireOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityFlameWraith;
 import drzhark.mocreatures.entity.monster.MoCEntityGolem;
+import drzhark.mocreatures.entity.monster.MoCEntityGreenOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityHellRat;
 import drzhark.mocreatures.entity.monster.MoCEntityHorseMob;
 import drzhark.mocreatures.entity.monster.MoCEntityManticore;
 import drzhark.mocreatures.entity.monster.MoCEntityMiniGolem;
-import drzhark.mocreatures.entity.monster.MoCEntityGreenOgre;
-import drzhark.mocreatures.entity.monster.MoCEntityFireOgre;
-import drzhark.mocreatures.entity.monster.MoCEntityCaveOgre;
 import drzhark.mocreatures.entity.monster.MoCEntityRat;
 import drzhark.mocreatures.entity.monster.MoCEntityScorpion;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
@@ -167,6 +165,7 @@ import drzhark.mocreatures.entity.monster.MoCEntityWWolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWerewolf;
 import drzhark.mocreatures.entity.monster.MoCEntityWraith;
 import drzhark.mocreatures.entity.passive.MoCEntityBird;
+import drzhark.mocreatures.entity.passive.MoCEntityBlackBear;
 import drzhark.mocreatures.entity.passive.MoCEntityBoar;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntityCrocodile;
@@ -176,6 +175,7 @@ import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityEnt;
 import drzhark.mocreatures.entity.passive.MoCEntityFox;
 import drzhark.mocreatures.entity.passive.MoCEntityGoat;
+import drzhark.mocreatures.entity.passive.MoCEntityGrizzlyBear;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityKomodo;
@@ -189,20 +189,18 @@ import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityMole;
 import drzhark.mocreatures.entity.passive.MoCEntityMouse;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
+import drzhark.mocreatures.entity.passive.MoCEntityPandaBear;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
 import drzhark.mocreatures.entity.passive.MoCEntityPanther;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.entity.passive.MoCEntityPolarBear;
 import drzhark.mocreatures.entity.passive.MoCEntityRaccoon;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityTiger;
 import drzhark.mocreatures.entity.passive.MoCEntityTurkey;
 import drzhark.mocreatures.entity.passive.MoCEntityTurtle;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
-import drzhark.mocreatures.entity.passive.MoCEntityBlackBear;
-import drzhark.mocreatures.entity.passive.MoCEntityGrizzlyBear;
-import drzhark.mocreatures.entity.passive.MoCEntityPolarBear;
-import drzhark.mocreatures.entity.passive.MoCEntityPandaBear;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageInstaSpawn;
 import drzhark.mocreatures.util.MoCLog;
@@ -346,7 +344,7 @@ public class MoCClientProxy extends MoCProxy {
 
     @Override
     public EntityPlayer getPlayer() {
-        return MoCClientProxy.mc.thePlayer;
+        return MoCClientProxy.mc.player;
     }
 
     /**
@@ -369,7 +367,7 @@ public class MoCClientProxy extends MoCProxy {
             return;
         }
 
-        int i = (densityInt / 2) * (entity.worldObj.rand.nextInt(2) + 1);
+        int i = (densityInt / 2) * (entity.world.rand.nextInt(2) + 1);
         if (i == 0) {
             i = 1;
         }
@@ -378,7 +376,7 @@ public class MoCClientProxy extends MoCProxy {
         }
         for (int x = 0; x < i; x++) {
             MoCEntityFXUndead FXUndead =
-                    new MoCEntityFXUndead(entity.worldObj, entity.posX, entity.posY + entity.worldObj.rand.nextFloat() * entity.height, entity.posZ);
+                    new MoCEntityFXUndead(entity.world, entity.posX, entity.posY + entity.world.rand.nextFloat() * entity.height, entity.posZ);
             mc.effectRenderer.addEffect(FXUndead);
 
         }
@@ -397,10 +395,10 @@ public class MoCClientProxy extends MoCProxy {
             float fGreen = entity.colorFX(2, entity.getType());
             float fBlue = entity.colorFX(3, entity.getType());
 
-            int i = densityInt * entity.worldObj.rand.nextInt(2);// + 2;
+            int i = densityInt * entity.world.rand.nextInt(2);// + 2;
             for (int x = 0; x < i; x++) {
                 MoCEntityFXStar FXStar =
-                        new MoCEntityFXStar(mc.theWorld, entity.posX, entity.posY + entity.worldObj.rand.nextFloat() * entity.height, entity.posZ,
+                        new MoCEntityFXStar(mc.world, entity.posX, entity.posY + entity.world.rand.nextFloat() * entity.height, entity.posZ,
                                 fRed, fGreen, fBlue);
                 mc.effectRenderer.addEffect(FXStar);
 
@@ -415,11 +413,11 @@ public class MoCClientProxy extends MoCProxy {
         if (densityInt == 0) {
             return;
         }
-        double var2 = entity.worldObj.rand.nextGaussian() * 0.02D;
-        double var4 = entity.worldObj.rand.nextGaussian() * 0.02D;
-        double var6 = entity.worldObj.rand.nextGaussian() * 0.02D;
-        mc.theWorld.spawnParticle(EnumParticleTypes.LAVA, entity.posX + entity.worldObj.rand.nextFloat() * entity.width - entity.width, entity.posY
-                + 0.5D + entity.worldObj.rand.nextFloat() * entity.height, entity.posZ + entity.worldObj.rand.nextFloat() * entity.width
+        double var2 = entity.world.rand.nextGaussian() * 0.02D;
+        double var4 = entity.world.rand.nextGaussian() * 0.02D;
+        double var6 = entity.world.rand.nextGaussian() * 0.02D;
+        mc.world.spawnParticle(EnumParticleTypes.LAVA, entity.posX + entity.world.rand.nextFloat() * entity.width - entity.width, entity.posY
+                + 0.5D + entity.world.rand.nextFloat() * entity.height, entity.posZ + entity.world.rand.nextFloat() * entity.width
                 - entity.width, var2, var4, var6);
 
     }
@@ -432,16 +430,16 @@ public class MoCClientProxy extends MoCProxy {
         }
 
         for (int var6 = 0; var6 < densityInt * 8; ++var6) {
-            double newPosX = ((float) entity.posX + entity.worldObj.rand.nextFloat());
-            double newPosY = 0.7D + ((float) entity.posY + entity.worldObj.rand.nextFloat());
-            double newPosZ = ((float) entity.posZ + entity.worldObj.rand.nextFloat());
-            int var19 = entity.worldObj.rand.nextInt(2) * 2 - 1;
-            double speedY = (entity.worldObj.rand.nextFloat() - 0.5D) * 0.5D;
-            double speedX = entity.worldObj.rand.nextFloat() * 2.0F * var19;
-            double speedZ = entity.worldObj.rand.nextFloat() * 2.0F * var19;
+            double newPosX = ((float) entity.posX + entity.world.rand.nextFloat());
+            double newPosY = 0.7D + ((float) entity.posY + entity.world.rand.nextFloat());
+            double newPosZ = ((float) entity.posZ + entity.world.rand.nextFloat());
+            int var19 = entity.world.rand.nextInt(2) * 2 - 1;
+            double speedY = (entity.world.rand.nextFloat() - 0.5D) * 0.5D;
+            double speedX = entity.world.rand.nextFloat() * 2.0F * var19;
+            double speedZ = entity.world.rand.nextFloat() * 2.0F * var19;
 
             MoCEntityFXVanish FXVanish =
-                    new MoCEntityFXVanish(entity.worldObj, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1, entity.getType()),
+                    new MoCEntityFXVanish(entity.world, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1, entity.getType()),
                             entity.colorFX(2, entity.getType()), entity.colorFX(3, entity.getType()), false);
             mc.effectRenderer.addEffect(FXVanish);
         }
@@ -455,16 +453,16 @@ public class MoCClientProxy extends MoCProxy {
         }
 
         for (int var6 = 0; var6 < (densityInt * 50); ++var6) {
-            double newPosX = ((float) entity.posX + entity.worldObj.rand.nextFloat());
-            double newPosY = 0.7D + ((float) entity.posY + entity.worldObj.rand.nextFloat());
-            double newPosZ = ((float) entity.posZ + entity.worldObj.rand.nextFloat());
-            int var19 = entity.worldObj.rand.nextInt(2) * 2 - 1;
-            double speedY = (entity.worldObj.rand.nextFloat() - 0.5D) * 0.5D;
-            double speedX = entity.worldObj.rand.nextFloat() * 2.0F * var19;
-            double speedZ = entity.worldObj.rand.nextFloat() * 2.0F * var19;
+            double newPosX = ((float) entity.posX + entity.world.rand.nextFloat());
+            double newPosY = 0.7D + ((float) entity.posY + entity.world.rand.nextFloat());
+            double newPosZ = ((float) entity.posZ + entity.world.rand.nextFloat());
+            int var19 = entity.world.rand.nextInt(2) * 2 - 1;
+            double speedY = (entity.world.rand.nextFloat() - 0.5D) * 0.5D;
+            double speedX = entity.world.rand.nextFloat() * 2.0F * var19;
+            double speedZ = entity.world.rand.nextFloat() * 2.0F * var19;
 
             MoCEntityFXVanish FXVanish =
-                    new MoCEntityFXVanish(mc.theWorld, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1, entity.getType()),
+                    new MoCEntityFXVanish(mc.world, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1, entity.getType()),
                             entity.colorFX(2, entity.getType()), entity.colorFX(3, entity.getType()), true);
             mc.effectRenderer.addEffect(FXVanish);
         }
@@ -481,15 +479,15 @@ public class MoCClientProxy extends MoCProxy {
         for (int var1 = 0; var1 < 2; ++var1) {
             double newPosX = entity.posX - (1.5 * Math.cos((MoCTools.realAngle(entity.rotationYaw - 90F)) / 57.29578F));
             double newPosZ = entity.posZ - (1.5 * Math.sin((MoCTools.realAngle(entity.rotationYaw - 90F)) / 57.29578F));
-            double newPosY = entity.posY + (entity.height - 0.8D - entity.getAdjustedYOffset() * 1.8);// + (entity.worldObj.rand.nextDouble() * ((double) entity.height - (double) entity.getAdjustedYOffset() * 2));
+            double newPosY = entity.posY + (entity.height - 0.8D - entity.getAdjustedYOffset() * 1.8);// + (entity.world.rand.nextDouble() * ((double) entity.height - (double) entity.getAdjustedYOffset() * 2));
             //adjustedYOffset from 0 (tallest) to 1.45 (on the ground)
             //height = 4F
 
-            double speedX = (entity.worldObj.rand.nextDouble() - 0.5D) * 4.0D;
-            double speedY = -entity.worldObj.rand.nextDouble();
-            double speedZ = (entity.worldObj.rand.nextDouble() - 0.5D) * 4.0D;
+            double speedX = (entity.world.rand.nextDouble() - 0.5D) * 4.0D;
+            double speedY = -entity.world.rand.nextDouble();
+            double speedZ = (entity.world.rand.nextDouble() - 0.5D) * 4.0D;
             MoCEntityFXVacuum FXVacuum =
-                    new MoCEntityFXVacuum(mc.theWorld, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1), entity.colorFX(2),
+                    new MoCEntityFXVacuum(mc.world, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, entity.colorFX(1), entity.colorFX(2),
                             entity.colorFX(3), 146);
             mc.effectRenderer.addEffect(FXVacuum);
         }
@@ -504,16 +502,16 @@ public class MoCClientProxy extends MoCProxy {
         }
 
         for (int var6 = 0; var6 < (densityInt * 10); ++var6) {
-            double newPosX = ((float) entity.posX + entity.worldObj.rand.nextFloat());
-            double newPosY = 0.3D + ((float) entity.posY + entity.worldObj.rand.nextFloat());
-            double newPosZ = ((float) entity.posZ + entity.worldObj.rand.nextFloat());
-            int var19 = entity.worldObj.rand.nextInt(2) * 2 - 1;
-            double speedY = (entity.worldObj.rand.nextFloat() - 0.5D) * 0.5D;
-            double speedX = entity.worldObj.rand.nextFloat() * 2.0F * var19;
-            double speedZ = entity.worldObj.rand.nextFloat() * 2.0F * var19;
+            double newPosX = ((float) entity.posX + entity.world.rand.nextFloat());
+            double newPosY = 0.3D + ((float) entity.posY + entity.world.rand.nextFloat());
+            double newPosZ = ((float) entity.posZ + entity.world.rand.nextFloat());
+            int var19 = entity.world.rand.nextInt(2) * 2 - 1;
+            double speedY = (entity.world.rand.nextFloat() - 0.5D) * 0.5D;
+            double speedX = entity.world.rand.nextFloat() * 2.0F * var19;
+            double speedZ = entity.world.rand.nextFloat() * 2.0F * var19;
 
             // TODO - fix particle fx
-            /*EntitySpellParticleFX hammerFX = new EntitySpellParticleFX(mc.theWorld, newPosX, newPosY, newPosZ, speedX, speedY, speedZ);
+            /*EntitySpellParticleFX hammerFX = new EntitySpellParticleFX(mc.world, newPosX, newPosY, newPosZ, speedX, speedY, speedZ);
             hammerFX.setBaseSpellTextureIndex(144);
             ((EntityFX) hammerFX).setRBGColorF(74F / 256F, 145F / 256F, 71F / 256F);
             mc.effectRenderer.addEffect(hammerFX);*/
@@ -529,16 +527,16 @@ public class MoCClientProxy extends MoCProxy {
         }
 
         for (int var6 = 0; var6 < (densityInt * 50); ++var6) {
-            double newPosX = ((float) entity.posX + entity.worldObj.rand.nextFloat());
-            double newPosY = 0.7D + ((float) entity.posY + entity.worldObj.rand.nextFloat());
-            double newPosZ = ((float) entity.posZ + entity.worldObj.rand.nextFloat());
-            int var19 = entity.worldObj.rand.nextInt(2) * 2 - 1;
-            double speedY = (entity.worldObj.rand.nextFloat() - 0.5D) * 0.5D;
-            double speedX = entity.worldObj.rand.nextFloat() * 2.0F * var19;
-            double speedZ = entity.worldObj.rand.nextFloat() * 2.0F * var19;
+            double newPosX = ((float) entity.posX + entity.world.rand.nextFloat());
+            double newPosY = 0.7D + ((float) entity.posY + entity.world.rand.nextFloat());
+            double newPosZ = ((float) entity.posZ + entity.world.rand.nextFloat());
+            int var19 = entity.world.rand.nextInt(2) * 2 - 1;
+            double speedY = (entity.world.rand.nextFloat() - 0.5D) * 0.5D;
+            double speedX = entity.world.rand.nextFloat() * 2.0F * var19;
+            double speedZ = entity.world.rand.nextFloat() * 2.0F * var19;
 
             MoCEntityFXVanish hammerFX =
-                    new MoCEntityFXVanish(mc.theWorld, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, 189F / 256F, 110F / 256F, 229F / 256F, true);
+                    new MoCEntityFXVanish(mc.world, newPosX, newPosY, newPosZ, speedX, speedY, speedZ, 189F / 256F, 110F / 256F, 229F / 256F, true);
             mc.effectRenderer.addEffect(hammerFX);
         }
 
@@ -1292,7 +1290,7 @@ public class MoCClientProxy extends MoCProxy {
 
     @Override
     public void printMessageToPlayer(String msg) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentTranslation(msg));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation(msg));
     }
 
     public static <T, E> T getKeyByValue(Map<T, E> map, E value) {

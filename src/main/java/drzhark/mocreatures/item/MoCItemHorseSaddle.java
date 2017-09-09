@@ -19,7 +19,7 @@ public class MoCItemHorseSaddle extends MoCItem {
             MoCEntityHorse entityhorse = (MoCEntityHorse) target;
             if (!entityhorse.getIsRideable() && entityhorse.getIsAdult()) {
                 entityhorse.setRideable(true);
-                stack.stackSize--;
+                stack.shrink(1);
                 return true;
             }
         }

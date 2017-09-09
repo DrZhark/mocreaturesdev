@@ -4,9 +4,10 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -44,7 +45,7 @@ public class MoCEntityManticore extends MoCEntityMob {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
     }
@@ -68,20 +69,20 @@ public class MoCEntityManticore extends MoCEntityMob {
 
     @Override
     public boolean checkSpawningBiome() {
-        if (this.worldObj.provider.doesWaterVaporize()) {
+        if (this.world.provider.doesWaterVaporize()) {
             setType(1);
             this.isImmuneToFire = true;
             return true;
         }
 
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+        if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
             setType(3);
         }
 
@@ -162,7 +163,7 @@ public class MoCEntityManticore extends MoCEntityMob {
 
     /*@Override
     public boolean getCanSpawnHere() {
-        if (this.posY < 50D && !this.worldObj.provider.doesWaterVaporize()) {
+        if (this.posY < 50D && !this.world.provider.doesWaterVaporize()) {
             setType(32);
         }
         return super.getCanSpawnHere();
@@ -182,8 +183,8 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     public boolean isOnAir() {
-        return this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.2D), MathHelper
-                .floor_double(this.posZ)));
+        return this.world.isAirBlock(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY - 0.2D), MathHelper
+                .floor(this.posZ)));
     }
 
     @Override
@@ -278,7 +279,7 @@ public class MoCEntityManticore extends MoCEntityMob {
         if (this.isFlyer() && this.wingFlapCounter == 0) {
             this.wingFlapCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
     }
 
@@ -305,7 +306,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     public void setPoisoning(boolean flag) {
         if (flag && MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.isPoisoning = flag;
     }
@@ -313,7 +314,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
 
             if (entity != null && entity != this && entity instanceof EntityLivingBase && this.shouldAttackPlayers() && getIsAdult()) {
                 setAttackTarget((EntityLivingBase) entity);
@@ -344,7 +345,7 @@ public class MoCEntityManticore extends MoCEntityMob {
 
             } else if (getType() == 1)// red
             {
-                if (flag && MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
+                if (flag && MoCreatures.isServer() && !this.world.provider.doesWaterVaporize()) {
                     MoCreatures.burnPlayer((EntityPlayer) entityIn);
                     ((EntityLivingBase) entityIn).setFire(15);
                 }
@@ -366,7 +367,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         openMouth();
         return MoCSoundEvents.ENTITY_LION_HURT;
     }
@@ -383,7 +384,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return "mocreatures:manticorehurt";
     }
 
@@ -404,37 +405,37 @@ public class MoCEntityManticore extends MoCEntityMob {
         switch (getType()) {
             case 1:
                 if (flag) {
-                    return MoCreatures.scorpStingNether;
+                    return MoCItems.scorpStingNether;
                 }
-                return MoCreatures.chitinNether;
+                return MoCItems.chitinNether;
             case 2:
                 if (flag) {
-                    return MoCreatures.scorpStingCave;
+                    return MoCItems.scorpStingCave;
                 }
-                return MoCreatures.chitinCave;
+                return MoCItems.chitinCave;
 
             case 3:
                 if (flag) {
-                    return MoCreatures.scorpStingFrost;
+                    return MoCItems.scorpStingFrost;
                 }
-                return MoCreatures.chitinFrost;
+                return MoCItems.chitinFrost;
             case 4:
                 if (flag) {
-                    return MoCreatures.scorpStingDirt;
+                    return MoCItems.scorpStingDirt;
                 }
-                return MoCreatures.chitin;
+                return MoCItems.chitin;
 
             default:
-                return MoCreatures.chitin;
+                return MoCItems.chitin;
         }
     }
 
     @Override
     protected void dropFewItems(boolean flag, int x) {
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
+        BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY), this.posZ);
         int chance = MoCreatures.proxy.rareItemDropChance;
         if (this.rand.nextInt(100) < chance) {
-            entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType() + 61), 0.0F);
+            entityDropItem(new ItemStack(MoCItems.mocegg, 1, getType() + 61), 0.0F);
         } else {
             super.dropFewItems(flag, x);
         }

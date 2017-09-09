@@ -2,14 +2,15 @@ package drzhark.mocreatures.entity.item;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -20,8 +21,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityKittyBed extends EntityLiving {
 
@@ -68,35 +67,35 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     public boolean getHasFood() {
-    	return ((Boolean)this.dataManager.get(HAS_FOOD)).booleanValue();
+        return ((Boolean)this.dataManager.get(HAS_FOOD)).booleanValue();
     }
 
     public boolean getHasMilk() {
-    	return ((Boolean)this.dataManager.get(HAS_MILK)).booleanValue();
+        return ((Boolean)this.dataManager.get(HAS_MILK)).booleanValue();
     }
 
     public boolean getPickedUp() {
-    	return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
+        return ((Boolean)this.dataManager.get(PICKED_UP)).booleanValue();
     }
 
     public int getSheetColor() {
-    	return ((Integer)this.dataManager.get(SHEET_COLOR)).intValue();
+        return ((Integer)this.dataManager.get(SHEET_COLOR)).intValue();
     }
 
     public void setHasFood(boolean flag) {
-    	this.dataManager.set(HAS_FOOD, Boolean.valueOf(flag));
+        this.dataManager.set(HAS_FOOD, Boolean.valueOf(flag));
     }
 
     public void setHasMilk(boolean flag) {
-    	this.dataManager.set(HAS_MILK, Boolean.valueOf(flag));
+        this.dataManager.set(HAS_MILK, Boolean.valueOf(flag));
     }
 
     public void setPickedUp(boolean flag) {
-    	this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
+        this.dataManager.set(PICKED_UP, Boolean.valueOf(flag));
     }
 
     public void setSheetColor(int i) {
-    	this.dataManager.set(SHEET_COLOR, Integer.valueOf(i));
+        this.dataManager.set(SHEET_COLOR, Integer.valueOf(i));
         //this.bedColor = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
     }
 
@@ -126,7 +125,7 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public boolean canEntityBeSeen(Entity entity) {
-        return this.worldObj.rayTraceBlocks(new Vec3d(this.posX, this.posY + getEyeHeight(), this.posZ),
+        return this.world.rayTraceBlocks(new Vec3d(this.posX, this.posY + getEyeHeight(), this.posZ),
                 new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ)) == null;
     }
 
@@ -142,7 +141,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.worldObj.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().thePlayer)
+        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.world.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().player)
         {
             setPickedUp(true);
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
@@ -155,42 +154,44 @@ public class MoCEntityKittyBed extends EntityLiving {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if ((stack != null) && (stack.getItem() == Items.MILK_BUCKET)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (!stack.isEmpty() && (stack.getItem() == Items.MILK_BUCKET)) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.BUCKET, 1));
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGMILK);
             setHasMilk(true);
             setHasFood(false);
             return true;
         }
-        if ((stack != null) && !getHasFood() && (stack.getItem() == MoCreatures.petfood)) {
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && !getHasFood() && (stack.getItem() == MoCItems.petfood)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGFOOD);
             setHasMilk(false);
             setHasFood(true);
             return true;
         }
-        if ((stack != null) && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+        if (!stack.isEmpty() && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
                         || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
-            player.inventory.addItemStackToInventory(new ItemStack(MoCreatures.kittybed[Math.abs(getSheetColor() - 15)], 1));
+            player.inventory.addItemStackToInventory(new ItemStack(MoCItems.kittybed[Math.abs(getSheetColor() - 15)], 1));
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
         } else {
             if (this.getRidingEntity() == null) {
-            	this.rotationYaw = player.rotationYaw;
+                this.rotationYaw = player.rotationYaw;
                 this.startRiding(player);
             }return true;
         }
     }
 
     @Override
-    public void moveEntity(double d, double d1, double d2) {
+    public void move(MoverType type, double d, double d1, double d2) {
         if ((this.getRidingEntity() != null) || !this.onGround || !MoCreatures.proxy.staticLitter) {
-            if (!this.worldObj.isRemote) {
-                super.moveEntity(d, d1, d2);
+            if (!this.world.isRemote) {
+                super.move(type, d, d1, d2);
             }
         }
     }

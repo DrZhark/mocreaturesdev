@@ -35,12 +35,12 @@ public class CommandMoCPets extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "mocpets";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -53,7 +53,7 @@ public class CommandMoCPets extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender par1ICommandSender) {
+    public String getUsage(ICommandSender par1ICommandSender) {
         return "commands.mocpets.usage";
     }
 
@@ -128,11 +128,11 @@ public class CommandMoCPets extends CommandBase {
 
         if (tamedlist.size() > 0) {
             sendPageHelp(sender, (byte) 10, tamedlist, args);
-            sender.addChatMessage(new TextComponentTranslation("Loaded tamed count : " + TextFormatting.AQUA + loadedCount
+            sender.sendMessage(new TextComponentTranslation("Loaded tamed count : " + TextFormatting.AQUA + loadedCount
                     + TextFormatting.WHITE + ", Unloaded count : " + TextFormatting.AQUA + unloadedCount + TextFormatting.WHITE
                     + ", Total count : " + TextFormatting.AQUA + (ownerPetData != null ? ownerPetData.getTamedList().tagCount() : 0)));
         } else {
-            sender.addChatMessage(new TextComponentTranslation("Loaded tamed count : "
+            sender.sendMessage(new TextComponentTranslation("Loaded tamed count : "
                     + TextFormatting.AQUA
                     + loadedCount
                     + TextFormatting.WHITE
@@ -166,13 +166,13 @@ public class CommandMoCPets extends CommandBase {
                         // check if in same dimension
                         if (entity.dimension == player.dimension) {
                             entity.setPosition(player.posX, player.posY, player.posZ);
-                        } else if (!player.worldObj.isRemote)// transfer entity to player dimension
+                        } else if (!player.world.isRemote)// transfer entity to player dimension
                         {
-                            Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), player.worldObj);
+                            Entity newEntity = EntityList.newEntity(entity.getClass(), player.world);
                             if (newEntity != null) {
                                 MoCTools.copyDataFromOld(newEntity, entity); // transfer all existing data to our new entity
                                 newEntity.setPosition(player.posX, player.posY, player.posZ);
-                                DimensionManager.getWorld(player.dimension).spawnEntityInWorld(newEntity);
+                                DimensionManager.getWorld(player.dimension).spawnEntity(newEntity);
                             }
                             if (entity.getRidingEntity() == null) {
                                 entity.isDead = true;
@@ -184,7 +184,7 @@ public class CommandMoCPets extends CommandBase {
                             world.resetUpdateEntityTick();
                             DimensionManager.getWorld(player.dimension).resetUpdateEntityTick();
                         }
-                        par1ICommandSender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
+                        par1ICommandSender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + name + TextFormatting.WHITE
                                 + " has been tp'd to location " + Math.round(player.posX) + ", " + Math.round(player.posY) + ", "
                                 + Math.round(player.posZ) + " in dimension " + player.dimension));
                         return true;
@@ -196,9 +196,9 @@ public class CommandMoCPets extends CommandBase {
     }
 
     public void sendCommandHelp(ICommandSender sender) {
-        sender.addChatMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
+        sender.sendMessage(new TextComponentTranslation("\u00a72Listing MoCreatures commands"));
         for (int i = 0; i < commands.size(); i++) {
-            sender.addChatMessage(new TextComponentTranslation(commands.get(i)));
+            sender.sendMessage(new TextComponentTranslation(commands.get(i)));
         }
     }
 
@@ -215,13 +215,13 @@ public class CommandMoCPets extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.addChatMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing MoCreatures Help Info "
+        sender.sendMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing MoCreatures Help Info "
                 + TextFormatting.AQUA + Integer.valueOf(j + 1) + TextFormatting.WHITE + " of " + TextFormatting.AQUA
                 + Integer.valueOf(x + 1) + TextFormatting.GRAY + " (/mocpets <page>)" + TextFormatting.DARK_GREEN + "---"));
 
         for (int l = j * pagelimit; l < k; ++l) {
             String tamedInfo = list.get(l);
-            sender.addChatMessage(new TextComponentTranslation(tamedInfo));
+            sender.sendMessage(new TextComponentTranslation(tamedInfo));
         }
     }
 }

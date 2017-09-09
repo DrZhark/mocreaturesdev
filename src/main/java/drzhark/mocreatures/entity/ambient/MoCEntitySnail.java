@@ -15,16 +15,16 @@ import net.minecraft.world.World;
 
 public class MoCEntitySnail extends MoCEntityAmbient {
 
-	private static final DataParameter<Boolean> IS_HIDDING = EntityDataManager.<Boolean>createKey(MoCEntitySnail.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_HIDDING = EntityDataManager.<Boolean>createKey(MoCEntitySnail.class, DataSerializers.BOOLEAN);
     
-	public MoCEntitySnail(World world) {
+    public MoCEntitySnail(World world) {
         super(world);
         setSize(0.2F, 0.2F);
     }
 
-	@Override
+    @Override
     protected void initEntityAI() {
-		this.tasks.addTask(1, new EntityAIWanderMoC2(this, 0.8D));
+        this.tasks.addTask(1, new EntityAIWanderMoC2(this, 0.8D));
     }
     
     @Override
@@ -73,18 +73,18 @@ public class MoCEntitySnail extends MoCEntityAmbient {
     }
 
     public boolean getIsHiding() {
-    	return ((Boolean)this.dataManager.get(IS_HIDDING)).booleanValue();
+        return ((Boolean)this.dataManager.get(IS_HIDDING)).booleanValue();
     }
 
     public void setIsHiding(boolean flag) {
-    	this.dataManager.set(IS_HIDDING, Boolean.valueOf(flag));
+        this.dataManager.set(IS_HIDDING, Boolean.valueOf(flag));
     }
 
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             EntityLivingBase entityliving = getBoogey(3D);
             if ((entityliving != null) && entityliving.height > 0.5F && entityliving.width > 0.5F && canEntityBeSeen(entityliving)) {
                 if (!getIsHiding()) {

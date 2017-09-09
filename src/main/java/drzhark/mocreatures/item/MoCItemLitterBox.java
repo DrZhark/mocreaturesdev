@@ -17,18 +17,17 @@ public class MoCItemLitterBox extends MoCItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
-
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         if (MoCreatures.isServer()) {
-
-            itemstack.stackSize--;
+            stack.shrink(1);
             MoCEntityLitterBox entitylitterbox = new MoCEntityLitterBox(world);
-            entitylitterbox.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
-            entityplayer.worldObj.spawnEntityInWorld(entitylitterbox);
+            entitylitterbox.setPosition(player.posX, player.posY, player.posZ);
+            player.world.spawnEntity(entitylitterbox);
             entitylitterbox.motionY += world.rand.nextFloat() * 0.05F;
             entitylitterbox.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             entitylitterbox.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
         }
-        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 }

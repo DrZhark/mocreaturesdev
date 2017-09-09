@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityTiger extends MoCEntityBigCat {
 
@@ -42,7 +41,7 @@ public class MoCEntityTiger extends MoCEntityBigCat {
             case 3:
                 return MoCreatures.proxy.getTexture("BCwhiteTiger.png"); //winged tiger
             /*case 4:
-            	return MoCreatures.proxy.getTexture("BCleoger.png"); // Tiger x Leopard
+                return MoCreatures.proxy.getTexture("BCleoger.png"); // Tiger x Leopard
             */default:
                 return MoCreatures.proxy.getTexture("BCtiger.png");
         }
@@ -54,13 +53,15 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((stack != null) && onMainHand && getIsTamed() && getType() == 2 && (stack.getItem() == MoCreatures.essencelight)) {
-            if (--stack.stackSize == 0) {
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getType() == 2 && (stack.getItem() == MoCItems.essencelight)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
                 player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
@@ -96,11 +97,6 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     }
 
     @Override
-    public String getClazzString() {
-        return "Tiger";
-    }
-
-    @Override
     public int getOffspringTypeInt(IMoCTameable mate) {
         if (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2) {
             return 1;//4; //liger
@@ -119,7 +115,7 @@ public class MoCEntityTiger extends MoCEntityBigCat {
         return (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3)
                 || (mate instanceof MoCEntityLion && ((MoCEntityLion) mate).getType() == 2)
                 || (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1)
-        		|| (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1);
+                || (mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1);
     }
 
     @Override

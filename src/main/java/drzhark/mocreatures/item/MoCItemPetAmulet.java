@@ -5,11 +5,13 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.entity.IMoCTameable;
-import drzhark.mocreatures.entity.passive.MoCEntityKitty;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
+import drzhark.mocreatures.entity.passive.MoCEntityKitty;
+import drzhark.mocreatures.init.MoCItems;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.util.MoCLog;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 public class MoCItemPetAmulet extends MoCItem {
 
@@ -51,59 +55,29 @@ public class MoCItemPetAmulet extends MoCItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         double dist = 1D;
-        double newPosY = entityplayer.posY;
-        double newPosX = entityplayer.posX - (dist * Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
-        double newPosZ = entityplayer.posZ - (dist * Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F)) / 57.29578F));
+        double newPosY = player.posY;
+        double newPosX = player.posX - (dist * Math.cos((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
+        double newPosZ = player.posZ - (dist * Math.sin((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
 
-        ItemStack emptyAmulet = new ItemStack(MoCreatures.fishnet, 1, 0);
+        ItemStack emptyAmulet = new ItemStack(MoCItems.fishnet, 1, 0);
         if (this.amuletType == 1) {
-            emptyAmulet = new ItemStack(MoCreatures.petamulet, 1, 0);
+            emptyAmulet = new ItemStack(MoCItems.petamulet, 1, 0);
         }
 
         //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
         if (!world.isRemote && hand == EnumHand.MAIN_HAND) {
-            initAndReadNBT(itemstack);
-            if (this.spawnClass.isEmpty())// || creatureType == 0)
-            {
-            	return new ActionResult(EnumActionResult.SUCCESS, itemstack);
+            initAndReadNBT(stack);
+            if (this.spawnClass.isEmpty()) {
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
             try {
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
                     this.spawnClass = "WildHorse";
                 }
-                /*if (this.spawnClass.equalsIgnoreCase("BigCat")) {
-                    switch (this.creatureType) {
-                        case 1:
-                            this.spawnClass = "Lion";
-                            this.creatureType = 1;//female
-                            break;
-                        case 2:
-                            this.spawnClass = "Lion";
-                            this.creatureType = 2;//male
-                            break;
-                        case 3:
-                            this.spawnClass = "Panther";
-                            this.creatureType = 1;
-                            break;
-                        case 4:
-                            //cheetah
-                            break;
-                        case 5:
-                            this.spawnClass = "Tiger";
-                            this.creatureType = 1;
-                            break;
-                        case 6:
-                            this.spawnClass = "Leopard";
-                            this.creatureType = 2;
-                            break;
-                        case 7:
-                            this.spawnClass = "Tiger";
-                            this.creatureType = 2;
-                            break;
-                    }
-                }*/
+
                 if (this.spawnClass.equalsIgnoreCase("Ray")) {
                     switch (this.creatureType) {
                         case 1:
@@ -122,8 +96,8 @@ public class MoCItemPetAmulet extends MoCItem {
                     storedCreature.setTamed(true);
                     storedCreature.setPetName(this.name);
                     storedCreature.setOwnerPetId(this.PetId);
-                    storedCreature.setOwnerId(entityplayer.getUniqueID());
-                    this.ownerName = entityplayer.getName();
+                    storedCreature.setOwnerId(player.getUniqueID());
+                    this.ownerName = player.getName();
                     ((EntityLiving) storedCreature).setHealth(this.health);
                     storedCreature.setEdad(this.edad);
                     storedCreature.setAdult(this.adult);
@@ -132,43 +106,64 @@ public class MoCItemPetAmulet extends MoCItem {
                     }
                     // special case for kitty
                     if (this.spawnClass.equalsIgnoreCase("Kitty")) {
-                        ((MoCEntityKitty) storedCreature).setKittyState(2); // allows name to render
+                        ((MoCEntityKitty) storedCreature).setKittyState(3); // allows name to render
                     }
 
-                    //if the player using the amulet is different than the original owner
-                    if (!(this.ownerUniqueId.equals(entityplayer.getUniqueID())) && MoCreatures.instance.mapData != null) {
-                        MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerUniqueId);
-                        MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(entityplayer.getUniqueID());
-                        EntityPlayer epOwner = world.getPlayerEntityByName(entityplayer.getName());
-                        int maxCount = MoCreatures.proxy.maxTamed;
-                        if (MoCTools.isThisPlayerAnOP(epOwner)) {
-                            maxCount = MoCreatures.proxy.maxOPTamed;
+                    if (this.ownerUniqueId == null) {
+                        this.ownerUniqueId = player.getUniqueID();
+                        if (MoCreatures.instance.mapData != null) {
+                            final MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(player.getUniqueID());
+                            int maxCount = MoCreatures.proxy.maxTamed;
+                            if (MoCTools.isThisPlayerAnOP(player)) {
+                                maxCount = MoCreatures.proxy.maxOPTamed;
+                            }
+                            if (newOwner == null) {
+                                if (maxCount > 0 || !MoCreatures.proxy.enableOwnership) {
+                                    // create new PetData for new owner
+                                    MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
+                                }
+                            } else // add pet to existing pet data
+                            {
+                                if (newOwner.getTamedList().tagCount() < maxCount || !MoCreatures.proxy.enableOwnership) {
+                                    MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
+                                }
+                            }
                         }
-                        if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0)
-                                || !MoCreatures.proxy.enableOwnership) {
-                            MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
-                        }
-                        // remove pet entry from old owner
-                        if (oldOwner != null) {
-                            for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++) {
-                                NBTTagCompound petEntry = oldOwner.getTamedList().getCompoundTagAt(j);
-                                if (petEntry.getInteger("PetId") == this.PetId) {
-                                    // found match, remove
-                                    oldOwner.getTamedList().removeTag(j);
+                    } else {
+                        //if the player using the amulet is different than the original owner
+                        if (!(this.ownerUniqueId.equals(player.getUniqueID())) && MoCreatures.instance.mapData != null) {
+                            MoCPetData oldOwner = MoCreatures.instance.mapData.getPetData(this.ownerUniqueId);
+                            MoCPetData newOwner = MoCreatures.instance.mapData.getPetData(player.getUniqueID());
+                            int maxCount = MoCreatures.proxy.maxTamed;
+                            if (MoCTools.isThisPlayerAnOP(player)) {
+                                maxCount = MoCreatures.proxy.maxOPTamed;
+                            }
+                            if ((newOwner != null && newOwner.getTamedList().tagCount() < maxCount) || (newOwner == null && maxCount > 0)
+                                    || !MoCreatures.proxy.enableOwnership) {
+                                MoCreatures.instance.mapData.updateOwnerPet(storedCreature);
+                            }
+                            // remove pet entry from old owner
+                            if (oldOwner != null) {
+                                for (int j = 0; j < oldOwner.getTamedList().tagCount(); j++) {
+                                    NBTTagCompound petEntry = oldOwner.getTamedList().getCompoundTagAt(j);
+                                    if (petEntry.getInteger("PetId") == this.PetId) {
+                                        // found match, remove
+                                        oldOwner.getTamedList().removeTag(j);
+                                    }
                                 }
                             }
                         }
                     }
 
-                    if (entityplayer.worldObj.spawnEntityInWorld((EntityLiving) storedCreature)) {
+                    if (player.getEntityWorld().spawnEntity((EntityLiving) storedCreature)) {
                         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(((EntityLiving) storedCreature).getEntityId()),
-                                new TargetPoint(entityplayer.worldObj.provider.getDimensionType().getId(), entityplayer.posX, entityplayer.posY,
-                                        entityplayer.posZ, 64));
+                                new TargetPoint(player.getEntityWorld().provider.getDimensionType().getId(), player.posX, player.posY,
+                                        player.posZ, 64));
                         if (this.ownerUniqueId == null || this.name.isEmpty()) {
-                            MoCTools.tameWithName(entityplayer, storedCreature);
+                            MoCTools.tameWithName(player, storedCreature);
                         }
 
-                        entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, emptyAmulet);
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, emptyAmulet);
                         MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerId());
                         if (petData != null) {
                             petData.setInAmulet(storedCreature.getOwnerPetId(), false);
@@ -182,7 +177,7 @@ public class MoCItemPetAmulet extends MoCItem {
             }
         }
 
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -218,16 +213,16 @@ public class MoCItemPetAmulet extends MoCItem {
      * allows items to add custom lines of information to the mouseover description
      */
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4) {
-        initAndReadNBT(par1ItemStack);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        initAndReadNBT(stack);
         if (this.spawnClass != "") {
-            par3List.add(TextFormatting.AQUA + this.spawnClass);
+            tooltip.add(TextFormatting.AQUA + this.spawnClass);
         }
         if (this.name != "") {
-            par3List.add(TextFormatting.BLUE + this.name);
+            tooltip.add(TextFormatting.BLUE + this.name);
         }
         if (this.ownerName != "") {
-            par3List.add(TextFormatting.DARK_BLUE + "Owned by " + this.ownerName);
+            tooltip.add(TextFormatting.DARK_BLUE + "Owned by " + this.ownerName);
         }
     }
 

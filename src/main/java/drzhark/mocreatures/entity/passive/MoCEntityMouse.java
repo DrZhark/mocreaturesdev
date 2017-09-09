@@ -5,7 +5,7 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -14,9 +14,8 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -27,8 +26,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
-import javax.annotation.Nullable;
-
 public class MoCEntityMouse extends MoCEntityAnimal {
 
     public MoCEntityMouse(World world) {
@@ -38,7 +35,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFleeFromPlayer(this, 1.2D, 4D));
         this.tasks.addTask(2, new EntityAIPanic(this, 1.4D));
         this.tasks.addTask(5, new EntityAIWanderMoC2(this, 1.0D));
@@ -78,11 +75,11 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public boolean checkSpawningBiome() {
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY), this.posZ);
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
 
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+            if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
                 setType(3); //white mice!
             }
         } catch (Exception e) {
@@ -100,14 +97,14 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public boolean getCanSpawnHere() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
-        Block block = this.worldObj.getBlockState(pos.down()).getBlock();
-        return ((MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && (this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0)
-                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.COBBLESTONE) || (block == Blocks.PLANKS)
+        Block block = this.world.getBlockState(pos.down()).getBlock();
+        return ((MoCreatures.entityMap.get(this.getClass()).getFrequency() > 0) && this.world.checkNoEntityCollision(this.getEntityBoundingBox())
+                && (this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0)
+                && !this.world.containsAnyLiquid(this.getEntityBoundingBox()) && ((block == Blocks.COBBLESTONE) || (block == Blocks.PLANKS)
                 || (block == Blocks.DIRT) || (block == Blocks.STONE) || (block == Blocks.GRASS)));
     }
 
@@ -122,7 +119,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_MOUSE_HURT;
     }
 
@@ -149,7 +146,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
         if (this.getRidingEntity() == null) {
                 this.startRiding(player);
             this.rotationYaw = player.rotationYaw;
@@ -178,6 +175,6 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public boolean canRidePlayer()
     {
-    	return true;
+        return true;
     }
 }

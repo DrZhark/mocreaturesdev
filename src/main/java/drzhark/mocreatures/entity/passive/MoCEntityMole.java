@@ -4,7 +4,8 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +26,7 @@ import net.minecraft.world.World;
 
 public class MoCEntityMole extends MoCEntityTameableAnimal {
 
-	private static final DataParameter<Integer> MOLE_STATE = EntityDataManager.<Integer>createKey(MoCEntityMole.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> MOLE_STATE = EntityDataManager.<Integer>createKey(MoCEntityMole.class, DataSerializers.VARINT);
 
     public MoCEntityMole(World world) {
         super(world);
@@ -34,7 +35,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIWanderMoC2(this, 1.0D));
         this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     }
@@ -60,9 +61,9 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
 
     public boolean isOnDirt() {
         Block block =
-                this.worldObj.getBlockState(
-                        new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY - 0.5D), MathHelper
-                                .floor_double(this.posZ))).getBlock();
+                this.world.getBlockState(
+                        new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY - 0.5D), MathHelper
+                                .floor(this.posZ))).getBlock();
         return isDiggableBlock(Block.getIdFromBlock(block));//(j == 2 | j == 3 | j == 12);
     }
 
@@ -85,8 +86,8 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
         double newPosZ =
                 coordZ + Math.sin((MoCTools.realAngle(this.rotationYaw - 90F) / 57.29578F)) * (Math.sin((this.rotationPitch - 90F) / 57.29578F) * x);
         Block block =
-                this.worldObj.getBlockState(
-                        new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ)))
+                this.world.getBlockState(
+                        new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ)))
                         .getBlock();
         if (isDiggableBlock(Block.getIdFromBlock(block))) {
             this.setPosition(newPosX, newPosY, newPosZ);
@@ -99,7 +100,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
      * @return 0 outside / 1 digging / 2 underground / 3 pick-a-boo
      */
     public int getState() {
-    	return ((Integer)this.dataManager.get(MOLE_STATE)).intValue();
+        return ((Integer)this.dataManager.get(MOLE_STATE)).intValue();
     }
 
     /**
@@ -108,7 +109,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
      * @param b 0 outside / 1 digging / 2 underground / 3 pick-a-boo
      */
     public void setState(int i) {
-    	this.dataManager.set(MOLE_STATE, Integer.valueOf(i));
+        this.dataManager.set(MOLE_STATE, Integer.valueOf(i));
     }
 
     @Override
@@ -245,7 +246,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.fur;
+        return MoCItems.fur;
     }
 
     @Override
@@ -254,7 +255,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_RABBIT_HURT;
     }
 

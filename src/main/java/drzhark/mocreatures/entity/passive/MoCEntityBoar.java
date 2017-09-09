@@ -6,6 +6,7 @@ import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -38,7 +39,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
         this.tasks.addTask(3, new EntityAIFollowAdult(this, 1.0D));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0D, true));
@@ -77,7 +78,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
@@ -102,7 +103,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
             return Items.PORKCHOP;
         }
 
-        return MoCreatures.animalHide;
+        return MoCItems.animalHide;
     }
 
     @Override
@@ -111,7 +112,7 @@ public class MoCEntityBoar extends MoCEntityAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.ENTITY_PIG_HURT;
     }
 

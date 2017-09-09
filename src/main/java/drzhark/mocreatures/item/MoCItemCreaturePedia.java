@@ -28,7 +28,7 @@ public class MoCItemCreaturePedia extends MoCItem {
      * Called when a player right clicks a entity with a item.
      */
     public void itemInteractionForEntity2(ItemStack par1ItemStack, EntityLiving entityliving) {
-        if (entityliving.worldObj.isRemote) {
+        if (entityliving.world.isRemote) {
             return;
         }
 
@@ -54,50 +54,51 @@ public class MoCItemCreaturePedia extends MoCItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         if (!world.isRemote) {
             double dist = 5D;
             double d1 = -1D;
             EntityLivingBase entityliving = null;
-            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityplayer, entityplayer.getEntityBoundingBox().expand(dist, dist, dist));
+            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(dist, dist, dist));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity1 = list.get(i);
                 if (entity1 == null || !(entity1 instanceof EntityLivingBase)) {
                     continue;
                 }
 
-                if (!(entityplayer.canEntityBeSeen(entity1))) {
+                if (!(player.canEntityBeSeen(entity1))) {
                     continue;
                 }
 
-                double d2 = entity1.getDistanceSq(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
+                double d2 = entity1.getDistanceSq(player.posX, player.posY, player.posZ);
                 if (((dist < 0.0D) || (d2 < (dist * dist))) && ((d1 == -1D) || (d2 < d1))
-                        && ((EntityLivingBase) entity1).canEntityBeSeen(entityplayer)) {
+                        && ((EntityLivingBase) entity1).canEntityBeSeen(player)) {
                     d1 = d2;
                     entityliving = (EntityLivingBase) entity1;
                 }
             }
 
             if (entityliving == null) {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
             if (entityliving instanceof MoCEntityHorse) {
-                MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/horse.png");
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                MoCreatures.showCreaturePedia(player, "/mocreatures/pedia/horse.png");
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
 
             if (entityliving instanceof MoCEntityTurtle) {
-                MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/turtle.png");
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                MoCreatures.showCreaturePedia(player, "/mocreatures/pedia/turtle.png");
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
 
             if (entityliving instanceof MoCEntityBunny) {
-                MoCreatures.showCreaturePedia(entityplayer, "/mocreatures/pedia/bunny.png");
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                MoCreatures.showCreaturePedia(player, "/mocreatures/pedia/bunny.png");
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
         }
 
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
     }
 }

@@ -4,7 +4,8 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -49,7 +50,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
@@ -132,19 +133,19 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     public boolean getIsHumanForm() {
-    	return ((Boolean)this.dataManager.get(IS_HUMAN)).booleanValue();
+        return ((Boolean)this.dataManager.get(IS_HUMAN)).booleanValue();
     }
 
     public void setHumanForm(boolean flag) {
-    	this.dataManager.set(IS_HUMAN, Boolean.valueOf(flag));
+        this.dataManager.set(IS_HUMAN, Boolean.valueOf(flag));
     }
 
     public boolean getIsHunched() {
-    	return ((Boolean)this.dataManager.get(IS_HUNCHED)).booleanValue();
+        return ((Boolean)this.dataManager.get(IS_HUNCHED)).booleanValue();
     }
 
     public void setHunched(boolean flag) {
-    	this.dataManager.set(IS_HUNCHED, Boolean.valueOf(flag));
+        this.dataManager.set(IS_HUNCHED, Boolean.valueOf(flag));
     }
 
     @Override
@@ -161,28 +162,28 @@ public class MoCEntityWerewolf extends MoCEntityMob {
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        Entity entity = damagesource.getEntity();
+        Entity entity = damagesource.getTrueSource();
         if (!getIsHumanForm() && (entity != null) && (entity instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) entity;
-            ItemStack itemstack = entityplayer.getHeldItemMainhand();
-            if (itemstack != null) {
+            ItemStack stack = entityplayer.getHeldItemMainhand();
+            if (!stack.isEmpty()) {
                 i = 1F;
-                if (itemstack.getItem() == MoCreatures.silversword) {
+                if (stack.getItem() == MoCItems.silversword) {
                     i = 10F;
                 }
-                if (itemstack.getItem() instanceof ItemSword) {
-                    String swordMaterial = ((ItemSword) itemstack.getItem()).getToolMaterialName();
-                    String swordName = ((ItemSword) itemstack.getItem()).getUnlocalizedName();
+                if (stack.getItem() instanceof ItemSword) {
+                    String swordMaterial = ((ItemSword) stack.getItem()).getToolMaterialName();
+                    String swordName = ((ItemSword) stack.getItem()).getUnlocalizedName();
                     if (swordMaterial.toLowerCase().contains("silver") || swordName.toLowerCase().contains("silver")) {
-                        i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 3F;
+                        i = ((ItemSword) stack.getItem()).getDamageVsEntity() * 3F;
                     }
-                } else if (itemstack.getItem() instanceof ItemTool) {
-                    String toolMaterial = ((ItemTool) itemstack.getItem()).getToolMaterialName();
-                    String toolName = ((ItemTool) itemstack.getItem()).getUnlocalizedName();
+                } else if (stack.getItem() instanceof ItemTool) {
+                    String toolMaterial = ((ItemTool) stack.getItem()).getToolMaterialName();
+                    String toolName = ((ItemTool) stack.getItem()).getUnlocalizedName();
                     if (toolMaterial.toLowerCase().contains("silver") || toolName.toLowerCase().contains("silver")) {
-                        i = ((ItemSword) itemstack.getItem()).getDamageVsEntity() * 2F;
+                        i = ((ItemSword) stack.getItem()).getDamageVsEntity() * 2F;
                     }
-                } else if (itemstack.getItem().getUnlocalizedName().toLowerCase().contains("silver")) {
+                } else if (stack.getItem().getUnlocalizedName().toLowerCase().contains("silver")) {
                     i = 6F;
                 }
             }
@@ -261,7 +262,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         if (getIsHumanForm()) {
             if (!this.transforming)
                 return MoCSoundEvents.ENTITY_WEREWOLF_HURT_HUMAN;
@@ -281,20 +282,20 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     }
 
     public boolean IsNight() {
-        return !this.worldObj.isDaytime();
+        return !this.world.isDaytime();
     }
 
     @Override
     public void onDeath(DamageSource damagesource) {
-        Entity entity = damagesource.getEntity();
+        Entity entity = damagesource.getTrueSource();
         if ((this.scoreValue > 0) && (entity != null)) {
-            entity.addToPlayerScore(this, this.scoreValue);
+            entity.awardKillScore(this, this.scoreValue, damagesource);
         }
         if (entity != null) {
             entity.onKillEntity(this);
         }
 
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             for (int i = 0; i < 2; i++) {
                 Item item = getDropItem();
                 if (item != null) {
@@ -308,7 +309,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             if (((IsNight() && getIsHumanForm()) || (!IsNight() && !getIsHumanForm())) && (this.rand.nextInt(250) == 0)) {
                 this.transforming = true;
             }
@@ -341,9 +342,9 @@ public class MoCEntityWerewolf extends MoCEntityMob {
             }
             //so entity doesn't despawn that often
             if (this.rand.nextInt(300) == 0) {
-                this.entityAge -= 100 * this.worldObj.getDifficulty().getDifficultyId();
-                if (this.entityAge < 0) {
-                    this.entityAge = 0;
+                this.idleTime -= 100 * this.world.getDifficulty().getDifficultyId();
+                if (this.idleTime  < 0) {
+                    this.idleTime  = 0;
                 }
             }
         }
@@ -353,27 +354,27 @@ public class MoCEntityWerewolf extends MoCEntityMob {
         if (this.deathTime > 0) {
             return;
         }
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY) + 1;
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY) + 1;
+        int k = MathHelper.floor(this.posZ);
         float f = 0.1F;
         for (int l = 0; l < 30; l++) {
-            double d = i + this.worldObj.rand.nextFloat();
-            double d1 = j + this.worldObj.rand.nextFloat();
-            double d2 = k + this.worldObj.rand.nextFloat();
+            double d = i + this.world.rand.nextFloat();
+            double d1 = j + this.world.rand.nextFloat();
+            double d2 = k + this.world.rand.nextFloat();
             double d3 = d - i;
             double d4 = d1 - j;
             double d5 = d2 - k;
-            double d6 = MathHelper.sqrt_double((d3 * d3) + (d4 * d4) + (d5 * d5));
+            double d6 = MathHelper.sqrt((d3 * d3) + (d4 * d4) + (d5 * d5));
             d3 /= d6;
             d4 /= d6;
             d5 /= d6;
             double d7 = 0.5D / ((d6 / f) + 0.1D);
-            d7 *= (this.worldObj.rand.nextFloat() * this.worldObj.rand.nextFloat()) + 0.3F;
+            d7 *= (this.world.rand.nextFloat() * this.world.rand.nextFloat()) + 0.3F;
             d3 *= d7;
             d4 *= d7;
             d5 *= d7;
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d + (i * 1.0D)) / 2D, (d1 + (j * 1.0D)) / 2D, (d2 + (k * 1.0D)) / 2D,
+            this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d + (i * 1.0D)) / 2D, (d1 + (j * 1.0D)) / 2D, (d2 + (k * 1.0D)) / 2D,
                     d3, d4, d5);
         }
 

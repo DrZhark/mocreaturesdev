@@ -253,7 +253,7 @@ public class MoCModelSnake extends ModelBase {
              * this one? //sidef = A * MathHelper.sin(w * t - 0.3F * (float)j);
              * //sidef = 0.5F * MathHelper.sin(2F * (f)- 0.25F * (float)j) -
              * 0.2F * MathHelper.cos(1.2F *f - 0.15F *(float)j); //sidef =
-             * MathHelper.sqrt_float(i/10F); //sidef = sidef * sideperf;
+             * MathHelper.sqrt(i/10F); //sidef = sidef * sideperf;
              * //GL11.glTranslatef(sidef, 0.0F, 0.0F); anglef = (8) * (i+1)
              * ;//works well for small snakes //anglef = (6) * (i+1) ; //this
              * may work!! GL11.glTranslatef(0.0F, 0.0F, -0.05F*i);

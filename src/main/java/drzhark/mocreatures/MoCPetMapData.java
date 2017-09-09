@@ -8,8 +8,8 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
@@ -53,7 +53,7 @@ public class MoCPetMapData extends WorldSavedData {
     public void updateOwnerPet(IMoCTameable pet) {
         this.markDirty();
         if (pet.getOwnerPetId() == -1 || this.petMap.get(pet.getOwnerId()) == null) {
-            UUID owner = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().thePlayer.getUniqueID();
+            UUID owner = MoCreatures.isServer() ? pet.getOwnerId() : Minecraft.getMinecraft().player.getUniqueID();
             MoCPetData petData = null;
             int id = -1;
             if (this.petMap.containsKey(owner)) {
@@ -83,7 +83,7 @@ public class MoCPetMapData extends WorldSavedData {
                     nbt.setInteger("ChunkX", ((Entity) pet).chunkCoordX);
                     nbt.setInteger("ChunkY", ((Entity) pet).chunkCoordY);
                     nbt.setInteger("ChunkZ", ((Entity) pet).chunkCoordZ);
-                    nbt.setInteger("Dimension", ((Entity) pet).worldObj.provider.getDimensionType().getId());
+                    nbt.setInteger("Dimension", ((Entity) pet).world.provider.getDimensionType().getId());
                     nbt.setInteger("PetId", pet.getOwnerPetId());
                 }
             }
@@ -166,13 +166,13 @@ public class MoCPetMapData extends WorldSavedData {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound) {
         for (Map.Entry<UUID, MoCPetData> ownerEntry : this.petMap.entrySet()) {
-    		try {
+            try {
             if (this.petMap.entrySet() != null && ownerEntry.getKey()!= null) 
             {
             par1NBTTagCompound.setTag(ownerEntry.getKey().toString(), ownerEntry.getValue().getOwnerRootNBT());
         }
             } catch (Exception e) {
-    			e.printStackTrace();
+                e.printStackTrace();
             }
         }
         return par1NBTTagCompound;

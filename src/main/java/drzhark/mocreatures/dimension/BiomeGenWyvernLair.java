@@ -1,10 +1,10 @@
 package drzhark.mocreatures.dimension;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.ambient.MoCEntityDragonfly;
 import drzhark.mocreatures.entity.passive.MoCEntityBunny;
 import drzhark.mocreatures.entity.passive.MoCEntitySnake;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
+import drzhark.mocreatures.init.MoCBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,18 +30,18 @@ public class BiomeGenWyvernLair extends Biome {
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntityDragonfly.class, 8, 2, 3));
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntitySnake.class, 6, 1, 2));
         this.spawnableCreatureList.add(new SpawnListEntry(MoCEntityWyvern.class, 10, 1, 4));
-        this.topBlock = MoCreatures.mocGrass.getDefaultState();
-        this.fillerBlock = MoCreatures.mocDirt.getDefaultState();
-        this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCreatures.mocLog.getDefaultState(), MoCreatures.mocLeaf.getDefaultState(), 2, 30, 10);
+        this.topBlock = MoCBlocks.mocGrass.getDefaultState();
+        this.fillerBlock = MoCBlocks.mocDirt.getDefaultState();
+        this.wyvernGenBigTree = new MoCWorldGenBigTree(false, MoCBlocks.mocLog.getDefaultState(), MoCBlocks.mocLeaf.getDefaultState(), 2, 30, 10);
         this.worldGenShrub = new WorldGenShrub(Blocks.DIRT.getDefaultState(), Blocks.AIR.getDefaultState());
-        this.theBiomeDecorator = new BiomeWyvernDecorator();
+        this.decorator = new BiomeWyvernDecorator();
     }
 
     /**
      * Gets a WorldGen appropriate for this biome.
      */
     @Override
-    public WorldGenAbstractTree genBigTreeChance(Random par1Random) {
+    public WorldGenAbstractTree getRandomTreeFeature(Random par1Random) {
         if (par1Random.nextInt(10) == 0) {
             return this.wyvernGenBigTree;
         } else {
@@ -54,7 +54,7 @@ public class BiomeGenWyvernLair extends Biome {
      */
     @Override
     public WorldGenerator getRandomWorldGenForGrass(Random par1Random) {
-        return new WorldGenWyvernGrass(MoCreatures.mocTallGrass.getDefaultState());
+        return new WorldGenWyvernGrass(MoCBlocks.mocTallGrass.getDefaultState());
     }
 
     @Override

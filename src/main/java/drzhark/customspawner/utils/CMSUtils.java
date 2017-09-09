@@ -171,8 +171,8 @@ public class CMSUtils {
                 environment.envLog.logger.info("Reading type " + entitySpawnType.name().toUpperCase() + "...");
                 Iterator<Biome> iterator = Biome.REGISTRY.iterator();
                 while (iterator.hasNext()) {
-                	Biome biome = iterator.next();
-                    environment.envLog.logger.info("Found biome " + biome.getBiomeName() + " with spawn entries : ");
+                    Biome biome = iterator.next();
+                    environment.envLog.logger.info("Found biome " + biome.biomeName + " with spawn entries : ");
                     if (entitySpawnType.getBiomeSpawnList(Biome.getIdForBiome(biome)) == null) {
                         environment.envLog.logger.info("NONE!");
                         continue;
@@ -194,7 +194,7 @@ public class CMSUtils {
         for (Map.Entry<String, ArrayList<Biome>> defaultEntry : CustomSpawner.entityDefaultSpawnBiomes.entrySet()) {
             CustomSpawner.globalLog.logger.info("Found entity " + defaultEntry.getKey() + ", printing biome list :");
             for (Biome biome : defaultEntry.getValue()) {
-                CustomSpawner.globalLog.logger.info("with biome " + biome.getBiomeName());
+                CustomSpawner.globalLog.logger.info("with biome " + biome.biomeName);
             }
             CustomSpawner.globalLog.logger.info("");
         }
@@ -209,7 +209,7 @@ public class CMSUtils {
         if (extendedblockstorage == null) {
             return 0;
         } else {
-            return extendedblockstorage.getExtBlocklightValue(x, y & 15, z);
+            return extendedblockstorage.getBlockLight(x, y & 15, z);
         }
     }
 
@@ -219,19 +219,19 @@ public class CMSUtils {
     public static boolean isValidUndergroundLightLevel(EntityLiving entityliving) {
         BlockPos pos = entityliving.getPosition();
 
-        if (entityliving.worldObj.getLightFor(EnumSkyBlock.SKY, pos) > entityliving.worldObj.rand.nextInt(32)) {
+        if (entityliving.world.getLightFor(EnumSkyBlock.SKY, pos) > entityliving.world.rand.nextInt(32)) {
             return false;
         } else {
-            int l = entityliving.worldObj.getLightFromNeighbors(pos);
+            int l = entityliving.world.getLightFromNeighbors(pos);
 
-            if (entityliving.worldObj.isThundering()) {
-                int i1 = entityliving.worldObj.getSkylightSubtracted();
-                entityliving.worldObj.setSkylightSubtracted(10);
-                l = entityliving.worldObj.getLightFromNeighbors(pos);
-                entityliving.worldObj.setSkylightSubtracted(i1);
+            if (entityliving.world.isThundering()) {
+                int i1 = entityliving.world.getSkylightSubtracted();
+                entityliving.world.setSkylightSubtracted(10);
+                l = entityliving.world.getLightFromNeighbors(pos);
+                entityliving.world.setSkylightSubtracted(i1);
             }
 
-            return l <= entityliving.worldObj.rand.nextInt(8);
+            return l <= entityliving.world.rand.nextInt(8);
         }
     }
 

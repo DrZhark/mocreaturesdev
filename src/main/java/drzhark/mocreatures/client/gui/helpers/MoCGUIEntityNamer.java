@@ -71,8 +71,8 @@ public class MoCGUIEntityNamer extends GuiScreen {
         int l = (this.width - this.xSize) / 2;
         int i1 = (this.height - (this.ySize + 16)) / 2;
         drawTexturedModalRect(l, i1, 0, 0, this.xSize, this.ySize);
-        drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 100, 0xffffff);
-        drawCenteredString(this.fontRendererObj, this.NameToSet, this.width / 2, 120, 0xffffff);
+        drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 100, 0xffffff);
+        drawCenteredString(this.fontRenderer, this.NameToSet, this.width / 2, 120, 0xffffff);
         super.drawScreen(i, j, f);
     }
 

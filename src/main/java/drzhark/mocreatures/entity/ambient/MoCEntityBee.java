@@ -7,7 +7,7 @@ package drzhark.mocreatures.entity.ambient;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +34,7 @@ public class MoCEntityBee extends MoCEntityInsect
 
         if (MoCreatures.isServer()) {
             if (getIsFlying() && --this.soundCount == -1) {
-                EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 5D);
+                EntityPlayer ep = this.world.getClosestPlayerToEntity(this, 5D);
                 if (ep != null) {
                     MoCTools.playCustomSound(this, getMySound());
                     this.soundCount = 20;
@@ -67,10 +67,10 @@ public class MoCEntityBee extends MoCEntityInsect
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if (entity instanceof EntityLivingBase) {
                 EntityLivingBase entityliving = (EntityLivingBase) entity;
-                if ((entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0)) {
+                if ((entity != this) && (this.world.getDifficulty().getDifficultyId() > 0)) {
                     setAttackTarget(entityliving);
                 }
                 return true;
@@ -82,9 +82,9 @@ public class MoCEntityBee extends MoCEntityInsect
     }
 
     @Override
-    public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null
-                && (par1ItemStack.getItem() == Item.getItemFromBlock(Blocks.RED_FLOWER) || par1ItemStack.getItem() == Item
+    public boolean isMyFavoriteFood(ItemStack stack) {
+        return !stack.isEmpty()
+                && (stack.getItem() == Item.getItemFromBlock(Blocks.RED_FLOWER) || stack.getItem() == Item
                         .getItemFromBlock(Blocks.YELLOW_FLOWER));
     }
 

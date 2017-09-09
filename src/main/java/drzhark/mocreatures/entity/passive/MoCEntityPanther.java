@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityPanther extends MoCEntityBigCat {
 
@@ -52,26 +51,28 @@ public class MoCEntityPanther extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityplayer, EnumHand hand, @Nullable ItemStack itemstack) {
-        if (super.processInteract(entityplayer, hand, itemstack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return false;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((itemstack != null) && onMainHand && getIsTamed() && getType() == 1 && (itemstack.getItem() == MoCreatures.essencedarkness)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getType() == 1 && (stack.getItem() == MoCItems.essencedarkness)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
-                entityplayer.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }
             setType(2);
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
             setSitting(false);
             if (MoCreatures.isServer()) {
-                entityplayer.startRiding(this);
+                player.startRiding(this);
             }
             return true;
         }
@@ -80,7 +81,7 @@ public class MoCEntityPanther extends MoCEntityBigCat {
 
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
-    	if (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
+        if (mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
             return "Panthard";//3; //panthard
         }
         if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() == 1) {
@@ -135,11 +136,6 @@ public class MoCEntityPanther extends MoCEntityBigCat {
     public int getMaxEdad() {
         if (getType() >= 4) return 110;
         return 100;
-    }
-
-    @Override
-    public String getClazzString() {
-        return "Panther";
     }
 
     @Override

@@ -6,14 +6,14 @@ public class MoCDespawnTickHandler {
     private void onTickInGame() {
         /*
          * if (MoCreatures.proxy.useDespawner) { for (int dimension :
-         * DimensionManager.getIDs()) { WorldServer worldObj =
-         * DimensionManager.getWorld(dimension); // despawn tick if (worldObj !=
-         * null && (worldObj.getWorldInfo().getWorldTotalTime() %
+         * DimensionManager.getIDs()) { WorldServer world =
+         * DimensionManager.getWorld(dimension); // despawn tick if (world !=
+         * null && (world.getWorldInfo().getWorldTotalTime() %
          * MoCDespawner.despawnTickRate == 0L)) //&&
-         * worldObj.provider.getDimensionType().getId() !=
+         * world.provider.getDimensionType().getId() !=
          * MoCreatures.WyvernLairDimensionID) { if
-         * (worldObj.playerEntities.size() > 0) { int numDespawns =
-         * MoCDespawner.despawnVanillaAnimals(worldObj,
+         * (world.playerEntities.size() > 0) { int numDespawns =
+         * MoCDespawner.despawnVanillaAnimals(world,
          * MoCDespawner.despawnLightLevel); if (MoCDespawner.debug) {
          * MoCLog.logger.info("MoCDespawner DeSpawned " + numDespawns +
          * " Vanilla Creatures"); } } } } }

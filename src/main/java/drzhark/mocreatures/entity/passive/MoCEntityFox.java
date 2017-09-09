@@ -9,7 +9,8 @@ import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,8 +32,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
-import javax.annotation.Nullable;
-
 public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     public MoCEntityFox(World world) {
@@ -49,7 +48,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
         this.tasks.addTask(3, new EntityAIFollowOwnerPlayer(this, 0.8D, 2F, 10F));
@@ -101,7 +100,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
@@ -116,14 +115,16 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((stack != null) && onMainHand && ((stack.getItem() == MoCreatures.rawTurkey))) {
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && ((stack.getItem() == MoCItems.rawTurkey))) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
             if (MoCreatures.isServer()) {
@@ -148,11 +149,11 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     @Override
     public boolean checkSpawningBiome() {
         BlockPos pos =
-                new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY),
-                        MathHelper.floor_double(this.posZ));
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+                new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY),
+                        MathHelper.floor(this.posZ));
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+            if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
                 setType(2);
             }
         } catch (Exception e) {
@@ -162,7 +163,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.fur;
+        return MoCItems.fur;
     }
 
     @Override
@@ -171,7 +172,7 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_FOX_HURT;
     }
 
@@ -186,8 +187,8 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && par1ItemStack.getItem() == MoCreatures.ratRaw;
+    public boolean isMyHealFood(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() == MoCItems.ratRaw;
     }
 
     @Override

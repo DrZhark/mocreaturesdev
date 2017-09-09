@@ -39,7 +39,7 @@ public class MoCRenderSnake extends MoCRenderMoC<MoCEntitySnake> {
             if (xOff > 0.0F) {
                 xOff = 0.0F;
             }
-            if (entitysnake.worldObj.isRemote) {
+            if (entitysnake.world.isRemote) {
                 GL11.glTranslatef(xOff, 0.0F, 0F);
             } else {
                 GL11.glTranslatef(xOff, 0F, 0.0F);

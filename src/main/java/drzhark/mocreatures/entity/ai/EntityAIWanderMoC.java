@@ -6,11 +6,11 @@ import net.minecraft.entity.ai.EntityAIWander;
 
 public class EntityAIWanderMoC extends EntityAIWander {
 
-    private EntityCreature theEntityCreature;
+    private EntityCreature entityCreature;
 
     public EntityAIWanderMoC(EntityCreature creature, double speedIn) {
         super(creature, speedIn);
-        this.theEntityCreature = creature;
+        this.entityCreature = creature;
     }
 
     /**
@@ -18,7 +18,7 @@ public class EntityAIWanderMoC extends EntityAIWander {
      */
     @Override
     public boolean shouldExecute() {
-        if (this.theEntityCreature instanceof IMoCEntity && ((IMoCEntity) this.theEntityCreature).isMovementCeased()) {
+        if (this.entityCreature instanceof IMoCEntity && ((IMoCEntity) this.entityCreature).isMovementCeased()) {
             return false;
         }
         return super.shouldExecute();

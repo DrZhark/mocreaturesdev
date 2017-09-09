@@ -60,13 +60,13 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
 
     public void onUpdateMoveOnGround()
     {
-    	if (this.action == EntityMoveHelper.Action.STRAFE)
+        if (this.action == EntityMoveHelper.Action.STRAFE)
         {
-        	float f = (float)this.entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue();
+            float f = (float)this.entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue();
             float f1 = (float)this.speed * f;
             float f2 = this.moveForward;
             float f3 = this.moveStrafe;
-            float f4 = MathHelper.sqrt_float(f2 * f2 + f3 * f3);
+            float f4 = MathHelper.sqrt(f2 * f2 + f3 * f3);
 
             if (f4 < 1.0F)
             {
@@ -86,7 +86,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             {
                 NodeProcessor nodeprocessor = pathnavigate.getNodeProcessor();
 
-                if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.entity.worldObj, MathHelper.floor_double(this.entity.posX + (double)f7), MathHelper.floor_double(this.entity.posY), MathHelper.floor_double(this.entity.posZ + (double)f8)) != PathNodeType.WALKABLE)
+                if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.posX + (double)f7), MathHelper.floor(this.entity.posY), MathHelper.floor(this.entity.posZ + (double)f8)) != PathNodeType.WALKABLE)
                 {
                     this.moveForward = 1.0F;
                     this.moveStrafe = 0.0F;
@@ -101,7 +101,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         }
         else if (this.action == EntityMoveHelper.Action.MOVE_TO)
         {
-        	this.action = EntityMoveHelper.Action.WAIT;
+            this.action = EntityMoveHelper.Action.WAIT;
             double d0 = this.posX - this.entity.posX;
             double d1 = this.posZ - this.entity.posZ;
             double d2 = this.posY - this.entity.posY;
@@ -192,7 +192,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         boolean isSwimmer = this.theCreature.isInWater(); 
         float fLimitAngle = 90F;
         if (!isFlyer && !isSwimmer) {
-        	onUpdateMoveOnGround();
+            onUpdateMoveOnGround();
             return;
         }
 
@@ -211,13 +211,13 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             fLimitAngle = 30F;
         }
         if (this.action == EntityMoveHelper.Action.MOVE_TO && !this.theCreature.getNavigator().noPath()) {
-        	double d0 = this.posX - this.theCreature.posX;
+            double d0 = this.posX - this.theCreature.posX;
             double d1 = this.posY - this.theCreature.posY;
             double d2 = this.posZ - this.theCreature.posZ;
             double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-            d3 = MathHelper.sqrt_double(d3);
+            d3 = MathHelper.sqrt(d3);
             if (d3 < 0.5) {
-            	this.entity.setMoveForward(0.0F);
+                this.entity.setMoveForward(0.0F);
                 this.theCreature.getNavigator().clearPathEntity();
                 return;
             }
@@ -248,10 +248,10 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         if (((IMoCEntity) theCreature).getIsFlying()) {
             int distY = MoCTools.distanceToFloor(this.theCreature);
             if (distY <= ((IMoCEntity) theCreature).minFlyingHeight()
-                    && (this.theCreature.isCollidedHorizontally || this.theCreature.worldObj.rand.nextInt(100) == 0)) {
+                    && (this.theCreature.isCollidedHorizontally || this.theCreature.world.rand.nextInt(100) == 0)) {
                 this.theCreature.motionY += 0.02D;
             }
-            if (distY > ((IMoCEntity) theCreature).maxFlyingHeight() || this.theCreature.worldObj.rand.nextInt(150) == 0) {
+            if (distY > ((IMoCEntity) theCreature).maxFlyingHeight() || this.theCreature.world.rand.nextInt(150) == 0) {
                 this.theCreature.motionY -= 0.02D;
             }
 

@@ -1,8 +1,8 @@
 {
     "parent": "block/cube_bottom_top",
     "textures": {
-        "bottom": "mocreatures:blocks/dirt_OgreLair",
-        "top": "mocreatures:blocks/grassTop_OgreLair",
-        "side": "mocreatures:blocks/grassSide_OgreLair"
+        "bottom": "mocreatures:blocks/dirt_ogre_lair",
+        "top": "mocreatures:blocks/grass_top_ogre_lair",
+        "side": "mocreatures:blocks/grass_side_ogre_lair"
     }
 }

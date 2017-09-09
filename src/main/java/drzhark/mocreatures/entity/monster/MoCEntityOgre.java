@@ -4,10 +4,10 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
 import drzhark.mocreatures.network.message.MoCMessageExplode;
-import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,14 +15,8 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -42,7 +36,7 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -58,8 +52,8 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     public void selectType() {
-    	if (getType() == 0) {
-        	setType(this.rand.nextInt(2) + 1);
+        if (getType() == 0) {
+            setType(this.rand.nextInt(2) + 1);
         }
     }
 
@@ -70,11 +64,11 @@ public class MoCEntityOgre extends MoCEntityMob {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if (this.isRidingOrBeingRiddenBy(entity)) {
                 return true;
             }
-            if ((entity != this) && (this.worldObj.getDifficulty().getDifficultyId() > 0) && entity instanceof EntityLivingBase) {
+            if ((entity != this) && (this.world.getDifficulty().getDifficultyId() > 0) && entity instanceof EntityLivingBase) {
                 setAttackTarget((EntityLivingBase) entity);
                 return true;
             } else {
@@ -87,7 +81,7 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     public boolean shouldAttackPlayers() {
-        return (this.getBrightness(1.0F) < 0.5F) && super.shouldAttackPlayers();
+        return (this.getBrightness() < 0.5F) && super.shouldAttackPlayers();
     }
 
     @Override
@@ -96,7 +90,7 @@ public class MoCEntityOgre extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_OGRE_HURT;
     }
 
@@ -128,7 +122,7 @@ public class MoCEntityOgre extends MoCEntityMob {
                 this.smashCounter = 0;
                 performDestroyBlastAttack();
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageExplode(this.getEntityId()),
-                        new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             }
 
             if ((this.getAttackTarget() != null) && (this.rand.nextInt(40) == 0) && this.smashCounter == 0 && this.attackCounter == 0) {
@@ -157,7 +151,7 @@ public class MoCEntityOgre extends MoCEntityMob {
     protected void startDestroyBlast() {
         this.smashCounter = 1;
         MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
     }
 
     /**
@@ -189,12 +183,12 @@ public class MoCEntityOgre extends MoCEntityMob {
                 this.attackCounter = 1;
                 this.armToAnimate = 1;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
-                        new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             } else {
                 this.attackCounter = 1;
                 this.armToAnimate = 2;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 2),
-                        new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             }
         }
     }

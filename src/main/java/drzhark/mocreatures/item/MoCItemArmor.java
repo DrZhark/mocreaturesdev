@@ -4,85 +4,79 @@ import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCProxy;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MoCItemArmor extends ItemArmor {
 
     public MoCItemArmor(String name, ItemArmor.ArmorMaterial materialIn, int renderIndex, EntityEquipmentSlot equipmentSlotIn) {
         super(materialIn, renderIndex, equipmentSlotIn);
         this.setCreativeTab(MoCreatures.tabMoC);
+        this.setRegistryName(MoCConstants.MOD_ID, name);
         this.setUnlocalizedName(name);
-        GameRegistry.register(this, new ResourceLocation(MoCConstants.MOD_ID, name));
-        if (!MoCreatures.isServer())
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                    .register(this, 0, new ModelResourceLocation("mocreatures:" + name, "inventory"));
     }
 
     @Override
     public String getArmorTexture(ItemStack itemstack, Entity entity, EntityEquipmentSlot slot, String type) {
         String tempArmorTexture = "croc_1.png";
-        if ((itemstack.getItem() == MoCreatures.helmetCroc) || (itemstack.getItem() == MoCreatures.plateCroc)
-                || (itemstack.getItem() == MoCreatures.bootsCroc)) {
+        if ((itemstack.getItem() == MoCItems.helmetCroc) || (itemstack.getItem() == MoCItems.plateCroc)
+                || (itemstack.getItem() == MoCItems.bootsCroc)) {
             tempArmorTexture = "croc_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsCroc) {
+        if (itemstack.getItem() == MoCItems.legsCroc) {
             tempArmorTexture = "croc_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetFur) || (itemstack.getItem() == MoCreatures.chestFur)
-                || (itemstack.getItem() == MoCreatures.bootsFur)) {
+        if ((itemstack.getItem() == MoCItems.helmetFur) || (itemstack.getItem() == MoCItems.chestFur)
+                || (itemstack.getItem() == MoCItems.bootsFur)) {
             tempArmorTexture = "fur_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsFur) {
+        if (itemstack.getItem() == MoCItems.legsFur) {
             tempArmorTexture = "fur_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.helmetHide) || (itemstack.getItem() == MoCreatures.chestHide)
-                || (itemstack.getItem() == MoCreatures.bootsHide)) {
+        if ((itemstack.getItem() == MoCItems.helmetHide) || (itemstack.getItem() == MoCItems.chestHide)
+                || (itemstack.getItem() == MoCItems.bootsHide)) {
             tempArmorTexture = "hide_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.legsHide) {
+        if (itemstack.getItem() == MoCItems.legsHide) {
             tempArmorTexture = "hide_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.scorpHelmetDirt) || (itemstack.getItem() == MoCreatures.scorpPlateDirt)
-                || (itemstack.getItem() == MoCreatures.scorpBootsDirt)) {
+        if ((itemstack.getItem() == MoCItems.scorpHelmetDirt) || (itemstack.getItem() == MoCItems.scorpPlateDirt)
+                || (itemstack.getItem() == MoCItems.scorpBootsDirt)) {
             tempArmorTexture = "scorpd_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.scorpLegsDirt) {
+        if (itemstack.getItem() == MoCItems.scorpLegsDirt) {
             tempArmorTexture = "scorpd_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.scorpHelmetFrost) || (itemstack.getItem() == MoCreatures.scorpPlateFrost)
-                || (itemstack.getItem() == MoCreatures.scorpBootsFrost)) {
+        if ((itemstack.getItem() == MoCItems.scorpHelmetFrost) || (itemstack.getItem() == MoCItems.scorpPlateFrost)
+                || (itemstack.getItem() == MoCItems.scorpBootsFrost)) {
             tempArmorTexture = "scorpf_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.scorpLegsFrost) {
+        if (itemstack.getItem() == MoCItems.scorpLegsFrost) {
             tempArmorTexture = "scorpf_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.scorpHelmetCave) || (itemstack.getItem() == MoCreatures.scorpPlateCave)
-                || (itemstack.getItem() == MoCreatures.scorpBootsCave)) {
+        if ((itemstack.getItem() == MoCItems.scorpHelmetCave) || (itemstack.getItem() == MoCItems.scorpPlateCave)
+                || (itemstack.getItem() == MoCItems.scorpBootsCave)) {
             tempArmorTexture = "scorpc_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.scorpLegsCave) {
+        if (itemstack.getItem() == MoCItems.scorpLegsCave) {
             tempArmorTexture = "scorpc_2.png";
         }
 
-        if ((itemstack.getItem() == MoCreatures.scorpHelmetNether) || (itemstack.getItem() == MoCreatures.scorpPlateNether)
-                || (itemstack.getItem() == MoCreatures.scorpBootsNether)) {
+        if ((itemstack.getItem() == MoCItems.scorpHelmetNether) || (itemstack.getItem() == MoCItems.scorpPlateNether)
+                || (itemstack.getItem() == MoCItems.scorpBootsNether)) {
             tempArmorTexture = "scorpn_1.png";
         }
-        if (itemstack.getItem() == MoCreatures.scorpLegsNether) {
+        if (itemstack.getItem() == MoCItems.scorpLegsNether) {
             tempArmorTexture = "scorpn_2.png";
         }
 
@@ -99,8 +93,8 @@ public class MoCItemArmor extends ItemArmor {
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
         if (world.rand.nextInt(50) == 0 && player.getItemStackFromSlot(EntityEquipmentSlot.FEET) != null) {
-            ItemStack myStack = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-            if (myStack != null && myStack.getItem() instanceof MoCItemArmor) {
+            ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+            if (!stack.isEmpty() && stack.getItem() instanceof MoCItemArmor) {
                 MoCTools.updatePlayerArmorEffects(player);
             }
         }

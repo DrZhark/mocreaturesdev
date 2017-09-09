@@ -57,7 +57,7 @@ public class EventHooks {
 
     @SubscribeEvent
     public void onLivingPackSize(LivingPackSizeEvent event) {
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().worldObj).classToEntityMapping.get(event.getEntityLiving().getClass());
+        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
         if (entityData != null) {
             event.setMaxPackSize(entityData.getMaxInChunk());
             event.setResult(Result.ALLOW); // needed for changes to take effect
@@ -66,7 +66,7 @@ public class EventHooks {
 
     @SubscribeEvent
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event) {
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().worldObj).classToEntityMapping.get(event.getEntityLiving().getClass());
+        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
         if (entityData != null && !entityData.getCanSpawn()) {
             if (entityData.getEnvironment().debug) {
                 entityData.getEnvironment().envLog.logger.info("Denied spawn for entity " + entityData.getEntityClass()
@@ -122,7 +122,7 @@ public class EventHooks {
                 double distance = d * d + d1 * d1 + d2 * d2;
                 if (distance > 16384D) {
                     event.setResult(Result.ALLOW);
-                } else if (event.getEntityLiving().getAge() > 600) {
+                } else if (event.getEntityLiving().getIdleTime() > 600) {
                     if (distance < 1024D) {
                         return;
                     } else {
@@ -132,15 +132,15 @@ public class EventHooks {
             }
 
             if (event.getResult() == Result.ALLOW && CustomSpawner.debug) {
-                int x = MathHelper.floor_double(event.getEntity().posX);
-                int y = MathHelper.floor_double(event.getEntity().getEntityBoundingBox().minY);
-                int z = MathHelper.floor_double(event.getEntity().posZ);
+                int x = MathHelper.floor(event.getEntity().posX);
+                int y = MathHelper.floor(event.getEntity().getEntityBoundingBox().minY);
+                int z = MathHelper.floor(event.getEntity().posZ);
                 CMSUtils.getEnvironment(event.getWorld()).envLog.logger.info("Forced Despawn of entity " + event.getEntityLiving() + " at " + x + ", " + y
                         + ", " + z + ". To prevent forced despawns, use /moc forceDespawns false.");
             }
         }
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().worldObj).classToEntityMapping.get(event.getEntityLiving().getClass());
-        if (entityData != null && entityData.getLivingSpawnType() == CMSUtils.getEnvironment(event.getEntity().worldObj).LIVINGTYPE_UNDERGROUND) {
+        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
+        if (entityData != null && entityData.getLivingSpawnType() == CMSUtils.getEnvironment(event.getEntity().world).LIVINGTYPE_UNDERGROUND) {
             event.setResult(Result.ALLOW);
         }
     }

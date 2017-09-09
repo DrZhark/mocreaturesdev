@@ -1,12 +1,12 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
@@ -28,7 +28,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
+        this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
         this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
@@ -89,7 +89,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getEggNumber()), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.mocegg, 1, getEggNumber()), 0.0F);
             }
         }
     }
@@ -192,13 +192,13 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     
     @Override
     public float getAdjustedZOffset() {
-    	if (!isInWater()) {
+        if (!isInWater()) {
             return 0.1F;
         }
         return 0F;
     }
     
     protected int getEggNumber() {
-		return 80;
-	}
+        return 80;
+    }
 }

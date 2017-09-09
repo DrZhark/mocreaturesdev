@@ -57,7 +57,8 @@ public class ItemBuilderHammer extends MoCItem {
      * pressed. Args: itemStack, world, entityPlayer
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         double coordY = player.posY + player.getEyeHeight();
         double coordZ = player.posZ;
         double coordX = player.posX;
@@ -70,8 +71,8 @@ public class ItemBuilderHammer extends MoCItem {
             double newPosZ =
                     coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
                             * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
-            BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-            IBlockState blockstate = player.worldObj.getBlockState(pos);
+            BlockPos pos = new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ));
+            IBlockState blockstate = player.world.getBlockState(pos);
 
             if (blockstate.getBlock() != Blocks.AIR) {
 
@@ -82,8 +83,8 @@ public class ItemBuilderHammer extends MoCItem {
                 newPosZ =
                         coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
                                 * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
-                pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-                if (!player.worldObj.isAirBlock(pos)) {
+                pos = new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ));
+                if (!player.world.isAirBlock(pos)) {
                     return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
                 }
 
@@ -91,8 +92,8 @@ public class ItemBuilderHammer extends MoCItem {
                 if (blockInfo[0] != 0) {
                     if (MoCreatures.isServer()) {
                         Block block = Block.getBlockById(blockInfo[0]);
-                        player.worldObj.setBlockState(pos, block.getDefaultState(), 3);
-                        player.worldObj.playSound(player, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
+                        player.world.setBlockState(pos, block.getDefaultState(), 3);
+                        player.world.playSound(player, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
                                 block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (block.getSoundType().getVolume() + 1.0F) / 2.0F, block.getSoundType().getPitch() * 0.8F);
                     }
                     MoCreatures.proxy.hammerFX(player);
@@ -114,15 +115,16 @@ public class ItemBuilderHammer extends MoCItem {
     private int[] obtainBlockAndMetadataFromBelt(EntityPlayer entityplayer, boolean remove) {
         for (int y = 0; y < 9; y++) {
             ItemStack slotStack = entityplayer.inventory.getStackInSlot(y);
-            if (slotStack == null) {
+            if (slotStack.isEmpty()) {
                 continue;
             }
             Item itemTemp = slotStack.getItem();
             int metadata = slotStack.getItemDamage();
             if (itemTemp instanceof ItemBlock) {
                 if (remove && !entityplayer.capabilities.isCreativeMode) {
-                    if (--slotStack.stackSize <= 0) {
-                        entityplayer.inventory.setInventorySlotContents(y, null);
+                    slotStack.shrink(1);
+                    if (slotStack.isEmpty()) {
+                        entityplayer.inventory.setInventorySlotContents(y, ItemStack.EMPTY);
                     } else {
                         entityplayer.inventory.setInventorySlotContents(y, slotStack);
                     }
@@ -135,7 +137,7 @@ public class ItemBuilderHammer extends MoCItem {
 
     @Override
     public EnumActionResult
-            onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+            onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         return EnumActionResult.FAIL;
     }
 }

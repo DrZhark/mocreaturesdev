@@ -36,12 +36,12 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
 
     @Override
     public void onLivingUpdate() {
-        if (!this.worldObj.isRemote) {
-            if (this.worldObj.isDaytime()) {
-                float f = getBrightness(1.0F);
+        if (!this.world.isRemote) {
+            if (this.world.isDaytime()) {
+                float f = getBrightness();
                 if ((f > 0.5F)
-                        && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-                                MathHelper.floor_double(this.posZ))) && ((this.rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F))) {
+                        && this.world.canBlockSeeSky(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY),
+                                MathHelper.floor(this.posZ))) && ((this.rand.nextFloat() * 30F) < ((f - 0.4F) * 2.0F))) {
                     this.setHealth(getHealth() - 2);
                 }
             }
@@ -57,7 +57,7 @@ public class MoCEntityFlameWraith extends MoCEntityWraith implements IMob {
 
     @Override
     protected void applyEnchantments(EntityLivingBase entityLivingBaseIn, Entity entityIn) {
-        if (MoCreatures.isServer() && !this.worldObj.provider.doesWaterVaporize()) {
+        if (MoCreatures.isServer() && !this.world.provider.doesWaterVaporize()) {
             entityLivingBaseIn.setFire(this.burningTime);
         }
         super.applyEnchantments(entityLivingBaseIn, entityIn);

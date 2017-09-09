@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class EntityAIFleeFromPlayer extends EntityAIBase {
 
-    private EntityCreature theEntityCreature;
+    private EntityCreature entityCreature;
     protected double speed;
     protected double distance;
     private double randPosX;
@@ -17,7 +17,7 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
     private double randPosZ;
 
     public EntityAIFleeFromPlayer(EntityCreature creature, double speedIn, double distanceToCheck) {
-        this.theEntityCreature = creature;
+        this.entityCreature = creature;
         this.distance = distanceToCheck;
         this.speed = speedIn;
         this.setMutexBits(1);
@@ -29,8 +29,8 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
 
-        if (this.theEntityCreature instanceof IMoCEntity) {
-            if (((IMoCEntity) this.theEntityCreature).isNotScared()) {
+        if (this.entityCreature instanceof IMoCEntity) {
+            if (((IMoCEntity) this.entityCreature).isNotScared()) {
                 return false;
             }
         }
@@ -38,21 +38,21 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
         if (!this.IsNearPlayer(this.distance)) {
             return false;
         } else {
-            Vec3d vec3 = RandomPositionGenerator.findRandomTarget(this.theEntityCreature, 5, 4);
+            Vec3d vec3 = RandomPositionGenerator.findRandomTarget(this.entityCreature, 5, 4);
 
             if (vec3 == null) {
                 return false;
             } else {
-                this.randPosX = vec3.xCoord;
-                this.randPosY = vec3.yCoord;
-                this.randPosZ = vec3.zCoord;
+                this.randPosX = vec3.x;
+                this.randPosY = vec3.y;
+                this.randPosZ = vec3.z;
                 return true;
             }
         }
     }
 
     protected boolean IsNearPlayer(double d) {
-        EntityPlayer entityplayer1 = this.theEntityCreature.worldObj.getClosestPlayerToEntity(this.theEntityCreature, d);
+        EntityPlayer entityplayer1 = this.entityCreature.world.getClosestPlayerToEntity(this.entityCreature, d);
         if (entityplayer1 != null) {
             return true;
         }
@@ -64,14 +64,14 @@ public class EntityAIFleeFromPlayer extends EntityAIBase {
      */
     @Override
     public void startExecuting() {
-        this.theEntityCreature.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.speed);
+        this.entityCreature.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.speed);
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
-        return !this.theEntityCreature.getNavigator().noPath();
+    public boolean shouldContinueExecuting() {
+        return !this.entityCreature.getNavigator().noPath();
     }
 }

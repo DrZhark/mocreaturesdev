@@ -23,6 +23,8 @@ public interface IMoCEntity {
 
     boolean getIsAdult();
 
+    boolean getIsGhost();
+
     void setAdult(boolean flag);
 
     boolean checkSpawningBiome();
@@ -88,4 +90,6 @@ public interface IMoCEntity {
     boolean isFlyer();
 
     boolean getIsFlying();
+
+    String getClazzString();
 }

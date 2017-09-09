@@ -5,12 +5,12 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,16 +58,16 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getEggNumber()), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.mocegg, 1, getEggNumber()), 0.0F);
             }
         }
     }
 
     protected int getEggNumber() {
-		return 70;
-	}
+        return 70;
+    }
 
-	@Override
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
@@ -124,7 +124,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedZOffset() {
-    	if (!isInWater()) {
+        if (!isInWater()) {
             return 0.2F;
         }
         return 0F;

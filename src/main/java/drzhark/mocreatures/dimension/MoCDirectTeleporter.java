@@ -20,9 +20,9 @@ public class MoCDirectTeleporter extends Teleporter {
 
     @Override
     public void placeInPortal(Entity par1Entity, float rotationYaw) {
-        int var9 = MathHelper.floor_double(par1Entity.posX);
-        int var10 = MathHelper.floor_double(par1Entity.posY) - 1;
-        int var11 = MathHelper.floor_double(par1Entity.posZ);
+        int var9 = MathHelper.floor(par1Entity.posX);
+        int var10 = MathHelper.floor(par1Entity.posY) - 1;
+        int var11 = MathHelper.floor(par1Entity.posZ);
         par1Entity.setLocationAndAngles(var9, var10, var11, par1Entity.rotationYaw, 0.0F);
         par1Entity.motionX = par1Entity.motionY = par1Entity.motionZ = 0.0D;
     }

@@ -93,7 +93,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
         } else {
             double d0 = this.getTargetDistance();
             List<EntityLivingBase> list =
-                    this.taskOwner.worldObj.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0),
+                    this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0),
                             Predicates.and(this.targetEntitySelector, EntitySelectors.NOT_SPECTATING));
             Collections.sort(list, this.theNearestAttackableTargetSorter);
 
@@ -120,15 +120,15 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
 
     public static class Sorter implements Comparator<Entity> {
 
-        private final Entity theEntity;
+        private final Entity entity;
 
-        public Sorter(Entity theEntityIn) {
-            this.theEntity = theEntityIn;
+        public Sorter(Entity entityIn) {
+            this.entity = entityIn;
         }
 
         public int compare(Entity p_compare_1_, Entity p_compare_2_) {
-            double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
-            double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
+            double d0 = this.entity.getDistanceSqToEntity(p_compare_1_);
+            double d1 = this.entity.getDistanceSqToEntity(p_compare_2_);
             return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
         }
     }

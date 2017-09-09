@@ -23,18 +23,20 @@ public class MoCItemKittyBed extends MoCItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         if (MoCreatures.isServer()) {
             MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, this.sheetType);
-            entitykittybed.setPosition(entityplayer.posX, entityplayer.posY, entityplayer.posZ);
-            world.spawnEntityInWorld(entitykittybed);
+            entitykittybed.setPosition(player.posX, player.posY, player.posZ);
+            world.spawnEntity(entitykittybed);
             entitykittybed.motionY += world.rand.nextFloat() * 0.05F;
             entitykittybed.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             entitykittybed.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
         }
-        return new ActionResult(EnumActionResult.SUCCESS, itemstack);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
     }
 }

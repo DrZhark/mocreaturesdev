@@ -41,7 +41,7 @@ public class EntityAIFollowHerd extends EntityAIBase {
         }
 
         List<EntityLiving> list =
-                this.theAnimal.worldObj.getEntitiesWithinAABB(this.theAnimal.getClass(),
+                this.theAnimal.world.getEntitiesWithinAABB(this.theAnimal.getClass(),
                         this.theAnimal.getEntityBoundingBox().expand(this.maxRange, 4.0D, this.maxRange));
         EntityLiving entityliving = null;
         double d0 = Double.MAX_VALUE;
@@ -76,7 +76,7 @@ public class EntityAIFollowHerd extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         if (this.theAnimal instanceof IMoCEntity && ((IMoCEntity) this.theAnimal).isMovementCeased()) { //System.out.println("returning, movement ceased");
             return false;
         } else if (!this.herdAnimal.isEntityAlive()) {

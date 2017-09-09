@@ -5,10 +5,11 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAnimation;
-import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,8 +45,6 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
@@ -121,11 +120,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     public int getTusks() {
-    	return ((Integer)this.dataManager.get(TUSK_TYPE)).intValue();
+        return ((Integer)this.dataManager.get(TUSK_TYPE)).intValue();
     }
 
     public void setTusks(int i) {
-    	this.dataManager.set(TUSK_TYPE, Integer.valueOf(i));
+        this.dataManager.set(TUSK_TYPE, Integer.valueOf(i));
     }
 
     @Override
@@ -135,15 +134,15 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void setArmorType(int i) {
-    	this.dataManager.set(HARNESS_TYPE, Integer.valueOf(i));
+        this.dataManager.set(HARNESS_TYPE, Integer.valueOf(i));
     }
 
     public int getStorage() {
-    	return ((Integer)this.dataManager.get(STORAGE_TYPE)).intValue();
+        return ((Integer)this.dataManager.get(STORAGE_TYPE)).intValue();
     }
 
     public void setStorage(int i) {
-    	this.dataManager.set(STORAGE_TYPE, Integer.valueOf(i));
+        this.dataManager.set(STORAGE_TYPE, Integer.valueOf(i));
     }
 
     @Override
@@ -215,7 +214,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         super.onLivingUpdate();
         if (MoCreatures.isServer()) {
             if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.isBeingRidden()) && rand.nextInt(15) == 0) {
-                MoCTools.buckleMobsNotPlayers(this, 3D, this.worldObj);
+                MoCTools.buckleMobsNotPlayers(this, 3D, this.world);
             }
 
             if (this.sprintCounter > 0 && ++this.sprintCounter > 300) {
@@ -223,7 +222,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             }
 
             if (getIsTamed() && (!this.isBeingRidden()) && getArmorType() >= 1 && this.rand.nextInt(20) == 0) {
-                EntityPlayer ep = this.worldObj.getClosestPlayerToEntity(this, 3D);
+                EntityPlayer ep = this.world.getClosestPlayerToEntity(this, 3D);
                 if (ep != null && (!MoCreatures.proxy.enableOwnership || ep.getUniqueID().equals(this.getOwnerId())) && ep.isSneaking()) {
                     sit();
                 }
@@ -296,7 +295,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         this.sitCounter = 1;
         if (MoCreatures.isServer()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
-                    new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
         this.getNavigator().clearPathEntity();
     }
@@ -311,51 +310,56 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityplayer, EnumHand hand, @Nullable ItemStack itemstack) {
-        if (super.processInteract(entityplayer, hand, itemstack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return false;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((itemstack != null) && onMainHand && !getIsTamed() && !getIsAdult() && itemstack.getItem() == Items.CAKE) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && !getIsTamed() && !getIsAdult() && stack.getItem() == Items.CAKE) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             this.temper += 2;
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
             return true;
         }
 
-        if ((itemstack != null) && onMainHand &&!getIsTamed() && !getIsAdult() && itemstack.getItem() == MoCreatures.sugarlump) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand &&!getIsTamed() && !getIsAdult() && stack.getItem() == MoCItems.sugarlump) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             this.temper += 1;
             this.setHealth(getMaxHealth());
             if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
                 setTamed(true);
-                MoCTools.tameWithName(entityplayer, this);
+                MoCTools.tameWithName(player, this);
             }
             return true;
         }
 
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 0 && itemstack.getItem() == MoCreatures.elephantHarness) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 0 && stack.getItem() == MoCItems.elephantHarness) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setArmorType((byte) 1);
             return true;
         }
 
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 0
-                && itemstack.getItem() == MoCreatures.elephantChest) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 0
+                && stack.getItem() == MoCItems.elephantChest) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             //entityplayer.inventory.addItemStackToInventory(new ItemStack(MoCreatures.key));
@@ -363,30 +367,33 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return true;
         }
         // second storage unit
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 1
-                && itemstack.getItem() == MoCreatures.elephantChest) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() >= 1 && getStorage() == 1
+                && stack.getItem() == MoCItems.elephantChest) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setStorage((byte) 2);
             return true;
         }
         // third storage unit for small mammoths
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 2
-                && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 2
+                && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setStorage((byte) 3);
             return true;
         }
         // fourth storage unit for small mammoths
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 3
-                && itemstack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && (getType() == 3) && getArmorType() >= 1 && getStorage() == 3
+                && stack.getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setStorage((byte) 4);
@@ -394,10 +401,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a garment to an indian elephant with an harness will make it pretty
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 2
-                && itemstack.getItem() == MoCreatures.elephantGarment) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 2
+                && stack.getItem() == MoCItems.elephantGarment) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setArmorType((byte) 2);
@@ -406,10 +414,11 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a howdah to a pretty indian elephant with a garment will attach the howdah
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 2 && getType() == 5
-                && itemstack.getItem() == MoCreatures.elephantHowdah) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 2 && getType() == 5
+                && stack.getItem() == MoCItems.elephantHowdah) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ROPING);
             setArmorType((byte) 3);
@@ -417,55 +426,59 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         }
 
         //giving a platform to a ? mammoth with harness will attach the platform
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 4
-                && itemstack.getItem() == MoCreatures.mammothPlatform) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && getArmorType() == 1 && getType() == 4
+                && stack.getItem() == MoCItems.mammothPlatform) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
             setArmorType((byte) 3);
             return true;
         }
 
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksWood) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && stack.getItem() == MoCItems.tusksWood) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
             dropTusks();
-            this.tuskUses = (byte) itemstack.getItemDamage();
+            this.tuskUses = (byte) stack.getItemDamage();
             setTusks((byte) 1);
             return true;
         }
 
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksIron) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && stack.getItem() == MoCItems.tusksIron) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
             dropTusks();
-            this.tuskUses = (byte) itemstack.getItemDamage();
+            this.tuskUses = (byte) stack.getItemDamage();
             setTusks((byte) 2);
             return true;
         }
 
-        if ((itemstack != null) && onMainHand && getIsTamed() && getIsAdult() && itemstack.getItem() == MoCreatures.tusksDiamond) {
-            if (--itemstack.stackSize == 0) {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && stack.getItem() == MoCItems.tusksDiamond) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
             dropTusks();
-            this.tuskUses = (byte) itemstack.getItemDamage();
+            this.tuskUses = (byte) stack.getItemDamage();
             setTusks((byte) 3);
             return true;
         }
 
-        if (entityplayer.isSneaking()) {
+        if (player.isSneaking()) {
             initChest();
             if (getStorage() == 1) {
                 if (MoCreatures.isServer()) {
                     if (MoCreatures.isServer()) {
-                        entityplayer.displayGUIChest(this.localelephantchest);
+                        player.displayGUIChest(this.localelephantchest);
                     }
                 }
                 return true;
@@ -473,7 +486,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (getStorage() == 2) {
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 if (MoCreatures.isServer()) {
-                    entityplayer.displayGUIChest(doubleChest);
+                    player.displayGUIChest(doubleChest);
                 }
                 return true;
             }
@@ -481,7 +494,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 InventoryLargeChest tripleChest = new InventoryLargeChest("ElephantChest", doubleChest, this.localelephantchest3);
                 if (MoCreatures.isServer()) {
-                    entityplayer.displayGUIChest(tripleChest);
+                    player.displayGUIChest(tripleChest);
                 }
                 return true;
             }
@@ -490,27 +503,27 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 InventoryLargeChest doubleChestb = new InventoryLargeChest("ElephantChest", this.localelephantchest3, this.localelephantchest4);
                 InventoryLargeChest fourChest = new InventoryLargeChest("ElephantChest", doubleChest, doubleChestb);
                 if (MoCreatures.isServer()) {
-                    entityplayer.displayGUIChest(fourChest);
+                    player.displayGUIChest(fourChest);
                 }
                 return true;
             }
 
         }
-        if ((itemstack != null)
+        if (!stack.isEmpty()
                 && onMainHand && getTusks() > 0 
-                && ((itemstack.getItem() == Items.DIAMOND_PICKAXE) || (itemstack.getItem() == Items.WOODEN_PICKAXE)
-                        || (itemstack.getItem() == Items.STONE_PICKAXE) || (itemstack.getItem() == Items.IRON_PICKAXE) || (itemstack.getItem() == Items.GOLDEN_PICKAXE))) {
+                && ((stack.getItem() == Items.DIAMOND_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
+                        || (stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE))) {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
             dropTusks();
             return true;
         }
 
         if (getIsTamed() && getIsAdult() && getArmorType() >= 1 && this.sitCounter != 0) {
-            entityplayer.rotationYaw = this.rotationYaw;
-            entityplayer.rotationPitch = this.rotationPitch;
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
             this.sitCounter = 0;
             if (MoCreatures.isServer()) {
-                entityplayer.startRiding(this);
+                player.startRiding(this);
             }
             return true;
         }
@@ -546,21 +559,21 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
         if (i == 1) {
             EntityItem entityitem =
-                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.tusksWood, 1, this.tuskUses));
+                    new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.tusksWood, 1, this.tuskUses));
             entityitem.setPickupDelay(10);
-            this.worldObj.spawnEntityInWorld(entityitem);
+            this.world.spawnEntity(entityitem);
         }
         if (i == 2) {
             EntityItem entityitem =
-                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.tusksIron, 1, this.tuskUses));
+                    new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.tusksIron, 1, this.tuskUses));
             entityitem.setPickupDelay(10);
-            this.worldObj.spawnEntityInWorld(entityitem);
+            this.world.spawnEntity(entityitem);
         }
         if (i == 3) {
             EntityItem entityitem =
-                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(MoCreatures.tusksDiamond, 1, this.tuskUses));
+                    new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.tusksDiamond, 1, this.tuskUses));
             entityitem.setPickupDelay(10);
-            this.worldObj.spawnEntityInWorld(entityitem);
+            this.world.spawnEntity(entityitem);
         }
         setTusks((byte) 0);
         this.tuskUses = 0;
@@ -583,24 +596,24 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public boolean checkSpawningBiome() {
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY), this.posZ);
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+        if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
             setType(3 + this.rand.nextInt(2));
             return true;
         }
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SANDY)) {
+        if (BiomeDictionary.hasType(currentbiome, Type.SANDY)) {
             setType(1);
             return true;
         }
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.JUNGLE)) {
+        if (BiomeDictionary.hasType(currentbiome, Type.JUNGLE)) {
             setType(2);
             return true;
         }
 
-        if (BiomeDictionary.isBiomeOfType(currentbiome, Type.PLAINS) || BiomeDictionary.isBiomeOfType(currentbiome, Type.FOREST)) {
+        if (BiomeDictionary.hasType(currentbiome, Type.PLAINS) || BiomeDictionary.hasType(currentbiome, Type.FOREST)) {
             setType(1 + this.rand.nextInt(2));
             return true;
         }
@@ -642,7 +655,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
                 int j = nbttagcompound1.getByte("Slot") & 0xff;
                 if ((j >= 0) && j < this.localelephantchest.getSizeInventory()) {
-                    this.localelephantchest.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                    this.localelephantchest.setInventorySlotContents(j, new ItemStack(nbttagcompound1));
                 }
             }
         }
@@ -653,7 +666,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
                 int j = nbttagcompound1.getByte("Slot") & 0xff;
                 if ((j >= 0) && j < this.localelephantchest2.getSizeInventory()) {
-                    this.localelephantchest2.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                    this.localelephantchest2.setInventorySlotContents(j, new ItemStack(nbttagcompound1));
                 }
             }
         }
@@ -665,7 +678,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
                 int j = nbttagcompound1.getByte("Slot") & 0xff;
                 if ((j >= 0) && j < this.localelephantchest3.getSizeInventory()) {
-                    this.localelephantchest3.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                    this.localelephantchest3.setInventorySlotContents(j, new ItemStack(nbttagcompound1));
                 }
             }
         }
@@ -676,7 +689,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
                 int j = nbttagcompound1.getByte("Slot") & 0xff;
                 if ((j >= 0) && j < this.localelephantchest4.getSizeInventory()) {
-                    this.localelephantchest4.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+                    this.localelephantchest4.setInventorySlotContents(j, new ItemStack(nbttagcompound1));
                 }
             }
         }
@@ -694,7 +707,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             NBTTagList nbttaglist = new NBTTagList();
             for (int i = 0; i < this.localelephantchest.getSizeInventory(); i++) {
                 this.localstack = this.localelephantchest.getStackInSlot(i);
-                if (this.localstack != null) {
+                if (this.localstack != null && !this.localstack.isEmpty()) {
                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                     nbttagcompound1.setByte("Slot", (byte) i);
                     this.localstack.writeToNBT(nbttagcompound1);
@@ -708,7 +721,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             NBTTagList nbttaglist = new NBTTagList();
             for (int i = 0; i < this.localelephantchest2.getSizeInventory(); i++) {
                 this.localstack = this.localelephantchest2.getStackInSlot(i);
-                if (this.localstack != null) {
+                if (this.localstack != null && !this.localstack.isEmpty()) {
                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                     nbttagcompound1.setByte("Slot", (byte) i);
                     this.localstack.writeToNBT(nbttagcompound1);
@@ -722,7 +735,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             NBTTagList nbttaglist = new NBTTagList();
             for (int i = 0; i < this.localelephantchest3.getSizeInventory(); i++) {
                 this.localstack = this.localelephantchest3.getStackInSlot(i);
-                if (this.localstack != null) {
+                if (this.localstack != null && !this.localstack.isEmpty()) {
                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                     nbttagcompound1.setByte("Slot", (byte) i);
                     this.localstack.writeToNBT(nbttagcompound1);
@@ -736,7 +749,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             NBTTagList nbttaglist = new NBTTagList();
             for (int i = 0; i < this.localelephantchest4.getSizeInventory(); i++) {
                 this.localstack = this.localelephantchest4.getStackInSlot(i);
-                if (this.localstack != null) {
+                if (this.localstack != null && !this.localstack.isEmpty()) {
                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                     nbttagcompound1.setByte("Slot", (byte) i);
                     this.localstack.writeToNBT(nbttagcompound1);
@@ -748,9 +761,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null
-                && (par1ItemStack.getItem() == Items.BAKED_POTATO || par1ItemStack.getItem() == Items.BREAD || par1ItemStack.getItem() == MoCreatures.haystack);
+    public boolean isMyHealFood(ItemStack stack) {
+        return !stack.isEmpty()
+                && (stack.getItem() == Items.BAKED_POTATO || stack.getItem() == Items.BREAD || stack.getItem() == MoCItems.haystack);
     }
 
     @Override
@@ -762,7 +775,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public void Riding() {
         if ((this.isBeingRidden()) && (this.getRidingEntity() instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.getRidingEntity();
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity = list.get(i);
@@ -877,7 +890,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_ELEPHANT_HURT;
     }
 
@@ -891,7 +904,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.animalHide;
+        return MoCItems.animalHide;
     }
 
     @Override
@@ -903,10 +916,10 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public void dropMyStuff() {
         if (MoCreatures.isServer()) {
             dropTusks();
-            //dropSaddle(this, worldObj);
+            //dropSaddle(this, world);
             if (getStorage() > 0) {
                 if (getStorage() > 0) {
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.elephantChest, 1));
+                    MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.elephantChest, 1));
                     if (this.localelephantchest != null) {
                         MoCTools.dropInventory(this, this.localelephantchest);
                     }
@@ -916,19 +929,19 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                     if (this.localelephantchest2 != null) {
                         MoCTools.dropInventory(this, this.localelephantchest2);
                     }
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.elephantChest, 1));
+                    MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.elephantChest, 1));
                 }
                 if (getStorage() >= 3) {
                     if (this.localelephantchest3 != null) {
                         MoCTools.dropInventory(this, this.localelephantchest3);
                     }
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.CHEST, 1));
+                    MoCTools.dropCustomItem(this, this.world, new ItemStack(Blocks.CHEST, 1));
                 }
                 if (getStorage() >= 4) {
                     if (this.localelephantchest4 != null) {
                         MoCTools.dropInventory(this, this.localelephantchest4);
                     }
-                    MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(Blocks.CHEST, 1));
+                    MoCTools.dropCustomItem(this, this.world, new ItemStack(Blocks.CHEST, 1));
                 }
                 setStorage((byte) 0);
             }
@@ -942,18 +955,18 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             return;
         }
         if (getArmorType() >= 1) {
-            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.elephantHarness, 1));
+            MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.elephantHarness, 1));
         }
         if (getType() == 5 && getArmorType() >= 2) {
 
-            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.elephantGarment, 1));
+            MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.elephantGarment, 1));
             if (getArmorType() == 3) {
-                MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.elephantHowdah, 1));
+                MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.elephantHowdah, 1));
             }
             setType(2);
         }
         if (getType() == 4 && getArmorType() == 3) {
-            MoCTools.dropCustomItem(this, this.worldObj, new ItemStack(MoCreatures.mammothPlatform, 1));
+            MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.mammothPlatform, 1));
         }
         setArmorType((byte) 0);
 
@@ -973,7 +986,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
         if (super.attackEntityFrom(damagesource, i)) {
-            Entity entity = damagesource.getEntity();
+            Entity entity = damagesource.getTrueSource();
             if ((entity != null && getIsTamed() && entity instanceof EntityPlayer) || !(entity instanceof EntityLivingBase)) {
                 return false;
             }
@@ -994,21 +1007,21 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if ((i > 0)) {
             i /= 2;
             if (i > 0) {
-                attackEntityFrom(DamageSource.fall, i);
+                attackEntityFrom(DamageSource.FALL, i);
             }
             if ((this.isBeingRidden()) && (i > 0)) {
-            	for (Entity entity : this.getRecursivePassengers())
+                for (Entity entity : this.getRecursivePassengers())
                 {
-                    entity.attackEntityFrom(DamageSource.fall, (float)i);
+                    entity.attackEntityFrom(DamageSource.FALL, (float)i);
             }
             }
-            IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ));
+            IBlockState iblockstate = this.world.getBlockState(new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ));
             Block block = iblockstate.getBlock();
 
             if (iblockstate.getMaterial() != Material.AIR && !this.isSilent())
             {
-                SoundType soundtype = block.getSoundType(iblockstate, worldObj, new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ), this);
-                this.worldObj.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, soundtype.getStepSound(), this.getSoundCategory(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
+                SoundType soundtype = block.getSoundType(iblockstate, world, new BlockPos(this.posX, this.posY - 0.2D - (double)this.prevRotationYaw, this.posZ), this);
+                this.world.playSound((EntityPlayer)null, this.posX, this.posY, this.posZ, soundtype.getStepSound(), this.getSoundCategory(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
             }
         }
     }

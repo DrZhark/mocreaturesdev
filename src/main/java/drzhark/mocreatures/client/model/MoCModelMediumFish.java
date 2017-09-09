@@ -1,12 +1,11 @@
 package drzhark.mocreatures.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import drzhark.mocreatures.entity.aquatic.MoCEntityMediumFish;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 public class MoCModelMediumFish extends ModelBase {
 

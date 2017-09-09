@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -53,30 +54,30 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     public IBlockState getState() {
-    	return Block.getStateById(((Integer)this.dataManager.get(ROCK_STATE)).intValue() & 65535);
+        return Block.getStateById(((Integer)this.dataManager.get(ROCK_STATE)).intValue() & 65535);
     }
 
     public void setMasterID(int i) {
-    	this.dataManager.set(MASTERS_ID, Integer.valueOf(i));
+        this.dataManager.set(MASTERS_ID, Integer.valueOf(i));
     }
 
     public int getMasterID() {
-    	return ((Integer)this.dataManager.get(MASTERS_ID)).intValue();
+        return ((Integer)this.dataManager.get(MASTERS_ID)).intValue();
     }
 
     public void setBehavior(int i) {
-    	this.dataManager.set(BEHAVIOUR_TYPE, Integer.valueOf(i));
+        this.dataManager.set(BEHAVIOUR_TYPE, Integer.valueOf(i));
     }
 
     public int getBehavior() {
-    	return ((Integer)this.dataManager.get(BEHAVIOUR_TYPE)).intValue();
+        return ((Integer)this.dataManager.get(BEHAVIOUR_TYPE)).intValue();
     }
 
     @Override
     protected void entityInit() {
-    	this.dataManager.register(BEHAVIOUR_TYPE, Integer.valueOf(0));
-    	this.dataManager.register(ROCK_STATE, Integer.valueOf(0));
-    	this.dataManager.register(MASTERS_ID, Integer.valueOf(0));
+        this.dataManager.register(BEHAVIOUR_TYPE, Integer.valueOf(0));
+        this.dataManager.register(ROCK_STATE, Integer.valueOf(0));
+        this.dataManager.register(MASTERS_ID, Integer.valueOf(0));
     }
 
     @Override
@@ -125,8 +126,8 @@ public class MoCEntityThrowableRock extends Entity {
         //rock damage code (for all rock behaviors)
         if (!this.onGround) {
             List<Entity> list =
-                    this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
-                            this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+                    this.world.getEntitiesWithinAABBExcludingEntity(this,
+                            this.getEntityBoundingBox().contract(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
 
             for (int i = 0; i < list.size(); i++) {
                 Entity entity1 = (Entity) list.get(i);
@@ -143,7 +144,7 @@ public class MoCEntityThrowableRock extends Entity {
                 if (master != null) {
                     entity1.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) master), 4);
                 } else {
-                    entity1.attackEntityFrom(DamageSource.generic, 4);
+                    entity1.attackEntityFrom(DamageSource.GENERIC, 4);
                 }
             }
         }
@@ -180,7 +181,7 @@ public class MoCEntityThrowableRock extends Entity {
             this.motionY = ((master.posY - this.posY) / 20D + 0.15D);
             this.motionZ = ((master.posZ - this.posZ) / summonedSpeed);
             if (MoCreatures.isServer()) {
-                this.moveEntity(this.motionX, this.motionY, this.motionZ);
+                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
             return;
         }
@@ -213,7 +214,7 @@ public class MoCEntityThrowableRock extends Entity {
             }
 
             if (MoCreatures.isServer()) {
-                this.moveEntity(this.motionX, this.motionY, this.motionZ);
+                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
 
             return;
@@ -227,7 +228,7 @@ public class MoCEntityThrowableRock extends Entity {
             this.motionY = ((this.oPosY - this.posY) / 20D + 0.15D);
             this.motionZ = ((this.oPosZ - this.posZ) / summonedSpeed);
             if (MoCreatures.isServer()) {
-                this.moveEntity(this.motionX, this.motionY, this.motionZ);
+                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
             setBehavior(0);
             return;
@@ -235,7 +236,7 @@ public class MoCEntityThrowableRock extends Entity {
 
         this.motionY -= 0.04D;
         if (MoCreatures.isServer()) {
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         }
         this.motionX *= 0.98D;
         this.motionY *= 0.98D;
@@ -250,14 +251,14 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     private void transformToItem() {
-        if ((MoCTools.mobGriefing(this.worldObj)) && (MoCreatures.proxy.golemDestroyBlocks) && MoCreatures.isServer()) // don't drop rocks if mobgriefing is set to false, prevents duping
+        if ((MoCTools.mobGriefing(this.world)) && (MoCreatures.proxy.golemDestroyBlocks) && MoCreatures.isServer()) // don't drop rocks if mobgriefing is set to false, prevents duping
         {
             EntityItem entityitem =
-                    new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(this.getState().getBlock(), 1, this.getState()
+                    new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(this.getState().getBlock(), 1, this.getState()
                             .getBlock().getMetaFromState(this.getState())));
             entityitem.setPickupDelay(10);
             entityitem.setAgeToCreativeDespawnTime();
-            this.worldObj.spawnEntityInWorld(entityitem);
+            this.world.spawnEntity(entityitem);
         }
         this.setDead();
     }
@@ -270,7 +271,7 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     private Entity getMaster() {
-        List<Entity> entityList = this.worldObj.loadedEntityList;
+        List<Entity> entityList = this.world.loadedEntityList;
         for (Entity ent : entityList) {
             if (ent.getEntityId() == getMasterID()) {
                 return ent;

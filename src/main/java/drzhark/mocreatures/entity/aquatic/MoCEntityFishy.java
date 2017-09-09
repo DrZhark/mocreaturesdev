@@ -1,13 +1,13 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
+import drzhark.mocreatures.init.MoCItems;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
 import net.minecraft.block.material.Material;
@@ -100,11 +100,11 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
     }
 
     public boolean getHasEaten() {
-    	return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
+        return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
     }
 
     public void setHasEaten(boolean flag) {
-    	this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
+        this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
     }
     
     @Override
@@ -115,7 +115,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
         } else {
             int j = this.rand.nextInt(2);
             for (int k = 0; k < j; k++) {
-                entityDropItem(new ItemStack(MoCreatures.mocegg, 1, getType()), 0.0F);
+                entityDropItem(new ItemStack(MoCItems.mocegg, 1, getType()), 0.0F);
             }
 
         }
@@ -140,7 +140,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 return;
             }
             int i = 0;
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 3D, 4D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 3D, 4D));
             for (int j = 0; j < list.size(); j++) {
                 Entity entity = list.get(j);
                 if (entity instanceof MoCEntityFishy) {
@@ -151,7 +151,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
             if (i > 1) {
                 return;
             }
-            List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list1 = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int k = 0; k < list.size(); k++) {
                 Entity entity1 = list1.get(k);
                 if (!(entity1 instanceof MoCEntityFishy) || (entity1 == this)) {
@@ -166,23 +166,23 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
                 }
                 if (this.gestationtime % 3 == 0) {
                     MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                            new TargetPoint(this.worldObj.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+                            new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
                 }
                 if (this.gestationtime <= 50) {
                     continue;
                 }
                 int l = this.rand.nextInt(3) + 1;
                 for (int i1 = 0; i1 < l; i1++) {
-                    MoCEntityFishy entityfishy1 = new MoCEntityFishy(this.worldObj);
+                    MoCEntityFishy entityfishy1 = new MoCEntityFishy(this.world);
                     entityfishy1.setPosition(this.posX, this.posY, this.posZ);
-                    this.worldObj.spawnEntityInWorld(entityfishy1);
+                    this.world.spawnEntity(entityfishy1);
                     MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     setHasEaten(false);
                     entityfishy.setHasEaten(false);
                     this.gestationtime = 0;
                     entityfishy.gestationtime = 0;
 
-                    EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 24D);
+                    EntityPlayer entityplayer = this.world.getClosestPlayerToEntity(this, 24D);
                     if (entityplayer != null) {
                         MoCTools.tameWithName(entityplayer, entityfishy1);
                     }
@@ -262,7 +262,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
 
     @Override
     public float getAdjustedXOffset() {
-    	if (!isInWater()) {
+        if (!isInWater()) {
             return -0.1F;
         }
         return 0F;

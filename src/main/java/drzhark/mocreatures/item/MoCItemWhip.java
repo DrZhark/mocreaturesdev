@@ -4,14 +4,14 @@ import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityAnimal;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
+import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityElephant;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityKitty;
-import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
 import drzhark.mocreatures.entity.passive.MoCEntityOstrich;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.entity.passive.MoCEntityWyvern;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,22 +46,23 @@ public class MoCItemWhip extends MoCItem {
 
     @Override
     public EnumActionResult
-            onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+            onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        final ItemStack stack = player.getHeldItem(hand);
         int i1 = 0;
         Block block = worldIn.getBlockState(pos).getBlock();
         Block block1 = worldIn.getBlockState(pos.up()).getBlock();
         if (side != EnumFacing.DOWN && (block1 == Blocks.AIR) && (block != Blocks.AIR) && (block != Blocks.STANDING_SIGN)) {
             whipFX(worldIn, pos);
-            worldIn.playSound(playerIn, pos, MoCSoundEvents.ENTITY_GENERIC_WHIP, SoundCategory.PLAYERS, 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
-            stack.damageItem(1, playerIn);
-            List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(12D, 12D, 12D));
+            worldIn.playSound(player, pos, MoCSoundEvents.ENTITY_GENERIC_WHIP, SoundCategory.PLAYERS, 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
+            stack.damageItem(1, player);
+            List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(12D, 12D, 12D));
             for (int l1 = 0; l1 < list.size(); l1++) {
                 Entity entity = list.get(l1);
 
                 if (entity instanceof MoCEntityAnimal) {
                     MoCEntityAnimal animal = (MoCEntityAnimal) entity;
                     if (MoCreatures.proxy.enableOwnership && animal.getOwnerId() != null
-                            && !playerIn.getName().equals(animal.getOwnerId()) && !MoCTools.isThisPlayerAnOP(playerIn)) {
+                            && !player.getName().equals(animal.getOwnerId()) && !MoCTools.isThisPlayerAnOP(player)) {
                         continue;
                     }
                 }
@@ -72,7 +73,7 @@ public class MoCItemWhip extends MoCItem {
                         entitybigcat.setSitting(!entitybigcat.getIsSitting());
                         i1++;
                     } else if ((worldIn.getDifficulty().getDifficultyId() > 0) && entitybigcat.getIsAdult()) {
-                        entitybigcat.setAttackTarget(playerIn);
+                        entitybigcat.setAttackTarget(player);
                     }
                 }
                 if (entity instanceof MoCEntityHorse) {

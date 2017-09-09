@@ -28,13 +28,13 @@ public class MoCRenderTRock extends Render<Entity> {
         GlStateManager.translate(-0.5F, 0F, 0.5F);
         GlStateManager.translate((float) par2, (float) par4, (float) par6);
         GlStateManager.rotate(((100 - entitytrock.acceleration) / 10F) * 36F, 0F, -1F, 0.0F);
-        int i = entitytrock.getBrightnessForRender(partialTicks);
+        int i = entitytrock.getBrightnessForRender();
         int j = i % 65536;
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        float lightLevel = entitytrock.getBrightness(partialTicks);
+        float lightLevel = entitytrock.getBrightness();
         blockrendererdispatcher.renderBlockBrightness(entitytrock.getState(), lightLevel);
         GlStateManager.popMatrix();
     }

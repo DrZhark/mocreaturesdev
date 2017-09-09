@@ -8,7 +8,7 @@ import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIPanicMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -33,8 +33,6 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
     private int bunnyReproduceTickerA;
@@ -57,7 +55,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIFollowOwnerPlayer(this, 0.8D, 6F, 5F));
         this.tasks.addTask(2, new EntityAIPanicMoC(this, 1.0D));
         this.tasks.addTask(3, new EntityAIFleeFromPlayer(this, 1.0D, 4D));
@@ -80,11 +78,11 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     public boolean getHasEaten() {
-    	return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
+        return ((Boolean)this.dataManager.get(HAS_EATEN)).booleanValue();
     }
 
     public void setHasEaten(boolean flag) {
-    	this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
+        this.dataManager.set(HAS_EATEN, Boolean.valueOf(flag));
     }
 
     @Override
@@ -99,14 +97,14 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
     @Override
     public boolean checkSpawningBiome() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
 
-        Biome currentbiome = MoCTools.Biomekind(this.worldObj, pos);
+        Biome currentbiome = MoCTools.Biomekind(this.world, pos);
         try {
-            if (BiomeDictionary.isBiomeOfType(currentbiome, Type.SNOWY)) {
+            if (BiomeDictionary.hasType(currentbiome, Type.SNOWY)) {
                 setType(3); //snow white bunnies!
                 return true;
             }
@@ -144,7 +142,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_RABBIT_HURT;
     }
 
@@ -154,14 +152,16 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((stack != null) && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             setHasEaten(true);
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
@@ -200,7 +200,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             } else if (this.bunnyReproduceTickerB < 127) {
                 this.bunnyReproduceTickerB++;
             } else {
-                List<Entity> list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4.0D, 4.0D, 4.0D));
+                List<Entity> list1 = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4.0D, 4.0D, 4.0D));
                 for (int i1 = 0; i1 < list1.size(); i1++) {
                     Entity entity1 = (Entity) list1.get(i1);
                     if (!(entity1 instanceof MoCEntityBunny) || (entity1 == this)) {
@@ -211,7 +211,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                             || !entitybunny.getHasEaten()) {
                         continue;
                     }
-                    MoCEntityBunny entitybunny1 = new MoCEntityBunny(this.worldObj);
+                    MoCEntityBunny entitybunny1 = new MoCEntityBunny(this.world);
                     entitybunny1.setPosition(this.posX, this.posY, this.posZ);
                     entitybunny1.setAdult(false);
                     int babytype = this.getType();
@@ -219,7 +219,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
                         babytype = entitybunny.getType();
                     }
                     entitybunny1.setType(babytype);
-                    this.worldObj.spawnEntityInWorld(entitybunny1);
+                    this.world.spawnEntity(entitybunny1);
                     MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
                     proceed();
                     entitybunny.proceed();
@@ -241,8 +241,8 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && par1ItemStack.getItem() == Items.CARROT;
+    public boolean isMyHealFood(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() == Items.CARROT;
     }
 
     /**
@@ -281,6 +281,6 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     @Override
     public boolean canRidePlayer()
     {
-    	return true;
+        return true;
     }
 }

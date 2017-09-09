@@ -25,21 +25,21 @@ public class PathNavigateFlyer extends PathNavigate {
     }
 
     protected Vec3d getEntityPosition() {
-        return new Vec3d(this.theEntity.posX, this.theEntity.posY + (double) this.theEntity.height * 0.5D, this.theEntity.posZ);
+        return new Vec3d(this.entity.posX, this.entity.posY + (double) this.entity.height * 0.5D, this.entity.posZ);
     }
 
     protected void pathFollow() {
         Vec3d vec3 = this.getEntityPosition();
-        float f = this.theEntity.width * this.theEntity.width;
+        float f = this.entity.width * this.entity.width;
         byte b0 = 6;
 
-        if (vec3.squareDistanceTo(this.currentPath.getVectorFromIndex(this.theEntity, this.currentPath.getCurrentPathIndex())) < (double) f) {
+        if (vec3.squareDistanceTo(this.currentPath.getVectorFromIndex(this.entity, this.currentPath.getCurrentPathIndex())) < (double) f) {
             this.currentPath.incrementPathIndex();
         }
 
         for (int i = Math.min(this.currentPath.getCurrentPathIndex() + b0, this.currentPath.getCurrentPathLength() - 1); i > this.currentPath
                 .getCurrentPathIndex(); --i) {
-            Vec3d vec31 = this.currentPath.getVectorFromIndex(this.theEntity, i);
+            Vec3d vec31 = this.currentPath.getVectorFromIndex(this.entity, i);
 
             if (vec31.squareDistanceTo(vec3) <= 36.0D && this.isDirectPathBetweenPoints(vec3, vec31, 0, 0, 0)) {
                 this.currentPath.setCurrentPathIndex(i);
@@ -64,7 +64,7 @@ public class PathNavigateFlyer extends PathNavigate {
     @Override
     protected boolean isDirectPathBetweenPoints(Vec3d posVec31, Vec3d posVec32, int sizeX, int sizeY, int sizeZ)
     {
-        RayTraceResult raytraceresult = this.worldObj.rayTraceBlocks(posVec31, new Vec3d(posVec32.xCoord, posVec32.yCoord + (double)this.theEntity.height * 0.5D, posVec32.zCoord), false, true, false);
+        RayTraceResult raytraceresult = this.world.rayTraceBlocks(posVec31, new Vec3d(posVec32.x, posVec32.y + (double)this.entity.height * 0.5D, posVec32.z), false, true, false);
         return raytraceresult == null || raytraceresult.typeOfHit == RayTraceResult.Type.MISS;
     }
 }

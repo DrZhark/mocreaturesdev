@@ -18,7 +18,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
     public final Predicate<Entity> canBeSeenSelector = new Predicate<Entity>() {
 
         public boolean isApplicable(Entity entityIn) {
-            return entityIn.isEntityAlive() && EntityAIFleeFromEntityMoC.this.theEntity.getEntitySenses().canSee(entityIn);
+            return entityIn.isEntityAlive() && EntityAIFleeFromEntityMoC.this.entity.getEntitySenses().canSee(entityIn);
         }
 
         @Override
@@ -27,7 +27,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
         }
     };
     /** The entity we are attached to */
-    protected EntityCreature theEntity;
+    protected EntityCreature entity;
     private double farSpeed;
     private double nearSpeed;
     protected Entity closestLivingEntity;
@@ -39,7 +39,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
     private double randPosZ;
 
     public EntityAIFleeFromEntityMoC(EntityCreature creature, Predicate<Entity> targetSelector, float searchDistance, double farSpeedIn, double nearSpeedIn) {
-        this.theEntity = creature;
+        this.entity = creature;
         this.avoidTargetSelector = targetSelector;
         this.avoidDistance = searchDistance;
         this.farSpeed = farSpeedIn;
@@ -53,17 +53,17 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
     @SuppressWarnings("unchecked")
     @Override
     public boolean shouldExecute() {
-        if (this.theEntity instanceof IMoCEntity && ((IMoCEntity) this.theEntity).isNotScared()) {
+        if (this.entity instanceof IMoCEntity && ((IMoCEntity) this.entity).isNotScared()) {
             return false;
         }
 
-        if (this.theEntity instanceof MoCEntityAquatic && !this.theEntity.isInWater()) {
+        if (this.entity instanceof MoCEntityAquatic && !this.entity.isInWater()) {
             return false;
         }
 
         List<Entity> list =
-                this.theEntity.worldObj.getEntitiesInAABBexcluding(this.theEntity,
-                        this.theEntity.getEntityBoundingBox().expand((double) this.avoidDistance, 3.0D, (double) this.avoidDistance),
+                this.entity.world.getEntitiesInAABBexcluding(this.entity,
+                        this.entity.getEntityBoundingBox().expand((double) this.avoidDistance, 3.0D, (double) this.avoidDistance),
                         Predicates.and(new Predicate[] {EntitySelectors.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
         if (list.isEmpty()) {
@@ -71,18 +71,18 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
         } else {
             this.closestLivingEntity = list.get(0);
             Vec3d vec3 =
-                    RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.posX,
+                    RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.entity, 16, 7, new Vec3d(this.closestLivingEntity.posX,
                             this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
 
             if (vec3 == null) {
                 return false;
-            } else if (this.closestLivingEntity.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < this.closestLivingEntity
-                    .getDistanceSqToEntity(this.theEntity)) {
+            } else if (this.closestLivingEntity.getDistanceSq(vec3.x, vec3.y, vec3.z) < this.closestLivingEntity
+                    .getDistanceSqToEntity(this.entity)) {
                 return false;
             } else {
-                this.randPosX = vec3.xCoord;
-                this.randPosY = vec3.yCoord;
-                this.randPosZ = vec3.zCoord;
+                this.randPosX = vec3.x;
+                this.randPosY = vec3.y;
+                this.randPosZ = vec3.z;
                 return true;
             }
         }
@@ -93,15 +93,15 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
      */
     @Override
     public void startExecuting() {
-        this.theEntity.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.nearSpeed);
+        this.entity.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.nearSpeed);
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
-        return !this.theEntity.getNavigator().noPath();
+    public boolean shouldContinueExecuting() {
+        return !this.entity.getNavigator().noPath();
     }
 
     /**
@@ -117,10 +117,10 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
      */
     @Override
     public void updateTask() {
-        if (this.theEntity.getDistanceSqToEntity(this.closestLivingEntity) < 8.0D) {
-            this.theEntity.getNavigator().setSpeed(this.nearSpeed);
+        if (this.entity.getDistanceSqToEntity(this.closestLivingEntity) < 8.0D) {
+            this.entity.getNavigator().setSpeed(this.nearSpeed);
         } else {
-            this.theEntity.getNavigator().setSpeed(this.farSpeed);
+            this.entity.getNavigator().setSpeed(this.farSpeed);
         }
     }
 }

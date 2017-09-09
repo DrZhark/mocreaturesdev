@@ -2,7 +2,7 @@ package drzhark.mocreatures.item;
 
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,7 +46,8 @@ public class ItemStaffTeleport extends MoCItem {
      * pressed. Args: itemStack, world, entityPlayer
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         if (player.getRidingEntity() != null || player.isBeingRidden()) {
             return ActionResult.newResult(EnumActionResult.PASS, stack);
         }
@@ -62,8 +63,8 @@ public class ItemStaffTeleport extends MoCItem {
             double newPosZ =
                     coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
                             * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
-            BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-            IBlockState blockstate = player.worldObj.getBlockState(pos);
+            BlockPos pos = new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ));
+            IBlockState blockstate = player.world.getBlockState(pos);
             if (blockstate.getBlock() != Blocks.AIR) {
                 newPosY = coordY - Math.cos((player.rotationPitch - 90F) / 57.29578F) * (x - 1);
                 newPosX =
@@ -74,8 +75,8 @@ public class ItemStaffTeleport extends MoCItem {
                                 * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
 
                 if (MoCreatures.isServer()) {
-                    EntityPlayerMP thePlayer = (EntityPlayerMP) player;
-                    thePlayer.connection.setPlayerLocation(newPosX, newPosY, newPosZ, player.rotationYaw,
+                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
+                    playerMP.connection.setPlayerLocation(newPosX, newPosY, newPosZ, player.rotationYaw,
                             player.rotationPitch);
                     MoCTools.playCustomSound(player, MoCSoundEvents.ENTITY_GENERIC_MAGIC_APPEAR);
                 }

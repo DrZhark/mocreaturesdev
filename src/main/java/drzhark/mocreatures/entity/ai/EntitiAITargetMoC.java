@@ -100,7 +100,7 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         EntityLivingBase entitylivingbase = this.taskOwner.getAttackTarget();
 
         if (entitylivingbase == null) {
@@ -205,8 +205,8 @@ public abstract class EntitiAITargetMoC extends EntityAIBase {
             if (pathpoint == null) {
                 return false;
             } else {
-                int i = pathpoint.xCoord - MathHelper.floor_double(p_75295_1_.posX);
-                int j = pathpoint.zCoord - MathHelper.floor_double(p_75295_1_.posZ);
+                int i = pathpoint.x - MathHelper.floor(p_75295_1_.posX);
+                int j = pathpoint.z - MathHelper.floor(p_75295_1_.posZ);
                 return i * i + j * j <= 2.25D;
             }
         }

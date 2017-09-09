@@ -32,7 +32,7 @@ public class MoCAnimalChestBig extends InventoryLargeChest {
             int var4 = var3.getByte("Slot") & 255;
 
             if (var4 >= 0 && var4 < this.getSizeInventory()) {
-                this.setInventorySlotContents(var4, ItemStack.loadItemStackFromNBT(var3));
+                this.setInventorySlotContents(var4, new ItemStack(var3));
             }
         }
     }

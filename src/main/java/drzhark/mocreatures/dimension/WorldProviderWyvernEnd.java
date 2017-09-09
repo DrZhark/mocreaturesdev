@@ -1,12 +1,13 @@
 package drzhark.mocreatures.dimension;
 
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBiomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProviderSurface;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,8 +19,8 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      * creates a new world chunk manager for WorldProvider
      */
     @Override
-    protected void createBiomeProvider() {
-        this.biomeProvider = new BiomeProviderWyvernLair(MoCreatures.WyvernLairBiome, 0.5F, 0.0F);
+    protected void init() {
+        this.biomeProvider = new BiomeProviderWyvernLair(MoCBiomes.WyvernLairBiome, 0.5F, 0.0F);
         setDimension(MoCreatures.WyvernLairDimensionID);
         setCustomSky();
     }
@@ -29,7 +30,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      */
     @Override
     public IChunkGenerator createChunkGenerator() {
-        return new ChunkGeneratorWyvernLair(this.worldObj, false, this.worldObj.getSeed());
+        return new ChunkGeneratorWyvernLair(this.world, false, this.world.getSeed());
     }
 
     private void setCustomSky() {
@@ -113,24 +114,8 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
      */
     @Override
     public boolean canCoordinateBeSpawn(int par1, int par2) {
-        BlockPos pos = this.worldObj.getTopSolidOrLiquidBlock(new BlockPos(par1, 0, par2));
-        return this.worldObj.getBlockState(pos).getMaterial().blocksMovement();
-    }
-
-    /**
-     * A Message to display to the user when they transfer out of this
-     * dismension.
-     *
-     * @return The message to be displayed
-     */
-    @Override
-    public String getDepartMessage() {
-        return "Leaving the Wyvern Lair";
-    }
-
-    @Override
-    public String getWelcomeMessage() {
-        return "Entering the Wyvern Lair";
+        BlockPos pos = this.world.getTopSolidOrLiquidBlock(new BlockPos(par1, 0, par2));
+        return this.world.getBlockState(pos).getMaterial().blocksMovement();
     }
 
     /**

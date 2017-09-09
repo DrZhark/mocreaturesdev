@@ -1,7 +1,7 @@
 package drzhark.mocreatures.client;
 
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,7 +35,7 @@ public class MoCEntityFXVacuum extends Particle {
     }
 
     @Override
-    public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float par3, float par4, float par5, float par6, float par7) {
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge;
         var8 = 1.0F - var8;
         var8 *= var8;

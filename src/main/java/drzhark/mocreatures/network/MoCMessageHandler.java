@@ -68,7 +68,7 @@ public class MoCMessageHandler {
         @SuppressWarnings("rawtypes")
         private IMessageHandler message;
         @SuppressWarnings("unused")
-		private MessageContext ctx;
+        private MessageContext ctx;
 
         @SuppressWarnings("rawtypes")
         public ClientPacketTask(IMessageHandler message, MessageContext ctx) {
@@ -80,7 +80,7 @@ public class MoCMessageHandler {
         public void run() {
             if (this.message instanceof MoCMessageAnimation) {
                 MoCMessageAnimation message = (MoCMessageAnimation) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof IMoCEntity) {
                         ((IMoCEntity) ent).performAnimation(message.animationType);
@@ -90,7 +90,7 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageAppear) {
                 MoCMessageAppear message = (MoCMessageAppear) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
                         ((MoCEntityHorse) ent).MaterializeFX();
@@ -100,8 +100,8 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageAttachedEntity) {
                 MoCMessageAttachedEntity message = (MoCMessageAttachedEntity) this.message;
-                Object var2 = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.sourceEntityId);
-                Entity var3 = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.targetEntityId);
+                Object var2 = MoCClientProxy.mc.player.world.getEntityByID(message.sourceEntityId);
+                Entity var3 = MoCClientProxy.mc.player.world.getEntityByID(message.targetEntityId);
 
                 if (var2 != null) {
                     ((Entity) var2).startRiding(var3);
@@ -109,7 +109,7 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageExplode) {
                 MoCMessageExplode message = (MoCMessageExplode) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityOgre) {
                         ((MoCEntityOgre) ent).performDestroyBlastAttack();
@@ -119,7 +119,7 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageHealth) {
                 MoCMessageHealth message = (MoCMessageHealth) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof EntityLiving) {
                         ((EntityLiving) ent).setHealth(message.health);
@@ -131,7 +131,7 @@ public class MoCMessageHandler {
                 MoCMessageHeart message = (MoCMessageHeart) this.message;
                 Entity entity = null;
                 while (entity == null) {
-                    entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
+                    entity = MoCClientProxy.mc.player.world.getEntityByID(message.entityId);
                     if (entity != null) {
                         if (entity instanceof IMoCTameable) {
                             ((IMoCTameable)entity).spawnHeart();
@@ -141,7 +141,7 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageShuffle) {
                 MoCMessageShuffle message = (MoCMessageShuffle) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
                         if (message.flag) {
@@ -155,14 +155,14 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageTwoBytes) {
                 MoCMessageTwoBytes message = (MoCMessageTwoBytes) this.message;
-                Entity ent = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
+                Entity ent = MoCClientProxy.mc.player.world.getEntityByID(message.entityId);
                 if (ent != null && ent instanceof MoCEntityGolem) {
                     ((MoCEntityGolem) ent).saveGolemCube(message.slot, message.value);
                 }
                 return;
             } else if (this.message instanceof MoCMessageVanish) {
                 MoCMessageVanish message = (MoCMessageVanish) this.message;
-                List<Entity> entList = MoCClientProxy.mc.thePlayer.worldObj.loadedEntityList;
+                List<Entity> entList = MoCClientProxy.mc.player.world.loadedEntityList;
                 for (Entity ent : entList) {
                     if (ent.getEntityId() == message.entityId && ent instanceof MoCEntityHorse) {
                         ((MoCEntityHorse) ent).setVanishC((byte) 1);
@@ -172,7 +172,7 @@ public class MoCMessageHandler {
                 return;
             } else if (this.message instanceof MoCMessageNameGUI) {
                 MoCMessageNameGUI message = (MoCMessageNameGUI) this.message;
-                Entity entity = MoCClientProxy.mc.thePlayer.worldObj.getEntityByID(message.entityId);
+                Entity entity = MoCClientProxy.mc.player.world.getEntityByID(message.entityId);
                 MoCClientProxy.mc.displayGuiScreen(new MoCGUIEntityNamer(((IMoCEntity) entity), ((IMoCEntity) entity).getPetName()));
                 return;
             }

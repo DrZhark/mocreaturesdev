@@ -16,7 +16,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +27,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,12 +90,12 @@ public class CommandCMS extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "customspawner";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -108,7 +108,7 @@ public class CommandCMS extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender par1ICommandSender) {
+    public String getUsage(ICommandSender par1ICommandSender) {
         return "commands.customspawner.usage";
     }
 
@@ -148,7 +148,7 @@ public class CommandCMS extends CommandBase {
                 // check if biomegroup is valid
                 BiomeGroupData biomeGroupData = environment.biomeGroupMap.get(par3);
                 if (biomeGroupData == null) {
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                             + "Invalid Biome Group entered. Please enter a valid biome group."));
                     return;
                 }
@@ -158,11 +158,11 @@ public class CommandCMS extends CommandBase {
                     CustomSpawner.INSTANCE.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getLivingSpawnType(),
                             entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(),
                             entityData.getBiomeGroupSpawnMap(biomeGroupData.getBiomeGroupName()));
-                    sender.addChatMessage(new TextComponentTranslation("Added biomegroup " + TextFormatting.AQUA
+                    sender.sendMessage(new TextComponentTranslation("Added biomegroup " + TextFormatting.AQUA
                             + biomeGroupData.getBiomeGroupName() + TextFormatting.WHITE + " to Entity " + TextFormatting.GREEN + par2));
                     entityData.getEntityConfig().save();
                 } else {
-                    sender.addChatMessage(new TextComponentTranslation("Biome Group " + biomeGroupData.getBiomeGroupName()
+                    sender.sendMessage(new TextComponentTranslation("Biome Group " + biomeGroupData.getBiomeGroupName()
                             + " already exists!!, please choose another from the following list :"));
                 }
                 return;
@@ -173,7 +173,7 @@ public class CommandCMS extends CommandBase {
                 // check if biomegroup is valid
                 BiomeGroupData biomeGroupData = environment.biomeGroupMap.get(par3);
                 if (biomeGroupData == null) {
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                             + "Invalid Biome Group entered. Please enter a valid biome group."));
                     return;
                 }
@@ -182,40 +182,40 @@ public class CommandCMS extends CommandBase {
                     CustomSpawner.INSTANCE.updateSpawnListBiomes(entityData.getEntityClass(), entityData.getLivingSpawnType(),
                             entityData.getFrequency(), entityData.getMinSpawn(), entityData.getMaxSpawn(),
                             entityData.getBiomeGroupSpawnMap(biomeGroupData.getBiomeGroupName()));
-                    sender.addChatMessage(new TextComponentTranslation("Removed biomegroup " + TextFormatting.AQUA
+                    sender.sendMessage(new TextComponentTranslation("Removed biomegroup " + TextFormatting.AQUA
                             + biomeGroupData.getBiomeGroupName() + TextFormatting.WHITE + " from Entity " + TextFormatting.GREEN + par2));
                     entityData.getEntityConfig().save();
                     return;
                 } else {
-                    sender.addChatMessage(new TextComponentTranslation("Biome Group " + biomeGroupData.getBiomeGroupName()
+                    sender.sendMessage(new TextComponentTranslation("Biome Group " + biomeGroupData.getBiomeGroupName()
                             + " already exists!!, please choose another from the following list :"));
                     for (int i = 0; i < biomeGroupData.getBiomeList().size(); i++) {
-                        sender.addChatMessage(new TextComponentTranslation(biomeGroupData.getBiomeList().get(i)));
+                        sender.sendMessage(new TextComponentTranslation(biomeGroupData.getBiomeList().get(i)));
                     }
                     return;
                 }
             }
         } else if (par1.equalsIgnoreCase("biomegroups") || par1.equalsIgnoreCase("bg")) {
             String biomeGroups = "";
-            sender.addChatMessage(new TextComponentTranslation("The following biome groups have been found :"));
+            sender.sendMessage(new TextComponentTranslation("The following biome groups have been found :"));
             for (Map.Entry<String, BiomeGroupData> biomeGroupEntry : environment.biomeGroupMap.entrySet()) {
                 biomeGroups += biomeGroupEntry.getKey() + ", ";
             }
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.AQUA + biomeGroups));
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.AQUA + biomeGroups));
             return;
         } else if ((par1.equalsIgnoreCase("biomegroups") || par1.equalsIgnoreCase("bg")) && !par2.equals(""))// handle entity biomegroup listings
         {
             EntityData entityData = environment.entityMap.get(par2);//modEntry.getValue().getCreature(name);
             if (entityData != null) {
                 String biomeGroups = "";
-                sender.addChatMessage(new TextComponentTranslation("The following biome groups have been found :"));
+                sender.sendMessage(new TextComponentTranslation("The following biome groups have been found :"));
                 for (String biomeGroup : entityData.getBiomeGroups()) {
                     biomeGroups += biomeGroup + ", ";
                 }
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.AQUA + biomeGroups));
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.AQUA + biomeGroups));
                 return;
             }
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Entity " + TextFormatting.GREEN + par2
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Entity " + TextFormatting.GREEN + par2
                     + TextFormatting.RED + " is invalid. Please enter a valid entity."));
             return;
         } else if (par1.equalsIgnoreCase("countentities")) {
@@ -243,7 +243,8 @@ public class CommandCMS extends CommandBase {
                         "Showing total entities in chunk " + TextFormatting.AQUA + pos.getX() + TextFormatting.WHITE + ", "
                                 + TextFormatting.AQUA + pos.getZ() + TextFormatting.WHITE + " ";
             } else if (par2.equalsIgnoreCase("all")) {
-                for (Class <? extends Entity > clazz : EntityList.CLASS_TO_NAME.keySet()) {
+                for (EntityEntry entry : net.minecraftforge.registries.GameData.getEntityRegistry().getValues()) {
+                    Class<?> clazz = entry.getEntityClass();
                     int count = 0;
                     for (int i = 0; i < world.loadedEntityList.size(); i++) {
                         Entity entity = (Entity) world.loadedEntityList.get(i);
@@ -282,19 +283,19 @@ public class CommandCMS extends CommandBase {
             if (countMap.size() > 0) {
                 for (Map.Entry<String, Integer> entityEntry : sortedMap.entrySet()) {
                     countList.add(TextFormatting.WHITE + " " + TextFormatting.AQUA + entityEntry.getValue() + " " + entityEntry.getKey());
-                    //par1ICommandSender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + " " + TextFormatting.AQUA + entityEntry.getKey() + " " + entityEntry.getValue() + TextFormatting.WHITE + "."));
+                    //par1ICommandSender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + " " + TextFormatting.AQUA + entityEntry.getKey() + " " + entityEntry.getValue() + TextFormatting.WHITE + "."));
                 }
                 sendPageHelp(sender, (byte) 10, countList, args, title);
                 if (!par2.equalsIgnoreCase("chunk")) {
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + "Total entities "
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + "Total entities "
                             + TextFormatting.AQUA + totalCount));
                 }
             } else if (par2.equalsIgnoreCase("chunk")) {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + "No entities found in chunk "
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + "No entities found in chunk "
                         + TextFormatting.AQUA + pos.getX() + TextFormatting.WHITE + ", " + TextFormatting.AQUA + pos.getZ()
                         + TextFormatting.WHITE + "."));
             } else {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + "No entities found in world "
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + "No entities found in world "
                         + world.getWorldInfo().getWorldName() + " in dimension " + world.provider.getDimensionType().getId() + "."));
             }
             return;
@@ -303,7 +304,7 @@ public class CommandCMS extends CommandBase {
                     || args.length == 1) {
                 String list = "";
                 List<String> entityTypes = new ArrayList<String>();
-                sender.addChatMessage(new TextComponentTranslation("Must specify a valid entity type to kill. Current types are : "));
+                sender.sendMessage(new TextComponentTranslation("Must specify a valid entity type to kill. Current types are : "));
                 for (Map.Entry<String, EntityData> entityEntry : environment.entityMap.entrySet()) {
                     EntityData entityData = entityEntry.getValue();
                     entityTypes.add(TextFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + TextFormatting.WHITE + "|"
@@ -317,7 +318,7 @@ public class CommandCMS extends CommandBase {
                         list += entityTypes.get(i) + ", ";
                     }
                 }
-                sender.addChatMessage(new TextComponentTranslation(list));
+                sender.sendMessage(new TextComponentTranslation(list));
                 return;
             } else if (par2.contains("|")) // tagged entity
             {
@@ -336,13 +337,13 @@ public class CommandCMS extends CommandBase {
                             } else if (!CMSUtils.isTamed(entity)) // not tamed
                             {
                                 entity.isDead = true;
-                                entity.worldObj.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
+                                entity.world.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
                                 count++;
                             }
                         }
                     }
                 }
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA + count
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA + count
                         + " " + TextFormatting.LIGHT_PURPLE + entityData.getEntityMod().getModTag() + TextFormatting.WHITE + "|"
                         + TextFormatting.GREEN + entityData.getEntityName() + TextFormatting.WHITE + "."));
                 return;
@@ -356,10 +357,10 @@ public class CommandCMS extends CommandBase {
                         continue;
                     }
                     entity.isDead = true;
-                    entity.worldObj.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
+                    entity.world.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
                     count++;
                 }
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA + count
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA + count
                         + " entities in world " + TextFormatting.LIGHT_PURPLE + world.getWorldInfo().getWorldName() + TextFormatting.WHITE
                         + "."));
                 return;
@@ -382,7 +383,7 @@ public class CommandCMS extends CommandBase {
                                             ;
                                         }
                                         entity.isDead = true;
-                                        entity.worldObj.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
+                                        entity.world.setEntityState(entity, (byte) 3); // inform the client that the entity is dead
                                         count++;
                                         return; // ignore
                                     }
@@ -390,7 +391,7 @@ public class CommandCMS extends CommandBase {
                             }
                         }
                     }
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "Killed " + TextFormatting.AQUA
                             + count + TextFormatting.LIGHT_PURPLE + " tamed" + TextFormatting.WHITE + " pets with owner "
                             + TextFormatting.GREEN + playername + TextFormatting.WHITE + "."));
                 }
@@ -409,7 +410,7 @@ public class CommandCMS extends CommandBase {
             if (entityData != null) {
                 if (par1.equalsIgnoreCase("frequency")) {
                     if (par3.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " frequency is " + TextFormatting.AQUA + entityData.getFrequency()
                                 + TextFormatting.WHITE + "."));
                         return;
@@ -419,7 +420,7 @@ public class CommandCMS extends CommandBase {
                             CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName().toLowerCase(), "frequency");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " frequency to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -428,7 +429,7 @@ public class CommandCMS extends CommandBase {
                     }
                 } else if (par1.equalsIgnoreCase("min")) {
                     if (par3.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " minGroupSpawn is " + TextFormatting.AQUA + entityData.getMinSpawn()
                                 + TextFormatting.WHITE + "."));
                     } else {
@@ -437,7 +438,7 @@ public class CommandCMS extends CommandBase {
                             CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(), "min");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " minGroupSpawn to " + TextFormatting.AQUA
                                     + par3 + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -446,7 +447,7 @@ public class CommandCMS extends CommandBase {
                     }
                 } else if (par1.equalsIgnoreCase("max")) {
                     if (par3.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " maxGroupSpawn is " + TextFormatting.AQUA + entityData.getMaxSpawn()
                                 + TextFormatting.WHITE + "."));
                         return;
@@ -456,7 +457,7 @@ public class CommandCMS extends CommandBase {
                             CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(), "max");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " maxGroupSpawn to " + TextFormatting.AQUA
                                     + par3 + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -465,7 +466,7 @@ public class CommandCMS extends CommandBase {
                     }
                 } else if (par1.equalsIgnoreCase("maxchunk")) {
                     if (par3.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " maxInChunk is " + TextFormatting.AQUA + entityData.getMaxInChunk()
                                 + TextFormatting.WHITE + "."));
                         return;
@@ -475,7 +476,7 @@ public class CommandCMS extends CommandBase {
                             CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(), "maxchunk");
                             prop.value = par3;
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " maxInChunk to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -484,7 +485,7 @@ public class CommandCMS extends CommandBase {
                     }
                 } else if (par1.equalsIgnoreCase("canspawn")) {
                     if (par3.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entityData.getEntityName()
                                 + TextFormatting.WHITE + " canSpawn is " + TextFormatting.AQUA + entityData.getCanSpawn()
                                 + TextFormatting.WHITE + "."));
                         return;
@@ -494,7 +495,7 @@ public class CommandCMS extends CommandBase {
                             CMSProperty prop = entityData.getEntityConfig().get(entityData.getEntityName(), "canSpawn");
                             prop.set(par3);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN
                                     + entityData.getEntityName() + TextFormatting.WHITE + " canSpawn to " + TextFormatting.AQUA + par3
                                     + TextFormatting.WHITE + "."));
                         } catch (NumberFormatException ex) {
@@ -512,23 +513,23 @@ public class CommandCMS extends CommandBase {
             config = environment.CMSLivingSpawnTypeConfig;
             config.load();
             if (par2.equals("")) {
-                sender.addChatMessage(new TextComponentTranslation("Please specify a valid LivingSpawnType from the following list :"));
+                sender.sendMessage(new TextComponentTranslation("Please specify a valid LivingSpawnType from the following list :"));
                 for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
                     if (entitySpawnType.name().equals("UNDEFINED")) {
                         continue;
                     }
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()));
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()));
                 }
                 return;
             }
             EntitySpawnType entitySpawnType = environment.entitySpawnTypes.get(par2.toUpperCase());
             if (entitySpawnType == null) {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "The LivingSpawnType " + par2
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "The LivingSpawnType " + par2
                         + " is not valid."));
                 return;
             }
             if (par3.equals("")) {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()
                         + TextFormatting.WHITE + " spawnTickRate is " + TextFormatting.AQUA + entitySpawnType.getSpawnTickRate()
                         + TextFormatting.WHITE + "."));
                 return;
@@ -539,7 +540,7 @@ public class CommandCMS extends CommandBase {
                 prop.value = par3;
             }
             entitySpawnType.setSpawnTickRate(Integer.parseInt(par3));
-            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + entitySpawnType.name()
+            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + entitySpawnType.name()
                     + TextFormatting.WHITE + " spawnTickRate to " + TextFormatting.AQUA + par3 + TextFormatting.WHITE + "."));
             config.save();
             environment.readConfigValues();
@@ -547,12 +548,12 @@ public class CommandCMS extends CommandBase {
         } else if (par1.equalsIgnoreCase("spawncap") && args.length <= 3) {
             config = environment.CMSLivingSpawnTypeConfig;
             if (par2.equals("")) {
-                sender.addChatMessage(new TextComponentTranslation("Please specify a valid LivingSpawnType from the following list :"));
+                sender.sendMessage(new TextComponentTranslation("Please specify a valid LivingSpawnType from the following list :"));
                 for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
                     if (entitySpawnType.name().equals("UNDEFINED")) {
                         continue;
                     }
-                    sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()));
+                    sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()));
                 }
                 return;
             }
@@ -561,7 +562,7 @@ public class CommandCMS extends CommandBase {
                 return;
             }
             if (par3.equals("")) {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + entitySpawnType.name()
                         + TextFormatting.WHITE + " spawnCap is " + TextFormatting.AQUA + entitySpawnType.getSpawnCap()
                         + TextFormatting.WHITE + "."));
                 return;
@@ -572,14 +573,14 @@ public class CommandCMS extends CommandBase {
                 prop.value = par3;
             }
             entitySpawnType.setSpawnCap(Integer.parseInt(par3));
-            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + entitySpawnType.name()
+            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + entitySpawnType.name()
                     + TextFormatting.WHITE + " spawnCap to " + TextFormatting.AQUA + par3 + TextFormatting.WHITE + "."));
             config.save();
             environment.readConfigValues();
             return;
         } else if (par1.equalsIgnoreCase("tag") || par1.equalsIgnoreCase("tags")) {
             for (Map.Entry<String, EntityModData> modEntry : environment.entityModMap.entrySet()) {
-                sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + modEntry.getKey()
+                sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + modEntry.getKey()
                         + TextFormatting.WHITE + " uses tag " + TextFormatting.LIGHT_PURPLE + modEntry.getValue().getModTag()));
             }
 
@@ -596,7 +597,7 @@ public class CommandCMS extends CommandBase {
                         continue;
                     }
                     if (par2.equals("")) {
-                        sender.addChatMessage(new TextComponentTranslation(TextFormatting.GREEN + propEntry.getKey()
+                        sender.sendMessage(new TextComponentTranslation(TextFormatting.GREEN + propEntry.getKey()
                                 + TextFormatting.WHITE + " is " + TextFormatting.AQUA + propValue));
                         return;
                     }
@@ -623,7 +624,7 @@ public class CommandCMS extends CommandBase {
                         if (par2.equalsIgnoreCase("true") || par2.equalsIgnoreCase("false")) {
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         }
                     } else if (propEntry.getValue().getType() == Type.INTEGER) {
@@ -631,10 +632,10 @@ public class CommandCMS extends CommandBase {
                             Integer.parseInt(par2);
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         } catch (NumberFormatException ex) {
-                            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                                     + "Invalid value entered. Please enter a valid number."));
                         }
 
@@ -643,10 +644,10 @@ public class CommandCMS extends CommandBase {
                             Double.parseDouble(par2);
                             property.set(par2);
                             saved = true;
-                            sender.addChatMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
+                            sender.sendMessage(new TextComponentTranslation("Set " + TextFormatting.GREEN + propEntry.getKey()
                                     + " to " + TextFormatting.AQUA + par2 + "."));
                         } catch (NumberFormatException ex) {
-                            sender.addChatMessage(new TextComponentTranslation(TextFormatting.RED
+                            sender.sendMessage(new TextComponentTranslation(TextFormatting.RED
                                     + "Invalid value entered. Please enter a valid number."));
                         }
                     }
@@ -669,12 +670,12 @@ public class CommandCMS extends CommandBase {
             }
 
             int k = Math.min((j + 1) * b0, list.size());
-            sender.addChatMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing CustomSpawner help page "
+            sender.sendMessage(new TextComponentTranslation(TextFormatting.DARK_GREEN + "--- Showing CustomSpawner help page "
                     + Integer.valueOf(j + 1) + " of " + Integer.valueOf(i + 1) + "(/moc help <page>)---"));
 
             for (int l = j * b0; l < k; ++l) {
                 String command = list.get(l);
-                sender.addChatMessage(new TextComponentTranslation(command));
+                sender.sendMessage(new TextComponentTranslation(command));
             }
         }
         // END HELP COMMAND
@@ -697,9 +698,9 @@ public class CommandCMS extends CommandBase {
     }
 
     public void sendCommandHelp(ICommandSender sender) {
-        sender.addChatMessage(new TextComponentTranslation("\u00a72Listing CustomSpawner commands"));
+        sender.sendMessage(new TextComponentTranslation("\u00a72Listing CustomSpawner commands"));
         for (int i = 0; i < commands.size(); i++) {
-            sender.addChatMessage(new TextComponentTranslation(commands.get(i)));
+            sender.sendMessage(new TextComponentTranslation(commands.get(i)));
         }
     }
 
@@ -716,12 +717,12 @@ public class CommandCMS extends CommandBase {
         }
         int k = Math.min((j + 1) * pagelimit, list.size());
 
-        sender.addChatMessage(new TextComponentTranslation(TextFormatting.WHITE + title + " (pg " + TextFormatting.WHITE
+        sender.sendMessage(new TextComponentTranslation(TextFormatting.WHITE + title + " (pg " + TextFormatting.WHITE
                 + Integer.valueOf(j + 1) + TextFormatting.DARK_GREEN + "/" + TextFormatting.WHITE + Integer.valueOf(x + 1) + ")"));
 
         for (int l = j * pagelimit; l < k; ++l) {
             String tamedInfo = list.get(l);
-            sender.addChatMessage(new TextComponentTranslation(tamedInfo));
+            sender.sendMessage(new TextComponentTranslation(tamedInfo));
         }
     }
 

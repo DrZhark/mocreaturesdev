@@ -1,6 +1,6 @@
 package drzhark.mocreatures.dimension;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBiomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public class BiomeProviderWyvernLair extends BiomeProvider {
 
     /** The biome generator object. */
-    private Biome biomeGenerator = MoCreatures.WyvernLairBiome;;
+    private Biome biomeGenerator = MoCBiomes.WyvernLairBiome;
     private float hellTemperature;
 
     /** The rainfall in the world */

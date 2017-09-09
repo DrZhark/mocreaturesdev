@@ -83,9 +83,9 @@ public class MoCEntityButterfly extends MoCEntityInsect {
     }
 
     @Override
-    public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null
-                && (par1ItemStack.getItem() == Item.getItemFromBlock(Blocks.RED_FLOWER) || par1ItemStack.getItem() == Item
+    public boolean isMyFavoriteFood(ItemStack stack) {
+        return !stack.isEmpty()
+                && (stack.getItem() == Item.getItemFromBlock(Blocks.RED_FLOWER) || stack.getItem() == Item
                         .getItemFromBlock(Blocks.YELLOW_FLOWER));
     }
 

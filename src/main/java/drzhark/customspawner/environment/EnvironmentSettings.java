@@ -15,7 +15,6 @@ import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;
@@ -32,15 +31,19 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class EnvironmentSettings {
@@ -74,6 +77,7 @@ public class EnvironmentSettings {
     public EntitySpawnType LIVINGTYPE_UNDERGROUND = new EntitySpawnType(this, EntitySpawnType.UNDERGROUND, 400, 15, 0, 63, 0.0F, false);
     public Map<String, String> worldEnvironmentMap = new HashMap<String, String>();
     public StructureRegistry structureData = new StructureRegistry();
+    private Set<BiomeDictionary.Type> biomeTypes = new HashSet<>();
 
     private static final String CATEGORY_CUSTOMSPAWNER_SETTINGS = "customspawner-settings";
     private static final String CATEGORY_BIOMEGROUP_DEFAULTS = "biomegroup-defaults";
@@ -198,8 +202,8 @@ public class EnvironmentSettings {
         // There seems to be a race condition with EntityDataManager registration when entity list is not sorted
         // To avoid these issues, the entity list will now be sorted to guarantee the order is the same every time
         TreeMap< String, Class <? extends Entity >> sortedMap = new TreeMap< String, Class <? extends Entity >>(String.CASE_INSENSITIVE_ORDER);
-        for (Map.Entry<String, Class<? extends Entity>> entry : EntityList.NAME_TO_CLASS.entrySet()) {
-            sortedMap.put(entry.getKey(), entry.getValue());
+        for (EntityEntry entry : net.minecraftforge.registries.GameData.getEntityRegistry().getValues()) {
+            sortedMap.put(entry.getName(), entry.getEntityClass());
         }
         for (Map.Entry<String, Class<? extends Entity>> entry : sortedMap.entrySet()) {
             Class<? extends Entity> clazz = entry.getValue();
@@ -228,7 +232,12 @@ public class EnvironmentSettings {
             return null;
         }
 
-        String entityName = (String) EntityList.CLASS_TO_NAME.get(clazz);
+        final EntityEntry entry = EntityRegistry.getEntry(clazz);
+        if (entry == null) {
+            return null;
+        }
+
+        String entityName = entry.getName();
 
         if (this.debug) {
             this.envLog.logger.info("Starting registration for " + entityName);
@@ -500,16 +509,17 @@ public class EnvironmentSettings {
     }
 
     public void initializeBiomes() {
-    	Iterator<Biome> iterator = Biome.REGISTRY.iterator();
+        Iterator<Biome> iterator = Biome.REGISTRY.iterator();
         while (iterator.hasNext()) {
             Biome biome = iterator.next();
             if (biome == null) {
                 continue;
             }
-            String biomeName = biome.getBiomeName();
+            String biomeName = biome.biomeName;
             String biomeClass = biome.getClass().getName();
             BiomeData biomeData = new BiomeData(biome);
-            Type[] types = BiomeDictionary.getTypesForBiome(biome);
+            Set<Type> types = BiomeDictionary.getTypes(biome);
+            this.biomeTypes.addAll(types);
             biomeData.setTypes(types);
             if (this.debug) {
                 this.envLog.logger.info("Detected Biome " + biomeName + " with class " + biomeClass + " with biomeID " + Biome.getIdForBiome(biome)
@@ -567,13 +577,13 @@ public class EnvironmentSettings {
         }
         // save configs
         for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
-            for (BiomeDictionary.Type type : BiomeDictionary.Type.values()) {
+            for (BiomeDictionary.Type type : this.biomeTypes) {
                 BiomeModData modData = modEntry.getValue();
                 CMSProperty prop = modData.getModConfig().get("biomegroups", "biomegroups");
                 if (prop != null && prop.valueList != null) {
                     prop.valueList = modData.getBiomes();
                 } else {
-                    modData.getModConfig().get("biomegroups", type.name(), modData.getBiomesForType(type));
+                    modData.getModConfig().get("biomegroups", type.getName(), modData.getBiomesForType(type));
                 }
                 modData.getModConfig().save();
             }
@@ -592,30 +602,30 @@ public class EnvironmentSettings {
 
     public void initDefaultGroups() {
         // scan all biome mods for biome dictionary groups
-        for (BiomeDictionary.Type type : BiomeDictionary.Type.values()) {
+        for (BiomeDictionary.Type type : this.biomeTypes) {
             List<String> biomes = new ArrayList<String>();
-            for (Biome biome : BiomeDictionary.getBiomesForType(type)) {
+            for (Biome biome : BiomeDictionary.getBiomes(type)) {
                 for (Map.Entry<String, BiomeModData> modEntry : this.biomeModMap.entrySet()) {
                     BiomeModData biomeModData = modEntry.getValue();
                     if (biomeModData.hasBiome(biome)) {
-                        biomes.add(biomeModData.getModTag() + "|" + biome.getBiomeName());
+                        biomes.add(biomeModData.getModTag() + "|" + biome.biomeName);
                         break;
                     }
                 }
             }
-            CMSProperty prop = new CMSProperty(type.name(), biomes, CMSProperty.Type.STRING);
+            CMSProperty prop = new CMSProperty(type.getName(), biomes, CMSProperty.Type.STRING);
             if (!biomes.isEmpty()) {
-                if (this.biomeGroupMap.containsKey(type.name())) {
-                    this.biomeGroupMap.remove(type.name());
+                if (this.biomeGroupMap.containsKey(type.getName())) {
+                    this.biomeGroupMap.remove(type.getName());
                 }
-                this.biomeGroupMap.put(type.name(), new BiomeGroupData(type.name(), biomes));
+                this.biomeGroupMap.put(type.getName(), new BiomeGroupData(type.getName(), biomes));
                 Collections.sort(biomes); // sort biome groups for GUI
                 prop.valueList = biomes; // blood - make sure to link our newly generated list to the configuration list for direct modification later
                 if (this.debug) {
-                    this.envLog.logger.info("Successfully added Biome Group " + type.name());
+                    this.envLog.logger.info("Successfully added Biome Group " + type.getName());
                 }
             }
-            this.CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(type.name(), prop);
+            this.CMSEntityBiomeGroupsConfig.getCategory(CATEGORY_BIOMEGROUP_DEFAULTS).put(type.getName(), prop);
             this.CMSEntityBiomeGroupsConfig.save();
         }
     }
@@ -694,10 +704,10 @@ public class EnvironmentSettings {
                             BiomeModData biomeModData = modEntry.getValue();
                             if (biomeModData.hasBiome(entryBiomes.get(i))) {
                                 if (this.debug) {
-                                    this.envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).getBiomeName()
+                                    this.envLog.logger.info("Adding biome " + biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName
                                             + " to biomegroups for entity " + entityData.getEntityName() + " in environment " + name());
                                 }
-                                biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).getBiomeName());
+                                biomes.add(biomeModData.getModTag() + "|" + entryBiomes.get(i).biomeName);
                                 entityData.addSpawnBiome(entryBiomes.get(i));
                             }
                         }

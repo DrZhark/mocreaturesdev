@@ -57,73 +57,75 @@ public class ItemOgreHammer extends MoCItem {
      * pressed. Args: itemStack, world, entityPlayer
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer, EnumHand hand) {
-        double coordY = entityplayer.posY + entityplayer.getEyeHeight();
-        double coordZ = entityplayer.posZ;
-        double coordX = entityplayer.posX;
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        double coordY = player.posY + player.getEyeHeight();
+        double coordZ = player.posZ;
+        double coordX = player.posX;
 
         for (int x = 3; x < 128; x++) {
-            double newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * x;
+            double newPosY = coordY - Math.cos((player.rotationPitch - 90F) / 57.29578F) * x;
             double newPosX =
-                    coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                            * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * x);
+                    coordX + Math.cos((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                            * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
             double newPosZ =
-                    coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                            * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * x);
-            BlockPos pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-            IBlockState blockstate = entityplayer.worldObj.getBlockState(pos);
+                    coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                            * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * x);
+            BlockPos pos = new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ));
+            IBlockState blockstate = player.world.getBlockState(pos);
 
             if (blockstate.getBlock() != Blocks.AIR) {
-                newPosY = coordY - Math.cos((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1);
+                newPosY = coordY - Math.cos((player.rotationPitch - 90F) / 57.29578F) * (x - 1);
                 newPosX =
-                        coordX + Math.cos((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                                * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
+                        coordX + Math.cos((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                                * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
                 newPosZ =
-                        coordZ + Math.sin((MoCTools.realAngle(entityplayer.rotationYaw - 90F) / 57.29578F))
-                                * (Math.sin((entityplayer.rotationPitch - 90F) / 57.29578F) * (x - 1));
-                pos = new BlockPos(MathHelper.floor_double(newPosX), MathHelper.floor_double(newPosY), MathHelper.floor_double(newPosZ));
-                if (entityplayer.worldObj.getBlockState(pos).getBlock() != Blocks.AIR) {
-                    return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                        coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
+                                * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
+                pos = new BlockPos(MathHelper.floor(newPosX), MathHelper.floor(newPosY), MathHelper.floor(newPosZ));
+                if (player.world.getBlockState(pos).getBlock() != Blocks.AIR) {
+                    return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
                 }
 
-                int blockInfo[] = obtainBlockAndMetadataFromBelt(entityplayer, true);
+                int blockInfo[] = obtainBlockAndMetadataFromBelt(player, true);
                 if (blockInfo[0] != 0) {
                     if (MoCreatures.isServer()) {
                         Block block = Block.getBlockById(blockInfo[0]);
-                        entityplayer.worldObj.setBlockState(pos, block.getDefaultState(), 3);
-                        entityplayer.worldObj.playSound(entityplayer, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
+                        player.world.setBlockState(pos, block.getDefaultState(), 3);
+                        player.world.playSound(player, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,
                                 block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (block.getSoundType().getVolume() + 1.0F) / 2.0F, block.getSoundType().getPitch() * 0.8F);
                     }
-                    MoCreatures.proxy.hammerFX(entityplayer);
+                    MoCreatures.proxy.hammerFX(player);
                     //entityplayer.setItemInUse(itemstack, 200);
                 }
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
         }
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
     }
 
     /**
      * Finds a block from the belt inventory of player, passes the block ID and
      * Metadata and reduces the stack by 1 if not on Creative mode
      *
-     * @param entityplayer
+     * @param player
      * @return
      */
-    private int[] obtainBlockAndMetadataFromBelt(EntityPlayer entityplayer, boolean remove) {
+    private int[] obtainBlockAndMetadataFromBelt(EntityPlayer player, boolean remove) {
         for (int y = 0; y < 9; y++) {
-            ItemStack slotStack = entityplayer.inventory.getStackInSlot(y);
-            if (slotStack == null) {
+            ItemStack slotStack = player.inventory.getStackInSlot(y);
+            if (slotStack.isEmpty()) {
                 continue;
             }
             Item itemTemp = slotStack.getItem();
             int metadata = slotStack.getItemDamage();
             if (itemTemp instanceof ItemBlock) {
-                if (remove && !entityplayer.capabilities.isCreativeMode) {
-                    if (--slotStack.stackSize <= 0) {
-                        entityplayer.inventory.setInventorySlotContents(y, null);
+                if (remove && !player.capabilities.isCreativeMode) {
+                    slotStack.shrink(1);
+                    if (slotStack.isEmpty()) {
+                        player.inventory.setInventorySlotContents(y, ItemStack.EMPTY);
                     } else {
-                        entityplayer.inventory.setInventorySlotContents(y, slotStack);
+                        player.inventory.setInventorySlotContents(y, slotStack);
                     }
                 }
                 return new int[] {Item.getIdFromItem(itemTemp), metadata};
@@ -133,7 +135,7 @@ public class ItemOgreHammer extends MoCItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         return EnumActionResult.FAIL;
     }
 }

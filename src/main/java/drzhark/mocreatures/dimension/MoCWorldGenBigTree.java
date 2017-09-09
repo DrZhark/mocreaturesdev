@@ -1,6 +1,6 @@
 package drzhark.mocreatures.dimension;
 
-import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -47,7 +47,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
     Random rand = new Random();
 
     /** Reference to the World object. */
-    World worldObj;
+    World world;
     int[] basePos = new int[] {0, 0, 0};
     int heightLimit = 20;
     int height;
@@ -118,8 +118,8 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
                 for (double var9 = 0.5D; var7 < var1; ++var7) {
                     double var11 = this.scaleWidth * var8 * (this.rand.nextFloat() + 0.328D);
                     double var13 = this.rand.nextFloat() * 2.0D * Math.PI;
-                    int var15 = MathHelper.floor_double(var11 * Math.sin(var13) + this.basePos[0] + var9);
-                    int var16 = MathHelper.floor_double(var11 * Math.cos(var13) + this.basePos[2] + var9);
+                    int var15 = MathHelper.floor(var11 * Math.sin(var13) + this.basePos[0] + var9);
+                    int var16 = MathHelper.floor(var11 * Math.cos(var13) + this.basePos[2] + var9);
                     int[] var17 = new int[] {var15, var3, var16};
                     int[] var18 = new int[] {var15, var3 + this.leafDistanceLimit, var16};
 
@@ -175,14 +175,14 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
                 } else {
                     var11[var9] = var10[var9] + var13;
                     BlockPos pos = new BlockPos(var11[0], var11[1], var11[2]);
-                    IBlockState blockstate = this.worldObj.getBlockState(pos);
+                    IBlockState blockstate = this.world.getBlockState(pos);
                     Block block = blockstate.getBlock();
 
                     if (block != Blocks.AIR && block != this.iBlockStateLeaf.getBlock())//BlockLeafID)//Block.leaves)
                     {
                         ++var13;
                     } else {
-                        this.setBlockAndNotifyAdequately(this.worldObj, pos, this.iBlockStateLeaf);
+                        this.setBlockAndNotifyAdequately(this.world, pos, this.iBlockStateLeaf);
                         ++var13;
                     }
                 }
@@ -227,7 +227,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
 
         for (int var5 = par2 + this.leafDistanceLimit; var4 < var5; ++var4) {
             float var6 = this.leafSize(var4 - par2);
-            this.func_150529_a(par1, var4, par3, var6, (byte) 1, MoCreatures.mocLeaf);
+            this.func_150529_a(par1, var4, par3, var6, (byte) 1, MoCBlocks.mocLeaf);
         }
     }
 
@@ -265,10 +265,10 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
             int var15 = 0;
 
             for (int var16 = var4[var6] + var9; var15 != var16; var15 += var9) {
-                var14[var6] = MathHelper.floor_double(par1ArrayOfInteger[var6] + var15 + 0.5D);
-                var14[var7] = MathHelper.floor_double(par1ArrayOfInteger[var7] + var15 * var10 + 0.5D);
-                var14[var8] = MathHelper.floor_double(par1ArrayOfInteger[var8] + var15 * var12 + 0.5D);
-                this.setBlockAndNotifyAdequately(this.worldObj, new BlockPos(var14[0], var14[1], var14[2]), this.iBlockStateLog);
+                var14[var6] = MathHelper.floor(par1ArrayOfInteger[var6] + var15 + 0.5D);
+                var14[var7] = MathHelper.floor(par1ArrayOfInteger[var7] + var15 * var10 + 0.5D);
+                var14[var8] = MathHelper.floor(par1ArrayOfInteger[var8] + var15 * var12 + 0.5D);
+                this.setBlockAndNotifyAdequately(this.world, new BlockPos(var14[0], var14[1], var14[2]), this.iBlockStateLog);
             }
         }
     }
@@ -381,10 +381,10 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
 
             for (var15 = var3[var5] + var8; var14 != var15; var14 += var8) {
                 var13[var5] = par1ArrayOfInteger[var5] + var14;
-                var13[var6] = MathHelper.floor_double(par1ArrayOfInteger[var6] + var14 * var9);
-                var13[var7] = MathHelper.floor_double(par1ArrayOfInteger[var7] + var14 * var11);
+                var13[var6] = MathHelper.floor(par1ArrayOfInteger[var6] + var14 * var9);
+                var13[var7] = MathHelper.floor(par1ArrayOfInteger[var7] + var14 * var11);
 
-                if (!this.isReplaceable(this.worldObj, new BlockPos(var13[0], var13[1], var13[2]))) {
+                if (!this.isReplaceable(this.world, new BlockPos(var13[0], var13[1], var13[2]))) {
                     break;
                 }
             }
@@ -402,14 +402,14 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
         int[] var2 = new int[] {pos.getX(), pos.getY() + this.heightLimit - 1, pos.getZ()};
         Block block = par1World.getBlockState(pos.down()).getBlock();
 
-        /*IBlockState iblockstate2 = this.worldObj.getBlockState(new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2]));
+        /*IBlockState iblockstate2 = this.world.getBlockState(new BlockPos(this.basePos[0], this.basePos[1] - 1, this.basePos[2]));
 
         if (iblockstate2.getBlock() != MoCreatures.mocDirt.getDefaultState().getBlock() 
                 && iblockstate2.getBlock() != MoCreatures.mocGrass.getDefaultState().getBlock() ) {
             System.out.println("invalid tree location option b = " +  iblockstate2.getBlock());
         }
         */
-        if (block != MoCreatures.mocDirt && block != MoCreatures.mocGrass) {
+        if (block != MoCBlocks.mocDirt && block != MoCBlocks.mocGrass) {
             return false;
         } else {
             int var4 = this.checkBlockLine(var1, var2);
@@ -441,7 +441,7 @@ public class MoCWorldGenBigTree extends WorldGenAbstractTree {
 
     @Override
     public boolean generate(World par1World, Random par2Random, BlockPos pos) {
-        this.worldObj = par1World;
+        this.world = par1World;
         long var6 = par2Random.nextLong();
         this.rand.setSeed(var6);
         this.basePos[0] = pos.getX();

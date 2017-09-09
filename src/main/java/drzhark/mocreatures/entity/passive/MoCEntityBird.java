@@ -7,7 +7,7 @@ import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -18,12 +18,12 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -33,8 +33,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityBird extends MoCEntityTameableAnimal {
 
@@ -66,7 +64,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
@@ -122,19 +120,19 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     public boolean getPreTamed() {
-    	return ((Boolean)this.dataManager.get(PRE_TAMED)).booleanValue();
+        return ((Boolean)this.dataManager.get(PRE_TAMED)).booleanValue();
     }
 
     public void setPreTamed(boolean flag) {
-    	this.dataManager.set(PRE_TAMED, Boolean.valueOf(flag));
+        this.dataManager.set(PRE_TAMED, Boolean.valueOf(flag));
     }
 
     public boolean getIsFlying() {
-    	return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
+        return ((Boolean)this.dataManager.get(IS_FLYING)).booleanValue();
     }
 
     public void setIsFlying(boolean flag) {
-    	this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
+        this.dataManager.set(IS_FLYING, Boolean.valueOf(flag));
     }
 
     @Override
@@ -150,8 +148,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         for (int i2 = l; i2 < j1; i2++) {
             label0: for (int j2 = i1; j2 < l1; j2++) {
                 BlockPos pos = new BlockPos(i2, j, j2);
-                IBlockState blockstate = this.worldObj.getBlockState(pos);
-                if (blockstate.getBlock().isAir(blockstate, this.worldObj, pos) || (blockstate.getMaterial() != Material.WOOD)) {
+                IBlockState blockstate = this.world.getBlockState(pos);
+                if (blockstate.getBlock().isAir(blockstate, this.world, pos) || (blockstate.getMaterial() != Material.WOOD)) {
                     continue;
                 }
                 int l2 = j;
@@ -160,8 +158,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
                         continue label0;
                     }
                     BlockPos pos1 = new BlockPos(i2, l2, j2);
-                    IBlockState blockstate1 = this.worldObj.getBlockState(pos1);
-                    if (blockstate1.getBlock().isAir(blockstate1, this.worldObj, pos1)) {
+                    IBlockState blockstate1 = this.world.getBlockState(pos1);
+                    if (blockstate1.getBlock().isAir(blockstate1, this.world, pos1)) {
                         return (new int[] {i2, l2 + 2, j2});
                     }
                     l2++;
@@ -175,11 +173,11 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     private boolean FlyToNextEntity(Entity entity) {
         if (entity != null) {
-            int i = MathHelper.floor_double(entity.posX);
-            int j = MathHelper.floor_double(entity.posY);
-            int k = MathHelper.floor_double(entity.posZ);
+            int i = MathHelper.floor(entity.posX);
+            int j = MathHelper.floor(entity.posY);
+            int k = MathHelper.floor(entity.posZ);
             faceLocation(i, j, k, 30F);
-            if (MathHelper.floor_double(this.posY) < j) {
+            if (MathHelper.floor(this.posY) < j) {
                 this.motionY += 0.14999999999999999D;
             }
             if (this.posX < entity.posX) {
@@ -219,23 +217,23 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             int j = ai1[1];
             int k = ai1[2];
             faceLocation(i, j, k, 30F);
-            if ((j - MathHelper.floor_double(this.posY)) > 2) {
+            if ((j - MathHelper.floor(this.posY)) > 2) {
                 this.motionY += 0.14999999999999999D;
             }
             int l = 0;
             int i1 = 0;
             if (this.posX < i) {
-                l = i - MathHelper.floor_double(this.posX);
+                l = i - MathHelper.floor(this.posX);
                 this.motionX += 0.050000000000000003D;
             } else {
-                l = MathHelper.floor_double(this.posX) - i;
+                l = MathHelper.floor(this.posX) - i;
                 this.motionX -= 0.050000000000000003D;
             }
             if (this.posZ < k) {
-                i1 = k - MathHelper.floor_double(this.posZ);
+                i1 = k - MathHelper.floor(this.posZ);
                 this.motionZ += 0.050000000000000003D;
             } else {
-                i1 = MathHelper.floor_double(this.posX) - k;
+                i1 = MathHelper.floor(this.posX) - k;
                 this.motionZ -= 0.050000000000000003D;
             }
             double d = l + i1;
@@ -257,7 +255,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return MoCSoundEvents.ENTITY_BIRD_HURT;
     }
 
@@ -296,14 +294,16 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (stack != null && onMainHand && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
-            if (--stack.stackSize == 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!stack.isEmpty() && onMainHand && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             if (MoCreatures.isServer()) {
                 MoCTools.tameWithName(player, this);
@@ -315,7 +315,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             return false;
         }
         if (this.getRidingEntity() == null) {
-        	this.rotationYaw = player.rotationYaw;
+            this.rotationYaw = player.rotationYaw;
             this.startRiding(player);
         }
         return true;
@@ -355,7 +355,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             }
 
             if (!getIsFlying() && !getIsTamed() && this.rand.nextInt(10) == 0) {
-                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
+                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 4D, 4D));
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity1 = list.get(i);
                     if (!(entity1 instanceof EntityLivingBase) || entity1 instanceof MoCEntityBird) {
@@ -430,18 +430,18 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     public int[] ReturnNearestMaterialCoord(Entity entity, Material material, Double double1) {
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
                     BlockPos pos = new BlockPos(k1, l1, i2);
-                    IBlockState blockstate = this.worldObj.getBlockState(pos);
-                    if (blockstate.getBlock() != null && !blockstate.getBlock().isAir(blockstate, this.worldObj, pos)
+                    IBlockState blockstate = this.world.getBlockState(pos);
+                    if (blockstate.getBlock() != null && !blockstate.getBlock().isAir(blockstate, this.world, pos)
                             && blockstate.getMaterial() == material) {
                         return (new int[] {k1, l1, i2});
                     }
@@ -486,8 +486,8 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     }
 
     @Override
-    public boolean isMyHealFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && (par1ItemStack.getItem() == Items.WHEAT_SEEDS || par1ItemStack.getItem() == Items.MELON_SEEDS);
+    public boolean isMyHealFood(ItemStack stack) {
+        return !stack.isEmpty() && (stack.getItem() == Items.WHEAT_SEEDS || stack.getItem() == Items.MELON_SEEDS);
     }
 
     @Override
@@ -515,6 +515,6 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     @Override
     public boolean canRidePlayer()
     {
-    	return true;
+        return true;
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class EntityAITools {
 
     protected static boolean IsNearPlayer(EntityLiving entityliving, double d) {
-        EntityPlayer entityplayer1 = entityliving.worldObj.getClosestPlayerToEntity(entityliving, d);
+        EntityPlayer entityplayer1 = entityliving.world.getClosestPlayerToEntity(entityliving, d);
         if (entityplayer1 != null) {
             return true;
         }
@@ -19,8 +19,8 @@ public class EntityAITools {
             return null;
         }
 
-        for (int i = 0; i < ((EntityLiving) pet).worldObj.playerEntities.size(); ++i) {
-            EntityPlayer entityplayer = (EntityPlayer) ((EntityLiving) pet).worldObj.playerEntities.get(i);
+        for (int i = 0; i < ((EntityLiving) pet).world.playerEntities.size(); ++i) {
+            EntityPlayer entityplayer = (EntityPlayer) ((EntityLiving) pet).world.playerEntities.get(i);
 
             if (pet.getOwnerId().equals(entityplayer.getUniqueID())) {
                 return entityplayer;

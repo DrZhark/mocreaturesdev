@@ -20,7 +20,7 @@ public class MoCEntityRoach extends MoCEntityInsect
 
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
+        this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
 
             public boolean apply(Entity entity) {
                 return !(entity instanceof MoCEntityCrab) && (entity.height > 0.3F || entity.width > 0.3F);
@@ -58,8 +58,8 @@ public class MoCEntityRoach extends MoCEntityInsect
     }
 
     @Override
-    public boolean isMyFavoriteFood(ItemStack par1ItemStack) {
-        return par1ItemStack != null && par1ItemStack.getItem() == Items.ROTTEN_FLESH;
+    public boolean isMyFavoriteFood(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() == Items.ROTTEN_FLESH;
     }
 
     @Override

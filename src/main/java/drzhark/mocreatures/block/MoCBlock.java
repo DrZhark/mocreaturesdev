@@ -1,6 +1,8 @@
 package drzhark.mocreatures.block;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCreatures;
+import drzhark.mocreatures.init.MoCBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -8,14 +10,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class MoCBlock extends Block {
 
@@ -24,8 +23,8 @@ public class MoCBlock extends Block {
     public MoCBlock(String name, Material material) {
         super(material);
         this.setCreativeTab(MoCreatures.tabMoC);
+        this.setRegistryName(MoCConstants.MOD_ID, name);
         this.setUnlocalizedName(name);
-        GameRegistry.registerBlock(this, MultiItemBlock.class, name);
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.WYVERN_LAIR));
     }
 
@@ -36,13 +35,9 @@ public class MoCBlock extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-        EnumType[] aenumtype = EnumType.values();
-        int i = aenumtype.length;
-
-        for (int j = 0; j < i; ++j) {
-            MoCBlock.EnumType enumtype = aenumtype[j];
-            list.add(new ItemStack(itemIn, 1, enumtype.getMetadata()));
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+        for (int ix = 0; ix < MoCBlocks.multiBlockNames.size(); ix++) {
+            items.add(new ItemStack(this, 1, ix));
         }
     }
 

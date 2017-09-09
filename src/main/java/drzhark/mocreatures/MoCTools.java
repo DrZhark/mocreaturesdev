@@ -17,11 +17,12 @@ import drzhark.mocreatures.entity.passive.MoCEntityLither;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageNameGUI;
 import drzhark.mocreatures.util.MoCLog;
-import drzhark.mocreatures.util.MoCSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
@@ -52,6 +53,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeeds;
@@ -89,18 +91,18 @@ public class MoCTools {
     /**
      * spawns tiny slimes
      */
-    public static void spawnSlimes(World worldObj, Entity entity) {
+    public static void spawnSlimes(World world, Entity entity) {
         if (MoCreatures.isServer()) {
             //changed so it only spawns 0 - 1 slime, as it now spaws also big slimes
-            int var2 = 1 + worldObj.rand.nextInt(1);
+            int var2 = 1 + world.rand.nextInt(1);
 
             for (int i = 0; i < var2; ++i) {
                 float var4 = (i % 2 - 0.5F) * 1 / 4.0F;
                 float var5 = (i / 2 - 0.5F) * 1 / 4.0F;
-                EntitySlime var6 = new EntitySlime(worldObj);
+                EntitySlime var6 = new EntitySlime(world);
                 //var6.setSlimeSize(1);  TODO FIX
-                var6.setLocationAndAngles(entity.posX + var4, entity.posY + 0.5D, entity.posZ + var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-                worldObj.spawnEntityInWorld(var6);
+                var6.setLocationAndAngles(entity.posX + var4, entity.posY + 0.5D, entity.posZ + var5, world.rand.nextFloat() * 360.0F, 0.0F);
+                world.spawnEntity(var6);
             }
         }
     }
@@ -108,38 +110,38 @@ public class MoCTools {
     /**
      * Drops saddle
      */
-    public static void dropSaddle(MoCEntityAnimal entity, World worldObj) {
+    public static void dropSaddle(MoCEntityAnimal entity, World world) {
         if (!entity.getIsRideable() || !MoCreatures.isServer()) {
             return;
         }
-        dropCustomItem(entity, worldObj, new ItemStack(MoCreatures.horsesaddle, 1));
+        dropCustomItem(entity, world, new ItemStack(MoCItems.horsesaddle, 1));
         entity.setRideable(false);
     }
 
     /**
      * Drops chest block
      */
-    public static void dropBags(MoCEntityAnimal entity, World worldObj) {
+    public static void dropBags(MoCEntityAnimal entity, World world) {
         if (!MoCreatures.isServer()) {
             return;
         }
-        dropCustomItem(entity, worldObj, new ItemStack(Blocks.CHEST, 1));
+        dropCustomItem(entity, world, new ItemStack(Blocks.CHEST, 1));
     }
 
     /**
      * Drops item
      */
-    public static void dropCustomItem(Entity entity, World worldObj, ItemStack itemstack) {
+    public static void dropCustomItem(Entity entity, World world, ItemStack itemstack) {
         if (!MoCreatures.isServer()) {
             return;
         }
 
-        EntityItem entityitem = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, itemstack);
+        EntityItem entityitem = new EntityItem(world, entity.posX, entity.posY, entity.posZ, itemstack);
         float f3 = 0.05F;
-        entityitem.motionX = (float) worldObj.rand.nextGaussian() * f3;
-        entityitem.motionY = ((float) worldObj.rand.nextGaussian() * f3) + 0.2F;
-        entityitem.motionZ = (float) worldObj.rand.nextGaussian() * f3;
-        worldObj.spawnEntityInWorld(entityitem);
+        entityitem.motionX = (float) world.rand.nextGaussian() * f3;
+        entityitem.motionY = ((float) world.rand.nextGaussian() * f3) + 0.2F;
+        entityitem.motionZ = (float) world.rand.nextGaussian() * f3;
+        world.spawnEntity(entityitem);
     }
 
     public static void bigsmack(Entity entity, Entity entity1, float force) {
@@ -149,7 +151,7 @@ public class MoCTools {
             d = (Math.random() - Math.random()) * 0.01D;
         }
 
-        float f = MathHelper.sqrt_double((d * d) + (d1 * d1));
+        float f = MathHelper.sqrt((d * d) + (d1 * d1));
         entity1.motionX /= 2D;
         entity1.motionY /= 2D;
         entity1.motionZ /= 2D;
@@ -161,8 +163,8 @@ public class MoCTools {
         }
     }
 
-    public static void buckleMobs(EntityLiving entityattacker, Double dist, World worldObj) {
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
+    public static void buckleMobs(EntityLiving entityattacker, Double dist, World world) {
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entitytarget = list.get(i);
             if (!(entitytarget instanceof EntityLiving) || (entityattacker.isBeingRidden() && entitytarget == entityattacker.getRidingEntity())) {
@@ -176,8 +178,8 @@ public class MoCTools {
         }
     }
 
-    public static void buckleMobsNotPlayers(EntityLiving entityattacker, Double dist, World worldObj) {
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
+    public static void buckleMobsNotPlayers(EntityLiving entityattacker, Double dist, World world) {
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entityattacker, entityattacker.getEntityBoundingBox().expand(dist, 2D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entitytarget = list.get(i);
             if (!(entitytarget instanceof EntityLiving) || (entitytarget instanceof EntityPlayer)
@@ -192,45 +194,45 @@ public class MoCTools {
         }
     }
 
-    public static void spawnNearPlayer(EntityPlayer player, int entityId, int numberToSpawn)//, World worldObj)
+    public static void spawnNearPlayer(EntityPlayer player, int entityId, int numberToSpawn)//, World world)
     {
-        WorldServer worldObj =
-                FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.getDimensionType().getId());
+        WorldServer world =
+                FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(player.world.provider.getDimensionType().getId());
         for (int i = 0; i < numberToSpawn; i++) {
             EntityLiving entityliving = null;
             try {
                 Class<? extends EntityLiving> entityClass = MoCreatures.instaSpawnerMap.get(entityId);
-                entityliving = (EntityLiving) entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
+                entityliving = (EntityLiving) entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             if (entityliving != null) {
                 entityliving.setLocationAndAngles(player.posX - 1, player.posY, player.posZ - 1, player.rotationYaw, player.rotationPitch);
-                worldObj.spawnEntityInWorld(entityliving);
+                world.spawnEntity(entityliving);
             }
         }
     }
 
     public static void spawnNearPlayerbyName(EntityPlayer player, String eName, int numberToSpawn) {
-        WorldServer worldObj =
-                FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(player.worldObj.provider.getDimensionType().getId());
+        WorldServer world =
+                FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(player.world.provider.getDimensionType().getId());
 
         for (int i = 0; i < numberToSpawn; i++) {
             EntityLiving entityToSpawn = null;
             try {
                 MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
                 Class<? extends EntityLiving> myClass = entityData.getEntityClass();
-                entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
+                entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             if (entityToSpawn != null) {
                 IEntityLivingData entitylivingdata = null;
-                entityToSpawn.onInitialSpawn(player.worldObj.getDifficultyForLocation(new BlockPos(entityToSpawn)), entitylivingdata); // onSpawnWithEgg
+                entityToSpawn.onInitialSpawn(player.world.getDifficultyForLocation(new BlockPos(entityToSpawn)), entitylivingdata); // onSpawnWithEgg
                 entityToSpawn.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-                worldObj.spawnEntityInWorld(entityToSpawn);
+                world.spawnEntity(entityToSpawn);
             }
         }
     }
@@ -240,17 +242,17 @@ public class MoCTools {
     }
 
     public static void playCustomSound(Entity entity, SoundEvent customSound, float volume) {
-        entity.playSound(customSound, volume, 1.0F + ((entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat()) * 0.2F));
+        entity.playSound(customSound, volume, 1.0F + ((entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
     }
 
     /**
      * Returns a new instance of EntityLiving based on the name of the class
      *
      * @param eName
-     * @param worldObj
+     * @param world
      * @return
      */
-    public static EntityLiving spawnListByNameClass(String eName, World worldObj) {
+    public static EntityLiving spawnListByNameClass(String eName, World world) {
         EntityLiving entityToSpawn = null;
         try {
             MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
@@ -289,7 +291,7 @@ public class MoCTools {
             else {
                 myClass = entityData.getEntityClass();
             }
-            entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {worldObj});
+            entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
         } catch (Exception e) {
             if (MoCreatures.proxy.debug) {
                 MoCLog.logger.warn("Unable to find class for entity " + eName + ", " + e);
@@ -300,16 +302,16 @@ public class MoCTools {
 
     public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat) {
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
-                    IBlockState blockstate = entity.worldObj.getBlockState(new BlockPos(k1, l1, i2));
+                    IBlockState blockstate = entity.world.getBlockState(new BlockPos(k1, l1, i2));
                     if ((blockstate.getBlock() != Blocks.AIR) && (blockstate.getMaterial() == mat)) {
                         return true;
                     }
@@ -321,16 +323,16 @@ public class MoCTools {
 
     public static boolean isNearBlockName(Entity entity, Double dist, String blockName) {
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(dist, dist / 2D, dist);
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
-                    IBlockState blockstate = entity.worldObj.getBlockState(new BlockPos(k1, l1, i2));
+                    IBlockState blockstate = entity.world.getBlockState(new BlockPos(k1, l1, i2));
 
                     if (blockstate.getBlock() != Blocks.AIR) {
                         String nameToCheck = "";
@@ -349,20 +351,20 @@ public class MoCTools {
 
     public static TileEntityJukebox nearJukeBoxRecord(Entity entity, Double dist) {
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(dist, dist / 2D, dist);
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
                     BlockPos pos = new BlockPos(k1, l1, i2);
-                    IBlockState blockstate = entity.worldObj.getBlockState(pos);
-                    if (!entity.worldObj.isAirBlock(pos)) {
+                    IBlockState blockstate = entity.world.getBlockState(pos);
+                    if (!entity.world.isAirBlock(pos)) {
                         if (blockstate.getBlock() instanceof BlockJukebox) {
-                            TileEntityJukebox juky = (TileEntityJukebox) entity.worldObj.getTileEntity(pos);
+                            TileEntityJukebox juky = (TileEntityJukebox) entity.world.getTileEntity(pos);
                             return juky;
                         }
                     }
@@ -399,17 +401,17 @@ public class MoCTools {
         int z = -1;
 
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(double1.doubleValue(), yOff.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
                     BlockPos pos = new BlockPos(k1, l1, i2);
-                    IBlockState blockstate = entity.worldObj.getBlockState(pos);
+                    IBlockState blockstate = entity.world.getBlockState(pos);
                     if ((blockstate.getBlock() != Blocks.AIR) && (blockstate.getMaterial() == material)) {
                         distance = getSqDistanceTo(entity, k1, l1, i2);
                         if (shortestDistance == -1D) {
@@ -451,17 +453,17 @@ public class MoCTools {
         int z = -1;
 
         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(dist, dist, dist);
-        int i = MathHelper.floor_double(axisalignedbb.minX);
-        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor_double(axisalignedbb.minY);
-        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
-        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        int i = MathHelper.floor(axisalignedbb.minX);
+        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor(axisalignedbb.minY);
+        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor(axisalignedbb.minZ);
+        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
         for (int k1 = i; k1 < j; k1++) {
             for (int l1 = k; l1 < l; l1++) {
                 for (int i2 = i1; i2 < j1; i2++) {
                     BlockPos pos = new BlockPos(k1, l1, i2);
-                    IBlockState blockstate = entity.worldObj.getBlockState(pos);
+                    IBlockState blockstate = entity.world.getBlockState(pos);
                     if ((blockstate.getBlock() != Blocks.AIR) && (blockstate.getBlock() == block1)) {
                         distance = getSqDistanceTo(entity, k1, l1, i2);
                         if (shortestDistance == -1D) {
@@ -551,13 +553,13 @@ public class MoCTools {
     }
 
     public static float distanceToSurface(Entity entity) {
-        int i = MathHelper.floor_double(entity.posX);
-        int j = MathHelper.floor_double(entity.posY);
-        int k = MathHelper.floor_double(entity.posZ);
-        IBlockState blockstate = entity.worldObj.getBlockState(new BlockPos(i, j, k));
+        int i = MathHelper.floor(entity.posX);
+        int j = MathHelper.floor(entity.posY);
+        int k = MathHelper.floor(entity.posZ);
+        IBlockState blockstate = entity.world.getBlockState(new BlockPos(i, j, k));
         if (blockstate.getBlock() != Blocks.AIR && blockstate.getMaterial() == Material.WATER) {
             for (int x = 1; x < 64; x++) {
-                blockstate = entity.worldObj.getBlockState(new BlockPos(i, j + x, k));
+                blockstate = entity.world.getBlockState(new BlockPos(i, j + x, k));
                 if (blockstate.getBlock() == Blocks.AIR || blockstate.getMaterial() != Material.WATER) {
                     return x;
                 }
@@ -567,9 +569,9 @@ public class MoCTools {
     }
 
     public static double waterSurfaceAtGivenPosition(double posX, double posY, double posZ, World worldIn) {
-        int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(posY);
-        int k = MathHelper.floor_double(posZ);
+        int i = MathHelper.floor(posX);
+        int j = MathHelper.floor(posY);
+        int k = MathHelper.floor(posZ);
         IBlockState blockstate = worldIn.getBlockState(new BlockPos(i, j, k));
         if (blockstate.getBlock() != Blocks.AIR && blockstate.getMaterial() == Material.WATER) {
             for (int x = 1; x < 64; x++) {
@@ -583,13 +585,13 @@ public class MoCTools {
     }
 
     public static double waterSurfaceAtGivenEntity(Entity entity) {
-        return waterSurfaceAtGivenPosition(entity.posX, entity.posY, entity.posZ, entity.worldObj);
+        return waterSurfaceAtGivenPosition(entity.posX, entity.posY, entity.posZ, entity.world);
     }
 
     public static float distanceToSurface(double posX, double posY, double posZ, World worldIn) {
-        int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(posY);
-        int k = MathHelper.floor_double(posZ);
+        int i = MathHelper.floor(posX);
+        int j = MathHelper.floor(posY);
+        int k = MathHelper.floor(posZ);
         IBlockState blockstate = worldIn.getBlockState(new BlockPos(i, j, k));
         if (blockstate.getBlock() != Blocks.AIR && blockstate.getMaterial() == Material.WATER) {
             for (int x = 1; x < 64; x++) {
@@ -603,11 +605,11 @@ public class MoCTools {
     }
 
     public static int distanceToFloor(Entity entity) {
-        int i = MathHelper.floor_double(entity.posX);
-        int j = MathHelper.floor_double(entity.posY);
-        int k = MathHelper.floor_double(entity.posZ);
+        int i = MathHelper.floor(entity.posX);
+        int j = MathHelper.floor(entity.posY);
+        int k = MathHelper.floor(entity.posZ);
         for (int x = 0; x < 64; x++) {
-            Block block = entity.worldObj.getBlockState(new BlockPos(i, j - x, k)).getBlock();
+            Block block = entity.world.getBlockState(new BlockPos(i, j - x, k)).getBlock();
             if (block != Blocks.AIR) {
                 return x;
             }
@@ -618,11 +620,11 @@ public class MoCTools {
 
     public boolean isInsideOfMaterial(Material material, Entity entity) {
         double d = entity.posY + entity.getEyeHeight();
-        int i = MathHelper.floor_double(entity.posX);
-        int j = MathHelper.floor_float(MathHelper.floor_double(d));
-        int k = MathHelper.floor_double(entity.posZ);
+        int i = MathHelper.floor(entity.posX);
+        int j = MathHelper.floor(MathHelper.floor(d));
+        int k = MathHelper.floor(entity.posZ);
         BlockPos pos = new BlockPos(i, j, k);
-        IBlockState blockstate = entity.worldObj.getBlockState(pos);
+        IBlockState blockstate = entity.world.getBlockState(pos);
         if (blockstate.getBlock() != Blocks.AIR && blockstate.getMaterial() == material) {
             float f = BlockLiquid.getLiquidHeightPercent(blockstate.getBlock().getMetaFromState(blockstate)) - 0.1111111F;
             float f1 = j + 1 - f;
@@ -635,7 +637,7 @@ public class MoCTools {
     public static void disorientEntity(Entity entity) {
         double rotD = 0;
         double motD = 0;
-        double d = entity.worldObj.rand.nextGaussian();
+        double d = entity.world.rand.nextGaussian();
         double d1 = 0.1D * d;
         motD = (0.2D * d1) + ((1.0D - 0.2D) * motD);
         entity.motionX += motD;
@@ -655,10 +657,10 @@ public class MoCTools {
         return ~i & 0xf;
     }
 
-    public int countEntities(Class<? extends EntityLiving> class1, World worldObj) {
+    public int countEntities(Class<? extends EntityLiving> class1, World world) {
         int i = 0;
-        for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
-            Entity entity = worldObj.loadedEntityList.get(j);
+        for (int j = 0; j < world.loadedEntityList.size(); j++) {
+            Entity entity = world.loadedEntityList.get(j);
             if (class1.isAssignableFrom(entity.getClass())) {
                 i++;
             }
@@ -684,7 +686,7 @@ public class MoCTools {
         if (Biome == null) {
             return null;
         } else {
-            return Biome.getBiomeName();
+            return Biome.biomeName;
         }
     }
 
@@ -698,7 +700,7 @@ public class MoCTools {
             return;
         }
 
-        List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
 
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = (Entity) list.get(i);
@@ -712,8 +714,8 @@ public class MoCTools {
         }
     }
 
-    public static void repelMobs(Entity entity1, Double dist, World worldObj) {
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
+    public static void repelMobs(Entity entity1, Double dist, World world) {
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = (Entity) list.get(i);
             if (!(entity instanceof EntityMob)) {
@@ -729,102 +731,102 @@ public class MoCTools {
     /**
      * Drops the important stuff to get going fast
      *
-     * @param worldObj
+     * @param world
      * @param entity
      */
-    public static void dropGoodies(World worldObj, Entity entity) {
+    public static void dropGoodies(World world, Entity entity) {
         if (!MoCreatures.isServer()) {
             return;
         }
 
-        EntityItem entityitem = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.LOG, 16));
+        EntityItem entityitem = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.LOG, 16));
         entityitem.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem);
+        world.spawnEntity(entityitem);
 
-        EntityItem entityitem2 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.DIAMOND, 64));
+        EntityItem entityitem2 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.DIAMOND, 64));
         entityitem2.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem2);
+        world.spawnEntity(entityitem2);
 
-        EntityItem entityitem3 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.PUMPKIN, 6));
+        EntityItem entityitem3 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.PUMPKIN, 6));
         entityitem3.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem3);
+        world.spawnEntity(entityitem3);
 
-        EntityItem entityitem4 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.COBBLESTONE, 64));
+        EntityItem entityitem4 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.COBBLESTONE, 64));
         entityitem4.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem4);
+        world.spawnEntity(entityitem4);
 
-        EntityItem entityitem5 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.APPLE, 24));
+        EntityItem entityitem5 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.APPLE, 24));
         entityitem5.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem5);
+        world.spawnEntity(entityitem5);
 
-        EntityItem entityitem6 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.LEATHER, 64));
+        EntityItem entityitem6 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.LEATHER, 64));
         entityitem6.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem6);
+        world.spawnEntity(entityitem6);
 
-        EntityItem entityitem7 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.recordshuffle, 6));
+        EntityItem entityitem7 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCItems.recordshuffle, 6));
         entityitem7.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem7);
+        world.spawnEntity(entityitem7);
 
-        EntityItem entityitem8 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.IRON_INGOT, 64));
+        EntityItem entityitem8 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.IRON_INGOT, 64));
         entityitem8.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem8);
+        world.spawnEntity(entityitem8);
 
-        EntityItem entityitem9 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.GOLD_INGOT, 12));
+        EntityItem entityitem9 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.GOLD_INGOT, 12));
         entityitem9.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem9);
+        world.spawnEntity(entityitem9);
 
-        EntityItem entityitem10 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.STRING, 32));
+        EntityItem entityitem10 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.STRING, 32));
         entityitem10.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem10);
+        world.spawnEntity(entityitem10);
 
-        EntityItem entityitem12 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.RED_FLOWER, 6));
+        EntityItem entityitem12 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.RED_FLOWER, 6));
         entityitem12.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem12);
+        world.spawnEntity(entityitem12);
 
-        EntityItem entityitem13 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.BLAZE_ROD, 12));
+        EntityItem entityitem13 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.BLAZE_ROD, 12));
         entityitem13.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem13);
+        world.spawnEntity(entityitem13);
 
-        EntityItem entityitem14 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.ENDER_PEARL, 12));
+        EntityItem entityitem14 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.ENDER_PEARL, 12));
         entityitem14.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem14);
+        world.spawnEntity(entityitem14);
 
-        EntityItem entityitem15 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.GHAST_TEAR, 12));
+        EntityItem entityitem15 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.GHAST_TEAR, 12));
         entityitem15.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem15);
+        world.spawnEntity(entityitem15);
 
-        EntityItem entityitem16 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.LAPIS_BLOCK, 2));
+        EntityItem entityitem16 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.LAPIS_BLOCK, 2));
         entityitem16.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem16);
+        world.spawnEntity(entityitem16);
 
-        EntityItem entityitem17 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.BONE, 12));
+        EntityItem entityitem17 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Items.BONE, 12));
         entityitem17.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem17);
+        world.spawnEntity(entityitem17);
 
-        EntityItem entityitem18 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.unicornhorn, 16));
+        EntityItem entityitem18 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCItems.unicornhorn, 16));
         entityitem18.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem18);
+        world.spawnEntity(entityitem18);
 
-        EntityItem entityitem19 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.FIRE, 32));
+        EntityItem entityitem19 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.FIRE, 32));
         entityitem19.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem19);
+        world.spawnEntity(entityitem19);
 
-        EntityItem entityitem20 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.essencedarkness, 6));
+        EntityItem entityitem20 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCItems.essencedarkness, 6));
         entityitem20.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem20);
+        world.spawnEntity(entityitem20);
 
-        EntityItem entityitem21 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.essenceundead, 6));
+        EntityItem entityitem21 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCItems.essenceundead, 6));
         entityitem21.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem21);
+        world.spawnEntity(entityitem21);
 
-        EntityItem entityitem22 = new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCreatures.essencefire, 6));
+        EntityItem entityitem22 = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(MoCItems.essencefire, 6));
         entityitem22.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem22);
+        world.spawnEntity(entityitem22);
 
         EntityItem entityitem23 =
-                new EntityItem(worldObj, entity.posX, entity.posY, entity.posZ, new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 6, 15));
+                new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 6, 15));
         entityitem23.setPickupDelay(10);
-        worldObj.spawnEntityInWorld(entityitem23);
+        world.spawnEntity(entityitem23);
 
     }
 
@@ -833,11 +835,11 @@ public class MoCTools {
     }
 
     public static void DestroyBlast(Entity entity, double d, double d1, double d2, float f, boolean flag) {
-    	EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        entity.worldObj.playSound(player, d, d1, d2, MoCSoundEvents.ENTITY_GENERIC_DESTROY, SoundCategory.HOSTILE, 4F,
-                (1.0F + ((entity.worldObj.rand.nextFloat() - entity.worldObj.rand.nextFloat()) * 0.2F)) * 0.7F);
+        EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
+        entity.world.playSound(player, d, d1, d2, MoCSoundEvents.ENTITY_GENERIC_DESTROY, SoundCategory.HOSTILE, 4F,
+                (1.0F + ((entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F)) * 0.7F);
 
-        boolean mobGriefing = mobGriefing(entity.worldObj);
+        boolean mobGriefing = mobGriefing(entity.world);
 
         HashSet<BlockPos> hashset = new HashSet<BlockPos>();
         float f1 = f;
@@ -855,7 +857,7 @@ public class MoCTools {
                     d3 /= d6;
                     d4 /= d6;
                     d5 /= d6;
-                    float f2 = f * (0.7F + (entity.worldObj.rand.nextFloat() * 0.6F));
+                    float f2 = f * (0.7F + (entity.world.rand.nextFloat() * 0.6F));
                     double d8 = d;
                     double d10 = d1;
                     double d12 = d2;
@@ -865,13 +867,13 @@ public class MoCTools {
                         if (f2 <= 0.0F) {
                             continue label0;
                         }
-                        int k5 = MathHelper.floor_double(d8);
-                        int l5 = MathHelper.floor_double(d10);
-                        int i6 = MathHelper.floor_double(d12);
+                        int k5 = MathHelper.floor(d8);
+                        int l5 = MathHelper.floor(d10);
+                        int i6 = MathHelper.floor(d12);
                         BlockPos pos = new BlockPos(k5, l5, i6);
-                        IBlockState blockstate = entity.worldObj.getBlockState(pos);
+                        IBlockState blockstate = entity.world.getBlockState(pos);
                         if (blockstate.getBlock() != Blocks.AIR) {
-                            f4 = blockstate.getBlockHardness(entity.worldObj, pos);
+                            f4 = blockstate.getBlockHardness(entity.world, pos);
                             f2 -= (blockstate.getBlock().getExplosionResistance(entity) + 0.3F) * (f3 / 10F);
                         }
                         if ((f2 > 0.0F) && (d10 > entity.posY) && (f4 < 3F)) {
@@ -890,13 +892,13 @@ public class MoCTools {
 
         f *= 2.0F;
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-            int k = MathHelper.floor_double(d - f - 1.0D);
-            int i1 = MathHelper.floor_double(d + f + 1.0D);
-            int k1 = MathHelper.floor_double(d1 - f - 1.0D);
-            int l1 = MathHelper.floor_double(d1 + f + 1.0D);
-            int i2 = MathHelper.floor_double(d2 - f - 1.0D);
-            int j2 = MathHelper.floor_double(d2 + f + 1.0D);
-            List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, new AxisAlignedBB(k, k1, i2, i1, l1, j2));
+            int k = MathHelper.floor(d - f - 1.0D);
+            int i1 = MathHelper.floor(d + f + 1.0D);
+            int k1 = MathHelper.floor(d1 - f - 1.0D);
+            int l1 = MathHelper.floor(d1 + f + 1.0D);
+            int i2 = MathHelper.floor(d2 - f - 1.0D);
+            int j2 = MathHelper.floor(d2 + f + 1.0D);
+            List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, new AxisAlignedBB(k, k1, i2, i1, l1, j2));
             Vec3d vec3d = new Vec3d(d, d1, d2);
             for (int k2 = 0; k2 < list.size(); k2++) {
                 Entity entity1 = (Entity) list.get(k2);
@@ -907,16 +909,16 @@ public class MoCTools {
                 double d9 = entity1.posX - d;
                 double d11 = entity1.posY - d1;
                 double d13 = entity1.posZ - d2;
-                double d15 = MathHelper.sqrt_double((d9 * d9) + (d11 * d11) + (d13 * d13));
+                double d15 = MathHelper.sqrt((d9 * d9) + (d11 * d11) + (d13 * d13));
                 d9 /= d15;
                 d11 /= d15;
                 d13 /= d15;
-                double d17 = entity.worldObj.getBlockDensity(vec3d, entity1.getEntityBoundingBox());
+                double d17 = entity.world.getBlockDensity(vec3d, entity1.getEntityBoundingBox());
                 double d19 = (1.0D - d7) * d17;
 
                 //attacks entities in server
                 if (!(entity1 instanceof MoCEntityOgre)) {
-                    entity1.attackEntityFrom(DamageSource.generic, (int) (((((d19 * d19) + d19) / 2D) * 3D * f) + 1.0D));
+                    entity1.attackEntityFrom(DamageSource.GENERIC, (int) (((((d19 * d19) + d19) / 2D) * 3D * f) + 1.0D));
                     double d21 = d19;
                     entity1.motionX += d9 * d21;
                     entity1.motionY += d11 * d21;
@@ -931,20 +933,20 @@ public class MoCTools {
 
         for (int l2 = arraylist.size() - 1; l2 >= 0; l2--) {
             BlockPos chunkposition = arraylist.get(l2);
-            IBlockState blockstate = entity.worldObj.getBlockState(chunkposition);
+            IBlockState blockstate = entity.world.getBlockState(chunkposition);
             for (int j5 = 0; j5 < 5; j5++) {
-                double d14 = chunkposition.getX() + entity.worldObj.rand.nextFloat();
-                double d16 = chunkposition.getY() + entity.worldObj.rand.nextFloat();
-                double d18 = chunkposition.getZ() + entity.worldObj.rand.nextFloat();
+                double d14 = chunkposition.getX() + entity.world.rand.nextFloat();
+                double d16 = chunkposition.getY() + entity.world.rand.nextFloat();
+                double d18 = chunkposition.getZ() + entity.world.rand.nextFloat();
                 double d20 = d14 - d;
                 double d22 = d16 - d1;
                 double d23 = d18 - d2;
-                double d24 = MathHelper.sqrt_double((d20 * d20) + (d22 * d22) + (d23 * d23));
+                double d24 = MathHelper.sqrt((d20 * d20) + (d22 * d22) + (d23 * d23));
                 d20 /= d24;
                 d22 /= d24;
                 d23 /= d24;
                 double d25 = 0.5D / ((d24 / f) + 0.10000000000000001D);
-                d25 *= (entity.worldObj.rand.nextFloat() * entity.worldObj.rand.nextFloat()) + 0.3F;
+                d25 *= (entity.world.rand.nextFloat() * entity.world.rand.nextFloat()) + 0.3F;
                 d25--;
                 d20 *= d25;
                 d22 *= d25 - 1.0D;
@@ -954,7 +956,7 @@ public class MoCTools {
                  * shows explosion on clients!
                  */
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    entity.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d14 + (d * 1.0D)) / 2D, (d16 + (d1 * 1.0D)) / 2D,
+                    entity.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d14 + (d * 1.0D)) / 2D, (d16 + (d1 * 1.0D)) / 2D,
                             (d18 + (d2 * 1.0D)) / 2D, d20, d22, d23);
                     entity.motionX -= 0.0010000000474974511D;
                     entity.motionY -= 0.0010000000474974511D;
@@ -965,21 +967,21 @@ public class MoCTools {
             //destroys blocks on server!
             if (mobGriefing && (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) && blockstate.getBlock() != Blocks.AIR) {
                 BlockEvent.BreakEvent event = null;
-                if (!entity.worldObj.isRemote) {
+                if (!entity.world.isRemote) {
                     try {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, chunkposition, blockstate, FakePlayerFactory.get(
-                                        DimensionManager.getWorld(entity.worldObj.provider.getDimensionType().getId()), MoCreatures.MOCFAKEPLAYER));
+                                new BlockEvent.BreakEvent(entity.world, chunkposition, blockstate, FakePlayerFactory.get(
+                                        DimensionManager.getWorld(entity.world.provider.getDimensionType().getId()), MoCreatures.MOCFAKEPLAYER));
                     } catch (Throwable t) {
                     }
                 }
                 if (event != null && !event.isCanceled()) {
-                    blockstate.getBlock().dropBlockAsItemWithChance(entity.worldObj, chunkposition, blockstate, 0.3F, 1);
-                    entity.worldObj.setBlockToAir(chunkposition);
+                    blockstate.getBlock().dropBlockAsItemWithChance(entity.world, chunkposition, blockstate, 0.3F, 1);
+                    entity.world.setBlockToAir(chunkposition);
                     // pass explosion instance to fix BlockTNT NPE's
                     Explosion explosion =
-                            new Explosion(entity.worldObj, null, chunkposition.getX(), chunkposition.getY(), chunkposition.getZ(), 3f, false, false);
-                    blockstate.getBlock().onBlockDestroyedByExplosion(entity.worldObj, chunkposition, explosion);
+                            new Explosion(entity.world, null, chunkposition.getX(), chunkposition.getY(), chunkposition.getZ(), 3f, false, false);
+                    blockstate.getBlock().onBlockDestroyedByExplosion(entity.world, chunkposition, explosion);
                 }
             }
         }
@@ -988,44 +990,44 @@ public class MoCTools {
         if (mobGriefing && (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) && flag) {
             for (int i3 = arraylist.size() - 1; i3 >= 0; i3--) {
                 BlockPos chunkposition1 = arraylist.get(i3);
-                IBlockState blockstate = entity.worldObj.getBlockState(chunkposition1);
-                if ((blockstate.getBlock() == Blocks.AIR) && (entity.worldObj.rand.nextInt(8) == 0)) {
+                IBlockState blockstate = entity.world.getBlockState(chunkposition1);
+                if ((blockstate.getBlock() == Blocks.AIR) && (entity.world.rand.nextInt(8) == 0)) {
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isRemote) {
+                    if (!entity.world.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, chunkposition1, blockstate, FakePlayerFactory.get(
-                                        (WorldServer) entity.worldObj, MoCreatures.MOCFAKEPLAYER));
+                                new BlockEvent.BreakEvent(entity.world, chunkposition1, blockstate, FakePlayerFactory.get(
+                                        (WorldServer) entity.world, MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
-                        entity.worldObj.setBlockState(chunkposition1, Blocks.FIRE.getDefaultState(), 3);
+                        entity.world.setBlockState(chunkposition1, Blocks.FIRE.getDefaultState(), 3);
                     }
                 }
             }
         }
     }
 
-    public static int despawnVanillaAnimals(World worldObj) {
-        return despawnVanillaAnimals(worldObj, null);
+    public static int despawnVanillaAnimals(World world) {
+        return despawnVanillaAnimals(world, null);
     }
 
     @SuppressWarnings("rawtypes")
-    public static int despawnVanillaAnimals(World worldObj, List[] classList) {
+    public static int despawnVanillaAnimals(World world, List[] classList) {
         int count = 0;
-        for (int j = 0; j < worldObj.loadedEntityList.size(); j++) {
-            Entity entity = (Entity) worldObj.loadedEntityList.get(j);
+        for (int j = 0; j < world.loadedEntityList.size(); j++) {
+            Entity entity = (Entity) world.loadedEntityList.get(j);
             if ((entity instanceof EntityLiving)
                     && (entity instanceof EntityCow || entity instanceof EntitySheep || entity instanceof EntityPig
                             || entity instanceof EntityChicken || entity instanceof EntitySquid || entity instanceof EntityWolf)) {
-                count += entityDespawnCheck(worldObj, (EntityLiving) entity);
+                count += entityDespawnCheck(world, (EntityLiving) entity);
             }
         }
         return count;
     }
 
-    protected static int entityDespawnCheck(World worldObj, EntityLiving entityliving)//to keep a copy
+    protected static int entityDespawnCheck(World world, EntityLiving entityliving)//to keep a copy
     {
         int count = 0;
-        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(entityliving, -1D);
+        EntityPlayer entityplayer = world.getClosestPlayerToEntity(entityliving, -1D);
         if (entityplayer != null) //entityliving.canDespawn() &&
         {
             double d = ((Entity) (entityplayer)).posX - entityliving.posX;
@@ -1037,7 +1039,7 @@ public class MoCTools {
                 count++;
             }
 
-            if (entityliving.getAge() > 600 && worldObj.rand.nextInt(800) == 0) {
+            if (entityliving.getIdleTime() > 600 && world.rand.nextInt(800) == 0) {
                 if (d3 < 1024D) {
                     //TODO test!
                     entityliving.attackEntityFrom(DamageSource.causeMobDamage(null), 0);
@@ -1059,46 +1061,46 @@ public class MoCTools {
         if (entityMoCreature.updateMount() && ((Entity) entityMoCreature).getRidingEntity() != null) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAttachedEntity(((Entity) entityMoCreature).getEntityId(),
                     ((Entity) entityMoCreature).getRidingEntity().getEntityId()), new TargetPoint(
-                    ((Entity) entityMoCreature).getRidingEntity().worldObj.provider.getDimensionType().getId(), ((Entity) entityMoCreature).getRidingEntity().posX,
+                    ((Entity) entityMoCreature).getRidingEntity().world.provider.getDimensionType().getId(), ((Entity) entityMoCreature).getRidingEntity().posX,
                     ((Entity) entityMoCreature).getRidingEntity().posY, ((Entity) entityMoCreature).getRidingEntity().posZ, 64));
         }
     }*/
 
     public static void updatePlayerArmorEffects(EntityPlayer player) {
         ItemStack mystack[] = new ItemStack[4];
-        mystack[0] = player.inventory.armorInventory[0]; //boots
-        mystack[1] = player.inventory.armorInventory[1]; //legs
-        mystack[2] = player.inventory.armorInventory[2]; //plate
-        mystack[3] = player.inventory.armorInventory[3]; //helmet
+        mystack[0] = player.getItemStackFromSlot(EntityEquipmentSlot.FEET); //boots
+        mystack[1] = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS); //legs
+        mystack[2] = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST); //plate
+        mystack[3] = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD); //helmet
 
         //full scorpion cave armor set, enable night vision
-        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsCave && mystack[1] != null
-                && mystack[1].getItem() == MoCreatures.scorpLegsCave && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateCave
-                && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetCave) {
+        if (mystack[0] != null && mystack[0].getItem() == MoCItems.scorpBootsCave && mystack[1] != null
+                && mystack[1].getItem() == MoCItems.scorpLegsCave && mystack[2] != null && mystack[2].getItem() == MoCItems.scorpPlateCave
+                && mystack[3] != null && mystack[3].getItem() == MoCItems.scorpHelmetCave) {
             player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
             return;
         }
 
         //full scorpion nether armor set, enable fire resistance
-        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsNether && mystack[1] != null
-                && mystack[1].getItem() == MoCreatures.scorpLegsNether && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateNether
-                && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetNether) {
+        if (mystack[0] != null && mystack[0].getItem() == MoCItems.scorpBootsNether && mystack[1] != null
+                && mystack[1].getItem() == MoCItems.scorpLegsNether && mystack[2] != null && mystack[2].getItem() == MoCItems.scorpPlateNether
+                && mystack[3] != null && mystack[3].getItem() == MoCItems.scorpHelmetNether) {
             player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0));
             return;
         }
 
         //full scorpion frost armor set, enable water breathing
-        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsFrost && mystack[1] != null
-                && mystack[1].getItem() == MoCreatures.scorpLegsFrost && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateFrost
-                && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetFrost) {
+        if (mystack[0] != null && mystack[0].getItem() == MoCItems.scorpBootsFrost && mystack[1] != null
+                && mystack[1].getItem() == MoCItems.scorpLegsFrost && mystack[2] != null && mystack[2].getItem() == MoCItems.scorpPlateFrost
+                && mystack[3] != null && mystack[3].getItem() == MoCItems.scorpHelmetFrost) {
             player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0));
             return;
         }
 
         //full scorpion armor set, regeneration effect
-        if (mystack[0] != null && mystack[0].getItem() == MoCreatures.scorpBootsDirt && mystack[1] != null
-                && mystack[1].getItem() == MoCreatures.scorpLegsDirt && mystack[2] != null && mystack[2].getItem() == MoCreatures.scorpPlateDirt
-                && mystack[3] != null && mystack[3].getItem() == MoCreatures.scorpHelmetDirt) {
+        if (mystack[0] != null && mystack[0].getItem() == MoCItems.scorpBootsDirt && mystack[1] != null
+                && mystack[1].getItem() == MoCItems.scorpLegsDirt && mystack[2] != null && mystack[2].getItem() == MoCItems.scorpPlateDirt
+                && mystack[3] != null && mystack[3].getItem() == MoCItems.scorpHelmetDirt) {
             player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 70, 0));
             return;
         }
@@ -1117,24 +1119,24 @@ public class MoCTools {
     public static int destroyRandomBlock(Entity entity, double distance) {
         int l = (int) (distance * distance * distance);
         for (int i = 0; i < l; i++) {
-            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 4));
-            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            IBlockState blockstate = entity.worldObj.getBlockState(pos.up());
-            IBlockState blockstate1 = entity.worldObj.getBlockState(pos);
+            int x = (int) (entity.posX + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 4));
+            int z = (int) (entity.posZ + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            BlockPos pos = new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+            IBlockState blockstate = entity.world.getBlockState(pos.up());
+            IBlockState blockstate1 = entity.world.getBlockState(pos);
 
             if (blockstate.getBlock() != Blocks.AIR && blockstate1.getBlock() == Blocks.AIR) {
-                if (mobGriefing(entity.worldObj)) {
-                    blockstate1 = entity.worldObj.getBlockState(pos);
+                if (mobGriefing(entity.world)) {
+                    blockstate1 = entity.world.getBlockState(pos);
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isRemote) {
+                    if (!entity.world.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, pos.up(), blockstate, FakePlayerFactory.get((WorldServer) entity.worldObj,
+                                new BlockEvent.BreakEvent(entity.world, pos.up(), blockstate, FakePlayerFactory.get((WorldServer) entity.world,
                                         MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
-                        entity.worldObj.setBlockToAir(pos);
+                        entity.world.setBlockToAir(pos);
                     }
                 }
                 return Block.getIdFromBlock(blockstate.getBlock());
@@ -1146,12 +1148,12 @@ public class MoCTools {
     public static IBlockState destroyRandomBlockWithIBlockState(Entity entity, double distance) {
         int l = (int) (distance * distance * distance);
         for (int i = 0; i < l; i++) {
-            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            IBlockState stateAbove = entity.worldObj.getBlockState(pos.up());
-            IBlockState stateTarget = entity.worldObj.getBlockState(pos);
+            int x = (int) (entity.posX + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int z = (int) (entity.posZ + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            BlockPos pos = new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+            IBlockState stateAbove = entity.world.getBlockState(pos.up());
+            IBlockState stateTarget = entity.world.getBlockState(pos);
 
             if (pos.getY() == (int) entity.posY - 1D && (pos.getX() == (int) Math.floor(entity.posX) && pos.getZ() == (int) Math.floor(entity.posZ))) {
                 continue;
@@ -1159,15 +1161,15 @@ public class MoCTools {
             if (stateTarget.getBlock() != Blocks.AIR && stateTarget.getBlock() != Blocks.WATER && stateTarget.getBlock() != Blocks.BEDROCK
                     && stateAbove.getBlock() == Blocks.AIR) // ignore bedrock
             {
-                if (mobGriefing(entity.worldObj)) {
+                if (mobGriefing(entity.world)) {
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isRemote) {
+                    if (!entity.world.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, pos, stateTarget, FakePlayerFactory.get((WorldServer) entity.worldObj,
+                                new BlockEvent.BreakEvent(entity.world, pos, stateTarget, FakePlayerFactory.get((WorldServer) entity.world,
                                         MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
-                        entity.worldObj.setBlockToAir(pos);
+                        entity.world.setBlockToAir(pos);
 
                     } else {
                         stateTarget = null;
@@ -1197,17 +1199,17 @@ public class MoCTools {
         int tempZ = -1;
         int ii = (int) (distance * distance * (distance / 2));
         for (int i = 0; i < ii; i++) {
-            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance / 2)) - (int) (distance / 4));
-            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            IBlockState blockstate1 = entity.worldObj.getBlockState(pos.up()); // +Y
-            IBlockState blockstate2 = entity.worldObj.getBlockState(pos);
-            IBlockState blockstate3 = entity.worldObj.getBlockState(pos.east()); // +X
-            IBlockState blockstate4 = entity.worldObj.getBlockState(pos.west()); // -X
-            IBlockState blockstate5 = entity.worldObj.getBlockState(pos.down()); // -Y
-            IBlockState blockstate6 = entity.worldObj.getBlockState(pos.south()); // -Z
-            IBlockState blockstate7 = entity.worldObj.getBlockState(pos.north()); // +Z
+            int x = (int) (entity.posX + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.world.rand.nextInt((int) (distance / 2)) - (int) (distance / 4));
+            int z = (int) (entity.posZ + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            BlockPos pos = new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+            IBlockState blockstate1 = entity.world.getBlockState(pos.up()); // +Y
+            IBlockState blockstate2 = entity.world.getBlockState(pos);
+            IBlockState blockstate3 = entity.world.getBlockState(pos.east()); // +X
+            IBlockState blockstate4 = entity.world.getBlockState(pos.west()); // -X
+            IBlockState blockstate5 = entity.world.getBlockState(pos.down()); // -Y
+            IBlockState blockstate6 = entity.world.getBlockState(pos.south()); // -Z
+            IBlockState blockstate7 = entity.world.getBlockState(pos.north()); // +Z
 
             float tX = x - (float) entity.posX;
             float tY = y - (float) entity.posY;
@@ -1233,17 +1235,17 @@ public class MoCTools {
         int tempZ = -1;
         int ii = (int) (distance * distance * (distance / 2));
         for (int i = 0; i < ii; i++) {
-            int x = (int) (entity.posX + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            int y = (int) (entity.posY + entity.worldObj.rand.nextInt((int) (distance / 2)) - (int) (distance / 4));
-            int z = (int) (entity.posZ + entity.worldObj.rand.nextInt((int) (distance)) - (int) (distance / 2));
-            BlockPos pos = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-            IBlockState blockstate1 = entity.worldObj.getBlockState(pos.up()); // +Y
-            IBlockState blockstate2 = entity.worldObj.getBlockState(pos);
-            IBlockState blockstate3 = entity.worldObj.getBlockState(pos.east()); // +X
-            IBlockState blockstate4 = entity.worldObj.getBlockState(pos.west()); // -X
-            IBlockState blockstate5 = entity.worldObj.getBlockState(pos.down()); // -Y
-            IBlockState blockstate6 = entity.worldObj.getBlockState(pos.south()); // -Z
-            IBlockState blockstate7 = entity.worldObj.getBlockState(pos.north()); // +Z
+            int x = (int) (entity.posX + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            int y = (int) (entity.posY + entity.world.rand.nextInt((int) (distance / 2)) - (int) (distance / 4));
+            int z = (int) (entity.posZ + entity.world.rand.nextInt((int) (distance)) - (int) (distance / 2));
+            BlockPos pos = new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+            IBlockState blockstate1 = entity.world.getBlockState(pos.up()); // +Y
+            IBlockState blockstate2 = entity.world.getBlockState(pos);
+            IBlockState blockstate3 = entity.world.getBlockState(pos.east()); // +X
+            IBlockState blockstate4 = entity.world.getBlockState(pos.west()); // -X
+            IBlockState blockstate5 = entity.world.getBlockState(pos.down()); // -Y
+            IBlockState blockstate6 = entity.world.getBlockState(pos.south()); // -Z
+            IBlockState blockstate7 = entity.world.getBlockState(pos.north()); // +Z
 
             float tX = x - (float) entity.posX;
             float tY = y - (float) entity.posY;
@@ -1260,7 +1262,7 @@ public class MoCTools {
                 break;
             }
         }
-        return new BlockPos(MathHelper.floor_double(tempX), MathHelper.floor_double(tempY), MathHelper.floor_double(tempZ));
+        return new BlockPos(MathHelper.floor(tempX), MathHelper.floor(tempY), MathHelper.floor(tempZ));
     }
 
     public static boolean allowedBlock(int ID) {
@@ -1298,7 +1300,7 @@ public class MoCTools {
 
         if (MoCreatures.proxy.enableOwnership) {
             if (storedCreature == null) {
-                ep.addChatMessage(new TextComponentTranslation(TextFormatting.RED + "ERROR:" + TextFormatting.WHITE
+                ep.sendMessage(new TextComponentTranslation(TextFormatting.RED + "ERROR:" + TextFormatting.WHITE
                         + "The stored creature is NULL and could not be created. Report to admin."));
                 return false;
             }
@@ -1312,7 +1314,7 @@ public class MoCTools {
                 }
                 if (count >= max) {
                     String message = "\2474" + ep.getName() + " can not tame more creatures, limit of " + max + " reached";
-                    ep.addChatMessage(new TextComponentTranslation(message));
+                    ep.sendMessage(new TextComponentTranslation(message));
                     return false;
                 }
             }
@@ -1358,25 +1360,25 @@ public class MoCTools {
         double newPosX = entity.posX - (distance * Math.cos((MoCTools.realAngle(entity.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = entity.posZ - (distance * Math.sin((MoCTools.realAngle(entity.rotationYaw - 90F)) / 57.29578F));
         double newPosY = entity.posY;
-        int x = MathHelper.floor_double(newPosX);
-        int y = MathHelper.floor_double(newPosY);
-        int z = MathHelper.floor_double(newPosZ);
+        int x = MathHelper.floor(newPosX);
+        int y = MathHelper.floor(newPosY);
+        int z = MathHelper.floor(newPosZ);
 
         for (int i = 0; i < height; i++) {
             BlockPos pos = new BlockPos(x, y + i, z);
-            IBlockState blockstate = entity.worldObj.getBlockState(pos);
+            IBlockState blockstate = entity.world.getBlockState(pos);
             if (blockstate.getBlock() != Blocks.AIR) {
-                if (blockstate.getBlockHardness(entity.worldObj, pos) <= strengthF) {
+                if (blockstate.getBlockHardness(entity.world, pos) <= strengthF) {
                     BlockEvent.BreakEvent event = null;
-                    if (!entity.worldObj.isRemote) {
+                    if (!entity.world.isRemote) {
                         event =
-                                new BlockEvent.BreakEvent(entity.worldObj, pos, blockstate, FakePlayerFactory.get((WorldServer) entity.worldObj,
+                                new BlockEvent.BreakEvent(entity.world, pos, blockstate, FakePlayerFactory.get((WorldServer) entity.world,
                                         MoCreatures.MOCFAKEPLAYER));
                     }
                     if (event != null && !event.isCanceled()) {
-                        blockstate.getBlock().dropBlockAsItemWithChance(entity.worldObj, pos, blockstate, 0.20F * strengthF, 1);
-                        entity.worldObj.setBlockToAir(pos);
-                        if (entity.worldObj.rand.nextInt(3) == 0) {
+                        blockstate.getBlock().dropBlockAsItemWithChance(entity.world, pos, blockstate, 0.20F * strengthF, 1);
+                        entity.world.setBlockToAir(pos);
+                        if (entity.world.rand.nextInt(3) == 0) {
                             playCustomSound(entity, MoCSoundEvents.ENTITY_GOLEM_WALK);
                             count++; //only counts recovered blocks
                         }
@@ -1392,26 +1394,26 @@ public class MoCTools {
             return;
         }
 
-        int i = MathHelper.floor_double(entity.posX);
-        int j = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(entity.posZ);
+        int i = MathHelper.floor(entity.posX);
+        int j = MathHelper.floor(entity.getEntityBoundingBox().minY);
+        int k = MathHelper.floor(entity.posZ);
 
         for (int l = 0; l < animalchest.getSizeInventory(); l++) {
             ItemStack itemstack = animalchest.getStackInSlot(l);
-            if (itemstack == null) {
+            if (itemstack.isEmpty()) {
                 continue;
             }
-            float f = (entity.worldObj.rand.nextFloat() * 0.8F) + 0.1F;
-            float f1 = (entity.worldObj.rand.nextFloat() * 0.8F) + 0.1F;
-            float f2 = (entity.worldObj.rand.nextFloat() * 0.8F) + 0.1F;
+            float f = (entity.world.rand.nextFloat() * 0.8F) + 0.1F;
+            float f1 = (entity.world.rand.nextFloat() * 0.8F) + 0.1F;
+            float f2 = (entity.world.rand.nextFloat() * 0.8F) + 0.1F;
             float f3 = 0.05F;
 
-            EntityItem entityitem = new EntityItem(entity.worldObj, i + f, j + f1, k + f2, itemstack);
-            entityitem.motionX = ((float) entity.worldObj.rand.nextGaussian() * f3);
-            entityitem.motionY = (((float) entity.worldObj.rand.nextGaussian() * f3) + 0.2F);
-            entityitem.motionZ = ((float) entity.worldObj.rand.nextGaussian() * f3);
-            entity.worldObj.spawnEntityInWorld(entityitem);
-            animalchest.setInventorySlotContents(l, null);
+            EntityItem entityitem = new EntityItem(entity.world, i + f, j + f1, k + f2, itemstack);
+            entityitem.motionX = ((float) entity.world.rand.nextGaussian() * f3);
+            entityitem.motionY = (((float) entity.world.rand.nextGaussian() * f3) + 0.2F);
+            entityitem.motionZ = ((float) entity.world.rand.nextGaussian() * f3);
+            entity.world.spawnEntity(entityitem);
+            animalchest.setInventorySlotContents(l, ItemStack.EMPTY);
         }
     }
 
@@ -1430,7 +1432,7 @@ public class MoCTools {
                 stack.setTagCompound(new NBTTagCompound());
             }
             NBTTagCompound nbtt = stack.getTagCompound();
-            EntityPlayer epOwner = entity.worldObj.getPlayerEntityByUUID(entity.getOwnerId());
+            EntityPlayer epOwner = entity.world.getPlayerEntityByUUID(entity.getOwnerId());
 
             try {
                 nbtt.setInteger("SpawnClass", 21);
@@ -1451,9 +1453,9 @@ public class MoCTools {
             {
                 epOwner.inventory.addItemStackToInventory(stack);
             } else {
-                EntityItem entityitem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+                EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, stack);
                 entityitem.setPickupDelay(20);
-                entity.worldObj.spawnEntityInWorld(entityitem);
+                entity.world.spawnEntity(entityitem);
             }
         }
     }
@@ -1463,13 +1465,13 @@ public class MoCTools {
      * @param player 
      */
     public static void dropAmulet(IMoCEntity entity, int amuletType, EntityPlayer player) {
-        if (!(((Entity)entity).worldObj.isRemote)) {
-    	    ItemStack stack = new ItemStack(MoCreatures.fishnetfull, 1, 0);
+        if (!(((Entity)entity).world.isRemote)) {
+            ItemStack stack = new ItemStack(MoCItems.fishnetfull, 1, 0);
             if (amuletType == 2) {
-            	stack = new ItemStack(MoCreatures.petamuletfull, 1, 0);
+                stack = new ItemStack(MoCItems.petamuletfull, 1, 0);
             }
             if (amuletType == 3) {
-                stack = new ItemStack(MoCreatures.amuletghostfull, 1, 0);
+                stack = new ItemStack(MoCItems.amuletghostfull, 1, 0);
             }
             if (stack.getTagCompound() == null) {
                 stack.setTagCompound(new NBTTagCompound());
@@ -1482,29 +1484,27 @@ public class MoCTools {
                 } else if (petClass.equalsIgnoreCase("Komodo")) {
                     petClass = "KomodoDragon";
                 }
-                if (amuletType == 3) {
-                    nbtt.setInteger("SpawnClass", 100);
-                } else {
-                    nbtt.setString("SpawnClass", petClass);
-                }
 
+                nbtt.setString("SpawnClass", petClass);
                 nbtt.setUniqueId("OwnerUUID", player.getUniqueID());
+                nbtt.setString("OwnerName", player.getName());
                 nbtt.setFloat("Health", ((EntityLiving) entity).getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getPetName());
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setBoolean("Adult", entity.getIsAdult());
                 nbtt.setInteger("PetId", entity.getOwnerPetId());
+                nbtt.setBoolean("Ghost", amuletType == 3 ? true : false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             if (!player.inventory.addItemStackToInventory(stack)) {
                 EntityItem entityitem =
-                        new EntityItem(((EntityLivingBase) entity).worldObj, ((EntityLivingBase) entity).posX, ((EntityLivingBase) entity).posY,
+                        new EntityItem(((EntityLivingBase) entity).world, ((EntityLivingBase) entity).posX, ((EntityLivingBase) entity).posY,
                                 ((EntityLivingBase) entity).posZ, stack);
                 entityitem.setPickupDelay(20);
-                ((EntityLivingBase) entity).worldObj.spawnEntityInWorld(entityitem);
+                ((EntityLivingBase) entity).world.spawnEntity(entityitem);
             }
         }
     }
@@ -1518,16 +1518,16 @@ public class MoCTools {
     public static ItemStack getProperAmulet(MoCEntityAnimal entity) {
         if (entity instanceof MoCEntityHorse) {
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28) {
-                return new ItemStack(MoCreatures.amuletbonefull, 1, 0);
+                return new ItemStack(MoCItems.amuletbonefull, 1, 0);
             }
             if (entity.getType() > 47 && entity.getType() < 60) {
-                return new ItemStack(MoCreatures.amuletfairyfull, 1, 0);
+                return new ItemStack(MoCItems.amuletfairyfull, 1, 0);
             }
             if (entity.getType() == 39 || entity.getType() == 40) {
-                return new ItemStack(MoCreatures.amuletpegasusfull, 1, 0);
+                return new ItemStack(MoCItems.amuletpegasusfull, 1, 0);
             }
             if (entity.getType() == 21 || entity.getType() == 22) {
-                return new ItemStack(MoCreatures.amuletghostfull, 1, 0);
+                return new ItemStack(MoCItems.amuletghostfull, 1, 0);
             }
         }
         return null;
@@ -1543,25 +1543,25 @@ public class MoCTools {
     public static ItemStack getProperEmptyAmulet(MoCEntityAnimal entity) {
         if (entity instanceof MoCEntityHorse) {
             if (entity.getType() == 26 || entity.getType() == 27 || entity.getType() == 28) {
-                return new ItemStack(MoCreatures.amuletbone, 1, 0);
+                return new ItemStack(MoCItems.amuletbone, 1, 0);
             }
             if (entity.getType() > 49 && entity.getType() < 60) {
-                return new ItemStack(MoCreatures.amuletfairy, 1, 0);
+                return new ItemStack(MoCItems.amuletfairy, 1, 0);
             }
             if (entity.getType() == 39 || entity.getType() == 40) {
-                return new ItemStack(MoCreatures.amuletpegasus, 1, 0);
+                return new ItemStack(MoCItems.amuletpegasus, 1, 0);
             }
             if (entity.getType() == 21 || entity.getType() == 22) {
-                return new ItemStack(MoCreatures.amuletghost, 1, 0);
+                return new ItemStack(MoCItems.amuletghost, 1, 0);
             }
         }
         return null;
     }
 
-    public static int countPlayersInDimension(WorldServer worldObj, int dimension) {
+    public static int countPlayersInDimension(WorldServer world, int dimension) {
         int playersInDimension = 0;
-        for (int j = 0; j < worldObj.playerEntities.size(); ++j) {
-            EntityPlayerMP entityplayermp = (EntityPlayerMP) worldObj.playerEntities.get(j);
+        for (int j = 0; j < world.playerEntities.size(); ++j) {
+            EntityPlayerMP entityplayermp = (EntityPlayerMP) world.playerEntities.get(j);
 
             if (entityplayermp.dimension == dimension) {
                 playersInDimension++;
@@ -1578,15 +1578,15 @@ public class MoCTools {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().canSendCommands(player.getGameProfile());
     }
 
-    public static void spawnMaggots(World worldObj, Entity entity) {
+    public static void spawnMaggots(World world, Entity entity) {
         if (MoCreatures.isServer()) {
-            int var2 = 1 + worldObj.rand.nextInt(4);
+            int var2 = 1 + world.rand.nextInt(4);
             for (int i = 0; i < var2; ++i) {
                 float var4 = (i % 2 - 0.5F) * 1 / 4.0F;
                 float var5 = (i / 2 - 0.5F) * 1 / 4.0F;
-                MoCEntityMaggot maggot = new MoCEntityMaggot(worldObj);
-                maggot.setLocationAndAngles(entity.posX + var4, entity.posY + 0.5D, entity.posZ + var5, worldObj.rand.nextFloat() * 360.0F, 0.0F);
-                worldObj.spawnEntityInWorld(maggot);
+                MoCEntityMaggot maggot = new MoCEntityMaggot(world);
+                maggot.setLocationAndAngles(entity.posX + var4, entity.posY + 0.5D, entity.posZ + var5, world.rand.nextFloat() * 360.0F, 0.0F);
+                world.spawnEntity(maggot);
             }
         }
     }
@@ -1602,24 +1602,24 @@ public class MoCTools {
         double d = runningEntity.posX - boogey.posX;
         double d1 = runningEntity.posZ - boogey.posZ;
         double d2 = Math.atan2(d, d1);
-        d2 += (runningEntity.worldObj.rand.nextFloat() - runningEntity.worldObj.rand.nextFloat()) * 0.75D;
+        d2 += (runningEntity.world.rand.nextFloat() - runningEntity.world.rand.nextFloat()) * 0.75D;
         double d3 = runningEntity.posX + (Math.sin(d2) * 8D);
         double d4 = runningEntity.posZ + (Math.cos(d2) * 8D);
-        int i = MathHelper.floor_double(d3);
-        int j = MathHelper.floor_double(runningEntity.getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(d4);
+        int i = MathHelper.floor(d3);
+        int j = MathHelper.floor(runningEntity.getEntityBoundingBox().minY);
+        int k = MathHelper.floor(d4);
         int l = 0;
         do {
             if (l >= 16) {
                 break;
             }
-            int i1 = (i + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
-            int j1 = (j + runningEntity.worldObj.rand.nextInt(3)) - runningEntity.worldObj.rand.nextInt(3);
-            int k1 = (k + runningEntity.worldObj.rand.nextInt(4)) - runningEntity.worldObj.rand.nextInt(4);
+            int i1 = (i + runningEntity.world.rand.nextInt(4)) - runningEntity.world.rand.nextInt(4);
+            int j1 = (j + runningEntity.world.rand.nextInt(3)) - runningEntity.world.rand.nextInt(3);
+            int k1 = (k + runningEntity.world.rand.nextInt(4)) - runningEntity.world.rand.nextInt(4);
             BlockPos pos = new BlockPos(i1, j1, k1);
             if ((j1 > 4)
-                    && ((runningEntity.worldObj.getBlockState(pos).getBlock() == Blocks.AIR) || (runningEntity.worldObj.getBlockState(pos).getBlock() == Blocks.SNOW))
-                    && (runningEntity.worldObj.getBlockState(pos.down()).getBlock() != Blocks.AIR)) {
+                    && ((runningEntity.world.getBlockState(pos).getBlock() == Blocks.AIR) || (runningEntity.world.getBlockState(pos).getBlock() == Blocks.SNOW))
+                    && (runningEntity.world.getBlockState(pos.down()).getBlock() != Blocks.AIR)) {
                 runningEntity.getNavigator().tryMoveToXYZ(i1, j1, k1, 1.0D);//TODO check if 1D speed is ok
                 break;
             }
@@ -1637,7 +1637,7 @@ public class MoCTools {
      * @return true if was able to poison the player
      */
     public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater) {
-        EntityPlayer entityplayertarget = poisoner.worldObj.getClosestPlayerToEntity(poisoner, 2D);
+        EntityPlayer entityplayertarget = poisoner.world.getClosestPlayerToEntity(poisoner, 2D);
         if (entityplayertarget != null && ((needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater)
                 && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F && !entityplayertarget.capabilities.disableDamage) {
             if (entityplayertarget.getRidingEntity() != null && entityplayertarget.getRidingEntity() instanceof EntityBoat) {
@@ -1692,8 +1692,8 @@ public class MoCTools {
      */
     public static void ThrowStone(Entity throwerEntity, int X, int Y, int Z, IBlockState state) {
         ThrowStone(throwerEntity, X, Y, Z, state, 10D, 0.25D);
-        /*MoCEntityThrowableRock etrock = new MoCEntityThrowableRock(throwerEntity.worldObj, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
-        throwerEntity.worldObj.spawnEntityInWorld(etrock);
+        /*MoCEntityThrowableRock etrock = new MoCEntityThrowableRock(throwerEntity.world, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
+        throwerEntity.world.spawnEntity(etrock);
         etrock.setState(state);
         etrock.setBehavior(0);
         etrock.motionX = ((X - throwerEntity.posX) / 10.0D);
@@ -1703,8 +1703,8 @@ public class MoCTools {
 
     public static void ThrowStone(Entity throwerEntity, int X, int Y, int Z, IBlockState state, double speedMod, double height) {
         MoCEntityThrowableRock etrock =
-                new MoCEntityThrowableRock(throwerEntity.worldObj, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
-        throwerEntity.worldObj.spawnEntityInWorld(etrock);
+                new MoCEntityThrowableRock(throwerEntity.world, throwerEntity, throwerEntity.posX, throwerEntity.posY + 0.5D, throwerEntity.posZ);//, false, false);
+        throwerEntity.world.spawnEntity(etrock);
         etrock.setState(state);
         etrock.setBehavior(0);
         etrock.motionX = ((X - throwerEntity.posX) / speedMod);
@@ -1718,20 +1718,20 @@ public class MoCTools {
      * @return
      */
     public static float getMyMovementSpeed(Entity entity) {
-        return MathHelper.sqrt_double((entity.motionX * entity.motionX) + (entity.motionZ * entity.motionZ));
+        return MathHelper.sqrt((entity.motionX * entity.motionX) + (entity.motionZ * entity.motionZ));
     }
 
     public static EntityItem getClosestFood(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List<Entity> list = entity.worldObj.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
             Entity entity1 = (Entity) list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            if (!isItemEdible(entityitem1.getEntityItem().getItem())) {
+            if (!isItemEdible(entityitem1.getItem().getItem())) {
                 continue;
             }
             double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
@@ -1757,9 +1757,9 @@ public class MoCTools {
     
     public static boolean isItemEdibleforCarnivores(Item item1) {
         return item1 == Items.BEEF || item1 == Items.CHICKEN || item1 == Items.COOKED_BEEF 
-        		|| item1 == Items.COOKED_CHICKEN || item1 == Items.COOKED_FISH || item1 == Items.RABBIT
-        		|| item1 == Items.COOKED_MUTTON || item1 == Items.COOKED_PORKCHOP || item1 == Items.MUTTON
-        		|| item1 == Items.COOKED_RABBIT || item1 == Items.FISH || item1 == Items.PORKCHOP;
+                || item1 == Items.COOKED_CHICKEN || item1 == Items.COOKED_FISH || item1 == Items.RABBIT
+                || item1 == Items.COOKED_MUTTON || item1 == Items.COOKED_PORKCHOP || item1 == Items.MUTTON
+                || item1 == Items.COOKED_RABBIT || item1 == Items.FISH || item1 == Items.PORKCHOP;
     }
 
     public static NBTTagCompound getEntityData(Entity entity) {
@@ -1771,7 +1771,7 @@ public class MoCTools {
     }
 
     public static void findMobRider(Entity mountEntity) {
-        List<Entity> list = mountEntity.worldObj.getEntitiesWithinAABBExcludingEntity(mountEntity, mountEntity.getEntityBoundingBox().expand(4D, 2D, 4D));
+        List<Entity> list = mountEntity.world.getEntitiesWithinAABBExcludingEntity(mountEntity, mountEntity.getEntityBoundingBox().expand(4D, 2D, 4D));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = list.get(i);
             if (!(entity instanceof EntityMob)) {
@@ -1792,18 +1792,18 @@ public class MoCTools {
         source.readFromNBT(nbttagcompound);
     }
 
-	public static boolean dismountSneakingPlayer(EntityLiving entity) {
-		if (!entity.isRiding()) return false;
-		Entity entityRidden = entity.getRidingEntity();
-		if (entityRidden instanceof EntityLivingBase && ((EntityLivingBase)entityRidden).isSneaking()) {
-			entity.dismountRidingEntity();
-			double dist = (-1.5D);
-	        double newPosX = entityRidden.posX + (dist * Math.sin(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
-	        double newPosZ = entityRidden.posZ - (dist * Math.cos(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
-	        entity.setPosition(newPosX, entityRidden.posY + 2D, newPosZ);
-	        MoCTools.playCustomSound(entity, SoundEvents.ENTITY_CHICKEN_EGG);
+    public static boolean dismountSneakingPlayer(EntityLiving entity) {
+        if (!entity.isRiding()) return false;
+        Entity entityRidden = entity.getRidingEntity();
+        if (entityRidden instanceof EntityLivingBase && ((EntityLivingBase)entityRidden).isSneaking()) {
+            entity.dismountRidingEntity();
+            double dist = (-1.5D);
+            double newPosX = entityRidden.posX + (dist * Math.sin(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
+            double newPosZ = entityRidden.posZ - (dist * Math.cos(((EntityLivingBase)entityRidden).renderYawOffset / 57.29578F));
+            entity.setPosition(newPosX, entityRidden.posY + 2D, newPosZ);
+            MoCTools.playCustomSound(entity, SoundEvents.ENTITY_CHICKEN_EGG);
             return true;
-		}
-		return false;
-	}
+        }
+        return false;
+    }
 }

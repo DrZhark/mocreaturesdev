@@ -77,7 +77,7 @@ public class MoCRenderCrocodile extends RenderLiving<MoCEntityCrocodile> {
             intEndSpin = 1;
         }
         float f3 = (((intEndSpin) - 1.0F) / 20F) * 1.6F;
-        f3 = MathHelper.sqrt_float(f3);
+        f3 = MathHelper.sqrt(f3);
         if (f3 > 1.0F) {
             f3 = 1.0F;
         }

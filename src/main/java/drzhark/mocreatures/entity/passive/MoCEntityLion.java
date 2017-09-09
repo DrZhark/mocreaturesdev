@@ -2,6 +2,7 @@ package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.IMoCTameable;
+import drzhark.mocreatures.init.MoCItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class MoCEntityLion extends MoCEntityBigCat {
 
@@ -71,14 +70,16 @@ public class MoCEntityLion extends MoCEntityBigCat {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
-        if (super.processInteract(player, hand, stack)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (super.processInteract(player, hand)) {
             return true;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((stack != null) && onMainHand && getIsTamed() && (getType() == 2 || getType() == 7)
-                && (stack.getItem() == MoCreatures.essencelight)) {
-            if (--stack.stackSize == 0) {
+        if (!stack.isEmpty() && onMainHand && getIsTamed() && (getType() == 2 || getType() == 7)
+                && (stack.getItem() == MoCItems.essencelight)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
             } else {
                 player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
@@ -101,7 +102,7 @@ public class MoCEntityLion extends MoCEntityBigCat {
 
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
-    	if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
+        if (mate instanceof MoCEntityTiger && ((MoCEntityTiger) mate).getType() < 3) {
             return "Liger";//return 4; //liger"
         }
         if (getType() == 2 && mate instanceof MoCEntityLeopard && ((MoCEntityLeopard) mate).getType() == 1) {
@@ -110,11 +111,6 @@ public class MoCEntityLion extends MoCEntityBigCat {
         if (getType() == 2 && mate instanceof MoCEntityPanther && ((MoCEntityPanther) mate).getType() == 1) {
             return "Lither";//return 5; //lither
         }
-        return "Lion";
-    }
-
-    @Override
-    public String getClazzString() {
         return "Lion";
     }
 

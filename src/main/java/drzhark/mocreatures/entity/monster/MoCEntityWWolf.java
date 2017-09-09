@@ -5,9 +5,10 @@ import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.passive.MoCEntityBear;
-import drzhark.mocreatures.entity.passive.MoCEntityHorse;
 import drzhark.mocreatures.entity.passive.MoCEntityBigCat;
-import drzhark.mocreatures.util.MoCSoundEvents;
+import drzhark.mocreatures.entity.passive.MoCEntityHorse;
+import drzhark.mocreatures.init.MoCItems;
+import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,6 +22,7 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +46,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTargetMoC(this, EntityPlayer.class, true));
@@ -111,12 +113,12 @@ public class MoCEntityWWolf extends MoCEntityMob {
 
     @Override
     public boolean checkSpawningBiome() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
 
-        Biome biome = MoCTools.Biomekind(this.worldObj, new BlockPos(i, j, k));
-        if (BiomeDictionary.isBiomeOfType(biome, Type.SNOWY)) {
+        Biome biome = MoCTools.Biomekind(this.world, new BlockPos(i, j, k));
+        if (BiomeDictionary.hasType(biome, Type.SNOWY)) {
             setType(3);
         }
         selectType();
@@ -126,15 +128,15 @@ public class MoCEntityWWolf extends MoCEntityMob {
     @Override
     public boolean getCanSpawnHere() {
         return checkSpawningBiome()
-                && this.worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper
-                        .floor_double(this.posZ))) && super.getCanSpawnHere();
+                && this.world.canBlockSeeSky(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper
+                        .floor(this.posZ))) && super.getCanSpawnHere();
     }
 
     //TODO move this
     public EntityLivingBase getClosestTarget(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
             if (!(entity1 instanceof EntityLivingBase) || (entity1 == entity) || (entity1 == entity.getRidingEntity())
@@ -156,7 +158,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
 
     @Override
     protected Item getDropItem() {
-        return MoCreatures.fur;
+        return MoCItems.fur;
     }
 
     @Override
@@ -165,7 +167,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         openMouth();
         return MoCSoundEvents.ENTITY_WOLF_HURT;
     }
@@ -194,7 +196,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (MoCreatures.isServer() && !this.isBeingRidden() && this.rand.nextInt(100) == 0) {
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity = list.get(i);
                 if (!(entity instanceof EntityMob)) {

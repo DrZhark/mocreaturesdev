@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "mocreatures:blocks/dirt_OgreLair"
+        "all": "mocreatures:blocks/dirt_ogre_lair"
     }
 }

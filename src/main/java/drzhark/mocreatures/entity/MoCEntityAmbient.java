@@ -12,10 +12,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -103,7 +105,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public int getType() {
-    	return this.dataManager.get(TYPE);
+        return this.dataManager.get(TYPE);
     }
 
     public void setDisplayName(boolean flag) {
@@ -117,12 +119,12 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public boolean getIsAdult() {
-    	return this.dataManager.get(ADULT);
+        return this.dataManager.get(ADULT);
     }
 
     @Override
     public void setAdult(boolean flag) {
-    	this.dataManager.set(ADULT, flag);
+        this.dataManager.set(ADULT, flag);
     }
 
     @Override
@@ -132,7 +134,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public void setPetName(String name) {
-    	this.dataManager.set(NAME_STR, name);
+        this.dataManager.set(NAME_STR, name);
     }
 
     @Override
@@ -142,7 +144,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public void setEdad(int i) {
-    	this.dataManager.set(AGE, i);
+        this.dataManager.set(AGE, i);
     }
 
     @Override
@@ -186,7 +188,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     protected EntityLivingBase getClosestEntityLiving(Entity entity, double d) {
         double d1 = -1D;
         EntityLivingBase entityliving = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int i = 0; i < list.size(); i++) {
             Entity entity1 = list.get(i);
 
@@ -262,14 +264,14 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public EntityItem getClosestItem(Entity entity, double d, ItemStack item, ItemStack item1) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
             Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
                 continue;
             }
             EntityItem entityitem1 = (EntityItem) entity1;
-            if ((entityitem1.getEntityItem() != item) && (entityitem1.getEntityItem() != item1)) {
+            if ((entityitem1.getItem() != item) && (entityitem1.getItem() != item1)) {
                 continue;
             }
             double d2 = entityitem1.getDistanceSq(entity.posX, entity.posY, entity.posZ);
@@ -285,7 +287,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public EntityItem getClosestEntityItem(Entity entity, double d) {
         double d1 = -1D;
         EntityItem entityitem = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, d, d));
         for (int k = 0; k < list.size(); k++) {
             Entity entity1 = list.get(k);
             if (!(entity1 instanceof EntityItem)) {
@@ -306,7 +308,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         double var4 = i + 0.5D - this.posX;
         double var8 = k + 0.5D - this.posZ;
         double var6 = j + 0.5D - this.posY;
-        double var14 = MathHelper.sqrt_double(var4 * var4 + var8 * var8);
+        double var14 = MathHelper.sqrt(var4 * var4 + var8 * var8);
         float var12 = (float) (Math.atan2(var8, var4) * 180.0D / Math.PI) - 90.0F;
         float var13 = (float) (-(Math.atan2(var6, var14) * 180.0D / Math.PI));
         this.rotationPitch = -this.updateRotation(this.rotationPitch, var13, f);
@@ -351,7 +353,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public void Riding() {
         if ((this.isBeingRidden()) && (this.getRidingEntity() instanceof EntityPlayer)) {
             EntityPlayer entityplayer = (EntityPlayer) this.getRidingEntity();
-            List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
                     Entity entity = list.get(i);
@@ -369,7 +371,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 }
             }
             if (entityplayer.isSneaking()) {
-                if (!this.worldObj.isRemote) {
+                if (!this.world.isRemote) {
                     entityplayer.dismountRidingEntity();
                 }
             }
@@ -379,15 +381,15 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     protected void getPathOrWalkableBlock(Entity entity, float f) {
         Path pathentity = this.navigator.getPathToPos(entity.getPosition());
         if ((pathentity == null) && (f > 8F)) {
-            int i = MathHelper.floor_double(entity.posX) - 2;
-            int j = MathHelper.floor_double(entity.posZ) - 2;
-            int k = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
+            int i = MathHelper.floor(entity.posX) - 2;
+            int j = MathHelper.floor(entity.posZ) - 2;
+            int k = MathHelper.floor(entity.getEntityBoundingBox().minY);
             for (int l = 0; l <= 4; l++) {
                 for (int i1 = 0; i1 <= 4; i1++) {
                     BlockPos pos = new BlockPos(i, j, k);
-                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && this.worldObj.getBlockState(pos.add(l, -1, i1)).isNormalCube()
-                            && !this.worldObj.getBlockState(pos.add(l, 0, i1)).isNormalCube()
-                            && !this.worldObj.getBlockState(pos.add(l, 1, i1)).isNormalCube()) {
+                    if (((l < 1) || (i1 < 1) || (l > 3) || (i1 > 3)) && this.world.getBlockState(pos.add(l, -1, i1)).isNormalCube()
+                            && !this.world.getBlockState(pos.add(l, 0, i1)).isNormalCube()
+                            && !this.world.getBlockState(pos.add(l, 1, i1)).isNormalCube()) {
                         setLocationAndAngles((i + l) + 0.5F, k, (j + i1) + 0.5F, this.rotationYaw, this.rotationPitch);
                         return;
                     }
@@ -399,28 +401,28 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     public boolean getCanSpawnHereAnimal() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         BlockPos pos = new BlockPos(i, j, k);
-        return this.worldObj.getBlockState(pos.down()).getBlock() == Blocks.GRASS && this.worldObj.getLight(pos) > 8;
+        return this.world.getBlockState(pos.down()).getBlock() == Blocks.GRASS && this.world.getLight(pos) > 8;
     }
 
     public boolean getCanSpawnHereCreature() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int k = MathHelper.floor_double(this.posZ);
+        int i = MathHelper.floor(this.posX);
+        int j = MathHelper.floor(getEntityBoundingBox().minY);
+        int k = MathHelper.floor(this.posZ);
         return getBlockPathWeight(new BlockPos(i, j, k)) >= 0.0F;
     }
 
     public boolean getCanSpawnHereLiving() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
-                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
+        return this.world.checkNoEntityCollision(this.getEntityBoundingBox())
+                && this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).size() == 0
+                && !this.world.containsAnyLiquid(this.getEntityBoundingBox());
     }
 
     public boolean getCanSpawnHereAquatic() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox());
+        return this.world.checkNoEntityCollision(this.getEntityBoundingBox());
     }
 
     @Override
@@ -428,9 +430,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         if (MoCreatures.entityMap.get(this.getClass()).getFrequency() <= 0) {
             return false;
         }
-        BlockPos pos = new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY), this.posZ);
+        BlockPos pos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(getEntityBoundingBox().minY), this.posZ);
 
-        String s = MoCTools.biomeName(this.worldObj, pos);
+        String s = MoCTools.biomeName(this.world, pos);
 
         if (s.equals("Jungle") || s.equals("JungleHills")) {
             return getCanSpawnHereJungle();
@@ -440,22 +442,22 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     public boolean getCanSpawnHereJungle() {
-        if (this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-                && this.worldObj.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty()
-                && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox())) {
-            int var1 = MathHelper.floor_double(this.posX);
-            int var2 = MathHelper.floor_double(this.getEntityBoundingBox().minY);
-            int var3 = MathHelper.floor_double(this.posZ);
+        if (this.world.checkNoEntityCollision(this.getEntityBoundingBox())
+                && this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty()
+                && !this.world.containsAnyLiquid(this.getEntityBoundingBox())) {
+            int var1 = MathHelper.floor(this.posX);
+            int var2 = MathHelper.floor(this.getEntityBoundingBox().minY);
+            int var3 = MathHelper.floor(this.posZ);
 
             if (var2 < 63) {
                 return false;
             }
 
             BlockPos pos = new BlockPos(var1, var2, var3);
-            IBlockState blockstate = this.worldObj.getBlockState(pos.down());
+            IBlockState blockstate = this.world.getBlockState(pos.down());
             final Block block = blockstate.getBlock();
 
-            if (block == Blocks.GRASS || block == Blocks.LEAVES || block.isLeaves(blockstate, this.worldObj, pos.down())) {
+            if (block == Blocks.GRASS || block == Blocks.LEAVES || block.isLeaves(blockstate, this.world, pos.down())) {
                 return true;
             }
         }
@@ -481,191 +483,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         setEdad(nbttagcompound.getInteger("Edad"));
         setPetName(nbttagcompound.getString("Name"));
         setType(nbttagcompound.getInteger("TypeInt"));
-    }
-
-    public void moveEntityWithHeadingOld(float f, float f1) {
-        //If the entity is not ridden by entityplayer, then execute the normal Entityliving code
-        if (!isFlyer() && (!rideableEntity() || !this.isBeingRidden())) {
-            super.moveEntityWithHeading(f, f1);
-            return;
-        }
-
-        if (handleWaterMovement()) {
-            if (this.isBeingRidden()) {
-                this.motionX += this.getRidingEntity().motionX * (getCustomSpeed() / 2.0D);
-                this.motionZ += this.getRidingEntity().motionZ * (getCustomSpeed() / 2.0D);
-
-                if (!this.worldObj.isRemote) {
-                    moveEntity(this.motionX, this.motionY, this.motionZ);
-                }
-
-                this.rotationPitch = this.getRidingEntity().rotationPitch * 0.5F;
-                if (this.rand.nextInt(20) == 0) {
-                    this.rotationYaw = this.getRidingEntity().rotationYaw;
-                }
-                setRotation(this.rotationYaw, this.rotationPitch);
-
-                if (MoCreatures.isServer() && !getIsTamed()) {
-                    MoCTools.playCustomSound(this, this.getAngrySound());
-                    this.getRidingEntity().motionY += 0.3D;
-                    this.getRidingEntity().motionZ -= 0.3D;
-                    this.getRidingEntity().dismountRidingEntity();
-                }
-            }
-            double d = this.posY;
-            if (!this.worldObj.isRemote) {
-                moveRelative(f, f1, 0.02F);
-                moveEntity(this.motionX, this.motionY, this.motionZ);
-            }
-            this.motionX *= 0.800000011920929D;
-            this.motionY *= 0.800000011920929D;
-            this.motionZ *= 0.800000011920929D;
-            this.motionY -= 0.02D;
-            if (this.isCollidedHorizontally
-                    && isOffsetPositionInLiquid(this.motionX, ((this.motionY + 0.60000002384185791D) - this.posY) + d, this.motionZ)) {
-                this.motionY = 0.30000001192092901D;
-            }
-        } else if (isNotColliding()) {
-            if (this.isBeingRidden()) {
-                this.motionX += this.getRidingEntity().motionX * (getCustomSpeed() / 2.0D);
-                this.motionZ += this.getRidingEntity().motionZ * (getCustomSpeed() / 2.0D);
-
-                moveEntity(this.motionX, this.motionY, this.motionZ);
-
-                this.rotationPitch = this.getRidingEntity().rotationPitch * 0.5F;
-                if (this.rand.nextInt(20) == 0) {
-                    this.rotationYaw = this.getRidingEntity().rotationYaw;
-                }
-                setRotation(this.rotationYaw, this.rotationPitch);
-                if (MoCreatures.isServer() && !getIsTamed()) {
-                    MoCTools.playCustomSound(this, this.getAngrySound());
-                    this.getRidingEntity().motionY += 0.3D;
-                    this.getRidingEntity().motionZ -= 0.3D;
-                    this.getRidingEntity().dismountRidingEntity();
-                }
-            }
-            double d1 = this.posY;
-
-            moveRelative(f, f1, 0.02F);
-            moveEntity(this.motionX, this.motionY, this.motionZ);
-
-            this.motionX *= 0.5D;
-            this.motionY *= 0.5D;
-            this.motionZ *= 0.5D;
-            this.motionY -= 0.02D;
-            if (this.isCollidedHorizontally
-                    && isOffsetPositionInLiquid(this.motionX, ((this.motionY + 0.60000002384185791D) - this.posY) + d1, this.motionZ)) {
-                this.motionY = 0.30000001192092901D;
-            }
-        } else {
-            float f2 = 0.91F;
-            if (this.onGround) {
-                f2 = 0.5460001F;
-                Block block =
-                        this.worldObj.getBlockState(
-                                new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(getEntityBoundingBox().minY) - 1, MathHelper
-                                        .floor_double(this.posZ))).getBlock();
-                if (block != Blocks.AIR) {
-                    f2 = block.slipperiness * 0.91F;
-                }
-            }
-
-            float f3 = 0.162771F / (f2 * f2 * f2);
-            moveRelative(f, f1, this.onGround ? 0.1F * f3 : 0.02F);
-
-            if (isOnLadder()) {
-                this.fallDistance = 0.0F;
-                if (this.motionY < -0.15D) {
-                    this.motionY = -0.15D;
-                }
-            }
-            if ((this.isBeingRidden()) && !getIsTamed()) {
-
-                if (this.rand.nextInt(10) == 0) {
-                    this.motionX += this.rand.nextDouble() / 30D;
-                    this.motionZ += this.rand.nextDouble() / 10D;
-                }
-                // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (!this.worldObj.isRemote) {
-                    moveEntity(this.motionX, this.motionY, this.motionZ);
-                }
-                if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
-                    MoCTools.playCustomSound(this, this.getAngrySound());
-                    this.getRidingEntity().motionY += 0.9D;
-                    this.getRidingEntity().motionZ -= 0.3D;
-                    this.getRidingEntity().dismountRidingEntity();
-                }
-            }
-            if ((this.isBeingRidden()) && getIsTamed()) {
-                if (!selfPropelledFlyer() || (selfPropelledFlyer() && !isOnAir())) {
-                    this.motionX += this.getRidingEntity().motionX * getCustomSpeed();
-                    this.motionZ += this.getRidingEntity().motionZ * getCustomSpeed();
-                }
-
-                // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-                if (MoCreatures.isServer()) {
-                    moveEntity(this.motionX, this.motionY, this.motionZ);
-                }
-
-                this.prevRotationYaw = this.rotationYaw = this.getRidingEntity().rotationYaw;
-                this.rotationPitch = this.getRidingEntity().rotationPitch * 0.5F;
-                setRotation(this.rotationYaw, this.rotationPitch);
-            }
-            // blood - This must be run on server side only since it causes glitch/twitch if run on both sides.
-            if (!this.worldObj.isRemote) {
-                //needs to be left in so flying mounts can be controlled
-                moveEntity(this.motionX, this.motionY, this.motionZ);
-            }
-            if (isFlyingAlone()) {
-                int distY = MoCTools.distanceToFloor(this);
-                if (distY <= maxFlyingHeight()) {
-                    this.motionY *= f2;
-                }
-                if (distY <= maxFlyingHeight() && (this.isCollidedHorizontally || this.rand.nextInt(100) == 0)) {
-                    this.motionY += 0.1D;
-                }
-                if (distY > maxFlyingHeight() || this.rand.nextInt(150) == 0) {
-                    this.motionY -= 0.10D;
-                }
-
-                if (isOnAir()) {
-                    double velX = 0.05F * Math.cos((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                    double velZ = 0.05F * Math.sin((MoCTools.realAngle(this.rotationYaw - 90F)) / 57.29578F);
-                    this.motionX -= velX;
-                    this.motionZ -= velZ;
-                }
-            }
-
-            if (isFlyer() && !this.isBeingRidden() && getAttackTarget() != null && getAttackTarget().posY < this.posY
-                    && this.rand.nextInt(30) == 0) {
-                this.motionY = -0.25D;
-            }
-
-            if (isFlyer() && (this.isBeingRidden()) && getIsTamed()) {
-                this.motionY -= 0.08D;
-                this.motionY *= myFallSpeed();//0.6D;
-            } else if (!isFlyingAlone()) {
-                this.motionY -= 0.08D;
-                this.motionY *= 0.98000001907348633D;
-            }
-
-            if (this.isBeingRidden() && isOnAir()) {
-                f2 = flyerFriction();
-
-            }
-            this.motionX *= f2;
-            this.motionZ *= f2;
-        }
-        this.prevLimbSwingAmount = this.limbSwingAmount;
-        double d2 = this.posX - this.prevPosX;
-        double d3 = this.posZ - this.prevPosZ;
-        float f4 = MathHelper.sqrt_double((d2 * d2) + (d3 * d3)) * 4.0F;
-        if (f4 > 1.0F) {
-            f4 = 1.0F;
-        }
-
-        this.limbSwingAmount += (f4 - this.limbSwingAmount) * 0.4F;
-        this.limbSwing += this.limbSwingAmount;
     }
 
     /**
@@ -772,8 +589,8 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         return null;
     }
 
-    public void repelMobs(Entity entity1, Double dist, World worldObj) {
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
+    public void repelMobs(Entity entity1, Double dist, World world) {
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(entity1, entity1.getEntityBoundingBox().expand(dist, 4D, dist));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = list.get(i);
             if (!(entity instanceof EntityMob)) {
@@ -789,7 +606,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
         double d = i - this.posX;
         double d1 = k - this.posZ;
         double d2 = j - this.posY;
-        double d3 = MathHelper.sqrt_double((d * d) + (d1 * d1));
+        double d3 = MathHelper.sqrt((d * d) + (d1 * d1));
         float f1 = (float) ((Math.atan2(d1, d) * 180D) / 3.1415927410125728D) - 90F;
         float f2 = (float) ((Math.atan2(d2, d3) * 180D) / 3.1415927410125728D);
         this.rotationPitch = -adjustRotation(this.rotationPitch, f2, f);
@@ -840,7 +657,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @SuppressWarnings("unused")
     private void followPlayer() {
-        EntityPlayer entityplayer1 = this.worldObj.getClosestPlayerToEntity(this, 24D);
+        EntityPlayer entityplayer1 = this.world.getClosestPlayerToEntity(this, 24D);
         if (entityplayer1 == null) {
             return;
         }
@@ -852,9 +669,9 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     public boolean isOnAir() {
-        return (this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 0.2D), MathHelper
-                .floor_double(this.posZ))) && this.worldObj.isAirBlock(new BlockPos(MathHelper.floor_double(this.posX), MathHelper
-                .floor_double(this.posY - 1.2D), MathHelper.floor_double(this.posZ))));
+        return (this.world.isAirBlock(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY - 0.2D), MathHelper
+                .floor(this.posZ))) && this.world.isAirBlock(new BlockPos(MathHelper.floor(this.posX), MathHelper
+                .floor(this.posY - 1.2D), MathHelper.floor(this.posZ))));
     }
 
     @Override
@@ -895,7 +712,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
      */
     protected EntityLivingBase getBoogey(double d) {
         EntityLivingBase entityliving = null;
-        List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(d, 4D, d));
         for (int i = 0; i < list.size(); i++) {
             Entity entity = list.get(i);
             if (entitiesToInclude(entity)) {
@@ -987,7 +804,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public boolean shouldAttackPlayers() {
-        return this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
+        return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     @Override
@@ -1033,29 +850,39 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     @Override
-    public void moveEntityWithHeading(float strafe, float forward) {
+    public void travel(float strafe, float vertical, float forward) {
         if (!getIsFlying()) {
-            super.moveEntityWithHeading(strafe, forward);
+            super.travel(strafe, vertical, forward);
             return;
         }
-        this.moveEntityWithHeadingFlying(strafe, forward);
+        this.moveEntityWithHeadingFlying(strafe, vertical, forward);
     }
 
-    public void moveEntityWithHeadingFlying(float strafe, float forward) {
+    public void moveEntityWithHeadingFlying(float strafe, float vertical, float forward) {
         if (this.isServerWorld()) {
 
-            this.moveRelative(strafe, forward, 0.1F);
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.moveRelative(strafe, vertical, forward, 0.1F);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.8999999761581421D;
             this.motionY *= 0.8999999761581421D;
             this.motionZ *= 0.8999999761581421D;
         } else {
-            super.moveEntityWithHeading(strafe, forward);
+            super.travel(strafe, vertical, forward);
         }
     }
 
     @Override
     public boolean getIsFlying() {
+        return false;
+    }
+
+    @Override
+    public String getClazzString() {
+        return EntityList.getEntityString(this);
+    }
+
+    @Override
+    public boolean getIsGhost() {
         return false;
     }
 }
