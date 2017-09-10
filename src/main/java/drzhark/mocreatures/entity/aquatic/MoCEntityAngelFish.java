@@ -8,8 +8,9 @@ public class MoCEntityAngelFish extends MoCEntitySmallFish{
 
     public MoCEntityAngelFish(World world) {
         super(world);
+        this.setType(2);
     }
-    
+
     @Override
     public ResourceLocation getTexture() {
         return MoCreatures.proxy.getTexture("smallfish_angelfish.png");

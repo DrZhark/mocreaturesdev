@@ -8,6 +8,7 @@ public class MoCEntityCod extends MoCEntityMediumFish{
 
     public MoCEntityCod(World world) {
         super(world);
+        this.setType(2);
     }
     
     @Override

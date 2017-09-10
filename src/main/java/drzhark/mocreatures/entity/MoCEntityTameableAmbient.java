@@ -340,11 +340,6 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         this.riderIsDisconnecting = flag;
     }
 
-    @Override
-    public boolean canBeLeashedTo(EntityPlayer player) {
-        return this.getIsTamed();
-    }
-
     /**
      * Used to spawn hearts at this location
      */

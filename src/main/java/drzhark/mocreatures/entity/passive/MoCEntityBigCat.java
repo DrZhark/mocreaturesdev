@@ -459,6 +459,9 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && !getIsTamed() && getHasEaten() && !getIsAdult() && (stack.getItem() == MoCItems.medallion)) {
             if (MoCreatures.isServer()) {

@@ -157,6 +157,9 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
             stack.shrink(1);

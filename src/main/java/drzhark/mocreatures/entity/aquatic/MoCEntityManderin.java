@@ -8,6 +8,7 @@ public class MoCEntityManderin extends MoCEntitySmallFish{
 
     public MoCEntityManderin(World world) {
         super(world);
+        this.setType(7);
     }
     
     @Override

@@ -1435,7 +1435,7 @@ public class MoCTools {
             EntityPlayer epOwner = entity.world.getPlayerEntityByUUID(entity.getOwnerId());
 
             try {
-                nbtt.setInteger("SpawnClass", 21);
+                nbtt.setString("SpawnClass", "WildHorse");
                 nbtt.setFloat("Health", entity.getHealth());
                 nbtt.setInteger("Edad", entity.getEdad());
                 nbtt.setString("Name", entity.getPetName());
@@ -1446,6 +1446,13 @@ public class MoCTools {
                 nbtt.setString("OwnerName", epOwner != null ? epOwner.getName() : "");
                 nbtt.setUniqueId("OwnerUUID", entity.getOwnerId());
                 nbtt.setInteger("PetId", entity.getOwnerPetId());
+                int amuletType = 1;
+                if (stack.getItem() == MoCItems.petamuletfull) {
+                    amuletType = 2;
+                } else if (stack.getItem() == MoCItems.amuletghostfull) {
+                    amuletType = 3;
+                }
+                nbtt.setBoolean("Ghost", amuletType == 3 ? true : false);
             } catch (Exception e) {
             }
 

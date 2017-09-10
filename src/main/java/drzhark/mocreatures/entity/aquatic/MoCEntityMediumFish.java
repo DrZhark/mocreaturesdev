@@ -25,6 +25,20 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
         setEdad(30 + this.rand.nextInt(70));
     }
 
+    public static MoCEntityMediumFish createEntity(World world, int type) {
+        if (type == 1) {
+            return new MoCEntitySalmon(world);
+        }
+        if (type == 2) {
+            return new MoCEntityCod(world);
+        }
+        if (type == 3) {
+            return new MoCEntityBass(world);
+        }
+
+        return new MoCEntitySalmon(world);
+    }
+
     @Override
     protected void initEntityAI() {
         this.tasks.addTask(3, new EntityAIFleeFromEntityMoC(this, new Predicate<Entity>() {
@@ -46,7 +60,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     @Override
     public void selectType() {
         if (getType() == 0) {
-            setType(this.rand.nextInt(3) + 1);
+            setType(this.rand.nextInt(fishNames.length) + 1);
         }
     }
 

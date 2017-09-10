@@ -26,6 +26,32 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
         setEdad(70 + this.rand.nextInt(30));
     }
 
+    public static MoCEntitySmallFish createEntity(World world, int type) {
+        if (type == 1) {
+            return new MoCEntityAnchovy(world);
+        }
+        if (type == 2) {
+            return new MoCEntityAngelFish(world);
+        }
+        if (type == 3) {
+            return new MoCEntityAngler(world);
+        }
+        if (type == 4) {
+            return new MoCEntityClownFish(world);
+        }
+        if (type == 5) {
+            return new MoCEntityGoldFish(world);
+        }
+        if (type == 6) {
+            return new MoCEntityHippoTang(world);
+        }
+        if (type == 7) {
+            return new MoCEntityManderin(world);
+        }
+
+        return new MoCEntityClownFish(world);
+    }
+
     @Override
     protected void initEntityAI() {
         this.tasks.addTask(1, new EntityAIPanicMoC(this, 1.3D));
@@ -48,7 +74,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     @Override
     public void selectType() {
         if (getType() == 0) {
-            setType(this.rand.nextInt(7) + 1);
+            setType(this.rand.nextInt(fishNames.length) + 1);
         }
 
     }

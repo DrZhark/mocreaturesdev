@@ -128,6 +128,9 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
 
         if (getIsTamed()) {
             if (getIsUpsideDown()) {

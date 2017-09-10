@@ -28,7 +28,7 @@ public class MoCRenderNewHorse extends MoCRenderMoC<MoCEntityHorse> {
         if (!entityhorse.getIsAdult() || entityhorse.getType() > 64) {
             stretch(entityhorse);
         }
-        if (entityhorse.isGhost()) {
+        if (entityhorse.getIsGhost()) {
             adjustHeight(entityhorse, -0.3F + (entityhorse.tFloat() / 5F));
         }
         super.preRenderCallback(entityhorse, f);

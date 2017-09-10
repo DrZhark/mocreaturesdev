@@ -784,7 +784,13 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public boolean canBeLeashedTo(EntityPlayer player) {
-        return false;
+        if (MoCTools.isThisPlayerAnOP(player)) {
+            return true;
+        }
+        if (this.getIsTamed() && !player.getUniqueID().equals(this.getOwnerId())) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -884,5 +890,17 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     @Override
     public boolean getIsGhost() {
         return false;
+    }
+
+    @Override
+    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+        if (this.getIsTamed() && entityIn instanceof EntityPlayer) {
+            EntityPlayer entityplayer = (EntityPlayer) entityIn;
+            if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
+                    && !entityplayer.getUniqueID().equals(this.getOwnerId()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
+                return;
+            }
+        }
+        super.setLeashedToEntity(entityIn, sendAttachNotification);
     }
 }

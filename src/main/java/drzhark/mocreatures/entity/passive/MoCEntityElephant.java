@@ -313,6 +313,9 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
         if (super.processInteract(player, hand)) {
+            return true;
+        }
+        if (!this.checkOwnership(player, hand)) {
             return false;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);

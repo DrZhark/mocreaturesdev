@@ -511,6 +511,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((getKittyState() == 2) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.medallion)) {
             if (MoCreatures.isServer()) {

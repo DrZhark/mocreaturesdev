@@ -25,6 +25,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -114,16 +116,34 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         return super.attackEntityFrom(damagesource, i);
     }
 
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    public boolean checkOwnership(EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
+        if (!this.getIsTamed() || MoCTools.isThisPlayerAnOP(player)) {
+            return true;
+        }
+
         if (this.getIsGhost() && !stack.isEmpty() && stack.getItem() == MoCItems.petamulet) {
             if (MoCreatures.isServer()) {
                 // Remove when client is updated
                 ((EntityPlayerMP) player).sendAllContents(player.openContainer, player.openContainer.getInventory());
+                player.sendMessage(new TextComponentTranslation(TextFormatting.RED + "This pet does not belong to you."));
             }
             return false;
         }
+
+        //if the player interacting is not the owner, do nothing!
+        if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
+                && !player.getUniqueID().equals(this.getOwnerId())) {
+            player.sendMessage(new TextComponentTranslation(TextFormatting.RED + "This pet does not belong to you."));
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
         //before ownership check
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
                 && MoCTools.isThisPlayerAnOP(player)) {
@@ -140,12 +160,6 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             }
             return true;
         }
-        //if the player interacting is not the owner, do nothing!
-        if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
-                && !player.getUniqueID().equals(this.getOwnerId()) && !MoCTools.isThisPlayerAnOP((player))) {
-            return true;
-        }
-
         //changes name
         if (!this.world.isRemote && !stack.isEmpty() && getIsTamed()
                 && (stack.getItem() == MoCItems.medallion || stack.getItem() == Items.BOOK || stack.getItem() == Items.NAME_TAG)) {
@@ -154,7 +168,6 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             }
             return false;
         }
-
         //sets it free, untamed
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollFreedom))) {
             stack.shrink(1);
@@ -364,28 +377,6 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         this.riderIsDisconnecting = flag;
     }
 
-    @Override
-    public boolean canBeLeashedTo(EntityPlayer player) {
-        return this.getIsTamed();
-    }
-
-    /**
-     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
-     * @param entityIn
-     * @param sendAttachNotification
-     */
-    @Override
-    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
-        if (entityIn instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) entityIn;
-            if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
-                    && !entityplayer.getName().equals(this.getOwnerId()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
-                return;
-            }
-        }
-        super.setLeashedToEntity(entityIn, sendAttachNotification);
-    }
-
     /**
      * Used to spawn hearts at this location
      */
@@ -542,5 +533,10 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     @Override
     public int getGestationTime() {
         return gestationtime;
+    }
+
+    @Override
+    public boolean getIsGhost() {
+        return false;
     }
 }

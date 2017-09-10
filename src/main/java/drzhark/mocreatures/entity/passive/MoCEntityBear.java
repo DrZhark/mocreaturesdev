@@ -351,6 +351,9 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getIsTamed() && !getIsRideable() && (getEdad() > 80)
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCItems.horsesaddle)) {

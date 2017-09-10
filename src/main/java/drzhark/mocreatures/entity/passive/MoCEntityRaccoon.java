@@ -86,6 +86,9 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return false;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && (MoCTools.isItemEdible(stack.getItem()))) //((itemstack.getItem() == MoCItems.rawTurkey.itemID)))
         {

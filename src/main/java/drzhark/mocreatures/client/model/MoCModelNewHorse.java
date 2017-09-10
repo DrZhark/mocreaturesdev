@@ -362,7 +362,7 @@ public class MoCModelNewHorse extends ModelBase {
         boolean flapwings = (entityhorse.wingFlapCounter != 0);
         boolean shuffling = (entityhorse.shuffleCounter != 0);
         boolean saddled = entityhorse.getIsRideable();
-        boolean wings = (entityhorse.isFlyer() && !entityhorse.isGhost() && type < 45);
+        boolean wings = (entityhorse.isFlyer() && !entityhorse.getIsGhost() && type < 45);
         //boolean chested = entityhorse.getChestedHorse();
         boolean eating = entityhorse.getIsSitting();
         //boolean flyer = entityhorse.isFlyer();
@@ -371,12 +371,12 @@ public class MoCModelNewHorse extends ModelBase {
         boolean moveTail = (entityhorse.tailCounter != 0);
 
         boolean rider = (entityhorse.isBeingRidden());
-        boolean floating = (entityhorse.isGhost() || (entityhorse.isFlyer() && entityhorse.isOnAir()));
+        boolean floating = (entityhorse.getIsGhost() || (entityhorse.isFlyer() && entityhorse.isOnAir()));
         //                || (entityhorse.getRidingEntity() == null && !entityhorse.onGround)
         //                || (entityhorse.isBeingRidden() && !entityhorse.getRidingEntity().onGround));
         setRotationAngles(f, f1, f2, f3, f4, f5, eating, rider, floating, standing, saddled, moveTail, wings, flapwings, shuffling, type);
 
-        if (!entityhorse.isGhost() && vanishingInt == 0) {
+        if (!entityhorse.getIsGhost() && vanishingInt == 0) {
             if (saddled) {
                 this.HeadSaddle.render(f5);
                 this.Saddle.render(f5);

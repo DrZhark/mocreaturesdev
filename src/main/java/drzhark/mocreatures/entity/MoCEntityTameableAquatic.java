@@ -354,28 +354,6 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         this.riderIsDisconnecting = flag;
     }
 
-    @Override
-    public boolean canBeLeashedTo(EntityPlayer player) {
-        return this.getIsTamed();
-    }
-
-    /**
-     * Overridden to prevent the use of a lead on an entity that belongs to other player when ownership is enabled 
-     * @param entityIn
-     * @param sendAttachNotification
-     */
-    @Override
-    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
-        if (entityIn instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) entityIn;
-            if (MoCreatures.proxy.enableOwnership && getOwnerId() != null
-                    && !entityplayer.getName().equals(getOwnerId()) && !MoCTools.isThisPlayerAnOP((entityplayer))) {
-                return;
-            }
-        }
-        super.setLeashedToEntity(entityIn, sendAttachNotification);
-    }
-
     /**
      * Used to spawn hearts at this location
      */

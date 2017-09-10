@@ -299,6 +299,9 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
             stack.shrink(1);

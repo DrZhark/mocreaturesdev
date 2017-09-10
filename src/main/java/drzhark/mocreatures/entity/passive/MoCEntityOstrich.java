@@ -547,6 +547,9 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (getIsTamed() && onMainHand && (getType() > 1) && !stack.isEmpty() && !getIsRideable()
                 && (stack.getItem() == MoCItems.horsesaddle || stack.getItem() == Items.SADDLE)) {

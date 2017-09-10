@@ -171,10 +171,9 @@ public class MoCEntityEgg extends EntityLiving {
 
                     else if (getEggType() >= 80 && getEggType() < (80 + MoCEntitySmallFish.fishNames.length)) // smallfish
                     {
-                        MoCEntitySmallFish entityspawn = new MoCEntitySmallFish(this.world);
-
+                        final int type = getEggType() - 79;
+                        MoCEntitySmallFish entityspawn = MoCEntitySmallFish.createEntity(this.world, type);
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
-                        entityspawn.setType(getEggType() - 79);
                         this.world.spawnEntity(entityspawn);
                         entityspawn.setEdad(30);
                         EntityPlayer entityplayer = this.world.getClosestPlayerToEntity(this, 24D);
@@ -185,9 +184,9 @@ public class MoCEntityEgg extends EntityLiving {
 
                     else if (getEggType() >= 70 && getEggType() < (70 + MoCEntityMediumFish.fishNames.length)) // mediumfish
                     {
-                        MoCEntityMediumFish entityspawn = new MoCEntityMediumFish(this.world);
+                        final int type = getEggType() - 69;
+                        MoCEntityMediumFish entityspawn = MoCEntityMediumFish.createEntity(this.world, type);
                         entityspawn.setPosition(this.posX, this.posY, this.posZ);
-                        entityspawn.setType(getEggType() - 69);
                         this.world.spawnEntity(entityspawn);
                         entityspawn.setEdad(30);
                         EntityPlayer entityplayer = this.world.getClosestPlayerToEntity(this, 24D);
