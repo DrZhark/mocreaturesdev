@@ -37,25 +37,25 @@ public class MoCEntityLion extends MoCEntityBigCat {
     public ResourceLocation getTexture() {
         switch (getType()) {
             case 1:
-                return MoCreatures.proxy.getTexture("BCfemaleLion.png");//lioness
+                return MoCreatures.proxy.getTexture("bcfemalelion.png");//lioness
             case 2:
-                return MoCreatures.proxy.getTexture("BCmaleLion.png");//lion
+                return MoCreatures.proxy.getTexture("bcmalelion.png");//lion
             case 3:
-                return MoCreatures.proxy.getTexture("BCmaleLion.png");//winged lion
+                return MoCreatures.proxy.getTexture("bcmalelion.png");//winged lion
             /*case 4:
-                return MoCreatures.proxy.getTexture("BCliger.png");//liger
+                return MoCreatures.proxy.getTexture("bcliger.png");//liger
             case 5:
-                return MoCreatures.proxy.getTexture("BCliger.png");//winged liger
+                return MoCreatures.proxy.getTexture("bcliger.png");//winged liger
             */case 6:
-                return MoCreatures.proxy.getTexture("BCwhiteLion.png");//female white
+                return MoCreatures.proxy.getTexture("bcwhitelion.png");//female white
             case 7:
-                return MoCreatures.proxy.getTexture("BCwhiteLion.png");//male white
+                return MoCreatures.proxy.getTexture("bcwhitelion.png");//male white
             case 8:
-                return MoCreatures.proxy.getTexture("BCwhiteLion.png");//winged male white
+                return MoCreatures.proxy.getTexture("bcwhitelion.png");//winged male white
             /*case 9:
-                return MoCreatures.proxy.getTexture("BCliard.png");// Male Lion X leopard
+                return MoCreatures.proxy.getTexture("bcliard.png");// Male Lion X leopard
             */default:
-                return MoCreatures.proxy.getTexture("BCfemaleLion.png");
+                return MoCreatures.proxy.getTexture("bcfemalelion.png");
         }
     }
 

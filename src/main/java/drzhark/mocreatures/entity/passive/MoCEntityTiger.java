@@ -35,15 +35,15 @@ public class MoCEntityTiger extends MoCEntityBigCat {
     public ResourceLocation getTexture() {
         switch (getType()) {
             case 1:
-                return MoCreatures.proxy.getTexture("BCtiger.png");
+                return MoCreatures.proxy.getTexture("bctiger.png");
             case 2:
-                return MoCreatures.proxy.getTexture("BCwhiteTiger.png");
+                return MoCreatures.proxy.getTexture("bcwhitetiger.png");
             case 3:
-                return MoCreatures.proxy.getTexture("BCwhiteTiger.png"); //winged tiger
+                return MoCreatures.proxy.getTexture("bcwhitetiger.png"); //winged tiger
             /*case 4:
-                return MoCreatures.proxy.getTexture("BCleoger.png"); // Tiger x Leopard
+                return MoCreatures.proxy.getTexture("bcleoger.png"); // Tiger x Leopard
             */default:
-                return MoCreatures.proxy.getTexture("BCtiger.png");
+                return MoCreatures.proxy.getTexture("bctiger.png");
         }
     }
 

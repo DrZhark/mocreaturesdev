@@ -53,11 +53,11 @@ public class MoCEntityLeopard extends MoCEntityBigCat {
     public ResourceLocation getTexture() {
         switch (getType()) {
             case 1:
-                return MoCreatures.proxy.getTexture("BCleopard.png");
+                return MoCreatures.proxy.getTexture("bcleopard.png");
             case 2:
-                return MoCreatures.proxy.getTexture("BCsnowLeopard.png");
+                return MoCreatures.proxy.getTexture("bcsnowleopard.png");
             default:
-                return MoCreatures.proxy.getTexture("BCleopard.png");
+                return MoCreatures.proxy.getTexture("bcleopard.png");
         }
     }
 

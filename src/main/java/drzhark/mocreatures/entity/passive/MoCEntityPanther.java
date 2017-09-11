@@ -22,17 +22,17 @@ public class MoCEntityPanther extends MoCEntityBigCat {
     public ResourceLocation getTexture() {
         switch (getType()) {
             case 1:
-                return MoCreatures.proxy.getTexture("BCpuma.png");
+                return MoCreatures.proxy.getTexture("bcpuma.png");
             case 2:
-                return MoCreatures.proxy.getTexture("BCpuma.png"); //winged panther
+                return MoCreatures.proxy.getTexture("bcpuma.png"); //winged panther
             /*case 3:
-                return MoCreatures.proxy.getTexture("BCpanthard.png"); //panther X leopard
+                return MoCreatures.proxy.getTexture("bcpanthard.png"); //panther X leopard
             case 4:
-                return MoCreatures.proxy.getTexture("BCpanthger.png"); //panther X tiger
+                return MoCreatures.proxy.getTexture("bcpanthger.png"); //panther X tiger
             case 5:
-                return MoCreatures.proxy.getTexture("BClither.png"); //panther X lion
+                return MoCreatures.proxy.getTexture("bclither.png"); //panther X lion
             */default:
-                return MoCreatures.proxy.getTexture("BCpuma.png");
+                return MoCreatures.proxy.getTexture("bcpuma.png");
         }
     }
 
