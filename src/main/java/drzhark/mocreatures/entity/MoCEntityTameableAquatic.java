@@ -126,7 +126,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -143,7 +143,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         }
 
         //changes name
-        if (MoCreatures.isServer() && !stack.isEmpty() && getIsTamed()
+        if (!this.world.isRemote && !stack.isEmpty() && getIsTamed()
                 && (stack.getItem() == MoCItems.medallion || stack.getItem() == Items.BOOK || stack.getItem() == Items.NAME_TAG)) {
             if (MoCTools.tameWithName(player, this)) {
                 return true;
@@ -157,7 +157,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -177,7 +177,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -193,7 +193,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 this.setHealth(getMaxHealth());
             }
             return true;
@@ -222,7 +222,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
     public void setDead() {
-        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
+        if (!this.world.isRemote && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
             return;
         }
         super.setDead();
@@ -394,7 +394,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
     public void onLivingUpdate() {
         super.onLivingUpdate();
         //breeding code
-        if (MoCreatures.isServer() && readytoBreed() && this.rand.nextInt(100) == 0) {
+        if (!this.world.isRemote && readytoBreed() && this.rand.nextInt(100) == 0) {
             doBreeding();
         }
     }
@@ -445,8 +445,10 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             }
 
             setGestationTime(getGestationTime()+1);
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            if (!this.world.isRemote) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            }
 
             if (getGestationTime() <= 50) {
                 continue;

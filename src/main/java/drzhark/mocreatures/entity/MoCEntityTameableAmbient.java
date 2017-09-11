@@ -106,7 +106,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             return false;
         }
 
-        if (MoCreatures.isServer() && getIsTamed()) {
+        if (!this.world.isRemote && getIsTamed()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
                     this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -127,7 +127,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -144,7 +144,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
         }
 
         //changes name
-        if (MoCreatures.isServer() && getIsTamed()
+        if (!this.world.isRemote && getIsTamed()
                 && (stack.getItem() == MoCItems.medallion || stack.getItem() == Items.BOOK || stack.getItem() == Items.NAME_TAG)) {
             if (MoCTools.tameWithName(player, this)) {
                 return true;
@@ -158,7 +158,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -178,7 +178,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
                     MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
@@ -222,14 +222,14 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 this.setHealth(getMaxHealth());
             }
             return true;
         }
 
         if (getIsTamed() && stack.getItem() == Items.SHEARS) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 dropMyStuff();
             }
 
@@ -242,7 +242,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
     @Override
     public void setDead() {
-        if (MoCreatures.isServer() && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
+        if (!this.world.isRemote && getIsTamed() && getHealth() > 0 && !this.riderIsDisconnecting) {
             return;
         }
         super.setDead();
@@ -380,7 +380,7 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
     public void onLivingUpdate() {
         super.onLivingUpdate();
         //breeding code
-        if (MoCreatures.isServer() && readytoBreed() && this.rand.nextInt(100) == 0) {
+        if (!this.world.isRemote && readytoBreed() && this.rand.nextInt(100) == 0) {
             doBreeding();
         }
     }
@@ -419,8 +419,10 @@ public class MoCEntityTameableAmbient extends MoCEntityAmbient implements IMoCTa
             }
 
             setGestationTime(getGestationTime()+1);
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            if (!this.world.isRemote) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            }
 
             if (getGestationTime() <= 50) {
                 continue;

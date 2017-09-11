@@ -95,7 +95,7 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
             return false;
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (MoCreatures.isServer() && onMainHand && !getIsTamed() && !stack.isEmpty() && (stack.getItem() == Items.MELON_SEEDS)) {
+        if (!this.world.isRemote && onMainHand && !getIsTamed() && !stack.isEmpty() && (stack.getItem() == Items.MELON_SEEDS)) {
             MoCTools.tameWithName(player, this);
         }
 

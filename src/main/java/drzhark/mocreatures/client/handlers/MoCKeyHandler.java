@@ -2,7 +2,6 @@ package drzhark.mocreatures.client.handlers;
 
 import drzhark.guiapi.GuiModScreen;
 import drzhark.guiapi.ModSettingScreen;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.client.MoCClientProxy;
 import drzhark.mocreatures.entity.IMoCEntity;
 import drzhark.mocreatures.network.MoCMessageHandler;
@@ -60,7 +59,7 @@ public class MoCKeyHandler {
         boolean kbGui = guiBinding.getKeyCode() >= 0 ? Keyboard.isKeyDown(guiBinding.getKeyCode()) : keyPressed == guiBinding.getKeyCode();
         //boolean kbDismount = kb.keyDescription.equals("MoCreatures Dismount");
 
-        if (kbGui && !MoCreatures.isServer()) {
+        if (kbGui && ep.world.isRemote) {
             if (MoCClientProxy.mc.inGameHasFocus && (this.localScreen == null)) {
                 GuiModScreen.show(MoCClientProxy.instance.MoCScreen.theWidget);
             } else {

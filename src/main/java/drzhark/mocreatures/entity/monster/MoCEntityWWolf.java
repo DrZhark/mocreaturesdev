@@ -195,7 +195,7 @@ public class MoCEntityWWolf extends MoCEntityMob {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer() && !this.isBeingRidden() && this.rand.nextInt(100) == 0) {
+        if (!this.world.isRemote && !this.isBeingRidden() && this.rand.nextInt(100) == 0) {
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
                 Entity entity = list.get(i);

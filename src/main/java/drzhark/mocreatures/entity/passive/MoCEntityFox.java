@@ -127,12 +127,12 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
             this.setHealth(getMaxHealth());
 
-            if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100)) {
+            if (!this.world.isRemote && !getIsAdult() && (getEdad() < 100)) {
                 setEdad(getEdad() + 1);
             }
 

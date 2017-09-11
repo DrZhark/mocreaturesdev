@@ -184,7 +184,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (!MoCreatures.isServer()) {
+        if (this.world.isRemote) {
             if (this.rand.nextInt(100) == 0) {
                 setSwingEar(true);
             }
@@ -210,7 +210,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             this.hungry = false;
         }
 
-        if (MoCreatures.isServer() && (getEdad() < 90 || getType() > 4 && getEdad() < 100) && this.rand.nextInt(500) == 0) {
+        if (!this.world.isRemote && (getEdad() < 90 || getType() > 4 && getEdad() < 100) && this.rand.nextInt(500) == 0) {
             setEdad(getEdad() + 1);
             if (getType() == 1 && getEdad() > 70) {
                 int i = this.rand.nextInt(6) + 2;
@@ -535,7 +535,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (MoCreatures.isServer() && onMainHand && !getIsTamed() && !stack.isEmpty() && MoCTools.isItemEdible(stack.getItem())) {
+        if (!this.world.isRemote && onMainHand && !getIsTamed() && !stack.isEmpty() && MoCTools.isItemEdible(stack.getItem())) {
             if (MoCTools.tameWithName(player, this)) {
                 return true;
             }

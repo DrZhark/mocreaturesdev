@@ -274,7 +274,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 setTemper(getTemper() + 25);
                 if (getTemper() > getMaxTemper()) {
                     setTemper(getMaxTemper() - 1);
@@ -322,7 +322,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             //TODO
             /*if (!getIsHungry() && (this.rand.nextInt(100) == 0)) {
@@ -421,7 +421,7 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
     @Override
     public void setDead() {
-        if (MoCreatures.isServer() && getIsTamed() && (getHealth() > 0)) {
+        if (!this.world.isRemote && getIsTamed() && (getHealth() > 0)) {
             return;
         } else {
             super.setDead();

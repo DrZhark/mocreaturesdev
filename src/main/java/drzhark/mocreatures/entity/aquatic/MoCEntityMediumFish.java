@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.aquatic;
 
 import com.google.common.base.Predicate;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
@@ -85,7 +84,7 @@ public class MoCEntityMediumFish extends MoCEntityTameableAquatic {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());
             }

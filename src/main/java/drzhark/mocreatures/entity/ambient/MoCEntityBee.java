@@ -5,7 +5,6 @@
 package drzhark.mocreatures.entity.ambient;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.Entity;
@@ -32,7 +31,7 @@ public class MoCEntityBee extends MoCEntityInsect
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getIsFlying() && --this.soundCount == -1) {
                 EntityPlayer ep = this.world.getClosestPlayerToEntity(this, 5D);
                 if (ep != null) {

@@ -225,11 +225,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
             return 0.1F;
         }
 
-        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
             return (super.getYOffset() + 0.1F);
         } else {
             return super.getYOffset();
@@ -264,7 +264,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     public void onUpdate() {
         super.onUpdate();
 
-        if (!MoCreatures.isServer()) {
+        if (this.world.isRemote) {
             if (getfTongue() != 0.0F) {
                 setfTongue(getfTongue() + 0.2F);
                 if (getfTongue() > 8.0F) {
@@ -470,7 +470,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
     }
 
     public void setBiting(boolean flag) {
-        if (flag && MoCreatures.isServer()) {
+        if (flag && !this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }

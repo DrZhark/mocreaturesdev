@@ -1,6 +1,5 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityKittyBed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ public class MoCItemKittyBed extends MoCItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
-        if (MoCreatures.isServer()) {
+        if (!world.isRemote) {
             MoCEntityKittyBed entitykittybed = new MoCEntityKittyBed(world, this.sheetType);
             entitykittybed.setPosition(player.posX, player.posY, player.posZ);
             world.spawnEntity(entitykittybed);

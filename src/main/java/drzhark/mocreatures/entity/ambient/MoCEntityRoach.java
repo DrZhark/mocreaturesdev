@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.ambient;
 
 import com.google.common.base.Predicate;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromEntityMoC;
 import net.minecraft.entity.Entity;
@@ -32,7 +31,7 @@ public class MoCEntityRoach extends MoCEntityInsect
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (getIsFlying() && this.rand.nextInt(50) == 0) {
                 setIsFlying(false);

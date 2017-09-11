@@ -173,7 +173,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (this.getRidingEntity() == null) {
             this.startRiding(player);
             this.rotationYaw = player.rotationYaw;
-            if (MoCreatures.isServer() && !getIsTamed()) {
+            if (!this.world.isRemote && !getIsTamed()) {
                 MoCTools.tameWithName(player, this);
             }
         }
@@ -187,7 +187,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (this.getRidingEntity() != null) {
             this.rotationYaw = this.getRidingEntity().rotationYaw;
         }
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (--this.jumpTimer <= 0 && this.onGround
                     && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {
@@ -267,10 +267,10 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
     @Override
     public double getYOffset() {
         // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer()) {
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
         }
-        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer) {
             return (super.getYOffset() + 0.5F);
         }
         return super.getYOffset();

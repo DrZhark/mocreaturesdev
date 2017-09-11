@@ -9,11 +9,11 @@ import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
-import drzhark.mocreatures.entity.passive.MoCEntityLiger;
 import drzhark.mocreatures.entity.passive.MoCEntityLeoger;
 import drzhark.mocreatures.entity.passive.MoCEntityLiard;
+import drzhark.mocreatures.entity.passive.MoCEntityLiger;
 import drzhark.mocreatures.entity.passive.MoCEntityLither;
+import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
 import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
 import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
@@ -92,7 +92,7 @@ public class MoCTools {
      * spawns tiny slimes
      */
     public static void spawnSlimes(World world, Entity entity) {
-        if (MoCreatures.isServer()) {
+        if (!world.isRemote) {
             //changed so it only spawns 0 - 1 slime, as it now spaws also big slimes
             int var2 = 1 + world.rand.nextInt(1);
 
@@ -111,7 +111,7 @@ public class MoCTools {
      * Drops saddle
      */
     public static void dropSaddle(MoCEntityAnimal entity, World world) {
-        if (!entity.getIsRideable() || !MoCreatures.isServer()) {
+        if (!entity.getIsRideable() || world.isRemote) {
             return;
         }
         dropCustomItem(entity, world, new ItemStack(MoCItems.horsesaddle, 1));
@@ -122,7 +122,7 @@ public class MoCTools {
      * Drops chest block
      */
     public static void dropBags(MoCEntityAnimal entity, World world) {
-        if (!MoCreatures.isServer()) {
+        if (world.isRemote) {
             return;
         }
         dropCustomItem(entity, world, new ItemStack(Blocks.CHEST, 1));
@@ -132,7 +132,7 @@ public class MoCTools {
      * Drops item
      */
     public static void dropCustomItem(Entity entity, World world, ItemStack itemstack) {
-        if (!MoCreatures.isServer()) {
+        if (world.isRemote) {
             return;
         }
 
@@ -735,7 +735,7 @@ public class MoCTools {
      * @param entity
      */
     public static void dropGoodies(World world, Entity entity) {
-        if (!MoCreatures.isServer()) {
+        if (world.isRemote) {
             return;
         }
 
@@ -1390,7 +1390,7 @@ public class MoCTools {
     }
 
     public static void dropInventory(Entity entity, MoCAnimalChest animalchest) {
-        if (animalchest == null || !(MoCreatures.isServer())) {
+        if (animalchest == null || entity.world.isRemote) {
             return;
         }
 
@@ -1423,7 +1423,7 @@ public class MoCTools {
      * @param entity
      */
     public static void dropHorseAmulet(MoCEntityTameableAnimal entity) {
-        if (MoCreatures.isServer()) {
+        if (!entity.world.isRemote) {
             ItemStack stack = getProperAmulet(entity);
             if (stack == null) {
                 return;
@@ -1578,7 +1578,7 @@ public class MoCTools {
     }
 
     public static boolean isThisPlayerAnOP(EntityPlayer player) {
-        if (!MoCreatures.isServer()) {
+        if (player.world.isRemote) {
             return false;
         }
 
@@ -1586,7 +1586,7 @@ public class MoCTools {
     }
 
     public static void spawnMaggots(World world, Entity entity) {
-        if (MoCreatures.isServer()) {
+        if (!world.isRemote) {
             int var2 = 1 + world.rand.nextInt(4);
             for (int i = 0; i < var2; ++i) {
                 float var4 = (i % 2 - 0.5F) * 1 / 4.0F;

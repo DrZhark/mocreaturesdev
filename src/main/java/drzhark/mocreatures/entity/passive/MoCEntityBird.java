@@ -282,11 +282,11 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer()) {
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.2 : 0.45F;
         }
 
-        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer) {
             return (super.getYOffset() + 0.45F);
         } else {
             return super.getYOffset();
@@ -308,7 +308,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
             return true;
@@ -347,7 +347,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
         this.wingb += this.wingh * 2.0F;
 
         //check added to avoid duplicating behavior on client / server
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (isMovementCeased() && getIsFlying()) {
                 setIsFlying(false);
@@ -459,7 +459,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public void setDead() {
-        if (MoCreatures.isServer() && getIsTamed() && (this.getHealth() > 0)) {
+        if (!this.world.isRemote && getIsTamed() && (this.getHealth() > 0)) {
             return;
         } else {
             super.setDead();

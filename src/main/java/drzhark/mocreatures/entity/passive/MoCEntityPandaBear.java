@@ -94,13 +94,13 @@ public class MoCEntityPandaBear extends MoCEntityBear{
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
 
             this.setHealth(getMaxHealth());
             eatingAnimal();
-            if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100)) {
+            if (!this.world.isRemote && !getIsAdult() && (getEdad() < 100)) {
                 setEdad(getEdad() + 1);
             }
 
@@ -118,7 +118,7 @@ public class MoCEntityPandaBear extends MoCEntityBear{
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;
             setBearState(0);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.startRiding(this);
             }
             return true;
@@ -132,7 +132,7 @@ public class MoCEntityPandaBear extends MoCEntityBear{
         /**
          * panda bears and cubs will sit down every now and then
          */
-        if ((MoCreatures.isServer()) && !getIsTamed() && (this.rand.nextInt(300) == 0)) {
+        if (!this.world.isRemote && !getIsTamed() && this.rand.nextInt(300) == 0) {
             setBearState(2);
         }
     }

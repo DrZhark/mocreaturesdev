@@ -224,7 +224,7 @@ public class MoCEntityManticore extends MoCEntityMob {
             moveTail();
         }
 
-        if (MoCreatures.isServer() && isFlyer() && isOnAir()) {
+        if (!this.world.isRemote && isFlyer() && isOnAir()) {
             float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
             int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
             if (!this.isBeingRidden() || wingFlapFreq < 5) {
@@ -239,10 +239,10 @@ public class MoCEntityManticore extends MoCEntityMob {
             if (this.wingFlapCounter > 0 && ++this.wingFlapCounter > 20) {
                 this.wingFlapCounter = 0;
             }
-            /*if (this.wingFlapCounter != 0 && this.wingFlapCounter % 5 == 0 && !MoCreatures.isServer()) {
+            /*if (this.wingFlapCounter != 0 && this.wingFlapCounter % 5 == 0 && this.world.isRemote) {
                 StarFX();
             }*/
-            if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
+            if (this.wingFlapCounter == 5 && !this.world.isRemote) {
                 //System.out.println("playing sound");
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_WINGFLAP);
             }
@@ -258,7 +258,7 @@ public class MoCEntityManticore extends MoCEntityMob {
                 setPoisoning(false);
             }
         }
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (isFlyer() && this.rand.nextInt(500) == 0) {
                 wingFlap();
             }
@@ -278,8 +278,10 @@ public class MoCEntityManticore extends MoCEntityMob {
     public void wingFlap() {
         if (this.isFlyer() && this.wingFlapCounter == 0) {
             this.wingFlapCounter = 1;
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
-                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            if (!this.world.isRemote) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            }
         }
     }
 
@@ -304,7 +306,7 @@ public class MoCEntityManticore extends MoCEntityMob {
     }
 
     public void setPoisoning(boolean flag) {
-        if (flag && MoCreatures.isServer()) {
+        if (flag && !this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -345,7 +347,7 @@ public class MoCEntityManticore extends MoCEntityMob {
 
             } else if (getType() == 1)// red
             {
-                if (flag && MoCreatures.isServer() && !this.world.provider.doesWaterVaporize()) {
+                if (flag && !this.world.isRemote && !this.world.provider.doesWaterVaporize()) {
                     MoCreatures.burnPlayer((EntityPlayer) entityIn);
                     ((EntityLivingBase) entityIn).setFire(15);
                 }

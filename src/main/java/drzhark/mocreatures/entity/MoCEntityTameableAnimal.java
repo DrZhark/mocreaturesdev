@@ -123,7 +123,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         }
 
         if (this.getIsGhost() && !stack.isEmpty() && stack.getItem() == MoCItems.petamulet) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 // Remove when client is updated
                 ((EntityPlayerMP) player).sendAllContents(player.openContainer, player.openContainer.getInventory());
                 player.sendMessage(new TextComponentTranslation(TextFormatting.RED + "This pet does not belong to you."));
@@ -417,7 +417,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
     public void onLivingUpdate() {
         super.onLivingUpdate();
         //breeding code
-        if (MoCreatures.isServer() && readytoBreed() && this.rand.nextInt(100) == 0) {
+        if (!this.world.isRemote && readytoBreed() && this.rand.nextInt(100) == 0) {
             doBreeding();
         }
 
@@ -469,8 +469,10 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             }
 
             setGestationTime(getGestationTime()+1);
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
-                    new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            if (!this.world.isRemote) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHeart(this.getEntityId()),
+                        new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
+            }
 
             if (getGestationTime() <= 50) {
                 continue;

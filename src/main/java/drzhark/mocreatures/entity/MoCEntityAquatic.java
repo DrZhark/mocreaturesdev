@@ -396,7 +396,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.isBeingRidden()) {
                 Riding();
                 this.mountCount = 1;
@@ -860,10 +860,10 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 this.motionX += this.rand.nextDouble() / 30D;
                 this.motionZ += this.rand.nextDouble() / 10D;
             }
-            //if (MoCreatures.isServer()) {
+            //if (!this.world.isRemote) {
                 move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             //}
-            if (MoCreatures.isServer() && this.rand.nextInt(100) == 0) {
+            if (!this.world.isRemote && this.rand.nextInt(100) == 0) {
                 passenger.motionY += 0.9D;
                 passenger.motionZ -= 0.3D;
                 passenger.dismountRidingEntity();
@@ -871,7 +871,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             if (this.onGround) {
                 setIsJumping(false);
             }
-            if (MoCreatures.isServer() && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
+            if (!this.world.isRemote && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
                 int chance = (getMaxTemper() - getTemper());
                 if (chance <= 0) {
                     chance = 1;

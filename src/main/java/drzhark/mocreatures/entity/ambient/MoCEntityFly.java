@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.ambient;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.init.MoCSoundEvents;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,7 @@ public class MoCEntityFly extends MoCEntityInsect {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (getIsFlying() && this.rand.nextInt(200) == 0) {
                 setIsFlying(false);

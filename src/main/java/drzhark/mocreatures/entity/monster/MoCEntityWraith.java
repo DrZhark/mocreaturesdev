@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.init.MoCSoundEvents;
@@ -108,7 +107,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
      * Starts attack counters and synchronizes animations with clients
      */
     private void startArmSwingAttack() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             this.attackCounter = 1;
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));

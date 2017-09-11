@@ -45,7 +45,7 @@ public class MoCEntityDragonfly extends MoCEntityInsect {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             EntityPlayer ep = this.world.getClosestPlayerToEntity(this, 5D);
             if (ep != null && getIsFlying() && --this.soundCount == -1) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_DRAGONFLY_AMBIENT);

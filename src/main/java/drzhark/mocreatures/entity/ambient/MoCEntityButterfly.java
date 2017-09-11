@@ -21,7 +21,7 @@ public class MoCEntityButterfly extends MoCEntityInsect {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getIsFlying() && this.rand.nextInt(200) == 0) {
                 setIsFlying(false);
             }

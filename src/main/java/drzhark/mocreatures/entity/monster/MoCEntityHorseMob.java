@@ -226,15 +226,15 @@ public class MoCEntityHorseMob extends MoCEntityMob {
             stand();
         }
 
-        if ((getType() == 38) && (this.rand.nextInt(50) == 0) && !MoCreatures.isServer()) {
+        if (this.world.isRemote && getType() == 38 && this.rand.nextInt(50) == 0) {
             LavaFX();
         }
 
-        if ((getType() == 23) && (this.rand.nextInt(50) == 0) && !MoCreatures.isServer()) {
+        if (this.world.isRemote && getType() == 23 && this.rand.nextInt(50) == 0) {
             UndeadFX();
         }
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (isFlyer() && this.rand.nextInt(500) == 0) {
                 wingFlap();
             }

@@ -106,7 +106,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getGolemState() == 0) //just spawned
             {
                 EntityPlayer entityplayer1 = this.world.getClosestPlayerToEntity(this, 8D);
@@ -280,7 +280,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      * @param Metadata = block Metadata
      */
     public void receiveRock(IBlockState state) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             byte myBlock = translateOre(Block.getIdFromBlock(state.getBlock()));
             byte slot = (byte) getRandomCubeAdj();
             if ((slot != -1) && (slot < 23) && (myBlock != -1) && getGolemState() != 4) {
@@ -378,7 +378,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         boolean uncoveredChest = (missingChestBlocks.size() == 4);
         if (!openChest() && !uncoveredChest && getGolemState() != 1) {
             int j = this.world.getDifficulty().getDifficultyId();
-            if (MoCreatures.isServer() && this.rand.nextInt(j) == 0) {
+            if (!this.world.isRemote && this.rand.nextInt(j) == 0) {
                 destroyRandomGolemCube();
             } else {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_TURTLE_HURT, 2F);
@@ -557,7 +557,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
      */
     public void saveGolemCube(byte slot, byte value) {
         this.golemCubes[slot] = value;
-        if (MoCreatures.isServer() && MoCreatures.proxy.worldInitDone) // Fixes CMS initialization during world load
+        if (!this.world.isRemote && MoCreatures.proxy.worldInitDone) // Fixes CMS initialization during world load
         {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageTwoBytes(this.getEntityId(), slot, value), new TargetPoint(
                     this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));

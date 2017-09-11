@@ -32,7 +32,7 @@ public class ItemStaffPortal extends MoCItem {
     public EnumActionResult
             onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         final ItemStack stack = player.getHeldItem(hand);
-        if (!MoCreatures.isServer()) {
+        if (worldIn.isRemote) {
             return EnumActionResult.FAIL;
         }
         if (stack.getTagCompound() == null) {

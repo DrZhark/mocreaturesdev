@@ -117,7 +117,7 @@ public class MoCEntityOgre extends MoCEntityMob {
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.smashCounter > 0 && ++this.smashCounter > 10) {
                 this.smashCounter = 0;
                 performDestroyBlastAttack();
@@ -173,7 +173,7 @@ public class MoCEntityOgre extends MoCEntityMob {
      * Starts attack counters and synchronizes animations with clients
      */
     protected void startArmSwingAttack() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.smashCounter != 0)
                 return;
 

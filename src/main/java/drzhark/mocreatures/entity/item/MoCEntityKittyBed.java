@@ -202,7 +202,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         if (this.onGround) {
             setPickedUp(false);
         }
-        if ((getHasMilk() || getHasFood()) && (this.isBeingRidden()) && MoCreatures.isServer()) {
+        if ((getHasMilk() || getHasFood()) && (this.isBeingRidden()) && !this.world.isRemote) {
             this.milklevel += 0.003F;
             if (this.milklevel > 2.0F) {
                 this.milklevel = 0.0F;

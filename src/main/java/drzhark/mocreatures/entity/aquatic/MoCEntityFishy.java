@@ -130,7 +130,7 @@ public class MoCEntityFishy extends MoCEntityTameableAquatic {
             this.rotationPitch = this.prevRotationPitch;
         }
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());

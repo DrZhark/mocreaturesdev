@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.monster;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.init.MoCItems;
@@ -52,7 +51,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.getAttackTarget() == null) {
                 setSprinting(false);
             } else {
@@ -97,7 +96,7 @@ public class MoCEntitySilverSkeleton extends MoCEntityMob {
      * Starts attack counters and synchronizes animations with clients
      */
     private void startAttackAnimation() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             boolean leftArmW = this.rand.nextInt(2) == 0;
 
             if (leftArmW) {

@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.ambient;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityInsect;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -51,7 +50,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (!getHasFood()) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 8D);
                 if (entityitem != null && entityitem.getRidingEntity() == null) {
@@ -94,7 +93,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
     private void exchangeItem(EntityItem entityitem) {
         EntityItem cargo = new EntityItem(this.world, this.posX, this.posY + 0.2D, this.posZ, entityitem.getItem());
         entityitem.setDead();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             this.world.spawnEntity(cargo);
         }
     }

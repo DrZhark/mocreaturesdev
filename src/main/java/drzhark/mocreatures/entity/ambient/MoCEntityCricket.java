@@ -45,7 +45,7 @@ public class MoCEntityCricket extends MoCEntityInsect
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getIsFlying() && this.rand.nextInt(50) == 0) {
                 setIsFlying(false);
             }
@@ -73,7 +73,7 @@ public class MoCEntityCricket extends MoCEntityInsect
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (onGround && ((motionX > 0.05D) || (motionZ > 0.05D) || (motionX < -0.05D) || (motionZ < -0.05D)))
                 if (this.jumpCounter == 0 && this.onGround
                         && ((this.motionX > 0.05D) || (this.motionZ > 0.05D) || (this.motionX < -0.05D) || (this.motionZ < -0.05D))) {

@@ -101,7 +101,7 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (this.rand.nextInt(200) == 0) {
                 setGlowing(!this.world.isDaytime());

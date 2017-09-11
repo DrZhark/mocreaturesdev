@@ -56,7 +56,7 @@ public class MoCEventHooks {
 
     @SubscribeEvent
     public void onLivingDeathEvent(LivingDeathEvent event) {
-        if (MoCreatures.isServer()) {
+        if (!event.getEntity().world.isRemote) {
             if (IMoCTameable.class.isAssignableFrom(event.getEntityLiving().getClass())) {
                 IMoCTameable mocEntity = (IMoCTameable) event.getEntityLiving();
                 if (mocEntity.getIsTamed() && mocEntity.getPetHealth() > 0 && !mocEntity.isRiderDisconnecting()) {

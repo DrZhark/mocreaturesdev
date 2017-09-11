@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.monster;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityMob;
 import drzhark.mocreatures.entity.ai.EntityAINearestAttackableTargetMoC;
 import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
@@ -78,7 +77,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.getAttackTarget() == null) {
                 setIsAngry(false);
 

@@ -21,8 +21,6 @@ import net.minecraft.world.gen.feature.WorldGenLakes;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 public class ChunkGeneratorWyvernLair implements IChunkGenerator
 {
     /** RNG. */

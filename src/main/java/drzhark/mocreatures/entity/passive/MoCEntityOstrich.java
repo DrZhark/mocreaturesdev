@@ -394,7 +394,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     }
 
     public void transform(int tType) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -419,11 +419,11 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (getIsTamed() && MoCreatures.isServer() && (this.rand.nextInt(300) == 0) && (getHealth() <= getMaxHealth()) && (this.deathTime == 0)) {
+        if (getIsTamed() && !this.world.isRemote && (this.rand.nextInt(300) == 0) && (getHealth() <= getMaxHealth()) && (this.deathTime == 0)) {
             this.setHealth(getHealth() + 1);
         }
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             //ostrich buckle!
             if (getType() == 8 && (this.sprintCounter > 0 && this.sprintCounter < 150) && (this.isBeingRidden()) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobs(this, 2D, this.world);
@@ -675,7 +675,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("OstrichChest", 9);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.displayGUIChest(this.localchest);
             }
             return true;
@@ -736,7 +736,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
      * Drops a block of the color of the flag if carrying one
      */
     private void dropFlag() {
-        if (MoCreatures.isServer() && getFlagColor() != 0) {
+        if (!this.world.isRemote && getFlagColor() != 0) {
             int color = getFlagColor();
             if (color == 16) {
                 color = 0;
@@ -880,7 +880,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropArmor();
             MoCTools.dropSaddle(this, this.world);
 
@@ -898,7 +898,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
      */
     @Override
     public void dropArmor() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             EntityItem entityitem = null;// = new EntityItem(world, posX, posY, posZ, new ItemStack(Blocks.WOOL, 1, color));
 
             switch (getHelmet()) {

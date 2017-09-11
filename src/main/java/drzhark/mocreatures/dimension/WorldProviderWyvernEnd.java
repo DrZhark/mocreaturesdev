@@ -34,7 +34,7 @@ public class WorldProviderWyvernEnd extends WorldProviderSurface {
     }
 
     private void setCustomSky() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             return;
         }
         setSkyRenderer(new MoCSkyRenderer());

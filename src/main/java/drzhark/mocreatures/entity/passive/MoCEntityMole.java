@@ -151,7 +151,7 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.rand.nextInt(10) == 0 && getState() == 1) {
                 setState(2);
             }

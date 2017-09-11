@@ -138,7 +138,7 @@ public class MoCEntityEnt extends MoCEntityAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (this.getAttackTarget() == null && this.rand.nextInt(500) == 0) {
                 plantOnFertileGround();

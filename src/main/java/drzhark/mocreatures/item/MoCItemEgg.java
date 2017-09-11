@@ -1,6 +1,5 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityEgg;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,7 +20,7 @@ public class MoCItemEgg extends MoCItem {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
         stack.shrink(1);
-        if (MoCreatures.isServer() && player.onGround) {
+        if (!world.isRemote && player.onGround) {
             int i = stack.getItemDamage();
             if (i == 30) {
                 i = 31; //for ostrich eggs. placed eggs become stolen eggs.

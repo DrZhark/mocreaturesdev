@@ -245,7 +245,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             /*if (forceUpdates() && this.rand.nextInt(1000) == 0) {
                 MoCTools.forceDataSync(this);
@@ -293,7 +293,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
 
     @Override
     public boolean attackEntityFrom(DamageSource damagesource, float i) {
-        if (MoCreatures.isServer() && getIsTamed()) {
+        if (!this.world.isRemote && getIsTamed()) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageHealth(this.getEntityId(), this.getHealth()), new TargetPoint(
                     this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -431,7 +431,7 @@ public abstract class MoCEntityMob extends EntityMob implements IMoCEntity//, IE
     @Override
     public void setDead() {
         // Server check required to prevent tamed entities from being duplicated on client-side
-        if (MoCreatures.isServer() && (getIsTamed()) && (getHealth() > 0)) {
+        if (!this.world.isRemote && (getIsTamed()) && (getHealth() > 0)) {
             return;
         }
         super.setDead();

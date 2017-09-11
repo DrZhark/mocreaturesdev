@@ -1,6 +1,5 @@
 package drzhark.mocreatures.item;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.item.MoCEntityLitterBox;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,7 @@ public class MoCItemLitterBox extends MoCItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
-        if (MoCreatures.isServer()) {
+        if (!world.isRemote) {
             stack.shrink(1);
             MoCEntityLitterBox entitylitterbox = new MoCEntityLitterBox(world);
             entitylitterbox.setPosition(player.posX, player.posY, player.posZ);

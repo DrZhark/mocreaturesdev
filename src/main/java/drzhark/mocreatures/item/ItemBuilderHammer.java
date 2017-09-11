@@ -90,7 +90,7 @@ public class ItemBuilderHammer extends MoCItem {
 
                 int blockInfo[] = obtainBlockAndMetadataFromBelt(player, true);
                 if (blockInfo[0] != 0) {
-                    if (MoCreatures.isServer()) {
+                    if (!worldIn.isRemote) {
                         Block block = Block.getBlockById(blockInfo[0]);
                         player.world.setBlockState(pos, block.getDefaultState(), 3);
                         player.world.playSound(player, (float) newPosX + 0.5F, (float) newPosY + 0.5F, (float) newPosZ + 0.5F,

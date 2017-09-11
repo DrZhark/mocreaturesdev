@@ -244,7 +244,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public void onDeath(DamageSource damagesource) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getHasAmulet()) {
                     MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.medallion, 1));
                     setHasAmulet(false);
@@ -289,7 +289,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
         super.onLivingUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.getAttackTarget() == null) {
                 setSprinting(false);
             } else {
@@ -297,7 +297,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             }
         }
         
-        if (!MoCreatures.isServer()) //animation counters
+        if (this.world.isRemote) //animation counters
         {
             if (this.mouthCounter > 0 && ++this.mouthCounter > 30) {
                 this.mouthCounter = 0;
@@ -330,7 +330,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             }*/
         }
 
-        if (MoCreatures.isServer() && isFlyer() && isOnAir()) {
+        if (!this.world.isRemote && isFlyer() && isOnAir()) {
             float myFlyingSpeed = MoCTools.getMyMovementSpeed(this);
             int wingFlapFreq = (int) (25 - (myFlyingSpeed * 10));
             if (!this.isBeingRidden() || wingFlapFreq < 5) {
@@ -345,7 +345,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             if (this.wingFlapCounter > 0 && ++this.wingFlapCounter > 20) {
                 this.wingFlapCounter = 0;
             }
-            if (this.wingFlapCounter == 5 && MoCreatures.isServer()) {
+            if (!this.world.isRemote && this.wingFlapCounter == 5) {
                 MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_WINGFLAP);
             }
         }
@@ -464,7 +464,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && !getIsTamed() && getHasEaten() && !getIsAdult() && (stack.getItem() == MoCItems.medallion)) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 setHasAmulet(true);
                 MoCTools.tameWithName(player, this);
             }
@@ -477,7 +477,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
         }
 
         if (!stack.isEmpty() && onMainHand && getIsTamed() && !getHasAmulet() && (stack.getItem() == MoCItems.medallion)) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 setHasAmulet(true);
             }
             stack.shrink(1);
@@ -544,7 +544,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest(this.chestName, 18);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.displayGUIChest(this.localchest);
             }
             return true;
@@ -564,7 +564,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
             return;
         }
         float i = (float) (Math.ceil(f - 3F) / 2F);
-        if (MoCreatures.isServer() && (i > 0)) {
+        if (!this.world.isRemote && (i > 0)) {
             i /= 2;
             if (i > 1F) {
                 attackEntityFrom(DamageSource.FALL, i);
@@ -628,7 +628,7 @@ public class MoCEntityBigCat extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropArmor();
             MoCTools.dropSaddle(this, this.world);
 

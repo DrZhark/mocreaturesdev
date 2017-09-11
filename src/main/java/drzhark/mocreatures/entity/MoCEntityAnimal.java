@@ -319,7 +319,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (rideableEntity() && this.isBeingRidden()) {
                 Riding();
             }
@@ -770,10 +770,10 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 this.motionX += this.rand.nextDouble() / 30D;
                 this.motionZ += this.rand.nextDouble() / 10D;
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
-            if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
+            if (!this.world.isRemote && this.rand.nextInt(50) == 0) {
                 passenger.motionY += 0.9D;
                 passenger.motionZ -= 0.3D;
                 passenger.dismountRidingEntity();
@@ -781,7 +781,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             if (this.onGround) {
                 setIsJumping(false);
             }
-            if (MoCreatures.isServer() && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
+            if (!this.world.isRemote && this instanceof IMoCTameable && passenger instanceof EntityPlayer) {
                 int chance = (getMaxTemper() - getTemper());
                 if (chance <= 0) {
                     chance = 1;
@@ -1035,7 +1035,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
 
     @Override
     public void onDeath(DamageSource damagesource) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropMyStuff();
         }
 

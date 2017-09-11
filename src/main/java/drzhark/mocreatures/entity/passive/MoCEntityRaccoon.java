@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
@@ -97,12 +96,12 @@ public class MoCEntityRaccoon extends MoCEntityTameableAnimal {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
 
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
             this.setHealth(getMaxHealth());
 
-            if (MoCreatures.isServer() && !getIsAdult() && (getEdad() < 100)) {
+            if (!this.world.isRemote && !getIsAdult() && (getEdad() < 100)) {
                 setEdad(getEdad() + 1);
             }
 

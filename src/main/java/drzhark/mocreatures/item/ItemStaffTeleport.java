@@ -74,7 +74,7 @@ public class ItemStaffTeleport extends MoCItem {
                         coordZ + Math.sin((MoCTools.realAngle(player.rotationYaw - 90F) / 57.29578F))
                                 * (Math.sin((player.rotationPitch - 90F) / 57.29578F) * (x - 1));
 
-                if (MoCreatures.isServer()) {
+                if (!worldIn.isRemote) {
                     EntityPlayerMP playerMP = (EntityPlayerMP) player;
                     playerMP.connection.setPlayerLocation(newPosX, newPosY, newPosZ, player.rotationYaw,
                             player.rotationPitch);

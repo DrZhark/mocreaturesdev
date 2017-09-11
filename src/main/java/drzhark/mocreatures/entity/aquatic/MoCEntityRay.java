@@ -1,6 +1,5 @@
 package drzhark.mocreatures.entity.aquatic;
 
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAquatic;
 import drzhark.mocreatures.entity.ai.EntityAIWanderMoC2;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +31,7 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;
             player.posY = this.posY;
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.startRiding(this);
             }
             return true;

@@ -42,7 +42,7 @@ public class MoCEntityStingRay extends MoCEntityRay {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (!getIsTamed() && ++this.poisoncounter > 250 && (this.world.getDifficulty().getDifficultyId() > 0) && this.rand.nextInt(30) == 0) {
                 if (MoCTools.findNearPlayerAndPoison(this, true)) {
                     MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),

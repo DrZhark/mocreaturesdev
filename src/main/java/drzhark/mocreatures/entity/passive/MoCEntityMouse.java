@@ -134,11 +134,11 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
             return (super.getYOffset() - 0.7F);
         }
 
-        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
             return (super.getYOffset() - 0.1F);
         } else {
             return super.getYOffset();

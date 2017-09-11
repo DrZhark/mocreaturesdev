@@ -108,8 +108,10 @@ public class CommandMoCSpawn extends CommandBase {
                 return;
             }
             player.world.spawnEntity(specialEntity);
-            MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(specialEntity.getEntityId()),
-                    new TargetPoint(player.world.provider.getDimensionType().getId(), player.posX, player.posY, player.posZ, 64));
+            if (!player.world.isRemote) {
+                MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAppear(specialEntity.getEntityId()),
+                        new TargetPoint(player.world.provider.getDimensionType().getId(), player.posX, player.posY, player.posZ, 64));
+            }
             MoCTools.playCustomSound(specialEntity, MoCSoundEvents.ENTITY_GENERIC_MAGIC_APPEAR);
         } else {
             sender.sendMessage(new TextComponentTranslation(TextFormatting.RED + "ERROR:" + TextFormatting.WHITE

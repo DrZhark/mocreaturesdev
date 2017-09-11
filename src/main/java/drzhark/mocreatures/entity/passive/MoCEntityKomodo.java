@@ -126,7 +126,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         if (this.sitCounter > 0 && (this.isBeingRidden() || ++this.sitCounter > 150)) {
             this.sitCounter = 0;
         }
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (!this.isSwimming() && !this.isBeingRidden() && this.sitCounter == 0 && this.rand.nextInt(500) == 0) { //TODO
                 sit();
             }
@@ -161,7 +161,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
     private void sit() {
         this.sitCounter = 1;
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -224,7 +224,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;
 
-            if (MoCreatures.isServer() && (!this.isBeingRidden())) {
+            if (!this.world.isRemote && (!this.isBeingRidden())) {
                 player.startRiding(this);
             }
 
@@ -314,7 +314,7 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropArmor();
             MoCTools.dropSaddle(this, this.world);
         }

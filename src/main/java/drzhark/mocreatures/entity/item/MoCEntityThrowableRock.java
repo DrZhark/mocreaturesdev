@@ -116,7 +116,7 @@ public class MoCEntityThrowableRock extends Entity {
         }
 
         /*if (getBehavior() == 0) {
-            System.out.println("Zero Rock, Server? =" + MoCreatures.isServer() + " age " + rockTimer + " at " + this);
+            System.out.println("Zero Rock, Server? =" + !this.world.isRemote + " age " + rockTimer + " at " + this);
         }*/
         //held Trocks don't need to adjust its position
         if (getBehavior() == 1) {
@@ -180,7 +180,7 @@ public class MoCEntityThrowableRock extends Entity {
             this.motionX = ((master.posX - this.posX) / summonedSpeed);
             this.motionY = ((master.posY - this.posY) / 20D + 0.15D);
             this.motionZ = ((master.posZ - this.posZ) / summonedSpeed);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
             return;
@@ -189,7 +189,7 @@ public class MoCEntityThrowableRock extends Entity {
         if (getBehavior() == 4)// imploding / exploding rock
         {
             if (master == null) {
-                if (MoCreatures.isServer()) {
+                if (!this.world.isRemote) {
                     setBehavior(5);
                 }
                 return;
@@ -213,7 +213,7 @@ public class MoCEntityThrowableRock extends Entity {
                 this.motionZ = 0D;
             }
 
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
 
@@ -227,7 +227,7 @@ public class MoCEntityThrowableRock extends Entity {
             this.motionX = ((this.oPosX - this.posX) / summonedSpeed);
             this.motionY = ((this.oPosY - this.posY) / 20D + 0.15D);
             this.motionZ = ((this.oPosZ - this.posZ) / summonedSpeed);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
             setBehavior(0);
@@ -235,7 +235,7 @@ public class MoCEntityThrowableRock extends Entity {
         }
 
         this.motionY -= 0.04D;
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         }
         this.motionX *= 0.98D;
@@ -251,7 +251,7 @@ public class MoCEntityThrowableRock extends Entity {
     }
 
     private void transformToItem() {
-        if ((MoCTools.mobGriefing(this.world)) && (MoCreatures.proxy.golemDestroyBlocks) && MoCreatures.isServer()) // don't drop rocks if mobgriefing is set to false, prevents duping
+        if (!this.world.isRemote && MoCTools.mobGriefing(this.world) && MoCreatures.proxy.golemDestroyBlocks) // don't drop rocks if mobgriefing is set to false, prevents duping
         {
             EntityItem entityitem =
                     new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(this.getState().getBlock(), 1, this.getState()

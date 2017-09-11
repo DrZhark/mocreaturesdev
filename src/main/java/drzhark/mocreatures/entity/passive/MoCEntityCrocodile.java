@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFleeFromPlayer;
 import drzhark.mocreatures.entity.ai.EntityAIHunt;
@@ -127,14 +126,14 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
             if (this.getAttackTarget() != null) {
                 setIsSitting(false);
             }
-            if (MoCreatures.isServer() && this.getAttackTarget() != null || isSwimming() || getHasCaughtPrey() || this.rand.nextInt(500) == 0)// isInsideOfMaterial(Material.WATER)
+            if (!this.world.isRemote && this.getAttackTarget() != null || isSwimming() || getHasCaughtPrey() || this.rand.nextInt(500) == 0)// isInsideOfMaterial(Material.WATER)
             {
                 setIsSitting(false);
                 this.biteProgress = 0;
             }
 
         } else {
-            if (MoCreatures.isServer() && (this.rand.nextInt(500) == 0) && this.getAttackTarget() == null && !getHasCaughtPrey() && !isSwimming()) {
+            if (!this.world.isRemote && (this.rand.nextInt(500) == 0) && this.getAttackTarget() == null && !getHasCaughtPrey() && !isSwimming()) {
                 setIsSitting(true);
                 this.getNavigator().clearPathEntity();
             }
@@ -146,7 +145,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
 
         //TODO replace with move to water AI
-        if (MoCreatures.isServer() && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsSitting() && !isSwimming()) {
+        if (!this.world.isRemote && this.rand.nextInt(500) == 0 && !this.waterbound && !getIsSitting() && !isSwimming()) {
             MoCTools.MoveToWater(this);
         }
 
@@ -171,7 +170,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
                         ((EntityLivingBase) this.getRidingEntity()).deathTime = 0;
                     }
 
-                    if (MoCreatures.isServer() && this.rand.nextInt(50) == 0) {
+                    if (!this.world.isRemote && this.rand.nextInt(50) == 0) {
                         this.getRidingEntity().attackEntityFrom(DamageSource.causeMobDamage(this), 2);
                     }
                 }
@@ -241,7 +240,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         }
 
         //TODO FIX!!!!
-        /*if (MoCreatures.isServer() && entityIn.getRidingEntity() == null && this.rand.nextInt(3) == 0) {
+        /*if (!this.world.isRemote && entityIn.getRidingEntity() == null && this.rand.nextInt(3) == 0) {
             entityIn.mountEntity(this);
             this.setHasCaughtPrey(true);
             return false;

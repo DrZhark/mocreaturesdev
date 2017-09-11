@@ -124,7 +124,7 @@ public class MoCEntitySmallFish extends MoCEntityTameableAquatic {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if ((MoCreatures.isServer())) {
+        if (!this.world.isRemote) {
 
             if (getIsTamed() && this.rand.nextInt(100) == 0 && getHealth() < getMaxHealth()) {
                 this.setHealth(getMaxHealth());

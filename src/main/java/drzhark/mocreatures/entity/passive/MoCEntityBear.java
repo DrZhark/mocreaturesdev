@@ -1,7 +1,6 @@
 package drzhark.mocreatures.entity.passive;
 
 import drzhark.mocreatures.MoCTools;
-import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.entity.MoCEntityTameableAnimal;
 import drzhark.mocreatures.entity.ai.EntityAIFollowAdult;
 import drzhark.mocreatures.entity.ai.EntityAIFollowOwnerPlayer;
@@ -223,26 +222,26 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         if (this.attackCounter > 0 && ++this.attackCounter > 9) {
             this.attackCounter = 0;
         }
-        if (MoCreatures.isServer() && !getIsAdult() && getEdad() < 80 && (this.rand.nextInt(300) == 0)) {
+        if (!this.world.isRemote && !getIsAdult() && getEdad() < 80 && (this.rand.nextInt(300) == 0)) {
             setBearState(2);
         }
         /**
          * Sitting non tamed bears will resume on fours stance every now and then
          */
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && (this.rand.nextInt(800) == 0)) {
+        if (!this.world.isRemote && getBearState() == 2 && !getIsTamed() && this.rand.nextInt(800) == 0) {
             setBearState(0);
         }
-        if ((MoCreatures.isServer()) && (getBearState() == 2) && !getIsTamed() && !this.getNavigator().noPath()) {
+        if (!this.world.isRemote && getBearState() == 2 && !getIsTamed() && !this.getNavigator().noPath()) {
             setBearState(0);
         }
-        if ((MoCreatures.isServer()) && this.standingCounter > 0 && ++this.standingCounter > 100) {
+        if (!this.world.isRemote && this.standingCounter > 0 && ++this.standingCounter > 100) {
             this.standingCounter = 0;
             setBearState(0);
         }
         /**\
          * Standing if close to a vulnerable player
          */
-        if ((MoCreatures.isServer()) && !getIsTamed() && getIsStanding() 
+        if (!this.world.isRemote && !getIsTamed() && getIsStanding() 
                 && getBearState() != 2 && getIsAdult() && (this.rand.nextInt(200) == 0) && shouldAttackPlayers()) {
             EntityPlayer entityplayer1 = this.world.getClosestPlayerToEntity(this, 4D);
             if ((entityplayer1 != null && this.canEntityBeSeen(entityplayer1) && !entityplayer1.capabilities.disableDamage)) {
@@ -251,7 +250,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             }
         }
         //TODO move to AI
-        if (MoCreatures.isServer() && getType() == 3 && (this.deathTime == 0) && getBearState() != 2) {
+        if (!this.world.isRemote && getType() == 3 && (this.deathTime == 0) && getBearState() != 2) {
             EntityItem entityitem = getClosestItem(this, 12D, Items.REEDS, Items.SUGAR);
             if (entityitem != null) {
 
@@ -307,7 +306,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     }
 
     private void startAttack() {
-       if (MoCreatures.isServer() && this.attackCounter == 0 && getBearState() == 1) {
+       if (!this.world.isRemote && this.attackCounter == 0 && getBearState() == 1) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
             this.attackCounter = 1;
@@ -388,7 +387,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             if (this.localchest == null) {
                 this.localchest = new MoCAnimalChest("BigBearChest", 18);
             }
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                player.displayGUIChest(this.localchest);
             }
             return true;
@@ -435,7 +434,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropArmor();
             MoCTools.dropSaddle(this, this.world);
 

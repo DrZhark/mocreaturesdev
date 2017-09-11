@@ -71,7 +71,7 @@ public class MoCEntityPanther extends MoCEntityBigCat {
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;
             setSitting(false);
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.startRiding(this);
             }
             return true;

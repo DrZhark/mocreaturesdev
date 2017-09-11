@@ -176,7 +176,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     public void setPoisoning(boolean flag) {
-        if (flag && MoCreatures.isServer()) {
+        if (flag && !this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -220,7 +220,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             this.mouthCounter = 0;
         }
 
-        if (MoCreatures.isServer() && (this.armCounter == 10 || this.armCounter == 40)) {
+        if (!this.world.isRemote && (this.armCounter == 10 || this.armCounter == 40)) {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SCORPION_CLAW);
         }
 
@@ -290,7 +290,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
             } else if (getType() == 3)// red scorpions
             {
-                if (flag && MoCreatures.isServer() && !this.world.provider.doesWaterVaporize()) {
+                if (flag && !this.world.isRemote && !this.world.provider.doesWaterVaporize()) {
                     MoCreatures.burnPlayer((EntityPlayer) entityIn);
                     ((EntityLivingBase) entityIn).setFire(15);
                 }
@@ -302,7 +302,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     public void swingArm() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -324,7 +324,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -567,7 +567,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
     }
 
     public void transform(int tType) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), tType),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }

@@ -207,7 +207,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (isMovementCeased()) {
                 this.getNavigator().clearPathEntity();
             }

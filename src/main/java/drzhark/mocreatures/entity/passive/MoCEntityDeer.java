@@ -140,7 +140,7 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
 
     @Override
     public void setAdult(boolean flag) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             setType(this.rand.nextInt(1));
         }
         super.setAdult(flag);
@@ -155,7 +155,7 @@ public class MoCEntityDeer extends MoCEntityTameableAnimal {
     public void onUpdate() {
         super.onUpdate();
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
 
             if (this.onGround && --this.readyToJumpTimer <= 0) {
                 if (MoCTools.getMyMovementSpeed(this) > 0.17F) {

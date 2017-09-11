@@ -74,7 +74,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         setSize(1.1F, 3F); //TODO 
         this.stepHeight = 1.0F;
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.rand.nextInt(4) == 0) {
                 setAdult(false);
             } else {
@@ -212,7 +212,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if ((this.sprintCounter > 0 && this.sprintCounter < 150) && (this.isBeingRidden()) && rand.nextInt(15) == 0) {
                 MoCTools.buckleMobsNotPlayers(this, 3D, this.world);
             }
@@ -293,7 +293,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     private void sit() {
         this.sitCounter = 1;
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -327,7 +327,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             this.temper += 2;
             this.setHealth(getMaxHealth());
-            if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
+            if (!this.world.isRemote && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
                 MoCTools.tameWithName(player, this);
             }
             return true;
@@ -341,7 +341,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             this.temper += 1;
             this.setHealth(getMaxHealth());
-            if (MoCreatures.isServer() && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
+            if (!this.world.isRemote && !getIsAdult() && !getIsTamed() && this.temper >= 10) {
                 setTamed(true);
                 MoCTools.tameWithName(player, this);
             }
@@ -479,16 +479,14 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (player.isSneaking()) {
             initChest();
             if (getStorage() == 1) {
-                if (MoCreatures.isServer()) {
-                    if (MoCreatures.isServer()) {
-                        player.displayGUIChest(this.localelephantchest);
-                    }
+                if (!this.world.isRemote) {
+                    player.displayGUIChest(this.localelephantchest);
                 }
                 return true;
             }
             if (getStorage() == 2) {
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
-                if (MoCreatures.isServer()) {
+                if (!this.world.isRemote) {
                     player.displayGUIChest(doubleChest);
                 }
                 return true;
@@ -496,7 +494,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             if (getStorage() == 3) {
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 InventoryLargeChest tripleChest = new InventoryLargeChest("ElephantChest", doubleChest, this.localelephantchest3);
-                if (MoCreatures.isServer()) {
+                if (!this.world.isRemote) {
                     player.displayGUIChest(tripleChest);
                 }
                 return true;
@@ -505,7 +503,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
                 InventoryLargeChest doubleChest = new InventoryLargeChest("ElephantChest", this.localelephantchest, this.localelephantchest2);
                 InventoryLargeChest doubleChestb = new InventoryLargeChest("ElephantChest", this.localelephantchest3, this.localelephantchest4);
                 InventoryLargeChest fourChest = new InventoryLargeChest("ElephantChest", doubleChest, doubleChestb);
-                if (MoCreatures.isServer()) {
+                if (!this.world.isRemote) {
                     player.displayGUIChest(fourChest);
                 }
                 return true;
@@ -525,7 +523,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             player.rotationYaw = this.rotationYaw;
             player.rotationPitch = this.rotationPitch;
             this.sitCounter = 0;
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 player.startRiding(this);
             }
             return true;
@@ -555,7 +553,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
      * Drops tusks, makes sound
      */
     private void dropTusks() {
-        if (!MoCreatures.isServer()) {
+        if (this.world.isRemote) {
             return;
         }
         int i = getTusks();
@@ -790,7 +788,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
             }
             if (entityplayer.isSneaking()) {
-                if (MoCreatures.isServer()) {
+                if (!this.world.isRemote) {
                     if (this.sitCounter == 0) {
                         sit();
                     }
@@ -917,7 +915,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void dropMyStuff() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             dropTusks();
             //dropSaddle(this, world);
             if (getStorage() > 0) {
@@ -954,7 +952,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
 
     @Override
     public void dropArmor() {
-        if (!MoCreatures.isServer()) {
+        if (this.world.isRemote) {
             return;
         }
         if (getArmorType() >= 1) {

@@ -59,7 +59,7 @@ public class MoCItemHorseAmulet extends MoCItem {
             return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
         }
 
-        if (MoCreatures.isServer()) {
+        if (!worldIn.isRemote) {
             initAndReadNBT(stack);
         }
 
@@ -68,7 +68,7 @@ public class MoCItemHorseAmulet extends MoCItem {
         double newPosX = player.posX - (dist * Math.cos((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
         double newPosZ = player.posZ - (dist * Math.sin((MoCTools.realAngle(player.rotationYaw - 90F)) / 57.29578F));
 
-        if (MoCreatures.isServer()) {
+        if (!player.world.isRemote) {
             try {
                 MoCEntityTameableAnimal storedCreature;
                 if (this.spawnClass.equalsIgnoreCase("Wyvern")) { //ghost wyvern
@@ -85,6 +85,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                     }
                 }
 
+                System.out.println("spawnclass = " + this.spawnClass);
                 storedCreature.setPosition(newPosX, newPosY, newPosZ);
                 storedCreature.setType(this.creatureType);
                 storedCreature.setTamed(true);

@@ -57,7 +57,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
         setAdult(true);
         setEdad(20);
 
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.rand.nextInt(4) == 0) {
                 setHasBabies(true);
             } else {
@@ -138,7 +138,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     public void setPoisoning(boolean flag) {
-        if (flag && MoCreatures.isServer()) {
+        if (flag && !this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -185,7 +185,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             this.mouthCounter = 0;
         }
 
-        if (MoCreatures.isServer() && (this.armCounter == 10 || this.armCounter == 40)) {
+        if (!this.world.isRemote && (this.armCounter == 10 || this.armCounter == 40)) {
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_SCORPION_CLAW);
         }
 
@@ -193,7 +193,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
             this.armCounter = 0;
         }
 
-        if (MoCreatures.isServer() && !this.isBeingRidden() && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
+        if (!this.world.isRemote && !this.isBeingRidden() && this.getIsAdult() && !this.getHasBabies() && this.rand.nextInt(100) == 0) {
             MoCTools.findMobRider(this);
             /*List list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(4D, 2D, 4D));
             for (int i = 0; i < list.size(); i++) {
@@ -263,7 +263,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
             } else if (getType() == 3)// red scorpions
             {
-                if (flag && MoCreatures.isServer() && !this.world.provider.doesWaterVaporize()) {
+                if (!this.world.isRemote && flag && !this.world.provider.doesWaterVaporize()) {
                     MoCreatures.burnPlayer((EntityPlayer) entityIn);
                     ((EntityLivingBase) entityIn).setFire(15);
                 }
@@ -275,7 +275,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     }
 
     public void swingArm() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 1),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -293,7 +293,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
     @Override
     public void onDeath(DamageSource damagesource) {
         super.onDeath(damagesource);
-        if (MoCreatures.isServer() && getIsAdult() && getHasBabies()) {
+        if (!this.world.isRemote && getIsAdult() && getHasBabies()) {
             int k = this.rand.nextInt(5);
             for (int i = 0; i < k; i++) {
                 MoCEntityPetScorpion entityscorpy = new MoCEntityPetScorpion(this.world);
@@ -319,7 +319,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 3),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }

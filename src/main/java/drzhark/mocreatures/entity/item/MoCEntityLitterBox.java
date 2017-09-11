@@ -163,7 +163,7 @@ public class MoCEntityLitterBox extends EntityLiving {
         if (this.onGround) {
             setPickedUp(false);
         }
-        if (getUsedLitter() && MoCreatures.isServer()) {
+        if (getUsedLitter() && !this.world.isRemote) {
             this.littertime++;
             this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(12D, 4D, 12D));
@@ -183,7 +183,7 @@ public class MoCEntityLitterBox extends EntityLiving {
             }
 
         }
-        if (this.littertime > 5000 && MoCreatures.isServer()) {
+        if (this.littertime > 5000 && !this.world.isRemote) {
             setUsedLitter(false);
             this.littertime = 0;
         }

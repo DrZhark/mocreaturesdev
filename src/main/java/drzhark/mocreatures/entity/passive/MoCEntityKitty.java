@@ -478,7 +478,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && !MoCreatures.isServer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
             if (getKittyState() == 10) {
                 return (super.getYOffset() - 1.1F);
             }
@@ -490,7 +490,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             }
         }
 
-        if ((this.getRidingEntity() instanceof EntityPlayer) && !MoCreatures.isServer()) {
+        if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
             if (getKittyState() == 10) {
                 return (super.getYOffset() + 0.3F);
             }
@@ -516,7 +516,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((getKittyState() == 2) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.medallion)) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
             if (getIsTamed()) {
@@ -541,7 +541,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball) && MoCreatures.isServer()) {
+        if ((getKittyState() == 11) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball) && !this.world.isRemote) {
             stack.shrink(1);
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
@@ -568,7 +568,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return true;
         }
         if (!stack.isEmpty() && (getKittyState() > 2) && ((stack.getItem() == MoCItems.medallion) || (stack.getItem() == Items.BOOK))) {
-            if (MoCreatures.isServer()) {
+            if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
 
@@ -618,7 +618,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     @Override
     public void onLivingUpdate() {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (!getIsAdult() && (getKittyState() != 10)) {
                 setKittyState(10);
             }
@@ -1211,7 +1211,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     @Override
     public void setDead() {
-        if (MoCreatures.isServer() && (getKittyState() > 2) && (getHealth() > 0)) {
+        if (!this.world.isRemote && (getKittyState() > 2) && (getHealth() > 0)) {
             return;
         } else {
             super.setDead();
@@ -1221,7 +1221,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     public void swingArm() {
         //to synchronize, uses the packet handler to invoke the same method in the clients
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
@@ -1272,7 +1272,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     //drops medallion on death
     @Override
     public void onDeath(DamageSource damagesource) {
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (getIsTamed()) {
                 MoCTools.dropCustomItem(this, this.world, new ItemStack(MoCItems.medallion, 1));
             }

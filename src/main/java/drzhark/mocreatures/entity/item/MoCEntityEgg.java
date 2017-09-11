@@ -109,7 +109,7 @@ public class MoCEntityEgg extends EntityLiving {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (MoCreatures.isServer()) {
+        if (!this.world.isRemote) {
             if (this.rand.nextInt(20) == 0) {
                 this.lCounter++;
             }
