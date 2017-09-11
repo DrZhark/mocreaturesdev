@@ -28,15 +28,15 @@ public class MoCEntityManticorePet extends MoCEntityBigCat {
     public ResourceLocation getTexture() {
         switch (getType()) {
             case 1:
-                return MoCreatures.proxy.getTexture("BCmanticore.png");
+                return MoCreatures.proxy.getTexture("bcmanticore.png");
             case 2:
-                return MoCreatures.proxy.getTexture("BCmanticoreDark.png");
+                return MoCreatures.proxy.getTexture("bcmanticoredark.png");
             case 3:
-                return MoCreatures.proxy.getTexture("BCmanticoreBlue.png");
+                return MoCreatures.proxy.getTexture("bcmanticoreblue.png");
             case 4:
-                return MoCreatures.proxy.getTexture("BCmanticoreGreen.png");
+                return MoCreatures.proxy.getTexture("bcmanticoregreen.png");
             default:
-                return MoCreatures.proxy.getTexture("BCmanticore.png");
+                return MoCreatures.proxy.getTexture("bcmanticore.png");
         }
     }
 
