@@ -99,6 +99,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
@@ -108,6 +109,8 @@ import java.util.List;
 public class MoCEntities {
 
     public static List<EntityEntry> ENTITIES = new ArrayList<>();
+    public static List<EntityEntry> SPAWN_ENTITIES = new ArrayList<>();
+    static int MoCEntityID = 7256;
 
     private static EntityEntry createEntityEntry(Class<? extends Entity> cls, String name) {
         EntityEntry entityEntry = new EntityEntry(cls, name);
@@ -120,8 +123,18 @@ public class MoCEntities {
         EntityEntry entityEntry = new EntityEntry(cls, name);
         entityEntry.setRegistryName(new ResourceLocation(MoCConstants.MOD_PREFIX + name.toLowerCase()));
         entityEntry.setEgg(new EntityEggInfo(new ResourceLocation(MoCConstants.MOD_PREFIX + name.toLowerCase()), primaryColorIn, secondaryColorIn));
-        ENTITIES.add(entityEntry);
+        SPAWN_ENTITIES.add(entityEntry);
         return entityEntry;
+    }
+
+    private static void registerEntity(Class<? extends Entity> entityClass, String entityName) {
+        EntityRegistry.registerModEntity(new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase()), entityClass, entityName, MoCEntityID, MoCreatures.instance, 128, 1, true);
+        MoCEntityID += 1;
+    }
+
+    private static void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor) {
+        EntityRegistry.registerModEntity(new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase()), entityClass, entityName, MoCEntityID, MoCreatures.instance, 128, 1, true, eggColor, eggDotsColor);
+        MoCEntityID += 1;
     }
 
     public static EntityEntry BIRD = createEntityEntry(MoCEntityBird.class, "Bird", 14020607, 14020607);// 0x03600, 0x003500);
@@ -233,7 +246,14 @@ public class MoCEntities {
             MoCreatures.LOGGER.info("Registering entities...");
             final IForgeRegistry<EntityEntry> registry = event.getRegistry();
             for (EntityEntry entry : ENTITIES) {
-                registry.register(entry);
+                // TODO: Re-enable when registry works properly
+                //registry.register(entry);
+                registerEntity(entry.getEntityClass(), entry.getName());
+            }
+            for (EntityEntry entry : SPAWN_ENTITIES) {
+                // TODO: Re-enable when registry works properly
+                //registry.register(entry);
+                registerEntity(entry.getEntityClass(), entry.getName(), entry.getEgg().primaryColor, entry.getEgg().secondaryColor);
             }
 
             // ambients

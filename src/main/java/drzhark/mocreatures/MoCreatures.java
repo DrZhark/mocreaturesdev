@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-@Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION)
+@Mod(modid = MoCConstants.MOD_ID, name = MoCConstants.MOD_NAME, version = MoCConstants.MOD_VERSION, acceptableRemoteVersions = MoCConstants.MOD_ACCEPTED_VERSIONS)
 public class MoCreatures {
 
     @Instance(MoCConstants.MOD_ID)
