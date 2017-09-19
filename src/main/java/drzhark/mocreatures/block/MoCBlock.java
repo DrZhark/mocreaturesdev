@@ -35,7 +35,7 @@ public class MoCBlock extends Block {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int ix = 0; ix < MoCBlocks.multiBlockNames.size(); ix++) {
             items.add(new ItemStack(this, 1, ix));
         }

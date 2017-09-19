@@ -70,6 +70,9 @@ public class MoCEntityPolarBear extends MoCEntityBear{
         if (super.processInteract(player, hand)) {
             return true;
         }
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(stack.getItem())) {
             stack.shrink(1);
@@ -111,7 +114,7 @@ public class MoCEntityPolarBear extends MoCEntityBear{
     
     @Override
     public String getOffspringClazz(IMoCTameable mate) {
-        return "PolarBear";
+        return "WildPolarBear";
     }
 
     @Override

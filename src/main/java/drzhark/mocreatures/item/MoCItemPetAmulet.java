@@ -76,6 +76,8 @@ public class MoCItemPetAmulet extends MoCItem {
             try {
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
                     this.spawnClass = "WildHorse";
+                } else if (this.spawnClass.equalsIgnoreCase("PolarBear")) {
+                    this.spawnClass = "WildPolarBear";
                 }
 
                 if (this.spawnClass.equalsIgnoreCase("Ray")) {

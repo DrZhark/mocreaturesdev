@@ -280,4 +280,16 @@ public class CMSUtils {
             }
         }
     }*/
+
+    public static long asLong(int x, int z) {
+        return ((long) x << 32) + z - Integer.MIN_VALUE;
+    }
+
+    public static int getChunkX(long l) {
+        return (int) (l >> 32);
+    }
+
+    public static int getChunkZ(long l) {
+        return (int) (l & 0xFFFFFFFF) + Integer.MIN_VALUE;
+    }
 }

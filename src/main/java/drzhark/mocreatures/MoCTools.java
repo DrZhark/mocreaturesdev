@@ -80,6 +80,8 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -1485,12 +1487,8 @@ public class MoCTools {
             }
             NBTTagCompound nbtt = stack.getTagCompound();
             try {
-                String petClass = entity.getClass().getSimpleName().replace("MoCEntity", "");
-                if (petClass.equalsIgnoreCase("Horse")) {
-                    petClass = "WildHorse";
-                } else if (petClass.equalsIgnoreCase("Komodo")) {
-                    petClass = "KomodoDragon";
-                }
+                final EntityEntry entry = EntityRegistry.getEntry((Class<? extends Entity>) entity.getClass());
+                final String petClass = entry.getName();
 
                 nbtt.setString("SpawnClass", petClass);
                 nbtt.setUniqueId("OwnerUUID", player.getUniqueID());

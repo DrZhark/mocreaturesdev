@@ -34,13 +34,9 @@ public class MoCBlockBush extends BlockBush {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
-        EnumType[] aenumtype = EnumType.values();
-        int i = aenumtype.length;
-
-        for (int j = 0; j < i; ++j) {
-            MoCBlockBush.EnumType enumtype = aenumtype[j];
-            items.add(new ItemStack(itemIn.getIconItemStack().getItem(), 1, enumtype.getMetadata()));
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+        for (int j = 0; j < EnumType.values().length; ++j) {
+            items.add(new ItemStack(this, 1, j));
         }
     }
 
