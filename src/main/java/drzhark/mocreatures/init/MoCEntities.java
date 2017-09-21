@@ -110,7 +110,7 @@ public class MoCEntities {
 
     public static List<EntityEntry> ENTITIES = new ArrayList<>();
     public static List<EntityEntry> SPAWN_ENTITIES = new ArrayList<>();
-    static int MoCEntityID = 7256;
+    static int MoCEntityID = 0;
 
     private static EntityEntry createEntityEntry(Class<? extends Entity> cls, String name) {
         EntityEntry entityEntry = new EntityEntry(cls, name);
@@ -128,12 +128,14 @@ public class MoCEntities {
     }
 
     private static void registerEntity(Class<? extends Entity> entityClass, String entityName) {
-        EntityRegistry.registerModEntity(new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase()), entityClass, entityName, MoCEntityID, MoCreatures.instance, 128, 1, true);
+        final ResourceLocation resourceLocation = new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase());
+        EntityRegistry.registerModEntity(resourceLocation, entityClass, resourceLocation.toString(), MoCEntityID, MoCreatures.instance, 128, 1, true);
         MoCEntityID += 1;
     }
 
     private static void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor, int eggDotsColor) {
-        EntityRegistry.registerModEntity(new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase()), entityClass, entityName, MoCEntityID, MoCreatures.instance, 128, 1, true, eggColor, eggDotsColor);
+        final ResourceLocation resourceLocation = new ResourceLocation(MoCConstants.MOD_PREFIX + entityName.toLowerCase());
+        EntityRegistry.registerModEntity(resourceLocation, entityClass, resourceLocation.toString(), MoCEntityID, MoCreatures.instance, 128, 1, true, eggColor, eggDotsColor);
         MoCEntityID += 1;
     }
 

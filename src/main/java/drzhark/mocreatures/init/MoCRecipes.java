@@ -246,9 +246,6 @@ public class MoCRecipes {
             addShapedRecipe(new ItemStack(MoCItems.whip, 1), new Object[] {"#X#", "X X", "# Z", Character.valueOf('#'), MoCItems.bigcatclaw, Character.valueOf('X'),
                     Items.LEATHER, Character.valueOf('Z'), Items.IRON_INGOT});
 
-            addShapedRecipe(new ItemStack(MoCItems.horsesaddle, 1),
-                    new Object[] {"XXX", "X#X", "# #", Character.valueOf('#'), Items.IRON_INGOT, Character.valueOf('X'), Items.LEATHER});
-
             addShapedRecipe(new ItemStack(MoCItems.haystack, 1), new Object[] {"XXX", "XXX", Character.valueOf('X'), Items.WHEAT});
 
             addShapedRecipe(new ResourceLocation(MoCConstants.MOD_ID + ":" + Items.WHEAT.getUnlocalizedName().replace("item.", "")), new ItemStack(Items.WHEAT, 6), new Object[] {"X", Character.valueOf('X'), MoCItems.haystack});
@@ -256,7 +253,10 @@ public class MoCRecipes {
             addShapedRecipe(new ItemStack(MoCItems.sugarlump, 1), new Object[] {"XX", "##", Character.valueOf('X'), Items.SUGAR, Character.valueOf('#'),
                     Items.SUGAR});
 
-            addShapedRecipe(new ItemStack(MoCItems.horsesaddle, 1), new Object[] {"X", "#", Character.valueOf('X'), Items.SADDLE, Character.valueOf('#'),
+            addShapedRecipe(new ItemStack(MoCItems.horsesaddle, 1),
+                    new Object[] {"XXX", "X#X", "# #", Character.valueOf('#'), Items.IRON_INGOT, Character.valueOf('X'), Items.LEATHER});
+
+            addShapedRecipe(new ItemStack(MoCItems.horsesaddle, 1), new Object[] {" X ", " # ", Character.valueOf('X'), Items.SADDLE, Character.valueOf('#'),
                     Items.IRON_INGOT});
 
             addShapedRecipe(new ResourceLocation(MoCConstants.MOD_ID + ":" + Items.CHAINMAIL_CHESTPLATE.getUnlocalizedName().replace("item.", "")), new ItemStack(Items.CHAINMAIL_CHESTPLATE, 1), new Object[] {"X X", "XXX", "XXX", Character.valueOf('X'), MoCItems.sharkteeth});
