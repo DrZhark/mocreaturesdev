@@ -306,7 +306,12 @@ public final class CustomSpawner {
                                 float spawnX = tempX + 0.5F;
                                 float spawnY = tempY;
                                 float spawnZ = tempZ + 0.5F;
-                                BlockPos blockpos = new BlockPos(tempX, tempY, tempZ);
+                                BlockPos spawnPos = new BlockPos(tempX, tempY, tempZ);
+                                final Chunk spawnChunk = getLoadedChunkWithoutMarkingActive(world.getChunkProvider(), spawnPos.getX() >> 4, spawnPos.getZ() >> 4);
+                                if (spawnChunk == null || spawnChunk.unloadQueued) {
+                                    ++spawnAttempt;
+                                    continue;
+                                }
 
                                 if (!world.isAnyPlayerWithinRangeAt(spawnX, spawnY, spawnZ, 24.0D) && chunkcoordspawn.distanceSq(spawnX, spawnY, spawnZ) >= 576.0D) {
                                     if (spawnlistentry == null) {
@@ -317,7 +322,7 @@ public final class CustomSpawner {
                                         }
                                     }
 
-                                    if (canCreatureTypeSpawnAtLocation(chunk, entitySpawnType, spawnlistentry, world, blockpos)) {
+                                    if (canCreatureTypeSpawnAtLocation(spawnChunk, entitySpawnType, spawnlistentry, world, spawnPos)) {
 
                                         EntityLiving entityliving;
                                         EntityData entityData;
