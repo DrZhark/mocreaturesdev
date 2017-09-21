@@ -179,8 +179,9 @@ public final class CustomSpawner {
 
     protected static BlockPos getRandomSpawningPointInChunk(Chunk chunk, World world) {
         int x = chunk.x * 16 + world.rand.nextInt(16);
-        int y = world.rand.nextInt(chunk == null ? world.getActualHeight() : chunk.getTopFilledSegment() + 16 - 1);
         int z = chunk.z * 16 + world.rand.nextInt(16);
+        int height = MathHelper.roundUp(chunk.getHeight(new BlockPos(x, 0, z)) + 1, 16);
+        int y = world.rand.nextInt(height > 0 ? height : chunk.getTopFilledSegment() + 16 - 1);
         return new BlockPos(x, y, z);
     }
 
@@ -277,14 +278,13 @@ public final class CustomSpawner {
             if (chunk == null || chunk.unloadQueued) {
                 continue;
             }
-            BlockPos chunkpos = getRandomSpawningPointInChunk(chunk, world);
-            int posX = chunkpos.getX();
-            int posY = chunkpos.getY();
-            int posZ = chunkpos.getZ();
+            BlockPos blockPos = getRandomSpawningPointInChunk(chunk, world);
+            int posX = blockPos.getX();
+            int posY = blockPos.getY();
+            int posZ = blockPos.getZ();
 
-            BlockPos pos = new BlockPos(posX, posY, posZ);
-            if (!chunk.getBlockState(pos).isNormalCube()
-                    && chunk.getBlockState(pos).getMaterial() == entitySpawnType.getLivingMaterial()) {
+            if (!chunk.getBlockState(blockPos).isNormalCube()
+                    && chunk.getBlockState(blockPos).getMaterial() == entitySpawnType.getLivingMaterial()) {
                 int spawnedMob = 0;
                 int spawnCount = 0;
 
@@ -333,7 +333,7 @@ public final class CustomSpawner {
                                         entityData = CMSUtils.getEnvironment(world).classToEntityMapping.get(spawnlistentry.entityClass);
                                         // spawn checks
                                         entityliving.setLocationAndAngles(spawnX, spawnY, spawnZ, world.rand.nextFloat() * 360.0F, 0.0F);
-                                        Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, world, spawnX, spawnY, spawnZ);
+                                        Result canSpawn = ForgeEventFactory.canEntitySpawn(entityliving, world, spawnX, spawnY, spawnZ, false);
                                         boolean validLightLevel = isValidLightLevel(entityliving, world, entityData.getMinLightLevel(), entityData.getMaxLightLevel());
                                         boolean canEntitySpawn = canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere());
                                         boolean underGroundSpawn = (entityData.getLivingSpawnType() == entityData.getEnvironment().LIVINGTYPE_UNDERGROUND && CMSUtils
@@ -731,7 +731,7 @@ public final class CustomSpawner {
                         entityliving.setLocationAndAngles(j1 + 0.5F, blockpos.getY(), k1 + 0.5F, par6Random.nextFloat() * 360.0F, 0.0F);
                         Result canSpawn =
                                 ForgeEventFactory.canEntitySpawn(entityliving, world, entityliving.getPosition().getX(), entityliving
-                                        .getPosition().getY(), entityliving.getPosition().getZ());
+                                        .getPosition().getY(), entityliving.getPosition().getZ(), false);
                         if (canSpawn == Result.ALLOW || (canSpawn == Result.DEFAULT && entityliving.getCanSpawnHere())) {
                             world.spawnEntity(entityliving);
                             if (CMSUtils.getEnvironment(world).debug) {
