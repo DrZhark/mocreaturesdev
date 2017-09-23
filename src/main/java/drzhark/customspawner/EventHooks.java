@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.biome.Biome;
@@ -57,7 +58,13 @@ public class EventHooks {
 
     @SubscribeEvent
     public void onLivingPackSize(LivingPackSizeEvent event) {
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
+        final World world = event.getEntity().world;
+        final EnvironmentSettings environment = CMSUtils.getEnvironment(event.getEntity().world);
+        if (!isValidEntity(event.getEntity(), world, environment)) {
+            return;
+        }
+
+        EntityData entityData = environment.classToEntityMapping.get(event.getEntityLiving().getClass());
         if (entityData != null) {
             event.setMaxPackSize(entityData.getMaxInChunk());
             event.setResult(Result.ALLOW); // needed for changes to take effect
@@ -66,7 +73,13 @@ public class EventHooks {
 
     @SubscribeEvent
     public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event) {
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
+        final World world = event.getEntity().world;
+        final EnvironmentSettings environment = CMSUtils.getEnvironment(event.getEntity().world);
+        if (!isValidEntity(event.getEntity(), world, environment)) {
+            return;
+        }
+
+        EntityData entityData = environment.classToEntityMapping.get(event.getEntityLiving().getClass());
         if (entityData != null && !entityData.getCanSpawn()) {
             if (entityData.getEnvironment().debug) {
                 entityData.getEnvironment().envLog.logger.info("Denied spawn for entity " + entityData.getEntityClass()
@@ -79,6 +92,12 @@ public class EventHooks {
     // used for Despawner
     @SubscribeEvent
     public void onLivingDespawn(LivingSpawnEvent.AllowDespawn event) {
+        final World world = event.getEntity().world;
+        final EnvironmentSettings environment = CMSUtils.getEnvironment(event.getEntity().world);
+        if (!isValidEntity(event.getEntity(), world, environment)) {
+            return;
+        }
+
         if (CustomSpawner.forceDespawns) {
             // try to guess what we should ignore
             // Monsters
@@ -139,7 +158,8 @@ public class EventHooks {
                         + ", " + z + ". To prevent forced despawns, use /moc forceDespawns false.");
             }
         }
-        EntityData entityData = CMSUtils.getEnvironment(event.getEntity().world).classToEntityMapping.get(event.getEntityLiving().getClass());
+
+        EntityData entityData = environment.classToEntityMapping.get(event.getEntityLiving().getClass());
         if (entityData != null && entityData.getLivingSpawnType() == CMSUtils.getEnvironment(event.getEntity().world).LIVINGTYPE_UNDERGROUND) {
             event.setResult(Result.ALLOW);
         }
@@ -170,5 +190,26 @@ public class EventHooks {
             CustomSpawner.environmentMap.get(WorldProviderSurface.class).structureData.registerStructure(
                     CustomSpawner.environmentMap.get(WorldProviderSurface.class), event.getType(), event.getOriginalGen());
         }
+    }
+
+    private boolean isValidEntity(Entity entity, World world, EnvironmentSettings environment) {
+        if (entity == null || world == null || environment == null) {
+            if (CustomSpawner.debug) {
+                if (entity == null) {
+                    CustomSpawner.globalLog.logger.info("Event fired with NULL entity!");
+                }
+                else if (world == null) {
+                    CustomSpawner.globalLog.logger.info("Event fired with NULL world for entity " + entity);
+                } else {
+                    CustomSpawner.globalLog.logger.info("No environment found in world " + world.getWorldInfo().getWorldName() 
+                            + ", dim " + world.provider.getDimension() + ", provider " + world.provider.getClass().getSimpleName() 
+                            + " for entity " + entity);
+                }
+                Thread.dumpStack();
+            }
+            return false;
+        }
+
+        return true;
     }
 }

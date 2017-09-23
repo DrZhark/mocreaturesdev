@@ -12,8 +12,11 @@ public class SpawnTickHandler {
 
     @SubscribeEvent
     public void worldTick(WorldTickEvent event) {
-        WorldServer world = (WorldServer) event.world;
-        EnvironmentSettings environment = CMSUtils.getEnvironment(world);
+        final WorldServer world = (WorldServer) event.world;
+        final EnvironmentSettings environment = CMSUtils.getEnvironment(world);
+        if (environment == null) {
+            return;
+        }
         for (EntitySpawnType entitySpawnType : environment.entitySpawnTypes.values()) {
             if (entitySpawnType.name().equals("UNDEFINED")) {
                 continue;
