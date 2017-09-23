@@ -175,7 +175,8 @@ public class MoCEntityKittyBed extends EntityLiving {
         }
         if (!stack.isEmpty() && ((stack.getItem() == Items.STONE_PICKAXE) || (stack.getItem() == Items.WOODEN_PICKAXE)
                         || (stack.getItem() == Items.IRON_PICKAXE) || (stack.getItem() == Items.GOLDEN_PICKAXE) || (stack.getItem() == Items.DIAMOND_PICKAXE))) {
-            player.inventory.addItemStackToInventory(new ItemStack(MoCItems.kittybed[Math.abs(getSheetColor() - 15)], 1));
+            final int color = getSheetColor();
+            player.inventory.addItemStackToInventory(new ItemStack(MoCItems.kittybed[color], 1));
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;

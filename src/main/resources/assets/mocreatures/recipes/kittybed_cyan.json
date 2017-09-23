@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "mocreatures:kittybed",
+  "pattern": [
+    "#X#",
+    "X X",
+    "# Z"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:planks",
+      "data": 0
+    },
+    "#": {
+      "item": "minecraft:wool",
+      "data": 9
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "mocreatures:kittybed_cyan"
+  }
+}

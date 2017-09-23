@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "mocreatures:saddle",
+  "pattern": [
+    " X ",
+    " # "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:saddle"
+    },
+    "#": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "mocreatures:horsesaddle"
+  }
+}

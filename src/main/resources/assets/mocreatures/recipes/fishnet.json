@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "X#X",
+    "#X#"
+  ],
+  "key": {
+    "X": {
+      "item": "mocreatures:sharkteeth"
+    },
+    "#": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "mocreatures:fishnet",
+    "data": 0
+  }
+}

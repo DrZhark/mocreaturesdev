@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mocreatures:moclog",
+      "data": 1
+    }
+  ],
+  "result": {
+    "item": "mocreatures:mocwoodplank",
+    "data": 1,
+	"count": 4
+  }
+}

@@ -3,9 +3,12 @@ package drzhark.mocreatures.item;
 import drzhark.mocreatures.MoCreatures;
 import drzhark.mocreatures.dimension.MoCDirectTeleporter;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +16,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ItemStaffPortal extends MoCItem {
@@ -35,6 +40,22 @@ public class ItemStaffPortal extends MoCItem {
         if (worldIn.isRemote) {
             return EnumActionResult.FAIL;
         }
+        final boolean hasMending = EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) > 0;
+        final boolean hasUnbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) > 0;
+        if (hasMending || hasUnbreaking) {
+            String enchantments = "unbreaking";
+            if (hasMending && hasUnbreaking) {
+                enchantments = "mending, unbreaking";
+            } else if (hasMending) {
+                enchantments = "mending";
+            }
+            player.sendMessage(new TextComponentTranslation(MoCreatures.MOC_LOGO + 
+                TextFormatting.RED + " Detected illegal enchantment(s) '" + TextFormatting.GREEN + enchantments + 
+                    TextFormatting.RED + "' on Staff Portal!\nThe item has been removed from your inventory."));
+            player.inventory.deleteStack(stack);
+            return EnumActionResult.SUCCESS;
+        }
+
         if (stack.getTagCompound() == null) {
             stack.setTagCompound(new NBTTagCompound());
         }
@@ -130,16 +151,6 @@ public class ItemStaffPortal extends MoCItem {
         return EnumAction.BLOCK;
     }
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is
-     * pressed. Args: itemStack, world, entityPlayer
-     */
-    /*@Override
-    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
-        return par1ItemStack;
-    }*/
-
     public void readFromNBT(NBTTagCompound nbt) {
         this.portalPosX = nbt.getInteger("portalPosX");
         this.portalPosY = nbt.getInteger("portalPosY");
@@ -152,5 +163,10 @@ public class ItemStaffPortal extends MoCItem {
         nbt.setInteger("portalPosY", this.portalPosY);
         nbt.setInteger("portalPosZ", this.portalPosZ);
         nbt.setInteger("portalDimension", this.portalDimension);
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return false;
     }
 }

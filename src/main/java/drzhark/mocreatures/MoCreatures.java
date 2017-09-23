@@ -15,6 +15,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.datafix.FixTypes;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,7 +57,7 @@ public class MoCreatures {
     public static Map<String, MoCEntityData> mocEntityMap = new TreeMap<String, MoCEntityData>(String.CASE_INSENSITIVE_ORDER);
     public static Map<Class<? extends EntityLiving>, MoCEntityData> entityMap = new HashMap<Class<? extends EntityLiving>, MoCEntityData>();
     public static Map<Integer, Class<? extends EntityLiving>> instaSpawnerMap = new HashMap<Integer, Class<? extends EntityLiving>>();
-    public static final String CATEGORY_ITEM_IDS = "item-ids";
+    public static final String MOC_LOGO = TextFormatting.WHITE + "[" + TextFormatting.AQUA + "Mo'Creatures" + TextFormatting.WHITE + "]";
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -101,11 +102,6 @@ public class MoCreatures {
                 event.registerServerCommand(new CommandMoCSpawn());
             }
         }
-    }
-
-    @SuppressWarnings("unused")
-    private int getItemId(String name, int defaultId) {
-        return proxy.mocSettingsConfig.get(CATEGORY_ITEM_IDS, "item_" + name, defaultId).getInt();
     }
 
     public static void burnPlayer(EntityPlayer player) {

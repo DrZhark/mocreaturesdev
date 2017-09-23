@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XRX",
+    "###",
+    "XRX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:log",
+      "data": 0
+    },
+    "#": {
+      "item": "minecraft:lead"
+    },
+    "R": {
+      "item": "minecraft:planks",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "mocreatures:mammothplatform"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond_sword"
+    },
+    {
+      "item": "mocreatures:scorpstingfrost"
+    },
+    {
+      "item": "mocreatures:scorpstingfrost"
+    },
+    {
+      "item": "mocreatures:scorpstingfrost"
+    }
+  ],
+  "result": {
+    "item": "mocreatures:scorpswordfrost"
+  }
+}

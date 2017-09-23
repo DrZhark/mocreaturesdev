@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    " Y ",
+    " Z "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:blaze_powder"
+    },
+    "Y": {
+      "item": "mocreatures:heartfire"
+    },
+    "Z": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "mocreatures:essencefire"
+  }
+}

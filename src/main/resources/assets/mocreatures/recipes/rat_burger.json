@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SX ",
+    "R#R",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:bread"
+    },
+    "#": {
+      "item": "mocreatures:ratcooked"
+    },
+    "R": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "S": {
+      "item": "minecraft:pumpkin_seeds"
+    }
+  },
+  "result": {
+    "item": "mocreatures:ratburger"
+  }
+}

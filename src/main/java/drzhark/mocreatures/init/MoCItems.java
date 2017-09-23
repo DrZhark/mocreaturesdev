@@ -45,6 +45,8 @@ import java.util.Set;
 
 public class MoCItems {
 
+    public static final Set<Item> ITEMS = new HashSet<>();
+
     static ArmorMaterial scorpARMOR = EnumHelper.addArmorMaterial("crocARMOR", "crocARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
     static ArmorMaterial furARMOR = EnumHelper.addArmorMaterial("furARMOR", "furARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
     static ArmorMaterial hideARMOR = EnumHelper.addArmorMaterial("hideARMOR", "hideARMOR", 15, new int[] {2, 6, 5, 2}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
@@ -191,8 +193,6 @@ public class MoCItems {
 
     @Mod.EventBusSubscriber(modid = MoCConstants.MOD_ID)
     public static class RegistrationHandler {
-        public static final Set<Item> ITEMS = new HashSet<>();
-
         /**
          * Register this mod's {@link Item}s.
          *
@@ -323,25 +323,28 @@ public class MoCItems {
                     crabcooked
             ));
 
+            final IForgeRegistry<Item> registry = event.getRegistry();
+
             for (int i = 0; i < 16; i++) {
-                String s = EnumDyeColor.byMetadata(i).getUnlocalizedName();
+                String s = EnumDyeColor.byMetadata(i).getUnlocalizedName().toLowerCase();
                 if (s.equalsIgnoreCase("lightBlue")) s = "light_blue";
                 kittybed[i] = new MoCItemKittyBed("kittybed_" + s, i);
-                items.add(kittybed[i]);
+                registry.register(kittybed[i]);
+                if (!MoCreatures.isServer()) {
+                    ModelLoader.setCustomModelResourceLocation(kittybed[i], 0, new ModelResourceLocation(MoCConstants.MOD_PREFIX + kittybed[i].getUnlocalizedName().replace("item.",  ""), "inventory"));
+                }
             }
-
-            final IForgeRegistry<Item> registry = event.getRegistry();
 
             for (final Item item : items) {
                 registry.register(item);
                 ITEMS.add(item);
                 if (!MoCreatures.isServer()) {
-                    ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation("mocreatures:" + item.getUnlocalizedName().replace("item.",  ""), "inventory"));
+                    ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(MoCConstants.MOD_PREFIX + item.getUnlocalizedName().replace("item.",  ""), "inventory"));
                 }
                 if (item instanceof MoCItemEgg) {
                     for (int i = 0; i < 91; i++) {
                         if (!MoCreatures.isServer()) {
-                            ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation("mocreatures:mocegg", "inventory"));
+                            ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(MoCConstants.MOD_PREFIX + "mocegg", "inventory"));
                         }
                     }
                 }

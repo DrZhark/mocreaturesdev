@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PYS",
+    "RMR",
+    "X#X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:wool",
+      "data": 11
+    },
+    "#": {
+      "item": "minecraft:wool",
+      "data": 4
+    },
+    "R": {
+      "item": "minecraft:wool",
+      "data": 14
+    },
+    "M": {
+      "item": "mocreatures:medallion"
+    },
+    "P": {
+      "item": "minecraft:dye",
+      "data": 9
+    },
+    "Y": {
+      "item": "minecraft:dye",
+      "data": 11
+    },
+    "S": {
+      "item": "minecraft:dye",
+      "data": 10
+    }
+  },
+  "result": {
+    "item": "mocreatures:elephantgarment"
+  }
+}

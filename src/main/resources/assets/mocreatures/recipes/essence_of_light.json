@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    " Y ",
+    " Z "
+  ],
+  "key": {
+    "X": {
+      "item": "mocreatures:essenceundead"
+    },
+    "Y": {
+      "item": "mocreatures:essencefire"
+    },
+    "Z": {
+      "item": "mocreatures:essencedarkness"
+    }
+  },
+  "result": {
+    "item": "mocreatures:essencelight"
+  }
+}

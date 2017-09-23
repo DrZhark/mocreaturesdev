@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    " Y ",
+    " Z "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "Y": {
+      "item": "mocreatures:heartundead"
+    },
+    "Z": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "mocreatures:essenceundead"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X  ",
+    "X# ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:planks",
+      "data": 0
+    },
+    "#": {
+      "item": "minecraft:lead"
+    }
+  },
+  "result": {
+    "item": "mocreatures:tuskswood"
+  }
+}
