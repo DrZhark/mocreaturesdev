@@ -33,10 +33,12 @@ public class MoCEntityLiger extends MoCEntityBigCat {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
+
+        final ItemStack stack = player.getHeldItem(hand);
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getIsTamed() && (getType() == 1) && (stack.getItem() == MoCItems.essencelight)) {
             stack.shrink(1);
@@ -50,15 +52,16 @@ public class MoCEntityLiger extends MoCEntityBigCat {
         }
         
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            setSitting(false);
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                setSitting(false);
             }
+
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
     @Override
     public String getOffspringClazz(IMoCTameable mate) {

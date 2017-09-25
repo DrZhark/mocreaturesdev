@@ -346,13 +346,12 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
     
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getIsTamed() && !getIsRideable() && (getEdad() > 80)
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCItems.horsesaddle)) {
@@ -392,7 +391,8 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             }
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
 
     @Override

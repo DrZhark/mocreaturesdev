@@ -83,10 +83,12 @@ public class MoCEntityPandaBear extends MoCEntityBear{
     
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
+
+        final ItemStack stack = player.getHeldItem(hand);
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && (stack.getItem() == MoCItems.sugarlump || stack.getItem() == Items.REEDS)) {
             stack.shrink(1);
@@ -115,15 +117,16 @@ public class MoCEntityPandaBear extends MoCEntityBear{
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            setBearState(0);
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                setBearState(0);
             }
+
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
     
     @Override

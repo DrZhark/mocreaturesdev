@@ -264,10 +264,12 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
+
+        final ItemStack stack = player.getHeldItem(hand);
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.FISH)) {
             stack.shrink(1);
@@ -306,16 +308,16 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
             return true;
         }
         if (!this.isBeingRidden()) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            player.posY = this.posY;
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                player.posY = this.posY;
             }
+
             return true;
-        } else {
-            return false;
         }
+
+        return super.processInteract(player, hand);
     }
 
     @Override

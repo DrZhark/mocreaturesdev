@@ -249,9 +249,6 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
     private void changeKittyState(int i) {
         setKittyState(i);
-        if (!this.world.isRemote) {
-            this.dismountRidingEntity();
-        }
         setSitting(false);
         this.kittytimer = 0;
         setOnTree(false);
@@ -476,23 +473,24 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         return ((EntityLiving) (obj));
     }
 
-    @Override
+    // Mojang changed offsets in 1.12 so this needs to be reviewed
+    /*@Override
     public double getYOffset() {
         if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
             if (getKittyState() == 10) {
-                return (super.getYOffset() - 1.1F);
+                return (super.getYOffset() - 0.95F);
             }
             if (upsideDown()) {
-                return (super.getYOffset() - 1.7F);
+                return (super.getYOffset() - 1.55F);
             }
             if (onMaBack()) {
-                return (super.getYOffset() - 1.5F);
+                return (super.getYOffset() - 1.35F);
             }
         }
 
         if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
             if (getKittyState() == 10) {
-                return (super.getYOffset() + 0.3F);
+                return (super.getYOffset() + 0.45F);
             }
             if (upsideDown()) {
                 return (super.getYOffset() - 0.1F);
@@ -503,17 +501,16 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
 
         return super.getYOffset();
-    }
+    }*/
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if ((getKittyState() == 2) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.medallion)) {
             if (!this.world.isRemote) {
@@ -541,20 +538,22 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball) && !this.world.isRemote) {
+        if ((getKittyState() == 11) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
             }
             setKittyState(8);
-            EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY + 1.0D, this.posZ, new ItemStack(MoCItems.woolball, 1));
-            entityitem.setPickupDelay(30);
-            entityitem.setNoDespawn();
-            this.world.spawnEntity(entityitem);
-            entityitem.motionY += this.world.rand.nextFloat() * 0.05F;
-            entityitem.motionX += (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.3F;
-            entityitem.motionZ += (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.3F;
-            this.itemAttackTarget = entityitem;
+            if (!this.world.isRemote) {
+                EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY + 1.0D, this.posZ, new ItemStack(MoCItems.woolball, 1));
+                entityitem.setPickupDelay(30);
+                entityitem.setNoDespawn();
+                this.world.spawnEntity(entityitem);
+                entityitem.motionY += this.world.rand.nextFloat() * 0.05F;
+                entityitem.motionX += (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.3F;
+                entityitem.motionZ += (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.3F;
+                this.itemAttackTarget = entityitem;
+            }
             return true;
         }
         if ((getKittyState() == 13) && onMainHand && !stack.isEmpty() && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
@@ -575,8 +574,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return true;
         }
         if (!stack.isEmpty() && (getKittyState() > 2) && pickable() && (stack.getItem() == Items.LEAD)) {
-            changeKittyState(14);
-                this.startRiding(player);
+            if (!this.world.isRemote && this.startRiding(player)) {
+                changeKittyState(14);
+            }
             return true;
         }
         if (!stack.isEmpty() && (getKittyState() > 2) && whipeable() && (stack.getItem() == MoCItems.whip)) {
@@ -584,21 +584,22 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return true;
         }
         
-        if (!stack.isEmpty() && (getKittyState() > 2) && pickable()) {
-            changeKittyState(15);
-                this.startRiding(player);
+        if (stack.isEmpty() && (getKittyState() > 2) && pickable()) {
+            if (!this.world.isRemote && this.startRiding(player)) {
+                changeKittyState(15);
+            }
             return true;
         }
-        if (!stack.isEmpty() && (getKittyState() == 15)) {
+        if (stack.isEmpty() && (getKittyState() == 15)) {
             changeKittyState(7);
             return true;
         }
         if ((getKittyState() == 14) && this.getRidingEntity() != null) {
             changeKittyState(7);
             return true;
-        } else {
-            return false;
         }
+
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -705,9 +706,10 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         getMyOwnPath(entitykittybed, f5);
                     }
                     if (f5 < 2.0F) {
-                        changeKittyState(4);
-                        this.startRiding(entitykittybed);
-                        setSitting(true);
+                        if (this.startRiding(entitykittybed)) {
+                            changeKittyState(4);
+                            setSitting(true);
+                        }
                     }
                     break;
 
@@ -746,8 +748,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         getMyOwnPath(entitylitterbox, f6);
                     }
                     if (f6 < 2.0F) {
-                        changeKittyState(6);
-                        this.startRiding(entitylitterbox);
+                        if (this.startRiding(entitylitterbox)) {
+                            changeKittyState(6);
+                        }
                     }
                     break;
 
@@ -1112,8 +1115,9 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         getMyOwnPath(entitykittybed2, f11);
                     }
                     if (f11 < 2.0F) {
-                        changeKittyState(20);
-                        this.startRiding(entitykittybed2);
+                        if (this.startRiding(entitykittybed2)) {
+                            changeKittyState(20);
+                        }
                     }
                     break;
 

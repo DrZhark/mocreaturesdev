@@ -116,10 +116,12 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
+
+        final ItemStack stack = player.getHeldItem(hand);
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && ((stack.getItem() == MoCItems.rawTurkey))) {
             stack.shrink(1);
@@ -138,7 +140,8 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
 
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -12,6 +13,7 @@ import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -74,6 +77,7 @@ public class MoCItemPetAmulet extends MoCItem {
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
             try {
+                this.spawnClass = this.spawnClass.replace(MoCConstants.MOD_PREFIX, "").toLowerCase();
                 if (this.spawnClass.equalsIgnoreCase("MoCHorse")) {
                     this.spawnClass = "WildHorse";
                 } else if (this.spawnClass.equalsIgnoreCase("PolarBear")) {
@@ -90,7 +94,7 @@ public class MoCItemPetAmulet extends MoCItem {
                             break;
                     }
                 }
-                EntityLiving tempLiving = MoCTools.spawnListByNameClass(this.spawnClass, world);
+                EntityLiving tempLiving = (EntityLiving) EntityList.createEntityByIDFromName(new ResourceLocation(MoCConstants.MOD_PREFIX + this.spawnClass.toLowerCase()), world);
                 if (tempLiving != null && tempLiving instanceof IMoCEntity) {
                     IMoCTameable storedCreature = (IMoCTameable) tempLiving;
                     ((EntityLiving) storedCreature).setPosition(newPosX, newPosY, newPosZ);

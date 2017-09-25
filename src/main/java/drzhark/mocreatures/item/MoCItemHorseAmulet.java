@@ -1,5 +1,6 @@
 package drzhark.mocreatures.item;
 
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -12,12 +13,15 @@ import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageAppear;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -71,6 +75,7 @@ public class MoCItemHorseAmulet extends MoCItem {
         if (!player.world.isRemote) {
             try {
                 MoCEntityTameableAnimal storedCreature;
+                this.spawnClass = this.spawnClass.replace(MoCConstants.MOD_PREFIX, "").toLowerCase();
                 if (this.spawnClass.equalsIgnoreCase("Wyvern")) { //ghost wyvern
                     storedCreature = new MoCEntityWyvern(worldIn);
                     ((MoCEntityWyvern) storedCreature).setIsGhost(true);
@@ -78,7 +83,7 @@ public class MoCItemHorseAmulet extends MoCItem {
                 } else if (this.spawnClass.equalsIgnoreCase("WildHorse")) {
                     storedCreature = new MoCEntityHorse(worldIn);
                 } else {
-                    storedCreature = (MoCEntityTameableAnimal) MoCTools.spawnListByNameClass(this.spawnClass, worldIn);
+                    storedCreature = (MoCEntityTameableAnimal) EntityList.createEntityByIDFromName(new ResourceLocation(MoCConstants.MOD_PREFIX + this.spawnClass.toLowerCase()), worldIn);
                     if (storedCreature instanceof MoCEntityBigCat) {
                         this.isGhost = true;
                         ((MoCEntityBigCat) storedCreature).setIsGhost(true);

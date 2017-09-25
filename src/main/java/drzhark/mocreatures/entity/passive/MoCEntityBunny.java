@@ -153,13 +153,12 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
             stack.shrink(1);
@@ -171,13 +170,17 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
             return true;
         }
         if (this.getRidingEntity() == null) {
-            this.startRiding(player);
-            this.rotationYaw = player.rotationYaw;
-            if (!this.world.isRemote && !getIsTamed()) {
-                MoCTools.tameWithName(player, this);
+            if (!this.world.isRemote && this.startRiding(player)) {
+                this.rotationYaw = player.rotationYaw;
+                if (!getIsTamed()) {
+                    MoCTools.tameWithName(player, this);
+                }
             }
+
+            return true;
         }
-        return true;
+
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -266,13 +269,10 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer) {
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
         }
-        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer) {
-            return (super.getYOffset() + 0.5F);
-        }
+
         return super.getYOffset();
     }
 

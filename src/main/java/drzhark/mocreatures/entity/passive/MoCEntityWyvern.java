@@ -412,13 +412,12 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && (stack.getItem() == MoCItems.whip) && getIsTamed() && (!this.isBeingRidden())) {
             setSitting(!getIsSitting());
@@ -579,18 +578,16 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
         }
 
         if (getIsRideable() && getEdad() > 90 && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
                 setSitting(false);
             }
 
             return true;
-        } else {
-            return false;
         }
+
+        return super.processInteract(player, hand);
     }
 
     /**

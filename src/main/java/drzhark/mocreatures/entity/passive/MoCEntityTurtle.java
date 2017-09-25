@@ -109,15 +109,11 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
+        if (this.getRidingEntity() instanceof EntityPlayer) {
             if (((EntityPlayer) this.getRidingEntity()).isSneaking()) {
                 return -0.25D + ((300D - this.getEdad()) / 500D);
             }
             return (300D - this.getEdad()) / 500D;
-        }
-        if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
-            return (super.getYOffset() + 0.3F);
         }
 
         return super.getYOffset();
@@ -125,11 +121,9 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
 
         if (getIsTamed()) {
@@ -138,14 +132,16 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                 return true;
             }
             if (this.getRidingEntity() == null) {
-                    this.startRiding(player);
-                this.rotationYaw = player.rotationYaw;
+                if (!this.world.isRemote && this.startRiding(player)) {
+                    this.rotationYaw = player.rotationYaw;
+                }
             }
             return true;
         }
+
         flipflop(!getIsUpsideDown());
 
-        return true;
+        return super.processInteract(player, hand);
     }
 
     @Override

@@ -9,20 +9,11 @@ import drzhark.mocreatures.entity.item.MoCEntityThrowableRock;
 import drzhark.mocreatures.entity.monster.MoCEntityOgre;
 import drzhark.mocreatures.entity.monster.MoCEntitySilverSkeleton;
 import drzhark.mocreatures.entity.passive.MoCEntityHorse;
-import drzhark.mocreatures.entity.passive.MoCEntityLeoger;
-import drzhark.mocreatures.entity.passive.MoCEntityLiard;
-import drzhark.mocreatures.entity.passive.MoCEntityLiger;
-import drzhark.mocreatures.entity.passive.MoCEntityLither;
-import drzhark.mocreatures.entity.passive.MoCEntityManticorePet;
-import drzhark.mocreatures.entity.passive.MoCEntityPanthard;
-import drzhark.mocreatures.entity.passive.MoCEntityPanthger;
-import drzhark.mocreatures.entity.passive.MoCEntityPetScorpion;
 import drzhark.mocreatures.init.MoCItems;
 import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.inventory.MoCAnimalChest;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageNameGUI;
-import drzhark.mocreatures.util.MoCLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockJukebox;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
@@ -245,61 +236,6 @@ public class MoCTools {
 
     public static void playCustomSound(Entity entity, SoundEvent customSound, float volume) {
         entity.playSound(customSound, volume, 1.0F + ((entity.world.rand.nextFloat() - entity.world.rand.nextFloat()) * 0.2F));
-    }
-
-    /**
-     * Returns a new instance of EntityLiving based on the name of the class
-     *
-     * @param eName
-     * @param world
-     * @return
-     */
-    public static EntityLiving spawnListByNameClass(String eName, World world) {
-        EntityLiving entityToSpawn = null;
-        try {
-            MoCEntityData entityData = MoCreatures.mocEntityMap.get(eName);
-            Class<? extends EntityLiving> myClass = null;
-            if (entityData == null && eName.contains("PetScorpion")) { // since we don't add this to our map, we need to check for it manually
-                myClass = MoCEntityPetScorpion.class;
-            } 
-            else if (entityData == null && eName.contains("ManticorePet")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityManticorePet.class;
-            } 
-            else if (entityData == null && eName.contains("Liger")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityLiger.class;
-            } 
-            else if (entityData == null && eName.contains("Leoger")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityLeoger.class;
-            } 
-            else if (entityData == null && eName.contains("Liard")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityLiard.class;
-            } 
-            else if (entityData == null && eName.contains("Lither")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityLither.class;
-            } 
-            else if (entityData == null && eName.contains("Panthard")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityPanthard.class;
-            } 
-            else if (entityData == null && eName.contains("Panthger")) // since we don't add this to our map, we need to check for it manually
-            {
-                myClass = MoCEntityPanthger.class;
-            } 
-            else {
-                myClass = entityData.getEntityClass();
-            }
-            entityToSpawn = (EntityLiving) myClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
-        } catch (Exception e) {
-            if (MoCreatures.proxy.debug) {
-                MoCLog.logger.warn("Unable to find class for entity " + eName + ", " + e);
-            }
-        }
-        return entityToSpawn;
     }
 
     public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat) {
@@ -1488,8 +1424,7 @@ public class MoCTools {
             NBTTagCompound nbtt = stack.getTagCompound();
             try {
                 final EntityEntry entry = EntityRegistry.getEntry((Class<? extends Entity>) entity.getClass());
-                final String petClass = entry.getName();
-
+                final String petClass = entry.getName().replace(MoCConstants.MOD_PREFIX, "");
                 nbtt.setString("SpawnClass", petClass);
                 nbtt.setUniqueId("OwnerUUID", player.getUniqueID());
                 nbtt.setString("OwnerName", player.getName());
@@ -1785,7 +1720,9 @@ public class MoCTools {
             EntityMob entitymob = (EntityMob) entity;
             if (entitymob.getRidingEntity() == null
                     && (entitymob instanceof EntitySkeleton || entitymob instanceof EntityZombie || entitymob instanceof MoCEntitySilverSkeleton)) {
-                entitymob.startRiding(mountEntity);
+                if (!mountEntity.world.isRemote) {
+                    entitymob.startRiding(mountEntity);
+                }
                 break;
             }
         }

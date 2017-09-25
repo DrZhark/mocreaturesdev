@@ -66,13 +66,12 @@ public class MoCEntityPolarBear extends MoCEntityBear{
     
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(stack.getItem())) {
             stack.shrink(1);
@@ -101,15 +100,16 @@ public class MoCEntityPolarBear extends MoCEntityBear{
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            setBearState(0);
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                setBearState(0);
             }
+
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
     
     @Override

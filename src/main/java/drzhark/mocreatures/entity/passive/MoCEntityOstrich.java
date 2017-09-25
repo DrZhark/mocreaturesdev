@@ -543,13 +543,12 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (getIsTamed() && onMainHand && (getType() > 1) && !stack.isEmpty() && !getIsRideable()
                 && (stack.getItem() == MoCItems.horsesaddle || stack.getItem() == Items.SADDLE)) {
@@ -721,15 +720,16 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             }
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            setHiding(false);
-            if (!this.world.isRemote && (!this.isBeingRidden() || this.getRidingEntity() == player)) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                setHiding(false);
             }
+
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
 
     /**

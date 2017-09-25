@@ -1401,13 +1401,15 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
-        if (!this.checkOwnership(player, hand) || (this.getType() == 60 && !getIsTamed() && isZebraRunning())) {
+        if (this.getType() == 60 && !getIsTamed() && isZebraRunning()) {
             return false;
         }
+
+        final ItemStack stack = player.getHeldItem(hand);
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && !getIsRideable() && stack.getItem() == Items.SADDLE) {
             stack.shrink(1);
@@ -1850,18 +1852,17 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
         }
 
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            setSitting(false);
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                setSitting(false);
+                this.gestationtime = 0;
             }
-            this.gestationtime = 0;
+
             return true;
-        } else {
-            return false;
         }
 
+        return super.processInteract(player, hand);
     }
 
     /**

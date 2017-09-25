@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity;
 
 import com.google.common.base.Optional;
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -9,9 +10,11 @@ import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -23,6 +26,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -116,8 +122,37 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         return super.attackEntityFrom(damagesource, i);
     }
 
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    private boolean checkOwnership(EntityPlayer player, EnumHand hand) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (!this.getIsTamed() || MoCTools.isThisPlayerAnOP(player)) {
+            return true;
+        }
+
+        if (this.getIsGhost() && !stack.isEmpty() && stack.getItem() == MoCItems.petamulet) {
+            if (!this.world.isRemote) {
+                // Remove when client is updated
+                ((EntityPlayerMP) player).sendAllContents(player.openContainer, player.openContainer.getInventory());
+                player.sendMessage(new TextComponentTranslation(TextFormatting.RED + "This pet does not belong to you."));
+            }
+            return false;
+        }
+
+        //if the player interacting is not the owner, do nothing!
+        if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
+                && !player.getUniqueID().equals(this.getOwnerId())) {
+            player.sendMessage(new TextComponentTranslation(TextFormatting.RED + "This pet does not belong to you."));
+            return false;
+        }
+
+        return true;
+    }
+
+    // This should always run first for all tameable aquatics
+    public Boolean processTameInteract(EntityPlayer player, EnumHand hand) {
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
         //before ownership check
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
@@ -216,7 +251,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
             return true;
         }
 
-        return super.processInteract(player, hand);
+        return null;
     }
 
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
@@ -456,9 +491,9 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
 
             try {
 
-                String offspringClass = this.getOffspringClazz((IMoCTameable) mate);
+                String offspringName = this.getOffspringClazz((IMoCTameable) mate);
 
-                EntityLiving offspring = MoCTools.spawnListByNameClass(offspringClass, this.world);
+                EntityLiving offspring = (EntityLiving) EntityList.createEntityByIDFromName(new ResourceLocation(MoCConstants.MOD_PREFIX + offspringName.toLowerCase()), this.world);
                 if (offspring != null && offspring instanceof IMoCTameable) {
                     IMoCTameable baby = (IMoCTameable) offspring;
                     ((EntityLiving) baby).setPosition(this.posX, this.posY, this.posZ);

@@ -140,12 +140,11 @@ public class MoCEntityKittyBed extends EntityLiving {
 
     @Override
     public double getYOffset() {
-        // If we are in SMP, do not alter offset on any client other than the player being mounted on
-        if (((this.getRidingEntity() instanceof EntityPlayer) && !this.world.isRemote) || this.getRidingEntity() == MoCreatures.proxy.getPlayer())//MoCProxy.mc().player)
+        if (this.getRidingEntity() instanceof EntityPlayer)
         {
-            setPickedUp(true);
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.25 : 0.5F;
         }
+
         return super.getYOffset();
     }
 
@@ -180,12 +179,17 @@ public class MoCEntityKittyBed extends EntityLiving {
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, (((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F) + 1.0F) * 2.0F);
             setDead();
             return true;
-        } else {
-            if (this.getRidingEntity() == null) {
-                this.rotationYaw = player.rotationYaw;
-                this.startRiding(player);
-            }return true;
         }
+        if (this.getRidingEntity() == null) {
+            if (!this.world.isRemote && this.startRiding(player)) {
+                this.rotationYaw = player.rotationYaw;
+                setPickedUp(true);
+            }
+
+            return true;
+        }
+
+        return true;
     }
 
     @Override

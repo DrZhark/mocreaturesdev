@@ -282,26 +282,21 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer()) {
+        if (this.getRidingEntity() instanceof EntityPlayer) {
             return ((EntityPlayer) this.getRidingEntity()).isSneaking() ? 0.2 : 0.45F;
         }
 
-        if (this.world.isRemote && this.getRidingEntity() instanceof EntityPlayer) {
-            return (super.getYOffset() + 0.45F);
-        } else {
-            return super.getYOffset();
-        }
+        return super.getYOffset();
     }
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getPreTamed() && !getIsTamed() && stack.getItem() == Items.WHEAT_SEEDS) {
             stack.shrink(1);
@@ -318,10 +313,14 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
             return false;
         }
         if (this.getRidingEntity() == null) {
-            this.rotationYaw = player.rotationYaw;
-            this.startRiding(player);
+            if (!this.world.isRemote && this.startRiding(player)) {
+                this.rotationYaw = player.rotationYaw;
+            }
+
+            return true;
         }
-        return true;
+
+        return super.processInteract(player, hand);
     }
 
     @Override

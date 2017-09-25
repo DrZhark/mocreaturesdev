@@ -87,19 +87,22 @@ public class MoCEntityTurkey extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!this.world.isRemote && onMainHand && !getIsTamed() && !stack.isEmpty() && (stack.getItem() == Items.MELON_SEEDS)) {
-            MoCTools.tameWithName(player, this);
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
 
-        return true;
+        final ItemStack stack = player.getHeldItem(hand);
+        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
+        if (onMainHand && !getIsTamed() && !stack.isEmpty() && (stack.getItem() == Items.MELON_SEEDS)) {
+            if (!this.world.isRemote) {
+                MoCTools.tameWithName(player, this);
+            }
+
+            return true;
+        }
+
+        return super.processInteract(player, hand);
     }
 
     @Override

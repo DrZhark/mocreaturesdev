@@ -23,20 +23,22 @@ public class MoCEntityRay extends MoCEntityTameableAquatic {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
 
         if (!this.isBeingRidden() && getType() == 1) {
-            player.rotationYaw = this.rotationYaw;
-            player.rotationPitch = this.rotationPitch;
-            player.posY = this.posY;
-            if (!this.world.isRemote) {
-                player.startRiding(this);
+            if (!this.world.isRemote && player.startRiding(this)) {
+                player.rotationYaw = this.rotationYaw;
+                player.rotationPitch = this.rotationPitch;
+                player.posY = this.posY;
             }
+
             return true;
         }
-        return false;
+
+        return super.processInteract(player, hand);
     }
 
     @Override

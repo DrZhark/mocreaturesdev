@@ -371,13 +371,12 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
-        if (super.processInteract(player, hand)) {
-            return true;
-        }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
         boolean onMainHand = (hand == EnumHand.MAIN_HAND);
         if (!stack.isEmpty() && onMainHand && getIsAdult() && !getIsRideable()
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCItems.horsesaddle)) {
@@ -426,11 +425,13 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
         }
 
         if (this.getRidingEntity() == null && this.getEdad() < 60 && !getIsAdult()) {
-            this.startRiding(player);
-            this.rotationYaw = player.rotationYaw;
-            if (!this.world.isRemote && !getIsTamed()) {
-                MoCTools.tameWithName(player, this);
+            if (!this.world.isRemote && this.startRiding(player)) {
+                this.rotationYaw = player.rotationYaw;
+                if (!getIsTamed()) {
+                    MoCTools.tameWithName(player, this);
+                }
             }
+
             return true;
         } else if (this.getRidingEntity() != null) {
             MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);
@@ -451,7 +452,7 @@ public class MoCEntityPetScorpion extends MoCEntityTameableAnimal {
             return true;
         }
 
-        return false;
+        return super.processInteract(player, hand);
     }
 
     @Override

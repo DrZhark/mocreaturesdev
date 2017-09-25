@@ -164,20 +164,24 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (super.processInteract(player, hand)) {
-            return true;
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
         }
-        if (!this.checkOwnership(player, hand)) {
-            return false;
-        }
+
         if (!getIsTamed()) {
             return false;
         }
 
         if (this.getRidingEntity() == null) {
-            this.startRiding(player);
-            this.rotationYaw = player.rotationYaw;
-        }return true;
+            if (!this.world.isRemote && this.startRiding(player)) {
+                this.rotationYaw = player.rotationYaw;
+            }
+
+            return true;
+        }
+
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -225,15 +229,11 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public double getYOffset() {
-        if (this.getRidingEntity() instanceof EntityPlayer && this.getRidingEntity() == MoCreatures.proxy.getPlayer() && this.world.isRemote) {
+        if (this.getRidingEntity() instanceof EntityPlayer) {
             return 0.1F;
         }
 
-        if ((this.getRidingEntity() instanceof EntityPlayer) && this.world.isRemote) {
-            return (super.getYOffset() + 0.1F);
-        } else {
-            return super.getYOffset();
-        }
+        return super.getYOffset();
     }
 
     public float getSizeF() {

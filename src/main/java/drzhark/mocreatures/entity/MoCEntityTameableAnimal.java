@@ -1,6 +1,7 @@
 package drzhark.mocreatures.entity;
 
 import com.google.common.base.Optional;
+import drzhark.mocreatures.MoCConstants;
 import drzhark.mocreatures.MoCPetData;
 import drzhark.mocreatures.MoCTools;
 import drzhark.mocreatures.MoCreatures;
@@ -9,6 +10,7 @@ import drzhark.mocreatures.init.MoCSoundEvents;
 import drzhark.mocreatures.network.MoCMessageHandler;
 import drzhark.mocreatures.network.message.MoCMessageHeart;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -25,6 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -116,7 +119,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         return super.attackEntityFrom(damagesource, i);
     }
 
-    public boolean checkOwnership(EntityPlayer player, EnumHand hand) {
+    private boolean checkOwnership(EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
         if (!this.getIsTamed() || MoCTools.isThisPlayerAnOP(player)) {
             return true;
@@ -141,8 +144,12 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         return true;
     }
 
-    @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    // This should always run first for all tameable animals
+    public Boolean processTameInteract(EntityPlayer player, EnumHand hand) {
+        if (!this.checkOwnership(player, hand)) {
+            return false;
+        }
+
         final ItemStack stack = player.getHeldItem(hand);
         //before ownership check
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollOfOwner)) && MoCreatures.proxy.enableResetOwnership
@@ -177,7 +184,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
                 {
-                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());//this.getOwnerPetId());
+                    MoCreatures.instance.mapData.removeOwnerPet(this, this.getOwnerPetId());
                 }
                 this.setOwnerId(null);
                 this.setPetName("");
@@ -241,7 +248,7 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
             return true;
         }
 
-        return super.processInteract(player, hand);
+        return null;
     }
 
     // Fixes despawn issue when chunks unload and duplicated mounts when disconnecting on servers
@@ -480,9 +487,9 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
 
             try {
 
-                String offspringClass = this.getOffspringClazz((IMoCTameable) mate);
+                String offspringName = this.getOffspringClazz((IMoCTameable) mate);
 
-                EntityLiving offspring = MoCTools.spawnListByNameClass(offspringClass, this.world);
+                EntityLiving offspring = (EntityLiving) EntityList.createEntityByIDFromName(new ResourceLocation(MoCConstants.MOD_PREFIX + offspringName.toLowerCase()), this.world);
                 if (offspring != null && offspring instanceof IMoCTameable) {
                     IMoCTameable baby = (IMoCTameable) offspring;
                     ((EntityLiving) baby).setPosition(this.posX, this.posY, this.posZ);
