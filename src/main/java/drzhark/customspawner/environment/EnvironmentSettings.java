@@ -239,7 +239,10 @@ public class EnvironmentSettings {
         }
 
         String entityName = entry.getName();
-
+        final String[] parts = entityName.split(":");
+        if (parts.length > 1) {
+            entityName = parts[1];
+        }
         if (this.debug) {
             this.envLog.logger.info("Starting registration for " + entityName);
         }
