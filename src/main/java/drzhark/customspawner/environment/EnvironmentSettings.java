@@ -1,5 +1,6 @@
 package drzhark.customspawner.environment;
 
+import com.google.common.collect.Sets;
 import drzhark.customspawner.CustomSpawner;
 import drzhark.customspawner.biomes.BiomeData;
 import drzhark.customspawner.biomes.BiomeGroupData;
@@ -510,8 +511,9 @@ public class EnvironmentSettings {
 
     public void initializeBiomes() {
         Iterator<Biome> iterator = Biome.REGISTRY.iterator();
-        while (iterator.hasNext()) {
-            Biome biome = iterator.next();
+        Set<Biome> biomeList = Sets.newHashSet(iterator);
+        biomeList.addAll(Biome.REGISTRY.inverseObjectRegistry.keySet());
+        for (Biome biome : biomeList) {
             if (biome == null) {
                 continue;
             }
@@ -806,27 +808,27 @@ public class EnvironmentSettings {
         this.defaultModMap.put("undefined",
                 new EntityModData("undefined", "U", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH
                         + "Undefined.cfg"))));
-        if (Loader.isModLoaded("MoCreatures")) {
+        if (Loader.isModLoaded("mocreatures")) {
             this.defaultModMap.put("drzhark",
                     new EntityModData("drzhark", "MOC", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH
                             + "MoCreatures.cfg"))));
         }
-        if (Loader.isModLoaded("BiomesOPlenty")) {
+        if (Loader.isModLoaded("biomesoplenty")) {
             this.defaultModMap.put("biomesop",
                     new EntityModData("biomesop", "BOP", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "BiomesOPlenty.cfg"))));
         }
-        if (Loader.isModLoaded("BWG4")) {
+        if (Loader.isModLoaded("bwg4")) {
             this.defaultModMap.put("ted80",
                     new EntityModData("ted80", "BWG", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH
                             + "BWG.cfg"))));
         }
-        if (Loader.isModLoaded("ExtrabiomesXL")) {
+        if (Loader.isModLoaded("extrabiomesxl")) {
             this.defaultModMap.put("extrabiomes",
                     new EntityModData("extrabiomes", "XL", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "ExtraBiomesXL.cfg"))));
         }
-        if (Loader.isModLoaded("TwilightForest")) {
+        if (Loader.isModLoaded("twilightforest")) {
             this.defaultModMap.put("twilightforest", new EntityModData("twilightforest", "TF", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "TwilightForest.cfg"))));
         }
@@ -834,7 +836,7 @@ public class EnvironmentSettings {
             this.defaultModMap.put("gaia", new EntityModData("gaia", "GAIA", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "GrimoireOfGaia.cfg"))));
         }
-        if (Loader.isModLoaded("InfernalMobs")) {
+        if (Loader.isModLoaded("infernalmobs")) {
             this.defaultModMap.put("atomicstryker", new EntityModData("atomicstryker", "IM", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "InfernalMobs.cfg"))));
         }
@@ -843,12 +845,12 @@ public class EnvironmentSettings {
                     new EntityModData("arsmagica", "ARS", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "ArsMagica.cfg"))));
         }
-        if (Loader.isModLoaded("ProjectZulu|Core") || Loader.isModLoaded("ProjectZulu|Mob")) {
+        if (Loader.isModLoaded("projectzulu|core") || Loader.isModLoaded("ProjectZulu|Mob")) {
             this.defaultModMap.put("projectzulu",
                     new EntityModData("projectzulu", "PZ", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "ProjectZulu.cfg"))));
         }
-        if (Loader.isModLoaded("Thaumcraft")) {
+        if (Loader.isModLoaded("thaumcraft")) {
             this.defaultModMap.put("thaumcraft",
                     new EntityModData("thaumcraft", "TC", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "Thaumcraft.cfg"))));
@@ -858,29 +860,29 @@ public class EnvironmentSettings {
                     new EntityModData("highlands", "HL", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "Highlands.cfg"))));
         }
-        if (Loader.isModLoaded("TConstruct")) {
+        if (Loader.isModLoaded("tconstruct")) {
             this.defaultModMap.put("tinker",
                     new EntityModData("tinker", "TC", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH
                             + "TinkerConstruct.cfg"))));
         }
-        if (Loader.isModLoaded("Atum")) {
+        if (Loader.isModLoaded("atum")) {
             this.defaultModMap.put("atum", new EntityModData("atum", "ATUM", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "Atum.cfg"))));
         }
-        if (Loader.isModLoaded("AngryCreatures")) {
+        if (Loader.isModLoaded("angrycreatures")) {
             this.defaultModMap.put("advancedglowstone", new EntityModData("advancedglowstone", "AC", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "AngryCreatures.cfg"))));
         }
-        if (Loader.isModLoaded("MineFantasy")) {
+        if (Loader.isModLoaded("minefantasy")) {
             this.defaultModMap.put("minefantasy",
                     new EntityModData("minefantasy", "MF", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "MineFantasy.cfg"))));
         }
-        if (Loader.isModLoaded("PrimitiveMobs")) {
+        if (Loader.isModLoaded("primitivemobs")) {
             this.defaultModMap.put("primitivemobs", new EntityModData("primitivemobs", "PM", new CMSConfiguration(new File(
                     this.CMSEnvironmentConfig.file.getParent(), CREATURES_FILE_PATH + "PrimitiveMobs.cfg"))));
         }
-        if (Loader.isModLoaded("AtmosMobs")) {
+        if (Loader.isModLoaded("atmosmobs")) {
             this.defaultModMap.put("atmosmobs",
                     new EntityModData("atmosmobs", "ATMOS", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "AtmosMobs.cfg"))));
@@ -889,6 +891,11 @@ public class EnvironmentSettings {
             this.defaultModMap.put("farlanders",
                     new EntityModData("farlanders", "FL", new CMSConfiguration(new File(this.CMSEnvironmentConfig.file.getParent(),
                             CREATURES_FILE_PATH + "Farlanders.cfg"))));
+        }
+        if (Loader.isModLoaded("terraincontrol")) {
+            this.biomeModMap.put("terraincontrol", new BiomeModData("terraincontrol", "TC", new CMSConfiguration(
+                            new File(this.CMSEnvironmentConfig.file.getParent(), BIOMES_FILE_PATH
+                                    + ("terraincontrol.cfg")))));
         }
 
         // generate default key mappings

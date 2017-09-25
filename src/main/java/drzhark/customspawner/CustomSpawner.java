@@ -349,13 +349,15 @@ public final class CustomSpawner {
                                             world.spawnEntity(entityliving);
                                             entityLivingData = creatureSpecificInit(entityliving, world, new BlockPos(spawnX, spawnY, spawnZ), entityLivingData);
                                             // changed check from maxSpawnedInChunk to maxGroupCount.
-                                            CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
-                                                    entitySpawnType.name(), world.getBiome(new BlockPos(
-                                                            (chunkX * 16) + 16, 0,
-                                                            (chunkZ * 16) + 16)).biomeName, entityData
-                                                            .getEntityName(), MathHelper.floor(spawnX), MathHelper
-                                                            .floor(spawnY), MathHelper.floor(spawnZ), spawnsLeft,
-                                                    spawnlistentry);
+                                            if (CustomSpawner.debug) {
+                                                CMSUtils.getEnvironment(world).envLog.logSpawn(CMSUtils.getEnvironment(world),
+                                                        entitySpawnType.name(), world.getBiome(new BlockPos(
+                                                                (chunkX * 16) + 16, 0,
+                                                                (chunkZ * 16) + 16)).biomeName, entityData
+                                                                .getEntityName(), MathHelper.floor(spawnX), MathHelper
+                                                                .floor(spawnY), MathHelper.floor(spawnZ), spawnsLeft,
+                                                        spawnlistentry);
+                                            }
 
                                             if (spawnedMob >= ForgeEventFactory.getMaxSpawnPackSize(entityliving)) {
                                                 continue label108;
