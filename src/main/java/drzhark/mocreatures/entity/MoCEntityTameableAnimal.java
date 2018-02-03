@@ -144,6 +144,16 @@ public class MoCEntityTameableAnimal extends MoCEntityAnimal implements IMoCTame
         return true;
     }
 
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        final Boolean tameResult = this.processTameInteract(player, hand);
+        if (tameResult != null) {
+            return tameResult;
+        }
+
+        return super.processInteract(player, hand);
+    }
+
     // This should always run first for all tameable animals
     public Boolean processTameInteract(EntityPlayer player, EnumHand hand) {
         if (!this.checkOwnership(player, hand)) {
