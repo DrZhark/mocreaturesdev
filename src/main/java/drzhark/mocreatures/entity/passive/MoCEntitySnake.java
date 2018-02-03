@@ -137,7 +137,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class MoCEntityWraith extends MoCEntityMob//MoCEntityFlyerMob
 
     public MoCEntityWraith(World world) {
         super(world);
-        this.isCollidedVertically = false;
+        this.collidedVertically = false;
         this.texture = "wraith.png";
         setSize(1.5F, 1.5F);
         this.isImmuneToFire = false;

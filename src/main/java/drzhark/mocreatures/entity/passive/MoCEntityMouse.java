@@ -161,7 +161,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     @Override

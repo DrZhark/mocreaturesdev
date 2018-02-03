@@ -148,7 +148,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
             }
 
             if (getGolemState() == 4) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
                 this.dCounter++;
 
                 if (this.dCounter < 80 && this.rand.nextInt(3) == 0) {
@@ -169,7 +169,7 @@ public class MoCEntityGolem extends MoCEntityMob implements IEntityAdditionalSpa
         }
 
         if (this.tcounter == 0 && this.getAttackTarget() != null && this.canShoot()) {
-            float distanceToTarget = this.getDistanceToEntity(this.getAttackTarget());
+            float distanceToTarget = this.getDistance(this.getAttackTarget());
             if (distanceToTarget > 6F) {
                 this.tcounter = 1;
                 MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),

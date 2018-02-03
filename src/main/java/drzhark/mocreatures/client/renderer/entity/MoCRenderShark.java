@@ -28,7 +28,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
         if (entityshark.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entityshark.getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f4 = entityshark.getDistance(this.renderManager.renderViewEntity);
             if (f4 < 16F) {
                 String s = "";
                 s = (new StringBuilder()).append(s).append(entityshark.getPetName()).toString();
@@ -96,7 +96,7 @@ public class MoCRenderShark extends RenderLiving<MoCEntityShark> {
         if (entityshark.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entityshark.getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f4 = entityshark.getDistance(this.renderManager.renderViewEntity);
             String s = "";
             s = (new StringBuilder()).append(s).append(entityshark.getPetName()).toString();
             if ((f4 < 12F) && (s.length() > 0)) {

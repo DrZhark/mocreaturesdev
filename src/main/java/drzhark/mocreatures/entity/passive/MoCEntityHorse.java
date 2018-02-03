@@ -2603,7 +2603,7 @@ public class MoCEntityHorse extends MoCEntityTameableAnimal {
      */
 
     public void vanishHorse() {
-        this.getNavigator().clearPathEntity();
+        this.getNavigator().clearPath();
         this.motionX = 0D;
         this.motionZ = 0D;
 

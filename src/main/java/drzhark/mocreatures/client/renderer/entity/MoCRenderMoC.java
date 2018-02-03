@@ -35,7 +35,7 @@ public class MoCRenderMoC<T extends EntityLiving> extends RenderLiving<T> {
         if (entityMoC.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f5 = ((Entity) entityMoC).getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f5 = ((Entity) entityMoC).getDistance(this.renderManager.renderViewEntity);
             if (f5 < 16F) {
                 String s = "";
                 s = (new StringBuilder()).append(s).append(entityMoC.getPetName()).toString();

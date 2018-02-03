@@ -69,7 +69,7 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
                             d0 *= 0.7F * f;
                         }
 
-                        if (entitylivingbaseIn.getDistanceToEntity(EntityAINearestAttackableTargetMoC.this.taskOwner) > d0) {
+                        if (entitylivingbaseIn.getDistance(EntityAINearestAttackableTargetMoC.this.taskOwner) > d0) {
                             return false;
                         }
                     }
@@ -127,8 +127,8 @@ public class EntityAINearestAttackableTargetMoC extends EntitiAITargetMoC {
         }
 
         public int compare(Entity p_compare_1_, Entity p_compare_2_) {
-            double d0 = this.entity.getDistanceSqToEntity(p_compare_1_);
-            double d1 = this.entity.getDistanceSqToEntity(p_compare_2_);
+            double d0 = this.entity.getDistanceSq(p_compare_1_);
+            double d1 = this.entity.getDistanceSq(p_compare_2_);
             return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
         }
     }

@@ -167,7 +167,7 @@ public class MoCEntityScorpion extends MoCEntityMob {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     public boolean climbing() {

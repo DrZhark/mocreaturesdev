@@ -90,7 +90,7 @@ public class MoCEntitySnail extends MoCEntityAmbient {
                 if (!getIsHiding()) {
                     setIsHiding(true);
                 }
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             } else {
                 setIsHiding(false);
             }
@@ -123,7 +123,7 @@ public class MoCEntitySnail extends MoCEntityAmbient {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     public boolean climbing() {

@@ -209,7 +209,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     public void onLivingUpdate() {
         if (!this.world.isRemote) {
             if (isMovementCeased()) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
             this.getNavigator().onUpdateNavigation();
         }
@@ -364,7 +364,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                     if (!(entity instanceof EntityMob)) {
                         continue;
                     }
-                    float f = getDistanceToEntity(entity);
+                    float f = getDistance(entity);
                     if ((f < 2.0F) && (this.rand.nextInt(10) == 0)) {
                         
                     }
@@ -598,7 +598,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
             }
             EntityMob entitymob = (EntityMob) entity;
             entitymob.setAttackTarget(null);
-            entitymob.getNavigator().clearPathEntity();
+            entitymob.getNavigator().clearPath();
         }
     }
 
@@ -893,7 +893,7 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
     }
 
     @Override
-    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+    public void setLeashHolder(Entity entityIn, boolean sendAttachNotification) {
         if (this.getIsTamed() && entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
             if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
@@ -901,6 +901,6 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
                 return;
             }
         }
-        super.setLeashedToEntity(entityIn, sendAttachNotification);
+        super.setLeashHolder(entityIn, sendAttachNotification);
     }
 }

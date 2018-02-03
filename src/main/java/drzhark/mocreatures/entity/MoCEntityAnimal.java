@@ -325,7 +325,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
 
             if (isMovementCeased()) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
             if (getEdad() == 0) setEdad(getMaxEdad() - 10); //fixes tiny creatures spawned by error
             if (!getIsAdult() && (this.rand.nextInt(300) == 0) && getEdad() <= getMaxEdad()) {
@@ -539,7 +539,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                     if (!(entity instanceof EntityMob)) {
                         continue;
                     }
-                    float f = getDistanceToEntity(entity);
+                    float f = getDistance(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (this.rand.nextInt(10) == 0)) {
                         attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity),
                                 (float) ((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
@@ -922,7 +922,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
             }
             EntityMob entitymob = (EntityMob) entity;
             entitymob.setAttackTarget(null);
-            entitymob.getNavigator().clearPathEntity();
+            entitymob.getNavigator().clearPath();
         }
     }
 
@@ -1300,7 +1300,7 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
     }
 
     @Override
-    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+    public void setLeashHolder(Entity entityIn, boolean sendAttachNotification) {
         if (this.getIsTamed() && entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
             if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
@@ -1308,6 +1308,6 @@ public abstract class MoCEntityAnimal extends EntityAnimal implements IMoCEntity
                 return;
             }
         }
-        super.setLeashedToEntity(entityIn, sendAttachNotification);
+        super.setLeashHolder(entityIn, sendAttachNotification);
     }
 }

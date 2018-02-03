@@ -160,14 +160,14 @@ public class MoCEntityMole extends MoCEntityTameableAnimal {
                 EntityLivingBase entityliving = getBoogey(4D);
                 if ((entityliving != null) && canEntityBeSeen(entityliving)) {
                     setState(1);
-                    this.getNavigator().clearPathEntity();
+                    this.getNavigator().clearPath();
                 }
             }
 
             //if underground and no enemies: pick a boo
             if (this.rand.nextInt(20) == 0 && getState() == 2 && (getBoogey(4D) == null)) {
                 setState(3);
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
 
             //if not on dirt, get out!

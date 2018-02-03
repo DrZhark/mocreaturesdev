@@ -86,7 +86,7 @@ public class MoCEntityCrab extends MoCEntityTameableAmbient
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     public boolean climbing() {

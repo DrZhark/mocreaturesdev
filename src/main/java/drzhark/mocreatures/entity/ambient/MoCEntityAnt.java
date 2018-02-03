@@ -54,7 +54,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
             if (!getHasFood()) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 8D);
                 if (entityitem != null && entityitem.getRidingEntity() == null) {
-                    float f = entityitem.getDistanceToEntity(this);
+                    float f = entityitem.getDistance(this);
                     if (f > 1.0F) {
                         int i = MathHelper.floor(entityitem.posX);
                         int j = MathHelper.floor(entityitem.posY);

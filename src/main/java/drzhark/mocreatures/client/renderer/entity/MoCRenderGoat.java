@@ -51,7 +51,7 @@ public class MoCRenderGoat extends RenderLiving<MoCEntityGoat> {
         if (entitygoat.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entitygoat.getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f4 = entitygoat.getDistance(this.renderManager.renderViewEntity);
             if (f4 < 16F) {
                 String s = "";
                 s = (new StringBuilder()).append(s).append(entitygoat.getPetName()).toString();

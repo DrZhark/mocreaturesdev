@@ -29,7 +29,7 @@ public class MoCRenderDolphin extends RenderLiving<MoCEntityDolphin> {
         if (entitydolphin.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entitydolphin.getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f4 = entitydolphin.getDistance(this.renderManager.renderViewEntity);
             if (f4 < 16F) {
                 String s = "";
                 s = (new StringBuilder()).append(s).append(entitydolphin.getPetName()).toString();
@@ -98,7 +98,7 @@ public class MoCRenderDolphin extends RenderLiving<MoCEntityDolphin> {
         if (entitydolphin.renderName()) {
             float f2 = 1.6F;
             float f3 = 0.01666667F * f2;
-            float f4 = entitydolphin.getDistanceToEntity(this.renderManager.renderViewEntity);
+            float f4 = entitydolphin.getDistance(this.renderManager.renderViewEntity);
             String s = "";
             s = (new StringBuilder()).append(s).append(entitydolphin.getPetName()).toString();
             if ((f4 < 12F) && (s.length() > 0)) {

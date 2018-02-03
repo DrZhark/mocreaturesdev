@@ -234,7 +234,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
             }
 
             if (!getCharging()) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
 
             if (getAttackTarget() != null)// && rand.nextInt(100)==0)
@@ -263,7 +263,7 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
                 // is there food around? only check with player near
                 EntityItem entityitem = getClosestEntityItem(this, 10D);
                 if (entityitem != null) {
-                    float f = entityitem.getDistanceToEntity(this);
+                    float f = entityitem.getDistance(this);
                     if (f > 2.0F) {
                         int i = MathHelper.floor(entityitem.posX);
                         int j = MathHelper.floor(entityitem.posY);

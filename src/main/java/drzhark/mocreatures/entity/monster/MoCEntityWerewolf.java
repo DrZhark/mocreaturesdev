@@ -175,13 +175,13 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                     String swordMaterial = ((ItemSword) stack.getItem()).getToolMaterialName();
                     String swordName = ((ItemSword) stack.getItem()).getUnlocalizedName();
                     if (swordMaterial.toLowerCase().contains("silver") || swordName.toLowerCase().contains("silver")) {
-                        i = ((ItemSword) stack.getItem()).getDamageVsEntity() * 3F;
+                        i = ((ItemSword) stack.getItem()).getAttackDamage() * 3F;
                     }
                 } else if (stack.getItem() instanceof ItemTool) {
                     String toolMaterial = ((ItemTool) stack.getItem()).getToolMaterialName();
                     String toolName = ((ItemTool) stack.getItem()).getUnlocalizedName();
                     if (toolMaterial.toLowerCase().contains("silver") || toolName.toLowerCase().contains("silver")) {
-                        i = ((ItemSword) stack.getItem()).getDamageVsEntity() * 2F;
+                        i = ((ItemSword) stack.getItem()).getAttackDamage() * 2F;
                     }
                 } else if (stack.getItem().getUnlocalizedName().toLowerCase().contains("silver")) {
                     i = 6F;
@@ -317,7 +317,7 @@ public class MoCEntityWerewolf extends MoCEntityMob {
                 setAttackTarget(null);
             }
             if (this.getAttackTarget() != null && !getIsHumanForm()) {
-                boolean hunch = (this.getDistanceSqToEntity(this.getAttackTarget()) > 12D);
+                boolean hunch = (this.getDistanceSq(this.getAttackTarget()) > 12D);
                 setHunched(hunch);
             }
 

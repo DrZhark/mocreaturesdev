@@ -433,7 +433,7 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
             /*if (!isNotScared() && fleeingTick > 0 && fleeingTick < 2) {
                 fleeingTick = 0;
                 setHiding(true);
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }*/
 
             if (getHiding()) {

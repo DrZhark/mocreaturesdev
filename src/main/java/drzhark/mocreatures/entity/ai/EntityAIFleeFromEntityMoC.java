@@ -77,7 +77,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
             if (vec3 == null) {
                 return false;
             } else if (this.closestLivingEntity.getDistanceSq(vec3.x, vec3.y, vec3.z) < this.closestLivingEntity
-                    .getDistanceSqToEntity(this.entity)) {
+                    .getDistanceSq(this.entity)) {
                 return false;
             } else {
                 this.randPosX = vec3.x;
@@ -117,7 +117,7 @@ public class EntityAIFleeFromEntityMoC extends EntityAIBase {
      */
     @Override
     public void updateTask() {
-        if (this.entity.getDistanceSqToEntity(this.closestLivingEntity) < 8.0D) {
+        if (this.entity.getDistanceSq(this.closestLivingEntity) < 8.0D) {
             this.entity.getNavigator().setSpeed(this.nearSpeed);
         } else {
             this.entity.getNavigator().setSpeed(this.farSpeed);

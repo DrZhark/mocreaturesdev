@@ -39,7 +39,7 @@ public class EntityAIFollowAdult extends EntityAIBase {
                 EntityLiving entityliving1 = iterator.next();
 
                 if (((IMoCEntity) entityliving1).getIsAdult()) {
-                    double d1 = this.childAnimal.getDistanceSqToEntity(entityliving1);
+                    double d1 = this.childAnimal.getDistanceSq(entityliving1);
 
                     if (d1 <= d0) {
                         d0 = d1;
@@ -69,7 +69,7 @@ public class EntityAIFollowAdult extends EntityAIBase {
         } else if (!this.parentAnimal.isEntityAlive()) {
             return false;
         } else {
-            double d0 = this.childAnimal.getDistanceSqToEntity(this.parentAnimal);
+            double d0 = this.childAnimal.getDistanceSq(this.parentAnimal);
             return d0 >= 9.0D && d0 <= 256.0D;
         }
     }

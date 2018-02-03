@@ -297,7 +297,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
             MoCMessageHandler.INSTANCE.sendToAllAround(new MoCMessageAnimation(this.getEntityId(), 0),
                     new TargetPoint(this.world.provider.getDimensionType().getId(), this.posX, this.posY, this.posZ, 64));
         }
-        this.getNavigator().clearPathEntity();
+        this.getNavigator().clearPath();
     }
 
     @Override
@@ -305,7 +305,7 @@ public class MoCEntityElephant extends MoCEntityTameableAnimal {
         if (animationType == 0) //sitting animation
         {
             this.sitCounter = 1;
-            this.getNavigator().clearPathEntity();
+            this.getNavigator().clearPath();
         }
     }
 

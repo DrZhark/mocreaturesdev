@@ -52,7 +52,7 @@ public class MoCEntityBird extends MoCEntityTameableAnimal {
     public MoCEntityBird(World world) {
         super(world);
         setSize(0.4F, 0.3F);
-        this.isCollidedVertically = true;
+        this.collidedVertically = true;
         this.wingb = 0.0F;
         this.wingc = 0.0F;
         this.wingh = 1.0F;

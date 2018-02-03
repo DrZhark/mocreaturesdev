@@ -58,8 +58,6 @@ public class MoCEntityJellyFish extends MoCEntityTameableAquatic {
         return (((Boolean)this.dataManager.get(GLOWS)).booleanValue());
     }
 
-    
-    
     @Override
     public float getAIMoveSpeed() {
         return 0.02F;

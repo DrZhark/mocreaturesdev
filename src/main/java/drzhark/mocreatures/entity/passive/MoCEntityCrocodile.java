@@ -135,7 +135,7 @@ public class MoCEntityCrocodile extends MoCEntityTameableAnimal {
         } else {
             if (!this.world.isRemote && (this.rand.nextInt(500) == 0) && this.getAttackTarget() == null && !getHasCaughtPrey() && !isSwimming()) {
                 setIsSitting(true);
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
 
         }

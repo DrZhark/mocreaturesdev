@@ -218,7 +218,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             d3 = MathHelper.sqrt(d3);
             if (d3 < 0.5) {
                 this.entity.setMoveForward(0.0F);
-                this.theCreature.getNavigator().clearPathEntity();
+                this.theCreature.getNavigator().clearPath();
                 return;
             }
             //System.out.println("distance to objective = " + d3 + "objective: X = " + this.posX + ", Y = " + this.posY + ", Z = " + this.posZ);
@@ -248,7 +248,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         if (((IMoCEntity) theCreature).getIsFlying()) {
             int distY = MoCTools.distanceToFloor(this.theCreature);
             if (distY <= ((IMoCEntity) theCreature).minFlyingHeight()
-                    && (this.theCreature.isCollidedHorizontally || this.theCreature.world.rand.nextInt(100) == 0)) {
+                    && (this.theCreature.collidedHorizontally || this.theCreature.world.rand.nextInt(100) == 0)) {
                 this.theCreature.motionY += 0.02D;
             }
             if (distY > ((IMoCEntity) theCreature).maxFlyingHeight() || this.theCreature.world.rand.nextInt(150) == 0) {
@@ -280,7 +280,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
             theCreature.motionY += (distToSurface * 0.01);
         }
 
-        if (!theCreature.getNavigator().noPath() && theCreature.isCollidedHorizontally) {
+        if (!theCreature.getNavigator().noPath() && theCreature.collidedHorizontally) {
             if (theCreature instanceof MoCEntityAquatic) {
                 theCreature.motionY = 0.05D;
             } else {
@@ -289,7 +289,7 @@ public class EntityAIMoverHelperMoC extends EntityMoveHelper {
         }
 
         if ((this.theCreature.getAttackTarget() != null && ((this.theCreature.getAttackTarget().posY < (this.posY - 0.5D)) && this.theCreature
-                .getDistanceToEntity(this.theCreature.getAttackTarget()) < 10F))) {
+                .getDistance(this.theCreature.getAttackTarget()) < 10F))) {
             if (this.theCreature.motionY < -0.1) {
                 this.theCreature.motionY = -0.1;
             }

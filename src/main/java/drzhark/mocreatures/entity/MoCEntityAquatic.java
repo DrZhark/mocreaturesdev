@@ -374,7 +374,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                     if (!(entity instanceof EntityMob)) {
                         continue;
                     }
-                    float f = getDistanceToEntity(entity);
+                    float f = getDistance(entity);
                     if ((f < 2.0F) && entity instanceof EntityMob && (this.rand.nextInt(10) == 0)) {
                         attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) entity),
                                 (float) ((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
@@ -431,7 +431,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             }
 
             if (isMovementCeased() || rand.nextInt(200) == 0) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
 
             /*if (this.isInWater() && this.onGroundHorizontally && rand.nextInt(10) == 0)
@@ -480,7 +480,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
             this.outOfWater++;
             this.motionY -= 0.1D;
             if (this.outOfWater > 20) {
-                this.getNavigator().clearPathEntity();
+                this.getNavigator().clearPath();
             }
             if (this.outOfWater > 300 && (this.outOfWater % 40) == 0) {
                 this.motionY += 0.3D;
@@ -674,7 +674,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
         if (entityplayer1 != null) {
             EntityFishHook fishHook = entityplayer1.fishEntity;
             if (fishHook != null && fishHook.caughtEntity == null) {
-                float f = fishHook.getDistanceToEntity(this);
+                float f = fishHook.getDistance(this);
                 if (f > 1) {
                     MoCTools.getPathToEntity(this, fishHook, f);
                 } else {
@@ -1084,7 +1084,7 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
     }
 
     @Override
-    public void setLeashedToEntity(Entity entityIn, boolean sendAttachNotification) {
+    public void setLeashHolder(Entity entityIn, boolean sendAttachNotification) {
         if (this.getIsTamed() && entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
             if (MoCreatures.proxy.enableOwnership && this.getOwnerId() != null
@@ -1092,6 +1092,6 @@ public abstract class MoCEntityAquatic extends EntityCreature implements IMoCEnt
                 return;
             }
         }
-        super.setLeashedToEntity(entityIn, sendAttachNotification);
+        super.setLeashHolder(entityIn, sendAttachNotification);
     }
 }

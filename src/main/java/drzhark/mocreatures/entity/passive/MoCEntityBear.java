@@ -254,7 +254,7 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             EntityItem entityitem = getClosestItem(this, 12D, Items.REEDS, Items.SUGAR);
             if (entityitem != null) {
 
-                float f = entityitem.getDistanceToEntity(this);
+                float f = entityitem.getDistance(this);
                 if (f > 2.0F) {
                     getMyOwnPath(entityitem, f);
                 }

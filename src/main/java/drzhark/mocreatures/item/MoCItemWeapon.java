@@ -35,7 +35,7 @@ public class MoCItemWeapon extends MoCItem {
         this.material = par2ToolMaterial;
         this.maxStackSize = 1;
         this.setMaxDamage(par2ToolMaterial.getMaxUses());
-        this.attackDamage = 4F + par2ToolMaterial.getDamageVsEntity();
+        this.attackDamage = 4F + par2ToolMaterial.getAttackDamage();
     }
 
     /**
@@ -54,8 +54,8 @@ public class MoCItemWeapon extends MoCItem {
     /**
      * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
      */
-    public float getDamageVsEntity() {
-        return this.material.getDamageVsEntity();
+    public float getAttackDamage() {
+        return this.material.getAttackDamage();
     }
 
     public float getStrVsBlock(ItemStack stack, IBlockState state) {

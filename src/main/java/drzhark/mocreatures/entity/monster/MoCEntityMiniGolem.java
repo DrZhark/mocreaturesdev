@@ -91,7 +91,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
                 }
 
                 if (getHasRock()) {
-                    this.getNavigator().clearPathEntity();
+                    this.getNavigator().clearPath();
                     attackWithTRock();
                 }
             }
@@ -135,7 +135,7 @@ public class MoCEntityMiniGolem extends MoCEntityMob {
 
         if (this.tcounter >= 50) {
             //throws a newly spawned Trock and destroys the held Trock
-            if (this.getAttackTarget() != null && this.getDistanceToEntity(this.getAttackTarget()) < 48F) {
+            if (this.getAttackTarget() != null && this.getDistance(this.getAttackTarget()) < 48F) {
                 MoCTools.ThrowStone(this, this.getAttackTarget(), this.tempRock.getState(), 10D, 0.25D);
             }
 

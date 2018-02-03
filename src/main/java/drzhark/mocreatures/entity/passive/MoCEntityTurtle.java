@@ -174,14 +174,14 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
                         setIsHiding(true);
                     }
 
-                    this.getNavigator().clearPathEntity();
+                    this.getNavigator().clearPath();
                 } else {
 
                     setIsHiding(false);
                     if (!hasPath() && this.rand.nextInt(50) == 0) {
                         EntityItem entityitem = getClosestItem(this, 10D, Items.MELON, Items.REEDS);
                         if (entityitem != null) {
-                            float f = entityitem.getDistanceToEntity(this);
+                            float f = entityitem.getDistance(this);
                             if (f > 2.0F) {
                                 getMyOwnPath(entityitem, f);
                             }
@@ -236,7 +236,7 @@ public class MoCEntityTurtle extends MoCEntityTameableAnimal {
     public void flipflop(boolean flip) {
         setIsUpsideDown(flip);
         setIsHiding(false);
-        this.getNavigator().clearPathEntity();
+        this.getNavigator().clearPath();
     }
 
     @Override

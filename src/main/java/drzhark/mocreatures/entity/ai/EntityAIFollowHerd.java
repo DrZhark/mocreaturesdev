@@ -49,7 +49,7 @@ public class EntityAIFollowHerd extends EntityAIBase {
 
         while (iterator.hasNext()) {
             EntityLiving entityliving1 = iterator.next();
-            double d1 = this.theAnimal.getDistanceSqToEntity(entityliving1);
+            double d1 = this.theAnimal.getDistanceSq(entityliving1);
             if (d1 >= this.minRange && this.theAnimal != entityliving1) {
                 d0 = d1;
                 entityliving = entityliving1;
@@ -82,7 +82,7 @@ public class EntityAIFollowHerd extends EntityAIBase {
         } else if (!this.herdAnimal.isEntityAlive()) {
             return false;
         } else {
-            double d0 = this.theAnimal.getDistanceSqToEntity(this.herdAnimal);
+            double d0 = this.theAnimal.getDistanceSq(this.herdAnimal);
             return d0 >= this.minRange && d0 <= this.maxRange;
         }
     }

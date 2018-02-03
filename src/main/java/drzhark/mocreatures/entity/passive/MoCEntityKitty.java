@@ -611,7 +611,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
     @Override
     public boolean isOnLadder() {
         if (getKittyState() == 16) {
-            return this.isCollidedHorizontally && getOnTree();
+            return this.collidedHorizontally && getOnTree();
         } else {
             return super.isOnLadder();
         }
@@ -662,7 +662,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if (entityitem == null) {
                         break;
                     }
-                    float f = entityitem.getDistanceToEntity(this);
+                    float f = entityitem.getDistance(this);
                     if (f > 2.0F) {
                         getMyOwnPath(entityitem, f);
                     }
@@ -701,7 +701,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                             || (!entitykittybed.getHasMilk() && !entitykittybed.getHasFood())) {
                         break;
                     }
-                    float f5 = entitykittybed.getDistanceToEntity(this);
+                    float f5 = entitykittybed.getDistance(this);
                     if (f5 > 2.0F) {
                         getMyOwnPath(entitykittybed, f5);
                     }
@@ -743,7 +743,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if ((entitylitterbox == null) || (entitylitterbox.isBeingRidden()) || entitylitterbox.getUsedLitter()) {
                         break;
                     }
-                    float f6 = entitylitterbox.getDistanceToEntity(this);
+                    float f6 = entitylitterbox.getDistance(this);
                     if (f6 > 2.0F) {
                         getMyOwnPath(entitylitterbox, f6);
                     }
@@ -807,7 +807,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
 
                     if (this.itemAttackTarget != null && this.itemAttackTarget instanceof EntityItem) {
                         if (getAttackTarget() != null) {
-                            float f1 = getDistanceToEntity(getAttackTarget());
+                            float f1 = getDistance(getAttackTarget());
                             if (f1 < 1.5F) {
                                 swingArm();
                                 if (this.rand.nextInt(10) == 0) {
@@ -861,7 +861,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                             if (!(entity1 instanceof MoCEntityKitty) || (((MoCEntityKitty) entity1).getKittyState() != 21)) {
                                 continue;
                             }
-                            float f9 = getDistanceToEntity(entity1);
+                            float f9 = getDistance(entity1);
                             if (f9 > 12F) {
                                 setAttackTarget((EntityLivingBase) entity1);
                             }
@@ -881,7 +881,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         this.itemAttackTarget = null;
                     }
                     if ((this.itemAttackTarget != null) && (this.itemAttackTarget instanceof EntityItem)) {
-                        float f2 = getDistanceToEntity(this.itemAttackTarget);
+                        float f2 = getDistance(this.itemAttackTarget);
                         if (f2 < 1.5F) {
                             swingArm();
                             if (this.rand.nextInt(10) == 0) {
@@ -891,16 +891,16 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         }
                     }
                     if (getAttackTarget() != null && (getAttackTarget() instanceof MoCEntityKitty) && (this.rand.nextInt(20) == 0)) {
-                        float f3 = getDistanceToEntity(getAttackTarget());
+                        float f3 = getDistance(getAttackTarget());
                         if (f3 < 2.0F) {
                             swingArm();
-                            this.getNavigator().clearPathEntity();
+                            this.getNavigator().clearPath();
                         }
                     }
                     if ((getAttackTarget() == null) || !(getAttackTarget() instanceof EntityPlayer)) {
                         break;
                     }
-                    float f4 = getDistanceToEntity(getAttackTarget());
+                    float f4 = getDistance(getAttackTarget());
                     if ((f4 < 2.0F) && (this.rand.nextInt(20) == 0)) {
                         swingArm();
                     }
@@ -916,7 +916,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         changeKittyState(7);
                         break;
                     }
-                    float f8 = entityplayer1.getDistanceToEntity(this);
+                    float f8 = entityplayer1.getDistance(this);
                     if (f8 > 5F) {
                         getPathOrWalkableBlock(entityplayer1, f8);
                     }
@@ -938,7 +938,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     setHungry(false);
                     setAttackTarget(this.world.getClosestPlayerToEntity(this, 18D));
                     if (getAttackTarget() != null) {
-                        float f7 = getDistanceToEntity(getAttackTarget());
+                        float f7 = getDistance(getAttackTarget());
                         if (f7 < 1.5F) {
                             swingArm();
                             if (this.rand.nextInt(20) == 0) {
@@ -1051,7 +1051,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     } else {
                         this.motionZ -= 0.01D;
                     }
-                    if (this.onGround || !this.isCollidedHorizontally || !this.isCollidedVertically) {
+                    if (this.onGround || !this.collidedHorizontally || !this.collidedVertically) {
                         break;
                     }
                     int i4 = 0;
@@ -1089,7 +1089,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                         if (this.rand.nextInt(50) == 0) {
                             swingArm();
                         }
-                        float f10 = getDistanceToEntity(entitykitty);
+                        float f10 = getDistance(entitykitty);
                         if (f10 < 5F) {
                             this.kittytimer++;
                         }
@@ -1110,7 +1110,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
                     if ((entitykittybed2 == null) || (entitykittybed2.isBeingRidden())) {
                         break;
                     }
-                    float f11 = entitykittybed2.getDistanceToEntity(this);
+                    float f11 = entitykittybed2.getDistance(this);
                     if (f11 > 2.0F) {
                         getMyOwnPath(entitykittybed2, f11);
                     }

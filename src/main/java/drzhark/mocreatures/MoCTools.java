@@ -662,7 +662,7 @@ public class MoCTools {
             EntityMob entitymob = (EntityMob) entity;
             entitymob.setAttackTarget(null);
             //entitymob.entityLivingToAttack = null;
-            entitymob.getNavigator().clearPathEntity();
+            entitymob.getNavigator().clearPath();
         }
     }
 
@@ -1410,7 +1410,7 @@ public class MoCTools {
      * @param player 
      */
     public static void dropAmulet(IMoCEntity entity, int amuletType, EntityPlayer player) {
-        if (!(((Entity)entity).world.isRemote)) {
+        if (!player.world.isRemote) {
             ItemStack stack = new ItemStack(MoCItems.fishnetfull, 1, 0);
             if (amuletType == 2) {
                 stack = new ItemStack(MoCItems.petamuletfull, 1, 0);
@@ -1579,7 +1579,7 @@ public class MoCTools {
     public static boolean findNearPlayerAndPoison(Entity poisoner, boolean needsToBeInWater) {
         EntityPlayer entityplayertarget = poisoner.world.getClosestPlayerToEntity(poisoner, 2D);
         if (entityplayertarget != null && ((needsToBeInWater && entityplayertarget.isInWater()) || !needsToBeInWater)
-                && poisoner.getDistanceToEntity(entityplayertarget) < 2.0F && !entityplayertarget.capabilities.disableDamage) {
+                && poisoner.getDistance(entityplayertarget) < 2.0F && !entityplayertarget.capabilities.disableDamage) {
             if (entityplayertarget.getRidingEntity() != null && entityplayertarget.getRidingEntity() instanceof EntityBoat) {
                 //don't poison players on boats
             } else {

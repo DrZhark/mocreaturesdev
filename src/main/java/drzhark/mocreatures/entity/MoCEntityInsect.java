@@ -150,7 +150,7 @@ public class MoCEntityInsect extends MoCEntityAmbient {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     public boolean climbing() {

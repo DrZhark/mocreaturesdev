@@ -141,7 +141,7 @@ public class MoCEntityRat extends MoCEntityMob {
 
     @Override
     public boolean isOnLadder() {
-        return this.isCollidedHorizontally;
+        return this.collidedHorizontally;
     }
 
     @Override
