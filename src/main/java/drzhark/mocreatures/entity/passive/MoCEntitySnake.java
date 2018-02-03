@@ -174,7 +174,7 @@ public class MoCEntitySnake extends MoCEntityTameableAnimal {
         }
 
         if (this.getRidingEntity() == null) {
-            if (!this.world.isRemote && this.startRiding(player)) {
+            if (this.startRiding(player)) {
                 this.rotationYaw = player.rotationYaw;
             }
 

@@ -100,7 +100,7 @@ public class MoCEntityBlackBear extends MoCEntityBear {
             return true;
         }
         if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
-            if (!this.world.isRemote && player.startRiding(this)) {
+            if (player.startRiding(this)) {
                 player.rotationYaw = this.rotationYaw;
                 player.rotationPitch = this.rotationPitch;
                 setBearState(0);

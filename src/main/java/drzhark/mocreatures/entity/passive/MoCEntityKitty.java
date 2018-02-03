@@ -574,7 +574,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             return true;
         }
         if (!stack.isEmpty() && (getKittyState() > 2) && pickable() && (stack.getItem() == Items.LEAD)) {
-            if (!this.world.isRemote && this.startRiding(player)) {
+            if (this.startRiding(player)) {
                 changeKittyState(14);
             }
             return true;
@@ -585,7 +585,7 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
         
         if (stack.isEmpty() && (getKittyState() > 2) && pickable()) {
-            if (!this.world.isRemote && this.startRiding(player)) {
+            if (this.startRiding(player)) {
                 changeKittyState(15);
             }
             return true;
