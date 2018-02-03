@@ -9,9 +9,6 @@ import drzhark.customspawner.type.EntitySpawnType;
 import drzhark.customspawner.utils.CMSLog;
 import drzhark.customspawner.utils.CMSUtils;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -22,7 +19,6 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -594,37 +590,24 @@ public final class CustomSpawner {
             }
         }
 
-        if (entitySpawnType.getLivingMaterial() == Material.WATER) {
+        final EntityLiving.SpawnPlacementType spawnPlacementType = EntitySpawnPlacementRegistry.getPlacementForEntity(spawnListEntry.entityClass);
+        if ((spawnPlacementType != null && spawnPlacementType == EntityLiving.SpawnPlacementType.IN_WATER) || entitySpawnType.getLivingMaterial() == Material.WATER) {
             return chunk.getBlockState(pos).getMaterial().isLiquid()
                     && chunk.getBlockState(pos.down()).getMaterial().isLiquid()
                     && !chunk.getBlockState(pos.up()).isNormalCube();
-        } else {
-            IBlockState blockstate = chunk.getBlockState(pos);
-            BlockPos blockpos = pos.down();
-            IBlockState blockstate1 = chunk.getBlockState(blockpos);
-            EntityLiving.SpawnPlacementType spawnPlacementType = EntitySpawnPlacementRegistry.getPlacementForEntity(spawnListEntry.entityClass);
-            if (spawnPlacementType == null) {
-                if (!canCreatureSpawn(blockstate1, world, blockpos)) {
-                    return false;
-                }
-            } else if (!blockstate1.getBlock().canCreatureSpawn(blockstate1, world, blockpos, spawnPlacementType)) {
-                return false;
-            }
-
-            boolean flag = blockstate1.getBlock() != Blocks.BEDROCK && blockstate1.getBlock() != Blocks.BARRIER;
-            boolean result = flag && !blockstate.isNormalCube() && !blockstate.getMaterial().isLiquid() && !chunk.getBlockState(pos.up()).isNormalCube();
-            return result;
         }
-    }
 
-    public static boolean canCreatureSpawn(IBlockState blockstate, World world, BlockPos pos) {
-        Block block = blockstate.getBlock();
-        if (block instanceof BlockSlab) {
-            return (blockstate.isFullBlock() || blockstate.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP);
-        } else if (block instanceof BlockStairs) {
-            return blockstate.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP;
+        final IBlockState blockstate = chunk.getBlockState(pos);
+        BlockPos blockpos = pos.down();
+        final IBlockState blockstate1 = chunk.getBlockState(blockpos);
+
+        if (!blockstate1.getBlock().canCreatureSpawn(blockstate1, world, blockpos, spawnPlacementType)) {
+            return false;
         }
-        return blockstate.isSideSolid(world, pos, EnumFacing.UP);
+
+        boolean flag = blockstate1.getBlock() != Blocks.BEDROCK && blockstate1.getBlock() != Blocks.BARRIER;
+        boolean result = flag && !blockstate.isNormalCube() && !blockstate.getMaterial().isLiquid() && !chunk.getBlockState(pos.up()).isNormalCube();
+        return result;
     }
 
     public final int countEntities(Class <? extends EntityLiving>  class1, World world) {

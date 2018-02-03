@@ -51,7 +51,7 @@ public class StructureRegistry {
             spawnList = ((MapGenNetherBridge) base).getSpawnList();
         } else if (structKey.equalsIgnoreCase("SCATTERED_FEATURE") && base instanceof MapGenScatteredFeature) {
             structCategoryName = "witchhut";
-            spawnList = ((MapGenScatteredFeature) base).getScatteredFeatureSpawnList();
+            spawnList = ((MapGenScatteredFeature) base).getMonsters();
         }
         environment.CMSStructureConfig.load(); // needed ?
 
