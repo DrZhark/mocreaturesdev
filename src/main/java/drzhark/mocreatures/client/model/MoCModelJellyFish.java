@@ -122,6 +122,7 @@ public class MoCModelJellyFish extends ModelBase {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         setRotationAngles(f, f1, f2, f3, f4, f5);
+        /* Disable until transparency issues with players are fixed
         MoCEntityJellyFish jellyfish = (MoCEntityJellyFish) entity;
         boolean glowing = jellyfish.isGlowing();
         boolean outOfWater = !jellyfish.isInWater();
@@ -134,15 +135,15 @@ public class MoCModelJellyFish extends ModelBase {
 
             //GL11.glRotatef((float) (f1 * -60D), -1F, 0.0F, 0.0F);
 
-        }
-        GL11.glEnable(3042 /* GL_BLEND */);
-        if (!glowing || outOfWater) {
+        }*/
+        //GL11.glEnable(3042 /* GL_BLEND */);
+        /*if (!glowing || outOfWater) {
             float transparency = 0.7F;
             GL11.glBlendFunc(770, 771);
             GL11.glColor4f(0.8F, 0.8F, 0.8F, transparency);
         } else {
             GL11.glBlendFunc(770, 1);
-        }
+        }*/
         this.Top.render(f5);
         this.Head.render(f5);
         this.HeadSmall.render(f5);
@@ -167,8 +168,8 @@ public class MoCModelJellyFish extends ModelBase {
         this.Leg8.render(f5);
         this.Leg9.render(f5);
 
-        GL11.glDisable(3042/* GL_BLEND */);
-        GL11.glPopMatrix();
+        //GL11.glDisable(3042/* GL_BLEND */);
+        //GL11.glPopMatrix();
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
