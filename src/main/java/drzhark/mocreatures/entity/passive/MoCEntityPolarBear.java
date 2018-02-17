@@ -99,7 +99,7 @@ public class MoCEntityPolarBear extends MoCEntityBear{
             }
             return true;
         }
-        if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
+        if (this.getIsRideable() && this.getIsAdult() && (!this.getIsChested() || !player.isSneaking()) && !this.isBeingRidden()) {
             if (!this.world.isRemote && player.startRiding(this)) {
                 player.rotationYaw = this.rotationYaw;
                 player.rotationPitch = this.rotationPitch;

@@ -90,7 +90,6 @@ public class MoCItemHorseAmulet extends MoCItem {
                     }
                 }
 
-                System.out.println("spawnclass = " + this.spawnClass);
                 storedCreature.setPosition(newPosX, newPosY, newPosZ);
                 storedCreature.setType(this.creatureType);
                 storedCreature.setTamed(true);

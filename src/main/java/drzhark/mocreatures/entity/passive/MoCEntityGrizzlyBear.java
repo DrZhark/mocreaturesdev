@@ -88,7 +88,6 @@ public class MoCEntityGrizzlyBear extends MoCEntityBear{
             if (!this.world.isRemote && !getIsAdult() && (getEdad() < 100)) {
                 setEdad(getEdad() + 1);
             }
-
             return true;
         }
         if (!stack.isEmpty() && getIsTamed() && (stack.getItem() == MoCItems.whip)) {
@@ -99,13 +98,12 @@ public class MoCEntityGrizzlyBear extends MoCEntityBear{
             }
             return true;
         }
-        if (getIsRideable() && getIsAdult() && (!this.isBeingRidden())) {
+        if (this.getIsRideable() && this.getIsAdult() && (!this.getIsChested() || !player.isSneaking()) && !this.isBeingRidden()) {
             if (!this.world.isRemote && player.startRiding(this)) {
                 player.rotationYaw = this.rotationYaw;
                 player.rotationPitch = this.rotationPitch;
                 setBearState(0);
             }
-
             return true;
         }
 

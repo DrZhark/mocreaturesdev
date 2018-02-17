@@ -577,7 +577,7 @@ public class MoCEntityWyvern extends MoCEntityTameableAnimal {
             return true;
         }
 
-        if (getIsRideable() && getEdad() > 90 && (!this.isBeingRidden())) {
+        if (this.getIsRideable() && getEdad() > 90 && (!this.getIsChested() || !player.isSneaking()) && !this.isBeingRidden()) {
             if (!this.world.isRemote && player.startRiding(this)) {
                 player.rotationYaw = this.rotationYaw;
                 player.rotationPitch = this.rotationPitch;
