@@ -511,15 +511,14 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if ((getKittyState() == 2) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.medallion)) {
+        if ((getKittyState() == 2) && !stack.isEmpty() && (stack.getItem() == MoCItems.medallion)) {
             if (!this.world.isRemote) {
                 MoCTools.tameWithName(player, this);
             }
             if (getIsTamed()) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                    player.setHeldItem(hand, ItemStack.EMPTY);
                 }
                 changeKittyState(3);
                 this.setHealth(getMaxHealth());
@@ -527,21 +526,21 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             }
             return false;
         }
-        if ((getKittyState() == 7) && onMainHand && !stack.isEmpty()
+        if ((getKittyState() == 7) && !stack.isEmpty()
                 && ((stack.getItem() == Items.CAKE) || (stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_EATING);
             this.setHealth(getMaxHealth());
             changeKittyState(9);
             return true;
         }
-        if ((getKittyState() == 11) && onMainHand && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball)) {
+        if ((getKittyState() == 11) && !stack.isEmpty() && (stack.getItem() == MoCItems.woolball)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             setKittyState(8);
             if (!this.world.isRemote) {
@@ -556,10 +555,10 @@ public class MoCEntityKitty extends MoCEntityTameableAnimal {
             }
             return true;
         }
-        if ((getKittyState() == 13) && onMainHand && !stack.isEmpty() && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
+        if ((getKittyState() == 13) && !stack.isEmpty() && ((stack.getItem() == Items.FISH) || (stack.getItem() == Items.COOKED_FISH))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTY_EATING);
             this.setHealth(getMaxHealth());

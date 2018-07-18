@@ -89,11 +89,10 @@ public class MoCEntityPandaBear extends MoCEntityBear{
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && (stack.getItem() == MoCItems.sugarlump || stack.getItem() == Items.REEDS)) {
+        if (!stack.isEmpty() && (stack.getItem() == MoCItems.sugarlump || stack.getItem() == Items.REEDS)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
 
             if (!this.world.isRemote) {

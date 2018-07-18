@@ -352,20 +352,19 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && getIsTamed() && !getIsRideable() && (getEdad() > 80)
+        if (!stack.isEmpty() && getIsTamed() && !getIsRideable() && (getEdad() > 80)
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCItems.horsesaddle)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             setRideable(true);
             return true;
         }
-        if (!stack.isEmpty() && getIsTamed() && onMainHand && (MoCTools.isItemEdibleforCarnivores(stack.getItem()))) {
+        if (!stack.isEmpty() && getIsTamed() && (MoCTools.isItemEdibleforCarnivores(stack.getItem()))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             this.setHealth(getMaxHealth());
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
@@ -373,10 +372,10 @@ public class MoCEntityBear extends MoCEntityTameableAnimal {
             setHasEaten(true);
             return true;
         }
-        if (!stack.isEmpty() && onMainHand && getIsTamed() && getIsAdult() && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
+        if (!stack.isEmpty() && getIsTamed() && getIsAdult() && !getIsChested() && (stack.getItem() == Item.getItemFromBlock(Blocks.CHEST))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             setIsChested(true);
             MoCTools.playCustomSound(this, SoundEvents.ENTITY_CHICKEN_EGG);

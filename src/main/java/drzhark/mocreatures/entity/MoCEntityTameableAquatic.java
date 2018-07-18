@@ -169,7 +169,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
                 && MoCTools.isThisPlayerAnOP(player)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
@@ -200,7 +200,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollFreedom))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
@@ -220,7 +220,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         if (!stack.isEmpty() && getIsTamed() && ((stack.getItem() == MoCItems.scrollOfSale))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             if (!this.world.isRemote) {
                 if (this.getOwnerPetId() != -1) // required since getInteger will always return 0 if no key is found
@@ -235,7 +235,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
         if (!stack.isEmpty() && getIsTamed() && isMyHealFood(stack)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
             if (!this.world.isRemote) {
@@ -252,7 +252,7 @@ public class MoCEntityTameableAquatic extends MoCEntityAquatic implements IMoCTa
                     petData.setInAmulet(this.getOwnerPetId(), true);
                 }
             }
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+            player.setHeldItem(hand, ItemStack.EMPTY);
             if (!this.world.isRemote) {
                 MoCTools.dropAmulet(this, 1, player);
                 this.isDead = true;

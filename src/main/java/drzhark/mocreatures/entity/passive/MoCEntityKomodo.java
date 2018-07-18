@@ -208,12 +208,11 @@ public class MoCEntityKomodo extends MoCEntityTameableAnimal {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
+        if (!stack.isEmpty() && getIsTamed() && (getEdad() > 90 || getIsAdult()) && !getIsRideable()
                 && (stack.getItem() == Items.SADDLE || stack.getItem() == MoCItems.horsesaddle)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             setRideable(true);
             return true;

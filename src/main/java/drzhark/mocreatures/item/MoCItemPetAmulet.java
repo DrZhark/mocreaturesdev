@@ -169,7 +169,7 @@ public class MoCItemPetAmulet extends MoCItem {
                             MoCTools.tameWithName(player, storedCreature);
                         }
 
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, emptyAmulet);
+                        player.setHeldItem(hand, emptyAmulet);
                         MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerId());
                         if (petData != null) {
                             petData.setInAmulet(storedCreature.getOwnerPetId(), false);

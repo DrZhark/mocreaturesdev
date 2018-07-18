@@ -156,7 +156,7 @@ public class MoCEntityKittyBed extends EntityLiving {
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
         final ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && (stack.getItem() == Items.MILK_BUCKET)) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.BUCKET, 1));
+            player.setHeldItem(hand, new ItemStack(Items.BUCKET, 1));
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGMILK);
             setHasMilk(true);
             setHasFood(false);
@@ -165,7 +165,7 @@ public class MoCEntityKittyBed extends EntityLiving {
         if (!stack.isEmpty() && !getHasFood() && (stack.getItem() == MoCItems.petfood)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_KITTYBED_POURINGFOOD);
             setHasMilk(false);

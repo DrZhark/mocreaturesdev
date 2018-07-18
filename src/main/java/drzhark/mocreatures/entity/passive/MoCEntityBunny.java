@@ -159,11 +159,10 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
+        if (!stack.isEmpty() && (stack.getItem() == Items.GOLDEN_CARROT) && !getHasEaten()) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             setHasEaten(true);
             MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_EATING);
@@ -172,7 +171,7 @@ public class MoCEntityBunny extends MoCEntityTameableAnimal {
         if (this.getRidingEntity() == null) {
             if (this.startRiding(player)) {
                 this.rotationYaw = player.rotationYaw;
-                if (!getIsTamed()) {
+                if (!getIsTamed() && !this.world.isRemote) {
                     MoCTools.tameWithName(player, this);
                 }
             }

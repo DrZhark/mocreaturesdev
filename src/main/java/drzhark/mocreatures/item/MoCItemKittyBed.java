@@ -33,7 +33,7 @@ public class MoCItemKittyBed extends MoCItem {
             entitykittybed.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.3F;
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
         }
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);

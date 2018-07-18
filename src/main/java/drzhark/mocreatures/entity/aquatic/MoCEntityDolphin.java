@@ -270,11 +270,10 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.FISH)) {
+        if (!stack.isEmpty() && (stack.getItem() == Items.FISH)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             if (!this.world.isRemote) {
                 setTemper(getTemper() + 25);
@@ -295,10 +294,10 @@ public class MoCEntityDolphin extends MoCEntityTameableAquatic {
 
             return true;
         }
-        if (!stack.isEmpty() && onMainHand && (stack.getItem() == Items.COOKED_FISH) && getIsTamed() && getIsAdult()) {
+        if (!stack.isEmpty() && (stack.getItem() == Items.COOKED_FISH) && getIsTamed() && getIsAdult()) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
             if ((getHealth() + 25) > getMaxHealth()) {
                 this.setHealth(getMaxHealth());

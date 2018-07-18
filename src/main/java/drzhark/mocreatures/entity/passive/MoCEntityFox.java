@@ -122,11 +122,10 @@ public class MoCEntityFox extends MoCEntityTameableAnimal {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && ((stack.getItem() == MoCItems.rawTurkey))) {
+        if (!stack.isEmpty() && ((stack.getItem() == MoCItems.rawTurkey))) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
 
             if (!this.world.isRemote) {

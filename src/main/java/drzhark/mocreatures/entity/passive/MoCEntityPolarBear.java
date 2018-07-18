@@ -72,11 +72,10 @@ public class MoCEntityPolarBear extends MoCEntityBear{
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(stack.getItem())) {
+        if (!stack.isEmpty() && this.getEdad() < 80 && MoCTools.isItemEdibleforCarnivores(stack.getItem())) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.setHeldItem(hand, ItemStack.EMPTY);
             }
 
             if (!getIsTamed() && !this.world.isRemote) {

@@ -60,11 +60,10 @@ public class MoCEntityTiger extends MoCEntityBigCat {
         }
 
         final ItemStack stack = player.getHeldItem(hand);
-        boolean onMainHand = (hand == EnumHand.MAIN_HAND);
-        if (!stack.isEmpty() && onMainHand && getIsTamed() && getType() == 2 && (stack.getItem() == MoCItems.essencelight)) {
+        if (!stack.isEmpty() && getIsTamed() && getType() == 2 && (stack.getItem() == MoCItems.essencelight)) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.GLASS_BOTTLE));
+                player.setHeldItem(hand, new ItemStack(Items.GLASS_BOTTLE));
             } else {
                 player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
             }

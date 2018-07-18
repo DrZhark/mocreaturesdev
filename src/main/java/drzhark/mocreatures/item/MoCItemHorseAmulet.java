@@ -162,17 +162,13 @@ public class MoCItemHorseAmulet extends MoCItem {
                     MoCTools.playCustomSound(storedCreature, MoCSoundEvents.ENTITY_GENERIC_MAGIC_APPEAR);
                     //gives an empty amulet
                     if (storedCreature instanceof MoCEntityBigCat || storedCreature instanceof MoCEntityWyvern || this.creatureType == 21 || this.creatureType == 22) {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
-                                MoCItems.amuletghost, 1, 0));
+                        player.setHeldItem(hand, new ItemStack(MoCItems.amuletghost, 1, 0));
                     } else if (this.creatureType == 26 || this.creatureType == 27 || this.creatureType == 28) {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(MoCItems.amuletbone,
-                                1, 0));
+                        player.setHeldItem(hand, new ItemStack(MoCItems.amuletbone, 1, 0));
                     } else if ((this.creatureType > 47 && this.creatureType < 60)) {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
-                                MoCItems.amuletfairy, 1, 0));
+                        player.setHeldItem(hand,  new ItemStack(MoCItems.amuletfairy, 1, 0));
                     } else if (this.creatureType == 39 || this.creatureType == 40) {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(
-                                MoCItems.amuletpegasus, 1, 0));
+                        player.setHeldItem(hand,  new ItemStack(MoCItems.amuletpegasus, 1, 0));
                     }
                     MoCPetData petData = MoCreatures.instance.mapData.getPetData(storedCreature.getOwnerId());
                     if (petData != null) {

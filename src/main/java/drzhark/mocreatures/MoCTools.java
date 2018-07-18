@@ -1382,7 +1382,9 @@ public class MoCTools {
                 nbtt.setInteger("CreatureType", entity.getType());
                 nbtt.setBoolean("Adult", entity.getIsAdult());
                 nbtt.setString("OwnerName", epOwner != null ? epOwner.getName() : "");
-                nbtt.setUniqueId("OwnerUUID", entity.getOwnerId());
+                if (entity.getOwnerId() != null) {
+                    nbtt.setUniqueId("OwnerUUID", entity.getOwnerId());
+                }
                 nbtt.setInteger("PetId", entity.getOwnerPetId());
                 int amuletType = 1;
                 if (stack.getItem() == MoCItems.petamuletfull) {
@@ -1392,6 +1394,7 @@ public class MoCTools {
                 }
                 nbtt.setBoolean("Ghost", amuletType == 3 ? true : false);
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             if (epOwner != null && epOwner.inventory.getFirstEmptyStack() != -1) // don't attempt to set if player inventory is full
