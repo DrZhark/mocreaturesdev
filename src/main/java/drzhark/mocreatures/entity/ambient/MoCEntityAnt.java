@@ -53,7 +53,10 @@ public class MoCEntityAnt extends MoCEntityInsect {
         if (!this.world.isRemote) {
             if (!getHasFood()) {
                 EntityItem entityitem = MoCTools.getClosestFood(this, 8D);
-                if (entityitem != null && entityitem.getRidingEntity() == null) {
+                if (entityitem == null || entityitem.isDead) {
+                    return;
+                }
+                if (entityitem.getRidingEntity() == null) {
                     float f = entityitem.getDistance(this);
                     if (f > 1.0F) {
                         int i = MathHelper.floor(entityitem.posX);
@@ -64,7 +67,7 @@ public class MoCEntityAnt extends MoCEntityInsect {
                         getMyOwnPath(entityitem, f);
                         return;
                     }
-                    if ((f < 1.0F) && (entityitem != null)) {
+                    if (f < 1.0F) {
                         exchangeItem(entityitem);
                         setHasFood(true);
                         return;
