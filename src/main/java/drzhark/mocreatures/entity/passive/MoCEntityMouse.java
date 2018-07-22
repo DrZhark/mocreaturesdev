@@ -148,8 +148,7 @@ public class MoCEntityMouse extends MoCEntityAnimal {
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand) {
         if (this.getRidingEntity() == null) {
-            if (player.startRiding(this)) {
-                this.startRiding(player);
+            if (this.startRiding(player)) {
                 this.rotationYaw = player.rotationYaw;
             }
 

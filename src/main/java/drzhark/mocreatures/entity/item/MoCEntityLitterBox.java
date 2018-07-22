@@ -144,7 +144,6 @@ public class MoCEntityLitterBox extends EntityLiving {
             if (this.startRiding(player)) {
                 setPickedUp(true);
                 this.rotationYaw = player.rotationYaw;
-                this.startRiding(player);
             }
 
             return true;

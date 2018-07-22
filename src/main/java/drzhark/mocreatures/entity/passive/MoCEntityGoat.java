@@ -519,7 +519,11 @@ public class MoCEntityGoat extends MoCEntityTameableAnimal {
                 return false;
             }
 
-            player.setHeldItem(hand, new ItemStack(Items.MILK_BUCKET));
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                player.setHeldItem(hand, ItemStack.EMPTY);
+            }
+            player.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET));
             return true;
         }
 

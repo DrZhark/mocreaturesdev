@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -682,7 +683,8 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
         if (getIsTamed() && (getType() > 1) && !stack.isEmpty()) {
 
             Item item = stack.getItem();
-            if (item instanceof ItemArmor) {
+            if (item instanceof ItemArmor && ((ItemArmor) item).armorType == EntityEquipmentSlot.HEAD) {
+                final ItemArmor itemArmor = (ItemArmor) stack.getItem();
                 byte helmetType = 0;
                 if (stack.getItem() == Items.LEATHER_HELMET) {
                     helmetType = 1;
@@ -711,11 +713,11 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
                 if (helmetType != 0) {
                     player.setHeldItem(hand, ItemStack.EMPTY);
                     dropArmor();
+                    this.setItemStackToSlot(itemArmor.armorType, stack);
                     MoCTools.playCustomSound(this, MoCSoundEvents.ENTITY_GENERIC_ARMOR_OFF);
                     setHelmet(helmetType);
                     return true;
                 }
-
             }
         }
         if (this.getIsRideable() && this.getIsAdult() && (!this.getIsChested() || !player.isSneaking()) && !this.isBeingRidden()) {
@@ -898,51 +900,13 @@ public class MoCEntityOstrich extends MoCEntityTameableAnimal {
     @Override
     public void dropArmor() {
         if (!this.world.isRemote) {
-            EntityItem entityitem = null;// = new EntityItem(world, posX, posY, posZ, new ItemStack(Blocks.WOOL, 1, color));
-
-            switch (getHelmet()) {
-                case 0:
-                case 8:
-                    return;
-                    //break;
-                case 1:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Items.LEATHER_HELMET, 1));
-                    break;
-                case 2:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Items.IRON_HELMET, 1));
-                    break;
-                case 3:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Items.GOLDEN_HELMET, 1));
-                    break;
-                case 4:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Items.DIAMOND_HELMET, 1));
-                    break;
-                case 5:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.helmetHide, 1));
-                    break;
-                case 6:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.helmetFur, 1));
-                    break;
-                case 7:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.helmetCroc, 1));
-                    break;
-                case 9:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.scorpHelmetDirt, 1));
-                    break;
-                case 10:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.scorpHelmetFrost, 1));
-                    break;
-                case 11:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.scorpHelmetCave, 1));
-                    break;
-                case 12:
-                    entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(MoCItems.scorpHelmetNether, 1));
-                    break;
-            }
-
-            if (entityitem != null) {
-                entityitem.setPickupDelay(10);
-                this.world.spawnEntity(entityitem);
+            final ItemStack itemStack = this.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+            if (!itemStack.isEmpty() && itemStack.getItem() instanceof ItemArmor) {
+                final EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY, this.posZ, itemStack.copy());
+                if (entityitem != null) {
+                    entityitem.setPickupDelay(10);
+                    this.world.spawnEntity(entityitem);
+                }
             }
             setHelmet((byte) 0);
         }

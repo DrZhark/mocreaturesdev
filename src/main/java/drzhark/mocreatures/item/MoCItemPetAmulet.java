@@ -70,8 +70,7 @@ public class MoCItemPetAmulet extends MoCItem {
             emptyAmulet = new ItemStack(MoCItems.petamulet, 1, 0);
         }
 
-        //entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(MoCreatures.fishnet, 1, 0));
-        if (!world.isRemote && hand == EnumHand.MAIN_HAND) {
+        if (!world.isRemote) {
             initAndReadNBT(stack);
             if (this.spawnClass.isEmpty()) {
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
