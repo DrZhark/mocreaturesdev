@@ -784,13 +784,10 @@ public abstract class MoCEntityAmbient extends EntityAnimal implements IMoCEntit
 
     @Override
     public boolean canBeLeashedTo(EntityPlayer player) {
-        if (MoCTools.isThisPlayerAnOP(player)) {
-            return true;
-        }
-        if (this.getIsTamed() && !player.getUniqueID().equals(this.getOwnerId())) {
+        if (!this.world.isRemote && !MoCTools.isThisPlayerAnOP(player) && this.getIsTamed() && !player.getUniqueID().equals(this.getOwnerId())) {
             return false;
         }
-        return true;
+        return super.canBeLeashedTo(player);
     }
 
     @Override
